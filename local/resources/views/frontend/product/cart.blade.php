@@ -53,14 +53,13 @@
                                             <span>{{ $value['attributes']['title'] }}</span>
                                         </td>
                                         <td>
-                                            <input type="number" min="0" class="form-control" name="" value="{{ $value['quantity'] }}">
+                                            <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
                                         </td>
                                         <td><b>${{ $value['price'] }}</b></td>
 
                                         <td><b>{{$value['attributes']['pv']}}</b></td>
                                         <td class="text-center">
                                             <button class="btn btn-warning btn-outline-warning btn-icon btn-sm"  onclick="cart_delete({{ $value['id'] }})"><i class="icofont icofont-delete-alt"></i></button>
-
                                         </td>
                                     </tr>
                                     @endforeach
@@ -83,27 +82,26 @@
                 <div class="col-md-12">
                     <table class="table table-responsive" >
                         <tr>
-                            <td><strong>ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
-                            <td align="right"><strong> ฿ {{ $price_total }} </strong></td>
+                            <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
+                            <td align="right"><strong id="price"> ฿ {{ $price_total }} </strong></td>
                         </tr>
                         <tr>
                             <td><strong>ค่าจัดส่ง</strong></td>
-                            <td align="right"><strong>฿ {{ number_format($sent,2) }}</strong></td>
+                            <td align="right"><strong id="sent">฿ {{ $sent }}</strong></td>
                         </tr>
                         <tr>
                             <td><strong>ยอดรวมทั้งสิ้น</strong></td>
-                            <td align="right"><strong>฿ {{ number_format($price_total_sent,2) }}</strong>
+                            <td align="right"><strong id="price_total">฿ {{ $price_total_sent }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td><strong>คะแนนที่ได้รับ</strong></td>
-                            <td align="right"><strong class="text-success">{{ $pv_total }} PV</strong></td>
+                            <td align="right"><strong class="text-success" id="pv">{{ $pv_total }} PV</strong></td>
                         </tr>
 
 
                     </table>
                     <div class="row" align="center">
-
                         <button class="btn btn-success btn-block" type="">ชำระเงิน</button>
                     </div>
 
@@ -125,8 +123,8 @@
 </div>
 
 <form action="" method="POST" id="cart_delete">
-@csrf
-<input type="hidden" id="data_id" name="data_id">
+    @csrf
+    <input type="hidden" id="data_id" name="data_id">
 </form>
 
 <!-- End Contact Info area-->
@@ -161,7 +159,7 @@
           if (result.isConfirmed) {
             $( "#cart_delete" ).attr('action',url);
             $('#data_id').val(item_id);
-                    $( "#cart_delete" ).submit();
+            $( "#cart_delete" ).submit();
             // Swal.fire(
             //   'Deleted!',
             //   'Your file has been deleted.',
@@ -172,15 +170,21 @@
     })
   }
 
-  function delete_item(item_id){
-    alert(item_id);
+  function quantity_change(item_id){ 
+    var qty = $('#quantity_'+item_id).val();
+
     $.ajax({
-        url: '/path/to/file',
-        type: 'GET',
-        dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-        data: {item_id: 'item_id'},
+        url: '{{ route('edit_item') }}',
+        type: 'POST',
+        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty},
     })
-    .done(function() {
+    .done(function(data) {
+        $('#price').html('$ '+data['price_total']);
+        $('#price').html('$ '+data['price_total']);
+        $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
+        $('#price_total').html('$ '+data['price_total_sent']);
+        $('#pv').html(data['pv_total']+' PV');
+        console.log(data); 
         console.log("success");
     })
     .fail(function() {

@@ -80,6 +80,7 @@ Route::get('product-detail/{id?}','Frontend\ProductController@product_detail')->
 
 Route::get('cart','Frontend\CartController@index')->name('cart');
 Route::post('cart_delete','Frontend\CartController@cart_delete')->name('cart_delete');
+Route::post('edit_item','Frontend\CartController@edit_item')->name('edit_item');
 
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
