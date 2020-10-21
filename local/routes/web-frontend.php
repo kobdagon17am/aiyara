@@ -20,7 +20,7 @@ Route::get('/', function () {
     return redirect('home');
   }else{
      
-    return view('frontend\member_login');
+    return view('frontend/member_login');
 
   }
 }); 
