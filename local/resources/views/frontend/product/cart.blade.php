@@ -1,12 +1,12 @@
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
-{{--  <style type="text/css" media="screen">
+ <style type="text/css" media="screen">
      table td[class*=col-], table th[class*=col-] {
         position: static !important;
         display: table-cell !important;
         float: none !important;
     }   
-</style> --}}
+</style>
 @endsection
 @section('conten')
 
