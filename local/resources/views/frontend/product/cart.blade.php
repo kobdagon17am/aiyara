@@ -102,7 +102,10 @@
 
                     </table>
                     <div class="row" align="center">
-                        <button class="btn btn-success btn-block" type="">ชำระเงิน</button>
+                        @if($quantity > 0)
+                        <a href="{{ route('cart_payment') }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                        @endif
+                        
                     </div>
 
                 </div>
@@ -114,14 +117,9 @@
             </div>
             <!-- end of card-footer -->
         </div>
-        </div
+        </div>
     </div>
-</div>
-</div>
-<!-- Shopping cart start -->
-</div>
-</div>
-
+  
 <form action="" method="POST" id="cart_delete">
     @csrf
     <input type="hidden" id="data_id" name="data_id">
