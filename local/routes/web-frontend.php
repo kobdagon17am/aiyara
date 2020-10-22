@@ -13,20 +13,24 @@
 // Route::get('register', function() { 
 //    return view('errors.404');
 //  });
- 
+ //Clear Config cache:
+Route::get('/config-cache', function() {
+    $exitCode = Artisan::call('config:cache');
+    return '<h1>Clear Config cleared</h1>';
+});
+
 Route::get('/', function () {
 
-  if(session('id')){
+  // if(session('id')){
+  if(Auth::guard('c_user')->check()){
     return redirect('home');
   }else{
-     
     return view('frontend/member_login');
-
   }
 }); 
 
 Route::get('login', function () {
-  if(session('id')){
+  if(Auth::guard('c_user')->check()){
     return redirect('home');
   }else{
     return view('frontend/member_login');
@@ -35,7 +39,8 @@ Route::get('login', function () {
 });
 
 Route::get('logout', function () {
-  Session::flush();
+  Auth::guard('c_user')->logout();
+  //Session::flush();
   return redirect('login');
 })->name('logout');
 
@@ -50,7 +55,11 @@ Route::post('under_b','Frontend\HomeController@under_b')->name('under_b');
 Route::post('under_c','Frontend\HomeController@under_c')->name('under_c');
 
 Route::get('profile','Frontend\ProfileController@index')->name('profile');
+Route::get('profile_img','Frontend\ProfileController@profile_img')->name('profile_img');
+ 
+
 Route::get('edit_profile','Frontend\ProfileController@edit_profile')->name('edit_profile');
+Route::post('update_img_profile','Frontend\ProfileController@update_img_profile')->name('update_img_profile');
 Route::post('update_profile','Frontend\ProfileController@update_profile')->name('update_profile');
 //------------------------------end-------------------------------//
 

@@ -9,7 +9,7 @@
 		<h5 class="m-b-10">ลำดับสายงาน</h5> 
 		<div class="card-header" style="padding: 0px">
 			<a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
-			@if($data['lv1']->id == Session('id'))
+			@if($data['lv1']->id == Auth::guard('c_user')->user()->id)
 			<button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
 				<i class="fa fa-sort-up"></i> <b>Up one step</b></button>
 				@else
@@ -77,7 +77,7 @@
 				<div class="col-lg-4"> 
 					<div class="card widget-statstic-card borderless-card">
 						<div class="card-block">
-							@if($data['lv1']->id == Session('id'))
+							@if($data['lv1']->id == Auth::guard('c_user')->user()->id)
 							<i class="fa fa-group st-icon bg-success"></i>
 							@else
 							<i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>

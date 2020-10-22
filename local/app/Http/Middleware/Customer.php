@@ -17,8 +17,9 @@ class Customer
      */
     public function handle($request, Closure $next)
     {
+       // if(session('id')){
 
-       if(session('id')){
+    if(Auth::guard('c_user')->check()){
         return $next($request);
 
     }else{

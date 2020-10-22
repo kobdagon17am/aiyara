@@ -55,6 +55,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+         'c_user' => [
+            'driver' => 'session',
+            'provider' => 'c_users',
+        ],
     ],
 
     /*
@@ -82,6 +87,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\Auth\User::class,
+        ],
+
+           'c_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\CustomerUSer\CUser::class,
         ],
 
         // 'users' => [

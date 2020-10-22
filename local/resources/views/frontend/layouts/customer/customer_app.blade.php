@@ -118,85 +118,92 @@
 
 							<li class="user-profile header-notification">
 								<a href="#!">
-									<img src="{{asset('frontend/assets/images/avatar-4.jpg')}}" class="img-radius" alt="User-Profile-Image">
-									<span>John Doe</span>
+									@if(Auth::guard('c_user')->user()->profile_img)
+
+									<img class="img-radius" width="100" src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" alt="User-Profile-Image">
+									@else
+
+									<img class="img-radius" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+									@endif
+
+									<span>{{ Auth::guard('c_user')->user()->first_name }}</span>
 									<i class="ti-angle-down"></i>
 								</a>
 								<ul class="show-notification profile-notification">
 									<li>
-										<a href="{{route('profile')}}">
-											<i class="ti-settings"></i> แก้ไขข้อมูลส่วนตัว
+										<a href="{{route('profile_img')}}">
+											<i class="fa fa-image"></i> อัพโหลดรูปโปรไฟล์
 										</a>
 									</li>
-<!--                                     <li>
-                                        <a href="{{route('home')}}" class="ti-user"> ข้อมูลส่วนตัว</a>
+									<li>
+										<a href="{{route('home')}}"><i class="fa fa-paper-plane-o"></i> แก้ไขที่อยู่การจัดส่ง </a>
 
-                                    </li> -->
+									</li>
 
-                           <!--          <li>
+                       {{--    <li>
                                         <a href="email-inbox.html">
                                             <i class="ti-email"></i> My Messages
                                         </a>
-                                    </li>
-                                -->
-                                <li>
-                                	<a href="{{route('logout')}}">
-                                		<i class="ti-layout-sidebar-left"></i> Logout
-                                	</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                                    </li> --}}
 
-        <!-- Sidebar inner chat start-->
-        <div class="showChat_inner">
-        	<div class="media chat-inner-header">
-        		<a class="back_chatBox">
-        			<i class="fa fa-chevron-left"></i> Josephin Doe
-        		</a>
-        	</div>
-        	<div class="media chat-messages">
-        		<a class="media-left photo-table" href="#!">
-        			<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
-        		</a>
-        		<div class="media-body chat-menu-content">
-        			<div class="">
-        				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-        				<p class="chat-time">8:20 a.m.</p>
-        			</div>
-        		</div>
-        	</div>
-        	<div class="media chat-messages">
-        		<div class="media-body chat-menu-reply">
-        			<div class="">
-        				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-        				<p class="chat-time">8:20 a.m.</p>
-        			</div>
-        		</div>
-        		<div class="media-right photo-table">
-        			<a href="#!">
-        				<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-4.jpg')}}" alt="Generic placeholder image">
-        			</a>
-        		</div>
-        	</div>
-        	<div class="chat-reply-box p-b-20">
-        		<div class="right-icon-control">
-        			<input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-        			<div class="form-icon">
-        				<i class="fa fa-paper-plane"></i>
-        			</div>
-        		</div>
-        	</div>
-        </div>
-        <!-- Sidebar inner chat end-->
-        <div class="pcoded-main-container">
-        	<div class="pcoded-wrapper">
-        		<nav class="pcoded-navbar">
-        			<div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
-        			<div class="pcoded-inner-navbar main-menu">
+                                    <li>
+                                    	<a href="{{route('logout')}}">
+                                    		<i class="ti-layout-sidebar-left"></i> Logout
+                                    	</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar inner chat start-->
+            <div class="showChat_inner">
+            	<div class="media chat-inner-header">
+            		<a class="back_chatBox">
+            			<i class="fa fa-chevron-left"></i> Josephin Doe
+            		</a>
+            	</div>
+            	<div class="media chat-messages">
+            		<a class="media-left photo-table" href="#!">
+            			<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
+            		</a>
+            		<div class="media-body chat-menu-content">
+            			<div class="">
+            				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+            				<p class="chat-time">8:20 a.m.</p>
+            			</div>
+            		</div>
+            	</div>
+            	<div class="media chat-messages">
+            		<div class="media-body chat-menu-reply">
+            			<div class="">
+            				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+            				<p class="chat-time">8:20 a.m.</p>
+            			</div>
+            		</div>
+            		<div class="media-right photo-table">
+            			<a href="#!">
+            				<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-4.jpg')}}" alt="Generic placeholder image">
+            			</a>
+            		</div>
+            	</div>
+            	<div class="chat-reply-box p-b-20">
+            		<div class="right-icon-control">
+            			<input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
+            			<div class="form-icon">
+            				<i class="fa fa-paper-plane"></i>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <!-- Sidebar inner chat end-->
+            <div class="pcoded-main-container">
+            	<div class="pcoded-wrapper">
+            		<nav class="pcoded-navbar">
+            			<div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+            			<div class="pcoded-inner-navbar main-menu">
 <!-- 
 	<div class="pcoded-navigation-label">สมาชิก</div> -->
 

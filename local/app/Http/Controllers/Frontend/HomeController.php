@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\Frontend\LineModel;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 //use App\Http\Controllers\Session;
 class HomeController extends Controller
 {
@@ -19,11 +20,11 @@ class HomeController extends Controller
   }
   
   public function index(Request $request){
+  
   	if($request->id){
   		$id = $request->id; 
-      //dd($request->id);
   	}else{
-  		$id = Session('id'); 
+  		$id = Auth::guard('c_user')->user()->id; 
   	}
   	
   	$data = LineModel::line_all($id);
