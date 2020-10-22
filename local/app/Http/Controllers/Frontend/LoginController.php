@@ -10,7 +10,7 @@ use Session;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
-use App\Models\CustomerUSer\CUser;
+use App\Models\Frontend\CUser;
 //use App\Http\Controllers\Session;
 class LoginController extends Controller
 {

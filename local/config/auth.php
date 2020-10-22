@@ -91,7 +91,7 @@ return [
 
            'c_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\CustomerUSer\CUser::class,
+            'model' => App\Models\Frontend\CUser::class,
         ],
 
         // 'users' => [
