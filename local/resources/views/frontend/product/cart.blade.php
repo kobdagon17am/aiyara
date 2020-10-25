@@ -18,7 +18,7 @@
                 <div class="row">
 
                     <div class="col-md-8 col-sx-8">
-                        <h4>Shopping Cart</h4>
+                        <h4>รายการสั่งซื้อ</h4>
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
                         <a href="{{route('product-list')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
@@ -41,12 +41,12 @@
                                         <th>Pv</th>
                                         <th>Action</th>
                                     </tr>
-                                </thead>
+                                </thead> 
                                 <tbody>
                                     @foreach($data as $value)
 
                                     <tr id="items">
-                                        <td class="text-center"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid img-70" alt="tbl">
+                                        <td class="text-center"><a href="{{ route('product-detail',['id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>

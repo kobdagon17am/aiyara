@@ -56,15 +56,14 @@ Route::post('under_c','Frontend\HomeController@under_c')->name('under_c');
 
 Route::get('profile','Frontend\ProfileController@index')->name('profile');
 Route::get('profile_img','Frontend\ProfileController@profile_img')->name('profile_img');
- 
+
+Route::get('profile_address','Frontend\ProfileController@profile_address')->name('profile_address');
+Route::post('profile_address','Frontend\ProfileController@profile_address')->name('profile_address');
 
 Route::get('edit_profile','Frontend\ProfileController@edit_profile')->name('edit_profile');
 Route::post('update_img_profile','Frontend\ProfileController@update_img_profile')->name('update_img_profile');
-Route::post('update_profile','Frontend\ProfileController@update_profile')->name('update_profile');
+Route::post('edit_address','Frontend\ProfileController@edit_address')->name('edit_address');
 //------------------------------end-------------------------------//
-
-
-
 
 Route::get('/cademy/addnew_category', function () {
   return view('frontend/product/product-addcategory');

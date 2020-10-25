@@ -28,52 +28,46 @@
             <div class="port_details_all_img row">
               <div class="col-lg-12 m-b-15">
                 <div id="big_banner">
+
+                  @if($product->image01)
                   <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-1.jpg')}}" alt="Big_ Details">
+                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
                   </div>
+                  @endif
+                  @if($product->image02)
                   <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-2.jpg')}}" alt="Big_ Details">
+                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
                   </div>
+                  @endif
+                  @if($product->image03)
                   <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-3.jpg')}}" alt="Big_ Details">
+                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
                   </div>
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-4.jpg')}}" alt="Big_ Details">
-                  </div>
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-5.jpg')}}" alt="Big_ Details">
-                  </div>
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-6.jpg')}}" alt="Big_ Details">
-                  </div>
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-l-7.jpg')}}" alt="Big_ Details">
-                  </div>
+                  @endif
+
+
                 </div>
               </div>
               <div class="col-lg-12 product-right">
                 <div id="small_banner">
+
+                   @if($product->image01)
                   <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-1.jpg')}}" alt="small-details">
+                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
                   </div>
+                  @endif
+                  @if($product->image02)
                   <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-2.jpg')}}" alt="small-details">
+                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
                   </div>
+                  @endif
+                  @if($product->image03)
                   <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-3.jpg')}}" alt="small-details">
+                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
                   </div>
-                  <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-4.jpg')}}" alt="small-details">
-                  </div>
-                  <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-5.jpg')}}" alt="small-details">
-                  </div>
-                  <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-6.jpg')}}" alt="small-details">
-                  </div>
-                  <div>
-                    <img class="img img-fluid" src="{{asset('frontend/assets/images/product-detail/pro-d-s-7.jpg')}}" alt="small-details">
-                  </div>
+                  @endif
+
+ 
                 </div>
               </div>
             </div>
@@ -88,10 +82,10 @@
                 <div class="col-lg-12">
 
 
-                  <h4 class="pro-desc">{{$data['product']->product_name}}</h4>
+                  <h4 class="pro-desc">{{$product->product_name}}</h4>
                 </div>
                 <div class="col-lg-12">
-                  <span class="txt-muted"> {{$data['product']->title}} </span>    <p></p>
+                  <span class="txt-muted"> {{$product->title}} </span>    <p></p>
 
                 </div>
             <!--     <div class="stars stars-example-css m-t-15 detail-stars col-lg-12">
@@ -104,9 +98,9 @@
                   </select>
                 </div> -->
                 <div class="col-lg-12">
-                  <h4>฿{{number_format($data['product']->price,2)}} <b style="color:#00c454">[{{$data['product']->pv}} PV]</b></h4>
+                  <h4>฿{{number_format($product->price,2)}} <b style="color:#00c454">[{{$product->pv}} PV]</b></h4>
                   <hr>
-                  <p>{!! $data['product']->product_detail !!}</p>
+                  <p>{!! $product->product_detail !!}</p>
                   
                   <hr>
 
@@ -133,7 +127,7 @@
 
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-6">
-                 <button type="button" onclick="addcart({{$data['product']->id}})" class="btn btn-primary waves-effect waves-light" style="margin-top: -2px">
+                 <button type="button" onclick="addcart({{$product->id}})" class="btn btn-primary waves-effect waves-light" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
               </div>
@@ -149,9 +143,9 @@
     <div class="row">
       <div class="col-lg-12">
         <hr>
-        <h2>{{$data['product']->product_name}}</h2>
-        <p>{{$data['product']->title}}</p>
-        <p>{!! $data['product']->product_detail !!}</p>
+        <h2>{{$product->product_name}}</h2>
+        <p>{{$product->title}}</p>
+        <p>{!! $product->product_detail !!}</p>
         
       </div>
       
@@ -174,29 +168,29 @@
 <!-- product detail js -->
 <script  src="{{asset('frontend/assets/pages/product-detail/product-detail.js')}}"></script>
 <script type="text/javascript">
-    function addcart(id) { 
-      <?php $img = $data['product']->img_url.''.$data['product']->image01; ?>
-      var quantity = $('#quant').val();
-      var name = '{{$data['product']->product_name}}';
-      var price = {{$data['product']->price}};
-      var pv = {{$data['product']->pv}};
-      var img = '{{$img}}';
-      var title = '{{$data['product']->title}}';
-      var promotion = 'code promotion';
-            $.ajax({
-            url: '{{ route('add_cart') }}',
-            type: 'get',
+  function addcart(id) { 
+    <?php $img = $product->img_url.''.$product->image01; ?>
+    var quantity = $('#quant').val();
+    var name = '{{$product->product_name}}';
+    var price = {{$product->price}};
+    var pv = {{$product->pv}};
+    var img = '{{$img}}';
+    var title = '{{$product->title}}';
+    var promotion = 'code promotion';
+    $.ajax({
+      url: '{{ route('add_cart') }}',
+      type: 'get',
             // dataType: 'json',
             data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion},
-        })
-        .done(function(data) {
-           date = $('#count_cart').html(data);
+          })
+    .done(function(data) {
+     date = $('#count_cart').html(data);
           //console.log(data);
         })
-        .fail(function() {
-          console.log("error");
-        });
-    }
+    .fail(function() {
+      console.log("error");
+    });
+  }
 </script>
 @endsection
 

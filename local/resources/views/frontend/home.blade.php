@@ -83,92 +83,99 @@
 							<i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
 							@endif
 							<div class="usre-image">
-								<a data-toggle="modal" data-target="#lv1"><img src="frontend/assets/images/avatar-4.jpg" class="img-radius zoom" alt="User-Profile-Image"></a>
-							</div>
-							<h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
-							<p class="text-muted">{{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }}</p>
-						</div>
-					</div>
-				</div>
+                                @if($data['lv1']->profile_img)
+                                <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
+                                </a>
+                                @else
+                                <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                                </a>
+                                @endif
 
-				<div class="modal fade" id="lv1" tabindex="-1" role="dialog">
-					<div class="modal-dialog modal-md" role="document">
-						<div class="modal-content">
-							<div class="modal-header bg-c-green">
-								<h4 class="modal-title" style="color: #FFFF">รหัสสมาชิก : {{$data['lv1']->user_name}}</h4>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
+                            </div>
+                            <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
+                            <p class="text-muted">{{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }}</p>
+                        </div>
+                    </div>
+                </div>
 
-							<div class="modal-body text-left">
-								<div class="table-responsive">
-									<table class="table">
-										<tbody>
-											<tr class="table-success">
-												<td><strong>วันที่สมัคร </strong></td>
-												<td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td><strong>สั่งซื้อครั้งแรก </strong></td>
-												<td> [ยังไม่มีข้อมูล] </td>
-												<td></td>
-											</tr>
-											<tr class="table-success">
-												<td><strong>คะแนนส่วนตัว:</strong></td> 
-												<td>{{ $data['lv1']->pv_point }} PV</td>
-												<td>[Exclusive ????]</td>
+                <div class="modal fade" id="lv1" tabindex="-1" role="dialog">
+                   <div class="modal-dialog modal-md" role="document">
+                      <div class="modal-content">
+                         <div class="modal-header bg-c-green">
+                            <h4 class="modal-title" style="color: #FFFF">รหัสสมาชิก : {{$data['lv1']->user_name}}</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                       </div>
 
-											</tr>
-											<tr>
-												<td><strong>Active ถึง</strong></td>
-												<td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-												<td>[เหลือ 0 pv ???]</td>
-											</tr>
-											<tr class="table-success">
-												<td><strong>คุณวุฒิสูงสุด</strong></td>
-												<td>BRONZE STAR AWARD (BSA)</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td><strong>สิทธิ Reward Bonus</strong></td>
-												<td></td>
-												<td></td>
-											</tr>
-											<tr class="table-success">
-												<td><strong>นับคุณวุฒิจาก</strong></td>
-												<td>2020-05-01 ถึง 2020-05-31</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td><strong>ทีมกลางคือทีม</strong></td>
-												<td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-												<td></td> 
-											</tr>
+                       <div class="modal-body text-left">
+                        <div class="table-responsive">
+                           <table class="table">
+                              <tbody>
+                                 <tr class="table-success">
+                                    <td><strong>วันที่สมัคร </strong></td>
+                                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>สั่งซื้อครั้งแรก </strong></td>
+                                    <td> [ยังไม่มีข้อมูล] </td>
+                                    <td></td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>คะแนนส่วนตัว:</strong></td> 
+                                    <td>{{ $data['lv1']->pv_point }} PV</td>
+                                    <td>[Exclusive ????]</td>
 
-										</tbody>
-									</table>
-								</div>
-								<div class="b-t-default transection-footer row">
-									<div class="col-6  b-r-default">
-										<strong>คะแนนคงเหลือยกมา</strong><br>
-										[ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-									</div>
-									<div class="col-6">
-										<strong>คะแนนวันนี้</strong><br>
-										[ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
-							<!-- <button type="button"  onclick="event.preventDefault();
+                                </tr>
+                                <tr>
+                                    <td><strong>Active ถึง</strong></td>
+                                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
+                                    <td>[เหลือ 0 pv ???]</td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>คุณวุฒิสูงสุด</strong></td>
+                                    <td>BRONZE STAR AWARD (BSA)</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>สิทธิ Reward Bonus</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>นับคุณวุฒิจาก</strong></td>
+                                    <td>2020-05-01 ถึง 2020-05-31</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ทีมกลางคือทีม</strong></td>
+                                    <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
+                                    <td></td> 
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="b-t-default transection-footer row">
+                       <div class="col-6  b-r-default">
+                          <strong>คะแนนคงเหลือยกมา</strong><br>
+                          [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
+                      </div>
+                      <div class="col-6">
+                          <strong>คะแนนวันนี้</strong><br>
+                          [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
+							{{-- <button type="button"  onclick="event.preventDefault();
 							document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
 							<form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
 								<input type="hidden" name="id" value="{{$data['lv1']->id}}">
 								@csrf
-							</form> -->
+							</form> --}}
 						</div>
 					</div>
 				</div>
@@ -221,311 +228,329 @@
 
                 	?>
 
+
                 	@if($data_lv2)
                 	<div class="col-lg-4">
                 		<div class="card widget-statstic-card borderless-card">
                 			<div class="card-block">
                 				<i class="st-icon bg-primary" style="padding: 34px 43px 12px 28px"><b>{{$line_lv2}}</b></i>
                 				<div class="usre-image">
-                					<a data-toggle="modal" data-target="#{{$model_lv2}}"><img src="frontend/assets/images/avatar-4.jpg" class="img-radius zoom" alt="User-Profile-Image"></a>
-                				</div>
 
-                				<div class="modal fade" id="{{$model_lv2}}" tabindex="-1" role="dialog">
-                					<div class="modal-dialog modal-md" role="document">
-                						<div class="modal-content">
-                							<div class="modal-header bg-c-green">
-                								<h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv2}} รหัสสมาชิก : {{$data_lv2->user_name}}</h4>
-                								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                									<span aria-hidden="true">&times;</span>
-                								</button>
-                							</div>
+                                  @if($data_lv2->profile_img)
+                                  <a data-toggle="modal" data-target="#{{$model_lv2}}"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data_lv2->profile_img)}}" alt="User-Profile-Image">
+                                  </a>
+                                  @else
+                                  <a data-toggle="modal" data-target="#{{$model_lv2}}"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                                  </a>
+                                  @endif
+                              </div>
 
-                							<div class="modal-body text-left">
-                								<div class="table-responsive">
-                									<table class="table">
-                										<tbody>
-                											<tr class="table-success">
-                												<td><strong>Upline </strong></td>
-                												<td>{{$data['lv1']->user_name}} Sponsor : ???</td>
-                												<td>Sponsor : ???</td>
-                											</tr>
-
-                											<tr>
-                												<td><strong>วันที่สมัคร </strong></td>
-                												<td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
-                												<td></td>
-                											</tr>
-                											<tr class="table-success">
-                												<td><strong>สั่งซื้อครั้งแรก </strong></td>
-                												<td> [ยังไม่มีข้อมูล] </td>
-                												<td></td>
-                											</tr>
-                											<tr>
-                												<td><strong>คะแนนส่วนตัว:</strong></td> 
-                												<td>{{ $data['lv1']->pv_point }} PV</td>
-                												<td>[Exclusive ????]</td>
-
-                											</tr>
-                											<tr class="table-success">
-                												<td><strong>Active ถึง</strong></td>
-                												<td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
-                												<td>[เหลือ 0 pv ???]</td>
-                											</tr>
-                											<tr>
-                												<td><strong>คุณวุฒิสูงสุด</strong></td>
-                												<td>BRONZE STAR AWARD (BSA)</td>
-                												<td></td>
-                											</tr>
-                											<tr class="table-success">
-                												<td><strong>สิทธิ Reward Bonus</strong></td>
-                												<td></td>
-                												<td></td>
-                											</tr>
-                											<tr>
-                												<td><strong>นับคุณวุฒิจาก</strong></td>
-                												<td>2020-05-01 ถึง 2020-05-31</td>
-                												<td></td>
-                											</tr>
-                											<tr class="table-success">
-                												<td><strong>ทีมกลางคือทีม</strong></td>
-                												<td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                												<td></td> 
-                											</tr>
-
-                										</tbody>
-                									</table>
-                								</div>
-                								<div class="b-t-default transection-footer row">
-                									<div class="col-6  b-r-default">
-                										<strong>คะแนนคงเหลือยกมา</strong><br>
-                										[ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-                									</div>
-                									<div class="col-6">
-                										<strong>คะแนนวันนี้</strong><br>
-                										[ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-                									</div>
-                								</div>
-                							</div>
-                							<div class="modal-footer">
-                								<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                								<button type="button"  onclick="event.preventDefault();
-                								document.getElementById('{{$data_lv2->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-                								<form id="{{$data_lv2->id}}" action="{{route('home')}}" method="POST" style="display: none;">
-                									<input type="hidden" name="id" value="{{$data_lv2->id}}">
-                									@csrf
-                								</form>
-                							</div>
-                						</div>
-                					</div>
-                				</div>
-
-                				<h6 class="f-w-600 m-t-15 m-b-10">สาย {{$line_lv2}} : {{$data_lv2->user_name}} </h6>
-                				<p class="text-muted m-t-15">{{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }}</p>
-
-
-                				<hr>
-                				<div class="row ml-auto">
-                					@for($j=1;$j<=3;$j++)
-                					<?php
-                					if($j==1){
-                						$data_lv3 =$data['lv3_'.$type.'_a'];
-                						$model_lv3 = 'lv3_'.$type.'_a';
-                						$line_lv3 = 'A';
-                					}elseif($j==2){
-                						$data_lv3 =$data['lv3_'.$type.'_b'];
-                						$model_lv3 = 'lv3_'.$type.'_b';
-                						$line_lv3 = 'B';
-                					}elseif($j==3){
-                						$data_lv3 =$data['lv3_'.$type.'_c'];
-                						$model_lv3 = 'lv3_'.$type.'_c';
-                						$line_lv3 = 'C';
-                					}else{
-                						$data_lv3 = null;
-                						$model_lv3 = null;
-                						$line_lv3 = null; 
-                					}
-
-                					?>
-                					@if($data_lv3)
-
-
-                					<div class="col-auto col-sm-4 text-center">
-                						<a data-toggle="modal" data-target="#{{$model_lv3}}"><img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-70 zoom"></a>
-                						<h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
-                						<!-- <p class="text-muted m-b-0"><small>{{ $data['lv1']->pv_point }} PV</small></p> -->
-                					</div>
-
-
-
-                					<div class="modal fade" id="{{$model_lv3}}" tabindex="-1" role="dialog">
-                						<div class="modal-dialog modal-md" role="document">
-                							<div class="modal-content">
-                								<div class="modal-header bg-c-green">
-                									<h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv3}} รหัสสมาชิก : {{$data_lv3->user_name}}</h4>
-                									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                										<span aria-hidden="true">&times;</span>
-                									</button>
-                								</div>
-
-                								<div class="modal-body text-left">
-                									<div class="table-responsive">
-                										<table class="table">
-                											<tbody>
-                												<tr class="table-success">
-                													<td><strong>Upline </strong></td>
-                													<td>{{$data_lv2->user_name}}</td>
-                													<td>Sponsor : ???</td>
-                												</tr>
-
-                												<tr>
-                													<td><strong>วันที่สมัคร </strong></td>
-                													<td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
-                													<td></td>
-                												</tr>
-                												<tr class="table-success">
-                													<td><strong>สั่งซื้อครั้งแรก </strong></td>
-                													<td> [ยังไม่มีข้อมูล] </td>
-                													<td></td>
-                												</tr>
-                												<tr>
-                													<td><strong>คะแนนส่วนตัว:</strong></td> 
-                													<td>{{ $data_lv3->pv_point }} PV</td>
-                													<td>[Exclusive ????]</td>
-
-                												</tr>
-                												<tr class="table-success">
-                													<td><strong>Active ถึง</strong></td>
-                													<td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
-                													<td>[เหลือ 0 pv ???]</td>
-                												</tr>
-                												<tr>
-                													<td><strong>คุณวุฒิสูงสุด</strong></td>
-                													<td>BRONZE STAR AWARD (BSA)</td>
-                													<td></td>
-                												</tr>
-                												<tr class="table-success">
-                													<td><strong>สิทธิ Reward Bonus</strong></td>
-                													<td></td>
-                													<td></td>
-                												</tr>
-                												<tr>
-                													<td><strong>นับคุณวุฒิจาก</strong></td>
-                													<td>2020-05-01 ถึง 2020-05-31</td>
-                													<td></td>
-                												</tr>
-                												<tr class="table-success">
-                													<td><strong>ทีมกลางคือทีม</strong></td>
-                													<td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                													<td></td> 
-                												</tr>
-
-                											</tbody>
-                										</table>
-                									</div>
-                									<div class="b-t-default transection-footer row">
-                										<div class="col-6  b-r-default">
-                											<strong>คะแนนคงเหลือยกมา</strong><br>
-                											[ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-                										</div>
-                										<div class="col-6">
-                											<strong>คะแนนวันนี้</strong><br>
-                											[ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-                										</div>
-                									</div>
-                								</div>
-                								<div class="modal-footer">
-                									<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                									<button type="button"  onclick="event.preventDefault();
-                									document.getElementById('{{$data_lv3->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-                									<form id="{{$data_lv3->id}}" action="{{route('home')}}" method="POST" style="display: none;">
-                										<input type="hidden" name="id" value="{{$data_lv3->id}}">
-                										@csrf
-                									</form>
-                								</div>
-                							</div>
-                						</div>
-                					</div>
-                					@else
-
-                					@if($data_lv2)
-
-                					<div class="col-auto col-sm-4 text-center">
-                						<a href="{{route('register',['id'=>$data_lv2->id,'line_type'=>$line_lv3])}}"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-70 zoom"></a>
-                						<h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
-                						<!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
-                					</div>
-
-
-                					@else
-
-
-                					<div class="col-auto text-center">
-                						<img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-70 zoom">
-                						<h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
-                						<!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
-                					</div>
-                					@endif
-
-                					@endif 
-
-                					@endfor
-                				</div>
-
-                			</div>
-                		</div>
-                		<br>
-
-                	</div> 
-
-                	@else
-                	<div class="col-lg-4">
-                		<div class="card widget-statstic-card borderless-card">
-                			<div class="card-block">
-                				<i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
-                				<div class="text-center">
-                					<a href="{{route('register',['id'=>$data['lv1']->id,'line_type'=>$line_lv2])}}">
-                						<img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-100 zoom">
-                						<a>
-
-                						</div>
-                						<h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
-                             		<h6 class="f-w-600 m-t-15 m-b-10">Under line : {{$data['lv1']->user_name}} </h6>
-						 
-                             	<hr> 
-                             	<div class="row ml-auto">
-                             		<div class="col-auto col-sm-4 text-center">
-                             			<img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
-                             			<h6 class="m-t-15 m-b-0">สาย A </h6>
-
-                             		</div>
-                             		<div class="col-auto col-sm-4 text-center">
-                             			<img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
-                             			<h6 class="m-t-15 m-b-0">สาย B </h6>
-                             			
-                             		</div>
-                             		<div class="col-auto col-sm-4 text-center">
-                             			<img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
-                             			<h6 class="m-t-15 m-b-0">สาย C </h6>
-                             			
-                             		</div>
-                             	</div>
-                             	
-
+                              <div class="modal fade" id="{{$model_lv2}}" tabindex="-1" role="dialog">
+                                 <div class="modal-dialog modal-md" role="document">
+                                  <div class="modal-content">
+                                   <div class="modal-header bg-c-green">
+                                    <h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv2}} รหัสสมาชิก : {{$data_lv2->user_name}}</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                     <span aria-hidden="true">&times;</span>
+                                 </button>
                              </div>
-                         </div>
-                         <br>
 
-                     </div>
+                             <div class="modal-body text-left">
+                                <div class="table-responsive">
+                                 <table class="table">
+                                  <tbody>
+                                   <tr class="table-success">
+                                    <td><strong>Upline </strong></td>
+                                    <td>{{$data['lv1']->user_name}} Sponsor : ???</td>
+                                    <td>Sponsor : ???</td>
+                                </tr>
 
-                     @endif
+                                <tr>
+                                    <td><strong>วันที่สมัคร </strong></td>
+                                    <td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>สั่งซื้อครั้งแรก </strong></td>
+                                    <td> [ยังไม่มีข้อมูล] </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>คะแนนส่วนตัว:</strong></td> 
+                                    <td>{{ $data['lv1']->pv_point }} PV</td>
+                                    <td>[Exclusive ????]</td>
 
-                     @endfor
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>Active ถึง</strong></td>
+                                    <td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
+                                    <td>[เหลือ 0 pv ???]</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>คุณวุฒิสูงสุด</strong></td>
+                                    <td>BRONZE STAR AWARD (BSA)</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>สิทธิ Reward Bonus</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>นับคุณวุฒิจาก</strong></td>
+                                    <td>2020-05-01 ถึง 2020-05-31</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>ทีมกลางคือทีม</strong></td>
+                                    <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
+                                    <td></td> 
+                                </tr>
 
-                 </div>
-             </div>
-         </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="b-t-default transection-footer row">
+                     <div class="col-6  b-r-default">
+                      <strong>คะแนนคงเหลือยกมา</strong><br>
+                      [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
+                  </div>
+                  <div class="col-6">
+                      <strong>คะแนนวันนี้</strong><br>
+                      [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+            <button type="button"  onclick="event.preventDefault();
+            document.getElementById('{{$data_lv2->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
+            <form id="{{$data_lv2->id}}" action="{{route('home')}}" method="POST" style="display: none;">
+             <input type="hidden" name="id" value="{{$data_lv2->id}}">
+             @csrf
+         </form>
+     </div>
+ </div>
+</div>
+</div>
 
-         @endsection
-         @section('js')
+<h6 class="f-w-600 m-t-15 m-b-10">สาย {{$line_lv2}} : {{$data_lv2->user_name}} </h6>
+<p class="text-muted m-t-15">{{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }}</p>
 
-         @endsection
+
+<hr>
+<div class="row ml-auto">
+ @for($j=1;$j<=3;$j++)
+ <?php
+ if($j==1){
+  $data_lv3 =$data['lv3_'.$type.'_a'];
+  $model_lv3 = 'lv3_'.$type.'_a';
+  $line_lv3 = 'A';
+}elseif($j==2){
+  $data_lv3 =$data['lv3_'.$type.'_b'];
+  $model_lv3 = 'lv3_'.$type.'_b';
+  $line_lv3 = 'B';
+}elseif($j==3){
+  $data_lv3 =$data['lv3_'.$type.'_c'];
+  $model_lv3 = 'lv3_'.$type.'_c';
+  $line_lv3 = 'C';
+}else{
+  $data_lv3 = null;
+  $model_lv3 = null;
+  $line_lv3 = null; 
+}
+
+?>
+@if($data_lv3)
+
+
+<div class="col-auto col-sm-4 text-center">
+    @if($data_lv2->profile_img)
+    <a data-toggle="modal" data-target="#{{$model_lv3}}">
+        <img class="img-radius zoom" width="70" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
+    </a>
+    @else
+    <a data-toggle="modal" data-target="#{{$model_lv3}}">
+        <img class="img-radius zoom" width="70" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+    </a>
+    @endif
+
+ 
+    <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
+    <!-- <p class="text-muted m-b-0"><small>{{ $data['lv1']->pv_point }} PV</small></p> -->
+</div>
+
+
+
+<div class="modal fade" id="{{$model_lv3}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+   <div class="modal-content">
+    <div class="modal-header bg-c-green">
+     <h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv3}} รหัสสมาชิก : {{$data_lv3->user_name}}</h4>
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body text-left">
+ <div class="table-responsive">
+  <table class="table">
+   <tbody>
+    <tr class="table-success">
+     <td><strong>Upline </strong></td>
+     <td>{{$data_lv2->user_name}}</td>
+     <td>Sponsor : ???</td>
+ </tr>
+
+ <tr>
+     <td><strong>วันที่สมัคร </strong></td>
+     <td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
+     <td></td>
+ </tr>
+ <tr class="table-success">
+     <td><strong>สั่งซื้อครั้งแรก </strong></td>
+     <td> [ยังไม่มีข้อมูล] </td>
+     <td></td>
+ </tr>
+ <tr>
+     <td><strong>คะแนนส่วนตัว:</strong></td> 
+     <td>{{ $data_lv3->pv_point }} PV</td>
+     <td>[Exclusive ????]</td>
+
+ </tr>
+ <tr class="table-success">
+     <td><strong>Active ถึง</strong></td>
+     <td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
+     <td>[เหลือ 0 pv ???]</td>
+ </tr>
+ <tr>
+     <td><strong>คุณวุฒิสูงสุด</strong></td>
+     <td>BRONZE STAR AWARD (BSA)</td>
+     <td></td>
+ </tr>
+ <tr class="table-success">
+     <td><strong>สิทธิ Reward Bonus</strong></td>
+     <td></td>
+     <td></td>
+ </tr>
+ <tr>
+     <td><strong>นับคุณวุฒิจาก</strong></td>
+     <td>2020-05-01 ถึง 2020-05-31</td>
+     <td></td>
+ </tr>
+ <tr class="table-success">
+     <td><strong>ทีมกลางคือทีม</strong></td>
+     <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
+     <td></td> 
+ </tr>
+
+</tbody>
+</table>
+</div>
+<div class="b-t-default transection-footer row">
+  <div class="col-6  b-r-default">
+   <strong>คะแนนคงเหลือยกมา</strong><br>
+   [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
+</div>
+<div class="col-6">
+   <strong>คะแนนวันนี้</strong><br>
+   [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+ <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+ <button type="button"  onclick="event.preventDefault();
+ document.getElementById('{{$data_lv3->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
+ <form id="{{$data_lv3->id}}" action="{{route('home')}}" method="POST" style="display: none;">
+  <input type="hidden" name="id" value="{{$data_lv3->id}}">
+  @csrf
+</form>
+</div>
+</div>
+</div>
+</div>
+@else
+
+@if($data_lv2)
+
+<div class="col-auto col-sm-4 text-center">
+  <a href="{{route('register',['id'=>$data_lv2->id,'line_type'=>$line_lv3])}}"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-70 zoom"></a>
+  <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
+  <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
+</div>
+
+
+@else
+
+
+<div class="col-auto text-center">
+  <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-70 zoom">
+  <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
+  <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
+</div>
+@endif
+
+@endif 
+
+@endfor
+</div>
+
+</div>
+</div>
+<br>
+
+</div> 
+
+@else
+<div class="col-lg-4">
+  <div class="card widget-statstic-card borderless-card">
+   <div class="card-block">
+    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
+    <div class="text-center">
+     <a href="{{route('register',['id'=>$data['lv1']->id,'line_type'=>$line_lv2])}}">
+      <img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-100 zoom">
+      <a>
+
+      </div>
+      <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
+      <h6 class="f-w-600 m-t-15 m-b-10">Under line : {{$data['lv1']->user_name}} </h6>
+
+      <hr> 
+      <div class="row ml-auto">
+         <div class="col-auto col-sm-4 text-center">
+            <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
+            <h6 class="m-t-15 m-b-0">สาย A </h6>
+
+        </div>
+        <div class="col-auto col-sm-4 text-center">
+            <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
+            <h6 class="m-t-15 m-b-0">สาย B </h6>
+
+        </div>
+        <div class="col-auto col-sm-4 text-center">
+            <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">
+            <h6 class="m-t-15 m-b-0">สาย C </h6>
+
+        </div>
+    </div>
+
+
+</div>
+</div>
+<br>
+
+</div>
+
+@endif
+
+@endfor
+
+</div>
+</div>
+</div>
+
+@endsection
+@section('js')
+
+@endsection

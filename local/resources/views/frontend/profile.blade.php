@@ -27,7 +27,7 @@
                 <h4 class="sub-title"><i class="fa fa-user"></i> ข้อมูลส่วนตัว</h4>
             </div>
             <div class="card-block">
-               <form action="{{route('update_profile')}}" method="POST" enctype="multipart/form-data" id="addemployee">
+               <form action="" method="POST" enctype="multipart/form-data" id="addemployee">
                 @csrf
                 <div class="modal-body">
                    

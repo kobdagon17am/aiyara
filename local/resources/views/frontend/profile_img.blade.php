@@ -2,10 +2,7 @@
 @section('conten')
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/croppie.css')}}">
-
 @endsection
-
-
 <div class="row simple-cards users-card">
     <div class="col-md-5 col-xl-5">
      <form action="{{route('update_img_profile')}}" method="POST" enctype="multipart/form-data" id="addemployee">

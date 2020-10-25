@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
+use Auth;
 
 class CartPaymentController extends Controller
 {
@@ -39,9 +40,13 @@ class CartPaymentController extends Controller
 			'status'=>'success'
 		);
 
-		return view('frontend/product/cart_payment',$bill);
+		$customer = DB::table('customers_detail')
+		->where('customer_id','=',Auth::guard('c_user')->user()->id)
+		->first();
+
+		return view('frontend/product/cart_payment',compact('customer'),$bill);
 
 	}
 
-	 
+
 }

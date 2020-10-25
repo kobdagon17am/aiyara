@@ -65,12 +65,11 @@ class ProductController extends Controller
             ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
-            ->limit('1')
             ->orderby('products.id')
-            ->get();
-            $data = ['product' => $product[0]];
+            ->first();
+           
 
-            return view('frontend/product/product-detail', compact('data'));
+            return view('frontend/product/product-detail', compact('product'));
         }
     }
 

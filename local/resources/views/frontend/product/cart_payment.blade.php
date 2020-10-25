@@ -2,14 +2,13 @@
  @section('css')
  @endsection
  @section('conten')
-
  <div class="row">
  	<div class="col-md-8 col-sm-12">
  		<div class="card card-border-success">
- 			<div class="card-header">
+ 		{{-- <div class="card-header">
  				<h5>Form Basic Wizard</h5>
  				<span>Add class of <code>.form-control</code> with <code>&lt;input&gt;</code> tag</span>
- 			</div>
+ 			</div> --}}
  			<div class="card-block">
  				<div class="row">
  					<div class="col-md-12">
@@ -19,64 +18,69 @@
  									<h3> ที่อยู่จัดส่งสินค้า </h3>
  									<fieldset>
  										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="userName-2" class="block">User name *</label>
+ 											<div class="col-sm-4">
+ 												<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
  											</div>
- 											<div class="col-sm-12">
- 												<input id="userName-2a" name="userName" type="text" class=" form-control">
+
+ 											<div class="col-sm-4">
+ 												<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
  											</div>
+
+ 											<div class="col-sm-4">
+ 												<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
+ 											</div>
+
+ 											
+ 										</div>
+
+ 										<div class="form-group row">
+ 											<div class="col-sm-4">
+ 												<label>ตรอก/ซอย </label>
+ 												<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
+ 											</div>
+
+ 											<div class="col-sm-4">
+ 												<label>เขต/อำเภอ <b class="text-danger">*</b></label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
+ 											</div>
+ 											<div class="col-sm-4">
+ 												<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
+ 											</div>
+ 											
+ 										</div>
+
+ 										<div class="form-group row">
+ 											<div class="col-sm-4">
+ 												<label>ถนน</label>
+ 												<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 											</div>
+
+ 											<div class="col-sm-4">
+ 												<label>จังหวัด <b class="text-danger">*</b></label>
+ 												<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
+ 											</div>
+
+ 											<div class="col-sm-4">
+ 												<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 												<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
+ 											</div>
+
  										</div>
  										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="email-2" class="block">Email *</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="email-2a" name="email" type="email" class=" form-control">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="password-2" class="block">Password *</label>
- 											</div>
- 											<div class="col-sm-8 col-lg-10">
- 												<input id="password-2a" name="password" type="password" class="form-control ">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="confirm-2" class="block">Confirm Password *</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="confirm-2a" name="confirm" type="password" class="form-control ">
+ 											<div class="col-sm-10">
+ 												{{-- <label> รายละเอียดเพิ่มเติม </label>  --}}
+ 												<textarea rows="5" cols="5" class="form-control" placeholder="รายละเอียดเพิ่มเติม"></textarea>
  											</div>
  										</div>
  									</fieldset>
  									<h3> ชำระเงิน </h3>
  									<fieldset>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="name-2" class="block">First name *</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="name-2a" name="name" type="text" class="form-control">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="surname-2" class="block">Last name *</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="surname-2a" name="surname" type="text" class="form-control">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="phone-2" class="block">Phone #</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="phone-2a" name="phone" type="number" class="form-control phone">
- 											</div>
- 										</div>
+ 								 
+ 										 
  										<div class="form-group row">
  											<div class="col-sm-12">
  												<label for="date" class="block">Date Of Birth</label>
@@ -102,22 +106,7 @@
  									</fieldset>
  									<h3> Education </h3>
  									<fieldset>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="University-2" class="block">University</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="University-2a" name="University" type="text" class="form-control required">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="Country-2" class="block">Country</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="Country-2a" name="Country" type="text" class="form-control required">
- 											</div>
- 										</div>
+ 										 
  										<div class="form-group row">
  											<div class="col-sm-12">
  												<label for="Degreelevel-2" class="block">Degree level #</label>
@@ -135,7 +124,7 @@
  											</div>
  										</div>
  									</fieldset>
- 								 
+
  								</form>
  							</section>
  						</div>
@@ -190,6 +179,9 @@
 
  	</div>
  </div>
+
+
+ 
  @endsection
  @section('js')
 
