@@ -10,7 +10,8 @@ body {
     background-color: #f3f3f3;
     font-size: 0.875em;
     overflow-x: hidden;
-    color: #222;
+    color: ;
+    color: #000;
     font-family: sukhumvitset-text,"Poppins", sans-serif;
     background-attachment: fixed;
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 20%, transparent 20%, transparent 40%, rgba(255, 255, 255, 0.15) 40%, rgba(255, 255, 255, 0.15) 60%, transparent 60%, transparent 80%, rgba(255, 255, 255, 0.15) 80%, transparent)
@@ -28,7 +29,8 @@ ul {
 
 a {
     font-size: 13px;
-    color: #222
+    color: ;
+    color: #000
 }
 
 @media only screen and (min-width: 1400px) {
@@ -318,7 +320,8 @@ h6 {
 
 .card .card-header h5 {
     margin-bottom: 0;
-    color: #222;
+    color: ;
+    color: #000;
     font-size: 14px;
     font-weight: 600;
     display: inline-block;
@@ -1363,7 +1366,8 @@ label.btn-upload {
 
 .accordion-msg {
     display: block;
-    color: #222222;
+    color: ;
+    color: #000222;
     padding: 14px 20px;
     border-top: 1px solid #ddd;
     font-weight: 600;
@@ -1381,7 +1385,8 @@ label.btn-upload {
 }
 
 .accordion-desc {
-    color: #222222;
+    color: ;
+    color: #000222;
     padding: 0 20px 20px
 }
 
@@ -1521,7 +1526,8 @@ a.bg-danger:hover {
 
 .product-edit .md-tabs .nav-item a {
     padding: 0 0 10px !important;
-    color: #222
+    color: ;
+    color: #000
 }
 
 .product-edit .md-tabs .nav-item a .f-20 {
@@ -1547,7 +1553,8 @@ a.bg-danger:hover {
 
 .md-tabs .nav-link {
     border: none;
-    color: #222
+    color: ;
+    color: #000
 }
 
 .md-tabs .nav-item {
@@ -1584,7 +1591,8 @@ a.bg-danger:hover {
 
 .md-tabs .nav-item a {
     padding: 20px 0 !important;
-    color: #222
+    color: ;
+    color: #000
 }
 
 .nav-tabs .slide {
@@ -1767,7 +1775,7 @@ a.bg-danger:hover {
 
 .user-about ul li a {
     font-size: 16px;
-    color: #666
+    color: #000
 }
 
 .user-about ul li.active a {
@@ -2075,7 +2083,8 @@ h6.media-heading {
 .card-header-img h6 {
     margin-top: 15px;
     font-size: 15px;
-    color: #222;
+    color: ;
+    color: #000;
     font-weight: 500;
     text-align: center
 }
@@ -2703,7 +2712,7 @@ figure.effect-goliath {
 }
 
 .dropdown-item {
-    color: #666;
+    color: #000;
     padding: 6px 20px
 }
 
@@ -3743,7 +3752,7 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .version .nav li a {
-    color: #666
+    color: #000
 }
 
 .version .nav li span {
@@ -3774,7 +3783,7 @@ a[data-toggle="lightbox"] .img-fluid {
 
 .version .nav li:first-child {
     border-top: 1px solid #ddd;
-    color: #666
+    color: #000
 }
 
 .dd-w,
@@ -5182,7 +5191,8 @@ a[data-toggle="lightbox"] .img-fluid {
 
 .handsontable td,
 .handsontable th {
-    color: #222
+    color: ;
+    color: #000
 }
 
 #map,
@@ -6091,7 +6101,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .text-inverse {
-    color: #222 !important
+    color: ;
+    color: #000 !important
 }
 
 .text-info {
@@ -6119,7 +6130,7 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .text-muted {
-    color: #313335 !important
+    color: #000 !important
 }
 
 .label {
@@ -6152,7 +6163,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .label-inverse {
-    background: linear-gradient(45deg, #222, #3c3c3c)
+    color: ;
+    background: linear-gradient(45deg, #000, #3c3c3c)
 }
 
 .label-info {
@@ -6184,7 +6196,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .badge-inverse {
-    background: linear-gradient(45deg, #222, #3c3c3c)
+    color: ;
+    background: linear-gradient(45deg, #000, #3c3c3c)
 }
 
 .badge-info {
@@ -6232,7 +6245,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .bg-inverse {
-    background-color: #222 !important;
+    color: ;
+    background-color: #000 !important;
     color: #fff
 }
 
@@ -6262,7 +6276,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .color-inverse {
-    background-color: #222
+    color: ;
+    background-color: #000
 }
 
 .color-info {
@@ -6290,7 +6305,8 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .loader-inverse {
-    background-color: #222 !important
+    color: ;
+    background-color: #000 !important
 }
 
 .loader-info {
@@ -6328,8 +6344,10 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .nestable-inverse {
-    background-color: #222 !important;
-    border-color: #222;
+    color: ;
+    background-color: #000 !important;
+    color: ;
+    border-color: #000;
     color: #fff !important
 }
 
@@ -6372,7 +6390,8 @@ table tbody .border-bottom-success td {
 table thead .border-bottom-inverse th,
 table tbody .border-bottom-inverse th,
 table tbody .border-bottom-inverse td {
-    border-bottom: 1px solid #222
+    color: ;
+    border-bottom: 1px solid #000
 }
 
 table thead .border-bottom-info th,
@@ -6448,9 +6467,11 @@ table tbody .border-bottom-info td {
 
 .table-styling .table-inverse,
 .table-styling.table-inverse {
-    background-color: #222;
+    color: ;
+    background-color: #000;
     color: #fff;
-    border: 3px solid #222
+    color: ;
+    border: 3px solid #000
 }
 
 .table-styling .table-inverse thead,
@@ -6618,7 +6639,8 @@ table tbody .border-bottom-info td {
 }
 
 .toolbar-dark .tool-item {
-    background: #222 !important
+    color: ;
+    background: #000 !important
 }
 
 .toolbar-dark .tool-item.selected,
@@ -6627,23 +6649,28 @@ table tbody .border-bottom-info td {
 }
 
 .toolbar-dark.tool-top .arrow {
-    border-color: #222 transparent transparent
+    color: ;
+    border-color: #000 transparent transparent
 }
 
 .toolbar-dark.tool-bottom .arrow {
-    border-color: transparent transparent #222
+    color: ;
+    border-color: transparent transparent #000
 }
 
 .toolbar-dark.tool-left .arrow {
-    border-color: transparent transparent transparent #222
+    color: ;
+    border-color: transparent transparent transparent #000
 }
 
 .toolbar-dark.tool-right .arrow {
-    border-color: transparent #222 transparent transparent
+    color: ;
+    border-color: transparent #000 transparent transparent
 }
 
 .btn-toolbar-dark.pressed {
-    background-color: #222
+    color: ;
+    background-color: #000
 }
 
 .toolbar-info .tool-item {
@@ -6696,7 +6723,8 @@ table tbody .border-bottom-info td {
 }
 
 .card-border-inverse {
-    border-top: 4px solid #222
+    color: ;
+    border-top: 4px solid #000
 }
 
 .card-border-info {
@@ -6724,7 +6752,8 @@ table tbody .border-bottom-info td {
 }
 
 .panels-wells .panel-inverse {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .panels-wells .panel-info {
@@ -6812,19 +6841,23 @@ table tbody .border-bottom-info td {
 }
 
 .b-t-inverse {
-    border-top: 1px solid #222
+    color: ;
+    border-top: 1px solid #000
 }
 
 .b-b-inverse {
-    border-bottom: 1px solid #222
+    color: ;
+    border-bottom: 1px solid #000
 }
 
 .b-l-inverse {
-    border-left: 1px solid #222
+    color: ;
+    border-left: 1px solid #000
 }
 
 .b-r-inverse {
-    border-right: 1px solid #222
+    color: ;
+    border-right: 1px solid #000
 }
 
 .b-t-info {
@@ -7076,12 +7109,14 @@ table tbody .border-bottom-info td {
 }
 
 .pcoded[nav-type="st2"] .pcoded-item.pcoded-left-item>li>a>.pcoded-micon {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .pcoded[nav-type="st1"] .pcoded-item.pcoded-left-item>li>a>.pcoded-micon,
 .pcoded[nav-type="st2"] .pcoded-item.pcoded-left-item>li>a>.pcoded-micon {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .pcoded[nav-type="st1"] .pcoded-item.pcoded-left-item>li>a>.pcoded-micon b,
@@ -7316,12 +7351,14 @@ table tbody .border-bottom-info td {
 
 .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification a,
 .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification li,
 .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification li {
-    border-top: 1px solid #4099ff, #FFB64D, #d6d6d6, #FF5370, #2ed8b6, #222, #00bcd4;
+    color: ;
+    border-top: 1px solid #4099ff, #FFB64D, #d6d6d6, #FF5370, #2ed8b6, #000, #00bcd4;
     line-height: initial;
     padding: 1em 20px;
     width: 100%;
@@ -10015,11 +10052,11 @@ body[themebg-pattern="pattern6"] {
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .main-menu .main-menu-header .user-details span {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .main-menu .main-menu-content .more-details a {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item li.pcoded-hasmenu .pcoded-submenu {
@@ -10028,26 +10065,26 @@ body[themebg-pattern="pattern6"] {
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item li.pcoded-hasmenu .pcoded-submenu li>a {
     border-bottom-color: #e6e6e6;
-    color: #313335
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu .pcoded-submenu li.pcoded-hasmenu>a:after,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu>a:after {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu.pcoded-trigger .pcoded-submenu li.pcoded-hasmenu.pcoded-trigger>a:after,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu.pcoded-trigger>a:after {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.active:hover>a,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li:hover>a {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li:hover>a {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li:hover>a:before {
@@ -10055,7 +10092,7 @@ body[themebg-pattern="pattern6"] {
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li.active>a {
-    color: #666
+    color: #000
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li.active>a .pcoded-mtext:before {
@@ -10079,7 +10116,7 @@ body[themebg-pattern="pattern6"] {
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li>a {
-    color: #666 !important
+    color: #000 !important
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.active>a {
@@ -10836,7 +10873,8 @@ body[themebg-pattern="pattern6"] {
 }
 
 #styleSelector .nav-tabs .nav-item a {
-    color: #222;
+    color: ;
+    color: #000;
     text-align: center;
     font-weight: 600;
     font-size: 13px;
@@ -10914,7 +10952,8 @@ body[themebg-pattern="pattern6"] {
 }
 
 #styleSelector #menu-effect .micon.st2 i {
-    color: #222
+    color: ;
+    color: #000
 }
 
 #styleSelector #bg-pattern-visiblity {
@@ -12060,8 +12099,10 @@ body.menu-bottom #collapse-menu {
 }
 
 .btn-inverse {
-    background-color: #222;
-    border-color: #222;
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000;
     color: #fff;
     cursor: pointer;
     transition: all ease-in 0.3s
@@ -12344,7 +12385,8 @@ body.menu-bottom #collapse-menu {
 }
 
 .btn-inverse.btn-mat {
-    background-color: #222
+    color: ;
+    background-color: #000
 }
 
 .btn-inverse.btn-mat:before {
@@ -12547,7 +12589,8 @@ body.menu-bottom #collapse-menu {
 
 .dropdown-inverse .dropdown-item:hover,
 .dropdown-split-inverse .dropdown-item:hover {
-    background-color: #222;
+    color: ;
+    background-color: #000;
     color: #fff
 }
 
@@ -12716,20 +12759,25 @@ body.menu-bottom #collapse-menu {
 }
 
 .form-control-inverse {
-    border-color: #222;
-    color: #222
+    color: ;
+    border-color: #000;
+    color: ;
+    color: #000
 }
 
 .form-control-inverse:focus {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .input-group-inverse .input-group-addon {
-    background-color: #222
+    color: ;
+    background-color: #000
 }
 
 .input-group-inverse .form-control {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .form-control-info {
@@ -12855,24 +12903,29 @@ body.menu-bottom #collapse-menu {
 }
 
 .form-txt-inverse {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .form-txt-inverse:focus {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .form-txt-inverse::-moz-placeholder {
-    color: #222;
+    color: ;
+    color: #000;
     opacity: 1
 }
 
 .form-txt-inverse:-ms-input-placeholder {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .form-txt-inverse::-webkit-input-placeholder {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .form-txt-info {
@@ -13022,14 +13075,18 @@ body.menu-bottom #collapse-menu {
 }
 
 .form-bg-inverse {
-    background-color: #222;
-    border-color: #222;
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000;
     color: #fff
 }
 
 .form-bg-inverse:focus {
-    background-color: #222;
-    border-color: #222;
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000;
     color: #fff
 }
 
@@ -13413,21 +13470,26 @@ body.menu-bottom #collapse-menu {
 }
 
 .radio.radiofill.radio-inverse .helper::after {
-    background-color: #222;
-    border-color: #222
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000
 }
 
 .radio.radiofill.radio-inverse .helper::before {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .radio.radio-outline.radio-inverse .helper::after {
     background-color: #fff;
-    border: 0.225rem solid #222
+    color: ;
+    border: 0.225rem solid #000
 }
 
 .radio.radio-outline.radio-inverse .helper::before {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .radio.radio-matrial.radio-inverse input~.helper::after {
@@ -13436,8 +13498,10 @@ body.menu-bottom #collapse-menu {
 }
 
 .radio.radio-matrial.radio-inverse input~.helper::before {
-    background-color: #222;
-    border-color: #222
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000
 }
 
 .radio.radiofill.radio-info .helper::after {
@@ -13604,11 +13668,13 @@ body.menu-bottom #collapse-menu {
 }
 
 .border-checkbox-section .border-checkbox-group-inverse .border-checkbox-label:before {
-    border: 2px solid #222
+    color: ;
+    border: 2px solid #000
 }
 
 .border-checkbox-section .border-checkbox-group-inverse .border-checkbox:checked+.border-checkbox-label:after {
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 .border-checkbox-section .border-checkbox-group-info .border-checkbox-label:before {
@@ -13812,14 +13878,16 @@ body.menu-bottom #collapse-menu {
 .checkbox-fade.zoom-inverse .cr,
 .checkbox-zoom.fade-in-inverse .cr,
 .checkbox-zoom.zoom-inverse .cr {
-    border: 2px solid #222
+    color: ;
+    border: 2px solid #000
 }
 
 .checkbox-fade.fade-in-inverse .cr .cr-icon,
 .checkbox-fade.zoom-inverse .cr .cr-icon,
 .checkbox-zoom.fade-in-inverse .cr .cr-icon,
 .checkbox-zoom.zoom-inverse .cr .cr-icon {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .checkbox-fade.fade-in-info .cr,
@@ -13946,7 +14014,8 @@ body.menu-bottom #collapse-menu {
 }
 
 .checkbox-inverse input[type="checkbox"]:checked+label::before {
-    background-color: #222
+    color: ;
+    background-color: #000
 }
 
 .checkbox-info input[type="checkbox"]:checked+label::before {
@@ -14223,8 +14292,10 @@ span.badge {
 
 .label-inverse-info-border {
     border: 1px solid;
-    border-color: #222;
-    color: #222 !important
+    color: ;
+    border-color: #000;
+    color: ;
+    color: #000 !important
 }
 
 .badge-inverse-default {
@@ -14259,8 +14330,10 @@ span.badge {
 
 .badge-inverse-info {
     border: 1px solid;
-    border-color: #222;
-    color: #222 !important
+    color: ;
+    border-color: #000;
+    color: ;
+    color: #000 !important
 }
 
 .label-icon {
@@ -14400,7 +14473,8 @@ label.txt-ellipsis {
 }
 
 .j-pro .j-divider-text span {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .j-pro .btn-primary.disabled,
@@ -14561,7 +14635,8 @@ label.txt-ellipsis {
 }
 
 .j-forms .divider-text span {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .j-forms .widget .addon,
@@ -14653,7 +14728,8 @@ label.txt-ellipsis {
 }
 
 .span4 label {
-    color: #222 !important
+    color: ;
+    color: #000 !important
 }
 
 .pop-up-wrapper {
@@ -14860,7 +14936,8 @@ table.table-bordered.dataTable tbody td:focus {
 }
 
 .page-link {
-    color: #222
+    color: ;
+    color: #000
 }
 
 td.highlight {
@@ -14984,8 +15061,10 @@ a.dt-button.btn-danger {
 button.dt-button.btn-inverse,
 div.dt-button.btn-inverse,
 a.dt-button.btn-inverse {
-    background-color: #222;
-    border-color: #222;
+    color: ;
+    background-color: #000;
+    color: ;
+    border-color: #000;
     border-radius: 2px;
     color: #fff;
     background-image: none
@@ -15020,7 +15099,8 @@ div.dt-button.btn-inverse:hover:not(.disabled),
 a.dt-button.btn-inverse:hover:not(.disabled) {
     background-image: none;
     background-color: #3c3c3c;
-    border-color: #222
+    color: ;
+    border-color: #000
 }
 
 div.dt-button-collection button.dt-button:active:not(.disabled),
@@ -15197,7 +15277,8 @@ div.DTS div.dataTables_length {
 
 .footable .pagination>li>a,
 .footable .pagination>li>span {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .footable-details.table,
@@ -15427,7 +15508,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
     position: absolute;
     top: -22px;
     right: 0;
-    color: #222;
+    color: ;
+    color: #000;
     font-weight: 600;
     font-size: 12px
 }
@@ -15581,7 +15663,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
     bottom: 10px;
     left: 0;
     right: 0;
-    color: #666
+    color: #000
 }
 
 .amount-card #amunt-card1,
@@ -16070,7 +16152,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .wather-card .card-block .progress {
     height: 30px;
     background-color: #fff;
-    border: 1px solid #666;
+    border: 1px solid #000;
     padding: 8px;
     border-radius: 15px;
     margin: 5px 20px 25px 25px
@@ -16092,7 +16174,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
     width: 70px;
     height: 70px;
     background-color: #fff;
-    border: 1px solid #666;
+    border: 1px solid #000;
     border-right-color: transparent;
     border-radius: 50%;
     position: absolute;
@@ -16487,7 +16569,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .login h3 {
-    color: #666666;
+    color: #000666;
     font-size: 24px;
     font-weight: 600;
     margin-top: 20px
@@ -16531,7 +16613,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .login-card h3 {
-    color: #666666;
+    color: #000666;
     font-size: 24px;
     font-weight: 600;
     margin-top: 20px
@@ -16685,7 +16767,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .mixed-form .tabbed-modal .nav-link.active {
     background-color: transparent;
     border-color: transparent;
-    color: #222
+    color: ;
+    color: #000
 }
 
 .mixed-form .modal-body {
@@ -16700,7 +16783,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .mixed-form .auth-box h3 {
-    color: #666666;
+    color: #000666;
     font-size: 22px;
     font-weight: 600;
     margin-top: 20px
@@ -16834,7 +16917,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .inverse-breadcrumb {
-    background: linear-gradient(45deg, #222, #3c3c3c)
+    color: ;
+    background: linear-gradient(45deg, #000, #3c3c3c)
 }
 
 .danger-breadcrumb {
@@ -17391,7 +17475,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .chat-header {
-    color: #222222
+    color: ;
+    color: #000222
 }
 
 .live-status {
@@ -20277,7 +20362,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 
 .nav-tabs.md-tabs.tab-timeline li a {
     padding: 20px 0 10px;
-    color: #222;
+    color: ;
+    color: #000;
     font-size: 16px
 }
 
@@ -20309,7 +20395,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .chat-header {
-    color: #222222
+    color: ;
+    color: #000222
 }
 
 .live-status {
@@ -20481,7 +20568,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .social-msg a span {
-    color: #666;
+    color: #000;
     padding-left: 10px;
     padding-right: 10px;
     margin-right: 10px
@@ -20582,7 +20669,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 #external-events p {
     margin: 1.5em 0;
     font-size: 11px;
-    color: #666
+    color: #000
 }
 
 #external-events p input {
@@ -21008,7 +21095,8 @@ tr:first-child>td>.fc-day-grid-event {
 .email-card .user-body .page-list li.mail-section a {
     padding: 15px 20px;
     border-radius: 0px !important;
-    color: #222;
+    color: ;
+    color: #000;
     border: 0px solid transparent
 }
 
@@ -21110,12 +21198,14 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .email-card .mail-body-content .unread a {
-    color: #222;
+    color: ;
+    color: #000;
     font-weight: 600
 }
 
 .email-card .mail-body-content .read a {
-    color: #222;
+    color: ;
+    color: #000;
     font-weight: 400
 }
 
@@ -21196,7 +21286,8 @@ tr:first-child>td>.fc-day-grid-event {
 .success-nav a,
 .info-nav a,
 .danger-nav a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .light-nav-border li.active a,
@@ -21292,16 +21383,17 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .primary-nav a {
-    color: #666
+    color: #000
 }
 
 .primary-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
 .primary-nav .navbar-varient-submenu a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .warning-nav {
@@ -21309,16 +21401,17 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .warning-nav a {
-    color: #666
+    color: #000
 }
 
 .warning-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
 .warning-nav .navbar-varient-submenu a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .success-nav {
@@ -21326,16 +21419,17 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .success-nav a {
-    color: #666
+    color: #000
 }
 
 .success-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
 .success-nav .navbar-varient-submenu a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .info-nav {
@@ -21343,16 +21437,17 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .info-nav a {
-    color: #666
+    color: #000
 }
 
 .info-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
 .info-nav .navbar-varient-submenu a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .danger-nav {
@@ -21360,16 +21455,17 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 .danger-nav a {
-    color: #666
+    color: #000
 }
 
 .danger-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
 .danger-nav .navbar-varient-submenu a {
-    color: #222
+    color: ;
+    color: #000
 }
 
 .bg-dark {
@@ -21561,7 +21657,7 @@ tr:first-child>td>.fc-day-grid-event {
 .success-nav li.active a,
 .info-nav li.active a,
 .danger-nav li.active a {
-    color: #666;
+    color: #000;
     font-weight: 600
 }
 
@@ -22766,7 +22862,7 @@ span.value {
 
 #task-container .task-headline {
     display: none;
-    color: #666666;
+    color: #000666;
     border-bottom: 1px solid #C8C7BB;
     padding-bottom: 20px;
     margin-bottom: 20px;
@@ -22786,7 +22882,7 @@ span.value {
 
 #task-container .nothing-message {
     height: 160px;
-    color: #666;
+    color: #000;
     background-size: 15%
 }
 
@@ -22800,7 +22896,7 @@ span.value {
     display: inline-block;
     padding: 20px;
     border: 1px solid #CCC;
-    color: #666;
+    color: #000;
     border-top: 9px solid #4099ff;
     cursor: pointer;
     margin-bottom: 20px;

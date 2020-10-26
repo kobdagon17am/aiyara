@@ -9,7 +9,7 @@
   <div class="col-md-12 col-lg-12">
     <div class="page-header card">
     <div class="card-block">
-          <h5 class="m-b-10">ลำดับสายงาน</h5> 
+          โครงสร้างสายงาน
     <div class="card-header" style="padding: 0px">
       <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
       @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
@@ -89,30 +89,28 @@
         <div class="card-block tree-view">
           <div id="basicTree">
             <ul>
-              <li data-jstree='{"opened":true}'>Admin
+              <li data-jstree='{"opened":true}'><b style="color:#28a745">รหัสสมาชิก : 0001</b>
                 <ul>
-                  <li data-jstree='{"opened":true}'><b>สาย A : 00016</b>
+                  <li data-jstree='{"opened":true}'><a data-toggle="modal" data-target="#lv2_a"><b>สาย A : 00016</b></a>
                     <ul>
-                      <li data-jstree='{"type":"file"}'>สาย A : 0020
-
-                      </li>
-                      <li data-jstree='{"type":"file"}'>สาย B : 0021</li>
-                      <li data-jstree='{"type":"file"}'>สาย C : 0022</li>
+                      <li data-jstree='{"type":"file"}'>สาย A : 0018</li>
+                      <li data-jstree='{"type":"file"}'>สาย B : 0027</li>
+                      <li data-jstree='{"type":"file"}'>สาย C : 0017</li>
                     </ul>
                   </li>
-                  <li data-jstree='{"opened":true}'><b>สาย B : 00017</b>
+                  <li data-jstree='{"opened":true}'><a data-toggle="modal" data-target="#lv2_b"><b>สาย B : 0002 </b></a>
                     <ul>
-                      <li data-jstree='{"type":"file"}'>สาย A : 0023</li>
-                      <li data-jstree='{"type":"file"}'>สาย B : 0024</li>
-                      <li data-jstree='{"type":"file"}'>สาย C : 0025</li>
+                      <li data-jstree='{"type":"file"}'>สาย A : 0019</li>
+                      <li data-jstree='{"type":"file"}'>สาย B : 0025</li>
+                      <li data-jstree='{"type":"file"}'>สาย C : 0015</li>
                     </ul>
                   </li>
 
-                  <li data-jstree='{"opened":true}'><b>สาย C : 00019</b>
+                  <li data-jstree='{"opened":true}'><a data-toggle="modal" data-target="#lv2_c"><b>สาย C : 00014</b></a>
                    <ul>
-                    <li data-jstree='{"type":"file"}'>สาย A : 0026</li>
-                    <li data-jstree='{"type":"file"}'>สาย B : 0027</li>
-                    <li data-jstree='{"type":"file"}'>สาย C : 0028</li>
+                    <li data-jstree='{"type":"file"}'>สาย A : <b style="color:#28a745"> (+) </b></li>
+                    <li data-jstree='{"type":"file"}'>สาย B : 0020</li>
+                    <li data-jstree='{"type":"file"}'>สาย C : <b style="color:#28a745"> (+) </b></li>
                   </ul>
                 </li>
 
@@ -130,7 +128,7 @@
 <div class="col-sm-12 col-md-9 col-lg-9">
   <div class="page-header card">
     <div class="card-block">
-      <h5 class="m-b-10">โครงสร้างสายงาน</h5> 
+      {{-- <h5 class="m-b-10">โครงสร้างสายงาน</h5>  --}}
 
       <div class="row" align="center">
         <div class="col-lg-4"> 
