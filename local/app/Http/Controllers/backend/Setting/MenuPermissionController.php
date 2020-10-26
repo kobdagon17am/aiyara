@@ -28,7 +28,7 @@ class MenuPermissionController extends Controller
         // ]);     
 
         // $sTable = \App\Models\UserModel::get();   
-        // return view('backend.MenuPermission.index');
+        return view('backend.MenuPermission.index');
 
         // dd($sTable);
 
