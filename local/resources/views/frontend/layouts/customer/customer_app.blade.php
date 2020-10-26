@@ -213,7 +213,7 @@
 
 		<li class="{{ (request()->is('home')) ? 'active' : '' }}">
 			<a href="{{route('home')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>โครงสร้างสายงาน</b></span>
+				<span class="pcoded-micon"><i class="fa fa-sitemap"></i><b>โครงสร้างสายงาน</b></span>
 				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -221,7 +221,7 @@
 
 		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
 			<a href="{{route('home_type_tree')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>โครงสร้างสายงาน</b></span>
+				<span class="pcoded-micon"><i class="fa fa-sitemap"></i><b>โครงสร้างสายงาน</b></span>
 				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
 				<span class="pcoded-mcaret"></span>
 				<span class="pcoded-badge label label-danger">NEW</span>
@@ -230,7 +230,7 @@
 
 		<li class="{{ (request()->is('allmember')) ? 'active' : '' }}">
 			<a href="{{route('allmember')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>Direct Sponsor</b></span>
+				<span class="pcoded-micon"><i class="fa fa-group"></i><b>Direct Sponsor</b></span>
 				<span class="pcoded-mtext">Direct Sponsor</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -238,7 +238,7 @@
 
 		<li class="{{ (request()->is('profile')) ? 'active' : '' }}">
 			<a href="{{route('profile')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>ข้อมูลส่วนตัว</b></span>
+				<span class="pcoded-micon"><i class="fa fa-wpforms"></i><b>ข้อมูลส่วนตัว</b></span>
 				<span class="pcoded-mtext">ข้อมูลส่วนตัว</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -246,7 +246,7 @@
 
 		<li class="pcoded-hasmenu {{ (request()->is('cart') || request()->is('product-detail') || request()->is('product-list') || request()->is('product-status') || request()->is('product-history')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>สั่งซื้อสินค้า</b></span>
+				<span class="pcoded-micon"><i class="fa fa-shopping-cart"></i><b>สั่งซื้อสินค้า</b></span>
 				<span class="pcoded-mtext">สั่งซื้อสินค้า</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -278,7 +278,7 @@
 
 		<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
 			<a href="{{route('comission')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>รายงานคอมมิชชั่น</b></span>
+				<span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>รายงานคอมมิชชั่น</b></span>
 				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -286,7 +286,7 @@
 
 		<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
 			<a href="{{route('walletindex')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>Ai-Cash</b></span>
+				<span class="pcoded-micon"><i class="fa fa-money"></i></i><b>Ai-Cash</b></span>
 				<span class="pcoded-mtext">Ai-Cast</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -305,7 +305,7 @@
 		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') 
 		|| request()->is('course') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 		<a href="javascript:void(0)">
-			<span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>สิทธิประโยชน์</b></span>
+			<span class="pcoded-micon"><i class="fa fa-gift"></i><b>สิทธิประโยชน์</b></span>
 			<span class="pcoded-mtext">สิทธิประโยชน์</span>
 			<span class="pcoded-mcaret"></span>
 		</a>
@@ -347,7 +347,7 @@
 
 	<li class="pcoded-hasmenu {{ (request()->is('24extra/promote') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 		<a href="javascript:void(0)">
-			<span class="pcoded-micon"><i class="ti-bar-chart-alt"></i><b>Sale Page</b></span>
+			<span class="pcoded-micon"><i class="fa fa-laptop"></i><b>Sale Page</b></span>
 			<span class="pcoded-mtext">Sale Page</span>
 			<span class="pcoded-mcaret"></span>
 		</a>
