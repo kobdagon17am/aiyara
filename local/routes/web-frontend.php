@@ -45,6 +45,7 @@ Route::get('logout', function () {
 })->name('logout');
 
 Route::get('home','Frontend\HomeController@index')->name('home');
+Route::get('home_type_tree','Frontend\HomeController@home_type_tree')->name('home_type_tree');
 Route::post('home','Frontend\HomeController@index')->name('home');
 Route::post('login','Frontend\LoginController@login')->name('login');
 Route::post('register_new_member','Frontend\RegisterController@register_new_member')->name('register_new_member');

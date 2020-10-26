@@ -31,6 +31,18 @@ class HomeController extends Controller
     return view('frontend/home',compact('data'));
   }
 
+  public function home_type_tree(Request $request){
+  
+    if($request->id){
+      $id = $request->id; 
+    }else{
+      $id = Auth::guard('c_user')->user()->id; 
+    }
+    
+    $data = LineModel::line_all($id);
+    return view('frontend/home_type_tree',compact('data'));
+  }
+
   public function under_a(Request $request){
     $id = $request->id;
 

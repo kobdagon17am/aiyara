@@ -18,15 +18,18 @@ class ProductController extends Controller
     public function index()
     {
 
+
         $ev_objective = DB::table('ev_objective')
         ->where('lang_id', '=', 1)
         ->orderby('order')
         ->get();
 
-        $categories = DB::table('categories')
+        $categories = DB::table('dataset_product_type')
         ->where('lang_id', '=', 1)
         ->orderby('order')
         ->get();
+
+       
 
         $product = DB::table('products')
         ->select(

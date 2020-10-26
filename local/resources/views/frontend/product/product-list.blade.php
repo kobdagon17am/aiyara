@@ -20,7 +20,7 @@
     <label>เลือกประเภทสินค้าด้านล้าง</label>
     <select class="form-control" name="">
         @foreach($categories as $value)
-        <option value="{{$value->category_id}}">{{$value->category_name}}</option>
+        <option value="{{$value->category_id}}">{{$value->product_type}}</option>
         @endforeach
     </select>
 </div>

@@ -21,6 +21,8 @@
 <link rel="icon" href="{{asset('frontend/assets/icon/logo_icon.png')}}" type="image/x-icon"> 
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 <!-- Required Fremwork -->
+
+@yield('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/bootstrap/css/bootstrap.min.css')}}">
 <!-- themify-icons line icon -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/icon/themify-icons/themify-icons.css')}}">
@@ -40,7 +42,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery.steps/css/jquery.steps.css')}}">
 
 
-@yield('css')
+
 </head>
 <body>
 	<!-- Pre-loader start -->
@@ -216,6 +218,16 @@
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
+
+		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
+			<a href="{{route('home_type_tree')}}">
+				<span class="pcoded-micon"><i class="ti-mobile"></i><b>โครงสร้างสายงาน</b></span>
+				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
+				<span class="pcoded-mcaret"></span>
+				<span class="pcoded-badge label label-danger">NEW</span>
+			</a>
+		</li>
+
 		<li class="{{ (request()->is('allmember')) ? 'active' : '' }}">
 			<a href="{{route('allmember')}}">
 				<span class="pcoded-micon"><i class="ti-mobile"></i><b>Direct Sponsor</b></span>
@@ -427,7 +439,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </body>
-
+ 
+ 
 @include('frontend.layouts.flash-message')
 @yield('js')
 
