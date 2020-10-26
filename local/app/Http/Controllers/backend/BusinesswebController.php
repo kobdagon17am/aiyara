@@ -7,21 +7,21 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class Banner_slideController extends Controller
+class BusinesswebController extends Controller
 {
 
     public function index(Request $request)
     {
-      // dd($request->id);
-      $dsBanner_slide  = \App\Models\Backend\Banner_slide::find($request->id);
-      return view('backend.banner_slide.index')->with(['dsBanner_slide'=>$dsBanner_slide]);
+
+      $dsPackage  = \App\Models\Backend\Businessweb::get();
+      return view('backend.businessweb.index')->with(['dsPackage'=>$dsPackage]);
 
     }
 
  public function create()
     {
       $sLocale  = \App\Models\Locale::all();
-      return view('backend.banner_slide.form');
+      return view('backend.businessweb.form');
     }
 
     public function store(Request $request)
@@ -31,8 +31,15 @@ class Banner_slideController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Banner_slide::find($id);
-       return View('backend.banner_slide.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sRow = \App\Models\Backend\Businessweb::find($id);
+       
+       $dsPackage = \App\Models\Backend\Package::find($sRow->package_id_fk);
+       // dd($dsPackage->dt_package);
+       // dd($id);
+       $dsBusinessweb_banner = \App\Models\Backend\Businessweb_banner::where('businessweb_id_fk', $id)->get();
+       // dd($dsBusinessweb_banner);
+
+       return View('backend.businessweb.form')->with(array('sRow'=>$sRow, 'id'=>$id,'dsPackage'=>$dsPackage,'dsBusinessweb_banner'=>$dsBusinessweb_banner) );
     }
 
     public function update(Request $request, $id)
@@ -47,10 +54,13 @@ class Banner_slideController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Banner_slide::find($id);
+            $sRow = \App\Models\Backend\Businessweb::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Banner_slide;
+            $sRow = new \App\Models\Backend\Businessweb;
           }
+
+          $sRow->topic    = request('topic');
+          $sRow->content    = request('content');
 
           $request = app('request');
           if ($request->hasFile('image')) {
@@ -63,33 +73,38 @@ class Banner_slideController extends Controller
               $image = $request->file('image');
              
               $name = time() . '.' . $image->getClientOriginalExtension();
-              $image_path = 'banner_slide/';
+              $image_path = 'businessweb/';
               $destinationPath = public_path($image_path);
            
               $image->move($destinationPath, $name);
-              $sRow->img_url    = 'local/public/'.$image_path;
+              $sRow->image_path    = 'local/public/'.$image_path;
               $sRow->image = $name;
               
             }
 
+                    
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
-
           \DB::commit();
 
-         return redirect()->action('Backend\Banner_slideController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          if( $id ){
+            return redirect()->action('Backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          }else{
+            return View('backend.businessweb.form')->with(array('sRow'=>$sRow, 'id'=>$id) ); 
+          }
+         
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\Banner_slideController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('Backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Banner_slide::find($id);
+      $sRow = \App\Models\Backend\Businessweb::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
@@ -97,12 +112,13 @@ class Banner_slideController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Banner_slide::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Businessweb::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('name', function($row) {
-        // return $row->fname.' '.$row->surname;
-      })
+      // ->addColumn('package_name', function($row) {
+      //   $dsPackage = \App\Models\Backend\Package::find($row->package_id_fk);
+      //   return @$dsPackage->dt_package;
+      // })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

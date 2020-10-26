@@ -6,33 +6,44 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Redirect;
 
-class Banner_slideController extends Controller
+class Businessweb_bannerController extends Controller
 {
 
     public function index(Request $request)
     {
       // dd($request->id);
-      $dsBanner_slide  = \App\Models\Backend\Banner_slide::find($request->id);
-      return view('backend.banner_slide.index')->with(['dsBanner_slide'=>$dsBanner_slide]);
+      $dsBusinessweb = \App\Models\Backend\Businessweb::find($request->id);
+      return view('backend.businessweb_banner.index')->with(['dsBusinessweb'=>$dsBusinessweb]);
 
     }
 
- public function create()
+    public function create()
     {
-      $sLocale  = \App\Models\Locale::all();
-      return view('backend.banner_slide.form');
+      $request = app('request');
+      // dd($request->Businessweb_id);
+      $dsBusinessweb = \App\Models\Backend\Businessweb::find($request->Businessweb_id);
+      // $sLocale  = \App\Models\Locale::all();
+      return view('backend.businessweb_banner.form')->with(array('dsBusinessweb'=>$dsBusinessweb) );
     }
 
     public function store(Request $request)
     {
+      // dd($request);
+      return $this->form();
+    }
+
+    public function show(Request $request)
+    {
+      // dd($request);
       return $this->form();
     }
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Banner_slide::find($id);
-       return View('backend.banner_slide.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sRow = \App\Models\Backend\Businessweb_banner::find($id);
+       return View('backend.businessweb_banner.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
     }
 
     public function update(Request $request, $id)
@@ -47,10 +58,12 @@ class Banner_slideController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Banner_slide::find($id);
+            $sRow = \App\Models\Backend\Businessweb_banner::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Banner_slide;
+            $sRow = new \App\Models\Backend\Businessweb_banner;
           }
+          
+          $sRow->businessweb_id_fk    = request('businessweb_id_fk');
 
           $request = app('request');
           if ($request->hasFile('image')) {
@@ -62,15 +75,16 @@ class Banner_slideController extends Controller
               ]);
               $image = $request->file('image');
              
-              $name = time() . '.' . $image->getClientOriginalExtension();
-              $image_path = 'banner_slide/';
+              $name = 'b'.time() . '.' . $image->getClientOriginalExtension();
+              $image_path = 'businessweb/';
               $destinationPath = public_path($image_path);
            
               $image->move($destinationPath, $name);
-              $sRow->img_url    = 'local/public/'.$image_path;
+              $sRow->image_path    = 'local/public/'.$image_path;
               $sRow->image = $name;
               
             }
+
 
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
@@ -78,18 +92,18 @@ class Banner_slideController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('Backend\Banner_slideController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/businessweb_banner/index/".request('businessweb_id_fk').""));
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\Banner_slideController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('Backend\Businessweb_bannerController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Banner_slide::find($id);
+      $sRow = \App\Models\Backend\Businessweb_banner::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
@@ -97,7 +111,8 @@ class Banner_slideController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Banner_slide::search()->orderBy('id', 'asc');
+
+      $sTable = \App\Models\Backend\Businessweb_banner::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {
