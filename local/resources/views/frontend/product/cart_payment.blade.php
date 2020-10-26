@@ -4,131 +4,201 @@
  @section('conten')
  <div class="row">
  	<div class="col-md-8 col-sm-12">
+ 		<!-- Choose Your Payment Method start -->
  		<div class="card card-border-success">
- 		{{-- <div class="card-header">
- 				<h5>Form Basic Wizard</h5>
- 				<span>Add class of <code>.form-control</code> with <code>&lt;input&gt;</code> tag</span>
- 			</div> --}}
- 			<div class="card-block">
- 				<div class="row">
- 					<div class="col-md-12">
- 						<div id="wizarda">
- 							<section>
- 								<form class="wizard-form" id="basic-forms" action="#">
- 									<h3> ที่อยู่จัดส่งสินค้า </h3>
- 									<fieldset>
- 										<div class="form-group row">
- 											<div class="col-sm-4">
- 												<label>บ้านเลขที่ <b class="text-danger">*</b></label>
- 												<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
- 											</div>
+ 			<div class="card-header">
+ 				{{-- <h5>กรุณาตรวจสอบ</h5> --}}
+ 				{{-- <div class="card-header-right">
+ 				 
+ 				</div> --}}
+ 			</div>
+ 			<div class="card-block payment-tabs">
+ 				<ul class="nav nav-tabs md-tabs" role="tablist">
+ 					<li class="nav-item">
+ 						<a class="nav-link active" id="nav_address" data-toggle="tab" href="#address" role="tab">ที่อยู่การจัดส่ง</a>
+ 						<div class="slide"></div>
+ 					</li>
+ 					<li class="nav-item">
+ 						<a class="nav-link" data-toggle="tab" id="nav_card" href="#credit-card" role="tab">ชำระเงิน</a>
+ 						<div class="slide"></div>
+ 					</li>
+ 					{{-- <li class="nav-item">
+ 						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
+ 						<div class="slide"></div>
+ 					</li> --}}
 
- 											<div class="col-sm-4">
- 												<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
- 												<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
- 											</div>
 
- 											<div class="col-sm-4">
- 												<label>หมู่ที่ <b class="text-danger">*</b></label>
- 												<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
- 											</div>
+ 				</ul>
+ 				<div class="tab-content m-t-15">
+ 					<div class="tab-pane active" id="address" role="tabpanel">
+ 						<div class="card-block p-b-0">
+ 							<div class="form-radio">
+ 								<div class="radio radio-inline">
+ 									<label>
+ 										<input type="radio" name="receive" checked="checked">
+ 										<i class="helper"></i><b>จัดส่ง</b> 
+ 									</label>
+ 								</div>
+ 								<div class="radio radio-inline">
+ 									<label>
+ 										<input type="radio" name="receive">
+ 										<i class="helper"></i><b>รับที่สาขาไกล้บ้าน</b>
+ 									</label>
+ 								</div>
+ 						 
+ 
+ 							</div>
+ 							<div class="row m-t-5">
+ 								<div class="col-md-3 col-sm-4 col-4">
+ 									<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
+ 								</div>
+ 								<div class="col-md-5 col-sm-8 col-8">
+ 									<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
+ 								</div>
+ 								<div class="col-md-3 col-sm-12 col-12">
+ 									<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
+ 								</div>
 
- 											
+ 							</div>
+
+ 							<div class="row m-t-5">
+ 								<div class="col-sm-4">
+ 									<label>ตรอก/ซอย </label>
+ 									<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
+ 								</div>
+
+ 								<div class="col-sm-4">
+ 									<label>เขต/อำเภอ <b class="text-danger">*</b></label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
+ 								</div>
+ 								<div class="col-sm-4">
+ 									<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
+ 								</div>
+ 							</div>
+ 							<div class="row m-t-5">
+ 								<div class="col-sm-4">
+ 									<label>ถนน</label>
+ 									<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 								</div>
+
+ 								<div class="col-sm-4">
+ 									<label>จังหวัด <b class="text-danger">*</b></label>
+ 									<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
+ 								</div>
+
+ 								<div class="col-sm-4">
+ 									<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 									<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
+ 								</div>
+ 							</div>
+
+ 							<div class="row m-t-5">
+ 								<div class="col-sm-12 text-right">
+ 									<button type="button" onclick="next()" class="btn btn-primary waves-effect waves-light m-t-20">ถัดไป</button>
+ 								</div>
+ 							</div>
+ 						</div>
+ 					</div>
+
+ 					<div class="tab-pane" id="credit-card" role="tabpanel">
+ 						<div class="demo-container card-block">
+
+ 							<div class="row">
+ 								<div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
+
+ 									<div class="form-radio">
+ 										<div class="radio radio-inline">
+ 											<label>
+ 												<input type="radio" name="radio" checked="checked">
+ 												<i class="helper"></i><b>เงินสด</b>
+ 											</label>
+ 										</div>
+ 										<div class="radio radio-inline">
+ 											<label>
+ 												<input type="radio" name="radio">
+ 												<i class="helper"></i><b>บัตรเครดิต</b>
+ 											</label>
+ 										</div>
+ 										<div class="radio radio-inline">
+ 											<label>
+ 												<input type="radio" name="radio">
+ 												<i class="helper"></i><b>Ai-Cast</b>
+ 											</label>
  										</div>
 
- 										<div class="form-group row">
- 											<div class="col-sm-4">
- 												<label>ตรอก/ซอย </label>
- 												<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
- 											</div>
-
- 											<div class="col-sm-4">
- 												<label>เขต/อำเภอ <b class="text-danger">*</b></label>
- 												<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
- 											</div>
- 											<div class="col-sm-4">
- 												<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
- 												<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
- 											</div>
- 											
+ 										<div class="radio radio-inline">
+ 											<label>
+ 												<input type="radio" name="radio">
+ 												<i class="helper"></i><b>Gift Voucher</b>
+ 											</label>
  										</div>
+ 									</div>
+ 								</div>
+ 							</div>
 
- 										<div class="form-group row">
- 											<div class="col-sm-4">
- 												<label>ถนน</label>
- 												<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 							<div class="row">
+ 								<div class="col-sm-6">
+ 									<div class="form-group">
+ 										<input type="text" class="form-control" placeholder="Type your Full Name">
+ 									</div>
+ 									<div class="form-group CVV">
+ 										<input type="text" class="form-control" id="cvv" placeholder="CVV">
+ 									</div>
+ 									<div class="form-group" id="card-number-field">
+ 										<input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number">
+ 									</div>
+ 								</div>
+ 								<div class="col-sm-6">
+ 									<div class="form-group" id="expiration-date">
+ 										<label>Expiration Date</label>
+ 										<div class="row">
+ 											<div class="col-sm-6">
+ 												<select class="form-control m-b-10">
+ 													<option>Select Month</option>
+ 													<option value="01">01</option>
+ 													<option value="02">02 </option>
+ 													<option value="03">03</option>
+ 													<option value="04">04</option>
+ 													<option value="05">05</option>
+ 													<option value="06">06</option>
+ 													<option value="07">07</option>
+ 													<option value="08">08</option>
+ 													<option value="09">09</option>
+ 													<option value="10">10</option>
+ 													<option value="11">11</option>
+ 													<option value="12">12</option>
+ 												</select>
  											</div>
-
- 											<div class="col-sm-4">
- 												<label>จังหวัด <b class="text-danger">*</b></label>
- 												<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
- 											</div>
-
- 											<div class="col-sm-4">
- 												<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
- 												<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
- 											</div>
-
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-10">
- 												{{-- <label> รายละเอียดเพิ่มเติม </label>  --}}
- 												<textarea rows="5" cols="5" class="form-control" placeholder="รายละเอียดเพิ่มเติม"></textarea>
- 											</div>
- 										</div>
- 									</fieldset>
- 									<h3> ชำระเงิน </h3>
- 									<fieldset>
- 								 
- 										 
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="date" class="block">Date Of Birth</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="datea" name="Date Of Birth" type="text" class="form-control date-control">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 											Select Country</div>
- 											<div class="col-sm-12">
- 												<select class="form-control required">
- 													<option>Select State</option>
- 													<option>Gujarat</option>
- 													<option>Kerala</option>
- 													<option>Manipur</option>
- 													<option>Tripura</option>
- 													<option>Sikkim</option>
+ 											<div class="col-sm-6">
+ 												<select class="form-control m-b-10">
+ 													<option><b>Select Year</b></option>
+ 													<option value="16"> 2016</option>
+ 													<option value="17"> 2017</option>
+ 													<option value="18"> 2018</option>
+ 													<option value="19"> 2019</option>
+ 													<option value="20"> 2020</option>
+ 													<option value="21"> 2021</option>
  												</select>
  											</div>
  										</div>
- 									</fieldset>
- 									<h3> Education </h3>
- 									<fieldset>
- 										 
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="Degreelevel-2" class="block">Degree level #</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="Degreelevel-2a" name="Degree level" type="text" class="form-control required phone">
- 											</div>
- 										</div>
- 										<div class="form-group row">
- 											<div class="col-sm-12">
- 												<label for="datejoin" class="block">Date Join</label>
- 											</div>
- 											<div class="col-sm-12">
- 												<input id="datejoina" name="Date Of Birth" type="text" class="form-control required">
- 											</div>
- 										</div>
- 									</fieldset>
-
- 								</form>
- 							</section>
+ 									</div>
+ 									<div class="form-group" id="debit-cards">
+ 										<img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">
+ 										<img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">
+ 										{{-- <img src="{{ asset('frontend/assets/images/e-payment/card/amex.jpg') }}" id="amex" alt="amex.jpg"> --}}
+ 									</div>
+ 								</div>
+ 								<div class="col-sm-12 text-right">
+ 									<a href="#!" class="btn btn-primary waves-effect waves-light m-t-20">ชำระเงิน</a>
+ 								</div>
+ 							</div>
  						</div>
  					</div>
+
  				</div>
  			</div>
  		</div>
@@ -181,19 +251,27 @@
  </div>
 
 
- 
+
+
+
+
  @endsection
  @section('js')
+ <script>
+ 	function next(){
 
- <script src="{{asset('frontend/bower_components/jquery.cookie/js/jquery.cookie.js')}}"></script>
- <script src="{{asset('frontend/bower_components/jquery.steps/js/jquery.steps.js')}}"></script>
- <script src="{{asset('frontend/bower_components/jquery-validation/js/jquery.validate.js')}}"></script>
- <!-- Validation js -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')}}"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js')}}"></script>
- <script  src="{{asset('frontend/assets/pages/form-validation/validate.js')}}"></script>
- <!-- Custom js -->
- <script src="{{asset('frontend/assets/pages/forms-wizard-validation/form-wizard.js')}}"></script>
- 
+ 		document.getElementById("address").classList.remove('active');
+ 		document.getElementById("nav_address").classList.remove('active');
+
+ 		document.getElementById("credit-card").classList.add('active');
+ 		document.getElementById("nav_card").classList.add('active');
+
+ 	}
+ </script>
+
+ <script src="{{asset('frontend/assets/pages/payment-card/card.js')}}"></script>
+ <script src="{{asset('frontend/assets/pages/payment-card/jquery.payform.min.js')}}" charset="utf-8"></script>
+ <script  src="{{asset('frontend/assets/pages/payment-card/e-payment.js')}}"></script>
+
  @endsection
 
