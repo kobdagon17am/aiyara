@@ -78,12 +78,12 @@ class Banner_frontController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('Backend\Banner_frontController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         return redirect()->action('backend\Banner_frontController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\Banner_frontController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Banner_frontController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

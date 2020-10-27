@@ -97,7 +97,7 @@ class Businessweb_bannerController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\Businessweb_bannerController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Businessweb_bannerController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

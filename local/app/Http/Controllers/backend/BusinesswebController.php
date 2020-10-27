@@ -89,7 +89,7 @@ class BusinesswebController extends Controller
           \DB::commit();
 
           if( $id ){
-            return redirect()->action('Backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+            return redirect()->action('backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
           }else{
             return View('backend.businessweb.form')->with(array('sRow'=>$sRow, 'id'=>$id) ); 
           }
@@ -98,7 +98,7 @@ class BusinesswebController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\BusinesswebController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
