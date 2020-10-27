@@ -64,12 +64,12 @@ class Product_typeController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('Backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         return redirect()->action('backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

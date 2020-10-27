@@ -82,12 +82,12 @@ class GoogleIdController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('Backend\GoogleIdController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         return redirect()->action('backend\GoogleIdController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('Backend\GoogleIdController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\GoogleIdController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
