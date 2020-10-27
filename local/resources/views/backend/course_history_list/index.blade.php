@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ประเภทสินค้า </h4>
+            <h4 class="mb-0 font-size-18"> รายชื่อลงทะเบียน Course / Event </h4>
         </div>
     </div>
 </div>
@@ -24,20 +24,27 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code">
+                    <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="" name="package_name"> -->
                   </div>
 
-                  <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.product_type.create') }}">
+       <!--            <div class="col-4 text-right">
+                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.course_history.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
-
+ -->
                 </div>
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
+                <div class="form-group mb-0 row">
+                    <div class="col-md-6">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/course_history") }}">
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div> <!-- end col -->
@@ -61,7 +68,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.product_type.datatable') }}',
+          url: '{{ route('backend.course_history_list.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -85,36 +92,15 @@ $(function() {
           },
           method: 'POST'
         },
-     
+
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'product_type', title :'<center>ประเภทสินค้า </center>', className: 'text-left'},
-            {data: 'detail', title :'<center>รายละเอียด </center>', className: 'text-left'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            {data: 'date_added', title :'<center>วันที่เพิ่ม</center>', className: 'text-left'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            {data: 'lang_id',   title :'<center>ภาษา</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'ไทย';
-              }else{
-                return 'อังกฤษ';
-              }
-            }},
-            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'Active';
-              }else{
-                return 'InActive';
-              }
-            }},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'details', title :'<center>รายละเอียด</center>', className: 'text-center'},
+            {data: 'regis_date', title :'<center>วันที่เข้าร่วมกิจกรรม</center>', className: 'text-center'},
+            {data: 'amt_registered', title :'<center>คะแนน</center>', className: 'text-center'},
+            {data: 'features', title :'<center>คุณวุฒิ</center>', className: 'text-center'},
         ],
-        rowCallback: function(nRow, aData, dataIndex){
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.product_type.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.product_type.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
-        }
+
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
       oTable.draw();

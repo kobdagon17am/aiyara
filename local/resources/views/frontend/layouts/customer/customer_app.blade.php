@@ -258,6 +258,14 @@
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
+				<li class="{{-- {{ (request()->is('product-list')) ? 'active' : '' }} --}}">
+					<a href="{{route('product-list')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext">สินค้าแลกซื้อ</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+				
 				<li class="{{ (request()->is('product-status')) ? 'active' : '' }}">
 					<a href="{{route('product-status')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>

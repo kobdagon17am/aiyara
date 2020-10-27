@@ -7,8 +7,8 @@
 //echo '<hr>';
 //echo shell_exec('git push "https://687b012772fc2b42ae5803b73b81c54e24d9ab13:x-oauth-basic@github.com/CuEiHzO/honda.git" master');
 //echo '<hr>';
-echo shell_exec('git pull "https://687b012772fc2b42ae5803b73b81c54e24d9ab13:x-oauth-basic@github.com/CuEiHzO/honda.git" master');
-echo '<hr>';
+// echo shell_exec('git pull "https://687b012772fc2b42ae5803b73b81c54e24d9ab13:x-oauth-basic@github.com/CuEiHzO/honda.git" master');
+// echo '<hr>';
 echo shell_exec('cd local && php artisan cache:clear');
 echo shell_exec('cd local && php artisan route:clear');
 echo shell_exec('cd local && php artisan config:clear');

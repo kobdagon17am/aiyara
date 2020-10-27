@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ภาพ Banner Slide </h4>
+            <h4 class="mb-0 font-size-18"> Course / Event </h4>
         </div>
     </div>
 </div>
@@ -23,12 +23,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                   <div class="col-8">
-                    <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
+                  <div class="col-8">
+                    <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="" name="package_name"> -->
                   </div>
- 
+
                   <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.banner_slide.create') }}">
+                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.course_event.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -61,7 +61,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.banner_slide.datatable') }}',
+          url: '{{ route('backend.course_event.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -85,18 +85,20 @@ $(function() {
           },
           method: 'POST'
         },
-     
+
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'image',   title :'<center>Image</center>', className: 'text-center',render: function(d) {
-               return '<img  width="400"src="{{ url("local/public/banner_slide/") }}/'+d+'" >';
-            }},
-            {data: 'id', title :'Tools', className: 'text-center w150'}, 
+            {data: 'ce_name', title :'<center>ชื่อกิจกรรม</center>', className: 'text-left'},
+            {data: 'ce_type_desc', title :'<center>ประเภท cource/event</center>', className: 'text-center'},
+            {data: 'ce_place', title :'<center>สถานที่จัดงาน</center>', className: 'text-left'},
+            {data: 'ce_max_ticket', title :'<center>จำนวนบัตรสูงสุด</center>', className: 'text-center'},
+            {data: 'ce_ticket_price', title :'<center>ราคาบัตร (หน่วย: บาทไทย)</center>', className: 'text-center'},
+            {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.banner_slide.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.banner_slide.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            + '<a href="{{ route('backend.course_event.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            + '<a href="javascript: void(0);" data-url="{{ route('backend.course_event.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           ).addClass('input');
         }
     });

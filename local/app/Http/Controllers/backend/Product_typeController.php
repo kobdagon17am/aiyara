@@ -55,6 +55,7 @@ class Product_typeController extends Controller
           $sRow->product_type    = request('product_type');
           $sRow->detail    = request('detail');
           $sRow->date_added    = request('date_added');
+          $sRow->lang_id    = request('lang_id');
           $sRow->status    = request('status')?request('status'):0;
                     
           $sRow->created_at = date('Y-m-d H:i:s');

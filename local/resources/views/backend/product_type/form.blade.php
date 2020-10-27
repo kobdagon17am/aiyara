@@ -53,6 +53,18 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">เลือกภาษา :</label>
+                    <div class="col-md-10">
+                         <select name="lang_id" class="form-control select2-templating " required >
+                         <option value="">Select</option>
+                             <!-- <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->ce_type)?'selected':'' }} >{{@$r->txt_desc}}</option> -->
+                             <option value="1" >ไทย</option>
+                             <option value="2" >อังกฤษ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label class="col-md-2 col-form-label">สถานะ :</label>
                     <div class="col-md-10 mt-2">
                       <div class="custom-control custom-switch">

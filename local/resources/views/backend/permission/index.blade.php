@@ -13,15 +13,6 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18">Account (ผู้ดูแลระบบ)</h4>
-
-  <!--           <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Backend</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Permission</a></li>
-                    <li class="breadcrumb-item active">Account (ผู้ดูแลระบบ) x</li>
-                </ol>
-            </div> -->
-
         </div>
     </div>
 </div>
@@ -37,7 +28,7 @@
                     <input type="text" class="form-control float-left ml-1 text-center w200 myLike" placeholder="E-Mail" name="email">
                   </div>
                   <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.permission.admin.create') }}">
+                    <a class="btn btn-info btn-sm mt-1" href="">
                       <i class="bx bx-plus font-size-16 align-middle mr-1"></i>เพิ่มผู้ใช้งาน
                     </a>
                   </div>
@@ -74,7 +65,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ action("Backend\Permission\AdminController@Datatable") }}',
+          url: '{{ route('backend.admin.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -113,19 +104,19 @@ $(function() {
           if(sPermission==1){
             if(aData['permission']==1&&aData['id']==1){
                   $('td:last-child', nRow).html(''
-                + '<a title="แก้ไข" href="{{ route('backend.permission.admin.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               ).addClass('input');
             }else{
                 $('td:last-child', nRow).html(''
-                + '<a title="แก้ไข" href="{{ route('backend.permission.admin.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a title="กำหนดสิทธิ์" href="{{ route('backend.menu_permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-success"><i class="bx bxs-key font-size-16 align-middle"></i></a> '
-                + '<a href="javascript: void(0);" data-url="{{ route('backend.permission.admin.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a title="กำหนดสิทธิ์" href="{{ route('backend.permission.index') }}/'+aData['id']+'/roles" class="btn btn-sm btn-success"><i class="bx bxs-key font-size-16 align-middle"></i></a> '
+                + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
             }
                
           }else{
                 $('td:last-child', nRow).html(''
-                + '<a title="แก้ไข" href="{{ route('backend.permission.admin.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               ).addClass('input');
           }
           

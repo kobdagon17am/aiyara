@@ -58,7 +58,6 @@ class MenuPermissionController extends Controller
 
     public function edit($id)
     {
-        
         $data = MenuModel::query()->orderBy('sort', 'ASC')->get();
         return view('backend.MenuPermission.edit', compact('data', 'id'));
         // return view('backend.MenuPermission.edit');

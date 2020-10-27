@@ -35,10 +35,10 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.permission.admin.store') }}" method="POST" autocomplete="off">
+              <form action="{{ route('backend.admin.store') }}" method="POST" autocomplete="off">
                 <?php @$placeholder=""; ?>
               @else
-              <form action="{{ route('backend.permission.admin.update', $sRow->id ) }}" method="POST" autocomplete="off">
+              <form action="{{ route('backend.admin.update', $sRow->id ) }}" method="POST" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <?php @$placeholder="หากต้องการเปลี่ยนแปลงให้ระบุ"; ?>
               @endif
@@ -112,7 +112,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.permission.admin.index') }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.admin.index') }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>

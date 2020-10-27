@@ -71,7 +71,7 @@
                          <option value="">Select</option>
                             @if(@$dsProductType)
                                 @foreach(@$dsProductType AS $r)
-                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->category_id)?'selected':'' }} >{{$r->product_type}}</option>
+                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->category_id)?'selected':'' }} >{{@$r->product_type}}</option>
                                 @endforeach
                             @endif
                         </select>
