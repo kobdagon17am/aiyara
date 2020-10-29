@@ -24,6 +24,8 @@
 
 @yield('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/bootstrap/css/bootstrap.min.css')}}">
+
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/icon/typicons-icons/css/typicons.min.css')}}">
 <!-- themify-icons line icon -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/icon/themify-icons/themify-icons.css')}}">
 <!-- ico font -->
@@ -40,8 +42,6 @@
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/sweetalert/css/sweetalert.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/component.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery.steps/css/jquery.steps.css')}}">
-
-
 
 </head>
 <body>
@@ -219,14 +219,14 @@
 			</a>
 		</li>
 
-		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
+{{-- 		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
 			<a href="{{route('home_type_tree')}}">
 				<span class="pcoded-micon"><i class="fa fa-sitemap"></i><b>โครงสร้างสายงาน</b></span>
 				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
 				<span class="pcoded-mcaret"></span>
 				<span class="pcoded-badge label label-danger">NEW</span>
 			</a>
-		</li>
+		</li> --}}
 
 		<li class="{{ (request()->is('allmember')) ? 'active' : '' }}">
 			<a href="{{route('allmember')}}">
@@ -447,8 +447,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </body>
- 
- 
 @include('frontend.layouts.flash-message')
 @yield('js')
 
