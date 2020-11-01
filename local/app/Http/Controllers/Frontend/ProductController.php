@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
+use App\Models\Frontend\Product;
 
 class ProductController extends Controller
 {
@@ -15,39 +16,115 @@ class ProductController extends Controller
         $this->middleware('customer');
     }
 
-    public function index()
+    public function product_list_type_1(Request $request)
+
     {
+        if(empty($request->c_id)){
+            $c_id = 1;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-1', $data);
+    }
+
+    public function product_list_1_select_c(Request $request)
+
+    {
+        if(empty($request->category_id)){
+            $c_id = 1;
+
+        }else{
+            $c_id = $request->category_id;
+        }
+        $data = Product::product_list($c_id);
+        $html='';
+        if($data['product']){
+            foreach ($data['product'] as $value) {
+                if($value->image_default == 1){
+                    $img = '<img src="'.asset($value->img_url.''.$value->image01).'" class="img-fluid o-hidden" alt="">';
+                }elseif($value->image_default == 2){
+                    $img =  '<img src="'.asset($value->img_url.''.$value->image02).'" class="img-fluid o-hidden" alt="">';
+                }elseif($value->image_default == 3){
+                    $img = '<img src="'.asset($value->img_url.''.$value->image03).'" class="img-fluid o-hidden" alt="">';
+                }else{
+                    $img = '<img src="'.asset($value->img_url.''.$value->image01).'" class="img-fluid o-hidden" alt="">';
+                }
+
+                $html .= '<div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
+                <input type="hidden" id="item_id" value="'.$value->id.'">
+                <div class="card prod-view">
+                <div class="prod-item text-center">
+                <div class="prod-img">
+                <div class="option-hover">
+                <a href="'.route("product-detail",["id"=>$value->id]).'" type="button" 
+                class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
+                <a href="'.route("product-detail",["id"=>$value->id]).'"
+                class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
+                <i class="icofont icofont-eye-alt f-20"></i>
+                </a>
+                <!-- <button type="button" class="btn btn-danger btn-icon waves-effect waves-light hvr-bounce-in option-icon">
+                <i class="icofont icofont-heart-alt f-20"></i>
+                </button> -->
+                </div>
+                <a href="#!" class="hvr-shrink">
+                '.$img.'
+                </a>
+                <!-- <div class="p-new"><a href=""> New </a></div> -->
+                </div>
+                <div class="prod-info">
+                <a href="'.route('product-detail',['id'=>$value->id]).'" class="txt-muted">
+                <h5 style="font-size: 15px">'.$value->product_name.'</h5>
+                <p style="margin-top: 0px;">'.$value->title.'</p>
+                </a>
+                <!--           <div class="m-b-10">
+                <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
+                </div> -->
+                <span class="prod-price"><i
+                class="icofont icofont-cur-dollar"></i>฿'.number_format($value->price,2).'<b
+                style="color:#00c454">['.$value->pv.' PV]</b></span>
+                </div>
+                </div>
+                </div>
+                </div>';
+            }
+
+        }else{
+            $html ='';
+        }
+        return $html;
+    }
 
 
-        $ev_objective = DB::table('ev_objective')
-        ->where('lang_id', '=', 1)
-        ->orderby('order')
-        ->get();
 
-        $categories = DB::table('dataset_product_type')
-        ->where('lang_id', '=', 1)
-        ->orderby('order')
-        ->get();
 
-       
+    public function product_list_type_2()
+    {
+        $data = Product::product_list();
+        return view('frontend/product/product-list', $data);
+    }
 
-        $product = DB::table('products')
-        ->select(
-            'products.*',
-            'product_detail.product_name',
-            'product_detail.title',
-            'product_detail.product_detail'
-        )
-        ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-        ->where('products.category_id', '=', 1)
-        ->where('product_detail.lang_id', '=', 1)
-        ->orderby('products.id')
-        ->Paginate(4);
+    public function product_list_type_3()
+    {
+        $data = Product::product_list();
+        return view('frontend/product/product-list', $data);
+    }
 
-        $data = array(
-            'objective' => $ev_objective,
-            'categories' => $categories,
-            'product' => $product);
+    public function product_list_type_4()
+    {
+        $data = Product::product_list();
+        return view('frontend/product/product-list', $data);
+    }
+    public function product_list_type_5()
+    {
+        $data = Product::product_list();
+        return view('frontend/product/product-list', $data);
+    }
+
+    public function product_list_type_6()
+    {
+        $data = Product::product_list();
         return view('frontend/product/product-list', $data);
     }
 
@@ -57,12 +134,12 @@ class ProductController extends Controller
             return redirect('product-list');
         } else {
             $product = DB::table('products')
-     ->select(
-            'products.*',
-            'product_detail.product_name',
-            'product_detail.title',
-            'product_detail.product_detail'
-        )
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
             ->where('products.category_id', '=', 1)
@@ -70,29 +147,29 @@ class ProductController extends Controller
             ->where('products.id', '=', $id)
             ->orderby('products.id')
             ->first();
-           
+
 
             return view('frontend/product/product-detail', compact('product'));
         }
     }
 
     public function add_cart(Request $request){
+     // dd($request->type);
+        Cart::session($request->type)->add(array(
+            'id' => $request->id, // inique row ID
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'attributes' => array(
+                'pv'=>$request->pv,
+                'img'=>$request->img,
+                'title'=>$request->title,
+                'promotion'=>$request->promotion
+            )
+        ));
 
-     //dd(Cart::getContent());
-     $data = Cart::add(array(
-    'id' => $request->id, // inique row ID
-    'name' => $request->name,
-    'price' => $request->price,
-    'pv'=>$request->pv,
-    'quantity' => $request->quantity,
-    'attributes' => array('pv'=>$request->pv,
-        'img'=>$request->img,
-        'title'=>$request->title,
-        'promotion'=>$request->promotion)
- 
-));
-     $getTotalQuantity = Cart::getTotalQuantity();
-     return $getTotalQuantity; 
+        $item = Cart::session($request->type)->getContent();
+        return $getTotalQuantity; 
 
- }
+    }
 }

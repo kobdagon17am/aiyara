@@ -181,7 +181,7 @@
       url: '{{ route('add_cart') }}',
       type: 'get',
             // dataType: 'json',
-            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion},
+            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'1'},
           })
     .done(function(data) {
      date = $('#count_cart').html(data);

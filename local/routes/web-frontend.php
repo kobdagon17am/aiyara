@@ -83,8 +83,17 @@ Route::get('/cademy/home_product', function () {
 });
 
 //---------------------- Product -------------------------------//
+Route::get('product-list-1','Frontend\ProductController@product_list_type_1')->name('product-list-1');
+Route::get('product_list_1_select_c/{c_id?}','Frontend\ProductController@product_list_1_select_c')->name('product_list_1_select_c');
+
+Route::get('product-list-2','Frontend\ProductController@product_list_type_2')->name('product-list-2');
+Route::get('product-list-3','Frontend\ProductController@product_list_type_3')->name('product-list-3');
+Route::get('product-list-4','Frontend\ProductController@product_list_type_4')->name('product-list-4');
+Route::get('product-list-5','Frontend\ProductController@product_list_type_5')->name('product-list-5');
+Route::get('product-list-6','Frontend\ProductController@product_list_type_6')->name('product-list-6');
+
+
 Route::get('add_cart','Frontend\ProductController@add_cart')->name('add_cart');
-Route::get('product-list','Frontend\ProductController@index')->name('product-list');
 Route::get('product-detail/{id?}','Frontend\ProductController@product_detail')->name('product-detail');
 
 Route::get('cart','Frontend\CartController@index')->name('cart');

@@ -86,11 +86,11 @@
 
 							<li class="header">
 
-								<a href="{{route('cart')}}">
+							{{-- 	<a href="{{route('cart')}}">
 									<i class="fa fa-shopping-basket"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ Cart::getTotalQuantity() }}</span>
-								</a>
+								</a> --}}
 							</li>
 
 							<li class="header-notification">
@@ -244,35 +244,83 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('cart') || request()->is('product-detail') || request()->is('product-list') || request()->is('product-status') || request()->is('product-history')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('cart') || request()->is('product-detail') || request()->is('product-list-1') || request()->is('product-list-2') || request()->is('product-list-3') || request()->is('product-list-4') || request()->is('product-list-5') || request()->is('product-list-6') || request()->is('product-status') || request()->is('product-history')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-shopping-cart"></i><b>สั่งซื้อสินค้า</b></span>
 				<span class="pcoded-mtext">สั่งซื้อสินค้า</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('product-list')) ? 'active' : '' }}">
+			{{-- 	<li class="{{ (request()->is('product-list')) ? 'active' : '' }}">
 					<a href="{{route('product-list')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext">สินค้า</span>
+						<span class="pcoded-mtext">สินค้าทั่วไป</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li> --}}
+
+
+				<li class="{{ (request()->is('product-list-1')) ? 'active' : '' }}">
+					<a href="{{route('product-list-1')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext">ทำคุณสมบัติ</span>
+						<span class="pcoded-badge label label-info" style="top:1px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(1)->getTotalQuantity() }}</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
-				<li class="{{-- {{ (request()->is('product-list')) ? 'active' : '' }} --}}">
-					<a href="{{route('product-list')}}">
+
+				<li class="{{ (request()->is('product-list-2')) ? 'active' : '' }}">
+					<a href="{{route('product-list-2')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext">สินค้าแลกซื้อ</span>
+						<span class="pcoded-mtext">รักษาคุณสมบัติ</span>
+						<span class="pcoded-badge label label-info" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(2)->getTotalQuantity() }}</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('product-list-3')) ? 'active' : '' }}">
+					<a href="{{route('product-list-3')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext" style="font-size: 13px">รักษาคุณสมบัติท่องเที่ยว</span>
+						<span class="pcoded-badge label label-info" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(3)->getTotalQuantity() }}</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('product-list-4')) ? 'active' : '' }}">
+					<a href="{{route('product-list-4')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext">เติม AiPocket</span>
+						<span class="pcoded-badge label label-info" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(4)->getTotalQuantity() }}</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('product-list-5')) ? 'active' : '' }}">
+					<a href="{{route('product-list-5')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext">Gift Voucher</span>
+						<span class="pcoded-badge label label-info" style="top:8px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(5)->getTotalQuantity() }}</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('product-list-6')) ? 'active' : '' }}">
+					<a href="{{route('product-list-6')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+						<span class="pcoded-mtext">คอร์สอบรม</span>
+						<span class="pcoded-badge label label-info" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(6)->getTotalQuantity() }}</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 				
-				<li class="{{ (request()->is('product-status')) ? 'active' : '' }}">
+				{{-- <li class="{{ (request()->is('product-status')) ? 'active' : '' }}">
 					<a href="{{route('product-status')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">ติดตามสถานะ</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>
+				</li> --}}
 				<li class="{{ (request()->is('product-history')) ? 'active' : '' }}">
 					<a href="{{route('product-history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>

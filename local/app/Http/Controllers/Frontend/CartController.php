@@ -20,7 +20,7 @@ class CartController extends Controller
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 			}
 			$pv_total = array_sum($pv);
-			$sent = 60;//ค่าส่ง
+			$sent = 100;//ค่าส่ง
 
 		}else{
 			$pv_total = 0;
@@ -68,7 +68,7 @@ class CartController extends Controller
 					$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 				}
 				$pv_total = array_sum($pv);
-			$sent = 60;//ค่าส่ง
+			$sent = 100;//ค่าส่ง
 
 		}else{
 			$pv_total = 0;

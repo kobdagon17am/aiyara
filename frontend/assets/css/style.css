@@ -9710,7 +9710,7 @@ table tbody .border-bottom-info td {
 
 .pcoded .pcoded-navbar .pcoded-item .pcoded-submenu>li a .pcoded-badge {
     top: 10px;
-    right: 2px
+    right: -8px
 }
 
 .pcoded[vertical-nav-type="collapsed"] .pcoded-navbar .pcoded-item>li>a .pcoded-badge {
