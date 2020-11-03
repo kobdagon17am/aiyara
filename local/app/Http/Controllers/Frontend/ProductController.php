@@ -93,13 +93,16 @@ class ProductController extends Controller
         return view('frontend/product/product-list-6', $data);
     }
 
-    public function product_list_1_select_c(Request $request)
+    public function product_list_select(Request $request)
     {
+        $type = $request->type;
+
         if(empty($request->category_id)){
             $c_id = 1;
         }else{
             $c_id = $request->category_id;
         }
+
         $data = Product::product_list($c_id);
         $html='';
         if($data['product']){
@@ -120,9 +123,9 @@ class ProductController extends Controller
                 <div class="prod-item text-center">
                 <div class="prod-img">
                 <div class="option-hover">
-                <a href="'.route("product-detail",["id"=>$value->id]).'" type="button" 
+                <a href="'.route("product-detail-".$type,["id"=>$value->id]).'" type="button" 
                 class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                <a href="'.route("product-detail",["id"=>$value->id]).'"
+                <a href="'.route("product-detail-".$type,["id"=>$value->id]).'"
                 class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                 <i class="icofont icofont-eye-alt f-20"></i>
                 </a>
@@ -136,7 +139,7 @@ class ProductController extends Controller
                 <!-- <div class="p-new"><a href=""> New </a></div> -->
                 </div>
                 <div class="prod-info">
-                <a href="'.route('product-detail',['id'=>$value->id]).'" class="txt-muted">
+                <a href="'.route('product-detail-'.$type,['id'=>$value->id]).'" class="txt-muted">
                 <h5 style="font-size: 15px">'.$value->product_name.'</h5>
                 <p style="margin-top: 0px;">'.$value->title.'</p>
                 </a>
@@ -199,7 +202,7 @@ class ProductController extends Controller
             )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
+            // ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
             ->orderby('products.id')
@@ -224,7 +227,7 @@ class ProductController extends Controller
             )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
+            // ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
             ->orderby('products.id')
@@ -249,7 +252,7 @@ class ProductController extends Controller
             )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
+            // ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
             ->orderby('products.id')
@@ -273,7 +276,7 @@ class ProductController extends Controller
             )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
+            // ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
             ->orderby('products.id')
@@ -297,7 +300,7 @@ class ProductController extends Controller
             )
                 //->select('*')
             ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
+            // ->where('products.category_id', '=', 1)
             ->where('product_detail.lang_id', '=', 1)
             ->where('products.id', '=', $id)
             ->orderby('products.id')
@@ -322,8 +325,9 @@ class ProductController extends Controller
                 'promotion'=>$request->promotion
             )
         ));
+        $getTotalQuantity = Cart::session($request->type)->getTotalQuantity();
 
-        $item = Cart::session($request->type)->getContent();
+        // $item = Cart::session($request->type)->getContent();
         return $getTotalQuantity; 
 
     }

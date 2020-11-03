@@ -18,10 +18,10 @@
                 <div class="row">
 
                     <div class="col-md-8 col-sx-8">
-                        <h4>รายการสั่งซื้อ</h4>
+                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตรท่องเที่ยว</h4>
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
-                        <a href="{{route('product-list-1')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
+                        <a href="{{route('product-list-3')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
                                     @foreach($data as $value)
 
                                     <tr id="items">
-                                        <td class="text-center"><a href="{{ route('product-detail',['id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
+                                        <td class="text-center"><a href="{{ route('product-detail-3',['id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
@@ -123,6 +123,7 @@
 <form action="" method="POST" id="cart_delete">
     @csrf
     <input type="hidden" id="data_id" name="data_id">
+    <input type="hidden" id="type" name="type" value="3">
 </form>
 
 <!-- End Contact Info area-->
@@ -174,10 +175,9 @@
     $.ajax({
         url: '{{ route('edit_item') }}',
         type: 'POST',
-        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty},
+        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':3},
     })
     .done(function(data) {
-        $('#price').html('$ '+data['price_total']);
         $('#price').html('$ '+data['price_total']);
         $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
         $('#price_total').html('$ '+data['price_total_sent']);

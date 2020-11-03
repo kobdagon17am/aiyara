@@ -83,33 +83,30 @@ Route::get('/cademy/home_product', function () {
 });
 
 //---------------------- Product -------------------------------//
+Route::get('product_list_select','Frontend\ProductController@product_list_select')->name('product_list_select');
+
+
 Route::get('product-list-1','Frontend\ProductController@product_list_type_1')->name('product-list-1');
-Route::get('product_list_1_select_c/{c_id?}','Frontend\ProductController@product_list_1_select_c')->name('product_list_1_select_c');
 Route::get('product-detail-1/{id?}','Frontend\ProductController@product_detail_1')->name('product-detail-1');
 Route::get('cart-1','Frontend\CartController@cart_1')->name('cart-1');
 
 Route::get('product-list-2','Frontend\ProductController@product_list_type_2')->name('product-list-2');
-Route::get('product_list_2_select_c/{c_id?}','Frontend\ProductController@product_list_2_select_c')->name('product_list_2_select_c');
 Route::get('product-detail-2/{id?}','Frontend\ProductController@product_detail_2')->name('product-detail-2');
 Route::get('cart-2','Frontend\CartController@cart_2')->name('cart-2');
 
 Route::get('product-list-3','Frontend\ProductController@product_list_type_3')->name('product-list-3');
-Route::get('product_list_3_select_c/{c_id?}','Frontend\ProductController@product_list_3_select_c')->name('product_list_3_select_c');
 Route::get('product-detail-3/{id?}','Frontend\ProductController@product_detail_3')->name('product-detail-3');
 Route::get('cart-3','Frontend\CartController@cart_3')->name('cart-3');
 
 Route::get('product-list-4','Frontend\ProductController@product_list_type_4')->name('product-list-4');
-Route::get('product_list_4_select_c/{c_id?}','Frontend\ProductController@product_list_4_select_c')->name('product_list_4_select_c');
 Route::get('product-detail-4/{id?}','Frontend\ProductController@product_detail_4')->name('product-detail-4');
 Route::get('cart-4','Frontend\CartController@cart_4')->name('cart-4');
 
 Route::get('product-list-5','Frontend\ProductController@product_list_type_5')->name('product-list-5');
-Route::get('product_list_5_select_c/{c_id?}','Frontend\ProductController@product_list_5_select_c')->name('product_list_5_select_c');
 Route::get('product-detail-5/{id?}','Frontend\ProductController@product_detail_5')->name('product-detail-5');
 Route::get('cart-5','Frontend\CartController@cart_5')->name('cart-5');
 
 Route::get('product-list-6','Frontend\ProductController@product_list_type_6')->name('product-list-6');
-Route::get('product_list_6_select_c/{c_id?}','Frontend\ProductController@product_list_6_select_c')->name('product_list_6_select_c');
 Route::get('product-detail-6/{id?}','Frontend\ProductController@product_detail_6')->name('product-detail-6');
 Route::get('cart-6','Frontend\CartController@cart_6')->name('cart-6');
 

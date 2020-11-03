@@ -135,6 +135,10 @@
                  <button type="button" onclick="addcart({{$product->id}})" class="btn btn-primary waves-effect waves-light" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
+
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 col-12 text-center">
+                 <a href="{{ route('product-list-3') }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
               </div>
 
 
@@ -186,10 +190,12 @@
       url: '{{ route('add_cart') }}',
       type: 'get',
             // dataType: 'json',
-            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'1'},
+            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'3'},
           })
     .done(function(data) {
-     date = $('#count_cart').html(data);
+     $('#count_cart').html(data);
+     var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
+     $('#count_cart_3').html(count_cart);
           //console.log(data);
         })
     .fail(function() {

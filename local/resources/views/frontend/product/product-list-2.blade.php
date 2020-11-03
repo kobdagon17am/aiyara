@@ -1,6 +1,7 @@
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 @section('css')
+
 @endsection
 
 <!-- Breadcomb area Start-->
@@ -13,30 +14,121 @@
             
         </form> --}}
 
-        <div class="col-sm-4">
-          <label>หมวดสินค้า </label>
-          <select class="form-control" id="category" name="category" onchange="select_category()">
+        <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
+         {{--  <label>หมวดสินค้า </label> --}}
+         <select class="form-control" id="category" name="category" onchange="select_category()">
             @foreach($category as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
         </select>
     </div>  
-{{-- 
-    <div class="col-sm-4">
-        <label>เลือกประเภทสินค้าด้านล้าง</label>
-        <select class="form-control" name="">
-            @foreach($categories as $value)
-            <option value="{{$value->category_id}}">{{$value->product_type}}</option>
-            @endforeach
-        </select>
-    </div> --}}
 
-    <div class="col-sm-4">
-        <label>รหัสสินค้าโปรโมชั่น</label>
-        <input type="text" class="form-control form-control-warning" placeholder="รหัสสินค้าโปรโมชั่น" name="">
+    <div class="col-lg-4 col-md-4 col-sm-6 m-t-5">
+        {{-- <label>รหัสสินค้าโปรโมชั่น</label> --}} 
+
+        <div class="input-group input-group-button">
+            <input type="text" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น">
+            <span class="input-group-addon btn btn-primary" id="check_code">
+                <span class="">Check Code</span>
+            </span>
+        </div>
     </div>
 
-</div>
+    <div class="col-lg-5 col-md-5 col-sm-12 m-t-5">
+        <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#large-Modal">Code ticket</button>
+
+        <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Code ticket</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-header">
+                               {{--  <h5>Zero Configuration</h5> --}}
+                                <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
+                            </div>
+                            <div class="card-block">
+                                <div class="dt-responsive table-responsive">
+                                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Detail</th>
+                                                {{-- <th>Start</th> --}}
+                                                <th>Expiry</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="label label-primary"><b style="color:#000">B1QQJTYL2</b></span></td>
+                                                <td> สำหรับสั่งซื้อ Aimmura-O 5 Free 1 </td>
+                                                {{-- <td>10/04/2020</td> --}}
+                                                <td>12/12/2020</td>
+                                                <td><span class="label label-success">ใช้งานได้</span></td>
+                                                <td><button class="btn btn-success btn-sm"><i class="icofont icofont-check-circled"></i> ใช้งาน </button></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="label label-primary"> <b style="color:#000">B1QQJTYL2</b> </span></td>
+                                                <td> สำหรับสั่งซื้อ Aimmura-O 5 Free 1 </td>
+                                                {{-- <td>10/04/2020</td> --}}
+                                                <td>12/12/2020</td>
+                                                <td><span class="label label-danger">หมดอายุ</span></td>
+                                                <td> </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><span class="label label-primary"> <b style="color:#000">B1QQJTYL2</b> </span></td>
+                                                <td> สำหรับสั่งซื้อ Aimmura-O 5 Free 1 </td>
+                                                {{-- <td>10/04/2020</td> --}}
+                                                <td>12/12/2020</td>
+                                                <td><span class="label label-inverse">ถูกใช้แล้ว</span></td>
+                                                <td> </td>
+                                            </tr>
+
+                                        </tbody>
+                                       {{--  <tfoot>
+                                            <tr>
+                                                <th>Code ticket</th>
+                                                <th>Detail</th>
+                                                <th>Start</th>
+                                                <th>Expiry</th>
+                                            </tr>
+                                        </tfoot> --}}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{{--     <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="row float-right m-r-10">
+             
+
+            <i class="fa fa-shopping-cart text-c-blue d-block f-50"></i> <b class="text-c-blue" style="font-size: 20px">
+                {{Cart::session(1)->getTotalQuantity()}} </b> 
+            </div>
+       
+
+        </div> --}}
+
+    </div>
 
 </div>
 </div>
@@ -101,14 +193,15 @@
 </div>
 
 @endsection
+
 @section('js')
 <script type="text/javascript">
     function select_category(){
         var category = $('#category').val();
         $.ajax({
-            url: '{{route('product_list_1_select_c')}}',
+            url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category},
+            data: {'category_id':category,'type':2},
         })
         .done(function(data){
             $('#product_list').html(data);
@@ -123,4 +216,16 @@
         
     }
 </script>
-@endsection
+<!-- data-table js -->
+{{--  <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script> 
+ <script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
+ <script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
+ <script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+ <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script> --}}
+
+ @endsection

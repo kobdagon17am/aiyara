@@ -199,9 +199,9 @@
     function select_category(){
         var category = $('#category').val();
         $.ajax({
-            url: '{{route('product_list_1_select_c')}}',
+            url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category},
+            data: {'category_id':category,'type':1},
         })
         .done(function(data){
             $('#product_list').html(data);
@@ -227,8 +227,5 @@
  <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
  <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
  <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script> --}}
-
-
-
 
  @endsection

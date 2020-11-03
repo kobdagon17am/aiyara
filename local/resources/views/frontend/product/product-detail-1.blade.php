@@ -193,7 +193,9 @@
             data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'1'},
           })
     .done(function(data) {
-     date = $('#count_cart').html(data);
+     $('#count_cart').html(data);
+     var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
+     $('#count_cart_1').html(count_cart);
           //console.log(data);
         })
     .fail(function() {

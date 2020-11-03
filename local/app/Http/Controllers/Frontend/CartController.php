@@ -220,23 +220,24 @@ class CartController extends Controller
 
 	public function cart_delete(Request $request){
 		//dd($request->all());
-		Cart::remove($request->data_id);
-		return redirect('cart-1')->withSuccess('Deleted Success');
+		Cart::session($request->type)->remove($request->data_id);
+		return redirect('cart-'.$request->type)->withSuccess('Deleted Success');
 	}
 
 	public function edit_item(Request $request){
+		$type = $request->type;
 
 		if($request->item_id){
-			Cart::update($request->item_id,array(
+			Cart::session($type)->update($request->item_id,array(
 				'quantity' => array (
 					'relative' => false ,
 					'value' => $request->qty
 				),
 			));
-			$cartCollection = Cart::getContent();
+			$cartCollection = Cart::session($type)->getContent();
 			$data=$cartCollection->toArray();
 
-			$quantity = Cart::getTotalQuantity();
+			$quantity = Cart::session($type)->getTotalQuantity();
 			if($data){
 				foreach ($data as $value) {
 					$pv[] = $value['quantity'] *  $value['attributes']['pv'];
@@ -249,7 +250,7 @@ class CartController extends Controller
 			$sent = 0;//ค่าส่ง
 		}
 
-		$price = Cart::getTotal();
+		$price = Cart::session($type)->getTotal();
 		$price_total = number_format($price,2);
 		$price_total_sent = $price + $sent;
 
