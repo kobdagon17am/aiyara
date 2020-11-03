@@ -29,12 +29,74 @@ class ProductController extends Controller
         return view('frontend/product/product-list-1', $data);
     }
 
-    public function product_list_1_select_c(Request $request)
+    public function product_list_type_2(Request $request)
 
+    {
+        if(empty($request->c_id)){
+            $c_id = 2;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-2', $data);
+    }
+
+    public function product_list_type_3(Request $request)
+
+    {
+        if(empty($request->c_id)){
+            $c_id = 3;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-3', $data);
+    }
+
+    public function product_list_type_4(Request $request)
+
+    {
+        if(empty($request->c_id)){
+            $c_id = 4;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-4', $data);
+    }
+
+    public function product_list_type_5(Request $request)
+
+    {
+        if(empty($request->c_id)){
+            $c_id = 5;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-5', $data);
+    }
+
+    public function product_list_type_6(Request $request)
+    {
+        if(empty($request->c_id)){
+            $c_id = 6;
+        }else{
+            $c_id = $request->c_id;
+        }
+
+        $data = Product::product_list($c_id);
+        return view('frontend/product/product-list-6', $data);
+    }
+
+    public function product_list_1_select_c(Request $request)
     {
         if(empty($request->category_id)){
             $c_id = 1;
-
         }else{
             $c_id = $request->category_id;
         }
@@ -98,37 +160,7 @@ class ProductController extends Controller
 
 
 
-
-    public function product_list_type_2()
-    {
-        $data = Product::product_list();
-        return view('frontend/product/product-list', $data);
-    }
-
-    public function product_list_type_3()
-    {
-        $data = Product::product_list();
-        return view('frontend/product/product-list', $data);
-    }
-
-    public function product_list_type_4()
-    {
-        $data = Product::product_list();
-        return view('frontend/product/product-list', $data);
-    }
-    public function product_list_type_5()
-    {
-        $data = Product::product_list();
-        return view('frontend/product/product-list', $data);
-    }
-
-    public function product_list_type_6()
-    {
-        $data = Product::product_list();
-        return view('frontend/product/product-list', $data);
-    }
-
-    public function product_detail($id)
+    public function product_detail_1($id)
     {
         if (empty($id)) {
             return redirect('product-list');
@@ -149,7 +181,130 @@ class ProductController extends Controller
             ->first();
 
 
-            return view('frontend/product/product-detail', compact('product'));
+            return view('frontend/product/product-detail-1', compact('product'));
+        }
+    }
+
+    public function product_detail_2($id)
+    {
+        if (empty($id)) {
+            return redirect('product-list');
+        } else {
+            $product = DB::table('products')
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
+                //->select('*')
+            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+            ->where('products.category_id', '=', 1)
+            ->where('product_detail.lang_id', '=', 1)
+            ->where('products.id', '=', $id)
+            ->orderby('products.id')
+            ->first();
+
+
+            return view('frontend/product/product-detail-2', compact('product'));
+        }
+    }
+
+    public function product_detail_3($id)
+    {
+        if (empty($id)) {
+            return redirect('product-list');
+        } else {
+            $product = DB::table('products')
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
+                //->select('*')
+            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+            ->where('products.category_id', '=', 1)
+            ->where('product_detail.lang_id', '=', 1)
+            ->where('products.id', '=', $id)
+            ->orderby('products.id')
+            ->first();
+
+
+            return view('frontend/product/product-detail-3', compact('product'));
+        }
+    }
+
+    public function product_detail_4($id)
+    {
+        if (empty($id)) {
+            return redirect('product-list');
+        } else {
+            $product = DB::table('products')
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
+                //->select('*')
+            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+            ->where('products.category_id', '=', 1)
+            ->where('product_detail.lang_id', '=', 1)
+            ->where('products.id', '=', $id)
+            ->orderby('products.id')
+            ->first();
+
+
+            return view('frontend/product/product-detail-4', compact('product'));
+        }
+    }
+    public function product_detail_5($id)
+    {
+        if (empty($id)) {
+            return redirect('product-list');
+        } else {
+            $product = DB::table('products')
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
+                //->select('*')
+            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+            ->where('products.category_id', '=', 1)
+            ->where('product_detail.lang_id', '=', 1)
+            ->where('products.id', '=', $id)
+            ->orderby('products.id')
+            ->first();
+
+
+            return view('frontend/product/product-detail-5', compact('product'));
+        }
+    }
+    public function product_detail_6($id)
+    {
+        if (empty($id)) {
+            return redirect('product-list');
+        } else {
+            $product = DB::table('products')
+            ->select(
+                'products.*',
+                'product_detail.product_name',
+                'product_detail.title',
+                'product_detail.product_detail'
+            )
+                //->select('*')
+            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+            ->where('products.category_id', '=', 1)
+            ->where('product_detail.lang_id', '=', 1)
+            ->where('products.id', '=', $id)
+            ->orderby('products.id')
+            ->first();
+
+
+            return view('frontend/product/product-detail-6', compact('product'));
         }
     }
 

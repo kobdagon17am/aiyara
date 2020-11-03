@@ -21,7 +21,7 @@
                         <h4>รายการสั่งซื้อ</h4>
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
-                        <a href="{{route('product-list')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
+                        <a href="{{route('product-list-1')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
                     </div>
                 </div>
 

@@ -14,11 +14,16 @@
  <!-- themify-icons line icon -->
  <!-- ico font -->
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/icon/icofont/css/icofont.css')}}">
+
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/notification/notification.css')}}">
+ <!-- Animate.css -->
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/animate.css/css/animate.css')}}">
  
  @endsection
  @section('conten')
 
  <div class="row">
+
   <div class="col-md-12">
     <!-- Product detail page start -->
     <div class="card product-detail-page">
@@ -51,30 +56,30 @@
               <div class="col-lg-12 product-right">
                 <div id="small_banner">
 
-                   @if($product->image01)
-                  <div>
-                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
-                  </div>
-                  @endif
-                  @if($product->image02)
-                  <div>
-                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
-                  </div>
-                  @endif
-                  @if($product->image03)
-                  <div>
-                    <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
-                  </div>
-                  @endif
-
- 
+                 @if($product->image01)
+                 <div>
+                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
                 </div>
+                @endif
+                @if($product->image02)
+                <div>
+                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
+                </div>
+                @endif
+                @if($product->image03)
+                <div>
+                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
+                </div>
+                @endif
+
+
               </div>
             </div>
           </div>
-          <div class="col-lg-7 col-xs-12 product-detail" id="product-detail">
-            <div class="row">
-              <div>
+        </div>
+        <div class="col-lg-7 col-xs-12 product-detail" id="product-detail">
+          <div class="row">
+            <div>
                <!--  <div class="col-lg-12">
                   <span class="txt-muted d-inline-block">Product Code: <a href="#!"> PRDT1234 </a> </span>
                   <span class="f-right">Availability : <a href="#!"> In Stock </a> </span>
@@ -126,10 +131,14 @@
                   </div>
 
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-6">
-                 <button type="button" onclick="addcart({{$product->id}})" class="btn btn-primary waves-effect waves-light" style="margin-top: -2px">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-6 notifications">
+                 <button type="button" onclick="addcart({{$product->id}})" class="btn btn-primary waves-effect waves-light" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
+
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 col-12 text-center">
+                 <a href="{{ route('product-list-1') }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
               </div>
 
 
@@ -192,5 +201,7 @@
     });
   }
 </script>
+<script  src="{{asset('frontend/assets/js/bootstrap-growl.min.js')}}"></script>
+<script  src="{{asset('frontend/assets/pages/notification/notification.js')}}"></script>
 @endsection
 

@@ -37,11 +37,19 @@
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/j-pro/css/font-awesome.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/j-pro/css/j-forms.css')}}">
 <!-- Style.css -->
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
+
+
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/jquery.mCustomScrollbar.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/sweetalert/css/sweetalert.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/component.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery.steps/css/jquery.steps.css')}}">
+
+ 
+ 
 
 </head>
 <body>
@@ -85,12 +93,51 @@
 						<ul class="nav-right">
 
 							<li class="header">
-
-							{{-- 	<a href="{{route('cart')}}">
-									<i class="fa fa-shopping-basket"></i>
+								@if(request()->is('product-list-1'))
+								<a href="{{route('cart-1')}}">
+									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
-									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ Cart::getTotalQuantity() }}</span>
-								</a> --}}
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list-2'))
+								<a href="{{route('cart-2')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(2)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list-3'))
+								<a href="{{route('cart-3')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(3)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list-4'))
+								<a href="{{route('cart-4')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(4)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list-5'))
+								<a href="{{route('cart-5')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(5)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list-6'))
+								<a href="{{route('cart-6')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(6)->getTotalQuantity() }}</span>
+								</a>
+
+								@else
+								<a href="{{route('cart-1')}}">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ Cart::session(1)->getTotalQuantity() }}</span>
+								</a>
+								@endif
+
 							</li>
 
 							<li class="header-notification">
@@ -469,7 +516,6 @@
 </div>
 
 <!-- modernizr js -->
-
 <script  src="{{asset('frontend/bower_components/jquery/js/jquery.min.js')}}"></script>
 <script  src="{{asset('frontend/bower_components/jquery-ui/js/jquery-ui.min.js')}}"></script>
 <script  src="{{asset('frontend/bower_components/popper.js/js/popper.min.js')}}"></script>
@@ -494,7 +540,7 @@
 <script  src="{{asset('frontend/bower_components/sweetalert/js/sweetalert.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-</body>
+
 @include('frontend.layouts.flash-message')
 @yield('js')
 
