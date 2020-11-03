@@ -503,7 +503,7 @@
               @if($data_lv3)
 
 
-              <div class="col-auto col-sm-4 text-center">
+              <div class="col-auto col-sm-4 col-4 text-center">
                 @if($data_lv2->profile_img)
                 <a data-toggle="modal" data-target="#{{$model_lv3}}">
                   <img class="img-radius zoom" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
@@ -610,9 +610,7 @@
   </div>
   @else
   @if($data_lv2)
-  <div class="col-auto col-sm-4 text-center">
-
-
+  <div class="col-auto col-sm-4 col-4 text-center">
 
    <a href="#" data-toggle="modal" data-target="#{{ $model_lv3 }}_add" ><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></a>
 
