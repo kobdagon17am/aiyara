@@ -20,6 +20,15 @@
     content: 'C';
   }
 
+  .bg-tree{
+    background-image: url(local/public/images/line_tree.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 109%;
+    background-position-y: 0%;
+    background-position-x: 51%;
+  }
+
 </style>
 @endsection
 
@@ -112,7 +121,7 @@
               <div class="slide"></div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#board" id="board_tab" role="tab"><i class="typcn typcn-flow-merge"></i>Board</a>
+              <a class="nav-link" data-toggle="tab" href="#board" id="board_tab" role="tab"><i class="fa fa-sitemap"></i>Board</a>
               <div class="slide"></div>
             </li>
 
@@ -220,8 +229,10 @@
               </div>
             </div>
 
-            {{--    ///////////////////////////////////////////////////////////////// --}}
-            <div class="tab-pane" id="board" role="tabpanel">
+            {{--    ///////////////////////////////////////////////////////////////////////////// --}}
+
+
+            <div class="tab-pane bg-tree" id="board" role="tabpanel">
               <div class="row" align="center">
                 <div class="col-lg-4"> 
                 </div>
@@ -272,7 +283,9 @@
                         <div class="col-lg-4"> 
                         </div>
                       </div>
-                      <br>
+ 
+                      <div class="verticalLine"></div>
+
                       <div class="row text-center">
                        @for($i=1;$i<=3;$i++)
                        <?php
@@ -323,7 +336,7 @@
 
 
                           <hr>
-                          <div class="row ml-auto">
+                          <div class="row text-center">
                            @for($j=1;$j<=3;$j++)
                            <?php
                            if($j==1){
@@ -350,13 +363,13 @@
 
                           <div class="col-auto col-sm-4 col-4 text-center">
                             @if($data_lv2->profile_img)
-                            <span onclick="modal_tree({{ $data_lv3->id }})">
-                              <img class="img-radius zoom" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
-                            </span>
+                            <a onclick="modal_tree({{ $data_lv3->id }})">
+                              <img class="img-radius zoom img-fluid" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
+                            </a>
                             @else
-                            <span onclick="modal_tree({{ $data_lv3->id }})">
-                              <img class="img-radius zoom" width="60" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                            </span>
+                            <a onclick="modal_tree({{ $data_lv3->id }})">
+                              <img class="img-radius zoom img-fluid" width="60" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                            </a>
                             @endif
 
 
@@ -369,14 +382,14 @@
                           <div class="col-auto col-sm-4 col-4 text-center">
 
 
-                           <span onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></span>
+                           <a onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></a>
 
                            <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
                            <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
-                          
-                        </div>
-                        @else
-                        <div class="col-auto text-center">
+
+                         </div>
+                         @else
+                         <div class="col-auto text-center">
                           <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-60 zoom">
                           <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
 
