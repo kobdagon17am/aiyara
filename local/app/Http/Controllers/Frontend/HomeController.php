@@ -31,6 +31,28 @@ class HomeController extends Controller
     return view('frontend/home',compact('data'));
   }
 
+  public function modal_tree(Request $request){
+    $id = $request->id;
+
+    $data = DB::table('Customers')
+      ->select('*')
+      ->where('id','=',$id)
+      ->limit(1)
+      ->first();
+    return view('frontend/modal/modal_tree',['data'=>$data]);
+  }
+
+    public function modal_add(Request $request){
+    $id = $request->id;
+    $type = $request->type;
+    $data = DB::table('Customers')
+      ->select('*')
+      ->where('id','=',$id)
+      ->limit(1)
+      ->first();
+    return view('frontend/modal/modal_add',['data'=>$data,'type'=>$type]);
+  } 
+
   public function home_type_tree(Request $request){
   
     if($request->id){

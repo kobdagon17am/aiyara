@@ -94,7 +94,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- Tab variant tab card start -->
   <div class="card">
    {{--  <div class="card-header">
@@ -108,11 +108,11 @@
           <!-- Nav tabs -->
           <ul class="nav nav-tabs md-tabs " role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#tree" role="tab"><i class="fa fa-server"></i>Tree View</a>
+              <a class="nav-link" data-toggle="tab" href="#tree" id="tree_tab" role="tab"><i class="fa fa-server"></i>Tree View</a>
               <div class="slide"></div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#board" role="tab"><i class="typcn typcn-flow-merge"></i>Board</a>
+              <a class="nav-link" data-toggle="tab" href="#board" id="board_tab" role="tab"><i class="typcn typcn-flow-merge"></i>Board</a>
               <div class="slide"></div>
             </li>
 
@@ -120,226 +120,148 @@
           </ul>
           <!-- Tab panes -->
           <div class="tab-content card-block">
-            <div class="tab-pane active" id="tree" role="tabpanel">
-             <div class="tree-view">
-              <div id="basicTree">
-                <ul>
-                  <li data-jstree='{"opened":true}'>
-                    @if($data['lv1'])
-                    @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+            <div class="tab-pane" id="tree" role="tabpanel">
 
-                    <a data-toggle="modal" data-target="#lv1">
-                      <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
-                      @else
-                      <a data-toggle="modal" data-target="#lv1">
-                        <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+              <div class="tree-view">
+                <div id="basicTree">
+                  <ul>
+                    <li data-jstree='{"opened":true}'>
+                      @if($data['lv1'])
+                      @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
 
-                        @endif
-                        @endif
+                      <a href="#" onclick="modal_tree({{ $data['lv1']->id }})">
+                        <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+                        @else
+                        <a href="#" onclick="modal_tree({{ $data['lv1']->id }})">
+                          <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
 
-                        <ul>
-                         @for($i=1;$i<=3;$i++)
+                          @endif
 
-                         <?php
-                         if($i==1){
-                          $data_lv2 =$data['lv2_a'];
-                          $model_lv2 = 'lv2_a';
-                          $type = 'a';
-                          $line_lv2 = 'A';
-                        }elseif($i==2){
-                          $data_lv2 =$data['lv2_b'];
-                          $model_lv2 = 'lv2_b';
-                          $type = 'b';
-                          $line_lv2 = 'B';
-                        }elseif($i==3){
-                          $data_lv2 =$data['lv2_c'];
-                          $model_lv2 = 'lv2_c';
-                          $type = 'c';
-                          $line_lv2 = 'C';
-                        }else{
-                          $data_lv2 = null;
-                          $model_lv2 = null;
-                          $line_lv2 = null;
-                        }
+                          @endif
 
-                        ?>
-                        @if($data_lv2)
-                        <li data-jstree='{"opened":true}'>
-                         <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
-                         <ul>
-                          @for($j=1;$j<=3;$j++)
-                          <?php
-                          if($j==1){
-                            $data_lv3 =$data['lv3_'.$type.'_a'];
-                            $model_lv3 = 'lv3_'.$type.'_a';
-                            $line_lv3 = 'A';
-                          }elseif($j==2){
-                            $data_lv3 =$data['lv3_'.$type.'_b'];
-                            $model_lv3 = 'lv3_'.$type.'_b';
-                            $line_lv3 = 'B';
-                          }elseif($j==3){
-                            $data_lv3 =$data['lv3_'.$type.'_c'];
-                            $model_lv3 = 'lv3_'.$type.'_c';
-                            $line_lv3 = 'C';
+                          <ul>
+                           @for($i=1;$i<=3;$i++)
+
+                           <?php
+                           if($i==1){
+                            $data_lv2 =$data['lv2_a'];
+                            $model_lv2 = 'lv2_a';
+                            $type = 'a';
+                            $line_lv2 = 'A';
+                          }elseif($i==2){
+                            $data_lv2 =$data['lv2_b'];
+                            $model_lv2 = 'lv2_b';
+                            $type = 'b';
+                            $line_lv2 = 'B';
+                          }elseif($i==3){
+                            $data_lv2 =$data['lv2_c'];
+                            $model_lv2 = 'lv2_c';
+                            $type = 'c';
+                            $line_lv2 = 'C';
                           }else{
-                            $data_lv3 = null;
-                            $model_lv3 = null;
-                            $line_lv3 = null; 
-                          } 
+                            $data_lv2 = null;
+                            $model_lv2 = null;
+                            $line_lv2 = null;
+                          }
 
                           ?>
-                          @if($data_lv3)
-                          <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
-                          @else
-                          <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}_add"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
-                          @endif
-                          @endfor
+                          @if($data_lv2)
+                          <li data-jstree='{"opened":true}'>
+                           <a href="#" onclick="modal_tree({{ $data_lv2->id }})"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
+                           <ul>
+                            @for($j=1;$j<=3;$j++)
+                            <?php
+                            if($j==1){
+                              $data_lv3 =$data['lv3_'.$type.'_a'];
+                              $model_lv3 = 'lv3_'.$type.'_a';
+                              $line_lv3 = 'A';
+                            }elseif($j==2){
+                              $data_lv3 =$data['lv3_'.$type.'_b'];
+                              $model_lv3 = 'lv3_'.$type.'_b';
+                              $line_lv3 = 'B';
+                            }elseif($j==3){
+                              $data_lv3 =$data['lv3_'.$type.'_c'];
+                              $model_lv3 = 'lv3_'.$type.'_c';
+                              $line_lv3 = 'C';
+                            }else{
+                              $data_lv3 = null;
+                              $model_lv3 = null;
+                              $line_lv3 = null; 
+                            } 
 
-                        </ul>
-                      </li>
-                      @else
-                      <li data-jstree='{"opened":true}'>
-                        <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}_add"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
-                        <ul>
-                          <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
-                          <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
-                          <li data-jstree='{"type":"file"}'><b> C (+)</b></li>
-                        </ul>
-                      </li>
-                      @endif
-                      @endfor
+                            ?>
+                            @if($data_lv3)
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree({{ $data_lv3->id }})">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
+                            @else
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add({{ $data_lv2->id }},'{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
+                            @endif
+                            @endfor
 
-                    </ul>
+                          </ul>
+                        </li>
+                        @else
+                        <li data-jstree='{"opened":true}'>
+                          <a href="#" onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
+                          <ul>
+                            <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
+                            <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
+                            <li data-jstree='{"type":"file"}'><b> C (+)</b></li>
+                          </ul>
+                        </li>
+                        @endif
+                        @endfor
 
-                  </li>
+                      </ul>
 
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="tab-pane" id="board" role="tabpanel">
-            <div class="row" align="center">
-              <div class="col-lg-4"> 
-              </div>
-              @if($data['lv1'])
+                    </li>
 
-              <div class="col-lg-4"> 
-                <div class="card widget-statstic-card borderless-card">
-                  <div class="card-block">
-                    @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
-                    <i class="fa fa-group st-icon bg-success"></i>
-                    @else
-                    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
-                    @endif
-                    <div class="usre-image">
-                      @if($data['lv1']->profile_img)
-                      <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
-                      </a>
-                      @else
-                      <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                      </a>
-                      @endif
-
-                    </div>
-                    <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
-                    <p class="text-muted">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
-                  </div>
+                  </ul>
                 </div>
               </div>
-
-              <div class="modal fade" id="lv1" tabindex="-1" role="dialog">
-               <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                 <div class="modal-header bg-c-green">
-                  <h4 class="modal-title" style="color: #FFFF">รหัสสมาชิก : {{$data['lv1']->user_name}}</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">&times;</span>
-                 </button>
-               </div>
-
-               <div class="modal-body text-left">
-                <div class="table-responsive">
-                 <table class="table">
-                  <tbody>
-                   <tr class="table-success">
-                    <td><strong>วันที่สมัคร </strong></td>
-                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><strong>สั่งซื้อครั้งแรก </strong></td>
-                    <td> [ยังไม่มีข้อมูล] </td>
-                    <td></td>
-                  </tr>
-                  <tr class="table-success">
-                    <td><strong>คะแนนส่วนตัว:</strong></td> 
-                    <td>{{ $data['lv1']->pv_point }} PV</td>
-                    <td>[Exclusive ????]</td>
-
-                  </tr>
-                  <tr>
-                    <td><strong>Active ถึง</strong></td>
-                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-                    <td>[เหลือ 0 pv ???]</td>
-                  </tr>
-                  <tr class="table-success">
-                    <td><strong>คุณวุฒิสูงสุด</strong></td>
-                    <td>BRONZE STAR AWARD (BSA)</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><strong>สิทธิ Reward Bonus</strong></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr class="table-success">
-                    <td><strong>นับคุณวุฒิจาก</strong></td>
-                    <td>2020-05-01 ถึง 2020-05-31</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><strong>ทีมกลางคือทีม</strong></td>
-                    <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                    <td></td> 
-                  </tr>
-
-                </tbody>
-              </table>
             </div>
-            <div class="b-t-default transection-footer row">
-             <div class="col-6  b-r-default">
-              <strong>คะแนนคงเหลือยกมา</strong><br>
-              [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-            </div>
-            <div class="col-6">
-              <strong>คะแนนวันนี้</strong><br>
-              [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
-              {{-- <button type="button"  onclick="event.preventDefault();
-              document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-              <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
-                <input type="hidden" name="id" value="{{$data['lv1']->id}}">
-                @csrf
-              </form> --}}
-            </div>
-          </div>
-        </div>
-      </div>
+
+            {{--    ///////////////////////////////////////////////////////////////// --}}
+            <div class="tab-pane" id="board" role="tabpanel">
+              <div class="row" align="center">
+                <div class="col-lg-4"> 
+                </div>
+                @if($data['lv1'])
+
+                <div class="col-lg-4"> 
+                  <div class="card widget-statstic-card borderless-card">
+                    <div class="card-block">
+                      @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+                      <i class="fa fa-group st-icon bg-success"></i>
+                      @else
+                      <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
+                      @endif
+                      <div class="usre-image">
+                        @if($data['lv1']->profile_img)
+                        <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
+                        </span> 
+                        @else
+                        <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                        </span>
+                        @endif
+
+                      </div>
+                      <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
+                      <p class="text-muted">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
+                    </div>
+                  </div>
+                </div>
 
 
-      @else
-      <!-- กรณีไม่มีข้อมูล -->
-      <div class="col-lg-4"> 
-        <div class="card widget-statstic-card borderless-card">
-          <div class="card-block">
-            <i class="fa fa-line-chart st-icon btn-warning"></i>
-            <div class="usre-image">
-              <img src="frontend/assets/icon/add_user.png" class="img-radius zoom" alt="User-Profile-Image">
-            </div>
+
+                @else
+                <!-- กรณีไม่มีข้อมูล -->
+                <div class="col-lg-4"> 
+                  <div class="card widget-statstic-card borderless-card">
+                    <div class="card-block">
+                      <i class="fa fa-line-chart st-icon btn-warning"></i>
+                      <div class="usre-image">
+                        <img src="frontend/assets/icon/add_user.png" class="img-radius zoom" alt="User-Profile-Image">
+                      </div>
                             <!-- <h6 class="f-w-600 m-t-15 m-b-10">Alessa Robert</h6>
                               <p class="text-muted">Active | Male | Born 23.05.1992</p> -->
                             </div>
@@ -386,354 +308,143 @@
                           <div class="usre-image">
 
                             @if($data_lv2->profile_img)
-                            <a data-toggle="modal" data-target="#{{$model_lv2}}"><img class="img-radius img-80 zoom" src="{{asset('local/public/profile_customer/'.$data_lv2->profile_img)}}" alt="User-Profile-Image">
-                            </a>
+                            <span onclick="modal_tree({{ $data_lv2->id }})"><img class="img-radius img-80 zoom" src="{{asset('local/public/profile_customer/'.$data_lv2->profile_img)}}" alt="User-Profile-Image">
+                            </span>
                             @else
-                            <a data-toggle="modal" data-target="#{{$model_lv2}}"><img class="img-radius img-80 zoom" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                            </a>
+                            <span href="#" onclick="modal_tree({{ $data_lv2->id }})"><img class="img-radius img-80 zoom" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                            </span>
                             @endif
                           </div>
 
-                          <div class="modal fade" id="{{$model_lv2}}" tabindex="-1" role="dialog">
-                           <div class="modal-dialog modal-md" role="document">
-                            <div class="modal-content">
-                             <div class="modal-header bg-c-green">
-                              <h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv2}} รหัสสมาชิก : {{$data_lv2->user_name}}</h4>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                               <span aria-hidden="true">&times;</span>
-                             </button>
-                           </div>
 
-                           <div class="modal-body text-left">
-                            <div class="table-responsive">
-                             <table class="table">
-                              <tbody>
-                               <tr class="table-success">
-                                <td><strong>Upline </strong></td>
-                                <td>{{$data['lv1']->user_name}} Sponsor : ???</td>
-                                <td>Sponsor : ???</td>
-                              </tr>
 
-                              <tr>
-                                <td><strong>วันที่สมัคร </strong></td>
-                                <td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
-                                <td></td>
-                              </tr>
-                              <tr class="table-success">
-                                <td><strong>สั่งซื้อครั้งแรก </strong></td>
-                                <td> [ยังไม่มีข้อมูล] </td>
-                                <td></td>
-                              </tr>
-                              <tr>
-                                <td><strong>คะแนนส่วนตัว:</strong></td> 
-                                <td>{{ $data['lv1']->pv_point }} PV</td>
-                                <td>[Exclusive ????]</td>
+                          <h6 class="f-w-600 m-t-15 m-b-10">สาย {{$line_lv2}} : {{$data_lv2->user_name}} </h6>
+                          <p class="text-muted m-t-15">@if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</p>
 
-                              </tr>
-                              <tr class="table-success">
-                                <td><strong>Active ถึง</strong></td>
-                                <td>{{ date('d-m-Y',strtotime($data_lv2->created_at)) }}</td>
-                                <td>[เหลือ 0 pv ???]</td>
-                              </tr>
-                              <tr>
-                                <td><strong>คุณวุฒิสูงสุด</strong></td>
-                                <td>BRONZE STAR AWARD (BSA)</td>
-                                <td></td>
-                              </tr>
-                              <tr class="table-success">
-                                <td><strong>สิทธิ Reward Bonus</strong></td>
-                                <td></td>
-                                <td></td>
-                              </tr>
-                              <tr>
-                                <td><strong>นับคุณวุฒิจาก</strong></td>
-                                <td>2020-05-01 ถึง 2020-05-31</td>
-                                <td></td>
-                              </tr>
-                              <tr class="table-success">
-                                <td><strong>ทีมกลางคือทีม</strong></td>
-                                <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                                <td></td> 
-                              </tr>
 
-                            </tbody>
-                          </table>
+                          <hr>
+                          <div class="row ml-auto">
+                           @for($j=1;$j<=3;$j++)
+                           <?php
+                           if($j==1){
+                            $data_lv3 =$data['lv3_'.$type.'_a'];
+                            $model_lv3 = 'lv3_'.$type.'_a';
+                            $line_lv3 = 'A';
+                          }elseif($j==2){
+                            $data_lv3 =$data['lv3_'.$type.'_b'];
+                            $model_lv3 = 'lv3_'.$type.'_b';
+                            $line_lv3 = 'B';
+                          }elseif($j==3){
+                            $data_lv3 =$data['lv3_'.$type.'_c'];
+                            $model_lv3 = 'lv3_'.$type.'_c';
+                            $line_lv3 = 'C';
+                          }else{
+                            $data_lv3 = null;
+                            $model_lv3 = null;
+                            $line_lv3 = null; 
+                          }
+
+                          ?>
+                          @if($data_lv3)
+
+
+                          <div class="col-auto col-sm-4 col-4 text-center">
+                            @if($data_lv2->profile_img)
+                            <span onclick="modal_tree({{ $data_lv3->id }})">
+                              <img class="img-radius zoom" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
+                            </span>
+                            @else
+                            <span onclick="modal_tree({{ $data_lv3->id }})">
+                              <img class="img-radius zoom" width="60" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                            </span>
+                            @endif
+
+
+                            <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
+                          </div>
+
+
+                          @else
+                          @if($data_lv2)
+                          <div class="col-auto col-sm-4 col-4 text-center">
+
+
+                           <span onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></span>
+
+                           <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
+                           <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
+                          
                         </div>
-                        <div class="b-t-default transection-footer row">
-                         <div class="col-6  b-r-default">
-                          <strong>คะแนนคงเหลือยกมา</strong><br>
-                          [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
+                        @else
+                        <div class="col-auto text-center">
+                          <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-60 zoom">
+                          <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
+
                         </div>
-                        <div class="col-6">
-                          <strong>คะแนนวันนี้</strong><br>
-                          [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-                        </div>
+                        @endif
+                        @endif 
+                        @endfor
                       </div>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                      <button type="button"  onclick="event.preventDefault();
-                      document.getElementById('{{$data_lv2->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-                      <form id="{{$data_lv2->id}}" action="{{route('home')}}" method="POST" style="display: none;">
-                       <input type="hidden" name="id" value="{{$data_lv2->id}}">
-                       @csrf
-                     </form>
-                   </div>
-                 </div>
-               </div>
-             </div>
-
-             <h6 class="f-w-600 m-t-15 m-b-10">สาย {{$line_lv2}} : {{$data_lv2->user_name}} </h6>
-             <p class="text-muted m-t-15">@if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</p>
-
-
-             <hr>
-             <div class="row ml-auto">
-               @for($j=1;$j<=3;$j++)
-               <?php
-               if($j==1){
-                $data_lv3 =$data['lv3_'.$type.'_a'];
-                $model_lv3 = 'lv3_'.$type.'_a';
-                $line_lv3 = 'A';
-              }elseif($j==2){
-                $data_lv3 =$data['lv3_'.$type.'_b'];
-                $model_lv3 = 'lv3_'.$type.'_b';
-                $line_lv3 = 'B';
-              }elseif($j==3){
-                $data_lv3 =$data['lv3_'.$type.'_c'];
-                $model_lv3 = 'lv3_'.$type.'_c';
-                $line_lv3 = 'C';
-              }else{
-                $data_lv3 = null;
-                $model_lv3 = null;
-                $line_lv3 = null; 
-              }
-
-              ?>
-              @if($data_lv3)
-
-
-              <div class="col-auto col-sm-4 col-4 text-center">
-                @if($data_lv2->profile_img)
-                <a data-toggle="modal" data-target="#{{$model_lv3}}">
-                  <img class="img-radius zoom" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
-                </a>
+                  </div>
+                  <br>
+                </div> 
                 @else
-                <a data-toggle="modal" data-target="#{{$model_lv3}}">
-                  <img class="img-radius zoom" width="60" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                </a>
-                @endif
+                <div class="col-lg-4">
+                  <div class="card widget-statstic-card borderless-card">
+                   <div class="card-block">
+                    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
+                    <div class="text-center">
+                     <span onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')">
+                      <img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-80 zoom">
+                    </span>
 
 
-                <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
-              </div>
+                  </div>
+                  <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
+                  <p class="text-muted">ภายใต้ : @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif </p>
 
+                  <hr> 
+                  <div class="row ml-auto">
+                   <div class="col-auto col-sm-4 text-center">
+                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                    <h6 class="m-t-15 m-b-0">สาย A </h6>
 
+                  </div>
+                  <div class="col-auto col-sm-4 text-center">
+                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                    <h6 class="m-t-15 m-b-0">สาย B </h6>
 
-              <div class="modal fade" id="{{$model_lv3}}" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-md" role="document">
-                 <div class="modal-content">
-                  <div class="modal-header bg-c-green">
-                   <h4 class="modal-title" style="color: #FFFF">สาย : {{$line_lv3}} รหัสสมาชิก : {{$data_lv3->user_name}}</h4>
-                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                  </div>
+                  <div class="col-auto col-sm-4 text-center">
+                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                    <h6 class="m-t-15 m-b-0">สาย C </h6>
+
+                  </div>
                 </div>
 
-                <div class="modal-body text-left">
-                 <div class="table-responsive">
-                  <table class="table">
-                   <tbody>
-                    <tr class="table-success">
-                     <td><strong>Upline </strong></td>
-                     <td>{{$data_lv2->user_name}}</td>
-                     <td>Sponsor : ???</td>
-                   </tr>
 
-                   <tr>
-                     <td><strong>วันที่สมัคร </strong></td>
-                     <td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
-                     <td></td>
-                   </tr>
-                   <tr class="table-success">
-                     <td><strong>สั่งซื้อครั้งแรก </strong></td>
-                     <td> [ยังไม่มีข้อมูล] </td>
-                     <td></td>
-                   </tr>
-                   <tr>
-                     <td><strong>คะแนนส่วนตัว:</strong></td> 
-                     <td>{{ $data_lv3->pv_point }} PV</td>
-                     <td>[Exclusive ????]</td>
-
-                   </tr>
-                   <tr class="table-success">
-                     <td><strong>Active ถึง</strong></td>
-                     <td>{{ date('d-m-Y',strtotime($data_lv3->created_at)) }}</td>
-                     <td>[เหลือ 0 pv ???]</td>
-                   </tr>
-                   <tr>
-                     <td><strong>คุณวุฒิสูงสุด</strong></td>
-                     <td>BRONZE STAR AWARD (BSA)</td>
-                     <td></td>
-                   </tr>
-                   <tr class="table-success">
-                     <td><strong>สิทธิ Reward Bonus</strong></td>
-                     <td></td>
-                     <td></td>
-                   </tr>
-                   <tr>
-                     <td><strong>นับคุณวุฒิจาก</strong></td>
-                     <td>2020-05-01 ถึง 2020-05-31</td>
-                     <td></td>
-                   </tr>
-                   <tr class="table-success">
-                     <td><strong>ทีมกลางคือทีม</strong></td>
-                     <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                     <td></td> 
-                   </tr>
-
-                 </tbody>
-               </table>
-             </div>
-             <div class="b-t-default transection-footer row">
-              <div class="col-6  b-r-default">
-               <strong>คะแนนคงเหลือยกมา</strong><br>
-               [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-             </div>
-             <div class="col-6">
-               <strong>คะแนนวันนี้</strong><br>
-               [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
-             </div>
-           </div>
-         </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-           <button type="button"  onclick="event.preventDefault();
-           document.getElementById('{{$data_lv3->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-           <form id="{{$data_lv3->id}}" action="{{route('home')}}" method="POST" style="display: none;">
-            <input type="hidden" name="id" value="{{$data_lv3->id}}">
-            @csrf
-          </form>
+              </div>
+            </div>
+            <br>
+          </div>
+          @endif
+          @endfor
         </div>
       </div>
+
+
     </div>
   </div>
-  @else
-  @if($data_lv2)
-  <div class="col-auto col-sm-4 col-4 text-center">
-
-   <a href="#" data-toggle="modal" data-target="#{{ $model_lv3 }}_add" ><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></a>
-
-   <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
-   <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
-   <div class="modal fade" id="{{ $model_lv3 }}_add" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">เพิ่ม {{$line_lv3}} </h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <h5>เพิ่ม {{$line_lv3}}</h5>
-          <p>ภายใต้ @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-          <a href="{{route('register',['id'=>$data_lv2->id,'line_type'=>$line_lv3])}}" type="button" class="btn btn-primary waves-effect waves-light ">Add</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-@else
-<div class="col-auto text-center">
-  <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-60 zoom">
-  <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
-
-</div>
-@endif
-@endif 
-@endfor
-</div>
-</div>
-</div>
-<br>
-</div> 
-@else
-<div class="col-lg-4">
-  <div class="card widget-statstic-card borderless-card">
-   <div class="card-block">
-    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
-    <div class="text-center">
-     <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}_add">
-      <img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-80 zoom">
-    </a>
-
-    <div class="modal fade" id="{{ $model_lv2 }}_add" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">เพิ่ม {{$line_lv2}} </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <h5>เพิ่ม {{$line_lv2}}</h5>
-            <p>ภายใต้ @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-            <a href="{{route('register',['id'=>$data['lv1']->id,'line_type'=>$line_lv2])}}" type="button" class="btn btn-primary waves-effect waves-light ">Add</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
-  <p class="text-muted">ภายใต้ : @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif </p>
-
-  <hr> 
-  <div class="row ml-auto">
-   <div class="col-auto col-sm-4 text-center">
-    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
-    <h6 class="m-t-15 m-b-0">สาย A </h6>
-
-  </div>
-  <div class="col-auto col-sm-4 text-center">
-    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
-    <h6 class="m-t-15 m-b-0">สาย B </h6>
-
-  </div>
-  <div class="col-auto col-sm-4 text-center">
-    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
-    <h6 class="m-t-15 m-b-0">สาย C </h6>
-
-  </div>
-</div>
-
-
-</div>
-</div>
-<br>
-</div>
-@endif
-@endfor
-</div>
-</div>
-
-
-</div>
-</div>
 
 </div>
 <!-- Row end -->
 </div>
 </div>
- 
+
+<div id="modal_tree"></div>
+<div id="modal_add"></div>
+
 @endsection
 @section('js')
 <script  src="{{asset('frontend/bower_components/jstree/js/jstree.min.js')}}"></script>
@@ -743,12 +454,14 @@
 
      $(document).ready(function() {
 
-      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        alert('ddd');
- // some code..
-}
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
+        $('#tree_tab').addClass('active'); 
+        $('#tree').addClass('active'); 
+      }else{
+        $('#board_tab').addClass('active'); 
+        $('#board').addClass('active'); 
 
-
+      }
 
       var lv1 = $('#j1_1_anchor');
       lv1.closest('a').find('.icofont-folder').removeClass('icofont icofont-folder').addClass('typcn typcn-flow-merge');
@@ -782,5 +495,46 @@
       lv3_3_3.closest('a').find('.icofont-file-alt').removeClass('icofont icofont-file-alt').addClass('fa fa-c');
       
     });
+
+     function modal_tree(id){
+
+      $.ajax({
+        url: '{{ route('modal_tree') }}',
+        type: 'GET',
+        data: {id:id},
+      })
+      .done(function(data) {
+        console.log("success");
+        $('#modal_tree').html(data);
+        $('#modal_tree_show').modal('show');
+      })
+      .fail(function() {
+        console.log("error");
+      })
+      .always(function() {
+        console.log("complete");
+      });
+      
+    }
+
+    function modal_add(id,type){
+      $.ajax({
+        url: '{{ route('modal_add') }}',
+        type: 'GET',
+        data: {id:id,type:type},
+      })
+      .done(function(data) {
+        console.log("success");
+        $('#modal_add').html(data);
+        $('#modal_add_show').modal('show');
+      })
+      .fail(function() {
+        console.log("error");
+      })
+      .always(function() {
+        console.log("complete");
+      });
+      
+    }
   </script>
   @endsection

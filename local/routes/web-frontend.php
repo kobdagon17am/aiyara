@@ -44,6 +44,9 @@ Route::get('logout', function () {
   return redirect('login');
 })->name('logout');
 
+
+Route::get('modal_tree','Frontend\HomeController@modal_tree')->name('modal_tree');
+Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
 Route::get('home','Frontend\HomeController@index')->name('home');
 Route::get('home_type_tree','Frontend\HomeController@home_type_tree')->name('home_type_tree');
 Route::post('home','Frontend\HomeController@index')->name('home');
