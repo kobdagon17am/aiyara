@@ -94,221 +94,231 @@
       </div>
     </div>
   </div>
+ 
+  <!-- Tab variant tab card start -->
+  <div class="card">
+   {{--  <div class="card-header">
+      <h5>Tab variant</h5>
+    </div> --}}
+    <div class="card-block tab-icon">
+      <!-- Row start -->
+      <div class="row">
+        <div class="col-lg-12 col-xl-12">
 
-  <div class="row">
-    <div class="col-sm-12 col-md-3 col-lg-3">
-      <!-- Basic Tree card start -->
-      <div class="card"> 
-        <div class="card-header">
-          <h5>Tree View</h5>
-        </div>
-        <div class="card-block">
-          <div class="card-block tree-view">
-            <div id="basicTree">
-              <ul>
-                <li data-jstree='{"opened":true}'>
-                  @if($data['lv1'])
-                  @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs md-tabs " role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#tree" role="tab"><i class="fa fa-server"></i>Tree View</a>
+              <div class="slide"></div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#board" role="tab"><i class="typcn typcn-flow-merge"></i>Board</a>
+              <div class="slide"></div>
+            </li>
 
-                  <a data-toggle="modal" data-target="#lv1">
-                    <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
-                    @else
+
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content card-block">
+            <div class="tab-pane active" id="tree" role="tabpanel">
+             <div class="tree-view">
+              <div id="basicTree">
+                <ul>
+                  <li data-jstree='{"opened":true}'>
+                    @if($data['lv1'])
+                    @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+
                     <a data-toggle="modal" data-target="#lv1">
-                      <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+                      <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+                      @else
+                      <a data-toggle="modal" data-target="#lv1">
+                        <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
 
-                      @endif
-                      @endif
+                        @endif
+                        @endif
 
-                      <ul>
-                       @for($i=1;$i<=3;$i++)
+                        <ul>
+                         @for($i=1;$i<=3;$i++)
 
-                       <?php
-                       if($i==1){
-                        $data_lv2 =$data['lv2_a'];
-                        $model_lv2 = 'lv2_a';
-                        $type = 'a';
-                        $line_lv2 = 'A';
-                      }elseif($i==2){
-                        $data_lv2 =$data['lv2_b'];
-                        $model_lv2 = 'lv2_b';
-                        $type = 'b';
-                        $line_lv2 = 'B';
-                      }elseif($i==3){
-                        $data_lv2 =$data['lv2_c'];
-                        $model_lv2 = 'lv2_c';
-                        $type = 'c';
-                        $line_lv2 = 'C';
-                      }else{
-                        $data_lv2 = null;
-                        $model_lv2 = null;
-                        $line_lv2 = null;
-                      }
-
-                      ?>
-                      @if($data_lv2)
-                      <li data-jstree='{"opened":true}'>
-                       <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
-                       <ul>
-                        @for($j=1;$j<=3;$j++)
-                        <?php
-                        if($j==1){
-                          $data_lv3 =$data['lv3_'.$type.'_a'];
-                          $model_lv3 = 'lv3_'.$type.'_a';
-                          $line_lv3 = 'A';
-                        }elseif($j==2){
-                          $data_lv3 =$data['lv3_'.$type.'_b'];
-                          $model_lv3 = 'lv3_'.$type.'_b';
-                          $line_lv3 = 'B';
-                        }elseif($j==3){
-                          $data_lv3 =$data['lv3_'.$type.'_c'];
-                          $model_lv3 = 'lv3_'.$type.'_c';
-                          $line_lv3 = 'C';
+                         <?php
+                         if($i==1){
+                          $data_lv2 =$data['lv2_a'];
+                          $model_lv2 = 'lv2_a';
+                          $type = 'a';
+                          $line_lv2 = 'A';
+                        }elseif($i==2){
+                          $data_lv2 =$data['lv2_b'];
+                          $model_lv2 = 'lv2_b';
+                          $type = 'b';
+                          $line_lv2 = 'B';
+                        }elseif($i==3){
+                          $data_lv2 =$data['lv2_c'];
+                          $model_lv2 = 'lv2_c';
+                          $type = 'c';
+                          $line_lv2 = 'C';
                         }else{
-                          $data_lv3 = null;
-                          $model_lv3 = null;
-                          $line_lv3 = null; 
-                        } 
+                          $data_lv2 = null;
+                          $model_lv2 = null;
+                          $line_lv2 = null;
+                        }
 
                         ?>
-                        @if($data_lv3)
-                        <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
-                        @else
-                        <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}_add"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
-                        @endif
-                        @endfor
+                        @if($data_lv2)
+                        <li data-jstree='{"opened":true}'>
+                         <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
+                         <ul>
+                          @for($j=1;$j<=3;$j++)
+                          <?php
+                          if($j==1){
+                            $data_lv3 =$data['lv3_'.$type.'_a'];
+                            $model_lv3 = 'lv3_'.$type.'_a';
+                            $line_lv3 = 'A';
+                          }elseif($j==2){
+                            $data_lv3 =$data['lv3_'.$type.'_b'];
+                            $model_lv3 = 'lv3_'.$type.'_b';
+                            $line_lv3 = 'B';
+                          }elseif($j==3){
+                            $data_lv3 =$data['lv3_'.$type.'_c'];
+                            $model_lv3 = 'lv3_'.$type.'_c';
+                            $line_lv3 = 'C';
+                          }else{
+                            $data_lv3 = null;
+                            $model_lv3 = null;
+                            $line_lv3 = null; 
+                          } 
 
-                      </ul>
-                    </li>
-                    @else
-                    <li data-jstree='{"opened":true}'>
-                      <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}_add"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
-                      <ul>
-                        <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
-                        <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
-                        <li data-jstree='{"type":"file"}'><b> C (+)</b></li>
-                      </ul>
-                    </li>
-                    @endif
-                    @endfor
+                          ?>
+                          @if($data_lv3)
+                          <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
+                          @else
+                          <li data-jstree='{"type":"file"}'><a href="#" data-toggle="modal" data-target="#{{$model_lv3}}_add"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
+                          @endif
+                          @endfor
 
-                  </ul>
+                        </ul>
+                      </li>
+                      @else
+                      <li data-jstree='{"opened":true}'>
+                        <a href="#" data-toggle="modal" data-target="#{{$model_lv2}}_add"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
+                        <ul>
+                          <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
+                          <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
+                          <li data-jstree='{"type":"file"}'><b> C (+)</b></li>
+                        </ul>
+                      </li>
+                      @endif
+                      @endfor
 
-                </li>
+                    </ul>
 
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Basic Tree card end -->
-    </div>
+                  </li>
 
-    <div class="col-sm-12 col-md-9 col-lg-9">
-      <div class="page-header card">
-        <div class="card-block">
-          {{-- <h5 class="m-b-10">โครงสร้างสายงาน</h5>  --}}
-
-          <div class="row" align="center">
-            <div class="col-lg-4"> 
-            </div>
-            @if($data['lv1'])
-
-            <div class="col-lg-4"> 
-              <div class="card widget-statstic-card borderless-card">
-                <div class="card-block">
-                  @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
-                  <i class="fa fa-group st-icon bg-success"></i>
-                  @else
-                  <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
-                  @endif
-                  <div class="usre-image">
-                    @if($data['lv1']->profile_img)
-                    <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
-                    </a>
-                    @else
-                    <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                    </a>
-                    @endif
-
-                  </div>
-                  <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
-                  <p class="text-muted">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
-                </div>
+                </ul>
               </div>
             </div>
-
-            <div class="modal fade" id="lv1" tabindex="-1" role="dialog">
-             <div class="modal-dialog modal-md" role="document">
-              <div class="modal-content">
-               <div class="modal-header bg-c-green">
-                <h4 class="modal-title" style="color: #FFFF">รหัสสมาชิก : {{$data['lv1']->user_name}}</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-               </button>
-             </div>
-
-             <div class="modal-body text-left">
-              <div class="table-responsive">
-               <table class="table">
-                <tbody>
-                 <tr class="table-success">
-                  <td><strong>วันที่สมัคร </strong></td>
-                  <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td><strong>สั่งซื้อครั้งแรก </strong></td>
-                  <td> [ยังไม่มีข้อมูล] </td>
-                  <td></td>
-                </tr>
-                <tr class="table-success">
-                  <td><strong>คะแนนส่วนตัว:</strong></td> 
-                  <td>{{ $data['lv1']->pv_point }} PV</td>
-                  <td>[Exclusive ????]</td>
-
-                </tr>
-                <tr>
-                  <td><strong>Active ถึง</strong></td>
-                  <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
-                  <td>[เหลือ 0 pv ???]</td>
-                </tr>
-                <tr class="table-success">
-                  <td><strong>คุณวุฒิสูงสุด</strong></td>
-                  <td>BRONZE STAR AWARD (BSA)</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td><strong>สิทธิ Reward Bonus</strong></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr class="table-success">
-                  <td><strong>นับคุณวุฒิจาก</strong></td>
-                  <td>2020-05-01 ถึง 2020-05-31</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td><strong>ทีมกลางคือทีม</strong></td>
-                  <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                  <td></td> 
-                </tr>
-
-              </tbody>
-            </table>
           </div>
-          <div class="b-t-default transection-footer row">
-           <div class="col-6  b-r-default">
-            <strong>คะแนนคงเหลือยกมา</strong><br>
-            [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
-          </div>
-          <div class="col-6">
-            <strong>คะแนนวันนี้</strong><br>
-            [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+          <div class="tab-pane" id="board" role="tabpanel">
+            <div class="row" align="center">
+              <div class="col-lg-4"> 
+              </div>
+              @if($data['lv1'])
+
+              <div class="col-lg-4"> 
+                <div class="card widget-statstic-card borderless-card">
+                  <div class="card-block">
+                    @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+                    <i class="fa fa-group st-icon bg-success"></i>
+                    @else
+                    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
+                    @endif
+                    <div class="usre-image">
+                      @if($data['lv1']->profile_img)
+                      <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
+                      </a>
+                      @else
+                      <a data-toggle="modal" data-target="#lv1"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+                      </a>
+                      @endif
+
+                    </div>
+                    <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
+                    <p class="text-muted">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="lv1" tabindex="-1" role="dialog">
+               <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                 <div class="modal-header bg-c-green">
+                  <h4 class="modal-title" style="color: #FFFF">รหัสสมาชิก : {{$data['lv1']->user_name}}</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                 </button>
+               </div>
+
+               <div class="modal-body text-left">
+                <div class="table-responsive">
+                 <table class="table">
+                  <tbody>
+                   <tr class="table-success">
+                    <td><strong>วันที่สมัคร </strong></td>
+                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>สั่งซื้อครั้งแรก </strong></td>
+                    <td> [ยังไม่มีข้อมูล] </td>
+                    <td></td>
+                  </tr>
+                  <tr class="table-success">
+                    <td><strong>คะแนนส่วนตัว:</strong></td> 
+                    <td>{{ $data['lv1']->pv_point }} PV</td>
+                    <td>[Exclusive ????]</td>
+
+                  </tr>
+                  <tr>
+                    <td><strong>Active ถึง</strong></td>
+                    <td>{{ date('d-m-Y',strtotime($data['lv1']->created_at)) }}</td>
+                    <td>[เหลือ 0 pv ???]</td>
+                  </tr>
+                  <tr class="table-success">
+                    <td><strong>คุณวุฒิสูงสุด</strong></td>
+                    <td>BRONZE STAR AWARD (BSA)</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>สิทธิ Reward Bonus</strong></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr class="table-success">
+                    <td><strong>นับคุณวุฒิจาก</strong></td>
+                    <td>2020-05-01 ถึง 2020-05-31</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>ทีมกลางคือทีม</strong></td>
+                    <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
+                    <td></td> 
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div class="b-t-default transection-footer row">
+             <div class="col-6  b-r-default">
+              <strong>คะแนนคงเหลือยกมา</strong><br>
+              [ A ]<font class="font-red"> 208,898,210</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 0</font>
+            </div>
+            <div class="col-6">
+              <strong>คะแนนวันนี้</strong><br>
+              [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
               {{-- <button type="button"  onclick="event.preventDefault();
               document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
               <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
@@ -714,10 +724,16 @@
 @endfor
 </div>
 </div>
+
+
 </div>
 </div>
 
 </div>
+<!-- Row end -->
+</div>
+</div>
+ 
 @endsection
 @section('js')
 <script  src="{{asset('frontend/bower_components/jstree/js/jstree.min.js')}}"></script>
@@ -726,6 +742,14 @@
      // document.getElementById("lv1_anchor ").classList.remove("");
 
      $(document).ready(function() {
+
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        alert('ddd');
+ // some code..
+}
+
+
+
       var lv1 = $('#j1_1_anchor');
       lv1.closest('a').find('.icofont-folder').removeClass('icofont icofont-folder').addClass('typcn typcn-flow-merge');
 
