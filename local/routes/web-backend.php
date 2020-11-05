@@ -64,6 +64,51 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('course_history_list/datatable', 'Course_history_listController@Datatable')->name('course_history_list.datatable');
     Route::get('course_history_list/index/{id}', 'Course_history_listController@index');
 
+	Route::resource('warehouse', 'WarehouseController');
+    Route::post('warehouse/datatable', 'WarehouseController@Datatable')->name('warehouse.datatable');
+
+	Route::resource('subwarehouse', 'SubwarehouseController');
+    Route::post('subwarehouse/datatable', 'SubwarehouseController@Datatable')->name('subwarehouse.datatable');
+
+    Route::resource('zone', 'ZoneController');
+    Route::post('zone/datatable', 'ZoneController@Datatable')->name('zone.datatable');
+
+    Route::resource('shelf', 'ShelfController');
+    Route::post('shelf/datatable', 'ShelfController@Datatable')->name('shelf.datatable');
+
+    Route::resource('categories', 'CategoriesController');
+    Route::post('categories/datatable', 'CategoriesController@Datatable')->name('categories.datatable');
+
+    Route::resource('business_location', 'Business_locationController');
+    Route::post('business_location/datatable', 'Business_locationController@Datatable')->name('business_location.datatable');
+
+
+    Route::resource('language', 'LanguageController');
+    Route::post('language/datatable', 'LanguageController@Datatable')->name('language.datatable');
+
+    Route::resource('product_group', 'Product_groupController');
+    Route::post('product_group/datatable', 'Product_groupController@Datatable')->name('product_group.datatable');
+
+    Route::resource('personal_quality', 'Personal_qualityController');
+    Route::post('personal_quality/datatable', 'Personal_qualityController@Datatable')->name('personal_quality.datatable');
+
+    Route::resource('travel_feature', 'Travel_featureController');
+    Route::post('travel_feature/datatable', 'Travel_featureController@Datatable')->name('travel_feature.datatable');
+
+    Route::resource('aistockist', 'AistockistController');
+    Route::post('aistockist/datatable', 'AistockistController@Datatable')->name('aistockist.datatable');
+
+    Route::resource('agency', 'AgencyController');
+    Route::post('agency/datatable', 'AgencyController@Datatable')->name('agency.datatable');
+
+
+    Route::resource('limited_amt_type', 'Limited_amt_typeController');
+    Route::post('limited_amt_type/datatable', 'Limited_amt_typeController@Datatable')->name('limited_amt_type.datatable');
+
+
+    Route::resource('promotions', 'PromotionsController');
+    Route::post('promotions/datatable', 'PromotionsController@Datatable')->name('promotions.datatable');
+
 
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {

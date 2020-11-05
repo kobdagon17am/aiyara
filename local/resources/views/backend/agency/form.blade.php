@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">ประเภทสินค้า</h4>
+            <h4 class="mb-0 font-size-18"> Agency </h4>
         </div>
     </div>
 </div>
@@ -23,45 +23,33 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.product_type.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.agency.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.product_type.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.agency.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ประเภทสินค้า :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">รายการ :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->product_type }}" name="product_type" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->txt_desc }}" name="txt_desc" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->detail }}" name="detail" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->date_added }}" name="date_added" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เลือกภาษา :</label>
-                    <div class="col-md-10">
-                         <select name="lang_id" class="form-control select2-templating " required >
-                         <option value="">Select</option>
-                             <!-- <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->ce_type)?'selected':'' }} >{{@$r->txt_desc}}</option> -->
-                             <option value="1" {{ (@$sRow->lang_id==1)?'selected':'' }} >ไทย</option>
-                             <option value="2" {{ (@$sRow->lang_id==2)?'selected':'' }} >อังกฤษ</option>
-                        </select>
-                    </div>
+                  <label for="example-text-input" class="col-md-2 col-form-label">เลือกภาษา :</label>
+                  <div class="col-md-10">
+                    <select name="lang_id" class="form-control select2-templating " >
+                      <option value="0">Select</option>
+                      @if(@$sLang)
+                        @foreach(@$sLang AS $r)
+                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->lang_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                        @endforeach
+                      @endif
+                    </select>
+                  </div>
                 </div>
 
                 <div class="form-group row">
@@ -76,7 +64,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/product_type") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/agency") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
