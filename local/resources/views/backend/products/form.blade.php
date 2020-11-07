@@ -64,20 +64,60 @@
                     </div>
                 </div>
 
+
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ประเภทสินค้า :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">Category :</label>
                     <div class="col-md-10">
                          <select name="category_id" class="form-control select2-templating " >
                          <option value="">Select</option>
-                            @if(@$dsProductType)
-                                @foreach(@$dsProductType AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->category_id)?'selected':'' }} >{{@$r->product_type}}</option>
+                            @if(@$dsCategory)
+                                @foreach(@$dsCategory AS $r)
+                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->category_id)?'selected':'' }} >{{@$r->category_name}}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                 </div>
 
+
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">Orders Type :</label>
+                    <div class="col-md-10">
+                       @php
+                        $v_orders_type_id = explode(",",@$sRow->orders_type_id);
+                        @endphp
+                        @foreach($dsOrders_type as $k => $r)
+                        @php
+                        $checked = '';
+                        foreach($v_orders_type_id as $v_orders_type){
+                        if($r->id==$v_orders_type) $checked = 'checked';
+                        }
+                        @endphp
+                        <div class="checkbox-color checkbox-primary">
+                            <input id="orders_type{{$r->id}}" name="orders_type[]"
+                            type="checkbox" {{$checked}}
+                            value="{{$r->id}}">
+                            <label for="orders_type{{$r->id}}">
+                                {{$r->orders_type}}
+                            </label>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="example-email-input" class="col-md-2 col-form-label">Descriptions </label>
+                    <div class="col-md-10">
+                        <textarea name="descriptions" class="form-control descriptions ">{{$sRow->descriptions}}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="example-email-input" class="col-md-2 col-form-label">Products Details </label>
+                    <div class="col-md-10">
+                        <textarea name="products_details" class="form-control products_details ">{{$sRow->products_details}}</textarea>
+                    </div>
+                </div>
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (1) :</label>
@@ -200,6 +240,19 @@
                             reader.readAsDataURL(ele.files[0]);
                     }
                 }
+
+
+                $( document ).ready( function() {
+                    $( '.descriptions' ).each( function() {
+                        CKEDITOR.replace( this );
+                    } );
+                } );
+
+                $( document ).ready( function() {
+                    $( '.products_details' ).each( function() {
+                        CKEDITOR.replace( this );
+                    } );
+                } );
 
 
         </script>

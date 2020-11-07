@@ -29,9 +29,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.subwarehouse.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.shelf.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.subwarehouse.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.shelf.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -39,7 +39,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">เลือก Zone :</label>
                     <div class="col-md-10">
-                         <select name="w_warehouse" class="form-control select2-templating " >
+                         <select name="w_zone" class="form-control select2-templating " >
                          <option value="">Select</option>
                             @if(@$dsZone)
                                 @foreach(@$dsZone AS $r)

@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">ประเภทสินค้า</h4>
+            <h4 class="mb-0 font-size-18"> Orders type (ชนิดการสั่งซื้อ) </h4>
         </div>
     </div>
 </div>
@@ -23,18 +23,18 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.product_type.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.orders_type.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.product_type.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.orders_type.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ประเภทสินค้า :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชนิดการสั่งซื้อ :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->product_type }}" name="product_type" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->orders_type }}" name="orders_type" required>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->date_added }}" name="date_added" required>
+                        <input class="form-control" type="date" value="{{ @$sRow->date_added }}" name="date_added" required>
                     </div>
                 </div>
 
@@ -76,7 +76,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/product_type") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/orders_type") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>

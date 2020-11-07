@@ -34,8 +34,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('qualification', 'QualificationController');
     Route::post('qualification/datatable', 'QualificationController@Datatable')->name('qualification.datatable');
 
-    Route::resource('product_type', 'Product_typeController');
-    Route::post('product_type/datatable', 'Product_typeController@Datatable')->name('product_type.datatable');
+    Route::resource('orders_type', 'Orders_typeController');
+    Route::post('orders_type/datatable', 'Orders_typeController@Datatable')->name('orders_type.datatable');
   
     Route::resource('product_unit', 'Product_unitController');
     Route::post('product_unit/datatable', 'Product_unitController@Datatable')->name('product_unit.datatable');
@@ -105,9 +105,19 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('limited_amt_type', 'Limited_amt_typeController');
     Route::post('limited_amt_type/datatable', 'Limited_amt_typeController@Datatable')->name('limited_amt_type.datatable');
 
-
     Route::resource('promotions', 'PromotionsController');
     Route::post('promotions/datatable', 'PromotionsController@Datatable')->name('promotions.datatable');
+
+    Route::resource('promotions_products', 'Promotions_productsController');
+    Route::post('promotions_products/datatable', 'Promotions_productsController@Datatable')->name('promotions_products.datatable');
+    Route::get('promotions_products/create/{id}', 'Promotions_productsController@create');
+
+    Route::resource('promotions_cost', 'Promotions_costController');
+    Route::post('promotions_cost/datatable', 'Promotions_costController@Datatable')->name('promotions_cost.datatable');
+    // Route::get('promotions_cost/{id}', 'Promotions_costController@index');
+
+    Route::resource('currency', 'CurrencyController');
+    Route::post('currency/datatable', 'CurrencyController@Datatable')->name('currency.datatable');
 
 
     #=======================================================================================================================================================

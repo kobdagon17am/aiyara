@@ -42,6 +42,7 @@ class MenuPermissionController extends Controller
 
     public function show($id)
     {
+        // dd($id);
         $data = UserModel::query()->where('id_admin', $id)->first();
         $getRowData = DB::table('menu_admin')
             ->where('admin_id', $id)->get();

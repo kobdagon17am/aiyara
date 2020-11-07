@@ -89,6 +89,8 @@ class AdminController extends Controller
   public function roles($id)
   {
 
+    // dd($id);
+
         // $data = \App\Models\MenuModel::query()->orderBy('sort', 'ASC')->get();
         $data = \App\Models\MenuModel::query()->where('isActive', 'Y')->get();
         return view('backend.permission.roles', compact('data', 'id'));

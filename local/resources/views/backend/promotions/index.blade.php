@@ -89,6 +89,9 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'name_thai', title :'<center>รายการ Promotion </center>', className: 'text-left'},
+            // {data: 'id',   title :'<center>ข้อมูลราคา Promotion</center>', className: 'text-center',render: function(d) {
+            //    return '<a href="{{ route('backend.promotions_cost.index') }}/'+d+'" class="btn btn-sm btn-primary"><i class="bx bx-money font-size-18 align-middle" ></i></a>';
+            // }},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

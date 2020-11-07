@@ -29,9 +29,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.subwarehouse.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.zone.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.subwarehouse.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.zone.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -39,7 +39,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">เลือกคลังสินค้าย่อย :</label>
                     <div class="col-md-10">
-                         <select name="w_warehouse" class="form-control select2-templating " >
+                         <select name="w_subwarehouse" class="form-control select2-templating " >
                          <option value="">Select</option>
                             @if(@$dsSubwarehouse)
                                 @foreach(@$dsSubwarehouse AS $r)
@@ -106,7 +106,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/subwarehouse") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/zone") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
