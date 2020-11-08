@@ -48,7 +48,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->date_added }}" name="date_added" required>
+                        <input class="form-control" type="date" value="{{ @$sRow->date_added }}" name="date_added" required>
                     </div>
                 </div>
 

@@ -96,13 +96,15 @@ class ZoneController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('w_warehouse', function($row) {
-         $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
-         $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
-         return $dsWarehouse->w_name;
+         // $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
+         // $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
+         // return $dsWarehouse->w_name;
+        $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
+        $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
+        return $dsWarehouse->w_name;
 
       })
       ->addColumn('w_subwarehouse', function($row) {
-        // return $row->fname.' '.$row->surname;
          $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
          return $dsSubwarehouse->w_name;
 

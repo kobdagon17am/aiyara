@@ -7,21 +7,21 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class Product_typeController extends Controller
+class Orders_typeController extends Controller
 {
 
     public function index(Request $request)
     {
 
-      $dsProduct_type  = \App\Models\Backend\Product_type::get();
-      return view('backend.product_type.index')->with(['dsProduct_type'=>$dsProduct_type]);
+      $dsOrders_type  = \App\Models\Backend\Orders_type::get();
+      return view('backend.orders_type.index')->with(['dsOrders_type'=>$dsOrders_type]);
 
     }
 
  public function create()
     {
       $sLocale  = \App\Models\Locale::all();
-      return view('backend.product_type.form');
+      return view('backend.orders_type.form');
     }
 
     public function store(Request $request)
@@ -31,8 +31,8 @@ class Product_typeController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Product_type::find($id);
-       return View('backend.product_type.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sRow = \App\Models\Backend\Orders_type::find($id);
+       return View('backend.orders_type.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
     }
 
     public function update(Request $request, $id)
@@ -47,12 +47,12 @@ class Product_typeController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Product_type::find($id);
+            $sRow = \App\Models\Backend\Orders_type::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Product_type;
+            $sRow = new \App\Models\Backend\Orders_type;
           }
 
-          $sRow->product_type    = request('product_type');
+          $sRow->orders_type    = request('orders_type');
           $sRow->detail    = request('detail');
           $sRow->date_added    = request('date_added');
           $sRow->lang_id    = request('lang_id');
@@ -64,18 +64,18 @@ class Product_typeController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         return redirect()->action('backend\Orders_typeController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\Product_typeController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Orders_typeController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Product_type::find($id);
+      $sRow = \App\Models\Backend\Orders_type::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
@@ -83,7 +83,7 @@ class Product_typeController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Product_type::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Orders_type::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {

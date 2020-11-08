@@ -28,7 +28,7 @@
                     <input type="text" class="form-control float-left ml-1 text-center w200 myLike" placeholder="E-Mail" name="email">
                   </div>
                   <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="">
+                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.permission.create') }}">
                       <i class="bx bx-plus font-size-16 align-middle mr-1"></i>เพิ่มผู้ใช้งาน
                     </a>
                   </div>

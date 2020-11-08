@@ -81,7 +81,8 @@ class CategoriesController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Categories::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Categories::where('lang_id', 1)
+               ->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {

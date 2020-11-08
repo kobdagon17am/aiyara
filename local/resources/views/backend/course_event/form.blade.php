@@ -131,6 +131,95 @@
                 </div>
 
 
+
+              <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
+                  <div class="col-md-10">
+                    <select name="minimum_package_purchased" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sPackage)
+                          @foreach(@$sPackage AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->minimum_package_purchased)?'selected':'' }} >{{$r->dt_package}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
+                  <div class="col-md-10">
+                    <select name="reward_qualify_purchased" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sQualification)
+                          @foreach(@$sQualification AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->reward_qualify_purchased)?'selected':'' }} >{{$r->business_qualifications}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
+                  <div class="col-md-10">
+                    <select name="keep_personal_quality" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sPersonal_quality)
+                          @foreach(@$sPersonal_quality AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->keep_personal_quality)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
+                  <div class="col-md-10">
+                    <select name="maintain_travel_feature" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sTravel_feature)
+                          @foreach(@$sTravel_feature AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->maintain_travel_feature)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">aistockist : </label>
+                  <div class="col-md-10">
+                    <select name="aistockist" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sAistockist)
+                          @foreach(@$sAistockist AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->aistockist)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label">agency : </label>
+                  <div class="col-md-10">
+                    <select name="agency" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sAgency)
+                          @foreach(@$sAgency AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->agency)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/course_event") }}">
