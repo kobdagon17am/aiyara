@@ -6,7 +6,9 @@
  		<h4>กรอกข้อมูลลงทะเบียนสมาชิกใหม่</h4>
  	</div>
  	<div class="card-block">
- 		<form action="{{route('register_new_member')}}" method="POST">
+ 		<form action="{{route('register_new_member')}}" method="POST" enctype="multipart/form-data">
+
+
  			@csrf
 
  			<div class="form-group row">
@@ -243,6 +245,14 @@
 
  			</div>
 
+ 			<div class="form-group row">
+ 				<input type="file" name="file_1" class="form-control"> 
+ 				<input type="file" name="file_2" class="form-control"> 
+ 				<input type="file" name="file_3" class="form-control"> 				
+ 			</div>
+
+
+ 			
  			<div class="form-group row text-right">
  				<label class="col-sm-2"></label>
  				<div class="col-sm-10">

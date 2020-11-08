@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Hash;
 //use App\Http\Controllers\Session;
 class RegisterController extends Controller
 {
-  
- 
+
+
   public function __construct()
   {
     $this->middleware('customer');
@@ -34,7 +34,7 @@ class RegisterController extends Controller
       return view('frontend/newregister',compact('data'));
 
     }
-   
+
   }
   
   public function register_new_member(Request $req){
@@ -46,6 +46,12 @@ class RegisterController extends Controller
   	$new_id = $id[0]->id+1;
     $username ="000".$new_id;
     $pass=md5($username);
+
+    $file_1 = $req->file_1;
+    $file_2 = $req->file_2;
+    $file_3 = $req->file_3;
+
+    dd($req->all());
 
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
