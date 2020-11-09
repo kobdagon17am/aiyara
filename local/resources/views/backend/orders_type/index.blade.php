@@ -90,7 +90,6 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'orders_type', title :'<center>ประเภทสินค้า </center>', className: 'text-left'},
             {data: 'detail', title :'<center>รายละเอียด </center>', className: 'text-left'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
             {data: 'date_added', title :'<center>วันที่เพิ่ม</center>', className: 'text-left'},
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
             // {data: 'lang_id',   title :'<center>ภาษา</center>', className: 'text-center',render: function(d) {
@@ -101,7 +100,7 @@ $(function() {
             //   }
             // }},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-               return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],

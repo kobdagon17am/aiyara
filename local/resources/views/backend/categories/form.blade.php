@@ -45,14 +45,13 @@
 						<input class="form-control" type="hidden" value="{{ @$sRow[$i]->id }}" name="id[]"  >
 						@endif
 
-					     	<div class="form-group row">
-			                    <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
-			                    <div class="col-md-10">
-			                    	<input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
-			                        <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
-			                    </div>
-			                </div>
-
+                    <div class="form-group row">
+                      <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
+                      <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
+                        <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
+                      </div>
+                    </div>
 
 			                <div class="form-group row">
 			                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Category :</label>

@@ -19,6 +19,7 @@ class CategoriesController extends Controller
     {
       $sRowCat = \App\Models\Backend\Categories::orderBy('category_id','desc')->limit(1)->get();
       $catMax = $sRowCat[0]->category_id+1;
+      // dd($catMax);
       $sLanguage = \App\Models\Backend\Language::get();
       return View('backend.categories.form')->with(array('sLanguage'=>$sLanguage,'catMax'=>$catMax ) );
     }
@@ -107,8 +108,7 @@ class CategoriesController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Categories::where('lang_id', 1)
-               ->search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Categories::where('lang_id', 1)->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {

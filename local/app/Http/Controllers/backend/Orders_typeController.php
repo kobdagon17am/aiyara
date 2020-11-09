@@ -18,10 +18,13 @@ class Orders_typeController extends Controller
 
     }
 
- public function create()
+   public function create()
     {
-      $sLocale  = \App\Models\Locale::all();
-      return view('backend.orders_type.form');
+      $sRowGroup = \App\Models\Backend\Orders_type::orderBy('group_id','desc')->limit(1)->get();
+      $groupMaxID = $sRowGroup[0]->group_id+1;
+      // dd($groupMaxID);
+      $sLanguage = \App\Models\Backend\Language::get();
+      return View('backend.orders_type.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
     public function store(Request $request)
@@ -31,9 +34,13 @@ class Orders_typeController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Orders_type::find($id);
-       return View('backend.orders_type.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sRowGroup = \App\Models\Backend\Orders_type::find($id);
+       $sRow = \App\Models\Backend\Orders_type::where('group_id', $sRowGroup->group_id)->get();
+       // dd($sRow[0]->status);
+       $sLanguage = \App\Models\Backend\Language::get();
+       return View('backend.orders_type.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
+
 
     public function update(Request $request, $id)
     {
@@ -41,25 +48,56 @@ class Orders_typeController extends Controller
       return $this->form($id);
     }
 
-
+    
     public function form($id=NULL)
     {
       \DB::beginTransaction();
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Orders_type::find($id);
-          }else{
-            $sRow = new \App\Models\Backend\Orders_type;
-          }
+            $langCnt = count(request('lang'));
+            for ($i=0; $i < $langCnt ; $i++) { 
+             
+                \App\Models\Backend\Orders_type::where('id', request('id')[$i])->update(
+                      [
+                        'orders_type' => request('orders_type')[$i] ,
+                        'detail' => request('detail')[$i] ,
+                        
+                        'order' => request('order')[$i] ,
 
-          $sRow->orders_type    = request('orders_type');
-          $sRow->detail    = request('detail');
-          $sRow->date_added    = request('date_added');
-          $sRow->lang_id    = request('lang_id');
-          $sRow->status    = request('status')?request('status'):0;
-                    
-          $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->save();
+                        'date_added' => request('date_added') ,
+
+                        'updated_at' => date('Y-m-d H:i:s') ,
+                        'status' => request('status')?request('status'):0 ,
+                      ]
+                  );     
+            }
+
+          }else{
+
+            $sRowGroup = \App\Models\Backend\Orders_type::orderBy('group_id','desc')->limit(1)->get();
+      		$groupMaxID = $sRowGroup[0]->group_id+1;
+
+            $langCnt = count(request('lang'));
+            for ($i=0; $i < $langCnt ; $i++) { 
+            
+                \App\Models\Backend\Orders_type::insert(
+                      [
+                        'lang_id' => request('lang')[$i] ,
+                        'order' => request('lang')[$i] ,
+                        'group_id' => $groupMaxID ,
+
+                        'orders_type' => request('orders_type')[$i] ,
+                        'detail' => request('detail')[$i] ,
+                        
+                        'date_added' => request('date_added') ,
+                        'created_at' => date('Y-m-d H:i:s') ,
+                        'status' => 1,
+                      ]
+                  );     
+            }
+
+          }
 
 
           \DB::commit();
@@ -83,7 +121,7 @@ class Orders_typeController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Orders_type::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Orders_type::where('lang_id', 1)->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {
