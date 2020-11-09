@@ -3,7 +3,11 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style type="text/css" media="screen">
+	.myBorder {
+		border: 2px solid #00ace6;border-radius: 5px;border-width: thin;padding: 10px;margin-bottom: 1%;
+	}
+</style>
 @endsection
 
 @section('content')
@@ -25,54 +29,64 @@
               @if( empty($sRow) )
               <form action="{{ route('backend.categories.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.categories.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.categories.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+                
               @endif
+
                 {{ csrf_field() }}
 
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">category_id :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->category_id }}" name="category_id" required>
-                    </div>
-                </div>
+					 @for ($i = 0; $i < count($sLanguage) ; $i++)
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">category_name :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->category_name }}" name="category_name" required>
-                    </div>
-                </div>
+					  <div class="myBorder">
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">order :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="number" value="{{ @$sRow->order }}" name="order" required>
-                    </div>
-                </div>
+					  	@if( !empty(@$sRow) )
+						<input class="form-control" type="hidden" value="{{ @$sRow[$i]->id }}" name="id[]"  >
+						@endif
 
-                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เลือกภาษา :</label>
-                    <div class="col-md-10">
-                         <select name="lang_id" class="form-control select2-templating " required >
-                         <option value="">Select</option>
-                             <!-- <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->ce_type)?'selected':'' }} >{{@$r->txt_desc}}</option> -->
-                             <option value="1" {{ (@$sRow->lang_id==1)?'selected':'' }} >ไทย</option>
-                             <option value="2" {{ (@$sRow->lang_id==2)?'selected':'' }} >อังกฤษ</option>
-                        </select>
-                    </div>
-                </div>
+					     	<div class="form-group row">
+			                    <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
+			                    <div class="col-md-10">
+			                    	<input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
+			                        <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
+			                    </div>
+			                </div>
 
-<!--                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
-                      <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
-                      </div>
-                    </div>
-                </div> -->
+
+			                <div class="form-group row">
+			                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Category :</label>
+			                    <div class="col-md-10">
+			                        <input class="form-control" type="text" value="{{ @$sRow[$i]->category_name }}" name="category_name[]" >
+			                    </div>
+			                </div>
+
+							@if( !empty($sRow) )
+							<div class="form-group row">
+							    <label for="example-text-input" class="col-md-2 col-form-label">ลำการการจัดเรียง :</label>
+							    <div class="col-md-10">
+							        <input class="form-control" type="number" value="{{ @$sRow[$i]->order }}" name="order[]" >
+							    </div>
+							</div>
+							@endif
+
+					</div>
+
+			 @endfor
+
+
+				@if( !empty($sRow) )
+					 <div class="form-group row">
+					    <label class="col-md-2 col-form-label">สถานะ :</label>
+					    <div class="col-md-10 mt-2">
+					      <div class="custom-control custom-switch">
+					          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow[0]->status=='1')?'checked':'' }}>
+					          <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
+					      </div>
+					    </div>
+					</div>
+				@endif
+
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -113,6 +127,14 @@
 
 
         </script>
+
+        <script type="text/javascript">
+        $(document).ready(function() {
+              $("html").dblclick(function(event) {
+                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+              });
+        }); 
+      </script>
 
 @endsection
 

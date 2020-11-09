@@ -93,19 +93,15 @@ $(function() {
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
             {data: 'date_added', title :'<center>วันที่เพิ่ม</center>', className: 'text-left'},
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            {data: 'lang_id',   title :'<center>ภาษา</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'ไทย';
-              }else{
-                return 'อังกฤษ';
-              }
-            }},
+            // {data: 'lang_id',   title :'<center>ภาษา</center>', className: 'text-center',render: function(d) {
+            //   if(d==1){
+            //     return 'ไทย';
+            //   }else{
+            //     return 'อังกฤษ';
+            //   }
+            // }},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'Active';
-              }else{
-                return 'InActive';
-              }
+               return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],

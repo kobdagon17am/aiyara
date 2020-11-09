@@ -88,19 +88,15 @@ $(function() {
      
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'category_id', title :'<center>category_id </center>', className: 'text-left'},
-            {data: 'category_name', title :'<center>category_name </center>', className: 'text-left'},
+            {data: 'category_id', title :'<center>Category Id (Auto gen ID) </center>', className: 'text-center'},
+            {data: 'category_name', title :'<center>Category Name </center>', className: 'text-left'},
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            {data: 'order', title :'<center>order</center>', className: 'text-left'},
-            {data: 'lang_id', title :'<center>lang_id</center>', className: 'text-left'},
+            // {data: 'order', title :'<center>order</center>', className: 'text-left'},
+            // {data: 'lang_id', title :'<center>lang_id</center>', className: 'text-left'},
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            // {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-            //   if(d==1){
-            //     return 'Active';
-            //   }else{
-            //     return 'InActive';
-            //   }
-            // }},
+            {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
+               return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+            }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
