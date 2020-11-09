@@ -246,10 +246,34 @@
  			</div>
 
  			<div class="form-group row">
- 				<input type="file" name="file_1" class="form-control"> 
- 				<input type="file" name="file_2" class="form-control"> 
- 				<input type="file" name="file_3" class="form-control"> 				
+ 				<div class="col-sm-12">
+ 					<h5 class="sub-title" >เอกสารสำหรับการสมัคร</h5>
+
+ 					<div class="form-group row">
+ 						<div class="col-sm-6">
+ 							<label>บัตรประชาชนเลขที่</label>
+ 							<input type="file" name="file_1" class="form-control">
+ 						</div>
+ 					</div>
+
+ 					<div class="form-group row">
+ 						<div class="col-sm-6">
+ 						<label>บัตรประชาชนเลขที่</label>
+ 						<input type="file" name="file_2" class="form-control">
+ 					</div>
+ 				</div>
+ 					<div class="form-group row">
+ 					<div class="col-sm-6"> 
+ 						<label>บัตรประชาชนเลขที่</label>
+ 						<input type="file" name="file_3" class="form-control">
+ 					</div>
+ 				</div>
+
  			</div>
+
+
+
+
 
 
  			
