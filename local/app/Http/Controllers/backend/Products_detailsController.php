@@ -102,13 +102,13 @@ class Products_detailsController extends Controller
                       [
                         'lang_id' => request('lang')[$i] ,
                         'group_id' => $groupMaxID ,
+                        'product_id_fk' => request('product_id_fk') ,
 
-                        'Products_details' => request('Products_details')[$i] ,
-                        'detail' => request('detail')[$i] ,
+                        'product_name' => request('product_name')[$i] ,
+                        'descriptions' => request('descriptions')[$i] ,
+                        'products_details' => request('products_details')[$i] ,
                         
-                        'date_added' => request('date_added') ,
                         'created_at' => date('Y-m-d H:i:s') ,
-                        'status' => 1,
                       ]
                   );     
             }
@@ -130,8 +130,9 @@ class Products_detailsController extends Controller
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Products_details::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
+      $sTable = \App\Models\Backend\Products_details::where('group_id', $sRow->group_id);
+      if( $sTable ){
+        $sTable->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
     }

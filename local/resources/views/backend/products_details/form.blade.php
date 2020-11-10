@@ -32,12 +32,17 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
+              
+
               @if( empty($sRow) )
               <form action="{{ route('backend.products_details.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="product_id_fk" value="{{@$sRowNew->id}}" >
               @else
               <form action="{{ route('backend.products_details.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input type="hidden" name="product_id_fk" value="{{@$sRowNew->id}}" >
+                
               @endif
                 {{ csrf_field() }}
 
@@ -60,21 +65,21 @@
                         <div class="form-group row">
                           <label for="example-text-input" class="col-md-2 col-form-label">Product name :</label>
                           <div class="col-md-10">
-                            <input class="form-control" type="text" value="{{ @$sRow[$i]->product_name }}" name="product_name[]" >
+                            <input class="form-control" type="text" value="{{ @$sRow[$i]->product_name }}" name="product_name[]" required >
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="example-text-input" class="col-md-2 col-form-label">Descriptions :</label>
                           <div class="col-md-10">
-                            <textarea name="descriptions[]" class="form-control descriptions ">{{@$sRow[$i]->descriptions}}</textarea>
+                            <textarea name="descriptions[]" class="form-control descriptions  "  >{{@$sRow[$i]->descriptions}}</textarea>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="example-text-input" class="col-md-2 col-form-label">Products details :</label>
                           <div class="col-md-10">
-                            <textarea name="products_details[]" class="form-control products_details ">{{@$sRow[$i]->products_details}}</textarea>
+                            <textarea name="products_details[]" class="form-control products_details "  >{{@$sRow[$i]->products_details}}</textarea>
                           </div>
                         </div>
 
