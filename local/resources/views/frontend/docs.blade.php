@@ -14,10 +14,11 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th width="100">#</th>
                                 <th>เอกสาร</th>
-                                <th>วันที่</th>
-                                <th>สถานะ</th>
+                                <th width="200">วันที่</th>
+                                <th width="200">สถานะ</th>
+                                <th>รายละเอียด</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,6 +52,7 @@
                                 <td>{{ $type }}</td>
                                 <td>{{ date('d/m/Y',strtotime($value->created_at)) }}</td>
                                 <td>{!! $status !!}</td>
+                                <td>{!! $value->comment !!}</td>
                             </tr>
                             @endforeach
                         </tbody>
