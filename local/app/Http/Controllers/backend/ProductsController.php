@@ -142,7 +142,13 @@ class ProductsController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\ProductsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+
+          if( $id ){
+            return redirect()->action('backend\ProductsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          }else{
+            return redirect()->to(url("backend/products/".$sRow->id."/edit"));
+          }
+          
 
       } catch (\Exception $e) {
         echo $e->getMessage();
