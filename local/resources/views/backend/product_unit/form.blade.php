@@ -3,7 +3,11 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style type="text/css" media="screen">
+    .myBorder {
+        border: 2px solid #00ace6;border-radius: 5px;border-width: thin;padding: 10px;margin-bottom: 1%;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -25,41 +29,68 @@
               @if( empty($sRow) )
               <form action="{{ route('backend.product_unit.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.product_unit.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.product_unit.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">หน่วยสินค้า :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->product_unit }}" name="product_unit" required>
-                    </div>
-                </div>
+                     @for ($i = 0; $i < count($sLanguage) ; $i++)
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->detail }}" name="detail" required>
-                    </div>
-                </div>
+                      <div class="myBorder">
 
-                <div class="form-group row">
+                        @if( !empty(@$sRow) )
+                        <input class="form-control" type="hidden" value="{{ @$sRow[$i]->id }}" name="id[]"  >
+                        @endif
+
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
+                              <div class="col-md-10">
+                                <input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
+                                <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
+                              </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label for="example-text-input" class="col-md-2 col-form-label">หน่วยสินค้า :</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->product_unit }}" name="product_unit[]" required >
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->detail }}" name="detail[]" required>
+                                </div>
+                            </div>
+
+                    </div>
+
+             @endfor
+
+                <div class="myBorder">
+
+                  <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="date" value="{{ @$sRow->date_added }}" name="date_added" required>
+                    <div class="col-md-3">
+                      <input class="form-control" type="date" value="{{ @$sRow[0]->date_added }}" name="date_added" required>
                     </div>
-                </div>
+                  </div>
 
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
-                      <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
-                      </div>
+                  @if( !empty($sRow) )
+                     <div class="form-group row">
+                        <label class="col-md-2 col-form-label">สถานะ :</label>
+                        <div class="col-md-10 mt-2">
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow[0]->status=='1')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
+                          </div>
+                        </div>
                     </div>
+                  @endif
+                  
                 </div>
 
                 <div class="form-group mb-0 row">

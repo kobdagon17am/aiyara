@@ -12,16 +12,16 @@ class Product_unitController extends Controller
 
     public function index(Request $request)
     {
-
-      $dsProduct_unit  = \App\Models\Backend\Product_unit::get();
-      return view('backend.product_unit.index')->with(['dsProduct_unit'=>$dsProduct_unit]);
-
+      return view('backend.product_unit.index');
     }
 
- public function create()
+   public function create()
     {
-      $sLocale  = \App\Models\Locale::all();
-      return view('backend.product_unit.form');
+      $sRowGroup = \App\Models\Backend\Product_unit::orderBy('group_id','desc')->limit(1)->get();
+      $groupMaxID = $sRowGroup[0]->group_id+1;
+      // dd($groupMaxID);
+      $sLanguage = \App\Models\Backend\Language::get();
+      return View('backend.product_unit.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
     public function store(Request $request)
@@ -31,8 +31,11 @@ class Product_unitController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Product_unit::find($id);
-       return View('backend.product_unit.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sRowGroup = \App\Models\Backend\Product_unit::find($id);
+       $sRow = \App\Models\Backend\Product_unit::where('group_id', $sRowGroup->group_id)->get();
+       // dd($sRow[0]->status);
+       $sLanguage = \App\Models\Backend\Language::get();
+       return View('backend.product_unit.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 
     public function update(Request $request, $id)
@@ -42,23 +45,53 @@ class Product_unitController extends Controller
     }
 
 
+    
     public function form($id=NULL)
     {
       \DB::beginTransaction();
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Product_unit::find($id);
-          }else{
-            $sRow = new \App\Models\Backend\Product_unit;
-          }
+            $langCnt = count(request('lang'));
+            for ($i=0; $i < $langCnt ; $i++) { 
 
-          $sRow->product_unit    = request('product_unit');
-          $sRow->detail    = request('detail');
-          $sRow->date_added    = request('date_added');
-          $sRow->status    = request('status')?request('status'):0;
-                    
-          $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->save();
+                \App\Models\Backend\Product_unit::where('id', request('id')[$i])->update(
+                      [
+                        'product_unit' => request('product_unit')[$i] ,
+                        'detail' => request('detail')[$i] ,
+                        
+                        'date_added' => request('date_added') ,
+
+                        'updated_at' => date('Y-m-d H:i:s') ,
+                        'status' => request('status')?request('status'):0 ,
+                      ]
+                  );     
+            }
+
+          }else{
+
+            $sRowGroup = \App\Models\Backend\Product_unit::orderBy('group_id','desc')->limit(1)->get();
+          $groupMaxID = $sRowGroup[0]->group_id+1;
+
+            $langCnt = count(request('lang'));
+            for ($i=0; $i < $langCnt ; $i++) { 
+            
+                \App\Models\Backend\Product_unit::insert(
+                      [
+                        'lang_id' => request('lang')[$i] ,
+                        'group_id' => $groupMaxID ,
+
+                        'product_unit' => request('product_unit')[$i] ,
+                        'detail' => request('detail')[$i] ,
+                        
+                        'date_added' => request('date_added') ,
+                        'created_at' => date('Y-m-d H:i:s') ,
+                        'status' => 1,
+                      ]
+                  );     
+            }
+
+          }
 
 
           \DB::commit();
@@ -82,7 +115,7 @@ class Product_unitController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Product_unit::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Product_unit::where('lang_id', 1)->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('name', function($row) {
