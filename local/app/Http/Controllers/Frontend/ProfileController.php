@@ -25,7 +25,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-       
+
         return view('frontend/profile');
     }
 
@@ -44,7 +44,12 @@ class ProfileController extends Controller
 
     public function edit_address(Request $request)
     {
-        $data =array( 'house_no' => trim($request->house_no),
+        $checkpass = DB::table('customers')
+        ->where('id','=',Auth::guard('c_user')->user()->id)
+        ->where('password','=',md5($request->password))
+        ->count();
+        if($checkpass == 1){
+           $data =array( 'house_no' => trim($request->house_no),
             'house_name' => trim($request->house_name),
             'moo' => trim($request->moo),
             'soi' => trim($request->soi),
@@ -55,28 +60,37 @@ class ProfileController extends Controller
             'zipcode' => trim($request->zipcode)
         );
 
-        try {
-         $update = DB::table('customers_detail')
-         ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-         ->update($data);
+           try {
+               $update = DB::table('customers_detail')
+               ->where('customer_id','=',Auth::guard('c_user')->user()->id)
+               ->update($data);
 
-         return redirect('profile_address')->withSuccess('Update Address Success');
+               return redirect('profile_address')->withSuccess('Update Address Success');
 
-     } catch (Exception $e) {
-       return redirect('profile_address')->withError('Update Address Error');
+           } catch (Exception $e) {
+             return redirect('profile_address')->withError('Update Address Error');
 
-   }
+         }
+
+     }else{
+        return redirect('profile_address')->withError('Wrong password');
+
+     }
 
 
-}
 
-public function profile_img()
-{
+
+
+
+ }
+
+ public function profile_img()
+ {
     return view('frontend/profile_img');
 }
 
 public function update_img_profile(Request $request){
- try {
+   try {
     if ($request->imgBase64 != null) {
         $photoBase64 = $request->imgBase64;
         $imageBase = $photoBase64;
@@ -121,9 +135,9 @@ public function update_profile(Request $request){
         return redirect('cart')->withSuccess('Upload image Success');
 
     } catch (Exception $e) {
-     dd($e);
+       dd($e);
 
- }
+   }
 
             //$profile->save();
 

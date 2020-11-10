@@ -186,7 +186,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o"></i> แก้ไขที่อยู่การจัดส่ง </a>
+										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o"></i> แก้ไขข้อมูลส่วนตัว </a>
 
 									</li>
 									<li>

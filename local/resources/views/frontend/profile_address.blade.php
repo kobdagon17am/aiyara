@@ -67,7 +67,40 @@
  			<div class="form-group row text-right">
  				<label class="col-sm-2"></label>
  				<div class="col-sm-10">
- 					<button type="submit" class="btn btn-primary m-b-0">บันทึก</button>
+ 					<button type="button" class="btn btn-primary m-b-0" data-toggle="modal" data-target="#default-Modal">บันทึก</button>
+ 				</div>
+
+ 			</div>
+ 			<div class="modal fade" id="default-Modal" tabindex="-1" role="dialog">
+ 				<div class="modal-dialog" role="document">
+ 					<div class="modal-content">
+ 						<div class="modal-header">
+ 							<h4 class="modal-title">กรุณายืนยันรหัสผ่านเพื่อเปลี่ยนแปลงที่อยู่</h4>
+ 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+ 								<span aria-hidden="true">&times;</span>
+ 							</button>
+ 						</div>
+ 						<div class="modal-body">
+ 							<div class="row text-center">
+ 								<div class="col-sm-2"> 
+ 								</div>
+ 								<div class="col-sm-8">
+ 									<div class="input-group input-group-primary">
+ 										<span class="input-group-addon">
+ 											<i class="fa fa-lock"></i>
+ 										</span>
+ 										<input type="password" name="password" class="form-control" placeholder="Password" required="">
+ 									</div>
+ 								</div>
+ 								<div class="col-sm-2">
+ 								</div>
+ 							</div>
+ 						</div>
+ 						<div class="modal-footer">
+ 							<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+ 							<button type="submit" class="btn btn-primary waves-effect waves-light ">ยืนยันรหัสผ่าน</button>
+ 						</div>
+ 					</div>
  				</div>
  			</div>
  		</form> 
