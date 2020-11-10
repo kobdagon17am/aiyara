@@ -189,6 +189,10 @@
 										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o"></i> แก้ไขที่อยู่การจัดส่ง </a>
 
 									</li>
+									<li>
+										<a href="{{route('docs')}}"><i class="fa fa-file-text"></i> สถานะเอกสารการสมัคร </a>
+
+									</li>
 
                        {{--    <li>
                                         <a href="email-inbox.html">

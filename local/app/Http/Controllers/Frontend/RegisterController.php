@@ -19,10 +19,9 @@ class RegisterController extends Controller
 
   public function index($id,$line_type){
     if(empty($id) || empty($line_type)){
-      dd('เลื่อก Upline ไม่ถูกต้อง');
-
+      return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
+ 
     }else{
-
     	$customer = DB::table('Customers')
     	->select('*')
     	->where('id','=',$id)
@@ -46,9 +45,6 @@ class RegisterController extends Controller
   	$new_id = $id[0]->id+1;
     $username ="000".$new_id;
     $pass=md5($username);
-
-
-
 
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
@@ -87,18 +83,25 @@ class RegisterController extends Controller
     $tel_home= (trim($req->input('tel_home')) == '') ? null : $req->input('tel_home');
     $tel_mobile= (trim($req->input('tel_mobile')) == '') ? null : $req->input('tel_mobile');
 
-    $count = DB::table('customers')
+    $count_user = DB::table('customers')
     ->select('*')
     ->where('user_name','=',$username)
     ->count();
 
-    if($count > 0){
-      return redirect('home')->withError('Username already exists in the system.');
+    $count_tel = DB::table('customers_detail')
+    ->select('*')
+    ->where('tel_mobile','=',$tel_mobile)
+    ->count();
+     if($count_tel > 0 ){
+       return redirect('home')->withError('MobileNumber already exists in the system.');
+     }
+
+    if($count_user > 0 ){
+      return redirect('home')->withError('Username or MobileNumber already exists in the system.');
     }else{
      $data_customer = [
       'user_name'=>$username,
       'password'=>$pass,
-
       'prefix_name'=>$prefix_name,
       'first_name'=>$first_name,
       'last_name'=>$last_name,
@@ -142,10 +145,10 @@ class RegisterController extends Controller
          if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
            $url='local/public/files_register/1';
-          $f_name = $new_id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
+          $f_name = $id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
           if($file_1->move($url,$f_name)){
             DB::table('register_files')
-            ->insert(['customer_id'=>$new_id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
+            ->insert(['customer_id'=>$id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
           }
 
@@ -155,10 +158,10 @@ class RegisterController extends Controller
         if(isset($file_2)){
             // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
           $url='local/public/files_register/2';
-          $f_name = $new_id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
+          $f_name = $id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
           if($file_2->move($url,$f_name)){
             DB::table('register_files')
-            ->insert(['customer_id'=>$new_id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
+            ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
           }
         }
@@ -167,10 +170,10 @@ class RegisterController extends Controller
         if(isset($file_3)){
             // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
          $url='local/public/files_register/3';
-         $f_name = $new_id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+         $f_name = $id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
          if($file_3->move($url,$f_name)){
           DB::table('register_files')
-          ->insert(['customer_id'=>$new_id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
+          ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
         }
       }

@@ -66,7 +66,11 @@ Route::post('profile_address','Frontend\ProfileController@profile_address')->nam
 
 Route::get('edit_profile','Frontend\ProfileController@edit_profile')->name('edit_profile');
 Route::post('update_img_profile','Frontend\ProfileController@update_img_profile')->name('update_img_profile');
+
 Route::post('edit_address','Frontend\ProfileController@edit_address')->name('edit_address');
+Route::get('docs','Frontend\DocsController@index')->name('docs');
+Route::post('docs_upload','Frontend\DocsController@docs_upload')->name('docs_upload');
+
 //------------------------------end-------------------------------//
 
 Route::get('/cademy/addnew_category', function () {
