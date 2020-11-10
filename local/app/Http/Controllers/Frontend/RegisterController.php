@@ -141,7 +141,7 @@ class RegisterController extends Controller
          $file_1 = $req->file_1;
          if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-           $url=public_path().'\files_register\1';
+           $url='local/public/files_register/1';
           $f_name = $new_id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
           if($file_1->move($url,$f_name)){
             DB::table('register_files')
@@ -154,7 +154,7 @@ class RegisterController extends Controller
         $file_2 = $req->file_2;
         if(isset($file_2)){
             // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-          $url=public_path().'\files_register\2';
+          $url='local/public/files_register/2';
           $f_name = $new_id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
           if($file_2->move($url,$f_name)){
             DB::table('register_files')
@@ -166,7 +166,7 @@ class RegisterController extends Controller
         $file_3 = $req->file_3;
         if(isset($file_3)){
             // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-         $url=public_path().'\files_register\3';
+         $url='local/public/files_register/3';
          $f_name = $new_id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
          if($file_3->move($url,$f_name)){
           DB::table('register_files')
