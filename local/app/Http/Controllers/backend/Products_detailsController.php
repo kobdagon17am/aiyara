@@ -18,14 +18,6 @@ class Products_detailsController extends Controller
    public function create($id)
     {
 
-      // dd($id);
-       // $sRowNew = \App\Models\Backend\Promotions::find($id);
-       // // dd($sRowNew);
-       // $sProduct = \App\Models\Backend\Products::get();
-       // $sProductUnit = \App\Models\Backend\Product_unit::get();
-       // return View('backend.promotions_products.form')->with(array('sRowNew'=>$sRowNew,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit));
-
-
       $sRowNew = \App\Models\Backend\Products::find($id);
       $sRowGroup = \App\Models\Backend\Products_details::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;

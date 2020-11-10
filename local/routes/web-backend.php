@@ -123,6 +123,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('products_details/datatable', 'Products_detailsController@Datatable')->name('products_details.datatable');
     Route::get('products_details/create/{id}', 'Products_detailsController@create');
 
+    Route::resource('products_images', 'Products_imagesController');
+    Route::post('products_images/datatable', 'Products_imagesController@Datatable')->name('products_images.datatable');
+    Route::get('products_images/create/{id}', 'Products_imagesController@create');
+
 
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {
