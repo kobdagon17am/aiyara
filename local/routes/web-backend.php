@@ -119,6 +119,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('currency', 'CurrencyController');
     Route::post('currency/datatable', 'CurrencyController@Datatable')->name('currency.datatable');
 
+    Route::resource('products_details', 'Products_detailsController');
+    Route::post('products_details/datatable', 'Products_detailsController@Datatable')->name('products_details.datatable');
+    Route::get('products_details/create/{id}', 'Products_detailsController@create');
+
 
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {

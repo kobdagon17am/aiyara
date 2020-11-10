@@ -13,9 +13,8 @@ class ProductsController extends Controller
     public function index(Request $request)
     {
 
-      // $dsProducts  = \App\Models\Backend\Products::get();
-      // return view('backend.products.index')->with(['dsProducts'=>$dsProducts]);
-      return view('backend.products.index');
+      $dsProducts  = \App\Models\Backend\Products::get();
+      return view('backend.products.index')->with(['dsProducts'=>$dsProducts]);
 
     }
 
@@ -41,6 +40,14 @@ class ProductsController extends Controller
 
     public function update(Request $request, $id)
     {
+      // dd($request->all());
+      // if(!empty($request->orders_type)){
+      //   $Orders_type = implode(',', $request->orders_type);
+      //   dd($Orders_type);
+      // }else{
+      //   dd();
+      // }
+      
       return $this->form($id);
     }
 
@@ -49,26 +56,76 @@ class ProductsController extends Controller
     {
       \DB::beginTransaction();
       try {
-
           if( $id ){
             $sRow = \App\Models\Backend\Products::find($id);
           }else{
             $sRow = new \App\Models\Backend\Products;
           }
 
+          $request = app('request');
+          if ($request->hasFile('image01')) {
+              @UNLINK(@$sRow->img_url.@$sRow->image01);
+              $this->validate($request, [
+                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+              ]);
+              $image = $request->file('image01');
+              $name = 'p1'.time() . '.' . $image->getClientOriginalExtension();
+              $image_path = 'products/';
+              $destinationPath = public_path($image_path);
+              $image->move($destinationPath, $name);
+              $sRow->img_url    = 'local/public/'.$image_path;
+              $sRow->image01 = $name;
+            }
+
+          if ($request->hasFile('image02')) {
+              @UNLINK(@$sRow->img_url.@$sRow->image02);
+              $this->validate($request, [
+                'image02' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+              ]);
+              $image = $request->file('image02');
+              $name = 'p2'.time() . '.' . $image->getClientOriginalExtension();
+              $image_path = 'products/';
+              $destinationPath = public_path($image_path);
+              $image->move($destinationPath, $name);
+              $sRow->img_url    = 'local/public/'.$image_path;
+              $sRow->image02 = $name;
+            }
+
+          if ($request->hasFile('image03')) {
+              @UNLINK(@$sRow->img_url.@$sRow->image03);
+              $this->validate($request, [
+                'image03' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+              ]);
+              $image = $request->file('image03');
+              $name = 'p3'.time() . '.' . $image->getClientOriginalExtension();
+              $image_path = 'products/';
+              $destinationPath = public_path($image_path);
+              $image->move($destinationPath, $name);
+              $sRow->img_url    = 'local/public/'.$image_path;
+              $sRow->image03 = $name;
+            }
+
+
           if(!empty(request('orders_type'))){
             $Orders_type = implode(',', request('orders_type'));
+            // dd($Orders_type);
           }else{
             $Orders_type = '';
           }
 
           $sRow->product_code    = request('product_code');
+          $sRow->product_name    = request('product_name');
+          $sRow->pv    = request('pv');
+          $sRow->price    = request('price');
           $sRow->category_id    = request('category_id');
           $sRow->orders_type_id    = $Orders_type ;
-          $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->status    = request('status')?request('status'):0;
-          $sRow->save();
+          $sRow->descriptions    = request('descriptions');
+          $sRow->products_details    = request('products_details');
 
+          $sRow->image_default    = request('image_default');
+                    
+          $sRow->created_at = date('Y-m-d H:i:s');
+          $sRow->save();
 
 
           \DB::commit();
@@ -100,9 +157,8 @@ class ProductsController extends Controller
       $sTable = \App\Models\Backend\Products::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('pname', function($row) {
-      	$sProducts_details = \App\Models\Backend\Products_details::where('product_id_fk',$row->id)->where('lang_id',1)->get();
-        return @$sProducts_details[0]->product_name;
+      ->addColumn('name', function($row) {
+        // return $row->fname.' '.$row->surname;
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

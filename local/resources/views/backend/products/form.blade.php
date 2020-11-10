@@ -44,31 +44,9 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Product Name :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->product_name }}" name="product_name" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">PV :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->pv }}" name="pv" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Price :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->price }}" name="price" required>
-                    </div>
-                </div>
-
-
-                <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">Category :</label>
                     <div class="col-md-10">
-                         <select name="category_id" class="form-control select2-templating " >
+                         <select name="category_id" class="form-control select2-templating "  required >
                          <option value="">Select</option>
                             @if(@$dsCategory)
                                 @foreach(@$dsCategory AS $r)
@@ -105,75 +83,19 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-email-input" class="col-md-2 col-form-label">Descriptions </label>
-                    <div class="col-md-10">
-                        <textarea name="descriptions" class="form-control descriptions ">{{@$sRow->descriptions}}</textarea>
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="example-email-input" class="col-md-2 col-form-label">Products Details </label>
-                    <div class="col-md-10">
-                        <textarea name="products_details" class="form-control products_details ">{{@$sRow->products_details}}</textarea>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (1) :</label>
-                    <div class="col-md-6">
-                        <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" >
-                        @IF(!empty(@$sRow->image01))
-                        <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ @$sRow->image01 }}" width="200px" > 
-                        @ELSE
-                        <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
-                        @ENDIF
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div class="custom-control custom-radio custom-control-inline ">
-                            <input type="radio" id="image_default_01" name="image_default" class="custom-control-input" value="1" 
-                            {{ (@$sRow->image_default==1)?'checked':'' }} 
-                            {{ empty(@$sRow->image_default)?'checked':'' }}
-                             >
-                            <label class="custom-control-label" for="image_default_01"> กำหนดให้รูปนี้เป็นรูปหลัก </label>
+                 @if( !empty($sRow) )
+                     <div class="form-group row">
+                        <label class="col-md-2 col-form-label">สถานะ :</label>
+                        <div class="col-md-10 mt-2">
+                          <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
+                          </div>
                         </div>
                     </div>
-                </div>
+                  @endif
 
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (2) :</label>
-                    <div class="col-md-6">
-                        <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" >
-                        @IF(!empty(@$sRow->image02))
-                        <img id="imgAvatar_02" src="{{ $sRow->img_url }}{{ @$sRow->image02 }}" width="200px" > 
-                        @ELSE
-                        <img id="imgAvatar_02" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
-                        @ENDIF
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div class="custom-control custom-radio custom-control-inline ">
-                            <input type="radio" id="image_default_02" name="image_default" class="custom-control-input" value="2" {{ (@$sRow->image_default==2)?'checked':'' }}>
-                            <label class="custom-control-label" for="image_default_02"> กำหนดให้รูปนี้เป็นรูปหลัก </label>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (3) :</label>
-                    <div class="col-md-6">
-                        <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" >
-                        @IF(!empty(@$sRow->image03))
-                        <img id="imgAvatar_03" src="{{ $sRow->img_url }}{{ @$sRow->image03 }}" width="200px" > 
-                        @ELSE
-                        <img id="imgAvatar_03" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
-                        @ENDIF
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div class="custom-control custom-radio custom-control-inline ">
-                            <input type="radio" id="image_default_03" name="image_default" class="custom-control-input" value="3" {{ (@$sRow->image_default==3)?'checked':'' }} >
-                            <label class="custom-control-label" for="image_default_03"> กำหนดให้รูปนี้เป็นรูปหลัก </label>
-                        </div>
-                    </div>
-                </div>
 
 
                 <div class="form-group mb-0 row">
@@ -190,6 +112,41 @@
                 </div>
 
               </form>
+
+
+
+                @if( !empty($sRow) )
+                        <hr>
+
+                        <div style="">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <span style="font-weight: bold;padding-right: 10px;"> Product Details </span>
+                                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_details.create') }}/{{@$sRow->id}}">
+                                        <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่มรายการ</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <table id="data-table-product-detail" class="table table-bordered dt-responsive" style="width: 100%;">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
+                                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                                    </a>
+                                </div>
+                        </div>
+
+                 @endif
+
+
+
             </div>
         </div>
     </div> <!-- end col -->
@@ -197,70 +154,57 @@
 <!-- end row -->
 @section('script')
 
-        <script type="text/javascript">
-
-
-                function showPreview_01(ele)
-                    {
-                        $('#image01').attr('src', ele.value); // for IE
-                        if (ele.files && ele.files[0]) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                $('#imgAvatar_01').show();
-                                $('#imgAvatar_01').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(ele.files[0]);
-                    }
-                }
-
-
-                function showPreview_02(ele)
-                    {
-                        $('#image02').attr('src', ele.value); // for IE
-                        if (ele.files && ele.files[0]) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                $('#imgAvatar_02').show();
-                                $('#imgAvatar_02').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(ele.files[0]);
-                    }
-                }
-
-
-                function showPreview_03(ele)
-                    {
-                        $('#image03').attr('src', ele.value); // for IE
-                        if (ele.files && ele.files[0]) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                $('#imgAvatar_03').show();
-                                $('#imgAvatar_03').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(ele.files[0]);
-                    }
-                }
-
-
-                $( document ).ready( function() {
-                    $( '.descriptions' ).each( function() {
-                        CKEDITOR.replace( this );
-                    } );
-                } );
-
-                $( document ).ready( function() {
-                    $( '.products_details' ).each( function() {
-                        CKEDITOR.replace( this );
-                    } );
-                } );
-
-
-        </script>
-
     <script src="{{ URL::asset('backend/libs/select2/select2.min.js')}}"></script>
     <script>
       $('.select2-templating').select2();
     </script>  
+
+
+           <script>
+
+            var product_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-product-detail').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.products_details.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['product_id_fk'] = product_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                 
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'product_name', title :'ชื่อสินค้า', className: 'text-center'},
+                        {data: 'descriptions_txt', title :'descriptions', className: 'text-center'},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.products_details.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_details.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+            </script>
+
 
 @endsection
 

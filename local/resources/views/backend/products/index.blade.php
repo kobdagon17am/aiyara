@@ -87,22 +87,11 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'product_code', title :'<center>Product Code</center>', className: 'text-left'},
-            {data: 'product_name', title :'<center>Product Name</center>', className: 'text-left'},
-            {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
-            {data: 'price', title :'<center>Price</center>', className: 'text-left'},
-            // {data: 'img_url',   title :'<center>Image</center>', className: 'text-center',render: function(d) {
-            //    return '<a href="{{ url("local/public/backend/file-ancap") }}/'+d+'" target="_blank">Download</a>';
-            // }},
-            // {data: 'image_default',   title :'<center>Image</center>', className: 'text-center',render: function(d) {
-            //   if(d==1){
-            //       return '<img  width="200"src="{{ url("local/public/products/p11602646882.jpg") }} " >';
-            //   }else if(d==2){
-            //       return '<img  width="200"src="{{ url("local/public/products/image02") }}/'+d+'" >';
-            //   }else{
-            //       return '<img  width="200"src="{{ url("local/public/products/image03") }}/'+d+'" >';
-            //   }
-            // }},
+            {data: 'product_code', title :'<center>Product Code</center>', className: 'text-center'},
+            {data: 'pname', title :'<center>Product Name</center>', className: 'text-left'},
+            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
+            }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
