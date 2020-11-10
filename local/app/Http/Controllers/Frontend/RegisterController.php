@@ -48,30 +48,7 @@ class RegisterController extends Controller
     $pass=md5($username);
 
 
-    $file_1 = $req->file_1;
-    if(isset($file_1)){
-            // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-      $f_name = $new_id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-      $file_1->move(public_path().'/files_register/', $f_name);
-            //$db = $f_name;
-    }
-    $file_2 = $req->file_2;
-    if(isset($file_2)){
-            // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-      $f_name = $new_id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-      $file_2->move(public_path().'/files_register/', $f_name);
-            //$db = $f_name;
-    }
 
-     $file_3 = $req->file_3;
-    if(isset($file_3)){
-            // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-      $f_name = $new_id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-      $file_3->move(public_path().'/files_register/', $f_name);
-            //$db = $f_name;
-    }
-
-    dd($req->all());
 
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
@@ -116,9 +93,8 @@ class RegisterController extends Controller
     ->count();
 
     if($count > 0){
-     dd('username ซ้ำ');
-
-   }else{
+      return redirect('home')->withError('Username already exists in the system.');
+    }else{
      $data_customer = [
       'user_name'=>$username,
       'password'=>$pass,
@@ -138,6 +114,7 @@ class RegisterController extends Controller
        $id = DB::table('customers')->insertGetId($data_customer);
 
        if (!empty($id)) {
+        try {
          $data_customer_detail = ['house_no'=>$house_no,
          'house_name'=>$house_name,
          'moo'=>$moo,
@@ -159,19 +136,70 @@ class RegisterController extends Controller
          'tel_mobile'=>$tel_mobile,
          'customer_id'=>$id];
          DB::table('customers_detail')->insert($data_customer_detail);
-         return redirect('home');
-       }else{ 
-        dd('customers id null');
 
+
+         $file_1 = $req->file_1;
+         if(isset($file_1)){
+            // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
+          $url=public_path().'/files_register/1/';
+          $f_name = $new_id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
+          if($file_1->move($url,$f_name)){
+            DB::table('register_files')
+            ->insert(['customer_id'=>$new_id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
+
+          }
+
+            //$db = $f_name;
+        }
+        $file_2 = $req->file_2;
+        if(isset($file_2)){
+            // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
+          $url=public_path().'/files_register/2/';
+          $f_name = $new_id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
+          if($file_2->move($url,$f_name)){
+            DB::table('register_files')
+            ->insert(['customer_id'=>$new_id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
+
+          }
+        }
+
+        $file_3 = $req->file_3;
+        if(isset($file_3)){
+            // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+         $url=public_path().'/files_register/3/';
+         $f_name = $new_id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+         if($file_3->move($url,$f_name)){
+          DB::table('register_files')
+          ->insert(['customer_id'=>$new_id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
+
+        }
       }
 
-    }else{
-      dd('data_customer null');
+      
+      return redirect('home')->withSuccess('Add User Success');
+
+
+    } catch (Exception $e) {
+      return redirect('home')->withError('Add User Error');
+
     }
 
 
 
+
+  }else{ 
+    return redirect('home')->withError('Customers id null add Error');
+    
   }
+
+}else{
+  return redirect('home')->withError('data_customer null');
+  
+}
+
+
+
+}
 
 
 

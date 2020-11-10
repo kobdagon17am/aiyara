@@ -251,20 +251,20 @@
 
  					<div class="form-group row">
  						<div class="col-sm-6">
- 							<label>บัตรประชาชนเลขที่</label>
+ 							<label>บัตรประชาชน</label>
  							<input type="file" name="file_1" class="form-control">
  						</div>
  					</div>
 
  					<div class="form-group row">
  						<div class="col-sm-6">
- 						<label>บัตรประชาชนเลขที่</label>
+ 						<label>หน้าบัญชีธนาคาร</label>
  						<input type="file" name="file_2" class="form-control">
  					</div>
  				</div>
  					<div class="form-group row">
  					<div class="col-sm-6"> 
- 						<label>บัตรประชาชนเลขที่</label>
+ 						<label>ลายเซ็น</label>
  						<input type="file" name="file_3" class="form-control">
  					</div>
  				</div>
