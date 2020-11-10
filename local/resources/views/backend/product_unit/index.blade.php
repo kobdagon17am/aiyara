@@ -24,7 +24,7 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code">
+                  <!--   <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
                   </div>
 
                   <div class="col-4 text-right">
@@ -90,15 +90,9 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'product_unit', title :'<center>หน่วยสินค้า </center>', className: 'text-left'},
             {data: 'detail', title :'<center>รายละเอียด </center>', className: 'text-left'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
             {data: 'date_added', title :'<center>วันที่เพิ่ม</center>', className: 'text-left'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-left'},
-            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'Active';
-              }else{
-                return 'InActive';
-              }
+            {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
