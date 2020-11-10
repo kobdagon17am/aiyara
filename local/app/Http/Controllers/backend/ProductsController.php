@@ -135,7 +135,7 @@ class ProductsController extends Controller
           $sRow->agency    = request('agency');
 
           $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->status    = request('status')?request('status'):0;
+          $sRow->status    = request('status')?request('status'):1;
           $sRow->save();
 
 
