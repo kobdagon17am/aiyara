@@ -328,32 +328,38 @@
               </form>
 
 
-                <hr>
+                @if( !empty($sRow) )
+                      <hr>
 
-                <div style="">
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"> รายการสินค้า </span>
-                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_products.create') }}/{{@$sRow->id}}">
-                                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่มรายการสินค้า</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group mb-0 row">
-                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
-                    </div>
-                </div>
+                      <div style="">
+                          <div class="form-group row">
+                              <div class="col-md-12">
+                                  <span style="font-weight: bold;padding-right: 10px;"> รายการสินค้า </span>
+                                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_products.create') }}/{{@$sRow->id}}">
+                                      <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่มรายการสินค้า</span>
+                                  </a>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <div class="col-md-12">
+                                  <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group mb-0 row">
+                           <div class="col-md-6">
+                              <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
+                                <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                              </a>
+                          </div>
+                      </div>
+
+
+                @endif
+
 
 
 
@@ -414,6 +420,14 @@
                   oTable.draw();
                 });
             });
+
+
+
+              $("html").dblclick(function(event) {
+                   // alert('xxxx');
+                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+              });
+              
             </script>
 
 

@@ -474,6 +474,16 @@
                   oTable.draw();
                 });
             });
+
+
+
+              $("html").dblclick(function(event) {
+                   // alert('xxxx');
+                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+              });
+
+
+              
             </script>
 
 @endsection

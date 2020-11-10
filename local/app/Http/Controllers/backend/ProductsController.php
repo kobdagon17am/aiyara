@@ -28,7 +28,7 @@ class ProductsController extends Controller
           $sPersonal_quality = \App\Models\Backend\Personal_quality::get();
           $sPackage = \App\Models\Backend\Package::get();
           $sLimited_amt_type = \App\Models\Backend\Limited_amt_type::get();
-          $sProduct_unit = \App\Models\Backend\Product_unit::get();
+          $sProduct_unit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
           $sQualification = \App\Models\Backend\Qualification::get();
 
           $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -64,7 +64,7 @@ class ProductsController extends Controller
           $sPersonal_quality = \App\Models\Backend\Personal_quality::get();
           $sPackage = \App\Models\Backend\Package::get();
           $sLimited_amt_type = \App\Models\Backend\Limited_amt_type::get();
-          $sProduct_unit = \App\Models\Backend\Product_unit::get();
+          $sProduct_unit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
           $sQualification = \App\Models\Backend\Qualification::get();
 
           $sBusiness_location = \App\Models\Backend\Business_location::get();
