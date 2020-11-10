@@ -160,12 +160,15 @@ class ProductsController extends Controller
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Products::find($id);
-
-      @UNLINK(@$sRow->img_url.@$sRow->image01);
-      @UNLINK(@$sRow->img_url.@$sRow->image02);
-      @UNLINK(@$sRow->img_url.@$sRow->image03);
-
+      $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
+      foreach ($sRowProducts_images as $key => $value) {
+      	  @UNLINK(@$value->img_url.@$value->product_img);
+      }
+      if( $sRowProducts_images ){
+        DB::delete(" DELETE FROM products_images WHERE (product_id_fk='$id') ");
+      }
       if( $sRow ){
+      	DB::delete(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
         $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
