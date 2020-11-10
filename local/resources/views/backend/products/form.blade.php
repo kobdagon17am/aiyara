@@ -108,14 +108,14 @@
                 <div class="form-group row">
                     <label for="example-email-input" class="col-md-2 col-form-label">Descriptions </label>
                     <div class="col-md-10">
-                        <textarea name="descriptions" class="form-control descriptions ">{{$sRow->descriptions}}</textarea>
+                        <textarea name="descriptions" class="form-control descriptions ">{{@$sRow->descriptions}}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="example-email-input" class="col-md-2 col-form-label">Products Details </label>
                     <div class="col-md-10">
-                        <textarea name="products_details" class="form-control products_details ">{{$sRow->products_details}}</textarea>
+                        <textarea name="products_details" class="form-control products_details ">{{@$sRow->products_details}}</textarea>
                     </div>
                 </div>
 
@@ -123,8 +123,8 @@
                     <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (1) :</label>
                     <div class="col-md-6">
                         <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" >
-                        @IF(!empty($sRow->image01))
-                        <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ $sRow->image01 }}" width="200px" > 
+                        @IF(!empty(@$sRow->image01))
+                        <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ @$sRow->image01 }}" width="200px" > 
                         @ELSE
                         <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
                         @ENDIF
@@ -144,8 +144,8 @@
                     <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (2) :</label>
                     <div class="col-md-6">
                         <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" >
-                        @IF(!empty($sRow->image02))
-                        <img id="imgAvatar_02" src="{{ $sRow->img_url }}{{ $sRow->image02 }}" width="200px" > 
+                        @IF(!empty(@$sRow->image02))
+                        <img id="imgAvatar_02" src="{{ $sRow->img_url }}{{ @$sRow->image02 }}" width="200px" > 
                         @ELSE
                         <img id="imgAvatar_02" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
                         @ENDIF
@@ -162,8 +162,8 @@
                     <label for="example-text-input" class="col-md-2 col-form-label">รูปสินค้า (3) :</label>
                     <div class="col-md-6">
                         <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" >
-                        @IF(!empty($sRow->image03))
-                        <img id="imgAvatar_03" src="{{ $sRow->img_url }}{{ $sRow->image03 }}" width="200px" > 
+                        @IF(!empty(@$sRow->image03))
+                        <img id="imgAvatar_03" src="{{ $sRow->img_url }}{{ @$sRow->image03 }}" width="200px" > 
                         @ELSE
                         <img id="imgAvatar_03" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="200px"> 
                         @ENDIF
