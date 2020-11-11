@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> CRM  </h4>
+            <h4 class="mb-0 font-size-18"> FAQ  </h4>
         </div>
     </div>
 </div>
@@ -23,21 +23,21 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.crm.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.faq.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.crm.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.faq.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
                     <div class="form-group row">
-                      <label for="example-text-input" class="col-md-2 col-form-label"> crm Topic : * </label>
+                      <label for="example-text-input" class="col-md-2 col-form-label"> FAQ Topic : * </label>
                       <div class="col-md-10">
-                        <select name="crm_topic_id" class="form-control select2-templating " required >
+                        <select name="faq_topic_id" class="form-control select2-templating " required >
                           <option value="">Select</option>
-                            @if(@$scrm_topic)
-                              @foreach(@$scrm_topic AS $r)
-                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow[0]->crm_topic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                            @if(@$sFaq_topic)
+                              @foreach(@$sFaq_topic AS $r)
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow[0]->faq_topic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
                               @endforeach
                             @endif
                         </select>
@@ -115,7 +115,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/crm") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/faq") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
