@@ -3,11 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<style type="text/css" media="screen">
-  .myBorder {
-    border: 2px solid #00ace6;border-radius: 5px;border-width: thin;padding: 10px;margin-bottom: 1%;
-  }
-</style>
+
 @endsection
 
 @section('content')
@@ -110,13 +106,6 @@
                             reader.readAsDataURL(ele.files[0]);
                     }
                 }
-
-
-              $("html").dblclick(function(event) {
-                   // alert('xxxx');
-                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-              });
-
 
         </script>
 

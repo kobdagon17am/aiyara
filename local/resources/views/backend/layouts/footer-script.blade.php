@@ -24,5 +24,19 @@
 
         <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 
+        <script type="text/javascript">
+                $("html").dblclick(function(event) {
+                   // alert('xxxx');
+                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+              });
+        </script>
+
+
+        <script src="{{ URL::asset('backend/libs/select2/select2.min.js')}}"></script>
+        <script>
+              $('.select2-templating').select2();
+        </script>  
+
+
         @yield('script')
         @yield('script-bottom')

@@ -13,3 +13,17 @@
         <link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/toastr/toastr.min.css')}}">
 
         <link href="{{ URL::asset('backend/css/custom.css')}}" id="app-light" rel="stylesheet" type="text/css" />
+
+
+        <style type="text/css" media="screen">
+                .myBorder {
+                        border: 2px solid #00ace6;border-radius: 5px;border-width: thin;padding: 10px;margin-bottom: 1%;
+                }
+        </style>
+
+        <link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/select2/select2.min.css')}}">
+        <style type="text/css">
+            .select2-dropdown {
+               font-size: 16px;
+            }
+        </style>

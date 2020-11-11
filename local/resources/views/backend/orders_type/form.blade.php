@@ -3,11 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<style type="text/css" media="screen">
-  .myBorder {
-    border: 2px solid #00ace6;border-radius: 5px;border-width: thin;padding: 10px;margin-bottom: 1%;
-  }
-</style>
+
 @endsection
 
 @section('content')
@@ -66,7 +62,7 @@
 
                         @if( !empty($sRow) )
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">ลำการการจัดเรียง :</label>
+                            <label for="example-text-input" class="col-md-2 col-form-label">ลำดับการจัดเรียง :</label>
                             <div class="col-md-10">
                                 <input class="form-control" type="number" value="{{ @$sRow[$i]->order }}" name="order[]" >
                             </div>

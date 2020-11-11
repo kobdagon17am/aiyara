@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Categories </h4>
+            <h4 class="mb-0 font-size-18"> FAQ  </h4>
         </div>
     </div>
 </div>
@@ -24,11 +24,11 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code">
+                  <!--   <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
                   </div>
 
                   <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.categories.create') }}">
+                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.faq.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -61,7 +61,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.categories.datatable') }}',
+          url: '{{ route('backend.faq.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -88,17 +88,17 @@ $(function() {
      
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'category_id', title :'<center>Category Id (Auto gen ID) </center>', className: 'text-center'},
-            {data: 'category_name', title :'<center>Category Name </center>', className: 'text-left'},
+            {data: 'q_topic', title :'<center>รายการคำถาม </center>', className: 'text-left'},
+            {data: 'faq_topic', title :'<center>หมวดคำถาม </center>', className: 'text-left'},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.categories.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.categories.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            + '<a href="{{ route('backend.faq.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            + '<a href="javascript: void(0);" data-url="{{ route('backend.faq.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           ).addClass('input');
         }
     });

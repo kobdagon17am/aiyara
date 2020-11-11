@@ -3,12 +3,6 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/select2/select2.min.css')}}">
-<style type="text/css">
-    .select2-dropdown {
-       font-size: 16px;
-    }
-</style>
 
 @endsection
 
@@ -124,11 +118,7 @@
 </div>
 <!-- end row -->
 @section('script')
-    <script src="{{ URL::asset('backend/libs/select2/select2.min.js')}}"></script>
-    <script>
-      $('.select2-templating').select2();
-    </script>  
-
+ 
 @endsection
 
 @endsection

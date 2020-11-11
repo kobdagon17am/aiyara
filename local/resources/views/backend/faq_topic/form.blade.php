@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> หน่วยสินค้า </h4>
+            <h4 class="mb-0 font-size-18"> FAQ Topic </h4>
         </div>
     </div>
 </div>
@@ -23,9 +23,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.product_unit.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.faq_topic.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.product_unit.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.faq_topic.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -48,17 +48,9 @@
                             </div>
 
                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">หน่วยสินค้า :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">หัวข้อ FAQ :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->product_unit }}" name="product_unit[]" required >
-                                </div>
-                            </div>
-
-
-                            <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->detail }}" name="detail[]" required>
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->txt_desc }}" name="txt_desc[]" required >
                                 </div>
                             </div>
 
@@ -66,16 +58,10 @@
 
              @endfor
 
-                <div class="myBorder">
-
-                  <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
-                    <div class="col-md-3">
-                      <input class="form-control" type="date" value="{{ @$sRow[0]->date_added }}" name="date_added" required>
-                    </div>
-                  </div>
+                
 
                   @if( !empty($sRow) )
+                  <div class="myBorder">
                      <div class="form-group row">
                         <label class="col-md-2 col-form-label">สถานะ :</label>
                         <div class="col-md-10 mt-2">
@@ -85,13 +71,14 @@
                           </div>
                         </div>
                     </div>
+                     </div>
                   @endif
                   
-                </div>
+               
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/product_unit") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/faq_topic") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -110,24 +97,6 @@
 <!-- end row -->
 @section('script')
 
-        <script type="text/javascript">
-
-
-                function showPreview_01(ele)
-                    {
-                        $('#image').attr('src', ele.value); // for IE
-                        if (ele.files && ele.files[0]) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                $('#imgAvatar_01').show();
-                                $('#imgAvatar_01').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(ele.files[0]);
-                    }
-                }
-
-
-        </script>
 
 @endsection
 

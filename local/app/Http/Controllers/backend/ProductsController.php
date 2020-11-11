@@ -21,16 +21,6 @@ class ProductsController extends Controller
 
  public function create()
     {
-
-          $sAgency = \App\Models\Backend\Agency::get();
-          $sAistockist = \App\Models\Backend\Aistockist::get();
-          $sTravel_feature = \App\Models\Backend\Travel_feature::get();
-          $sPersonal_quality = \App\Models\Backend\Personal_quality::get();
-          $sPackage = \App\Models\Backend\Package::get();
-          $sLimited_amt_type = \App\Models\Backend\Limited_amt_type::get();
-          $sProduct_unit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
-          $sQualification = \App\Models\Backend\Qualification::get();
-
           $sBusiness_location = \App\Models\Backend\Business_location::get();
           $dsCategory  = \App\Models\Backend\Categories::where('lang_id', 1)->get();
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
@@ -39,14 +29,6 @@ class ProductsController extends Controller
           'dsOrders_type'=>$dsOrders_type,
           'dsCategory'=>$dsCategory,
           'sBusiness_location'=>$sBusiness_location,
-          'sAgency'=>$sAgency,
-          'sAistockist'=>$sAistockist,
-          'sTravel_feature'=>$sTravel_feature,
-          'sPersonal_quality'=>$sPersonal_quality,
-          'sPackage'=>$sPackage,
-          'sLimited_amt_type'=>$sLimited_amt_type,
-          'sProduct_unit'=>$sProduct_unit,       
-          'sQualification'=>$sQualification, 
       ]);
     }
 
@@ -58,36 +40,28 @@ class ProductsController extends Controller
     public function edit($id)
     {
 
-          $sAgency = \App\Models\Backend\Agency::get();
-          $sAistockist = \App\Models\Backend\Aistockist::get();
-          $sTravel_feature = \App\Models\Backend\Travel_feature::get();
-          $sPersonal_quality = \App\Models\Backend\Personal_quality::get();
-          $sPackage = \App\Models\Backend\Package::get();
-          $sLimited_amt_type = \App\Models\Backend\Limited_amt_type::get();
-          $sProduct_unit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
-          $sQualification = \App\Models\Backend\Qualification::get();
-
           $sBusiness_location = \App\Models\Backend\Business_location::get();
           $sRow = \App\Models\Backend\Products::find($id);
           $dsCategory  = \App\Models\Backend\Categories::where('lang_id', 1)->get();
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
           $sProducts_details = \App\Models\Backend\Products_details::where('product_id_fk', $sRow->id)->get();
        // dd($sProducts_details);
+
+          $dsProducts_cost  = \App\Models\Backend\Products_cost::where('product_id_fk', $sRow->id)->first();
+          // dd($dsProducts_cost);
+          // dd($dsProducts_cost->cost_price);
+          // dd($dsProducts_cost->selling_price);
+          // dd($dsProducts_cost->member_price);
+          // dd($dsProducts_cost->pv);
+ 
        return view('backend.products.form')->with([
           'sRow'=>$sRow, 'id'=>$id ,
           'dsOrders_type'=>$dsOrders_type,
           'dsCategory'=>$dsCategory,
           'sBusiness_location'=>$sBusiness_location,
           'sProducts_details'=>$sProducts_details,
+          'dsProducts_cost'=>$dsProducts_cost,
 
-          'sAgency'=>$sAgency,
-          'sAistockist'=>$sAistockist,
-          'sTravel_feature'=>$sTravel_feature,
-          'sPersonal_quality'=>$sPersonal_quality,
-          'sPackage'=>$sPackage,
-          'sLimited_amt_type'=>$sLimited_amt_type,
-          'sProduct_unit'=>$sProduct_unit,
-          'sQualification'=>$sQualification,
       ]);
     }
 
@@ -113,32 +87,16 @@ class ProductsController extends Controller
           }else{
             $Orders_type = '';
           }
-
-          $sRow->business_location    = request('business_location');
+         
           $sRow->product_code    = request('product_code');
           $sRow->category_id    = request('category_id');
           $sRow->orders_type_id    = $Orders_type ;
-          
-          $sRow->pv    = request('pv');
-          $sRow->main_unit    = request('main_unit');
-          $sRow->show_startdate    = request('show_startdate');
-          $sRow->show_enddate    = request('show_enddate');
-          $sRow->all_available_purchase    = request('all_available_purchase');
-          $sRow->limited_amt_type    = request('limited_amt_type');
-          $sRow->limited_amt_person    = request('limited_amt_person');
-          $sRow->promotion_coupon_status    = request('promotion_coupon_status');
-          $sRow->minimum_package_purchased    = request('minimum_package_purchased');
-          $sRow->reward_qualify_purchased    = request('reward_qualify_purchased');
-          $sRow->keep_personal_quality    = request('keep_personal_quality');
-          $sRow->maintain_travel_feature    = request('maintain_travel_feature');
-          $sRow->aistockist    = request('aistockist');
-          $sRow->agency    = request('agency');
+
+          $sRow->product_voucher    = request('product_voucher');
 
           $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->status    = request('status')?request('status'):1;
+          $sRow->status    = request('status')?request('status'):0;
           $sRow->save();
-
-
 
           \DB::commit();
 
@@ -169,6 +127,7 @@ class ProductsController extends Controller
       }
       if( $sRow ){
       	DB::delete(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
+        DB::delete(" DELETE FROM products_cost WHERE (product_id_fk='$id') ");
         $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
@@ -180,7 +139,7 @@ class ProductsController extends Controller
       return $sQuery
       ->addColumn('pname', function($row) {
       	$sProducts_details = \App\Models\Backend\Products_details::where('product_id_fk',$row->id)->where('lang_id',1)->get();
-        return @$sProducts_details[0]->product_name;
+        return @$sProducts_details[0]->product_name?@$sProducts_details[0]->product_name:'-ยังไม่กำหนด-';
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

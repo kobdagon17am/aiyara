@@ -3,12 +3,6 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/select2/select2.min.css')}}">
-<style type="text/css">
-    .select2-dropdown {
-       font-size: 16px;
-    }
-</style>
 
 @endsection
 
@@ -24,32 +18,23 @@
 </div>
 <!-- end page title -->
 
+
+
 <div class="row">
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
+        
+        <div class="myBorder">        
+
               @if( empty($sRow) )
-              <form action="{{ route('backend.products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.products.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.products.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">Business Location : * </label>
-                  <div class="col-md-10">
-                    <select name="business_location" class="form-control select2-templating " required >
-                      <option value="">Select</option>
-                        @if(@$sBusiness_location)
-                          @foreach(@$sBusiness_location AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">Product Code :</label>
@@ -101,193 +86,45 @@
 
                 @if( !empty($sRow) )
 
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาทุน :</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="text" value="{{@$dsProducts_cost->cost_price?@$dsProducts_cost->cost_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
+                    </div>
+                </div>
 
-                        <div style="">
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                   
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาขาย :</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="text" value="{{@$dsProducts_cost->selling_price?@$dsProducts_cost->selling_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
+                    </div>
+                </div>
 
-                                @if( count($sProducts_details)==0 )
-                                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_details.create') }}/{{@$sRow->id}}">
-                                        <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
-                                    </a>
-                                @endif   
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาสมาชิก :</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="text" value="{{@$dsProducts_cost->member_price?@$dsProducts_cost->member_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
+                    </div>
+                </div>
 
-                                 <span style="font-weight: bold;padding-right: 10px;"> > Product Details </span>
-
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <table id="data-table-product-detail" class="table table-bordered dt-responsive" style="width: 100%;">
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-
-                 @endif
-
-
-                     <div class="form-group row">
+                <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">PV :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->pv }}" name="pv" >
+                    <div class="col-md-2">
+                        <input class="form-control" type="text" value="{{@$dsProducts_cost->pv?@$dsProducts_cost->pv:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
                     </div>
                 </div>
+                @endif
+
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับหลัก : * </label>
-                  <div class="col-md-10">
-                    <select name="main_unit" class="form-control select2-templating " required >
-                      <option value="">Select</option>
-                        @if(@$sProduct_unit)
-                          @foreach(@$sProduct_unit AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->main_unit)?'selected':'' }} >{{$r->product_unit}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันเริ่มต้นการแสดง :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->show_startdate }}" name="show_startdate" required >
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันสิ้นสุดการแสดง :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->show_enddate }}" name="show_enddate" required >
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">จำนวนที่สามารถซื้อได้ทั้งหมด :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="number" value="{{ @$sRow->all_available_purchase }}" name="all_available_purchase" >
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">ประเภทจำนวนจำกัด : * </label>
-                  <div class="col-md-10">
-                    <select name="limited_amt_type" class="form-control select2-templating " required >
-                      <option value="">Select</option>
-                        @if(@$sLimited_amt_type)
-                          @foreach(@$sLimited_amt_type AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->limited_amt_type)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">จำนวนจำกัดต่อคน :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="number" value="{{ @$sRow->limited_amt_person }}" name="limited_amt_person" >
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label"></label>
-                    <div class="col-md-10 mt-2">
-                      <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="promotion_coupon_status" name="promotion_coupon_status" value="1" {{ ( @$sRow->promotion_coupon_status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="promotion_coupon_status"><b>promotion coupon status</b></label>
+                      <label class="col-md-2 col-form-label"> </label>
+                      <div class="col-md-10 mt-2">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="product_voucher" value="1" {{ ( @$sRow->product_voucher=='1')?'checked':'' }}>
+                            <label class="custom-control-label" for="customSwitch1">เป็นสินค้าที่สามารถซื้อด้วย Voucher</label>
+                        </div>
                       </div>
-                    </div>
                 </div>
-
-              <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
-                  <div class="col-md-10">
-                    <select name="minimum_package_purchased" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sPackage)
-                          @foreach(@$sPackage AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->minimum_package_purchased)?'selected':'' }} >{{$r->dt_package}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
-                  <div class="col-md-10">
-                    <select name="reward_qualify_purchased" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sQualification)
-                          @foreach(@$sQualification AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->reward_qualify_purchased)?'selected':'' }} >{{$r->business_qualifications}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
-                  <div class="col-md-10">
-                    <select name="keep_personal_quality" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sPersonal_quality)
-                          @foreach(@$sPersonal_quality AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->keep_personal_quality)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
-                  <div class="col-md-10">
-                    <select name="maintain_travel_feature" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sTravel_feature)
-                          @foreach(@$sTravel_feature AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->maintain_travel_feature)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">aistockist : </label>
-                  <div class="col-md-10">
-                    <select name="aistockist" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sAistockist)
-                          @foreach(@$sAistockist AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->aistockist)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">agency : </label>
-                  <div class="col-md-10">
-                    <select name="agency" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                        @if(@$sAgency)
-                          @foreach(@$sAgency AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->agency)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
-                    </select>
-                  </div>
-                </div>
-
 
 
                  @if( !empty($sRow) )
@@ -306,56 +143,101 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
+                      @if( empty($sRow) )
+                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
+                        </a> 
+                         @endif
                     </div>
                     <div class="col-md-6 text-right">
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>
                     </div>
                 </div>
 
               </form>
-
-
+    </div>
 
                 @if( !empty($sRow) )
 
-                        <hr>
-
-                        <div style="">
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    
-                                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_images.create') }}/{{@$sRow->id}}">
-                                        <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
-                                    </a>
-
-                                    <span style="font-weight: bold;padding-right: 10px;"> > รูปสินค้า  </span>
-
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <table id="data-table-product-images" class="table table-bordered dt-responsive" style="width: 100%;">
-                                    </table>
-                                </div>
-                            </div>
+                  <div class="myBorder">
+                    <div style="">
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          
+                          @if( count($sProducts_details)==0 )
+                          <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_details.create') }}/{{@$sRow->id}}" style="float: right;" >
+                            <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                          </a>
+                          @endif
+                          <span style="font-weight: bold;padding-right: 10px;"> <i class="bx bx-play"></i> Product Details </span>
                         </div>
-
-                        <div class="form-group mb-0 row">
-                                <div class="col-md-6">
-                                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
-                                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                                    </a>
-                                </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <table id="data-table-product-detail" class="table table-bordered dt-responsive" style="width: 100%;">
+                          </table>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_images.create') }}/{{@$sRow->id}}" style="float: right;" >
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รูปสินค้า  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-product-images" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
+                            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_cost.create') }}/{{@$sRow->id}}" style="float: right;">
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ข้อมูลราคา  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-product-cost" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
+                            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          </a>
+                        </div>
+                      </div>
+                    </div>
 
 
                  @endif
-
 
 
 
@@ -365,12 +247,6 @@
 </div>
 <!-- end row -->
 @section('script')
-
-    <script src="{{ URL::asset('backend/libs/select2/select2.min.js')}}"></script>
-    <script>
-      $('.select2-templating').select2();
-    </script>  
-
 
            <script>
 
@@ -417,12 +293,8 @@
                   oTable.draw();
                 });
             });
-            </script>
+     
 
-
-
-
-           <script>
 
             var product_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
             var oTable;
@@ -477,11 +349,69 @@
 
 
 
-              $("html").dblclick(function(event) {
-                   // alert('xxxx');
-                   $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-              });
 
+            var product_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-product-cost').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.products_cost.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['product_id_fk'] = product_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-left'},
+                        {data: 'country', title :'<center>ประเทศ</center>', className: 'text-center'},
+                        {data: 'currency', title :'<center>สกุลเงิน</center>', className: 'text-center'},
+                        {data: 'cost_price', title :'<center>ราคาทุน</center>', className: 'text-center'},
+                        {data: 'selling_price', title :'<center>ราคาขาย</center>', className: 'text-center'},
+                        {data: 'member_price', title :'<center>ราคาสมาชิก</center>', className: 'text-center'},
+                        {data: 'pv', title :'<center>PV</center>', className: 'text-center'},
+                        {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                           return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+                        }},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.products_cost.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+              
+            // $(".btnSave").click(function(event) {
+            //       event.preventDefault();
+            //       var searchIDs = $('input[name^=orders_type]:checked').map(function(){
+            //         return $(this).val();
+            //       });
+            //       // alert(searchIDs.get());
+            //       if(searchIDs.get()==""){
+            //         alert("! กรุณากรอกข้อมูลให้ครบถ้วนด้วยค่ะ ");
+            //         return false;
+            //       }else{
+                    // $("#frm").submit();
+            //       }
+            // });
 
               
             </script>

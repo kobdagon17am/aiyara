@@ -128,6 +128,21 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('products_images/create/{id}', 'Products_imagesController@create');
 
 
+
+    Route::resource('faq_topic', 'Faq_topicController');
+    Route::post('faq_topic/datatable', 'Faq_topicController@Datatable')->name('faq_topic.datatable');
+
+    Route::resource('faq', 'FaqController');
+    Route::post('faq/datatable', 'FaqController@Datatable')->name('faq.datatable');
+
+    Route::resource('crm', 'CrmController');
+    Route::post('crm/datatable', 'CrmController@Datatable')->name('crm.datatable');
+
+    Route::resource('products_cost', 'Products_costController');
+    Route::post('products_cost/datatable', 'Products_costController@Datatable')->name('products_cost.datatable');
+    Route::get('products_cost/create/{id}', 'Products_costController@create');
+
+
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {
 

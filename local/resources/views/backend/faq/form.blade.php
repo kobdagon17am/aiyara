@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> หน่วยสินค้า </h4>
+            <h4 class="mb-0 font-size-18"> CRM  </h4>
         </div>
     </div>
 </div>
@@ -23,12 +23,26 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.product_unit.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.crm.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.product_unit.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.crm.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
+
+                    <div class="form-group row">
+                      <label for="example-text-input" class="col-md-2 col-form-label"> crm Topic : * </label>
+                      <div class="col-md-10">
+                        <select name="crm_topic_id" class="form-control select2-templating " required >
+                          <option value="">Select</option>
+                            @if(@$scrm_topic)
+                              @foreach(@$scrm_topic AS $r)
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow[0]->crm_topic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                              @endforeach
+                            @endif
+                        </select>
+                      </div>
+                    </div>
 
 
                      @for ($i = 0; $i < count($sLanguage) ; $i++)
@@ -48,30 +62,40 @@
                             </div>
 
                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">หน่วยสินค้า :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">รายการคำถาม :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->product_unit }}" name="product_unit[]" required >
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_topic }}" name="q_topic[]" required >
                                 </div>
                             </div>
-
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดคำถาม :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->detail }}" name="detail[]" required>
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_details }}" name="q_details[]" required >
                                 </div>
                             </div>
+
+                              <div class="form-group row">
+                                <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ :</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_answer }}" name="q_answer[]" required >
+                                </div>
+                            </div>
+
+
+
 
                     </div>
 
              @endfor
 
+                
                 <div class="myBorder">
 
                   <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่เพิ่ม :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่ :</label>
                     <div class="col-md-3">
-                      <input class="form-control" type="date" value="{{ @$sRow[0]->date_added }}" name="date_added" required>
+                      <input class="form-control" type="date" value="{{ @$sRow[0]->q_date }}" name="q_date" required>
                     </div>
                   </div>
 
@@ -87,11 +111,11 @@
                     </div>
                   @endif
                   
-                </div>
+               
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/product_unit") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/crm") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -109,25 +133,6 @@
 </div>
 <!-- end row -->
 @section('script')
-
-        <script type="text/javascript">
-
-
-                function showPreview_01(ele)
-                    {
-                        $('#image').attr('src', ele.value); // for IE
-                        if (ele.files && ele.files[0]) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                $('#imgAvatar_01').show();
-                                $('#imgAvatar_01').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(ele.files[0]);
-                    }
-                }
-
-
-        </script>
 
 @endsection
 
