@@ -57,14 +57,22 @@
                               <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดติดต่อ :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow->contact_details }}" name="contact_details"  >
+                                    <textarea class="form-control" rows="5" name="contact_details" >{{@$sRow->contact_details}}</textarea>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง (User Login) :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow->subject_recipient }}" name="subject_recipient"  >
+
+                                	@if( empty($sRow) )
+                                		<input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                                    	<input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="subject_recipient" >
+									@else
+										<input class="form-control" type="text" value="{{$subject_recipient_name}}" readonly style="background-color: #f2f2f2;" >
+                                    	<input class="form-control" type="hidden" value="{{ @$sRow->subject_recipient }}" name="subject_recipient" >
+									@endif
+                                    
                                 </div>
                             </div>
 

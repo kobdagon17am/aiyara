@@ -28,7 +28,11 @@ class CrmController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Crm::find($id);
-       return View('backend.crm.form')->with(array('sRow'=>$sRow, 'id'=>$id ) );
+       $sUser = \App\Models\Backend\Permission\Admin::where('id', $sRow->subject_recipient)->get();
+       // dd($sUser[0]->name);
+       $subject_recipient = $sUser[0]->name;
+
+       return View('backend.crm.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient ) );
     }
 
     public function update(Request $request, $id)
