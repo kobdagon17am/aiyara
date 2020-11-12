@@ -50,6 +50,8 @@
 <script>
 var oTable;
 $(function() {
+    var sPermission = '{{$sPermission}}' ;
+    console.log(sPermission);
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -89,16 +91,39 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'role_name', title :'<center>ชื่อกลุ่มสิทธิ์</center>', className: 'text-left'},
+            {data: 'access_menu',   title :'<center>เข้าถึงเมนู</center>', className: 'text-left',render: function(d) {
+              if(d){
+                return d.replace(/ *, */g, '<br>');
+              }else{
+                return '-';
+              }
+            }},
+            {data: 'member_ingroup',   title :'<center>รายชื่อสมาชิกที่อยู่ในกลุ่มนี้</center>', className: 'text-left',render: function(d) {
+               return d.replace(/ *, */g, '<br>');
+            }},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.role.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-success"><i class="bx bxs-key font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.role.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
+
+            if(sPermission==1){
+                if(aData['id']==1){
+                    $('td:last-child', nRow).html('');
+                }else{
+                    $('td:last-child', nRow).html(''
+                      + '<a href="{{ route('backend.role.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-success"><i class="bx bxs-key font-size-16 align-middle"></i></a> '
+                      + '<a href="javascript: void(0);" data-url="{{ route('backend.role.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                    ).addClass('input');
+                }
+          }else{
+                $('td:last-child', nRow).html(''
+                + '<a title="แก้ไข" href="{{ route('backend.role.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                ).addClass('input');
+          }
+
+
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

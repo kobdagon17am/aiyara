@@ -72,7 +72,7 @@ class Products_imagesController extends Controller
               
               if(request('image_default')==1){
                 DB::update(" 
-                    UPDATE products_images SET image_default = 0 ;
+                    UPDATE products_images SET image_default = 0  where product_id_fk=".request('product_id_fk')." ;
                 ");
               }
 

@@ -12,7 +12,8 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
-      return view('backend.role.index');
+        $sPermission = \Auth::user()->permission;
+        return view('backend.role.index',['sPermission'=>$sPermission]);
     }
 
    public function create()
@@ -96,10 +97,29 @@ class RoleController extends Controller
       $sTable = \App\Models\Backend\Role::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('Crm_topic', function($row) {
-      //   $sCrm_topic = \App\Models\Backend\Role_topic::where('id', $row->Crm_topic_id)->get();
-      //   return $sCrm_topic[0]->txt_desc;
-      // })
+      ->addColumn('access_menu', function($row) {
+          $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$row->id)->get();
+          $array = array();
+          foreach ($menu_permit as $key => $value) {
+            $menu_name = DB::table('ck_backend_menu')->where('id',$value->menu_id_fk)->first();
+            array_push($array, $menu_name->name);
+          }
+          $arr = implode(',', $array);
+          if($row->id==1){
+            return 'เข้าถึงทุกเมนู';
+          }else{
+            return $arr;
+          }
+      })
+      ->addColumn('member_ingroup', function($row) {
+        $sRow = \App\Models\Backend\Permission\Admin::where('role_group_id_fk', $row->id )->get();
+        $array = array();
+        foreach ($sRow as $key => $value) {
+            array_push($array, $value->name);
+        }
+        $arr = implode(',', $array);
+        return $arr;
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

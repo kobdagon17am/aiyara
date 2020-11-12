@@ -14,7 +14,8 @@ class Menu extends Model
     $setMenu = array();
     $txtMenu = '';
     $pid = array();
-    $row = \Cache::remember('Menu-'.\Auth::user()->id, 10, function() {
+    // $row = \Cache::remember('Menu-'.\Auth::user()->id, 10, function() {
+    $row = \Cache::remember('Menu-'.\Auth::user()->role_group_id_fk, 10, function() {
       $Menu = Menu::where('isActive', '<>', 'N')->orderBy('sort', 'asc')->orderBy('id', 'asc');
       return $Menu->get();
     });
@@ -41,8 +42,11 @@ class Menu extends Model
   //   echo "<pre>";
 
   // print_r($setMenu);
+    // print_r(\Auth::user()->role_group_id_fk);
 
- $MenuPermission = \App\Models\MenuPermissionModel::where('admin_id',\Auth::user()->id)->get();
+ // $MenuPermission = \App\Models\MenuPermissionModel::where('admin_id',\Auth::user()->id)->get();
+ $MenuPermission = \App\Models\MenuPermissionModel::where('role_group_id_fk',\Auth::user()->role_group_id_fk)->get();
+ // print_r($MenuPermission);
 
 
 $arr_menu_id = [];

@@ -95,15 +95,11 @@
                   <div class="col-md-10">
                     <select name="permission" class="form-control select2-templating " required >
                       <option value="">Select</option>
-                        @if(@$sPermission)
-                          @foreach(@$sPermission AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->permission)?'selected':'' }} >{{$r->txt_desc}}</option>
-                          @endforeach
-                        @endif
+                         <option value="1" {{ (@$sRow->permission==1)?'selected':'' }} >Super Admin</option>
+                         <option value="0" {{ (@$sRow->permission==0)?'selected':'' }} >สมาชิกระดับ Admin ทั่วไป</option>
                     </select>
                   </div>
                 </div>
-
 
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์ : * </label>
@@ -112,7 +108,7 @@
                       <option value="">Select</option>
                         @if(@$sRole_group)
                           @foreach(@$sRole_group AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->role_group_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->role_group_id_fk)?'selected':'' }} >{{$r->role_name}}</option>
                           @endforeach
                         @endif
                     </select>

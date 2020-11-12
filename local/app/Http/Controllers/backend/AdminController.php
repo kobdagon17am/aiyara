@@ -23,9 +23,8 @@ class AdminController extends Controller
 
   public function create()
   {
-    // $sLocale  = \App\Models\Locale::all();
-    // return view('backend.admin.form',['sLocale'=>$sLocale]);
-    return view('backend.permission.form');
+    $sRole_group = \App\Models\Backend\Role::get();
+    return view('backend.permission.form',['sRole_group'=>$sRole_group]);
   }
 
   public function store(Request $request)
@@ -57,6 +56,8 @@ class AdminController extends Controller
         
         $sRow->permission    = request('permission')?request('permission'):'0';
 
+        $sRow->role_group_id_fk    = request('role_group_id_fk');
+
         $sRow->isActive    = request('active')?request('active'):'N';
 
         if( request('password') ){
@@ -80,7 +81,8 @@ class AdminController extends Controller
     try {
       $sLocale  = \App\Models\Locale::all();
       $sRow = \App\Models\Backend\Permission\Admin::find($id);
-      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale) );
+      $sRole_group = \App\Models\Backend\Role::get();
+      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group));
     } catch (\Exception $e) {
       return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
     }
