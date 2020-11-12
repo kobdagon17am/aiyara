@@ -19,13 +19,9 @@ class ProductController extends Controller
     public function product_list_type_1(Request $request)
 
     {
-        if(empty($request->c_id)){
-            $c_id = 2;
-        }else{
-            $c_id = $request->c_id;
-        }
-
-        $data = Product::product_list($c_id);
+ 
+        $type = 1;
+        $data = Product::product_list($type);
         return view('frontend/product/product-list-1', $data);
     }
 
@@ -103,19 +99,11 @@ class ProductController extends Controller
             $c_id = $request->category_id;
         }
 
-        $data = Product::product_list($c_id);
+        $data = Product::product_list_select($c_id,$type);
         $html='';
         if($data['product']){
-            foreach ($data['product'] as $value) {
-                if($value->image_default == 1){
-                    $img = '<img src="'.asset($value->img_url.''.$value->image01).'" class="img-fluid o-hidden" alt="">';
-                }elseif($value->image_default == 2){
-                    $img =  '<img src="'.asset($value->img_url.''.$value->image02).'" class="img-fluid o-hidden" alt="">';
-                }elseif($value->image_default == 3){
-                    $img = '<img src="'.asset($value->img_url.''.$value->image03).'" class="img-fluid o-hidden" alt="">';
-                }else{
-                    $img = '<img src="'.asset($value->img_url.''.$value->image01).'" class="img-fluid o-hidden" alt="">';
-                }
+            foreach ($data['product'] as $value){
+           
 
                 $html .= '<div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
                 <input type="hidden" id="item_id" value="'.$value->id.'">
@@ -134,26 +122,26 @@ class ProductController extends Controller
                 </button> -->
                 </div>
                 <a href="#!" class="hvr-shrink">
-                '.$img.'
+                <img src="'.asset($value->img_url.''.$value->product_img).'" class="img-fluid o-hidden" alt="">
                 </a>
                 <!-- <div class="p-new"><a href=""> New </a></div> -->
                 </div>
                 <div class="prod-info">
                 <a href="'.route('product-detail-'.$type,['id'=>$value->id]).'" class="txt-muted">
                 <h5 style="font-size: 15px">'.$value->product_name.'</h5>
-                <p style="margin-top: 0px;">'.$value->title.'</p>
+                <p class="text-left p-2 m-b-0" style="font-size: 12px">'.$value->title.'</p>
                 </a>
-                <!--           <div class="m-b-10">
+                <!--<div class="m-b-10">
                 <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
                 </div> -->
-                <span class="prod-price"><i
-                class="icofont icofont-cur-dollar"></i>฿'.number_format($value->price,2).'<b
+                <span class="prod-price" style="font-size: 20px">'.$value->icon.' '.number_format($value->member_price,2).'<b
                 style="color:#00c454">['.$value->pv.' PV]</b></span>
                 </div>
                 </div>
                 </div>
                 </div>';
             }
+ 
 
         }else{
             $html ='';

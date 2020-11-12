@@ -164,7 +164,7 @@
         <!--<div class="m-b-10">
         <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
     </div> -->
-    <span class="prod-price" style="font-size: 20px"> {{ $value->icon }} {{number_format($value->member_price,2)}} <b
+    <span class="prod-price" style="font-size: 20px"> {!! $value->icon !!} {{number_format($value->member_price,2)}} <b
         style="color:#00c454">[{{$value->pv}} PV]</b></span>
     </div>
 </div>
@@ -183,12 +183,12 @@
 
 @section('js')
 <script type="text/javascript">
-
     function select_category(){
+        var category = $('#category').val();
         $.ajax({
             url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category,'type':1},
+            data: {'category_id':category,'type':3},
         })
         .done(function(data){
             $('#product_list').html(data);
@@ -200,7 +200,7 @@
         .always(function() {
             console.log("complete");
         });
-
+        
     }
 </script>
 
