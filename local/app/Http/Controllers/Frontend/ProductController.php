@@ -20,7 +20,7 @@ class ProductController extends Controller
 
     {
         if(empty($request->c_id)){
-            $c_id = 1;
+            $c_id = 2;
         }else{
             $c_id = $request->c_id;
         }

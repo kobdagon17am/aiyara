@@ -18,18 +18,24 @@ class Product extends Model
         ->get();
 
         $product = DB::table('products')
-        ->select(
-            'products.*',
-            'product_detail.product_name',
-            'product_detail.title',
-            'product_detail.product_detail'
-        )
-        ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
+        // ->select(
+        //     'products.*',
+        //     'product_detail.product_name',
+        //     'product_detail.title',
+        //     'product_detail.product_detail'
+        // )
+        ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+        ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+        ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+        ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
         ->where('products.category_id', '=',$c_id)
-        ->where('product_detail.lang_id', '=', 1)
+        ->where('products_images.image_default', '=', 1)
+        ->where('products_details.lang_id', '=', 1)
+        ->where('products_cost.business_location_id','=', 1)
         ->orderby('products.id')
         ->get();
-        // ->Paginate(4);
+        //->Paginate(4);
+        //dd($product);
 
         $data = array(
             'category' => $categories,
