@@ -37,6 +37,12 @@
               $('.select2-templating').select2();
         </script>  
 
+        <script type="text/javascript">
+            $('.NumberOnly').on('keyup',function(){
+                  if(isNaN(this.value)){ alert('!!! กรุณากรอกเป็น ตัวเลข'); this.value='0';$(this).select();}
+            });
+        </script>
+
 
         @yield('script')
         @yield('script-bottom')

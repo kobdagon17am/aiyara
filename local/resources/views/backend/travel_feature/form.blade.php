@@ -56,8 +56,12 @@
                     <label class="col-md-2 col-form-label">สถานะ :</label>
                     <div class="col-md-10 mt-2">
                       <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
+                        @endif
+                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
                       </div>
                     </div>
                 </div>

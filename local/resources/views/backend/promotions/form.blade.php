@@ -295,17 +295,20 @@
                   </div>
                 </div>
 
-
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">สถานะ :</label>
                     <div class="col-md-10 mt-2">
                       <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
+                        @endif
                           <label class="custom-control-label" for="customSwitch">การใช้งาน/การแสดงผล</label>
                       </div>
                     </div>
                 </div>
-
+                
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
