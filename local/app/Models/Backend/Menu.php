@@ -39,21 +39,26 @@ class Menu extends Model
       }
     }
 
-  //   echo "<pre>";
+    // echo "<pre>";
 
   // print_r($setMenu);
     // print_r(\Auth::user()->role_group_id_fk);
 
  // $MenuPermission = \App\Models\MenuPermissionModel::where('admin_id',\Auth::user()->id)->get();
  $MenuPermission = \App\Models\MenuPermissionModel::where('role_group_id_fk',\Auth::user()->role_group_id_fk)->get();
- // print_r($MenuPermission);
+ // print_r($MenuPermission[0]->role_group_id_fk);
+ // print_r($MenuPermission[0]->menu_id_fk);
+ // foreach ($MenuPermission as $key => $value) {
+ //   echo  $value;
+ // }
 
 
 $arr_menu_id = [];
 foreach ($MenuPermission as $key => $value) {
   # code...
   // echo @$value->main_menu_id;
-  array_push($arr_menu_id, $value->main_menu_id);
+  // array_push($arr_menu_id, $value->main_menu_id);
+  array_push($arr_menu_id, $value->menu_id_fk);
 }
 
 
