@@ -61,31 +61,31 @@
 
                 <hr>
                 <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการคะ </p>
-               
+
 
                 <form action="{{route('docs_upload')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                   <div class="form-group row">
-                    <div class="col-sm-12">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
                          <h4 class="sub-title"><i class="fa fa-upload"></i> ส่งเอกสารเพิ่มเติม</h4>
 
-                        <div class="form-group row">
+                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label>บัตรประชาชน</label>
-                                <input type="file" name="file_1" class="form-control">
+                                <input type="file" id="file_1" name="file_1" class="form-control">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label>หน้าบัญชีธนาคาร</label>
-                                <input type="file" name="file_2" class="form-control">
+                                <input type="file" id="file_2" name="file_2" class="form-control">
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6"> 
                                 <label>ลายเซ็น</label>
-                                <input type="file" name="file_3" class="form-control">
+                                <input type="file" id="file_3" name="file_3" class="form-control">
                             </div>
                         </div>
 
@@ -112,6 +112,33 @@
 </div>
 @endsection
 @section('js')
+<script type="text/javascript">
+    $('#file_1').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+    $('#file_2').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+
+    $('#file_3').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+</script>
 @endsection
 
 

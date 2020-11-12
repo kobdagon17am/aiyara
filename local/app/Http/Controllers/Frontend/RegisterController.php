@@ -20,7 +20,7 @@ class RegisterController extends Controller
   public function index($id,$line_type){
     if(empty($id) || empty($line_type)){
       return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
- 
+
     }else{
     	$customer = DB::table('Customers')
     	->select('*')
@@ -92,108 +92,108 @@ class RegisterController extends Controller
     ->select('*')
     ->where('tel_mobile','=',$tel_mobile)
     ->count();
-     if($count_tel > 0 ){
-       return redirect('home')->withError('MobileNumber already exists in the system.');
-     }
+    if($count_tel > 0 ){
+     return redirect('home')->withError('MobileNumber already exists in the system.');
+   }
 
-    if($count_user > 0 ){
-      return redirect('home')->withError('Username or MobileNumber already exists in the system.');
-    }else{
-     $data_customer = [
-      'user_name'=>$username,
-      'password'=>$pass,
-      'prefix_name'=>$prefix_name,
-      'first_name'=>$first_name,
-      'last_name'=>$last_name,
-      'business_name'=>$business_name,
-      'family_status'=>$family_status,
-      'id_card'=>$id_card,
-      'email'=>$email,
-      'line_type'=>$line_type, 
-      'upline_id'=>$upline_id,
-      'birth_day'=>$birth_day];
+   if($count_user > 0 ){
+    return redirect('home')->withError('Username or MobileNumber already exists in the system.');
+  }else{
+   $data_customer = [
+    'user_name'=>$username,
+    'password'=>$pass,
+    'prefix_name'=>$prefix_name,
+    'first_name'=>$first_name,
+    'last_name'=>$last_name,
+    'business_name'=>$business_name,
+    'family_status'=>$family_status,
+    'id_card'=>$id_card,
+    'email'=>$email,
+    'line_type'=>$line_type, 
+    'upline_id'=>$upline_id,
+    'birth_day'=>$birth_day];
 
-      if(!empty($data_customer)){
-       $id = DB::table('customers')->insertGetId($data_customer);
+    if(!empty($data_customer)){
+     $id = DB::table('customers')->insertGetId($data_customer);
 
-       if (!empty($id)) {
-        try {
-         $data_customer_detail = ['house_no'=>$house_no,
-         'house_name'=>$house_name,
-         'moo'=>$moo,
-         'soi'=>$soi,
-         'road'=>$road,
-         'district_sub'=>$district_sub,
-         'district'=>$district,
-         'province'=>$province,
-         'zipcode'=>$zipcode,
-         'benefit_name'=>$benefit_name,
-         'benefit_relation'=>$benefit_relation,
-         'benefit_id_card'=>$benefit_id,
-         'bank_no'=>$bank_no,
-         'bank_account'=>$bank_account,
-         'bank_type'=>$bank_type,
-         'bank_branch'=>$bank_branch,
-         'bank_name'=>$bank_name,
-         'tel_home'=>$tel_home,
-         'tel_mobile'=>$tel_mobile,
-         'customer_id'=>$id];
-         DB::table('customers_detail')->insert($data_customer_detail);
+     if (!empty($id)) {
+      try {
+       $data_customer_detail = ['house_no'=>$house_no,
+       'house_name'=>$house_name,
+       'moo'=>$moo,
+       'soi'=>$soi,
+       'road'=>$road,
+       'district_sub'=>$district_sub,
+       'district'=>$district,
+       'province'=>$province,
+       'zipcode'=>$zipcode,
+       'benefit_name'=>$benefit_name,
+       'benefit_relation'=>$benefit_relation,
+       'benefit_id_card'=>$benefit_id,
+       'bank_no'=>$bank_no,
+       'bank_account'=>$bank_account,
+       'bank_type'=>$bank_type,
+       'bank_branch'=>$bank_branch,
+       'bank_name'=>$bank_name,
+       'tel_home'=>$tel_home,
+       'tel_mobile'=>$tel_mobile,
+       'customer_id'=>$id];
+       DB::table('customers_detail')->insert($data_customer_detail);
 
 
-         $file_1 = $req->file_1;
-         if(isset($file_1)){
+       $file_1 = $req->file_1;
+       if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-           $url='local/public/files_register/1';
-          $f_name = $id.'_1'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-          if($file_1->move($url,$f_name)){
-            DB::table('register_files')
-            ->insert(['customer_id'=>$id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
+         $url='local/public/files_register/1/'.date('Ym');
+         $f_name =  date('YmdHis').'_'.$id.'_1'.'.'.$file_1->getClientOriginalExtension();
+         if($file_1->move($url,$f_name)){
+          DB::table('register_files')
+          ->insert(['customer_id'=>$id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
-          }
+        }
 
             //$db = $f_name;
-        }
-        $file_2 = $req->file_2;
-        if(isset($file_2)){
+      }
+      $file_2 = $req->file_2;
+      if(isset($file_2)){
             // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-          $url='local/public/files_register/2';
-          $f_name = $id.'_2'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-          if($file_2->move($url,$f_name)){
-            DB::table('register_files')
-            ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
-
-          }
-        }
-
-        $file_3 = $req->file_3;
-        if(isset($file_3)){
-            // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-         $url='local/public/files_register/3';
-         $f_name = $id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-         if($file_3->move($url,$f_name)){
+        $url='local/public/files_register/2/'.date('Ym');
+        $f_name =  date('YmdHis').'_'.$id.'_2'.'.'.$file_1->getClientOriginalExtension();
+        if($file_2->move($url,$f_name)){
           DB::table('register_files')
-          ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
+          ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
         }
       }
 
+      $file_3 = $req->file_3;
+      if(isset($file_3)){
+            // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+       $url='local/public/files_register/3/'.date('Ym');
+       $f_name =  date('YmdHis').'_'.$id.'_3'.'.'.$file_1->getClientOriginalExtension();
+       if($file_3->move($url,$f_name)){
+        DB::table('register_files')
+        ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
-      return redirect('home')->withSuccess('Add User Success');
-
-
-    } catch (Exception $e) {
-      return redirect('home')->withError('Add User Error');
-
+      }
     }
 
 
+    return redirect('home')->withSuccess('Add User Success');
 
 
-  }else{ 
-    return redirect('home')->withError('Customers id null add Error');
+  } catch (Exception $e) {
+    return redirect('home')->withError('Add User Error');
 
   }
+
+
+
+
+}else{ 
+  return redirect('home')->withError('Customers id null add Error');
+
+}
 
 }else{
   return redirect('home')->withError('data_customer null');

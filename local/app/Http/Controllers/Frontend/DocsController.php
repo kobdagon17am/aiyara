@@ -28,8 +28,9 @@ class DocsController extends Controller
 
 			if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
-				$url='local/public/files_register/3';
-				$f_name = Auth::guard('c_user')->user()->id.'_3'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
+				$url='local/public/files_register/1/'.date('Ym');
+				
+				$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_1'.'.'.$file_1->getClientOriginalExtension();
 				if($file_1->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -39,8 +40,8 @@ class DocsController extends Controller
 
 			if(isset($file_2)){
             // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
-				$url='local/public/files_register/3';
-				$f_name = Auth::guard('c_user')->user()->id.'_3'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
+				$url='local/public/files_register/2/'.date('Ym');
+				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_1->getClientOriginalExtension();
 				if($file_2->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -50,8 +51,8 @@ class DocsController extends Controller
 
 			if(isset($file_3)){
             // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
-				$url='local/public/files_register/3';
-				$f_name = Auth::guard('c_user')->user()->id.'_3'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+				$url='local/public/files_register/3/'.date('Ym');
+				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_1->getClientOriginalExtension();
 				if($file_3->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -61,7 +62,7 @@ class DocsController extends Controller
 
 			return redirect('docs')->withSuccess('Docs upload Success');
 
-
+ 
 		}else{
 			 return redirect('docs')->withError('Docs upload Fail');
 		}

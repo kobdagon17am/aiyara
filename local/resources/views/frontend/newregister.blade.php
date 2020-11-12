@@ -252,20 +252,20 @@
  					<div class="form-group row">
  						<div class="col-sm-6">
  							<label>บัตรประชาชน</label>
- 							<input type="file" name="file_1" class="form-control">
+ 							<input type="file" id="file_1" name="file_1" class="form-control">
  						</div>
  					</div>
 
  					<div class="form-group row">
  						<div class="col-sm-6">
  						<label>หน้าบัญชีธนาคาร</label>
- 						<input type="file" name="file_2" class="form-control">
+ 						<input type="file" id="file_2"  name="file_2" class="form-control">
  					</div>
  				</div>
  					<div class="form-group row">
  					<div class="col-sm-6"> 
  						<label>ลายเซ็น</label>
- 						<input type="file" name="file_3" class="form-control">
+ 						<input type="file" id="file_3" name="file_3" class="form-control">
  					</div>
  				</div>
 
@@ -291,3 +291,32 @@
 </div>
 @endsection
 
+@section('js')
+<script type="text/javascript">
+    $('#file_1').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+    $('#file_2').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+
+    $('#file_3').change( function () {
+      var fileExtension = ['jpg','png','pdf'];
+      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+         alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+         this.value = '';
+         return false;
+     }
+ });
+</script>
+@endsection
