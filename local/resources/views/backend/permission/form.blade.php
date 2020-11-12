@@ -8,23 +8,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">Account (ผู้ดูแลระบบ)</h4>
+            <h4 class="mb-0 font-size-18">Account / Member</h4>
 
             @php
             $path = explode("/",Request::path());
             $path = $path[0]."/".$path[1]."/".$path[2];
             @endphp
             
-
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <!-- <li class="breadcrumb-item"><a href="javascript: void(0);">Backend</a></li> -->
-                    <li class="breadcrumb-item">Backend</li>
-                    <li class="breadcrumb-item"><a href="<?=@$path?>">Permission</a></li>
-                    <li class="breadcrumb-item active">Account (ผู้ดูแลระบบ)</li>
-                </ol>
-            </div>
-
         </div>
     </div>
 </div>
@@ -98,6 +88,35 @@
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->position }}" name="position" >
                     </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ : * </label>
+                  <div class="col-md-10">
+                    <select name="permission" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                        @if(@$sPermission)
+                          @foreach(@$sPermission AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->permission)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์ : * </label>
+                  <div class="col-md-10">
+                    <select name="role_group_id_fk" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                        @if(@$sRole_group)
+                          @foreach(@$sRole_group AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->role_group_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
                 </div>
 
                 <div class="form-group row">

@@ -109,7 +109,6 @@ $(function() {
             }else{
                 $('td:last-child', nRow).html(''
                 + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a title="กำหนดสิทธิ์" href="{{ route('backend.permission.index') }}/'+aData['id']+'/roles" class="btn btn-sm btn-success"><i class="bx bxs-key font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
             }

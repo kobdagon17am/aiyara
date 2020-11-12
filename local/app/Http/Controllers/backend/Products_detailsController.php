@@ -35,6 +35,7 @@ class Products_detailsController extends Controller
     {
        $sRowGroup = \App\Models\Backend\Products_details::find($id);
        $sRow = \App\Models\Backend\Products_details::where('group_id', $sRowGroup->group_id)->get();
+       // dd($sRow);
        $sRowNew = \App\Models\Backend\Products::find($sRow[0]->product_id_fk);
        // dd($sRow[0]->status);
        $sLanguage = \App\Models\Backend\Language::get();
@@ -61,6 +62,7 @@ class Products_detailsController extends Controller
                 \App\Models\Backend\Products_details::where('id', request('id')[$i])->update(
                       [
                         'product_name' => request('product_name')[$i] ,
+                        'title' => request('title')[$i] ,
                         'descriptions' => request('descriptions')[$i] ,
                         'products_details' => request('products_details')[$i] ,
                         'updated_at' => date('Y-m-d H:i:s') ,
@@ -75,20 +77,6 @@ class Products_detailsController extends Controller
 
             $langCnt = count(request('lang'));
             for ($i=0; $i < $langCnt ; $i++) { 
-            
-
-              // `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-              // `group_id` int(11) DEFAULT '0',
-              // `product_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>products>id',
-              // `product_name` varchar(255) DEFAULT NULL,
-              // `descriptions` text,
-              // `products_details` text,
-              // `lang_id` int(10) DEFAULT '1' COMMENT '1=ไทย',
-              // `created_at` timestamp NULL DEFAULT NULL,
-              // `updated_at` timestamp NULL DEFAULT NULL,
-              // `deleted_at` timestamp NULL DEFAULT NULL,
-
-
 
                 \App\Models\Backend\Products_details::insert(
                       [
@@ -97,6 +85,7 @@ class Products_detailsController extends Controller
                         'product_id_fk' => request('product_id_fk') ,
 
                         'product_name' => request('product_name')[$i] ,
+                        'title' => request('title')[$i] ,
                         'descriptions' => request('descriptions')[$i] ,
                         'products_details' => request('products_details')[$i] ,
                         

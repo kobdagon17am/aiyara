@@ -157,6 +157,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('permission', 'AdminController');
 
+
+    Route::resource('role', 'RoleController');
+    Route::post('role/datatable', 'RoleController@Datatable')->name('role.datatable');
+
+
+
     // }); 
     #=======================================================================================================================================================
 

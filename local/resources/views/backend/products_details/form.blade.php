@@ -66,6 +66,13 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="example-text-input" class="col-md-2 col-form-label">Title :</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" rows="5" name="title[]" >{{@$sRow[$i]->title}}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                           <label for="example-text-input" class="col-md-2 col-form-label">Descriptions :</label>
                           <div class="col-md-10">
                             <textarea name="descriptions[]" class="form-control descriptions  "  >{{@$sRow[$i]->descriptions}}</textarea>

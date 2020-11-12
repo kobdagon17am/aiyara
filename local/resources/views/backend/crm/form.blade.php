@@ -54,7 +54,7 @@
                                 </div>
                             </div>
 
-                              <div class="form-group row">
+                            <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดติดต่อ :</label>
                                 <div class="col-md-10">
                                     <textarea class="form-control" rows="5" name="contact_details" >{{@$sRow->contact_details}}</textarea>
@@ -68,10 +68,10 @@
                                 	@if( empty($sRow) )
                                 		<input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                     	<input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="subject_recipient" >
-									@else
-										<input class="form-control" type="text" value="{{$subject_recipient_name}}" readonly style="background-color: #f2f2f2;" >
+                    									@else
+                    										<input class="form-control" type="text" value="{{$subject_recipient_name}}" readonly style="background-color: #f2f2f2;" >
                                     	<input class="form-control" type="hidden" value="{{ @$sRow->subject_recipient }}" name="subject_recipient" >
-									@endif
+									                 @endif
                                     
                                 </div>
                             </div>
