@@ -118,11 +118,7 @@ $(function() {
             }},
 
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-              if(d==1){
-                return 'Active';
-              }else{
-                return 'InActive';
-              }
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
 
             {data: 'id', title :'Tools', className: 'text-center w60'}, 

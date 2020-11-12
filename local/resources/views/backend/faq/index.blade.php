@@ -24,7 +24,7 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                  <!--   <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
+                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น: รายการคำถาม" name="q_topic">
                   </div>
 
                   <div class="col-4 text-right">
@@ -88,7 +88,7 @@ $(function() {
      
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'q_topic', title :'<center>รายการคำถาม </center>', className: 'text-left'},
+            {data: 'q_question', title :'<center>รายการคำถาม </center>', className: 'text-left'},
             {data: 'faq_topic', title :'<center>หมวดคำถาม </center>', className: 'text-left'},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';

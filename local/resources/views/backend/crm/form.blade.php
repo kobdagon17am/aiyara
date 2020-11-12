@@ -25,98 +25,78 @@
               @if( empty($sRow) )
               <form action="{{ route('backend.crm.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.crm.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.crm.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
 
-                     @for ($i = 0; $i < count($sLanguage) ; $i++)
-
                       <div class="myBorder">
-
-                        @if( !empty(@$sRow) )
-                        <input class="form-control" type="hidden" value="{{ @$sRow[$i]->id }}" name="id[]"  >
-                        @endif
-
-
-
-                            <div class="form-group row">
-                              <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
-                              <div class="col-md-10">
-                                <input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
-                                <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
-                              </div>
-                            </div>
 
                              <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">เลขใบรับเรื่อง :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->subject_receipt_number }}" name="subject_receipt_number[]"  >
+                                    <input class="form-control" type="text" value="{{ @$sRow->subject_receipt_number }}" name="subject_receipt_number"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">วันที่-เวลา รับเรื่อง :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="datetime" value="{{ @$sRow[$i]->receipt_date }}" name="receipt_date[]"  >
+                                <div class="col-md-3">
+                                    <input class="form-control" type="datetime" value="{{ @$sRow->receipt_date }}" name="receipt_date"  >
                                 </div>
                             </div>
 
                               <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">หัวข้อที่ลูกค้าแจ้ง :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->topics_reported }}" name="topics_reported[]"  >
+                                    <input class="form-control" type="text" value="{{ @$sRow->topics_reported }}" name="topics_reported"  >
                                 </div>
                             </div>
 
                               <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดติดต่อ :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->contact_details }}" name="contact_details[]"  >
+                                    <input class="form-control" type="text" value="{{ @$sRow->contact_details }}" name="contact_details"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->subject_recipient }}" name="subject_recipient[]"  >
+                                    <input class="form-control" type="text" value="{{ @$sRow->subject_recipient }}" name="subject_recipient"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ :</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->operator }}" name="operator[]"  >
+                                    <input class="form-control" type="text" value="{{ @$sRow->operator }}" name="operator"  >
                                 </div>
                             </div>
 
-                    </div>
-
-             @endfor
-
-                
-                <div class="myBorder">
 
                   <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่-เวลา อัพเดตล่าสุด :</label>
                     <div class="col-md-3">
-                      <input class="form-control" type="datetime" value="{{ @$sRow[0]->last_update }}" name="last_update" >
+                      <input class="form-control" type="datetime" value="{{ @$sRow->last_update }}" name="last_update" >
                     </div>
                   </div>
 
 
-                  @if( !empty($sRow) )
-                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label">สถานะ :</label>
-                        <div class="col-md-10 mt-2">
-                          <div class="custom-control custom-switch">
-                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow[0]->status=='1')?'checked':'' }}>
-                              <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
-                          </div>
-                        </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">สถานะ :</label>
+                    <div class="col-md-10 mt-2">
+                      <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
+                        @endif
+                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
+                      </div>
                     </div>
-                  @endif
+                </div>
                   
                
 

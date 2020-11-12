@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> FAQ  </h4>
+            <h4 class="mb-0 font-size-18"> FAQ </h4>
         </div>
     </div>
 </div>
@@ -25,19 +25,20 @@
               @if( empty($sRow) )
               <form action="{{ route('backend.faq.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.faq.update', @$sRow[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.faq.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
-                    <div class="form-group row">
+
+                 <div class="form-group row">
                       <label for="example-text-input" class="col-md-2 col-form-label"> FAQ Topic : * </label>
                       <div class="col-md-10">
                         <select name="faq_topic_id" class="form-control select2-templating " required >
                           <option value="">Select</option>
                             @if(@$sFaq_topic)
                               @foreach(@$sFaq_topic AS $r)
-                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow[0]->faq_topic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->faq_topic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
                               @endforeach
                             @endif
                         </select>
@@ -45,73 +46,33 @@
                     </div>
 
 
-                     @for ($i = 0; $i < count($sLanguage) ; $i++)
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">รายการคำถาม : * </label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ @$sRow->q_question }}" name="q_question" required>
+                    </div>
+                </div>
 
-                      <div class="myBorder">
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ :</label>
+                    <div class="col-md-10">
+                        <textarea class="form-control" rows="5" name="q_answer" >{{@$sRow->q_answer}}</textarea>
+                    </div>
+                </div>
 
-                        @if( !empty(@$sRow) )
-                        <input class="form-control" type="hidden" value="{{ @$sRow[$i]->id }}" name="id[]"  >
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">สถานะ :</label>
+                    <div class="col-md-10 mt-2">
+                      <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
                         @endif
-
-                            <div class="form-group row">
-                              <label for="example-text-input" class="col-md-2 col-form-label">ภาษา :</label>
-                              <div class="col-md-10">
-                                <input class="form-control" type="text" value="{{ $sLanguage[$i]->txt_desc }}"  readonly="" style="border: 0px;font-weight: bold;color: blue;">
-                                <input class="form-control" type="hidden" value="{{ $sLanguage[$i]->id }}" name="lang[]"  readonly="" style="border: 0px;font-weight: bold;">
-                              </div>
-                            </div>
-
-                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายการคำถาม :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_topic }}" name="q_topic[]" required >
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดคำถาม :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_details }}" name="q_details[]" required >
-                                </div>
-                            </div>
-
-                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow[$i]->q_answer }}" name="q_answer[]" required >
-                                </div>
-                            </div>
-
-
-
-
+                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
+                      </div>
                     </div>
-
-             @endfor
-
-                
-                <div class="myBorder">
-
-                  <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่ :</label>
-                    <div class="col-md-3">
-                      <input class="form-control" type="date" value="{{ @$sRow[0]->q_date }}" name="q_date" required>
-                    </div>
-                  </div>
-
-                  @if( !empty($sRow) )
-                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label">สถานะ :</label>
-                        <div class="col-md-10 mt-2">
-                          <div class="custom-control custom-switch">
-                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow[0]->status=='1')?'checked':'' }}>
-                              <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
-                          </div>
-                        </div>
-                    </div>
-                  @endif
-                  
-               
+                </div>
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -132,8 +93,5 @@
     </div> <!-- end col -->
 </div>
 <!-- end row -->
-@section('script')
-
-@endsection
 
 @endsection
