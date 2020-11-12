@@ -93,7 +93,7 @@ $(function() {
             //    return '<a href="{{ route('backend.promotions_cost.index') }}/'+d+'" class="btn btn-sm btn-primary"><i class="bx bx-money font-size-18 align-middle" ></i></a>';
             // }},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-               return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],

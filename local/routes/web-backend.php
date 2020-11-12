@@ -142,7 +142,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('products_cost/datatable', 'Products_costController@Datatable')->name('products_cost.datatable');
     Route::get('products_cost/create/{id}', 'Products_costController@create');
 
-
+    Route::resource('products_units', 'Products_unitsController');
+    Route::post('products_units/datatable', 'Products_unitsController@Datatable')->name('products_units.datatable');
+    Route::get('products_units/create/{id}', 'Products_unitsController@create');
+    
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {
 

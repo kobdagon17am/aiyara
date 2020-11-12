@@ -237,6 +237,33 @@
                     </div>
 
 
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_units.create') }}/{{@$sRow->id}}" style="float: right;">
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการหน่วยนับ  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-product-unit" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
+                            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+
                  @endif
 
 
@@ -383,7 +410,7 @@
                         {data: 'member_price', title :'<center>ราคาสมาชิก</center>', className: 'text-center'},
                         {data: 'pv', title :'<center>PV</center>', className: 'text-center'},
                         {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-                           return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+                           return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
                         }},
                         {data: 'id', title :'Tools', className: 'text-center w60'}, 
                     ],
@@ -399,21 +426,55 @@
                 });
             });
               
-            // $(".btnSave").click(function(event) {
-            //       event.preventDefault();
-            //       var searchIDs = $('input[name^=orders_type]:checked').map(function(){
-            //         return $(this).val();
-            //       });
-            //       // alert(searchIDs.get());
-            //       if(searchIDs.get()==""){
-            //         alert("! กรุณากรอกข้อมูลให้ครบถ้วนด้วยค่ะ ");
-            //         return false;
-            //       }else{
-                    // $("#frm").submit();
-            //       }
-            // });
 
+
+
+            var product_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-product-unit').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.products_units.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['product_id_fk'] = product_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'product_unit_name', title :'<center>หน่วย</center>', className: 'text-center'},
+                        {data: 'converted_value', title :'<center>ค่าที่แปลง</center>', className: 'text-center'},
+                        {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                           return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
+                        }},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.products_units.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_units.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
               
+
+
             </script>
 
 @endsection

@@ -91,7 +91,7 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'txt_desc', title :'<center>รายการ </center>', className: 'text-left'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-               return d==1?'<span style="color:blue">เปิดใชช้งาน</span>':'<span style="color:red">ปิด</span>';
+               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
             // {data: 'id', title :'Tools', className: 'text-center w60'}, 
             {data: 'id',   title :'<center>Tools</center>', className: 'text-center',render: function(d) {
