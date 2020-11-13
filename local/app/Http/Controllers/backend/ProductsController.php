@@ -78,8 +78,10 @@ class ProductsController extends Controller
 
           if( $id ){
             $sRow = \App\Models\Backend\Products::find($id);
+            $sRow->status    = request('status')?request('status'):0;
           }else{
             $sRow = new \App\Models\Backend\Products;
+            $sRow->status    = 1 ;
           }
 
           if(!empty(request('orders_type'))){
@@ -95,17 +97,17 @@ class ProductsController extends Controller
           $sRow->product_voucher    = request('product_voucher');
 
           $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->status    = request('status')?request('status'):0;
+          
           $sRow->save();
 
           \DB::commit();
 
 
-          if( $id ){
-            return redirect()->action('backend\ProductsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-          }else{
+          // if( $id ){
+          //   return redirect()->action('backend\ProductsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          // }else{
             return redirect()->to(url("backend/products/".$sRow->id."/edit"));
-          }
+          // }
           
 
       } catch (\Exception $e) {
