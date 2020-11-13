@@ -31,68 +31,115 @@
  				</ul>
  				<div class="tab-content m-t-15">
  					<div class="tab-pane active" id="address" role="tabpanel">
- 						<div class="card-block p-b-0">
+ 						<div class="card-block p-b-0" style="padding:10px">
+
  							<div class="form-radio">
- 								<div class="radio radio-inline">
- 									<label>
- 										<input type="radio" name="receive" checked="checked">
- 										<i class="helper"></i><b>จัดส่ง</b> 
- 									</label>
- 								</div>
- 								<div class="radio radio-inline">
- 									<label>
- 										<input type="radio" name="receive">
- 										<i class="helper"></i><b>รับที่สาขาไกล้บ้าน</b>
- 									</label>
- 								</div>
- 						 
- 
- 							</div>
- 							<div class="row m-t-5">
- 								<div class="col-md-3 col-sm-4 col-4">
- 									<label>บ้านเลขที่ <b class="text-danger">*</b></label>
- 									<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
- 								</div>
- 								<div class="col-md-5 col-sm-8 col-8">
- 									<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
- 									<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
- 								</div>
- 								<div class="col-md-3 col-sm-12 col-12">
- 									<label>หมู่ที่ <b class="text-danger">*</b></label>
- 									<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
- 								</div>
+ 								<div class="row">
 
- 							</div>
+ 									<div class="radio radio-inline">
+ 										<label>
+ 											<input type="radio" onchange="sent()" name="receive" checked="checked">
+ 											<i class="helper"></i><b>จัดส่ง</b> 
+ 										</label>
+ 									</div>
+ 									<div class="radio radio-inline">
+ 										<label>
+ 											<input type="radio" onchange="receive()" name="receive">
+ 											<i class="helper"></i><b>รับที่สาขาไกล้บ้าน</b>
+ 										</label>
+ 									</div>
 
- 							<div class="row m-t-5">
- 								<div class="col-sm-4">
- 									<label>ตรอก/ซอย </label>
- 									<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
- 								</div>
-
- 								<div class="col-sm-4">
- 									<label>เขต/อำเภอ <b class="text-danger">*</b></label>
- 									<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
- 								</div>
- 								<div class="col-sm-4">
- 									<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
- 									<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
  								</div>
  							</div>
- 							<div class="row m-t-5">
- 								<div class="col-sm-4">
- 									<label>ถนน</label>
- 									<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 							
+ 							<div id="sent">
+ 								<div class="row m-t-5">
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" required="">
+ 									</div>
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $customer->tel_mobile }}" required="">
+ 									</div>
  								</div>
 
- 								<div class="col-sm-4">
- 									<label>จังหวัด <b class="text-danger">*</b></label>
- 									<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
- 								</div>
+ 								<div class="row m-t-5">
+ 									<div class="col-md-3 col-sm-4 col-4">
+ 										<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
+ 									</div>
+ 									<div class="col-md-5 col-sm-8 col-8">
+ 										<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
+ 									</div>
+ 									<div class="col-md-3 col-sm-12 col-12">
+ 										<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
+ 									</div>
 
- 								<div class="col-sm-4">
- 									<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
- 									<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
+ 								</div>
+ 								<div class="row m-t-5">
+ 									<div class="col-sm-4">
+ 										<label>ตรอก/ซอย </label>
+ 										<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
+ 									</div>
+
+ 									<div class="col-sm-4">
+ 										<label>เขต/อำเภอ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
+ 									</div>
+ 									<div class="col-sm-4">
+ 										<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
+ 									</div>
+ 								</div>
+ 								<div class="row m-t-5">
+ 									<div class="col-sm-4">
+ 										<label>ถนน</label>
+ 										<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 									</div>
+
+ 									<div class="col-sm-4">
+ 										<label>จังหวัด <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
+ 									</div>
+
+ 									<div class="col-sm-4">
+ 										<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 										<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
+ 									</div>
+ 								</div>
+ 								
+ 							</div>
+
+ 							<div id="receive" style="display: none;">
+ 								<div class="row m-t-5">
+
+
+ 									<div class="col-sm-12">
+ 										<select name="select" class="form-control" required="">
+ 											<option value="opt1">กรุณาเลือกสาขาที่ต้องการ</option>
+ 											<option value="opt2">Type 2</option>
+ 											<option value="opt3">Type 3</option>
+ 											<option value="opt4">Type 4</option>
+ 											<option value="opt5">Type 5</option>
+ 											<option value="opt6">Type 6</option>
+ 											<option value="opt7">Type 7</option>
+ 											<option value="opt8">Type 8</option>
+ 										</select>
+ 									</div>
+
+ 								</div>
+ 								<div class="row m-t-5">
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" required="">
+ 									</div>
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $customer->tel_mobile }}" required="">
+ 									</div>
  								</div>
  							</div>
 
@@ -214,15 +261,15 @@
  					<table class="table table-responsive" >
  						<tr>
  							<td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
- 							<td align="right"><strong id="price"> ฿ {{ $price_total }} </strong></td>
+ 							<td align="right"><strong id="price"> {{ $price_total }} </strong></td>
  						</tr>
  						<tr>
  							<td><strong>ค่าจัดส่ง</strong></td>
- 							<td align="right"><strong id="sent">฿ {{ $sent }}</strong></td>
+ 							<td align="right"><strong id="sent"> {{ $sent }}</strong></td>
  						</tr>
  						<tr>
  							<td><strong>ยอดรวมทั้งสิ้น</strong></td>
- 							<td align="right"><strong id="price_total">฿ {{ $price_total_sent }}</strong>
+ 							<td align="right"><strong id="price_total"> {{ $price_total_sent }}</strong>
  							</td>
  						</tr>
  						<tr>
@@ -240,32 +287,30 @@
 
  			</div>
  			<div class="card-footer">
-
-
  			</div>
  			<!-- end of card-footer -->
  		</div>
-
-
  	</div>
  </div>
-
-
-
-
-
 
  @endsection
  @section('js')
  <script>
  	function next(){
-
  		document.getElementById("address").classList.remove('active');
  		document.getElementById("nav_address").classList.remove('active');
 
  		document.getElementById("credit-card").classList.add('active');
  		document.getElementById("nav_card").classList.add('active');
+ 	}
+ 	function sent(){
+ 		document.getElementById("sent").style.display = 'block';
+ 		document.getElementById("receive").style.display = 'none'; 
+ 	}
 
+ 	function receive(){ 
+ 		document.getElementById("sent").style.display = 'none';
+ 		document.getElementById("receive").style.display = 'block'; 
  	}
  </script>
 

@@ -11,23 +11,23 @@ use Auth;
 class CartPaymentController extends Controller
 {
 	public function index(){
-		$cartCollection = Cart::getContent();
+		$cartCollection = Cart::session(1)->getContent();
 		$data=$cartCollection->toArray();
 
-		$quantity = Cart::getTotalQuantity();
+		$quantity = Cart::session(1)->getTotalQuantity();
 		if($data){
 			foreach ($data as $value) {
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 			}
 			$pv_total = array_sum($pv);
-			$sent = 60;//ค่าส่ง
+			$sent = 100;//ค่าส่ง
 
 		}else{
 			$pv_total = 0;
 			$sent = 0;//ค่าส่ง
 		}
 
-		$price = Cart::getTotal();
+		$price = Cart::session(1)->getTotal();
 		$price_total = number_format($price,2);
 		$price_total_sent = $price + $sent;
 
@@ -40,9 +40,11 @@ class CartPaymentController extends Controller
 			'status'=>'success'
 		);
 
-		$customer = DB::table('customers_detail')
+		$customer = DB::table('customers')
+		->leftjoin('customers_detail','customers.id','=','customers_detail.customer_id')
 		->where('customer_id','=',Auth::guard('c_user')->user()->id)
 		->first();
+		//dd($customer);
 
 		return view('frontend/product/cart_payment',compact('customer'),$bill);
 
