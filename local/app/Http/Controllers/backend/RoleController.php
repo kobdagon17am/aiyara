@@ -49,7 +49,7 @@ class RoleController extends Controller
             $sRow = new \App\Models\Backend\Role;
           }
           $sRow->role_name    = request('role_name');
-          $sRow->status    = request('status')?request('status'):0;    
+          $sRow->status    = request('status')?request('status'):0;     
           $sRow->created_at = date('Y-m-d H:i:s');
           $id_user = request('id_user');
           $nameMenu = request('nameMenu');
@@ -57,6 +57,7 @@ class RoleController extends Controller
           // dd($nameMenu);
           DB::delete(" DELETE FROM role_permit where role_group_id_fk=$id;");
           DB::select(" ALTER TABLE role_permit AUTO_INCREMENT=1; ");
+
           if(!empty($nameMenu)){
               foreach ($nameMenu AS $row) {
                     $dnow = date("Y-m-d H:i:s");
@@ -68,7 +69,27 @@ class RoleController extends Controller
                         ]
                     );
               }
+          }
 
+          $data_c = request('data_c');
+          if(!empty($data_c)){
+              foreach ($data_c AS $row) {
+                   DB::update(" UPDATE role_permit SET c=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+              }
+          }
+
+          $data_u = request('data_u');
+          if(!empty($data_u)){
+              foreach ($data_u AS $row) {
+                   DB::update(" UPDATE role_permit SET u=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+              }
+          }
+
+          $data_d = request('data_d');
+          if(!empty($data_d)){
+              foreach ($data_d AS $row) {
+                   DB::update(" UPDATE role_permit SET d=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+              }
           }
 
           $sRow->save();
