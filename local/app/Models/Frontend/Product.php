@@ -18,12 +18,13 @@ class Product extends Model
         ->get();
 
         $product = DB::table('products')
-        // ->select(
-        //     'products.*',
-        //     'product_detail.product_name',
-        //     'product_detail.title',
-        //     'product_detail.product_detail'
-        // )
+        ->select(
+            'products.id as products_id',
+            'products_details.*',
+            'products_images.*',
+            'products_cost.*',
+            'dataset_currency.*',
+        )
         ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
         ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
         ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
@@ -44,7 +45,7 @@ class Product extends Model
 
     }
 
-        public static function product_list_select($c_id,$type){
+    public static function product_list_select($c_id,$type){
         // $ev_objective = DB::table('categories')
   //       ->where('lang_id', '=', 1)
   //       ->orderby('order')
@@ -56,12 +57,13 @@ class Product extends Model
         ->get();
 
         $product = DB::table('products')
-        // ->select(
-        //     'products.*',
-        //     'product_detail.product_name',
-        //     'product_detail.title',
-        //     'product_detail.product_detail'
-        // )
+        ->select(
+            'products.id as products_id',
+            'products_details.*',
+            'products_images.*',
+            'products_cost.*',
+            'dataset_currency.*',
+        )
         ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
         ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
         ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
@@ -74,7 +76,7 @@ class Product extends Model
         ->orderby('products.id')
         ->get();
         //->Paginate(4);
-        //dd($product);
+        
 
         $data = array(
             'category' => $categories,

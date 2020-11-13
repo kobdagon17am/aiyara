@@ -50,12 +50,12 @@
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                            <span>{{ $value['attributes']['title'] }}</span>
+                                           {{--  <span>{{ $value['attributes']['title'] }}</span> --}}
                                         </td>
                                         <td>
                                             <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
                                         </td>
-                                        <td><b>${{ $value['price'] }}</b></td>
+                                        <td><b>{{ $value['price'] }}</b></td>
 
                                         <td><b>{{$value['attributes']['pv']}}</b></td>
                                         <td class="text-center">
@@ -83,15 +83,15 @@
                     <table class="table table-responsive" >
                         <tr>
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
-                            <td align="right"><strong id="price"> ฿ {{ $price_total }} </strong></td>
+                            <td align="right"><strong id="price"> {{ $price_total }} </strong></td>
                         </tr>
                         <tr>
                             <td><strong>ค่าจัดส่ง</strong></td>
-                            <td align="right"><strong id="sent">฿ {{ $sent }}</strong></td>
+                            <td align="right"><strong id="sent"> {{ $sent }}</strong></td>
                         </tr>
                         <tr>
                             <td><strong>ยอดรวมทั้งสิ้น</strong></td>
-                            <td align="right"><strong id="price_total">฿ {{ $price_total_sent }}</strong>
+                            <td align="right"><strong id="price_total"> {{ $price_total_sent }}</strong>
                             </td>
                         </tr>
                         <tr>
@@ -178,9 +178,9 @@
         data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':1},
     })
     .done(function(data) {
-        $('#price').html('$ '+data['price_total']);
+        $('#price').html(data['price_total']);
         $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
-        $('#price_total').html('$ '+data['price_total_sent']);
+        $('#price_total').html(data['price_total_sent']);
         $('#pv').html(data['pv_total']+' PV');
         console.log(data); 
         console.log("success");

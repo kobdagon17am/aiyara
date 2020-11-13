@@ -16,83 +16,43 @@ class ProductController extends Controller
         $this->middleware('customer');
     }
 
-    public function product_list_type_1(Request $request)
-
-    {
- 
-        $type = 1;
-        $data = Product::product_list($type);
+    public function product_list_type_1(){
+        $data = Product::product_list(1);
         return view('frontend/product/product-list-1', $data);
     }
 
-    public function product_list_type_2(Request $request)
-
-    {
-        if(empty($request->c_id)){
-            $c_id = 2;
-        }else{
-            $c_id = $request->c_id;
-        }
-
-        $data = Product::product_list($c_id);
+    public function product_list_type_2(){
+        $data = Product::product_list(2);
         return view('frontend/product/product-list-2', $data);
     }
 
-    public function product_list_type_3(Request $request)
 
-    {
-        if(empty($request->c_id)){
-            $c_id = 3;
-        }else{
-            $c_id = $request->c_id;
-        }
-
-        $data = Product::product_list($c_id);
+    public function product_list_type_3(){
+        $data = Product::product_list(3);
         return view('frontend/product/product-list-3', $data);
     }
 
-    public function product_list_type_4(Request $request)
 
-    {
-        if(empty($request->c_id)){
-            $c_id = 4;
-        }else{
-            $c_id = $request->c_id;
-        }
-
-        $data = Product::product_list($c_id);
+    public function product_list_type_4(){
+        $data = Product::product_list(4);
         return view('frontend/product/product-list-4', $data);
     }
 
-    public function product_list_type_5(Request $request)
 
-    {
-        if(empty($request->c_id)){
-            $c_id = 5;
-        }else{
-            $c_id = $request->c_id;
-        }
-
-        $data = Product::product_list($c_id);
+    public function product_list_type_5(){
+        $data = Product::product_list(5);
         return view('frontend/product/product-list-5', $data);
     }
 
-    public function product_list_type_6(Request $request)
-    {
-        if(empty($request->c_id)){
-            $c_id = 6;
-        }else{
-            $c_id = $request->c_id;
-        }
 
-        $data = Product::product_list($c_id);
+    public function product_list_type_6(){
+        $data = Product::product_list(6);
         return view('frontend/product/product-list-6', $data);
     }
 
-    public function product_list_select(Request $request)
-    {
-        $type = $request->type;
 
+    public function product_list_select(Request $request){
+        $type = $request->type;
         if(empty($request->category_id)){
             $c_id = 1;
         }else{
@@ -103,17 +63,15 @@ class ProductController extends Controller
         $html='';
         if($data['product']){
             foreach ($data['product'] as $value){
-           
-
                 $html .= '<div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
-                <input type="hidden" id="item_id" value="'.$value->id.'">
+                <input type="hidden" id="item_id" value="'.$value->products_id.'">
                 <div class="card prod-view">
                 <div class="prod-item text-center">
                 <div class="prod-img">
                 <div class="option-hover">
-                <a href="'.route("product-detail-".$type,["id"=>$value->id]).'" type="button" 
+                <a href="'.route("product-detail-".$type,["id"=>$value->products_id]).'" type="button" 
                 class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                <a href="'.route("product-detail-".$type,["id"=>$value->id]).'"
+                <a href="'.route("product-detail-".$type,["id"=>$value->products_id]).'"
                 class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                 <i class="icofont icofont-eye-alt f-20"></i>
                 </a>
@@ -127,7 +85,7 @@ class ProductController extends Controller
                 <!-- <div class="p-new"><a href=""> New </a></div> -->
                 </div>
                 <div class="prod-info">
-                <a href="'.route('product-detail-'.$type,['id'=>$value->id]).'" class="txt-muted">
+                <a href="'.route('product-detail-'.$type,['id'=>$value->products_id]).'" class="txt-muted">
                 <h5 style="font-size: 15px">'.$value->product_name.'</h5>
                 <p class="text-left p-2 m-b-0" style="font-size: 12px">'.$value->title.'</p>
                 </a>
@@ -141,7 +99,6 @@ class ProductController extends Controller
                 </div>
                 </div>';
             }
- 
 
         }else{
             $html ='';
@@ -154,154 +111,184 @@ class ProductController extends Controller
     public function product_detail_1($id)
     {
         if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
+            return redirect('product-list-1')->withError('No Product');
+        }else{
+             $product = DB::table('products')
+        ->select(
+            'products.id as products_id',
+            'products_details.*',
+            'products_cost.*',
+            'dataset_currency.*',
+        )
+          ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+          // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+          ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+          ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+          ->where('products.id', '=',$id)
+          // ->where('products_images.image_default', '=', 1)
+          ->where('products_details.lang_id', '=', 1)
+          ->where('products_cost.business_location_id','=', 1)
+          ->first();
 
-
-            return view('frontend/product/product-detail-1', compact('product'));
+          if(empty($product)){
+            return redirect('product-list-1')->withError('No Product');
+        }else{
+            $img = DB::table('products_images')
+            ->where('product_id_fk', '=',$id)
+            ->orderby('image_default','DESC')
+            ->get();
         }
+          //dd($product);
+        return view('frontend/product/product-detail-1', compact('product','img'));
     }
+}
 
-    public function product_detail_2($id)
-    {
-        if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            // ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
+public function product_detail_2($id)
+{
+ if (empty($id)) {
+    return redirect('product-list-2')->withError('No Product');
+}else{
+  $product = DB::table('products')
+  ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+          // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+  ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+  ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+  ->where('products.id', '=',$id)
+          // ->where('products_images.image_default', '=', 1)
+  ->where('products_details.lang_id', '=', 1)
+  ->where('products_cost.business_location_id','=', 1)
+  ->first();
 
+  if(empty($product)){
+    return redirect('product-list-2')->withError('No Product');
+}else{
+    $img = DB::table('products_images')
+    ->where('product_id_fk', '=',$id)
+    ->orderby('image_default','DESC')
+    ->get();
+}
+          //dd($product);
+return view('frontend/product/product-detail-2', compact('product','img'));
+}
+}
 
-            return view('frontend/product/product-detail-2', compact('product'));
-        }
+public function product_detail_3($id)
+{
+ if (empty($id)) {
+    return redirect('product-list-3')->withError('No Product');
+}else{
+  $product = DB::table('products')
+  ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+          // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+  ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+  ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+  ->where('products.id', '=',$id)
+          // ->where('products_images.image_default', '=', 1)
+  ->where('products_details.lang_id', '=', 1)
+  ->where('products_cost.business_location_id','=', 1)
+  ->first();
+
+  if(empty($product)){
+    return redirect('product-list-3')->withError('No Product');
+}else{
+    $img = DB::table('products_images')
+    ->where('product_id_fk', '=',$id)
+    ->orderby('image_default','DESC')
+    ->get();
+}
+          //dd($product);
+return view('frontend/product/product-detail-3', compact('product','img'));
+}
+}
+
+public function product_detail_4($id)
+{
+  if (empty($id)) {
+    return redirect('product-list-4')->withError('No Product');
+}else{
+  $product = DB::table('products')
+  ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+          // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+  ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+  ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+  ->where('products.id', '=',$id)
+          // ->where('products_images.image_default', '=', 1)
+  ->where('products_details.lang_id', '=', 1)
+  ->where('products_cost.business_location_id','=', 1)
+  ->first();
+
+  if(empty($product)){
+    return redirect('product-list-4')->withError('No Product');
+}else{
+    $img = DB::table('products_images')
+    ->where('product_id_fk', '=',$id)
+    ->orderby('image_default','DESC')
+    ->get();
+}
+          //dd($product);
+return view('frontend/product/product-detail-4', compact('product','img'));
+}
+}
+public function product_detail_5($id)
+{
+    if (empty($id)) {
+        return redirect('product-list-5')->withError('No Product');
+    }else{
+      $product = DB::table('products')
+      ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+          // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+      ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+      ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+      ->where('products.id', '=',$id)
+          // ->where('products_images.image_default', '=', 1)
+      ->where('products_details.lang_id', '=', 1)
+      ->where('products_cost.business_location_id','=', 1)
+      ->first();
+
+      if(empty($product)){
+        return redirect('product-list-5')->withError('No Product');
+    }else{
+        $img = DB::table('products_images')
+        ->where('product_id_fk', '=',$id)
+        ->orderby('image_default','DESC')
+        ->get();
     }
+          //dd($product);
+    return view('frontend/product/product-detail-5', compact('product','img'));
+}
+}
+public function product_detail_6($id)
+{
+    if (empty($id)) {
+        return redirect('product-list-6')->withError('No Product');
+    }else{
+      $product = DB::table('products')
+      ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+      //->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
+      ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+      ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
+      ->where('products.id', '=',$id)
+      //->where('products_images.image_default', '=', 1)
+      ->where('products_details.lang_id', '=', 1)
+      ->where('products_cost.business_location_id','=', 1)
+      ->first();
 
-    public function product_detail_3($id)
-    {
-        if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            // ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
-
-
-            return view('frontend/product/product-detail-3', compact('product'));
-        }
+      if(empty($product)){
+        return redirect('product-list-6')->withError('No Product');
+    }else{
+        $img = DB::table('products_images')
+        ->where('product_id_fk', '=',$id)
+        ->orderby('image_default','DESC')
+        ->get();
     }
+          //dd($product);
+    return view('frontend/product/product-detail-6', compact('product','img'));
+}
+}
 
-    public function product_detail_4($id)
-    {
-        if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            // ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
-
-
-            return view('frontend/product/product-detail-4', compact('product'));
-        }
-    }
-    public function product_detail_5($id)
-    {
-        if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            // ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
-
-
-            return view('frontend/product/product-detail-5', compact('product'));
-        }
-    }
-    public function product_detail_6($id)
-    {
-        if (empty($id)) {
-            return redirect('product-list');
-        } else {
-            $product = DB::table('products')
-            ->select(
-                'products.*',
-                'product_detail.product_name',
-                'product_detail.title',
-                'product_detail.product_detail'
-            )
-                //->select('*')
-            ->leftjoin('product_detail', 'products.id', '=', 'product_detail.product_id')
-            // ->where('products.category_id', '=', 1)
-            ->where('product_detail.lang_id', '=', 1)
-            ->where('products.id', '=', $id)
-            ->orderby('products.id')
-            ->first();
-
-
-            return view('frontend/product/product-detail-6', compact('product'));
-        }
-    }
-
-    public function add_cart(Request $request){
-     // dd($request->type);
-        Cart::session($request->type)->add(array(
+public function add_cart(Request $request){
+     //dd($request->all());
+    Cart::session($request->type)->add(array(
             'id' => $request->id, // inique row ID
             'name' => $request->name,
             'price' => $request->price,
@@ -309,14 +296,13 @@ class ProductController extends Controller
             'attributes' => array(
                 'pv'=>$request->pv,
                 'img'=>$request->img,
-                'title'=>$request->title,
                 'promotion'=>$request->promotion
             )
         ));
-        $getTotalQuantity = Cart::session($request->type)->getTotalQuantity();
+    $getTotalQuantity = Cart::session($request->type)->getTotalQuantity();
 
         // $item = Cart::session($request->type)->getContent();
-        return $getTotalQuantity; 
+    return $getTotalQuantity; 
 
-    }
+}
 }

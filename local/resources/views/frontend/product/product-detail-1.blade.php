@@ -33,46 +33,20 @@
             <div class="port_details_all_img row">
               <div class="col-lg-12 m-b-15">
                 <div id="big_banner">
-
-                  @if($product->image01)
+                  @foreach($img as $value_img)
                   <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
+                    <img class="img img-fluid" src="{{asset($value_img->img_url.'/'.$value_img->product_img)}}" alt="">
                   </div>
-                  @endif
-                  @if($product->image02)
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
-                  </div>
-                  @endif
-                  @if($product->image03)
-                  <div class="port_big_img">
-                    <img class="img img-fluid" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
-                  </div>
-                  @endif
-
-
+                  @endforeach
                 </div>
               </div>
               <div class="col-lg-12 product-right">
                 <div id="small_banner">
-
-                 @if($product->image01)
+                 @foreach($img as $value_img_small)
                  <div>
-                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image01)}}" alt="">
+                  <img class="img img-fluid" width="120" src="{{asset($value_img_small->img_url.'/'.$value_img_small->product_img)}}" alt="">
                 </div>
-                @endif
-                @if($product->image02)
-                <div>
-                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image02)}}" alt="">
-                </div>
-                @endif
-                @if($product->image03)
-                <div>
-                  <img class="img img-fluid" width="120" src="{{asset($product->img_url.'/'.$product->image03)}}" alt="">
-                </div>
-                @endif
-
-
+                @endforeach
               </div>
             </div>
           </div>
@@ -89,10 +63,9 @@
 
                   <h4 class="pro-desc">{{$product->product_name}}</h4>
                 </div>
-                <div class="col-lg-12">
-                  <span class="txt-muted"> {{$product->title}} </span>    <p></p>
-
-                </div>
+           {{--      <div class="col-lg-12">
+                   {{$product->descriptions}}
+                </div> --}}
             <!--     <div class="stars stars-example-css m-t-15 detail-stars col-lg-12">
                   <select id="product-view" class="rating-star" name="rating" autocomplete="off">
                     <option value="1">1</option>
@@ -103,9 +76,9 @@
                   </select>
                 </div> -->
                 <div class="col-lg-12">
-                  <h4>฿{{number_format($product->price,2)}} <b style="color:#00c454">[{{$product->pv}} PV]</b></h4>
+                  <h4>{!! $product->icon !!} {{number_format($product->member_price,2)}} <b style="color:#00c454">[{{$product->pv}} PV]</b></h4>
                   <hr>
-                  <p>{!! $product->product_detail !!}</p>
+                  {!! $product->descriptions !!}
                   
                   <hr>
 
@@ -132,36 +105,34 @@
 
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-6 notifications">
-                 <button type="button" onclick="addcart({{$product->id}})" class="btn btn-primary waves-effect waves-light" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
+                 <button type="button" onclick="addcart({{$product->products_id}})" class="btn btn-primary waves-effect waves-light" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
 
               </div>
               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 col-12 text-center">
-                 <a href="{{ route('product-list-1') }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
-              </div>
+               <a href="{{ route('product-list-1') }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
+             </div>
 
 
-            </div>
+           </div>
 
-          </div>
-        </div>
-      </div>
-    </div>
+         </div>
+       </div>
+     </div>
+   </div>
 
-    <div class="row">
-      <div class="col-lg-12">
-        <hr>
-        <h2>{{$product->product_name}}</h2>
-        <p>{{$product->title}}</p>
-        <p>{!! $product->product_detail !!}</p>
-        
-      </div>
-      
+   <div class="row">
+    <div class="col-lg-12">
+      <hr>
+
+      {{-- <h2>{{$product->product_name}}</h2> --}}
+      <p>{!! $product->products_details !!}</p>
 
     </div>
-
   </div>
+
+</div>
 </div>
 <!-- Product detail page end -->
 </div>
@@ -178,10 +149,10 @@
 <script  src="{{asset('frontend/assets/pages/product-detail/product-detail.js')}}"></script>
 <script type="text/javascript">
   function addcart(id) { 
-    <?php $img = $product->img_url.''.$product->image01; ?>
+    <?php $img = $img[0]->img_url.''.$img[0]->product_img; ?>
     var quantity = $('#quant').val();
     var name = '{{$product->product_name}}';
-    var price = {{$product->price}};
+    var price = {{$product->member_price}};
     var pv = {{$product->pv}};
     var img = '{{$img}}';
     var title = '{{$product->title}}';

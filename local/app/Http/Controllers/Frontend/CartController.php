@@ -115,10 +115,10 @@ class CartController extends Controller
 	}
 	public function cart_4(){
 
-		$cartCollection = Cart::session(3)->getContent();
+		$cartCollection = Cart::session(4)->getContent();
 		$data=$cartCollection->toArray();
 
-		$quantity = Cart::session(3)->getTotalQuantity();
+		$quantity = Cart::session(4)->getTotalQuantity();
 		if($data){
 			foreach ($data as $value) {
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
@@ -131,7 +131,7 @@ class CartController extends Controller
 			$sent = 0;//ค่าส่ง
 		}
 
-		$price = Cart::session(3)->getTotal();
+		$price = Cart::session(4)->getTotal();
 		$price_total = number_format($price,2);
 		$price_total_sent = $price + $sent;
 
@@ -150,10 +150,10 @@ class CartController extends Controller
 
 	public function cart_5(){
 
-		$cartCollection = Cart::session(4)->getContent();
+		$cartCollection = Cart::session(5)->getContent();
 		$data=$cartCollection->toArray();
 
-		$quantity = Cart::session(4)->getTotalQuantity();
+		$quantity = Cart::session(5)->getTotalQuantity();
 		if($data){
 			foreach ($data as $value) {
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
@@ -166,7 +166,7 @@ class CartController extends Controller
 			$sent = 0;//ค่าส่ง
 		}
 
-		$price = Cart::session(4)->getTotal();
+		$price = Cart::session(5)->getTotal();
 		$price_total = number_format($price,2);
 		$price_total_sent = $price + $sent;
 

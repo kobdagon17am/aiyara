@@ -133,16 +133,17 @@
 <div class="row" id="product_list">
 
     @foreach($product as $value)
+   
     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
-      <input type="hidden" id="item_id" value="{{$value->id}}">
+      <input type="hidden" id="item_id" value="{{$value->products_id}}">
       <div class="card prod-view">
         <div class="prod-item text-center">
             <div class="prod-img">
                 <div class="option-hover">
 
-                   <a href="{{route('product-detail-1',['id'=>$value->id])}}" type="button" 
+                   <a href="{{route('product-detail-1',['id'=>$value->products_id])}}" type="button" 
                     class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                    <a href="{{route('product-detail-1',['id'=>$value->id])}}"
+                    <a href="{{route('product-detail-1',['id'=>$value->products_id])}}"
                         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                         <i class="icofont icofont-eye-alt f-20"></i>
                     </a>
@@ -156,7 +157,7 @@
     <!-- <div class="p-new"><a href=""> New </a></div> -->
 </div>
 <div class="prod-info">
-    <a href="{{route('product-detail-1',['id'=>$value->id])}}" class="txt-muted">
+    <a href="{{route('product-detail-1',['id'=>$value->products_id])}}" class="txt-muted">
         <h5 style="font-size: 15px">{{$value->product_name}}</h5>
         <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->title!!}</p> 
        
@@ -164,6 +165,7 @@
         <!--<div class="m-b-10">
         <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
     </div> -->
+
     <span class="prod-price" style="font-size: 20px"> {!! $value->icon !!} {{number_format($value->member_price,2)}} <b
         style="color:#00c454">[{{$value->pv}} PV]</b></span>
     </div>
@@ -188,7 +190,7 @@
         $.ajax({
             url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category,'type':3},
+            data: {'category_id':category,'type':1},
         })
         .done(function(data){
             $('#product_list').html(data);
