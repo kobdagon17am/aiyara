@@ -144,7 +144,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับหลัก : * </label>
+                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับ : * </label>
                   <div class="col-md-10">
                     <select name="main_unit" class="form-control select2-templating " required >
                       <option value="">Select</option>
@@ -399,7 +399,7 @@
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'ชื่อสินค้า', className: 'text-center'},
                         {data: 'product_amt', title :'จำนวน', className: 'text-center'},
-                        {data: 'product_unit_desc', title :'หน่วยนับหลัก', className: 'text-center'},
+                        {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'id', title :'Tools', className: 'text-center w60'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){

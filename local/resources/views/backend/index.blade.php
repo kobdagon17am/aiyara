@@ -457,7 +457,7 @@
                                             <tr>
                                                 <th scope="row">
                                                     <div>
-                                                        <img src="backend/images/product/img-7.png" alt="" class="avatar-sm">
+                                                        <!-- <img src="backend/images/product/img-7.png" alt="" class="avatar-sm"> -->
                                                     </div>
                                                 </th>
                                                 <td>
@@ -471,7 +471,7 @@
                                             <tr>
                                                 <th scope="row">
                                                     <div>
-                                                        <img src="backend/images/product/img-4.png" alt="" class="avatar-sm">
+                                                        <!-- <img src="backend/images/product/img-4.png" alt="" class="avatar-sm"> -->
                                                     </div>
                                                 </th>
                                                 <td>
@@ -520,9 +520,5 @@
 @endsection
 
 @section('script')
-        <!-- plugin js -->
-        <script src="{{ URL::asset('backend/libs/apexcharts/apexcharts.min.js')}}"></script>
 
-        <!-- Calendar init -->
-        <script src="{{ URL::asset('backend/js/pages/dashboard.init.js')}}"></script>
 @endsection

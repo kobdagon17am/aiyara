@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Session;
+use App\Models\UserModel;
+use App\Models\MenuPermissionModel;
 
-class FaqController extends Controller
+
+class FaqController extends MyAjaxController 
 {
 
     public function index(Request $request)
     {
+
       return view('backend.faq.index');
+ 
     }
 
    public function create()

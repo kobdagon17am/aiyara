@@ -161,7 +161,35 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('role', 'RoleController');
     Route::post('role/datatable', 'RoleController@Datatable')->name('role.datatable');
 
+    Route::resource('department', 'DepartmentController');
+    Route::post('department/datatable', 'DepartmentController@Datatable')->name('department.datatable');
 
+    Route::resource('vat', 'VatController');
+    Route::post('vat/datatable', 'VatController@Datatable')->name('vat.datatable');
+
+    Route::resource('fee', 'FeeController');
+    Route::post('fee/datatable', 'FeeController@Datatable')->name('fee.datatable');
+
+    Route::resource('maintain_balance', 'Maintain_balanceController');
+    Route::post('maintain_balance/datatable', 'Maintain_balanceController@Datatable')->name('maintain_balance.datatable');
+
+    Route::resource('crm_gettopic', 'Crm_gettopicController');
+    Route::post('crm_gettopic/datatable', 'Crm_gettopicController@Datatable')->name('crm_gettopic.datatable');
+
+    Route::resource('crm_answer', 'Crm_answerController');
+    Route::post('crm_answer/datatable', 'Crm_answerController@Datatable')->name('crm_answer.datatable');
+    Route::get('crm_answer/create/{id}', 'Crm_answerController@create');
+
+
+    Route::resource('pm', 'PmController');
+    Route::post('pm/datatable', 'PmController@Datatable')->name('pm.datatable');
+
+    Route::resource('pm_broadcast', 'Pm_broadcastController');
+    Route::post('pm_broadcast/datatable', 'Pm_broadcastController@Datatable')->name('pm_broadcast.datatable');
+
+    Route::get('/', 'ImportController@getImport')->name('import');
+    Route::post('/import_parse', 'ImportController@parseImport')->name('import_parse');
+    Route::post('/import_process', 'ImportController@processImport')->name('import_process');
 
     // }); 
     #=======================================================================================================================================================
@@ -172,4 +200,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
   #=========================================================================================================================================================
   }); //route group auth:admin
 #===========================================================================================================================================================
+
 }); //route group backend
+

@@ -85,7 +85,7 @@ foreach ($MenuPermission as $key => $value) {
             if(\Auth::user()->permission==1){
                  $txtMenu .= '
                       <li>
-                          <a href="'.asset($mMenu->link).'" class=" waves-effect">
+                          <a data-id="'.$sMenu->id.'" href="'.asset($mMenu->link).'" class=" waves-effect click_link ">
                               <i class="'.$mMenu->icon.'"></i>
                               <span>'.$mMenu->name.'  </span>
                           </a>
@@ -95,7 +95,7 @@ foreach ($MenuPermission as $key => $value) {
               if(in_array($mMenu->id, $arr_menu_id)){
                 $txtMenu .= '
                       <li>
-                          <a href="'.asset($mMenu->link).'" class=" waves-effect">
+                          <a data-id="'.$sMenu->id.'" href="'.asset($mMenu->link).'" class=" waves-effect click_link ">
                               <i class="'.$mMenu->icon.'"></i>
                               <span>'.$mMenu->name.'  </span>
                           </a>
@@ -120,14 +120,14 @@ foreach ($MenuPermission as $key => $value) {
                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
 	              		
 	                    	$subMenu .= '       
-		                           <li><a href="javascript: void(0);" class="has-arrow">'.$sMenu->name.' </a>';
+		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
 
 		                           		if($sMenu->id==$sMenu2->ref2){
 									  		$subMenu .= '
 									            <ul class="sub-menu" aria-expanded="true">
-								                    <li><a href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
+								                    <li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
 								                </ul>';
 								        }
 
@@ -141,7 +141,7 @@ foreach ($MenuPermission as $key => $value) {
 	            		if($sMenu->menu_level==1){
 		            		$subMenu .= '<li><a href="'.asset($sMenu->link).'">'.$sMenu->name.' </a></li>';
 			                  if(in_array($sMenu->id, $arr_menu_id)){
-			                    $subMenu .= '<li><a href="'.asset($sMenu->link).'">'.$sMenu->name.'  </a></li>';
+			                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu->link).'">'.$sMenu->name.'  </a></li>';
 			                  }
 		              	}
 
@@ -162,7 +162,7 @@ foreach ($MenuPermission as $key => $value) {
 		                           		if($sMenu->id==$sMenu2->ref2){
 									  		$subMenu .= '
 									            <ul class="sub-menu" aria-expanded="true">
-								                    <li><a href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
+								                    <li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
 								                </ul>';
 								        }
 
@@ -174,7 +174,7 @@ foreach ($MenuPermission as $key => $value) {
 
 			            		if($sMenu->menu_level==1){
 					                  if(in_array($sMenu->id, $arr_menu_id)){
-					                    $subMenu .= '<li><a href="'.asset($sMenu->link).'">'.$sMenu->name.' </a></li>';
+					                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu->link).'">'.$sMenu->name.'</a></li>';
 					                  }
 				              	}
 
@@ -193,7 +193,7 @@ foreach ($MenuPermission as $key => $value) {
           if(\Auth::user()->permission==1){
                 $txtMenu .= '
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect click_link ">
                         <i class="'.$mMenu->icon.'"></i>
                         <span>'.$mMenu->name.' </span>
                     </a>
@@ -208,12 +208,12 @@ foreach ($MenuPermission as $key => $value) {
 
 	                $txtMenu .= '
 	                <li>
-	                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+	                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect click_link ">
 	                        <i class="'.$mMenu->icon.'"></i>
-	                        <span>'.$mMenu->name.' </span>
+	                        <span>'.$mMenu->name.'  </span>
 	                    </a>
 	                    <ul class="sub-menu" aria-expanded="true">
-	                        '.$subMenu.'  
+	                        '.$subMenu.' 
 	                    </ul>
 	                  </li>
 	                  ';

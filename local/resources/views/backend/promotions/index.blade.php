@@ -18,6 +18,22 @@
 </div>
 <!-- end page title -->
 
+  <?php 
+    $sPermission = \Auth::user()->permission ;
+    $menu_id = @$_REQUEST['menu_id'];
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+    }else{
+      $role_group_id = \Auth::user()->role_group_id_fk;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      $sU = @$menu_permit->u==1?'':'display:none;';
+      $sD = @$menu_permit->d==1?'':'display:none;';
+    }
+   ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -27,7 +43,7 @@
                     <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
                   </div>
 
-                  <div class="col-4 text-right">
+                  <div class="col-4 text-right" style="{{@$sC}}" >
                     <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
@@ -48,6 +64,8 @@
 @section('script')
 
 <script>
+var sU = "{{@$sU}}"; 
+var sD = "{{@$sD}}";
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -98,10 +116,18 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.promotions.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
+
+          if(sU!=''&&sD!=''){
+              $('td:last-child', nRow).html('-');
+          }else{ 
+
+              $('td:last-child', nRow).html(''
+                + '<a href="{{ route('backend.promotions.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+              ).addClass('input');
+
+          }
+
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

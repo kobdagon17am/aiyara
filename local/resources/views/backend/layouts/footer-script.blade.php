@@ -43,6 +43,16 @@
             });
         </script>
 
+        <script type="text/javascript">
+
+            $(document).on('click', '.click_link', function(event) {
+
+                var v = $(this).data('id');
+                sessionStorage.setItem("menu_id", v);
+
+            });
+
+        </script>
 
         @yield('script')
         @yield('script-bottom')

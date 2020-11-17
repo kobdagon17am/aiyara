@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับหลัก : * </label>
+                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับ : * </label>
                   <div class="col-md-10">
                     <select name="product_unit" class="form-control select2-templating " required >
                       <option value="">Select</option>

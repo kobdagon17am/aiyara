@@ -12,11 +12,28 @@ class Course_eventController extends Controller
 
     public function index(Request $request)
     {
-
-      $dsCourse_event  = \App\Models\Backend\Course_event::get();
-      return view('backend.course_event.index')->with(['dsCourse_event'=>$dsCourse_event]);
-
+      $menu_id = \Session::get('get_link');
+      $sPermission = \Auth::user()->permission;
+      if($sPermission==1){
+          return view('backend.course_event.index')->with(array('sC'=>'','sU'=>'','sD'=>''));
+      }else{
+          $role_group_id = \Auth::user()->role_group_id_fk;
+          $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+          $sC = @$menu_permit->c==1?'':'display:none;';
+          $sU = @$menu_permit->u==1?'':'display:none;';
+          $sD = @$menu_permit->d==1?'':'display:none;';
+          return view('backend.course_event.index')->with(array('sC'=>$sC,'sU'=>$sU,'sD'=>$sD));
+      }
     }
+
+    // public function index(Request $request)
+    // {
+
+    //   $dsCourse_event  = \App\Models\Backend\Course_event::get();
+    //   return view('backend.course_event.index')->with(['dsCourse_event'=>$dsCourse_event]);
+    //   return view('backend.course_event.index');
+
+    // }
 
  public function create()
     {

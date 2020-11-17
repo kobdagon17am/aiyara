@@ -60,7 +60,7 @@
                       		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
                       	@else
                       		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-						@endif
+						            @endif
                           <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
                       </div>
                     </div>

@@ -18,7 +18,8 @@ class RoleController extends Controller
 
    public function create()
     {
-      return View('backend.role.form');
+      $sMenu_All = \App\Models\MenuModel::query()->where('isActive', 'Y')->get();
+      return View('backend.role.form')->with(array('sMenu_All'=>$sMenu_All));
     }
 
     public function store(Request $request)
@@ -45,18 +46,18 @@ class RoleController extends Controller
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Role::find($id);
+                DB::delete(" DELETE FROM role_permit where role_group_id_fk=$id;");
+                DB::select(" ALTER TABLE role_permit AUTO_INCREMENT=1; ");
           }else{
             $sRow = new \App\Models\Backend\Role;
           }
+
           $sRow->role_name    = request('role_name');
           $sRow->status    = request('status')?request('status'):0;     
           $sRow->created_at = date('Y-m-d H:i:s');
+
           $id_user = request('id_user');
           $nameMenu = request('nameMenu');
-          // dd($id_user);
-          // dd($nameMenu);
-          DB::delete(" DELETE FROM role_permit where role_group_id_fk=$id;");
-          DB::select(" ALTER TABLE role_permit AUTO_INCREMENT=1; ");
 
           if(!empty($nameMenu)){
               foreach ($nameMenu AS $row) {
@@ -71,32 +72,52 @@ class RoleController extends Controller
               }
           }
 
-          $data_c = request('data_c');
-          if(!empty($data_c)){
-              foreach ($data_c AS $row) {
-                   DB::update(" UPDATE role_permit SET c=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
-              }
-          }
+          if(!empty($id_user)){
 
-          $data_u = request('data_u');
-          if(!empty($data_u)){
-              foreach ($data_u AS $row) {
-                   DB::update(" UPDATE role_permit SET u=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+              if(!empty(request('data_c'))){
+                $data_c = request('data_c');
+                if(!empty($data_c)){
+                    foreach ($data_c AS $row) {
+                         DB::update(" UPDATE role_permit SET c=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
               }
-          }
 
-          $data_d = request('data_d');
-          if(!empty($data_d)){
-              foreach ($data_d AS $row) {
-                   DB::update(" UPDATE role_permit SET d=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+              if(!empty(request('data_u'))){
+                $data_u = request('data_u');
+                if(!empty($data_u)){
+                    foreach ($data_u AS $row) {
+                         DB::update(" UPDATE role_permit SET u=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
               }
+
+              if(!empty(request('data_d'))){
+                $data_d = request('data_d');
+                if(!empty($data_d)){
+                    foreach ($data_d AS $row) {
+                         DB::update(" UPDATE role_permit SET d=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+              
+              if(!empty(request('can_answer'))){
+                $can_answer = request('can_answer');
+                if(!empty($can_answer)){
+                    foreach ($can_answer AS $row) {
+                         DB::update(" UPDATE role_permit SET can_answer=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
           }
 
           $sRow->save();
 
           \DB::commit();
 
-         return redirect()->action('backend\RoleController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         // return redirect()->action('backend\RoleController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+           return redirect()->to(url("backend/role/".$sRow->id."/edit"));
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -122,8 +143,8 @@ class RoleController extends Controller
           $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$row->id)->get();
           $array = array();
           foreach ($menu_permit as $key => $value) {
-            $menu_name = DB::table('ck_backend_menu')->where('id',$value->menu_id_fk)->first();
-            array_push($array, $menu_name->name);
+            $menu_name = DB::table('ck_backend_menu')->where('id',$value->menu_id_fk)->get();
+            array_push($array, @$menu_name[0]->name);
           }
           $arr = implode(',', $array);
           if($row->id==1){
@@ -133,12 +154,13 @@ class RoleController extends Controller
           }
       })
       ->addColumn('member_ingroup', function($row) {
-        $sRow = \App\Models\Backend\Permission\Admin::where('role_group_id_fk', $row->id )->get();
+        // $sRow2 = \App\Models\Backend\Permission\Admin::where('role_group_id_fk', $row->id )->get();
+        $sRows = DB::table('ck_users_admin')->where('role_group_id_fk',$row->id)->get();
         $array = array();
-        foreach ($sRow as $key => $value) {
-            array_push($array, $value->name);
+        foreach (@$sRows as $k => $v) {
+            array_push($array, @$v->name);
         }
-        $arr = implode(',', $array);
+        $arr = implode(',', @$array);
         return $arr;
       })
       ->addColumn('updated_at', function($row) {

@@ -17,7 +17,28 @@
     </div>
 </div>
 <!-- end page title -->
+  <?php 
+    $sPermission = \Auth::user()->permission ;
+    $menu_id = @$_REQUEST['menu_id'];
+    $role_group_id = @$_REQUEST['role_group_id'];
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+      $sA = '';
+    }else{
+      // $role_group_id = \Auth::user()->role_group_id_fk;
+      // echo $role_group_id;
+      // echo $menu_id;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      // $sU = @$menu_permit->u==1?'':'display:none;';
+      // $sD = @$menu_permit->d==1?'':'display:none;';
+      $sA = @$menu_permit->can_answer==1?'':'display:none;';
 
+      // echo $sA;
+    }
+   ?>
 <div class="row">
     <div class="col-10">
         <div class="card">
@@ -33,6 +54,55 @@
 
                       <div class="myBorder">
 
+                        <div class="form-group row">
+                            <label for="example-text-input" class="col-md-2 col-form-label"> หมวดหลัก : * </label>
+                            <div class="col-md-10">
+                              <select name="role_group_id_fk" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                  @if(@$sMainGroup)
+                                    @foreach(@$sMainGroup AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->role_group_id_fk)?'selected':'' }} >{{$r->role_name}}</option>
+                                    @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
+
+
+                          <div class="form-group row">
+                            <label for="example-text-input" class="col-md-2 col-form-label"> หมวดย่อย : * </label>
+                            <div class="col-md-10">
+                              <select name="crm_gettopic_id" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                  @if(@$sCrm_topic)
+                                    @foreach(@$sCrm_topic AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->crm_gettopic_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                                    @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
+
+
+                           <div class="form-group row">
+                            <label for="example-text-input" class="col-md-2 col-form-label"> ชื่อลูกค้า : * </label>
+                            <div class="col-md-10">
+                              <select name="customers_id_fk" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                  @if(@$Customer)
+                                    @foreach(@$Customer AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customers_id_fk)?'selected':'' }} >
+                                        {{$r->prefix_name}}{{$r->first_name}} 
+                                        {{$r->last_name}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
+
+
+
                              <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">เลขใบรับเรื่อง :</label>
                                 <div class="col-md-10">
@@ -41,9 +111,9 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">วันที่-เวลา รับเรื่อง :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">วันที่รับเรื่อง :</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="datetime" value="{{ @$sRow->receipt_date }}" name="receipt_date"  >
+                                    <input class="form-control" type="date" value="{{ @$sRow->receipt_date }}" name="receipt_date"  >
                                 </div>
                             </div>
 
@@ -55,14 +125,14 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดติดต่อ :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดที่รับเรื่อง :</label>
                                 <div class="col-md-10">
                                     <textarea class="form-control" rows="5" name="contact_details" >{{@$sRow->contact_details}}</textarea>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง (User Login) :</label>
+                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง :</label>
                                 <div class="col-md-10">
 
                                 	@if( empty($sRow) )
@@ -76,37 +146,29 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ :</label>
+
+                          <div class="form-group row">
+                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ(User Login):</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow->operator }}" name="operator"  >
+
+                                  @if( empty($sRow) )
+                                    <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                                      <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="operator" >
+                                      @else
+                                        <input class="form-control" type="text" value="{{@$operator_name}}" readonly style="background-color: #f2f2f2;" >
+                                      <input class="form-control" type="hidden" value="{{ @$sRow->operator }}" name="operator" >
+                                   @endif
+                                    
                                 </div>
                             </div>
 
 
                   <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่-เวลา อัพเดตล่าสุด :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่อัพเดตล่าสุด :</label>
                     <div class="col-md-3">
-                      <input class="form-control" type="datetime" value="{{ @$sRow->last_update }}" name="last_update" >
+                      <input class="form-control" type="date" value="{{ @$sRow->last_update }}" name="last_update" >
                     </div>
                   </div>
-
-
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
-                      <div class="custom-control custom-switch">
-                        @if( empty($sRow) )
-                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
-                        @else
-                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-                        @endif
-                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
-                      </div>
-                    </div>
-                </div>
-                  
-               
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -121,6 +183,74 @@
                     </div>
                 </div>
 
+
+                  <hr> 
+
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12" style="{{@$sA}}" > 
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}" style="float: right;">
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม การตอบคำถาม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการตอบคำถาม  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-answer" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="myBorder">
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">สถานะการปิดการรับเรื่อง :</label>
+                    <div class="col-md-10 mt-2">
+                      <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_close_job" value="1" >
+                        @else
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_close_job" value="1" {{ ( @$sRow->status_close_job=='1')?'checked':'' }}>
+                        @endif
+                          <label class="custom-control-label" for="customSwitch">ปิดการรับเรื่อง</label>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">สถานะ :</label>
+                    <div class="col-md-10 mt-2">
+                      <div class="custom-control custom-switch">
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
+                        @endif
+                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน/แสดง</label>
+                      </div>
+                    </div>
+                </div>
+                    </div>
+
+                             <div class="form-group mb-0 row">
+                    <div class="col-md-6">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/crm") }}">
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                        </button>
+                    </div>
+                </div>
+
+
+
               </form>
             </div>
         </div>
@@ -128,6 +258,63 @@
 </div>
 <!-- end row -->
 @section('script')
+
+<script type="text/javascript">
+
+            var user_id = "{{\Auth::user()->id}}";
+            var crm_id_fk = "{{@$sRow->id?@$sRow->id:'999999999999999'}}"; //alert(crm_id_fk);
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-answer').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.crm_answer.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['crm_id_fk'] = crm_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'txt_answer', title :'<center>คำตอบ</center>', className: 'text-center'},
+                        {data: 'respondent_name', title :'<center>ผู้ตอบคำถาม</center>', className: 'text-center'},
+                        {data: 'date_answer', title :'<center>วันที่ตอบคำถาม</center>', className: 'text-center'},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+
+                  // alert(aData['respondent']);
+                    // var sU = (aData['respondent']==user_id)?'':'display:none;';
+                    // var sD = (aData['respondent']==user_id)?'':'display:none;';
+                    if((aData['respondent']==user_id)){
+                        var sA = "{{$sA}}";
+                    }else{
+                        var sA = 'display:none;';
+                    }
+
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.crm_answer.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.crm_answer.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sA+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+              
+</script>
 
 @endsection
 

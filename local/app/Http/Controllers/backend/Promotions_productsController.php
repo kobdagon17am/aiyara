@@ -40,7 +40,7 @@ class Promotions_productsController extends Controller
     {
        $sRow = \App\Models\Backend\Promotions_products::find($id);
        $sRowNew = \App\Models\Backend\Promotions::find($sRow->promotion_id_fk);
-       $sProduct = \App\Models\Backend\Products::get();
+       $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
        $sProductUnit = \App\Models\Backend\Product_unit::get();
        return View('backend.promotions_products.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sRowNew'=>$sRowNew ,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit ) );
     }
@@ -96,7 +96,7 @@ class Promotions_productsController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-          $sProduct = \App\Models\Backend\Products_details::where('product_id_fk', $row->product_id_fk)->get();
+          $sProduct = \App\Models\Backend\Products_details::where('id', $row->product_id_fk)->where('lang_id', 1)->get();
           return @$sProduct[0]->product_name;
       })
       ->addColumn('product_unit_desc', function($row) {
