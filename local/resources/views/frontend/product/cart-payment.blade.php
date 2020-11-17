@@ -4,6 +4,7 @@
 @endsection
 @section('conten')
      <!-- Start Contact Info area-->
+     <!-- Start Contact Info area-->
     <div class="contact-info-area mg-t-30">
         <div class="container">
             <div class="row">
