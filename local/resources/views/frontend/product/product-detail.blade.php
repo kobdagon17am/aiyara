@@ -111,7 +111,7 @@
 
               </div>
               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 col-12 text-center">
-               <a href="{{ route('product-list-4') }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
+               <a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
              </div>
 
 
@@ -161,12 +161,12 @@
       url: '{{ route('add_cart') }}',
       type: 'get',
             // dataType: 'json',
-            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'4'},
+            data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'{{ $type }}'},
           })
     .done(function(data) {
      $('#count_cart').html(data);
      var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
-     $('#count_cart_4').html(count_cart);
+     $('#count_cart_1').html(count_cart);
           //console.log(data);
         })
     .fail(function() {

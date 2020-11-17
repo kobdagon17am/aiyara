@@ -18,7 +18,7 @@
                 <div class="row">
 
                     <div class="col-md-8 col-sx-8">
-                        <h4>รายการสั่งซื้อเพื่อเติม AiPocket</h4>
+                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
                         <a href="{{route('product-list-4')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
@@ -50,7 +50,7 @@
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                            {{-- <span>{{ $value['attributes']['title'] }}</span> --}}
+                                           {{--  <span>{{ $value['attributes']['title'] }}</span> --}}
                                         </td>
                                         <td>
                                             <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
@@ -85,15 +85,8 @@
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
                             <td align="right"><strong id="price"> {{ $price_total }} </strong></td>
                         </tr>
-                        <tr>
-                            <td><strong>ค่าจัดส่ง</strong></td>
-                            <td align="right"><strong id="sent"> {{ $sent }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ยอดรวมทั้งสิ้น</strong></td>
-                            <td align="right"><strong id="price_total"> {{ $price_total_sent }}</strong>
-                            </td>
-                        </tr>
+                         
+                       
                         <tr>
                             <td><strong>คะแนนที่ได้รับ</strong></td>
                             <td align="right"><strong class="text-success" id="pv">{{ $pv_total }} PV</strong></td>
@@ -175,12 +168,12 @@
     $.ajax({
         url: '{{ route('edit_item') }}',
         type: 'POST',
-        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':4},
+        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':1},
     })
     .done(function(data) {
         $('#price').html(data['price_total']);
         $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
-        $('#price_total').html(data['price_total_sent']);
+        $('#price_total').html(data['price_total']);
         $('#pv').html(data['pv_total']+' PV');
         console.log(data); 
         console.log("success");

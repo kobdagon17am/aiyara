@@ -85,15 +85,8 @@
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
                             <td align="right"><strong id="price"> {{ $price_total }} </strong></td>
                         </tr>
-                        <tr>
-                            <td><strong>ค่าจัดส่ง</strong></td>
-                            <td align="right"><strong id="sent"> {{ $sent }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ยอดรวมทั้งสิ้น</strong></td>
-                            <td align="right"><strong id="price_total"> {{ $price_total_sent }}</strong>
-                            </td>
-                        </tr>
+                         
+                       
                         <tr>
                             <td><strong>คะแนนที่ได้รับ</strong></td>
                             <td align="right"><strong class="text-success" id="pv">{{ $pv_total }} PV</strong></td>
@@ -180,7 +173,7 @@
     .done(function(data) {
         $('#price').html(data['price_total']);
         $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
-        $('#price_total').html(data['price_total_sent']);
+        $('#price_total').html(data['price_total']);
         $('#pv').html(data['pv_total']+' PV');
         console.log(data); 
         console.log("success");

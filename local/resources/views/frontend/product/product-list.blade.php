@@ -2,6 +2,7 @@
 @section('conten')
 @section('css')
 @endsection
+
 <!-- Breadcomb area Start-->
 <div class="page-header card">
     <div class="card-block">
@@ -15,7 +16,7 @@
         <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
          {{--  <label>หมวดสินค้า </label> --}}
          <select class="form-control" id="category" name="category" onchange="select_category()">
-            @foreach($category as $value)
+            @foreach($data['category'] as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
         </select>
@@ -132,7 +133,7 @@
 </div>
 <div class="row" id="product_list">
 
-    @foreach($product as $value)
+    @foreach($data['product'] as $value)
    
     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
       <input type="hidden" id="item_id" value="{{$value->products_id}}">
@@ -141,9 +142,9 @@
             <div class="prod-img">
                 <div class="option-hover">
 
-                   <a href="{{route('product-detail-5',['id'=>$value->products_id])}}" type="button" 
+                   <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
                     class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                    <a href="{{route('product-detail-5',['id'=>$value->products_id])}}"
+                    <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
                         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                         <i class="icofont icofont-eye-alt f-20"></i>
                     </a>
@@ -157,7 +158,7 @@
     <!-- <div class="p-new"><a href=""> New </a></div> -->
 </div>
 <div class="prod-info">
-    <a href="{{route('product-detail-5',['id'=>$value->products_id])}}" class="txt-muted">
+    <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" class="txt-muted">
         <h5 style="font-size: 15px">{{$value->product_name}}</h5>
         <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->title!!}</p> 
        
@@ -190,7 +191,7 @@
         $.ajax({
             url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category,'type':5},
+            data: {'category_id':category,'type':{{$type}}},
         })
         .done(function(data){
             $('#product_list').html(data);

@@ -18,10 +18,25 @@
                 <div class="row">
 
                     <div class="col-md-8 col-sx-8">
+                        @if($type == 1)
                         <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
+                        @elseif($type == 2)
+                        <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h4>
+                        @elseif($type == 3)
+                        <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h4>
+                        @elseif($type == 4)
+                        <h4>รายการสั่งซื้อเพื่อเติม AiPocket</h4>
+                        @elseif($type == 5)
+                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
+                        @elseif($type == 6)
+                        @else
+                        <h4 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h4>
+                        @endif
+
+                        
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
-                        <a href="{{route('product-list-2')}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
+                        <a href="{{route('product-list',['type'=>$type])}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
                     </div>
                 </div>
 
@@ -43,14 +58,14 @@
                                     </tr>
                                 </thead> 
                                 <tbody>
-                                    @foreach($data as $value)
+                                    @foreach($bill['data'] as $value)
 
                                     <tr id="items">
-                                        <td class="text-center"><a href="{{ route('product-detail-2',['id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
+                                        <td class="text-center"><a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                           {{--  <span>{{ $value['attributes']['title'] }}</span> --}}
+                                            {{--  <span>{{ $value['attributes']['title'] }}</span> --}}
                                         </td>
                                         <td>
                                             <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
@@ -82,20 +97,20 @@
                 <div class="col-md-12">
                     <table class="table table-responsive" >
                         <tr>
-                            <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
-                            <td align="right"><strong id="price"> {{ $price_total }} </strong></td>
+                            <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $bill['quantity'] }}) ชิ้น</strong></td>
+                            <td align="right"><strong id="price"> {{ $bill['price_total'] }} </strong></td>
                         </tr>
-                         
-                       
+
+
                         <tr>
                             <td><strong>คะแนนที่ได้รับ</strong></td>
-                            <td align="right"><strong class="text-success" id="pv">{{ $pv_total }} PV</strong></td>
+                            <td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>
                         </tr>
 
 
                     </table>
                     <div class="row" align="center">
-                        @if($quantity > 0)
+                        @if($bill['quantity'] > 0)
                         <a href="{{ route('cart_payment') }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                         @endif
                         
@@ -110,13 +125,13 @@
             </div>
             <!-- end of card-footer -->
         </div>
-        </div>
     </div>
-  
+</div>
+
 <form action="" method="POST" id="cart_delete">
     @csrf
     <input type="hidden" id="data_id" name="data_id">
-    <input type="hidden" id="type" name="type" value="2">
+    <input type="hidden" id="type" name="type" value="{{ $type }}">
 </form>
 
 <!-- End Contact Info area-->
@@ -168,7 +183,7 @@
     $.ajax({
         url: '{{ route('edit_item') }}',
         type: 'POST',
-        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':1},
+        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':'$type'},
     })
     .done(function(data) {
         $('#price').html(data['price_total']);
