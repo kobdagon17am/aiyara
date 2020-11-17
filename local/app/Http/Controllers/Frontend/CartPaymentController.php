@@ -11,8 +11,7 @@ use App\Models\Frontend\Location;
 
 class CartPaymentController extends Controller
 {
-	public function index($type=''){
-		$type = 1;
+	public function index($type){
 		$location = Location::location(1,1);
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
@@ -38,7 +37,8 @@ class CartPaymentController extends Controller
 		->where('location_id','=','1')
 		->first();
 
-		$vat = $vat->vat;
+
+		$vat = $vat->txt_value;
 		$shipping = $shipping->price_shipping;
 		
 		$price = Cart::session($type)->getTotal();

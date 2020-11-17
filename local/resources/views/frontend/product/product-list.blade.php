@@ -6,7 +6,21 @@
 <!-- Breadcomb area Start-->
 <div class="page-header card">
     <div class="card-block">
-        <div class="form-group row">
+      @if($type == 1)
+      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+      @elseif($type == 2)
+      <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
+      @elseif($type == 3)
+      <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
+      @elseif($type == 4)
+      <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
+      @elseif($type == 5)
+      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+      @elseif($type == 6)
+      @else
+      <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
+      @endif 
+      <div class="form-group row">
 
         {{-- <form action="{{route('product-list-1_c_id')}}" method="post">
             @csrf
@@ -14,8 +28,8 @@
         </form> --}}
 
         <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
-         {{--  <label>หมวดสินค้า </label> --}}
-         <select class="form-control" id="category" name="category" onchange="select_category()">
+           {{--  <label>หมวดสินค้า </label> --}}
+           <select class="form-control" id="category" name="category" onchange="select_category()">
             @foreach($data['category'] as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
@@ -48,10 +62,10 @@
                     <div class="modal-body">
                         <div class="card">
                             <div class="card-header">
-                               {{--  <h5>Zero Configuration</h5> --}}
-                               <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
-                           </div>
-                           <div class="card-block">
+                             {{--  <h5>Zero Configuration</h5> --}}
+                             <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
+                         </div>
+                         <div class="card-block">
                             <div class="dt-responsive table-responsive">
                                 <table id="simpletable" class="table table-striped table-bordered nowrap">
                                     <thead>
@@ -134,7 +148,7 @@
 <div class="row" id="product_list">
 
     @foreach($data['product'] as $value)
-   
+
     <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
       <input type="hidden" id="item_id" value="{{$value->products_id}}">
       <div class="card prod-view">
@@ -142,7 +156,7 @@
             <div class="prod-img">
                 <div class="option-hover">
 
-                   <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+                 <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
                     class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
                     <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
                         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
@@ -161,7 +175,7 @@
     <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" class="txt-muted">
         <h5 style="font-size: 15px">{{$value->product_name}}</h5>
         <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->title!!}</p> 
-       
+
     </a> 
         <!--<div class="m-b-10">
         <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
@@ -191,7 +205,7 @@
         $.ajax({
             url: '{{route('product_list_select')}}',
             type: 'GET',
-            data: {'category_id':category,'type':{{$type}}},
+            data: {'category_id':category,'type':'{{$type}}'},
         })
         .done(function(data){
             $('#product_list').html(data);

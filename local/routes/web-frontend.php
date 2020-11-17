@@ -108,7 +108,7 @@ Route::get('add_cart','Frontend\ProductController@add_cart')->name('add_cart');
 Route::post('cart_delete','Frontend\CartController@cart_delete')->name('cart_delete');
 Route::post('edit_item','Frontend\CartController@edit_item')->name('edit_item');
 
-Route::get('cart_payment','Frontend\CartPaymentController@index')->name('cart_payment');
+Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('cart_payment');
 
  
 

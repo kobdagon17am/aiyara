@@ -16,8 +16,21 @@
  			
  			<!-- Choose Your Payment Method start -->
  			<div class="card card-border-success">
- 				<div class="card-header">
- 					{{-- <h5>กรุณาตรวจสอบ</h5> --}}
+ 				<div class="card-header p-3">
+ 					  @if($type == 1)
+                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+                        @elseif($type == 2)
+                        <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
+                        @elseif($type == 3)
+                        <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
+                        @elseif($type == 4)
+                        <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
+                        @elseif($type == 5)
+                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+                        @elseif($type == 6)
+                        @else
+                        <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
+                        @endif  
  				{{-- <div class="card-header-right">
  				 
  				</div> --}}
@@ -254,7 +267,7 @@
 
  				</table>
  				<div class="row" align="center">
- 					<button class="btn btn-warning btn-block" type="submit">เลือกสินค้าเพิ่มเติม</button>
+ 					<a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning btn-block" >เลือกสินค้าเพิ่มเติม</a>
  				</div>
 
  			</div>

@@ -40,9 +40,9 @@ class ProductController extends Controller
                 <div class="prod-item text-center">
                 <div class="prod-img">
                 <div class="option-hover">
-                <a href="'.route("product-detail-".$type,["id"=>$value->products_id]).'" type="button" 
+                <a href="'.route("product-detail",['type'=>$type,'id'=>$value->products_id]).'" type="button" 
                 class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                <a href="'.route("product-detail-".$type,["id"=>$value->products_id]).'"
+                <a href="'.route("product-detail",['type'=>$type,'id'=>$value->products_id]).'"
                 class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                 <i class="icofont icofont-eye-alt f-20"></i>
                 </a>
@@ -56,7 +56,7 @@ class ProductController extends Controller
                 <!-- <div class="p-new"><a href=""> New </a></div> -->
                 </div>
                 <div class="prod-info">
-                <a href="'.route('product-detail-'.$type,['id'=>$value->products_id]).'" class="txt-muted">
+                <a href="'.route('product-detail',['type'=>$type,'id'=>$value->products_id]).'" class="txt-muted">
                 <h5 style="font-size: 15px">'.$value->product_name.'</h5>
                 <p class="text-left p-2 m-b-0" style="font-size: 12px">'.$value->title.'</p>
                 </a>

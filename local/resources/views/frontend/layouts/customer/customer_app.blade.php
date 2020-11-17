@@ -93,37 +93,37 @@
 						<ul class="nav-right">
 
 							<li class="header">
-								@if(request()->is('product-list/1') || request()->is('cart/1') || request()->is('product-detail/1/*'))
+								@if(request()->is('product-list/1') || request()->is('cart/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1'))
 								<a href="{{route('cart',['type'=>1])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
 								</a>
-								@elseif(request()->is('product-list/2') || request()->is('cart/2') || request()->is('product-detail/2/*'))
+								@elseif(request()->is('product-list/2') || request()->is('cart/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2'))
 								<a href="{{route('cart',['type'=>2])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(2)->getTotalQuantity() }}</span>
 								</a>
-								@elseif(request()->is('product-list/3') || request()->is('cart/3') || request()->is('product-detail/3/*'))
+								@elseif(request()->is('product-list/3') || request()->is('cart/3') || request()->is('product-detail/3/*') || request()->is('cart_payment/3'))
 								<a href="{{route('cart',['type'=>3])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(3)->getTotalQuantity() }}</span>
 								</a>
-								@elseif(request()->is('product-list/4') || request()->is('cart/4') || request()->is('product-detail/4/*') )
+								@elseif(request()->is('product-list/4') || request()->is('cart/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') )
 								<a href="{{route('cart',['type'=>4])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(4)->getTotalQuantity() }}</span>
 								</a>
-								@elseif(request()->is('product-list/5') || request()->is('cart/5') || request()->is('product-detail/5/*'))
+								@elseif(request()->is('product-list/5') || request()->is('cart/5') || request()->is('product-detail/5/*') || request()->is('cart_payment/5'))
 								<a href="{{route('cart',['type'=>5])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(5)->getTotalQuantity() }}</span>
 								</a>
-								@elseif(request()->is('product-list/6') || request()->is('cart/6') || request()->is('product-detail/6/*'))
+								@elseif(request()->is('product-list/6') || request()->is('cart/6') || request()->is('product-detail/6/*') || request()->is('cart_payment/6'))
 								<a href="{{route('cart',['type'=>6])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
@@ -296,7 +296,7 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('product-history')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('product-history') || request()->is('cart_payment/*')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-shopping-cart"></i><b>สั่งซื้อสินค้า</b></span>
 				<span class="pcoded-mtext">สั่งซื้อสินค้า</span>
@@ -312,7 +312,7 @@
 				</li> --}}
 
 
-				<li class="{{ (request()->is('cart/1') || request()->is('product-list/1') || request()->is('product-detail/1/*') )  ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/1') || request()->is('product-list/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1') )  ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>1])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">ทำคุณสมบัติ</span>
@@ -323,7 +323,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cart/2') || request()->is('product-list/2') || request()->is('product-detail/2/*') ) ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/2') || request()->is('product-list/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>2])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">รักษาคุณสมบัติ</span>
@@ -334,7 +334,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cart/3') || request()->is('product-list/3') || request()->is('product-detail/3/*') ) ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/3') || request()->is('product-list/3') || request()->is('product-detail/3/*') || request()->is('cart_payment/3') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>3])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext" style="font-size: 13px">รักษาคุณสมบัติท่องเที่ยว</span>
@@ -345,7 +345,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cart/4') || request()->is('product-list/4') || request()->is('product-detail/4/*') ) ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/4') || request()->is('product-list/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>4])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">เติม AiPocket</span>
@@ -356,7 +356,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cart/5') || request()->is('product-list/5') || request()->is('product-detail/5/*') ) ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/5') || request()->is('product-list/5') || request()->is('product-detail/5/*') || request()->is('cart_payment/5') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>5])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">Gift Voucher</span>
@@ -367,7 +367,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cart/6') || request()->is('product-list/6') || request()->is('product-detail/6/*') ) ? 'active' : '' }}">
+				<li class="{{ (request()->is('cart/6') || request()->is('product-list/6') || request()->is('product-detail/6/*') || request()->is('cart_payment/6') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>6])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">คอร์สอบรม</span>

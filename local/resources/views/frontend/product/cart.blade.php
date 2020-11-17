@@ -111,7 +111,7 @@
                     </table>
                     <div class="row" align="center">
                         @if($bill['quantity'] > 0)
-                        <a href="{{ route('cart_payment') }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                        <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                         @endif
                         
                     </div>
