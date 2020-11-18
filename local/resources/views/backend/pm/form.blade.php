@@ -110,9 +110,27 @@
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ :</label>
                                 <div class="col-md-10">
-                                    <textarea class="form-control" rows="5" name="txt_answers" required >{{@$sRow->txt_answers}}</textarea>
+                                    <textarea class="form-control" rows="5" name="txt_answers" required style="color: blue;font-size: 16px;">{{@$sRow->txt_answers}}</textarea>
                                 </div>
                             </div>
+
+                             <div class="form-group row">
+                                <label for="example-text-input" class="col-md-2 col-form-label"> Class : * </label>
+                                <div class="col-md-10">
+                                  <select name="level_class" class="form-control select2-templating " required >
+                                    <option value="">Select</option>
+                                          <option value="1" {{ (@$sRow->level_class==1)?'selected':'' }} >1</option>
+                                          <option value="2" {{ (@$sRow->level_class==2)?'selected':'' }} >2</option>
+                                          <option value="3" {{ (@$sRow->level_class==3)?'selected':'' }} >3</option>
+                                          <option value="4" {{ (@$sRow->level_class==4)?'selected':'' }} >4</option>
+                                          <option value="5" {{ (@$sRow->level_class==5)?'selected':'' }} >5</option>
+                                          <option value="6" {{ (@$sRow->level_class==6)?'selected':'' }} >6</option>
+                                          <option value="7" {{ (@$sRow->level_class==7)?'selected':'' }} >7</option>
+                                          <option value="8" {{ (@$sRow->level_class==8)?'selected':'' }} >8</option>
+                                          <option value="9" {{ (@$sRow->level_class==9)?'selected':'' }} >9</option>
+                                  </select>
+                                </div>
+                              </div>
 
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง (User Login) :</label>

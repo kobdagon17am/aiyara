@@ -77,13 +77,14 @@ class Crm_answerController extends Controller
           $sRow->txt_answer    = request('txt_answer');
           $sRow->date_answer    = request('date_answer');
           $sRow->respondent    = request('respondent');
+          $sRow->level_class    = request('level_class');
 
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
           \DB::commit();
 
-          return redirect()->to(url("backend/crm/".request('crm_id_fk')."/edit"));
+          return redirect()->to(url("backend/crm/".request('crm_id_fk')."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
 
       } catch (\Exception $e) {
         echo $e->getMessage();

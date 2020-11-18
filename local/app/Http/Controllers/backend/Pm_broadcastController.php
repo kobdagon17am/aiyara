@@ -89,7 +89,7 @@ class Pm_broadcastController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Pm_broadcast::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Pm_broadcast::search()->orderBy('id', 'desc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       // ->addColumn('recipient_name', function($row) {

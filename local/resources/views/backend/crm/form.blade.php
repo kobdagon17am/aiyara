@@ -3,7 +3,9 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style type="text/css">
+  /*table.dataTable thead {background-color:blue !important;}*/
+</style>
 @endsection
 
 @section('content')
@@ -190,7 +192,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12" style="{{@$sA}}" > 
-                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}" style="float: right;">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}?role_group_id={{@$_REQUEST['role_group_id']}}&menu_id={{@$_REQUEST['menu_id']}}" style="float: right;">
                               <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม การตอบคำถาม</span>
                             </a>
                             <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการตอบคำถาม  </span>
@@ -261,6 +263,9 @@
 
 <script type="text/javascript">
 
+            var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; 
+            var menu_id = sessionStorage.getItem("menu_id");
+
             var user_id = "{{\Auth::user()->id}}";
             var crm_id_fk = "{{@$sRow->id?@$sRow->id:'999999999999999'}}"; //alert(crm_id_fk);
             var oTable;
@@ -286,8 +291,16 @@
                               method: 'POST',
                             },
                     columns: [
-                        {data: 'id', title :'ID', className: 'text-center w50'},
-                        {data: 'txt_answer', title :'<center>คำตอบ</center>', className: 'text-center'},
+                        // {data: 'id', title :'ID', className: 'text-center w50'},
+                        // {data: 'txt_answer', title :'<center>คำตอบ</center>', className: 'text-center font-size-16 '},
+                        {data: 'txt_answer',   title :'<center>คำตอบ</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
+                           return '<span class="badge badge-pill badge-primary font-size-14">'+d+'</span>';
+                        }},
+                        
+                        {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
+                           return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+                        }},
+
                         {data: 'respondent_name', title :'<center>ผู้ตอบคำถาม</center>', className: 'text-center'},
                         {data: 'date_answer', title :'<center>วันที่ตอบคำถาม</center>', className: 'text-center'},
                         {data: 'id', title :'Tools', className: 'text-center w60'}, 
@@ -304,7 +317,7 @@
                     }
 
                       $('td:last-child', nRow).html(''
-                        + '<a href="{{ route('backend.crm_answer.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="{{ route('backend.crm_answer.index') }}/'+aData['id']+'/edit'+ '?role_group_id=' + role_group_id + '&menu_id=' + menu_id +'" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.crm_answer.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sA+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
@@ -315,7 +328,17 @@
             });
               
 </script>
-
+<script type="text/javascript">
+  var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; 
+  sessionStorage.setItem("role_group_id", role_group_id);
+  var role_group_id = sessionStorage.getItem("role_group_id");
+  var menu_id = sessionStorage.getItem("menu_id");
+    window.onload = function() {
+    if(!window.location.hash) {
+       window.location = window.location + '?role_group_id=' + role_group_id + '#menu_id=' + menu_id ;
+    }
+  }
+</script>
 @endsection
 
 @endsection

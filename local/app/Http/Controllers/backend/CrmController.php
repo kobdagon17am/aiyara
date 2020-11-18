@@ -106,6 +106,10 @@ class CrmController extends Controller
       $sTable = \App\Models\Backend\Crm::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('role_name', function($row) {
+        $sRole_group = \App\Models\Backend\Role::where('id', $row->role_group_id_fk)->get();
+        return $sRole_group[0]->role_name;
+      })
       ->addColumn('recipient_name', function($row) {
         $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->subject_recipient)->get();
         return $sUser[0]->name;

@@ -67,6 +67,7 @@ class PmController extends Controller
           $sRow->topics_question    = request('topics_question');
           $sRow->details_question    = request('details_question');
           $sRow->txt_answers    = request('txt_answers');
+          $sRow->level_class    = request('level_class');
           $sRow->subject_recipient    = request('subject_recipient');
           $sRow->operator    = request('operator');
           $sRow->last_update    = request('last_update');
@@ -103,6 +104,10 @@ class PmController extends Controller
       $sTable = \App\Models\Backend\Pm::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('role_name', function($row) {
+        $sRole_group = \App\Models\Backend\Role::where('id', $row->role_group_id_fk)->get();
+        return $sRole_group[0]->role_name;
+      })
       ->addColumn('recipient_name', function($row) {
         $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->subject_recipient)->get();
         return $sUser[0]->name;

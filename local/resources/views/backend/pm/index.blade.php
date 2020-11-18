@@ -89,11 +89,13 @@ $(function() {
           url: '{{ route('backend.pm.datatable') }}',
           data: function ( d ) {
             d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
+            // $('.myWhere').each(function() {
+            //   if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+            //     d.Where[$(this).attr('name')] = $.trim($(this).val());
+            //   }
+            // });
+            d.Where['role_group_id_fk'] = role_group_id ;
+            
             d.Like={};
             $('.myLike').each(function() {
               if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
@@ -113,9 +115,17 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'role_name', title :'<center>หมวด/แผนก </center>', className: 'text-left'},
             {data: 'receipt_date', title :'<center>วันที่รับเรื่อง </center>', className: 'text-left'},
             {data: 'topics_question', title :'<center>หัวข้อที่ลูกค้าสอบถามเข้ามา </center>', className: 'text-left'},
-            {data: 'details_question', title :'<center>รายละเอียดคำถาม </center>', className: 'text-left'},
+            // {data: 'details_question', title :'<center>รายละเอียดคำถาม </center>', className: 'text-left'},
+            {data: 'txt_answers',   title :'<center>คำตอบ</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
+                           return '<span class="badge badge-pill badge-primary font-size-14">'+d+'</span>';
+                        }},
+            {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
+                           return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+            }},
+
             {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-left'},
             {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-left'},
             {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-left'},

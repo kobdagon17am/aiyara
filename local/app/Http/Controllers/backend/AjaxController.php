@@ -17,5 +17,10 @@ use Storage;
 class AjaxController extends Controller
 {
 
+    public function ajaxClearDataPm_broadcast()
+    {
+        DB::delete(" TRUNCATE `pm_broadcast` ");
+    }
+
 
 }

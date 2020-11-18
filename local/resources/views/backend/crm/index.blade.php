@@ -69,7 +69,7 @@
 @section('script')
 
 <script>
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(role_group_id);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
@@ -89,11 +89,12 @@ $(function() {
           url: '{{ route('backend.crm.datatable') }}',
           data: function ( d ) {
             d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
+            // $('.myWhere').each(function() {
+              // if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //   d.Where[$(this).attr('name')] = $.trim($(this).val());
+              // }
+              d.Where['role_group_id_fk'] = role_group_id ;
+            // });
             d.Like={};
             $('.myLike').each(function() {
               if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
@@ -112,6 +113,7 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'role_name', title :'<center>หมวด/แผนก </center>', className: 'text-left'},
             {data: 'subject_receipt_number', title :'<center>เลขใบรับเรื่อง </center>', className: 'text-left'},
             {data: 'receipt_date', title :'<center>วันที่-เวลา รับเรื่อง </center>', className: 'text-left'},
             {data: 'topics_reported', title :'<center>หัวข้อที่ลูกค้าแจ้ง </center>', className: 'text-left'},
@@ -143,6 +145,11 @@ $(function() {
 </script>
 
 <script type="text/javascript">
+
+  var role_group_id = "{{\Auth::user()->role_group_id_fk}}";
+
+  sessionStorage.setItem("role_group_id", role_group_id);
+
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
     if(!window.location.hash) {

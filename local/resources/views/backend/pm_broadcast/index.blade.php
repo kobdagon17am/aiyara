@@ -35,22 +35,24 @@
    ?>
 
 
-  <div class="myBorder">
+  <div class="myBorder" >
 
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                    
-                        <form class="form-horizontal" method="POST" action="#" enctype="multipart/form-data">
+
+                   
+
+                        <form class="form-horizontal" method="POST" action="backend/uploadFile" enctype="multipart/form-data">
                             {{ csrf_field() }}
 
                             <div class="form-group{{ @$errors->has('csv_file') ? ' has-error' : '' }}">
-                                <label for="csv_file" class="col-md-4 control-label">CSV file to import</label>
+                                <label for="csv_file" class="col-md-4 control-label"><b>CSV file to import</b></label>
 
                                 <div class="col-md-6">
-                                    <input id="csv_file" type="file" accept=".csv" class="form-control" name="csv_file" required>
+                                    <input type="file" accept=".csv" class="form-control" name="file" required>
 
                                     @if (@$errors->has('csv_file'))
                                         <span class="help-block">
@@ -63,20 +65,26 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <div class="checkbox">
-                                        <label>
+                                     <!--    <label>
                                             <input type="checkbox" name="header" checked> File contains header row?
-                                        </label>
+                                        </label> -->
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" class="btn btn-primary">
-                                        Import CSV
-                                    </button>
+                                    <input type='submit' name='submit' class="btn btn-primary" value='Import CSV'>
+                                    <input type='button' class="btn btn-danger btnClearData " value='(Test) Clear data' style="float: right;">
                                 </div>
                             </div>
+
+                             <!-- Message -->
+                                 @if(Session::has('message'))
+                                    <p style="color:green;font-weight:bold;margin-left: 2%;font-size: 16px;" >{{ Session::get('message') }}</p>
+                                 @endif
+
+
                         </form>
                     </div>
                 </div>
@@ -156,16 +164,30 @@ $(function() {
       oTable.draw();
     });
 });
+
+$(document).ready(function() {
+    $(".btnClearData").click(function(event) {
+        /* Act on the event */
+        $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxClearDataPm_broadcast') }} ", 
+               data:{ _token: '{{csrf_token()}}' },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+    });
+});
+
+
 </script>
 
-<script type="text/javascript">
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-</script>
 
 @endsection
 

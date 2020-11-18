@@ -49,7 +49,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ : * </label>
                     <div class="col-md-10">
-                        <textarea class="form-control" rows="5" name="txt_answer" required >{{@$sRow->txt_answer}}</textarea>
+                        <textarea class="form-control" rows="5" name="txt_answer" required style="color: blue;font-size: 16px;">{{@$sRow->txt_answer}}</textarea>
                     </div>
                 </div>
 
@@ -59,6 +59,26 @@
                         <input class="form-control NumberOnly " type="date" value="{{ @$sRow->date_answer }}" name="date_answer" required>
                     </div>
                 </div>
+
+
+                 <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label"> Class : * </label>
+                  <div class="col-md-10">
+                    <select name="level_class" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                            <option value="1" {{ (@$sRow->level_class==1)?'selected':'' }} >1</option>
+                            <option value="2" {{ (@$sRow->level_class==2)?'selected':'' }} >2</option>
+                            <option value="3" {{ (@$sRow->level_class==3)?'selected':'' }} >3</option>
+                            <option value="4" {{ (@$sRow->level_class==4)?'selected':'' }} >4</option>
+                            <option value="5" {{ (@$sRow->level_class==5)?'selected':'' }} >5</option>
+                            <option value="6" {{ (@$sRow->level_class==6)?'selected':'' }} >6</option>
+                            <option value="7" {{ (@$sRow->level_class==7)?'selected':'' }} >7</option>
+                            <option value="8" {{ (@$sRow->level_class==8)?'selected':'' }} >8</option>
+                            <option value="9" {{ (@$sRow->level_class==9)?'selected':'' }} >9</option>
+                    </select>
+                  </div>
+                </div>
+
 
                  <div class="form-group row">
                       <label for="example-text-input" class="col-md-2 col-form-label">ผู้ตอบ (User Login) :</label>
@@ -91,11 +111,13 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ route('backend.crm.index') }}/{{@$sRowNew->id}}/edit" }}">
+                        <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ route('backend.crm.index') }}/{{@$sRowNew->id}}/edit?role_group_id={{@$_REQUEST['role_group_id']}}&menu_id={{@$_REQUEST['menu_id']}}" }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
+                      <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
+                      <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>
@@ -110,5 +132,6 @@
     </div> <!-- end col -->
 </div>
 <!-- end row -->
+
 @endsection
 

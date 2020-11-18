@@ -8,6 +8,23 @@
 
 @section('content')
 
+  <?php 
+      $sPermission = \Auth::user()->permission ;
+      // $menu_id = @$_REQUEST['menu_id'];
+      if($sPermission==1){
+        $sC = '';
+        $sU = '';
+        $sD = '';
+      }else{
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        // echo $role_group_id;
+        // echo $menu_id;     
+        // $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+        // $sC = @$menu_permit->c==1?'':'display:none;';
+        // $sU = @$menu_permit->u==1?'':'display:none;';
+        // $sD = @$menu_permit->d==1?'':'display:none;';
+      }
+   ?>
                        <!-- start page title -->
                         <div class="row">
                             <div class="col-12">
@@ -222,8 +239,68 @@
                             </div>
                         </div>
                         <!-- end row -->
+<div class="myBorder">   
 
-            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">CRM Transaction</h4>
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap">
+                                    <thead class="thead-light">
+                                        <div class="col-12 text-right" >
+                                            <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.crm.index') }}">
+                                              View Details
+                                            </a>
+                                          </div>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <table id="data-table-crm" class="table table-bordered dt-responsive" style="width: 100%;">
+                                        </table>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table-responsive -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>          
+
+    <div class="myBorder">   
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">PM Transaction</h4>
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap">
+                                    <thead class="thead-light">
+                                         <div class="col-12 text-right" >
+                                            <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.pm.index') }}">
+                                              View Details
+                                            </a>
+                                          </div>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <table id="data-table-pm" class="table table-bordered dt-responsive" style="width: 100%;">
+                                        </table>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table-responsive -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>          
+<div class="myBorder"> 
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -428,7 +505,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- end row -->
+                      <!-- end row -->
+</div>                        
 
                         <!-- Modal -->
                 <div class="modal fade exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -517,8 +595,150 @@
                     </div>
                 </div>
                 <!-- end modal -->
+
 @endsection
 
 @section('script')
 
+<script>
+var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(role_group_id);
+var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+var oTable;
+$(function() {
+    oTable = $('#data-table-crm').DataTable({
+    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        scroller: true,
+        scrollCollapse: true,
+        scrollX: true,
+        ordering: false,
+        scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 25,
+        ajax: {
+          url: '{{ route('backend.crm.datatable') }}',
+          data: function ( d ) {
+            d.Where={};
+            // $('.myWhere').each(function() {
+              // if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //   d.Where[$(this).attr('name')] = $.trim($(this).val());
+              // }
+              d.Where['role_group_id_fk'] = role_group_id ;
+            // });
+            d.Like={};
+            $('.myLike').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Like[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Custom={};
+            $('.myCustom').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Custom[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            oData = d;
+          },
+          method: 'POST'
+        },
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'role_name', title :'<center>แผนก </center>', className: 'text-center'},
+            // {data: 'subject_receipt_number', title :'<center>เลขใบรับเรื่อง </center>', className: 'text-left'},
+            {data: 'receipt_date', title :'<center>วันที่-เวลา รับเรื่อง </center>', className: 'text-center'},
+            {data: 'topics_reported', title :'<center>หัวข้อที่ลูกค้าแจ้ง </center>', className: 'text-center'},
+            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-center'},
+            {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
+            {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-center'},
+            {data: 'status_close_job',   title :'<center>Status</center>', className: 'text-center w150 ',render: function(d) {
+               return d==1?'<span class="badge badge-pill badge-soft-success font-size-16">ปิดจ๊อบ</span>':'<span class="badge badge-pill badge-soft-danger font-size-16">Pending</span>';
+            }},
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
+ 
+        }
+    });
+    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+      oTable.draw();
+    });
+});
+</script>
+
+
+
+<script>
+var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+var oTable;
+$(function() {
+    oTable = $('#data-table-pm').DataTable({
+    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        scroller: true,
+        scrollCollapse: true,
+        scrollX: true,
+        ordering: false,
+        scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 25,
+        ajax: {
+          url: '{{ route('backend.pm.datatable') }}',
+          data: function ( d ) {
+            d.Where={};
+            // $('.myWhere').each(function() {
+            //   if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+            //     d.Where[$(this).attr('name')] = $.trim($(this).val());
+            //   }
+            // });
+            d.Where['role_group_id_fk'] = role_group_id ;
+            
+            d.Like={};
+            $('.myLike').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Like[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Custom={};
+            $('.myCustom').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Custom[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            oData = d;
+          },
+          method: 'POST'
+        },
+
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'role_name', title :'<center>แผนก </center>', className: 'text-left'},
+            {data: 'receipt_date', title :'<center>วันที่รับเรื่อง </center>', className: 'text-left'},
+            {data: 'topics_question', title :'<center>หัวข้อที่ลูกค้าสอบถามเข้ามา </center>', className: 'text-left'},
+            // {data: 'details_question', title :'<center>รายละเอียดคำถาม </center>', className: 'text-left'},
+            {data: 'txt_answers',   title :'<center>คำตอบ</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
+                           return '<span class="badge badge-pill badge-primary font-size-14">'+d+'</span>';
+                        }},
+            {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
+                           return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+            }},
+
+            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-left'},
+            {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-left'},
+            {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-left'},
+            {data: 'status_close_job',   title :'<center>Status</center>', className: 'text-center w150 ',render: function(d) {
+               return d==1?'<span class="badge badge-pill badge-soft-success font-size-16">ปิดจ๊อบ</span>':'<span class="badge badge-pill badge-soft-danger font-size-16">Pending</span>';
+            }},
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
+
+        }
+    });
+    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+      oTable.draw();
+    });
+});
+</script>
+
+
 @endsection
+
