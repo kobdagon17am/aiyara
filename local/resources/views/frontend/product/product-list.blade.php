@@ -7,7 +7,7 @@
 <div class="page-header card">
     <div class="card-block">
       @if($type == 1)
-      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
       @elseif($type == 2)
       <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
       @elseif($type == 3)
@@ -15,8 +15,9 @@
       @elseif($type == 4)
       <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
       @elseif($type == 5)
-      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+      <h5>Gift Voucher</h5>
       @elseif($type == 6)
+      <h5>คอร์สอบรม</h5>
       @else
       <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
       @endif 
@@ -28,8 +29,8 @@
         </form> --}}
 
         <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
-           {{--  <label>หมวดสินค้า </label> --}}
-           <select class="form-control" id="category" name="category" onchange="select_category()">
+         {{--  <label>หมวดสินค้า </label> --}}
+         <select class="form-control" id="category" name="category" onchange="select_category()">
             @foreach($data['category'] as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
@@ -62,10 +63,10 @@
                     <div class="modal-body">
                         <div class="card">
                             <div class="card-header">
-                             {{--  <h5>Zero Configuration</h5> --}}
-                             <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
-                         </div>
-                         <div class="card-block">
+                               {{--  <h5>Zero Configuration</h5> --}}
+                               <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
+                           </div>
+                           <div class="card-block">
                             <div class="dt-responsive table-responsive">
                                 <table id="simpletable" class="table table-striped table-bordered nowrap">
                                     <thead>
@@ -156,7 +157,7 @@
             <div class="prod-img">
                 <div class="option-hover">
 
-                 <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+                   <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
                     class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
                     <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
                         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">

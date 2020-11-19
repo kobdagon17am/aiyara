@@ -407,7 +407,7 @@
 		<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
 			<a href="{{route('walletindex')}}">
 				<span class="pcoded-micon"><i class="fa fa-money"></i></i><b>Ai-Cash</b></span>
-				<span class="pcoded-mtext">Ai-Cast</span>
+				<span class="pcoded-mtext">Ai-Cash</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>

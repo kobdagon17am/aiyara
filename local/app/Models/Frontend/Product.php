@@ -56,6 +56,7 @@ class Product extends Model
         ->orderby('order')
         ->get();
 
+//DB::enableQueryLog();
         $product = DB::table('products')
         ->select(
             'products.id as products_id',
@@ -69,14 +70,17 @@ class Product extends Model
         ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
         ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
         ->where('products.orders_type_id','LIKE','%'.$type.'%')
-        ->where('products.category_id', '=',$c_id)
+        ->whereRaw(('case WHEN '.$c_id.' != 1 THEN products.category_id = '.$c_id.' else products.category_id != '.$c_id.' END'))
+        //->where('products.category_id', '=',$c_id)
         ->where('products_images.image_default', '=', 1)
         ->where('products_details.lang_id', '=', 1)
         ->where('products_cost.business_location_id','=', 1)
         ->orderby('products.id')
         ->get();
         //->Paginate(4);
-        
+        //dd($product);
+        //$query = DB::getQueryLog();
+        //dd($query);
 
         $data = array(
             'category' => $categories,

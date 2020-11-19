@@ -18,7 +18,7 @@
  			<div class="card card-border-success">
  				<div class="card-header p-3">
  					  @if($type == 1)
-                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
                         @elseif($type == 2)
                         <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
                         @elseif($type == 3)
@@ -26,8 +26,9 @@
                         @elseif($type == 4)
                         <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
                         @elseif($type == 5)
-                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h5>
+                        <h5>Gift Voucher</h5>
                         @elseif($type == 6)
+                         <h5>คอร์สอบรม</h5>
                         @else
                         <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
                         @endif  
@@ -67,7 +68,7 @@
  									<div class="radio radio-inline">
  										<label>
  											<input type="radio" onchange="receive_office()" name="receive" value="receive_office">
- 											<i class="helper"></i><b>รับที่สาขาไกล้บ้าน</b>
+ 											<i class="helper"></i><b>รับที่สาขา</b>
  										</label>
  									</div>
 
@@ -184,19 +185,21 @@
  												<i class="helper"></i><b>บัตรเครดิต</b>
  											</label>
  										</div>
+ 										@if($type != 6)
  										<div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="AiCast">
- 												<i class="helper"></i><b>Ai-Cast</b>
+ 												<i class="helper"></i><b>Ai-Cash</b>
  											</label>
- 										</div>
+ 										</div> 
+ 										@endif
 
- 										<div class="radio radio-inline">
+ 										{{-- <div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="open_input(4)" id="voucher" name="pay_type" value="Voucher">
  												<i class="helper"></i><b>Gift Voucher</b>
  											</label>
- 										</div>
+ 										</div> --}}
  									</div>
  								</div>
  							</div>
