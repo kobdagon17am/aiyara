@@ -1,64 +1,98 @@
       
 @extends('frontend.layouts.customer.customer_app')
-@section('conten')
 @section('css')
+<!-- Data Table Css -->
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
 
-<link rel="stylesheet" href="{{asset('public/css/bootstrap-slider.css')}}">
 @endsection
-<div class="breadcomb-area">
-	<div class="container">
-		<div class="row">
-
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="breadcomb-list">
-
-
-					<select style=" font-size: 20px;" >
-						<option>แสดงผล 5 รายการล่าลุด</option>
-						<option>แสดงผล 15 วันที่ผ่านมา</option>
-						<option>แสดงผล 30 วันที่ผ่านมา</option>
-						<option>แสดงผล 3 เดือนที่ผ่านมา</option>
-						<option>แสดงผล 6 เดือนที่ผ่านมา</option>
-						<option>แสดงผล 1 ปีที่ผ่านมา</option>
-						<option>แสดงผล รายการทั้งหมด</option>
-					</select>
-
-
-					<hr/>
-					@for ($x=1; $x<=5; $x++)
-					<div class="row">
-						<h4>คำสั่งซื้อที่ : 2020xxxxxx00{{ $x }}</h4>
-						<h6>วันที่สั่งซื้อ 30/04/2020 16:30:48</h6>
-						<h6>วันที่ได้รับสินค้า 30/04/2020 16:30:48</h6>
-						<div class="col" style=" margin-left: 10%;">                                                    
-						</div>
-						<!---   Product List  -->
-						<?php $rnd=rand(2,7); ?>
-
-						@for ($y = 1; $y <= $rnd; $y++)
-						<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-							<div class="breadcomb-wp">
-								<div class="breadcomb-ctn">
-									<br/>
-									<div class="animation-img mg-b-15">
-										<img class="animate-one" src="{{asset('public/img/widgets/2.png')}}" alt="" />
-									</div>
-									<p>สินค้าชิ้นที่ #{{ $y }}</p>  
-									<p>จำนวน 1 qty. ราคา  ฿1,000.00</p>
-								</div>
-							</div>
-						</div>
-						@endfor
-						<!---   Product List  -->
-
-					</div>
-					<hr/>
-					@endfor
+@section('conten')
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<h5>Zero Configuration</h5>
+				<span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span>
+			</div>
+			<div class="card-block">
+				<div class="table-responsive dt-responsive">
+					<table id="history" class="table table-striped table-bordered nowrap">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>เลขที่ใบเสร็จ</th>
+								<th>ยอดชำระ</th>
+								<th>PV</th>
+								<th>วันที่สั่งซื้อ</th>
+								<th>สถานะ</th>
+								<th>#</th>
+							</tr>
+						</thead>
+					 
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 @endsection
+@section('js')
+<!-- data-table js -->
+
+<script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+<!-- Custom js -->
+<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		fetch_data();
+
+		function fetch_data() {
+			$('#history').DataTable({
+				scrollX: true,
+				scrollCollapsed: true,
+				processing: true,
+				serverSide: true,
+				//searching: true,
+				ajax: {
+					url: "{{ route('dt_history') }}",
+					dataType: "json",
+					type: "POST",
+					data: {_token:'{{ csrf_token() }}'}
+				},
  
+				columns:[
+				{"data": "id"},
+				{"data": "code_order"},
+				{"data": "price"},
+				{"data": "pv_total"},
+				{"data": "date"},
+				{"data": "status"},
+				{"data": "action"},
+				// {"data": "interesting"},
+				// {"data": "course"},
+				// {"data": "step"},
+				// {"data": "date_create"},
+				// {"data": "comment", },
+				// {"data": "source"},
+				// {"data": "payment_status"}
+				],
+				//order: [[ "0", "desc" ]],
+			});
+		}
+	});
+</script>
+@endsection
+
 

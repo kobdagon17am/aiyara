@@ -110,14 +110,16 @@ Route::post('edit_item','Frontend\CartController@edit_item')->name('edit_item');
 
 Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('cart_payment');
 
- 
+
+Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
+Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
 })->name('product-status');
 
 Route::get('/allmember', function () {
-  return view('frontend//allmember');
+  return view('frontend/allmember');
 })->name('allmember');
 
 Route::get('/benefits', function () {
@@ -150,9 +152,7 @@ Route::get('/cart-payment', function () {
   return view('frontend/product/cart-payment');
 })->name('cart-payment');
 
-Route::get('/product-history', function () {
-  return view('frontend/product/product-history');
-})->name('product-history');
+
 
 Route::get('/comission', function () {
   return view('frontend/comission');
