@@ -2,39 +2,39 @@
  @section('css')
  @endsection
  @section('conten')
+ 
  <div class="row">
  	<div class="col-md-8 col-sm-12">
  		<form action="{{route('payment_submit')}}" method="POST" enctype="multipart/form-data">
  			@csrf
- 			<input type="hidden" name="type" value="{{ $type }}">
- 			<input type="hidden" name="vat" value="{{ $vat }}">
- 			<input type="hidden" name="shipping" value="{{ $shipping }}">
- 			<input type="hidden" name="price" value="{{ $price }}">
- 			<input type="hidden" name="price_vat" value="{{ $price_vat }}">
- 			<input type="hidden" name="price_vat_shipping" value="{{ $price_vat_shipping }}">
- 			<input type="hidden" name="pv_total" value="{{ $pv_total }}">
+ 			<input type="hidden" name="type" value="{{ $bill['type'] }}">
+ 			<input type="hidden" name="vat" value="{{ $bill['vat'] }}">
+ 			<input type="hidden" name="shipping" value="{{ $bill['shipping'] }}">
+ 			<input type="hidden" name="price_vat" value="{{ $bill['price_vat'] }}">
+ 			<input type="hidden" name="price" value="{{ $bill['price'] }}">
+ 			<input type="hidden" name="p_vat" value="{{ $bill['p_vat'] }}">
+ 			<input type="hidden" name="price_total" value="{{ $bill['price_total'] }}">
+ 			<input type="hidden" name="pv_total" value="{{ $bill['pv_total'] }}">
  			
  			<!-- Choose Your Payment Method start -->
  			<div class="card card-border-success">
  				<div class="card-header p-3">
- 					  @if($type == 1)
+ 					  @if($bill['type'] == 1)
                         <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
-                        @elseif($type == 2)
+                        @elseif($bill['type'] == 2)
                         <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
-                        @elseif($type == 3)
+                        @elseif($bill['type'] == 3)
                         <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
-                        @elseif($type == 4)
+                        @elseif($bill['type'] == 4)
                         <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
-                        @elseif($type == 5)
+                        @elseif($bill['type'] == 5)
                         <h5>Gift Voucher</h5>
-                        @elseif($type == 6)
+                        @elseif($bill['type'] == 6)
                          <h5>คอร์สอบรม</h5>
                         @else
                         <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
                         @endif  
- 				{{-- <div class="card-header-right">
- 				 
- 				</div> --}}
+ 				{{-- <div class="card-header-right"></div> --}}
  			</div>
  			<div class="card-block payment-tabs">
  				<ul class="nav nav-tabs md-tabs" role="tablist">
@@ -185,7 +185,7 @@
  												<i class="helper"></i><b>บัตรเครดิต</b>
  											</label>
  										</div>
- 										@if($type != 6)
+ 										@if($bill['type'] != 6)
  										<div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="AiCast">
@@ -246,31 +246,38 @@
  			<div class="col-md-12">
  				<table class="table table-responsive" >
  					<tr>
- 						<td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $quantity }}) ชิ้น</strong></td>
- 						<td align="right"><strong id="price"> {{ number_format($price,2) }} </strong></td>
+
+ 						<td><strong id="quantity_bill">มูลค่าสินค้า ({{ $bill['quantity'] }}) ชิ้น</strong></td>
+ 						<td align="right"><strong id="price"> {{ $bill['price_vat'] }} </strong></td>
+ 					</tr>
+ 					<tr>
+ 						<td><strong>Vat({{ $bill['vat'] }}%)</strong></td>
+ 						<td align="right"><strong id="sent"> {{ $bill['p_vat'] }}</strong></td>
+ 					</tr>
+
+ 					<tr>
+ 						<td><strong>รวม</strong></td>
+ 						<td align="right"><strong id="sent"> {{ $bill['price'] }}</strong></td>
  					</tr>
  					<tr>
  						<td><strong>ค่าจัดส่ง</strong></td>
- 						<td align="right"><strong id="sent"> {{ $shipping }}</strong></td>
+ 						<td align="right"><strong id="sent"> {{ $bill['shipping'] }}</strong></td>
  					</tr>
+ 					
  					<tr>
- 						<td><strong>Vat({{ $vat }}%)</strong></td>
- 						<td align="right"><strong id="sent"> {{ $price_vat }}</strong></td>
- 					</tr>
- 					<tr>
- 						<td><strong>ยอดรวมทั้งสิ้น</strong></td>
- 						<td align="right"><strong id="price_total"> {{ $price_vat_shipping }}</strong>
+ 						<td><strong>ยอดที่ต้องชำระ</strong></td>
+ 						<td align="right"><strong id="price_total"> {{ $bill['price_total'] }}</strong>
  						</td>
  					</tr>
  					<tr>
  						<td><strong>คะแนนที่ได้รับ</strong></td>
- 						<td align="right"><strong class="text-success" id="pv">{{ $pv_total }} PV</strong></td>
+ 						<td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>
  					</tr>
 
 
  				</table>
  				<div class="row" align="center">
- 					<a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning btn-block" >เลือกสินค้าเพิ่มเติม</a>
+ 					<a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-primary btn-block" >เลือกสินค้าเพิ่มเติม</a>
  				</div>
 
  			</div>

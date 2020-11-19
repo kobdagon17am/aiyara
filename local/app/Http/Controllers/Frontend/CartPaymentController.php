@@ -41,18 +41,26 @@ class CartPaymentController extends Controller
 		$vat = $vat->txt_value;
 		$shipping = $shipping->price_shipping;
 		
-		$price = Cart::session($type)->getTotal();
-		$price_vat = $price*($vat/100);
-		$price_vat = number_format($price_vat,2);
 
-		$price_vat_shipping = $price + $price_vat + $shipping;
-		$price_vat_shipping = number_format($price_vat_shipping,2);
+
+        //ราคาสินค้า
+		$price = Cart::session($type)->getTotal();
+		 
+		//vatใน 7% 
+		$p_vat = number_format($price*($vat/(100+$vat)),2);
+
+		 //มูลค่าสินค้า
+		$price_vat =  $price - $p_vat;
+
+		$price_total = number_format($price + $shipping,2);
+ 
 
 		$bill = array('vat'=>$vat,
 			'shipping'=>$shipping,
 			'price'=>$price,
+			'p_vat'=>$p_vat,
 			'price_vat'=>$price_vat,
-			'price_vat_shipping'=>$price_vat_shipping,
+			'price_total'=>$price_total,
 			'pv_total'=>$pv_total,
 			'data'=>$data,
 			'quantity'=>$quantity,
@@ -67,11 +75,12 @@ class CartPaymentController extends Controller
 		->first();
 		//dd($customer);
 
-		return view('frontend/product/cart_payment',compact('customer','location'),$bill);
+		return view('frontend/product/cart_payment',compact('customer','location','bill'));
 
 	}
 	
 	public function payment_submit(Request $request){
+		//dd($request->all());
 		try {
 			$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
 
@@ -91,7 +100,7 @@ class CartPaymentController extends Controller
 					'shipping'  => $request->shipping,
 					'price' => $request->price,
 					'price_vat' => $request->price_vat,
-					'price_vat_shipping'  => $request->price_vat_shipping,
+					'p_vat'  => $request->p_vat,
 					'pv_total'  => $request->pv_total,
 					'type'  => $request->type,
 					'pay_type'  => $request->pay_type,
@@ -130,7 +139,7 @@ class CartPaymentController extends Controller
 					'shipping'  => $request->shipping,
 					'price' => $request->price,
 					'price_vat' => $request->price_vat,
-					'price_vat_shipping'  => $request->price_vat_shipping,
+					'p_vat'  => $request->p_vat,
 					'pv_total'  => $request->pv_total,
 					'type'  => $request->type,
 					'pay_type'  => $request->pay_type,
