@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -38,14 +38,13 @@
   <div class="myBorder" >
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+       
+            <div class="col-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-
-                   
-
-                        <form class="form-horizontal" method="POST" action="backend/uploadFile" enctype="multipart/form-data">
+ <div class="row">
+                       <div class="col-6">
+  <form class="form-horizontal" method="POST" action="backend/uploadFile" enctype="multipart/form-data">
                             {{ csrf_field() }}
 
                             <div class="form-group{{ @$errors->has('csv_file') ? ' has-error' : '' }}">
@@ -63,32 +62,59 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <div class="checkbox">
-                                     <!--    <label>
-                                            <input type="checkbox" name="header" checked> File contains header row?
-                                        </label> -->
-                                    </div>
+                                <div class="col-md-10 col-md-offset-4">
+                                    <input type='submit' name='submit' class="btn btn-primary btnImCsv " value='Import CSV'>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <input type='submit' name='submit' class="btn btn-primary" value='Import CSV'>
-                                    <input type='button' class="btn btn-danger btnClearData " value='(Test) Clear data' style="float: right;">
-                                </div>
-                            </div>
-
                              <!-- Message -->
                                  @if(Session::has('message'))
                                     <p style="color:green;font-weight:bold;margin-left: 2%;font-size: 16px;" >{{ Session::get('message') }}</p>
                                  @endif
+                        </form>
+                       </div>
 
+                       <div class="col-6">
+             <form class="form-horizontal" method="POST" action="backend/uploadFileXLS" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+
+                            <div class="form-group">
+                                <label for="csv_file" class="col-md-4 control-label"><b>XLSX file to import</b></label>
+                                <div class="col-md-6">
+                                    <input type="file" accept=".xls,.xlsx" class="form-control" name="fileXLS" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-4">
+                                    <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import XLSX'>
+                                </div>
+                            </div>
 
                         </form>
-                    </div>
+                       </div>
+
                 </div>
+
+                <hr>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group"> &nbsp;&nbsp;
+                      <input type='button' class="btn btn-success btnExportCSV " value='Export excel'> &nbsp;&nbsp;
+                    </div>
+                  </div>
+           
+                  <div class="col-6">
+                    <div class="form-group"> &nbsp;&nbsp;
+                      <input type='button' class="btn btn-danger btnClearData " value='(Test) Clear data' >
+                    </div>
+                  </div>
+                </div>
+
             </div>
+            </div>
+
+
         </div>
     </div>
 
@@ -155,6 +181,9 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'customers_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
             {data: 'txt_msg', title :'<center>ข้อความ</center>', className: 'text-center'},
+            {data: 'show_from', title :'<center>From</center>', className: 'text-center'},
+            {data: 'show_to', title :'<center>To</center>', className: 'text-center'},
+            {data: 'remark', title :'<center>Remark</center>', className: 'text-center'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
           
@@ -165,9 +194,13 @@ $(function() {
     });
 });
 
+
 $(document).ready(function() {
+
     $(".btnClearData").click(function(event) {
         /* Act on the event */
+        $(".myloading").show();
+
         $.ajax({
 
                type:'POST',
@@ -180,9 +213,59 @@ $(document).ready(function() {
                 error: function(jqXHR, textStatus, errorThrown) { 
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    $(".myloading").hide();
                 }
             });
     });
+
+
+    $(".btnExportCSV").click(function(event) {
+        /* Act on the event */
+        $(".myloading").show();
+        $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/excelExport') }} ", 
+               data:{ _token: '{{csrf_token()}}' },
+                success:function(data){
+                     console.log(data); 
+                     // location.reload();
+
+                     setTimeout(function(){
+                        var url='local/public/excel_files/pm_broadcast.xlsx';
+                        window.open(url, 'Download');  
+                        $(".myloading").hide();
+                    },3000);
+
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    $(".myloading").hide();
+                }
+            });
+    });
+
+
+   $(".btnImCsv").click(function(event) {
+          /* Act on the event */
+          var v = $("input[name=file]").val();
+          if(v!=''){
+            $(".myloading").show();
+          }
+          
+    });
+
+   $(".btnImXlsx").click(function(event) {
+          /* Act on the event */
+          var v = $("input[name=fileXLS]").val();
+          if(v!=''){
+            $(".myloading").show();
+          }
+          
+    });
+
+
 });
 
 

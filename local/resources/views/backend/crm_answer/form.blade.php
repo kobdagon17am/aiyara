@@ -18,6 +18,18 @@
 </div>
 <!-- end page title -->
 
+  <?php 
+  
+    $sPermission = \Auth::user()->permission ;
+    $menu_id = @$_REQUEST['menu_id'];
+    $role_group_id = @$_REQUEST['role_group_id'];
+
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;  
+
+   ?>
+
 <div class="row">
     <div class="col-10">
         <div class="card">

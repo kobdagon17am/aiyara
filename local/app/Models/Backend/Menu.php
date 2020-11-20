@@ -139,7 +139,7 @@ foreach ($MenuPermission as $key => $value) {
 	            	}else{
 
 	            		if($sMenu->menu_level==1){
-		            		$subMenu .= '<li><a href="'.asset($sMenu->link).'">'.$sMenu->name.' </a></li>';
+		            		$subMenu .= '<li><a href="'.asset($sMenu->link).'" data-id="'.$sMenu->id.'" class="click_link" >'.$sMenu->name.' </a></li>';
 			                  if(in_array($sMenu->id, $arr_menu_id)){
 			                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu->link).'">'.$sMenu->name.'  </a></li>';
 			                  }
@@ -155,7 +155,7 @@ foreach ($MenuPermission as $key => $value) {
 	                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
 	              		
 	                    	$subMenu .= '       
-		                           <li><a href="javascript: void(0);" class="has-arrow">'.$sMenu->name.' </a>';
+		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
 

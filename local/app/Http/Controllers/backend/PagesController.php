@@ -18,6 +18,9 @@ class PagesController extends Controller{
 
   public function uploadFile(Request $request){
 
+    // dd($request->input('submit'));
+
+
     if ($request->input('submit') != null ){
 
       $file = $request->file('file');
@@ -33,7 +36,9 @@ class PagesController extends Controller{
       $valid_extension = array("csv");
 
       // 2MB in Bytes
-      $maxFileSize = 2097152; 
+      // $maxFileSize = 2097152; 
+      // 5MB in Bytes
+      $maxFileSize = 5242880; 
 
       // Check file extension
       if(in_array(strtolower($extension),$valid_extension)){
@@ -43,16 +48,9 @@ class PagesController extends Controller{
 
           // File upload location
           $location = 'uploads/';
-
-
-          $location = 'uploads/';
           $destinationPath = public_path($location);
           $file->move($destinationPath, $filename);
-              // $sRow->img_url    = 'local/public/'.$location;
 
-          // Upload file
-          // $file->move($location,$filename);
-          // Import CSV to Database
           $filepath = public_path("uploads/".$filename);
 
           // Reading file
@@ -80,16 +78,14 @@ class PagesController extends Controller{
           // Insert to MySQL database
           foreach($importData_arr as $importData){
 
-            // $insertData = array(
-            //    "username"=>@$importData[0],
-            //    "name"=>@$importData[1],
-            //    "gender"=>@$importData[2],
-            //    "email"=>@$importData[3]);
-            // Page::insertData($insertData);
-
             $insertData = array(
                "customers_id_fk"=>@$importData[0],
-               "txt_msg"=>@$importData[1]);
+               "txt_msg"=>@$importData[1],
+               "show_from"=>@$importData[2],
+               "show_to"=>@$importData[3],
+               "remark"=>@$importData[4],
+               "created_at"=>now()
+             );
             Page::insertData($insertData);
 
           }
@@ -99,7 +95,7 @@ class PagesController extends Controller{
           // dd(Session::get('message'));
 
         }else{
-          Session::flash('message','File too large. File must be less than 2MB.');
+          Session::flash('message','File too large. File must be less than 5MB.');
         }
 
       }else{
@@ -112,4 +108,109 @@ class PagesController extends Controller{
     // return redirect()->action('PagesController@index');
     return redirect()->to(url("backend/pm_broadcast"));
   }
+
+
+  public function uploadFileXLS(Request $request){
+
+      // dd($request->input('submit'));
+
+    if ($request->input('submit') != null ){
+
+      $file = $request->file('fileXLS');
+
+       // dd($file);
+
+      // File Details 
+      $filename = $file->getClientOriginalName();
+      $extension = $file->getClientOriginalExtension();
+      $tempPath = $file->getRealPath();
+      $fileSize = $file->getSize();
+      $mimeType = $file->getMimeType();
+
+      // Valid File Extensions
+      $valid_extension = array("xlsx");
+
+      // 2MB in Bytes
+      // $maxFileSize = 2097152; 
+      // 5MB in Bytes
+      $maxFileSize = 5242880; 
+
+      // Check file extension
+      if(in_array(strtolower($extension),$valid_extension)){
+
+        // Check file size
+        if($fileSize <= $maxFileSize){
+
+          // File upload location
+
+          $location = 'uploads/';
+          $destinationPath = public_path($location);
+          $file->move($destinationPath, $filename);
+
+          $filepath = public_path("uploads/".$filename);
+
+          $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+          $spreadsheet = $reader->load($filepath);
+
+          $worksheet = $spreadsheet->getActiveSheet();
+          $highestRow = $worksheet->getHighestRow(); // total number of rows
+          $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+          $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+          $lines = $highestRow - 2; 
+          if ($lines <= 0) {
+                   // Exit ('There is no data in the Excel table');
+              Session::flash('message','There is no data in the Excel table');
+
+          }else{
+
+              $i = 0;
+
+              for ($row = 1; $row <= $highestRow; ++$row) {
+                   $customers_id = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //customers_id
+                   $txt_msg = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //txt_msg
+                   $show_from = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //show_from
+                   $show_to = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //show_to
+                   $remark = $worksheet->getCellByColumnAndRow(5, $row)->getValue(); //remark
+
+                    // Skip first row (Remove below comment if you want to skip the first row)
+                     if($i == 0){
+                        $i++;
+                        continue; 
+                     }
+
+                   $insertData = array(
+                     "customers_id_fk"=>@$customers_id,
+                     "txt_msg"=>@$txt_msg,
+                     "show_from"=>@$show_from,
+                     "show_to"=>@$show_to,
+                     "remark"=>@$remark,
+                     "created_at"=>now());
+                   Page::insertData($insertData);
+
+                   $i++;
+
+              }
+
+              Session::flash('message','Import Successful.');
+
+          }
+
+        }else{
+          Session::flash('message','File too large. File must be less than 5MB.');
+        }
+
+      }else{
+         Session::flash('message','Invalid File Extension.');
+      }
+
+    }
+
+    // Redirect to index
+    // return redirect()->action('PagesController@index');
+    return redirect()->to(url("backend/pm_broadcast"));
+  }
+
+
+
 }

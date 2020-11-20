@@ -40,6 +40,11 @@
 
       // echo $sA;
     }
+
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;  
+
    ?>
 <div class="row">
     <div class="col-10">
@@ -192,7 +197,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12" style="{{@$sA}}" > 
-                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}?role_group_id={{@$_REQUEST['role_group_id']}}&menu_id={{@$_REQUEST['menu_id']}}" style="float: right;">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}" style="float: right;">
                               <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม การตอบคำถาม</span>
                             </a>
                             <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการตอบคำถาม  </span>
@@ -245,6 +250,11 @@
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
+
+                      <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
+                      <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
+
+                      
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>
@@ -293,13 +303,13 @@
                     columns: [
                         // {data: 'id', title :'ID', className: 'text-center w50'},
                         // {data: 'txt_answer', title :'<center>คำตอบ</center>', className: 'text-center font-size-16 '},
-                        {data: 'txt_answer',   title :'<center>คำตอบ</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
-                           return '<span class="badge badge-pill badge-primary font-size-14">'+d+'</span>';
+                        {data: 'txt_answer',   title :'<center>คำตอบ</center>', className: 'text-left font-size-16 th_ ',render: function(d) {
+                           return '<span class="badge font-size-16">'+d+'</span>';
                         }},
-                        
-                        {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                           return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                        }},
+                        {data: 'level_class', title :'<center>Class</center>', className: 'text-center font-size-14 '},
+                        // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
+                        //    return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+                        // }},
 
                         {data: 'respondent_name', title :'<center>ผู้ตอบคำถาม</center>', className: 'text-center'},
                         {data: 'date_answer', title :'<center>วันที่ตอบคำถาม</center>', className: 'text-center'},
@@ -329,15 +339,7 @@
               
 </script>
 <script type="text/javascript">
-  var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; 
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '#menu_id=' + menu_id ;
-    }
-  }
+
 </script>
 @endsection
 

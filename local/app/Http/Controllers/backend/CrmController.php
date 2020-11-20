@@ -84,7 +84,7 @@ class CrmController extends Controller
           \DB::commit();
 
          // return redirect()->action('backend\CrmController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-          return redirect()->to(url("backend/crm/".$sRow->id."/edit"));
+           return redirect()->to(url("backend/crm/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
 
       } catch (\Exception $e) {
         echo $e->getMessage();

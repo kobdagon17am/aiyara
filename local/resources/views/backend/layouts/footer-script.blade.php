@@ -47,8 +47,15 @@
 
             $(document).on('click', '.click_link', function(event) {
 
-                var v = $(this).data('id');
-                sessionStorage.setItem("menu_id", v);
+                // alert("xxxxxx");
+                var role_group_id = "{{!empty(\Auth::user()->role_group_id_fk)?\Auth::user()->role_group_id_fk:0}}";
+
+                sessionStorage.setItem("role_group_id", role_group_id);
+
+                var menu_id = $(this).data('id');
+                sessionStorage.setItem("menu_id", menu_id);
+
+                // alert(role_group_id+":"+menu_id);
 
             });
 

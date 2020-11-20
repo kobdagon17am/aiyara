@@ -38,6 +38,11 @@
 
       // echo $sA;
     }
+
+      //   echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;  
+
    ?>
 <div class="row">
     <div class="col-10">
@@ -207,6 +212,10 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
+                      
+                      <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
+                      <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
+
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                     </button>

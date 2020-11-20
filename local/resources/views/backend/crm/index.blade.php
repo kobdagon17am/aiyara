@@ -25,6 +25,7 @@
         $sC = '';
         $sU = '';
         $sD = '';
+        $role_group_id = '%';
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
@@ -34,6 +35,9 @@
         $sU = @$menu_permit->u==1?'':'display:none;';
         $sD = @$menu_permit->d==1?'':'display:none;';
       }
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;     
    ?>
 <div class="row">
     <div class="col-12">
@@ -49,7 +53,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.crm.create') }}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.crm.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -69,10 +73,11 @@
 @section('script')
 
 <script>
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(role_group_id);
+var role_group_id = "{{@$role_group_id?@$role_group_id:9999999999}}"; //alert(role_group_id);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
+var sPermission = "{{@$sPermission}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -93,7 +98,8 @@ $(function() {
               // if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
               //   d.Where[$(this).attr('name')] = $.trim($(this).val());
               // }
-              d.Where['role_group_id_fk'] = role_group_id ;
+              if(sPermission!=1){d.Where['role_group_id_fk'] = role_group_id ;}
+              // d.Where['role_group_id_fk'] = role_group_id ;
             // });
             d.Like={};
             $('.myLike').each(function() {
@@ -146,14 +152,12 @@ $(function() {
 
 <script type="text/javascript">
 
-  var role_group_id = "{{\Auth::user()->role_group_id_fk}}";
-
   sessionStorage.setItem("role_group_id", role_group_id);
-
+  var role_group_id = sessionStorage.getItem("role_group_id");
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
     if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
+       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
 </script>

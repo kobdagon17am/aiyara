@@ -188,6 +188,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pm_broadcast/datatable', 'Pm_broadcastController@Datatable')->name('pm_broadcast.datatable');
 
     Route::post('uploadFile', 'PagesController@uploadFile');
+    Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
+
+    Route::post('excelExport', 'ExcelController@excelExport');
+    Route::post('excelImport', 'ExcelController@excelImport');
 
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
 
@@ -203,3 +207,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 }); //route group backend
 
+
+Route::group(['prefix' => 'aboutfile', 'as' => 'aboutfile.'], function() {
+// Route::post('excel-import-upload', 'backend\ExcelController@excelImportEmployeeUpload');               
+Route::post('excel-import-upload', 'backend\ExcelController@excelExport');               
+#===========================================================================
+}); //route group report
