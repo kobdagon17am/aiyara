@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Cart;
 use Auth;
 use App\Models\Frontend\Location;
+use App\Models\Frontend\Payment;
 
 class CartPaymentController extends Controller
 {
@@ -45,7 +46,7 @@ class CartPaymentController extends Controller
 
         //ราคาสินค้า
 		$price = Cart::session($type)->getTotal();
-		 
+
 		//vatใน 7% 
 		$p_vat = number_format($price*($vat/(100+$vat)),2);
 
@@ -53,7 +54,7 @@ class CartPaymentController extends Controller
 		$price_vat =  $price - $p_vat;
 
 		$price_total = number_format($price + $shipping,2);
- 
+
 
 		$bill = array('vat'=>$vat,
 			'shipping'=>$shipping,
@@ -80,95 +81,45 @@ class CartPaymentController extends Controller
 	}
 	
 	public function payment_submit(Request $request){
-		//dd($request->all());
-		try {
-			$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
 
-			if($request->receive == 'sent_address'){
-				$address = 'บ้านเลขที่.'.$request->house_no.' หมู่บ้าน/อาคาร.'.$request->house_name.' หมู่.'.$request->moo.' ตรอก/ซอย.'.$request->soi.' เขต/อำเภอ.'.$request->district.' แขวง/ตำบล.'.$request->district_sub.' ถนน.'.$request->road.' จังหวัด.'.$request->province.' รหัสไปษณีย์.'.$request->zipcode;
-
-				$cartCollection = Cart::session($request->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($request->type)->getTotal();
-				
-
-
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $request->vat,
-					'shipping'  => $request->shipping,
-					'price' => $request->price,
-					'price_vat' => $request->price_vat,
-					'p_vat'  => $request->p_vat,
-					'pv_total'  => $request->pv_total,
-					'type'  => $request->type,
-					'pay_type'  => $request->pay_type,
-					'orderstatus_id' => '1',
-					'address' => $address,
-					'type_address' => 0,
-					'tel' => $request->tel_mobile,
-					'name' => $request->name,
-				]
-			);
-
-				foreach ($data as $value) {
-
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					
-					Cart::session($request->type)->remove($value['id']);
-				}
-
-				return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}elseif($request->receive == 'receive_office') {
-
-				$cartCollection = Cart::session($request->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($request->type)->getTotal();
-
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $request->vat,
-					'shipping'  => $request->shipping,
-					'price' => $request->price,
-					'price_vat' => $request->price_vat,
-					'p_vat'  => $request->p_vat,
-					'pv_total'  => $request->pv_total,
-					'type'  => $request->type,
-					'pay_type'  => $request->pay_type,
-					'orderstatus_id' => '1',
-					'address' => 'Receive office',
-					'type_address' => $request->receive_location,
-					'tel' => $request->tel_mobile,
-					'name' => $request->name,
-				]
-			);
-
-				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					Cart::session($request->type)->remove($value['id']);
-				}
-				return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
+		if($request->submit == 'upload'){
+			$resule = Payment::payment_uploadfile($request);
+			if($resule['status'] == 'success'){
+				return redirect('product-history')->withSuccess($resule['message']);
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
 			}else{
-				return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
-			}
-			return redirect('cart_payment')->withSuccess('Success');
-		}catch(Exception $e) {
-			return redirect('cart_payment')->withError('Payment submit Fail');
-
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			} 
+		}elseif($request->submit == 'not_upload'){
+			$resule = Payment::payment_not_uploadfile($request);
+			if($resule['status'] == 'success'){
+				return redirect('product-history')->withSuccess($resule['message']);
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			} 
+		}elseif($request->submit == 'credit_card'){
+			$resule = Payment::credit_card($request);
+			if($resule['status'] == 'success'){
+				return redirect('product-history')->withSuccess($resule['message']);
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			} 
+		}elseif($request->submit == 'ai_cash'){
+			$resule = Payment::ai_cash($request);
+			if($resule['status'] == 'success'){
+				return redirect('product-history')->withSuccess($resule['message']);
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			} 
+		}else{
+			return redirect('product-history')->withError('Payment submit Fail');
 		}
 
 	}

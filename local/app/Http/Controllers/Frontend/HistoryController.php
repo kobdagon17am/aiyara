@@ -28,14 +28,17 @@ class HistoryController extends Controller
             1 => 'code_order',
             2 => 'price',
             3 => 'pv_total',
-            4 => 'date',
-            5 => 'status',
-            6 => 'action',
-
+            4 => 'type',
+            5 => 'date',
+            6 => 'status',
+            7 => 'action',
         );
 
         $totalData =  DB::table('orders')
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
+        ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
+        ->where('dataset_orders_type.lang_id','=','1')
+        ->where('dataset_order_status.lang_id','=','1')
         ->count();
         $totalFiltered = $totalData;
 
@@ -52,22 +55,33 @@ class HistoryController extends Controller
 //6 ได้รับสินค้าแล้ว Success 
 
         $orders =  DB::table('orders')
-        ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class') 
+        ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type') 
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
+        ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
+        ->where('dataset_order_status.lang_id','=','1')
+        ->where('dataset_orders_type.lang_id','=','1')
         ->offset($start)
         ->limit($limit)
         ->orderby('id','DESC')
-        ->get();
+        ->get(); 
         $i = 0;
         foreach ($orders as $value){
             $i++;
             $nestedData['id'] = $i;
             $nestedData['code_order'] = $value->code_order;
             $nestedData['price'] = number_format($value->price + $value->shipping,2);
-            $nestedData['pv_total'] = $value->pv_total;
+            $nestedData['pv_total'] = '<b class="text-success">'.$value->pv_total.'</b>';
             $nestedData['date'] = date('d/m/Y H:i:s',strtotime($value->create_at));
+            $nestedData['type'] = $value->type;
             $nestedData['status'] = '<span style="font-size: 14px;"class="pcoded-badge label label-'.$value->css_class.'"><font style="color:#000">'.$value->detail.'</font></span>';
-            $nestedData['action'] = '<button class="btn btn-sm btn-primary"><i class="fa fa-file-text-o"></i> View </button> <button class="btn btn-sm btn-success"><i class="fa fa-file-text-o"></i> Upload </button>';
+            if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
+                $upload = '<button class="btn btn-sm btn-success"><i class="fa fa-file-text-o"></i> Upload </button>';
+            }else{
+                $upload = '';
+            }
+            
+
+            $nestedData['action'] = '<button class="btn btn-sm btn-primary"><i class="fa fa-file-text-o"></i> View </button> '.$upload;
 
             $data[] = $nestedData;
         }

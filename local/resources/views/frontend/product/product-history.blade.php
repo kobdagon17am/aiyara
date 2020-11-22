@@ -12,8 +12,8 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<h5>Zero Configuration</h5>
-				<span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span>
+				<h5>ประวัติการสั่งซื้อ</h5>
+				{{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
 			</div>
 			<div class="card-block">
 				<div class="table-responsive dt-responsive">
@@ -24,6 +24,7 @@
 								<th>เลขที่ใบเสร็จ</th>
 								<th>ยอดชำระ</th>
 								<th>PV</th>
+								<th>จุดประสงค์การสั่งซื้อ</th>
 								<th>วันที่สั่งซื้อ</th>
 								<th>สถานะ</th>
 								<th>#</th>
@@ -77,6 +78,7 @@
 				{"data": "code_order"},
 				{"data": "price"},
 				{"data": "pv_total"},
+				{"data": "type"},
 				{"data": "date"},
 				{"data": "status"},
 				{"data": "action"},

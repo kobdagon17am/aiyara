@@ -19,33 +19,33 @@
  			<!-- Choose Your Payment Method start -->
  			<div class="card card-border-success">
  				<div class="card-header p-3">
- 					  @if($bill['type'] == 1)
-                        <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
-                        @elseif($bill['type'] == 2)
-                        <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
-                        @elseif($bill['type'] == 3)
-                        <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
-                        @elseif($bill['type'] == 4)
-                        <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
-                        @elseif($bill['type'] == 5)
-                        <h5>Gift Voucher</h5>
-                        @elseif($bill['type'] == 6)
-                         <h5>คอร์สอบรม</h5>
-                        @else
-                        <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
-                        @endif  
- 				{{-- <div class="card-header-right"></div> --}}
- 			</div>
- 			<div class="card-block payment-tabs">
- 				<ul class="nav nav-tabs md-tabs" role="tablist">
- 					<li class="nav-item">
- 						<a class="nav-link active" id="nav_address" data-toggle="tab" href="#address" role="tab">ที่อยู่การจัดส่ง</a>
- 						<div class="slide"></div>
- 					</li>
- 					<li class="nav-item">
- 						<a class="nav-link" data-toggle="tab" id="nav_card" href="#credit-card" role="tab">ชำระเงิน</a>
- 						<div class="slide"></div>
- 					</li>
+ 					@if($bill['type'] == 1)
+ 					<h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
+ 					@elseif($bill['type'] == 2)
+ 					<h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
+ 					@elseif($bill['type'] == 3)
+ 					<h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
+ 					@elseif($bill['type'] == 4)
+ 					<h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
+ 					@elseif($bill['type'] == 5)
+ 					<h5>Gift Voucher</h5>
+ 					@elseif($bill['type'] == 6)
+ 					<h5>คอร์สอบรม</h5>
+ 					@else
+ 					<h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
+ 					@endif  
+ 					{{-- <div class="card-header-right"></div> --}}
+ 				</div>
+ 				<div class="card-block payment-tabs">
+ 					<ul class="nav nav-tabs md-tabs" role="tablist">
+ 						<li class="nav-item">
+ 							<a class="nav-link active" id="nav_address" data-toggle="tab" href="#address" role="tab">ที่อยู่การจัดส่ง</a>
+ 							<div class="slide"></div>
+ 						</li>
+ 						<li class="nav-item">
+ 							<a class="nav-link" data-toggle="tab" id="nav_card" href="#credit-card" role="tab">ชำระเงิน</a>
+ 							<div class="slide"></div>
+ 						</li>
  					{{-- <li class="nav-item">
  						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
  						<div class="slide"></div>
@@ -175,20 +175,20 @@
  									<div class="form-radio">
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" id="bank" onchange="open_input(1)" name="pay_type" value="Bank" checked="checked">
+ 												<input type="radio" id="bank" onchange="open_input(1)" name="pay_type" value="1" checked="checked">
  												<i class="helper"></i><b>โอนชำระ</b>
  											</label>
  										</div>
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" onchange="open_input(2)" id="credit_cart" name="pay_type" value="Credit">
+ 												<input type="radio" onchange="open_input(2)" id="credit_cart" name="pay_type" value="2">
  												<i class="helper"></i><b>บัตรเครดิต</b>
  											</label>
  										</div>
  										@if($bill['type'] != 6)
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="AiCast">
+ 												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="3">
  												<i class="helper"></i><b>Ai-Cash</b>
  											</label>
  										</div> 
@@ -211,19 +211,19 @@
 
  										<div class="form-group row">
  											<div class="col-sm-6">
- 												<label>อัพโหลดหลักฐานการชำระเงิน</label>
- 												<input type="file" name="file_slip" class="form-control">
+ 												<label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b> </label>
+ 												<input type="file" id="upload" name="file_slip" class="form-control">
  											</div>
  										</div>
  									</div>
  									<div class="row">
  										<div class="col-xs-6 p-1">
- 											<button class="btn btn-success btn-block" type="">อัพโหลดหลักฐานการชำระเงิน</button>
+ 											<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
  										</div>
  										<div class="col-xs-6 p-1">
- 											<button class="btn btn-primary btn-block" type="">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
+ 											<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
  										</div>
- 					 				</div>
+ 									</div>
  								</div>
  								
  							</div>
@@ -292,7 +292,22 @@
 
 @endsection
 @section('js')
-<script> 
+<script>
+
+	document.getElementById("submit_upload").disabled = true;
+
+	$('#upload').change( function () {
+		var fileExtension = ['jpg','png'];
+		if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+			alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
+			this.value = '';
+			return false;
+		}else {
+			document.getElementById("submit_upload").disabled = false;
+		}
+	});
+
+	
 	function next(){
 		document.getElementById("address").classList.remove('active');
 		document.getElementById("nav_address").classList.remove('active');
@@ -316,16 +331,16 @@
 		'<div class="form-group row">'+
 		'<div class="col-sm-6">'+
 		'<label>อัพโหลดหลักฐานการชำระเงิน</label>'+
-		'<input type="file" name="file_slip" class="form-control">'+
+		'<input type="file" id="upload" name="file_slip" class="form-control">'+
 		'</div>'+
 		'</div>'+
 		'</div>'+
 		'<div class="row">'+
 		'<div class="col-xs-6 p-1">'+
-		'<button class="btn btn-success btn-block" type="submit">อัพโหลดหลักฐานการชำระเงิน</button>'+
+		'<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>'+
 		'</div>'+
 		'<div class="col-xs-6 p-1">'+
-		'<button class="btn btn-primary btn-block" type="submit">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>'+
+		'<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>'+
 		'</div>'+
 		'</div>'+
 		'</div>';
@@ -381,13 +396,24 @@
 		'</div>'+
 		'</div>'+
 		'<div class="col-sm-12 text-right">'+
-		'<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>'+
+		'<button class="btn btn-success btn-block" name="submit" value="credit_card"  type="submit">ชำระเงิน</button>'+
 		'</div>';
-		var conten_3 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
+		var conten_3 = '<button class="btn btn-success btn-block" type="submit" name="submit" value="ai_cash">ชำระเงิน</button>';
 		var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
-		if(data == '1') {
+		if(data == '1'){
 			document.getElementById("cart_pament").innerHTML=(conten_1);
+			document.getElementById("submit_upload").disabled = true;
+			$('#upload').change( function () {
+				var fileExtension = ['jpg','png'];
+				if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+					alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
+					this.value = '';
+					return false;
+				}else {
+					document.getElementById("submit_upload").disabled = false;
+				}
+			});
 		}else if (data == '2') {
 			document.getElementById("cart_pament").innerHTML=(conten_2);
 		}else if (data == '3') {
