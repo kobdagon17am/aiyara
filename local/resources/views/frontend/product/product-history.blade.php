@@ -30,9 +30,46 @@
 								<th>#</th>
 							</tr>
 						</thead>
-					 
+
 					</table>
 				</div>
+
+ 
+				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+					<div class="modal-dialog modal-md" role="document">
+						<form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
+							@csrf
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Upload File Slip</h4>
+								</div>
+
+								<div class="modal-body">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<div class="form-group row">
+												<div class="col-sm-10">
+													<label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b> </label>
+													<input type="file" name="file_slip" id="file_slip" class="form-control" required="">
+													<input type="hidden" name="order_id" id="order_id" value="">
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+
+									<button class="btn btn-success" type="submit" name="submit" id="submit_upload" value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
+
+								</div>
+
+							</div>
+						</form>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -72,7 +109,7 @@
 					type: "POST",
 					data: {_token:'{{ csrf_token() }}'}
 				},
- 
+
 				columns:[
 				{"data": "id"},
 				{"data": "code_order"},
@@ -93,6 +130,19 @@
 				//order: [[ "0", "desc" ]],
 			});
 		}
+	});
+
+	function upload_slip(order_id){
+		$('#order_id').val(order_id);
+	}
+
+	$('#file_slip').change( function () {
+		var fileExtension = ['jpg','png'];
+		if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+			alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
+			this.value = '';
+			return false;
+		} 
 	});
 </script>
 @endsection

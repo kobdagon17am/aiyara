@@ -9,11 +9,11 @@ use Cart;
 class Payment extends Model
 {
 	public static function payment_uploadfile($rs){
+
 		DB::BeginTransaction();
 		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
 		try{
 			if($rs->receive == 'sent_address'){
-				$address = 'บ้านเลขที่.'.$rs->house_no.' หมู่บ้าน/อาคาร.'.$rs->house_name.' หมู่.'.$rs->moo.' ตรอก/ซอย.'.$rs->soi.' เขต/อำเภอ.'.$rs->district.' แขวง/ตำบล.'.$rs->district_sub.' ถนน.'.$rs->road.' จังหวัด.'.$rs->province.' รหัสไปษณีย์.'.$rs->zipcode;
 
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data = $cartCollection->toArray();
@@ -31,10 +31,19 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '2',
-					'address' => $address,
+					'house_no'=> $rs->house_no,
+					'house_name'=> $rs->house_name,
+					'moo'=> $rs->moo,
+					'soi'=> $rs->soi,
+					'district'=> $rs->district,
+					'district_sub'=> $rs->district_sub,
+					'road'=> $rs->road,
+					'province'=> $rs->province,
+					'zipcode'=> $rs->zipcode,
 					'type_address' => 0,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -47,7 +56,6 @@ class Payment extends Model
 					if($file_slip->move($url,$f_name)){
 						DB::table('payment_slip')
 						->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
-
 					}
 				}
 
@@ -55,6 +63,7 @@ class Payment extends Model
 					DB::table('order_items')->insert([
 						'order_id'=>$id,
 						'product_id'=>$value['id'],
+						'product_name'=>$value['name'],
 						'quantity'=>$value['quantity'],
 						'list_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
@@ -83,10 +92,10 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '2',
-					'address' => 'Receive office',
 					'type_address' => $rs->receive_location,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -139,7 +148,6 @@ class Payment extends Model
 		try{
 
 			if($rs->receive == 'sent_address'){
-				$address = 'บ้านเลขที่.'.$rs->house_no.' หมู่บ้าน/อาคาร.'.$rs->house_name.' หมู่.'.$rs->moo.' ตรอก/ซอย.'.$rs->soi.' เขต/อำเภอ.'.$rs->district.' แขวง/ตำบล.'.$rs->district_sub.' ถนน.'.$rs->road.' จังหวัด.'.$rs->province.' รหัสไปษณีย์.'.$rs->zipcode;
 
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data=$cartCollection->toArray();
@@ -157,10 +165,19 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '1',
-					'address' => $address,
+					'house_no'=> $rs->house_no,
+					'house_name'=> $rs->house_name,
+					'moo'=> $rs->moo,
+					'soi'=> $rs->soi,
+					'district'=> $rs->district,
+					'district_sub'=> $rs->district_sub,
+					'road'=> $rs->road,
+					'province'=> $rs->province,
+					'zipcode'=> $rs->zipcode,
 					'type_address' => 0,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -169,6 +186,7 @@ class Payment extends Model
 					DB::table('order_items')->insert([
 						'order_id'=>$id,
 						'product_id'=>$value['id'],
+						'product_name'=>$value['name'],
 						'quantity'=>$value['quantity'],
 						'list_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
@@ -198,10 +216,10 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '1',
-					'address' => 'Receive office',
 					'type_address' => $rs->receive_location,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -239,7 +257,6 @@ class Payment extends Model
 		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
 		try{
 			if($rs->receive == 'sent_address'){
-				$address = 'บ้านเลขที่.'.$rs->house_no.' หมู่บ้าน/อาคาร.'.$rs->house_name.' หมู่.'.$rs->moo.' ตรอก/ซอย.'.$rs->soi.' เขต/อำเภอ.'.$rs->district.' แขวง/ตำบล.'.$rs->district_sub.' ถนน.'.$rs->road.' จังหวัด.'.$rs->province.' รหัสไปษณีย์.'.$rs->zipcode;
 
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data=$cartCollection->toArray();
@@ -257,10 +274,19 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '2',
-					'address' => $address,
+					'house_no'=> $rs->house_no,
+					'house_name'=> $rs->house_name,
+					'moo'=> $rs->moo,
+					'soi'=> $rs->soi,
+					'district'=> $rs->district,
+					'district_sub'=> $rs->district_sub,
+					'road'=> $rs->road,
+					'province'=> $rs->province,
+					'zipcode'=> $rs->zipcode,
 					'type_address' => 0,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -269,6 +295,7 @@ class Payment extends Model
 					DB::table('order_items')->insert([
 						'order_id'=>$id,
 						'product_id'=>$value['id'],
+						'product_name'=>$value['name'],
 						'quantity'=>$value['quantity'],
 						'list_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
@@ -298,10 +325,10 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '2',
-					'address' => 'Receive office',
 					'type_address' => $rs->receive_location,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -339,7 +366,6 @@ class Payment extends Model
 		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
 		try{
 			if($rs->receive == 'sent_address'){
-				$address = 'บ้านเลขที่.'.$rs->house_no.' หมู่บ้าน/อาคาร.'.$rs->house_name.' หมู่.'.$rs->moo.' ตรอก/ซอย.'.$rs->soi.' เขต/อำเภอ.'.$rs->district.' แขวง/ตำบล.'.$rs->district_sub.' ถนน.'.$rs->road.' จังหวัด.'.$rs->province.' รหัสไปษณีย์.'.$rs->zipcode;
 
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data=$cartCollection->toArray();
@@ -357,10 +383,19 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '2',
-					'address' => $address,
+					'house_no'=> $rs->house_no,
+					'house_name'=> $rs->house_name,
+					'moo'=> $rs->moo,
+					'soi'=> $rs->soi,
+					'district'=> $rs->district,
+					'district_sub'=> $rs->district_sub,
+					'road'=> $rs->road,
+					'province'=> $rs->province,
+					'zipcode'=> $rs->zipcode,
 					'type_address' => 0,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 
@@ -369,6 +404,7 @@ class Payment extends Model
 					DB::table('order_items')->insert([
 						'order_id'=>$id,
 						'product_id'=>$value['id'],
+						'product_name'=>$value['name'],
 						'quantity'=>$value['quantity'],
 						'list_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
@@ -398,10 +434,10 @@ class Payment extends Model
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
 					'orderstatus_id' => '1',
-					'address' => 'Receive office',
 					'type_address' => $rs->receive_location,
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
+					'email' => $rs->email,
 				]
 			);
 

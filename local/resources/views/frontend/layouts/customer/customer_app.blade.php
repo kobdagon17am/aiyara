@@ -296,7 +296,7 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('product-history') || request()->is('cart_payment/*')) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('product-history') || request()->is('cart_payment/*') || request()->is('cart-payment-history/*') ) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-shopping-cart"></i><b>สั่งซื้อสินค้า</b></span>
 				<span class="pcoded-mtext">สั่งซื้อสินค้า</span>
@@ -385,7 +385,7 @@
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li> --}}
-				<li class="{{ (request()->is('product-history')) ? 'active' : '' }}">
+				<li class="{{ (request()->is('product-history') || request()->is('cart-payment-history/*')) ? 'active' : '' }}">
 					<a href="{{route('product-history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>

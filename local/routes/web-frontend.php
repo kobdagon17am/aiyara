@@ -113,6 +113,8 @@ Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
+Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
+Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
@@ -153,7 +155,6 @@ Route::get('/cart-payment', function () {
 })->name('cart-payment');
 
 
-
 Route::get('/comission', function () {
   return view('frontend/comission');
 })->name('comission');
@@ -166,9 +167,8 @@ Route::get('/travel', function () {
 Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });
- 
 
-/*  Member Web Promotion Theme  */
+/*  Member Web Promotion Theme */
 Route::get('/24extra/promote', function () {
   return view('frontend/webpromote/theme02/index');
 });

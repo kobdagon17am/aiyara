@@ -86,6 +86,13 @@
  										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $customer->tel_mobile }}" required="">
  									</div>
  								</div>
+ 								<div class="row m-t-5">
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>Email <b class="text-danger">*</b></label>
+ 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
+ 									</div>
+ 								 
+ 								</div>
 
  								<div class="row m-t-5">
  									<div class="col-md-3 col-sm-4 col-4">
@@ -156,6 +163,14 @@
  										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="receive_tel_mobile" value="{{ $customer->tel_mobile }}" required="">
  									</div>
  								</div>
+
+ 								<div class="row m-t-5">
+ 									<div class="col-md-6 col-sm-6 col-6">
+ 										<label>Email <b class="text-danger">*</b></label>
+ 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
+ 									</div>
+ 								 
+ 								</div>
  							</div>
 
  							<div class="row m-t-5">
@@ -218,11 +233,12 @@
  									</div>
  									<div class="row">
  										<div class="col-xs-6 p-1">
- 											<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
- 										</div>
- 										<div class="col-xs-6 p-1">
  											<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
  										</div>
+ 										<div class="col-xs-6 p-1">
+ 											<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
+ 										</div>
+ 										
  									</div>
  								</div>
  								
