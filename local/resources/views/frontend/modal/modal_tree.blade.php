@@ -24,7 +24,7 @@
     </tr>
     <tr class="table-success">
       <td><strong>คะแนนส่วนตัว:</strong></td> 
-      <td>{{ $data->pv_point }} PV</td>
+      <td>{{ $data->pv }} PV</td>
       <td>[Exclusive ????]</td>
 
     </tr>

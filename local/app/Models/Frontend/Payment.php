@@ -11,7 +11,9 @@ class Payment extends Model
 	public static function payment_uploadfile($rs){
 
 		DB::BeginTransaction();
-		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
+		$customer_id = Auth::guard('c_user')->user()->id;
+		$code_order = date('Ymdhis').''.$customer_id;
+
 		try{
 			if($rs->receive == 'sent_address'){
 
@@ -21,7 +23,7 @@ class Payment extends Model
 
 				$id = DB::table('orders')->insertGetId(
 					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
+					'customer_id' => $customer_id,
 					'vat'  => $rs->vat,
 					'shipping'  => $rs->shipping,
 					'price' => $rs->price,
@@ -46,16 +48,27 @@ class Payment extends Model
 					'email' => $rs->email,
 				]
 			);
+				if($rs->type == 4){//เติม Ai-pocket
+					$ai_pocket = DB::table('ai_pocket')->insert(
+						['customer_id'=>$customer_id,
+						'to_customer_id'=>$customer_id,
+						'order_id'=>$id,
+						'pv'=>$rs->pv_total,
+						'type_id'  => $rs->type,
+						'status' => 'panding',
+						'detail' => 'Payment Add Ai-pocket',
+					]);
+
+				}
 
 				$file_slip = $rs->file_slip;
-
 				if(isset($file_slip)){
 					$url='local/public/files_slip/'.date('Ym');
 
-					$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'.'.$file_slip->getClientOriginalExtension();
+					$f_name = date('YmdHis').'_'.$customer_id.'.'.$file_slip->getClientOriginalExtension();
 					if($file_slip->move($url,$f_name)){
 						DB::table('payment_slip')
-						->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
+						->insert(['customer_id'=>$customer_id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
 					}
 				}
 
@@ -82,7 +95,7 @@ class Payment extends Model
 
 				$id = DB::table('orders')->insertGetId(
 					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
+					'customer_id' => $customer_id,
 					'vat'  => $rs->vat,
 					'shipping'  => $rs->shipping,
 					'price' => $rs->price,
@@ -99,376 +112,462 @@ class Payment extends Model
 				]
 			);
 
-				$file_slip = $rs->file_slip;
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
+					'type_id'  => $rs->type,
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				if(isset($file_slip)){
-					$url='local/public/files_slip/'.date('Ym');
+			}
 
-					$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'.'.$file_slip->getClientOriginalExtension();
-					if($file_slip->move($url,$f_name)){
-						DB::table('payment_slip')
-						->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
+			$file_slip = $rs->file_slip;
+			if(isset($file_slip)){
+				$url='local/public/files_slip/'.date('Ym');
 
-					}
+				$f_name = date('YmdHis').'_'.$customer_id.'.'.$file_slip->getClientOriginalExtension();
+				if($file_slip->move($url,$f_name)){
+					DB::table('payment_slip')
+					->insert(['customer_id'=>$customer_id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
+
 				}
+			}
 
-				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			foreach ($data as $value) {
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}else{
-				$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
+		}else{
+			$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
 
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
-			}
-			DB::commit();
-
-			return $resule;
-		}catch(Exception $e) { 
-			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
 		}
+		DB::commit();
+
+		return $resule;
+	}catch(Exception $e) { 
+		DB::rollback();
+		return redirect('product-history')->withError('Payment submit Fail');
+
 	}
+}
 
-	public static function payment_not_uploadfile($rs){
-		DB::BeginTransaction();
+public static function payment_not_uploadfile($rs){
+	DB::BeginTransaction();
 
-		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
-		try{
+	$customer_id = Auth::guard('c_user')->user()->id;
+	$code_order = date('Ymdhis').''.$customer_id;
+	try{
 
-			if($rs->receive == 'sent_address'){
+		if($rs->receive == 'sent_address'){
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '1',
+				'house_no'=> $rs->house_no,
+				'house_name'=> $rs->house_name,
+				'moo'=> $rs->moo,
+				'soi'=> $rs->soi,
+				'district'=> $rs->district,
+				'district_sub'=> $rs->district_sub,
+				'road'=> $rs->road,
+				'province'=> $rs->province,
+				'zipcode'=> $rs->zipcode,
+				'type_address' => 0,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '1',
-					'house_no'=> $rs->house_no,
-					'house_name'=> $rs->house_name,
-					'moo'=> $rs->moo,
-					'soi'=> $rs->soi,
-					'district'=> $rs->district,
-					'district_sub'=> $rs->district_sub,
-					'road'=> $rs->road,
-					'province'=> $rs->province,
-					'zipcode'=> $rs->zipcode,
-					'type_address' => 0,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
+			}
 
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
+			foreach ($data as $value) {
 
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}elseif($rs->receive == 'receive_office') {
+		}elseif($rs->receive == 'receive_office') {
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '1',
+				'type_address' => $rs->receive_location,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '1',
-					'type_address' => $rs->receive_location,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			}
+
+			foreach ($data as $value) {
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}else{
-				$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
+		}else{
+			$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
-			}
-			DB::commit();
-			return $resule;
-		}catch(Exception $e) {
-			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
 		}
+		DB::commit();
+		return $resule;
+	}catch(Exception $e) {
+		DB::rollback();
+		return redirect('product-history')->withError('Payment submit Fail');
+
 	}
+}
 
+public static function credit_card($rs){
+	DB::BeginTransaction();
+	$customer_id = Auth::guard('c_user')->user()->id;
+	$code_order = date('Ymdhis').''.$customer_id;
+	try{
+		if($rs->receive == 'sent_address'){
 
-	public static function credit_card($rs){
-		DB::BeginTransaction();
-		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
-		try{
-			if($rs->receive == 'sent_address'){
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
-
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '2',
+				'house_no'=> $rs->house_no,
+				'house_name'=> $rs->house_name,
+				'moo'=> $rs->moo,
+				'soi'=> $rs->soi,
+				'district'=> $rs->district,
+				'district_sub'=> $rs->district_sub,
+				'road'=> $rs->road,
+				'province'=> $rs->province,
+				'zipcode'=> $rs->zipcode,
+				'type_address' => 0,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '2',
-					'house_no'=> $rs->house_no,
-					'house_name'=> $rs->house_name,
-					'moo'=> $rs->moo,
-					'soi'=> $rs->soi,
-					'district'=> $rs->district,
-					'district_sub'=> $rs->district_sub,
-					'road'=> $rs->road,
-					'province'=> $rs->province,
-					'zipcode'=> $rs->zipcode,
-					'type_address' => 0,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
+			}
 
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
+			foreach ($data as $value) {
 
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}elseif($rs->receive == 'receive_office') {
+		}elseif($rs->receive == 'receive_office') {
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '2',
+				'type_address' => $rs->receive_location,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '2',
-					'type_address' => $rs->receive_location,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			}
+
+			foreach ($data as $value) {
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}else{
-				$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
+		}else{
+			$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
-			}
-			DB::commit();
-			return $resule;
-		}catch(Exception $e) {
-			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
 		}
+		DB::commit();
+		return $resule;
+	}catch(Exception $e) {
+		DB::rollback();
+		return redirect('product-history')->withError('Payment submit Fail');
+
 	}
+}
 
+public static function ai_cash($rs){
+	DB::BeginTransaction();
+	$customer_id = Auth::guard('c_user')->user()->id;
+	$code_order = date('Ymdhis').''.$customer_id;
+	try{
+		if($rs->receive == 'sent_address'){
 
-	public static function ai_cash($rs){
-		DB::BeginTransaction();
-		$code_order = date('Ymdhis').''.Auth::guard('c_user')->user()->id;
-		try{
-			if($rs->receive == 'sent_address'){
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
-
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '2',
+				'house_no'=> $rs->house_no,
+				'house_name'=> $rs->house_name,
+				'moo'=> $rs->moo,
+				'soi'=> $rs->soi,
+				'district'=> $rs->district,
+				'district_sub'=> $rs->district_sub,
+				'road'=> $rs->road,
+				'province'=> $rs->province,
+				'zipcode'=> $rs->zipcode,
+				'type_address' => 0,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '2',
-					'house_no'=> $rs->house_no,
-					'house_name'=> $rs->house_name,
-					'moo'=> $rs->moo,
-					'soi'=> $rs->soi,
-					'district'=> $rs->district,
-					'district_sub'=> $rs->district_sub,
-					'road'=> $rs->road,
-					'province'=> $rs->province,
-					'zipcode'=> $rs->zipcode,
-					'type_address' => 0,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
+			}
 
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
+			foreach ($data as $value) {
 
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}elseif($rs->receive == 'receive_office') {
+		}elseif($rs->receive == 'receive_office') {
 
-				$cartCollection = Cart::session($rs->type)->getContent();
-				$data=$cartCollection->toArray();
-				$total = Cart::session($rs->type)->getTotal();
+			$cartCollection = Cart::session($rs->type)->getContent();
+			$data=$cartCollection->toArray();
+			$total = Cart::session($rs->type)->getTotal();
 
-				$id = DB::table('orders')->insertGetId(
-					['code_order' => $code_order,
-					'customer_id' => Auth::guard('c_user')->user()->id,
-					'vat'  => $rs->vat,
-					'shipping'  => $rs->shipping,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
+			$id = DB::table('orders')->insertGetId(
+				['code_order' => $code_order,
+				'customer_id' => $customer_id,
+				'vat'  => $rs->vat,
+				'shipping'  => $rs->shipping,
+				'price' => $rs->price,
+				'price_vat' => $rs->price_vat,
+				'p_vat'  => $rs->p_vat,
+				'pv_total'  => $rs->pv_total,
+				'type_id'  => $rs->type,
+				'pay_type_id'  => $rs->pay_type,
+				'orderstatus_id' => '1',
+				'type_address' => $rs->receive_location,
+				'tel' => $rs->tel_mobile,
+				'name' => $rs->name,
+				'email' => $rs->email,
+			]
+		);
+			if($rs->type == 4){//เติม Ai-pocket
+				$ai_pocket = DB::table('ai_pocket')->insert(
+					['customer_id'=>$customer_id,
+					'to_customer_id'=>$customer_id,
+					'order_id'=>$id,
+					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'orderstatus_id' => '1',
-					'type_address' => $rs->receive_location,
-					'tel' => $rs->tel_mobile,
-					'name' => $rs->name,
-					'email' => $rs->email,
-				]
-			);
+					'status' => 'panding',
+					'detail' => 'Payment Add Ai-pocket',
+				]);
 
-				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-					Cart::session($rs->type)->remove($value['id']);
-				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			}
+
+			foreach ($data as $value) {
+				DB::table('order_items')->insert([
+					'order_id'=>$id,
+					'product_id'=>$value['id'],
+					'product_name'=>$value['name'],
+					'quantity'=>$value['quantity'],
+					'list_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+				]);
+				Cart::session($rs->type)->remove($value['id']);
+			}
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
 					//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
-			}else{
-				$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
+		}else{
+			$resule = ['status'=>'fail','message'=>'Payment submit Fail Address'];
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
-			}
-			DB::commit();
-			return $resule;
-
-		}catch(Exception $e) {
-			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
 		}
+		DB::commit();
+		return $resule;
+
+	}catch(Exception $e) {
+		DB::rollback();
+		return redirect('product-history')->withError('Payment submit Fail');
+
 	}
+}
 
 
 }

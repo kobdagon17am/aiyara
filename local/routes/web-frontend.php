@@ -74,6 +74,8 @@ Route::post('docs_upload','Frontend\DocsController@docs_upload')->name('docs_upl
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
 
+
+
 //------------------------------end-------------------------------//
 
 Route::get('/cademy/addnew_category', function () {
@@ -116,6 +118,10 @@ Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_hist
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 
+ 
+
+Route::get('ai-pocket','Frontend\AipocketController@index')->name('ai-pocket');
+
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
 })->name('product-status');
@@ -145,10 +151,8 @@ Route::get('/cademy/membersetting', function () {
 
 Route::get('/walletindex', function () {
   return view('frontend/walletindex');
-})->name('walletindex');;
-Route::get('/pocketindex', function () {
-  return view('frontend/pocketindex');
-})->name('pocketindex');
+})->name('walletindex');
+
 
 Route::get('/cart-payment', function () {
   return view('frontend/product/cart-payment');

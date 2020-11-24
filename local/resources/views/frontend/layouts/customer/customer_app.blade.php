@@ -412,10 +412,10 @@
 			</a>
 		</li>
 
-		<li class="{{ (request()->is('pocketindex')) ? 'active' : '' }}">
-			<a href="{{route('pocketindex')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>I-Pocket</b></span>
-				<span class="pcoded-mtext">I-Pocket</span>
+		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
+			<a href="{{route('ai-pocket')}}">
+				<span class="pcoded-micon"><i class="ti-mobile"></i><b>Ai-Pocket</b></span>
+				<span class="pcoded-mtext">Ai-Pocket</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
