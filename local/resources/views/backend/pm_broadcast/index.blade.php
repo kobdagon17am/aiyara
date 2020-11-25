@@ -42,73 +42,83 @@
             <div class="col-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
- <div class="row">
-                       <div class="col-6">
-  <form class="form-horizontal" method="POST" action="backend/uploadFile" enctype="multipart/form-data">
+                      
+                      <div class="row">
+                        <div class="col-4">
+                          <form class="form-horizontal" method="POST" action="backend/uploadFile" enctype="multipart/form-data">
                             {{ csrf_field() }}
-
                             <div class="form-group{{ @$errors->has('csv_file') ? ' has-error' : '' }}">
-                                <label for="csv_file" class="col-md-4 control-label"><b>CSV file to import</b></label>
-
-                                <div class="col-md-6">
-                                    <input type="file" accept=".csv" class="form-control" name="file" required>
-
-                                    @if (@$errors->has('csv_file'))
-                                        <span class="help-block">
-                                        <strong>{{ @$errors->first('csv_file') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
+                              <label for="csv_file" class="col-md-5 control-label"><b>CSV file to import</b></label>
+                              <div class="col-md-6">
+                                <input type="file" accept=".csv" class="form-control" name="file" required>
+                                @if (@$errors->has('csv_file'))
+                                <span class="help-block">
+                                  <strong>{{ @$errors->first('csv_file') }}</strong>
+                                </span>
+                                @endif
+                              </div>
                             </div>
-
                             <div class="form-group">
-                                <div class="col-md-10 col-md-offset-4">
-                                    <input type='submit' name='submit' class="btn btn-primary btnImCsv " value='Import CSV'>
-                                </div>
+                              <div class="col-md-10 col-md-offset-4">
+                                <input type='submit' name='submit' class="btn btn-primary btnImCsv " value='Import CSV'>
+                              </div>
                             </div>
-                             <!-- Message -->
-                                 @if(Session::has('message'))
-                                    <p style="color:green;font-weight:bold;margin-left: 2%;font-size: 16px;" >{{ Session::get('message') }}</p>
-                                 @endif
-                        </form>
-                       </div>
+                            
+                          </form>
+                        </div>
 
-                       <div class="col-6">
-             <form class="form-horizontal" method="POST" action="backend/uploadFileXLS" enctype="multipart/form-data">
+                        <div class="col-6">
+                          <form class="form-horizontal" method="POST" action="backend/uploadFileXLS" enctype="multipart/form-data">
                             {{ csrf_field() }}
-
                             <div class="form-group">
-                                <label for="csv_file" class="col-md-4 control-label"><b>XLSX file to import</b></label>
-                                <div class="col-md-6">
-                                    <input type="file" accept=".xls,.xlsx" class="form-control" name="fileXLS" required>
-                                </div>
+                              <label for="csv_file" class="col-md-4 control-label"><b>XLSX file to import</b></label>
+                              <div class="col-md-6">
+                                <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
+                              </div>
                             </div>
-
                             <div class="form-group">
-                                <div class="col-md-10 col-md-offset-4">
-                                    <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import XLSX'>
-                                </div>
+                              <div class="col-md-10 col-md-offset-4">
+                                <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import XLSX'>
+                              </div>
                             </div>
+                          </form>
 
-                        </form>
-                       </div>
+                        </div>
+
+                         <div class="col-2">
+
+                            @if(Session::has('message'))
+                            <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
+                            @endif
+
+                        </div>
+                     
 
                 </div>
 
                 <hr>
 
                 <div class="row">
-                  <div class="col-6">
+
+                  <div class="col-4">
                     <div class="form-group"> &nbsp;&nbsp;
-                      <input type='button' class="btn btn-success btnExportCSV " value='Export excel'> &nbsp;&nbsp;
+                      <input type='button' class="btn btn-success btnExportCSV " value='Export CSV'> &nbsp;&nbsp;
                     </div>
                   </div>
            
-                  <div class="col-6">
+                  <div class="col-4">
                     <div class="form-group"> &nbsp;&nbsp;
-                      <input type='button' class="btn btn-danger btnClearData " value='(Test) Clear data' >
+                       <input type='button' class="btn btn-success btnExportElsx " value='Export Excel'>
                     </div>
                   </div>
+
+                  <div class="col-4">
+                    <div class="form-group"> &nbsp;&nbsp;
+                      <input type='button' class="btn btn-danger btnClearData " value='Clear data' >
+                    </div>
+                  </div>
+
+
                 </div>
 
             </div>
@@ -124,6 +134,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
+
+                <div class="row">
+                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้า : รหัสสมาชิก" name="customers_id_fk"> 
+                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : Remark" name="remark" style="margin-left: 1%;" >
+                </div>
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
@@ -219,7 +234,7 @@ $(document).ready(function() {
     });
 
 
-    $(".btnExportCSV").click(function(event) {
+    $(".btnExportElsx").click(function(event) {
         /* Act on the event */
         $(".myloading").show();
         $.ajax({
@@ -246,6 +261,33 @@ $(document).ready(function() {
             });
     });
 
+
+    $(".btnExportCSV").click(function(event) {
+        /* Act on the event */
+        $(".myloading").show();
+        $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/csvExport') }} ", 
+               data:{ _token: '{{csrf_token()}}' },
+                success:function(data){
+                     console.log(data); 
+                     // location.reload();
+
+                     setTimeout(function(){
+                        var url='local/public/excel_files/pm_broadcast.csv';
+                        window.open(url, 'Download');  
+                        $(".myloading").hide();
+                    },3000);
+
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    $(".myloading").hide();
+                }
+            });
+    });
 
    $(".btnImCsv").click(function(event) {
           /* Act on the event */

@@ -47,7 +47,7 @@
                           <div class="form-group row">
                               <label for="example-text-input" class="col-md-3 col-form-label">รูปสินค้า :</label>
                               <div class="col-md-6">
-                                  <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" >
+                                  <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" {{ (empty(@$sRow->product_img))?'required':'' }} >
                                   @IF(!empty(@$sRow->product_img))
                                   <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ @$sRow->product_img }}" width="300px" > 
                                   @ELSE
@@ -68,21 +68,21 @@
                                     </div>
                                 </div>
 
-                    </div>
 
+                      <div class="form-group mb-0 row">
+                          <div class="col-md-6">
+                              <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.products.index') }}/{{@$sRowNew->id}}/edit" }}">
+                                <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                              </a>
+                          </div>
+                          <div class="col-md-6 text-right">
+                              <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                              </button>
+                          </div>
+                      </div>
 
-                <div class="form-group mb-0 row">
-                    <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.products.index') }}/{{@$sRowNew->id}}/edit" }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                        </button>
-                    </div>
-                </div>
+                  </div>
 
               </form>
             </div>

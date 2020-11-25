@@ -25,6 +25,7 @@
         $sC = '';
         $sU = '';
         $sD = '';
+        $role_group_id = '%';
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
@@ -34,6 +35,9 @@
         $sU = @$menu_permit->u==1?'':'display:none;';
         $sD = @$menu_permit->d==1?'':'display:none;';
       }
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;     
    ?>
 <div class="row">
     <div class="col-12">
@@ -49,7 +53,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.pm.create') }}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.pm.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -154,10 +158,13 @@ $(function() {
 </script>
 
 <script type="text/javascript">
+
+  sessionStorage.setItem("role_group_id", role_group_id);
+  var role_group_id = sessionStorage.getItem("role_group_id");
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
     if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
+       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
 </script>

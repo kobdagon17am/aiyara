@@ -23,7 +23,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('course_event', 'Course_eventController');
     Route::post('course_event/datatable', 'Course_eventController@Datatable')->name('course_event.datatable');
 
-
+    Route::resource('course_event_images', 'Course_event_imagesController');
+    Route::post('course_event_images/datatable', 'Course_event_imagesController@Datatable')->name('course_event_images.datatable');
+    Route::get('course_event_images/create/{id}', 'Course_event_imagesController@create');
 
     Route::resource('products', 'ProductsController');
     Route::post('products/datatable', 'ProductsController@Datatable')->name('products.datatable');
@@ -189,11 +191,55 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('uploadFile', 'PagesController@uploadFile');
     Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
+    Route::post('uploadCe_regis', 'PagesController@uploadCe_regis');
+    Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
 
+    Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
+    Route::post('excelExportCe_regis', 'ExcelController@excelExportCe_regis');
+    Route::post('csvExportCe_regis', 'ExcelController@csvExportCe_regis');
+
     Route::post('excelImport', 'ExcelController@excelImport');
 
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
+    // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
+    // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
+
+
+    Route::resource('ce_regis', 'Ce_regisController');
+    Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
+
+    Route::resource('delivery', 'DeliveryController');
+    Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+
+    Route::resource('delivery_approve', 'Delivery_approveController');
+    Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');
+
+    Route::resource('check_orders', 'Check_ordersController');
+    Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
+
+    Route::resource('check_orders_list', 'Check_orders_listController');
+    Route::post('check_orders_list/datatable', 'Check_orders_listController@Datatable')->name('check_orders_list.datatable');
+
+    Route::resource('po_in', 'Po_inController');
+    Route::post('po_in/datatable', 'Po_inController@Datatable')->name('po_in.datatable');
+
+    Route::resource('products_return', 'Products_returnController');
+    Route::post('products_return/datatable', 'Products_returnController@Datatable')->name('products_return.datatable');
+
+    Route::resource('products_return_approve', 'Products_return_approveController');
+    Route::post('products_return_approve/datatable', 'Products_return_approveController@Datatable')->name('products_return_approve.datatable');
+
+    Route::resource('products_out', 'Products_outController');
+    Route::post('products_out/datatable', 'Products_outController@Datatable')->name('products_out.datatable');
+
+    Route::resource('products_out_approve', 'Products_out_approveController');
+    Route::post('products_out_approve/datatable', 'Products_out_approveController@Datatable')->name('products_out_approve.datatable');
+
+    Route::resource('products_borrow', 'Products_borrowController');
+    Route::post('products_borrow/datatable', 'Products_borrowController@Datatable')->name('products_borrow.datatable');
+
+
 
     // }); 
     #=======================================================================================================================================================

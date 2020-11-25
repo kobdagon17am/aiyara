@@ -22,5 +22,32 @@ class AjaxController extends Controller
         DB::delete(" TRUNCATE `pm_broadcast` ");
     }
 
+    public function ajaxFetchData(Request $request)
+    {
+        // DB::delete(" TRUNCATE `course_event_regis` ");
+
+        // return($request->search);
+
+        // if(isset($request->search)){
+
+			    // $result = DB::select("SELECT * FROM course_event_regis WHERE ticket_number like'%".$request->search."%'");
+			    // $response = [];
+			    // while($result){
+			    //     $response[] = array("value"=>$result[0]->id,"label"=>$result[0]->ticket_number);
+			    // }
+			    // return(@$result[0]->ticket_number);
+			    // return compact($result);
+			// }
+
+    	// if(isset($request->search)){
+    	// if($request->has('term')){
+            // return Product::where('name','like','%'.$request->input('term').'%')->get();
+    	// return DB::select("SELECT * FROM course_event_regis WHERE ticket_number like'%".$request->search."%'");
+        // }
+
+
+    }
+
+
 
 }

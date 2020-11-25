@@ -9,6 +9,7 @@ use File;
 
 use Session;
 use App\Models\Backend\Page;
+use App\Models\Backend\Ce_regis_add;
 
 class PagesController extends Controller{
 
@@ -209,7 +210,218 @@ class PagesController extends Controller{
     // Redirect to index
     // return redirect()->action('PagesController@index');
     return redirect()->to(url("backend/pm_broadcast"));
+
   }
+
+
+
+
+      public function uploadCe_regis(Request $request){
+
+          // dd($request->input('submit'));
+
+        if ($request->input('submit') != null ){
+
+          $file = $request->file('fileXLS');
+
+           // dd($file);
+
+          // File Details 
+          $filename = $file->getClientOriginalName();
+          $extension = $file->getClientOriginalExtension();
+          $tempPath = $file->getRealPath();
+          $fileSize = $file->getSize();
+          $mimeType = $file->getMimeType();
+
+          // Valid File Extensions
+          $valid_extension = array("xlsx");
+
+          // 2MB in Bytes
+          // $maxFileSize = 2097152; 
+          // 5MB in Bytes
+          $maxFileSize = 5242880; 
+
+          // Check file extension
+          if(in_array(strtolower($extension),$valid_extension)){
+
+            // Check file size
+            if($fileSize <= $maxFileSize){
+
+              // File upload location
+
+              $location = 'uploads/';
+              $destinationPath = public_path($location);
+              $file->move($destinationPath, $filename);
+
+              $filepath = public_path("uploads/".$filename);
+
+              $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+              $spreadsheet = $reader->load($filepath);
+
+              $worksheet = $spreadsheet->getActiveSheet();
+              $highestRow = $worksheet->getHighestRow(); // total number of rows
+              $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+              $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+              $lines = $highestRow - 2; 
+              if ($lines <= 0) {
+                       // Exit ('There is no data in the Excel table');
+                  Session::flash('message','There is no data in the Excel table');
+
+              }else{
+
+                  $i = 0;
+
+                  for ($row = 1; $row <= $highestRow; ++$row) {
+
+                       $ce_id_fk = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //ce_id_fk
+                       $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
+                       $ticket_number = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //ticket_number
+                       $subject_recipient = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //subject_recipient
+                       $regis_date = $worksheet->getCellByColumnAndRow(5, $row)->getValue(); //regis_date
+
+                        // Skip first row (Remove below comment if you want to skip the first row)
+                         if($i == 0){
+                            $i++;
+                            continue; 
+                         }
+
+                       $insertData = array(
+                         "ce_id_fk"=>@$ce_id_fk,
+                         "customers_id_fk"=>@$customers_id_fk,
+                         "ticket_number"=>@$ticket_number,
+                         "subject_recipient"=>@$subject_recipient,
+                         "regis_date"=>@$regis_date,
+                         "created_at"=>now());
+                       Ce_regis_add::insertData($insertData);
+
+                       $i++;
+
+                  }
+
+                  Session::flash('message','Import Successful.');
+
+              }
+
+            }else{
+              Session::flash('message','File too large. File must be less than 5MB.');
+            }
+
+          }else{
+             Session::flash('message','Invalid File Extension.');
+          }
+
+        }
+
+        // Redirect to index
+        return redirect()->to(url("backend/ce_regis"));
+      }
+
+
+
+
+     public function uploadCe_regisCSV(Request $request){
+
+          // dd($request->input('submit'));
+
+        if ($request->input('submit') != null ){
+
+          $file = $request->file('fileCSV');
+
+           // dd($file);
+
+          // File Details 
+          $filename = $file->getClientOriginalName();
+          $extension = $file->getClientOriginalExtension();
+          $tempPath = $file->getRealPath();
+          $fileSize = $file->getSize();
+          $mimeType = $file->getMimeType();
+
+          // Valid File Extensions
+          $valid_extension = array("csv");
+
+          // 2MB in Bytes
+          // $maxFileSize = 2097152; 
+          // 5MB in Bytes
+          $maxFileSize = 5242880; 
+
+          // Check file extension
+          if(in_array(strtolower($extension),$valid_extension)){
+
+            // Check file size
+            if($fileSize <= $maxFileSize){
+
+              // File upload location
+
+              $location = 'uploads/';
+              $destinationPath = public_path($location);
+              $file->move($destinationPath, $filename);
+
+              $filepath = public_path("uploads/".$filename);
+
+              $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+              $spreadsheet = $reader->load($filepath);
+
+              $worksheet = $spreadsheet->getActiveSheet();
+              $highestRow = $worksheet->getHighestRow(); // total number of rows
+              $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+              $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+              $lines = $highestRow - 2; 
+              if ($lines <= 0) {
+                       // Exit ('There is no data in the Excel table');
+                  Session::flash('message','There is no data in the Excel table');
+
+              }else{
+
+                  $i = 0;
+
+                  for ($row = 1; $row <= $highestRow; ++$row) {
+
+                       $ce_id_fk = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //ce_id_fk
+                       $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
+                       $ticket_number = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //ticket_number
+                       $subject_recipient = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //subject_recipient
+                       $regis_date = $worksheet->getCellByColumnAndRow(5, $row)->getValue(); //regis_date
+
+                        // Skip first row (Remove below comment if you want to skip the first row)
+                         if($i == 0){
+                            $i++;
+                            continue; 
+                         }
+
+                       $insertData = array(
+                         "ce_id_fk"=>@$ce_id_fk,
+                         "customers_id_fk"=>@$customers_id_fk,
+                         "ticket_number"=>@$ticket_number,
+                         "subject_recipient"=>@$subject_recipient,
+                         "regis_date"=>@$regis_date,
+                         "created_at"=>now());
+                       Ce_regis_add::insertData($insertData);
+
+                       $i++;
+
+                  }
+
+                  Session::flash('message','Import Successful.');
+
+              }
+
+            }else{
+              Session::flash('message','File too large. File must be less than 5MB.');
+            }
+
+          }else{
+             Session::flash('message','Invalid File Extension.');
+          }
+
+        }
+
+        // Redirect to index
+        return redirect()->to(url("backend/ce_regis"));
+      }
+
+
 
 
 
