@@ -68,7 +68,8 @@ class WarehouseController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\WarehouseController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         // return redirect()->action('backend\WarehouseController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/warehouse/".($id?$id:0)."/edit"));
 
       } catch (\Exception $e) {
         echo $e->getMessage();

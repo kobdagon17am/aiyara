@@ -12,7 +12,10 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">คลังสินค้าย่อย</h4>
+            <h4 class="mb-0 font-size-18"> 
+                {{ @$sWarehouse->w_name?' > '.@$sWarehouse->w_name:'' }} 
+                {{ @$sRow->w_name?' \ '.@$sRow->w_name:'' }} 
+            </h4>
         </div>
     </div>
 </div>
@@ -27,12 +30,14 @@
 
               @if( empty($sRow) )
               <form action="{{ route('backend.subwarehouse.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="w_warehouse_id_fk" value="{{@$sWarehouse->id}}" >
               @else
               <form action="{{ route('backend.subwarehouse.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+                 <input type="hidden" name="w_warehouse_id_fk" value="{{@$sWarehouse->id}}" >
               @endif
                 {{ csrf_field() }}
-
+<!-- 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">เลือกคลังสินค้าหลัก :</label>
                     <div class="col-md-10">
@@ -46,7 +51,7 @@
                         </select>
                     </div>
                 </div>
-
+ -->
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">รหัสคลัง :</label>
@@ -107,9 +112,11 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/subwarehouse") }}">
+
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.warehouse.index') }}/{{@$sWarehouse->id}}/edit">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
+
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
@@ -127,7 +134,7 @@
 
                     <div class="form-group row">
                       <div class="col-md-12">
-                        <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_units.create') }}/{{@$sRow->id}}" style="float: right;">
+                        <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.zone.create') }}/{{@$sRow->id}}" style="float: right;">
                           <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                         </a>
                         <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> Zone  </span>
@@ -141,9 +148,9 @@
                     </div>
                   <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                      <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/subwarehouse") }}">
-                        <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                      </a>
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.warehouse.index') }}/{{@$sWarehouse->id}}/edit">
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                        </a>
                     </div>
                   </div>
 

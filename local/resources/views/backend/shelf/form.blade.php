@@ -12,7 +12,12 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">Shelf</h4>
+            <h4 class="mb-0 font-size-18"> 
+                {{ @$sWarehouse->w_name?' > '.@$sWarehouse->w_name:'' }} 
+                {{ @$sSubwarehouse->w_name?' \ '.@$sSubwarehouse->w_name:'' }} 
+                {{ @$sZone->w_name?' \ '.@$sZone->w_name:'' }} 
+                {{ @$sRow->w_name?' \ '.@$sRow->w_name:'' }}
+            </h4>
         </div>
     </div>
 </div>
@@ -24,13 +29,15 @@
             <div class="card-body">
               @if( empty($sRow) )
               <form action="{{ route('backend.shelf.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="w_zone_id_fk" value="{{@$sZone->id}}" >
               @else
               <form action="{{ route('backend.shelf.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+                <input type="hidden" name="w_zone_id_fk" value="{{@$sZone->id}}" >
               @endif
                 {{ csrf_field() }}
 
-                <div class="form-group row">
+              <!--   <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">เลือก Zone :</label>
                     <div class="col-md-10">
                          <select name="w_zone" class="form-control select2-templating " >
@@ -42,22 +49,30 @@
                             @endif
                         </select>
                     </div>
-                </div>
+                </div> -->
 
+              <!--   <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">Zone :</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ @$sZone->w_name }}"readonly >
+                    </div>
+                </div> -->
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัสคลัง :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Shelf :</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">รหัส Shelf :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->w_code }}" name="w_code" required>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อคลังย่อย :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
-                    </div>
-                </div>
+               
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่สร้าง :</label>
@@ -104,7 +119,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shelf") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.zone.index') }}/{{@$sZone->id}}/edit">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>

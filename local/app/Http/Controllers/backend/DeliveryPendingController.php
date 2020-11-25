@@ -7,13 +7,13 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class DeliveryController extends Controller
+class DeliveryPendingController extends Controller
 {
 
     public function index(Request $request)
     {
 
-      return view('backend.delivery.index');
+      return view('backend.delivery_pending.index');
       
     }
 
@@ -23,27 +23,14 @@ class DeliveryController extends Controller
       $Province = DB::select(" select * from dataset_provinces ");
 
       $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery.form')->with(
+      return View('backend.delivery_pending.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
         ) );
     }
-
-
     public function store(Request $request)
     {
-      // dd($request->all());
-      $arr = implode(',', $request->row_id);
-      if(isset($request->save_to_pending)){
-
-        DB::update(" UPDATE db_delivery SET status_delivery='1' WHERE id in ($arr)  ");
-
-        return redirect()->to(url("backend/delivery"));
-
-      }else{
-        return $this->form();
-      }
-      
+      return $this->form();
     }
 
     public function edit($id)
@@ -52,7 +39,7 @@ class DeliveryController extends Controller
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery.form')->with(
+      return View('backend.delivery_pending.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
         ) );
@@ -93,21 +80,23 @@ class DeliveryController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\DeliveryController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\DeliveryPendingController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Delivery::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
-      }
+      // $sRow = \App\Models\Backend\Delivery::find($id);
+      // if( $sRow ){
+      //   $sRow->forceDelete();
+      // }
+      DB::update(" UPDATE db_delivery SET status_delivery='0' WHERE id = $id  ");
       return response()->json(\App\Models\Alert::Msg('success'));
+      // return redirect()->to(url("backend/delivery"));
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','0')->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','1')->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
@@ -123,7 +112,6 @@ class DeliveryController extends Controller
       })
       ->make(true);
     }
-
 
 
 

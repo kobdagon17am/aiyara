@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">คลังสินค้า</h4>
+            <h4 class="mb-0 font-size-18">คลังสินค้า {{ @$sRow->w_name?' > '.@$sRow->w_name:'' }} </h4>
         </div>
     </div>
 </div>
@@ -120,7 +120,7 @@
 
             <div class="form-group row">
               <div class="col-md-12">
-                <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_units.create') }}/{{@$sRow->id}}" style="float: right;">
+                <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.subwarehouse.create') }}/{{@$sRow->id}}" style="float: right;">
                   <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                 </a>
                 <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> คลังย่อย  </span>

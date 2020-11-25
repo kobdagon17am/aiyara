@@ -18,12 +18,10 @@ class SubwarehouseController extends Controller
 
     }
 
- public function create()
+    public function create($id)
     {
-      $dsWarehouse = \App\Models\Backend\Warehouse::get();
-      return View('backend.subwarehouse.form')->with(array(
-        'dsWarehouse'=>$dsWarehouse,
-      ) );
+      $sWarehouse = \App\Models\Backend\Warehouse::find($id);
+      return View('backend.subwarehouse.form')->with(array('sWarehouse'=>$sWarehouse) );
     }
 
     public function store(Request $request)
@@ -31,11 +29,11 @@ class SubwarehouseController extends Controller
       return $this->form();
     }
 
-    public function edit($id)
+      public function edit($id)
     {
-       $dsWarehouse = \App\Models\Backend\Warehouse::get();
        $sRow = \App\Models\Backend\Subwarehouse::find($id);
-       return View('backend.subwarehouse.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'dsWarehouse'=>$dsWarehouse) );
+       $sWarehouse = \App\Models\Backend\Warehouse::find($sRow->w_warehouse_id_fk);
+       return view('backend.subwarehouse.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sSubwarehouse'=>$sRow,'sWarehouse'=>$sWarehouse ]);
     }
 
     public function update(Request $request, $id)
@@ -57,7 +55,7 @@ class SubwarehouseController extends Controller
 
           // dd(request('w_warehouse'));
 
-          $sRow->w_warehouse_id_fk    = request('w_warehouse');
+          $sRow->w_warehouse_id_fk    = request('w_warehouse_id_fk');
           $sRow->w_code    = request('w_code');
           $sRow->w_name    = request('w_name');
           $sRow->w_date_created    = request('w_date_created');
@@ -73,7 +71,15 @@ class SubwarehouseController extends Controller
 
           \DB::commit();
 
-           return redirect()->action('backend\SubwarehouseController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+           // return redirect()->action('backend\SubwarehouseController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+
+          if( $id ){
+            return redirect()->to(url("backend/subwarehouse/".$id."/edit"));
+          }else{
+            // return redirect()->action('backend\ZoneController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+            return redirect()->to(url("backend/warehouse/".request('w_warehouse_id_fk')."/edit"));
+          } 
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();

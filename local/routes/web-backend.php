@@ -17,8 +17,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('home', 'HomeController@index');
     Route::get('index', 'HomeController@index');
-    Route::get('manage_warehouse', 'WarehousController@index');
-
 
     Route::resource('course_event', 'Course_eventController');
     Route::post('course_event/datatable', 'Course_eventController@Datatable')->name('course_event.datatable');
@@ -71,12 +69,15 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 	Route::resource('subwarehouse', 'SubwarehouseController');
     Route::post('subwarehouse/datatable', 'SubwarehouseController@Datatable')->name('subwarehouse.datatable');
+    Route::get('subwarehouse/create/{id}', 'SubwarehouseController@create');
 
     Route::resource('zone', 'ZoneController');
     Route::post('zone/datatable', 'ZoneController@Datatable')->name('zone.datatable');
+    Route::get('zone/create/{id}', 'ZoneController@create');
 
     Route::resource('shelf', 'ShelfController');
     Route::post('shelf/datatable', 'ShelfController@Datatable')->name('shelf.datatable');
+    Route::get('shelf/create/{id}', 'ShelfController@create');
 
     Route::resource('categories', 'CategoriesController');
     Route::post('categories/datatable', 'CategoriesController@Datatable')->name('categories.datatable');
@@ -211,6 +212,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+
+    Route::resource('delivery_pending', 'DeliveryPendingController');
+    Route::post('delivery_pending/datatable', 'DeliveryPendingController@Datatable')->name('delivery_pending.datatable');
 
     Route::resource('delivery_approve', 'Delivery_approveController');
     Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');

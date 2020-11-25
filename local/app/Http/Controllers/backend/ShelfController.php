@@ -18,12 +18,12 @@ class ShelfController extends Controller
 
     }
 
- public function create()
+ public function create($id)
     {
-      $dsZone = \App\Models\Backend\Zone::get();
-      return View('backend.shelf.form')->with(array(
-        'dsZone'=>$dsZone,
-      ) );
+      $sZone = \App\Models\Backend\Zone::find($id);
+      $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($sZone->w_subwarehouse_id_fk);
+      $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
+      return View('backend.shelf.form')->with(array('sZone'=>$sZone,'sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse) );
     }
 
     public function store(Request $request)
@@ -33,9 +33,11 @@ class ShelfController extends Controller
 
     public function edit($id)
     {
-       $dsZone = \App\Models\Backend\Zone::get();
        $sRow = \App\Models\Backend\Shelf::find($id);
-       return View('backend.shelf.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'dsZone'=>$dsZone) );
+       $sZone = \App\Models\Backend\Zone::find($sRow->w_zone_id_fk);
+       $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($sZone->w_subwarehouse_id_fk);
+       $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
+       return view('backend.shelf.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sZone'=>$sZone ,'sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse ]);
     }
 
     public function update(Request $request, $id)
@@ -57,7 +59,7 @@ class ShelfController extends Controller
 
           // dd(request('w_warehouse'));
 
-          $sRow->w_zone_id_fk    = request('w_zone');
+          $sRow->w_zone_id_fk    = request('w_zone_id_fk');
           $sRow->w_code    = request('w_code');
           $sRow->w_name    = request('w_name');
           $sRow->w_date_created    = request('w_date_created');
@@ -73,7 +75,8 @@ class ShelfController extends Controller
 
           \DB::commit();
 
-           return redirect()->action('backend\ShelfController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+           // return redirect()->action('backend\ShelfController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/zone/".request('w_zone_id_fk')."/edit"));
 
       } catch (\Exception $e) {
         echo $e->getMessage();

@@ -12,7 +12,11 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">Zone</h4>
+            <h4 class="mb-0 font-size-18"> 
+                {{ @$sWarehouse->w_name?' > '.@$sWarehouse->w_name:'' }} 
+                {{ @$sSubwarehouse->w_name?' \ '.@$sSubwarehouse->w_name:'' }} 
+                {{ @$sRow->w_name?' \ '.@$sRow->w_name:'' }} 
+            </h4>
         </div>
     </div>
 </div>
@@ -29,13 +33,15 @@
 
               @if( empty($sRow) )
               <form action="{{ route('backend.zone.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="w_subwarehouse_id_fk" value="{{@$sSubwarehouse->id}}" >
               @else
               <form action="{{ route('backend.zone.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+                <input type="hidden" name="w_subwarehouse_id_fk" value="{{@$sSubwarehouse->id}}" >
               @endif
                 {{ csrf_field() }}
 
-                <div class="form-group row">
+       <!--          <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">เลือกคลังสินค้าย่อย :</label>
                     <div class="col-md-10">
                          <select name="w_subwarehouse" class="form-control select2-templating " >
@@ -48,19 +54,19 @@
                         </select>
                     </div>
                 </div>
-
+ -->
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัสคลัง :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Zone :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_code }}" name="w_code" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อคลังย่อย :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">รหัส Zone :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->w_code }}" name="w_code" required>
                     </div>
                 </div>
 
@@ -109,7 +115,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/zone") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.subwarehouse.index') }}/{{@$sSubwarehouse->id}}/edit">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -129,7 +135,7 @@
 
                     <div class="form-group row">
                       <div class="col-md-12">
-                        <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_units.create') }}/{{@$sRow->id}}" style="float: right;">
+                        <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.shelf.create') }}/{{@$sRow->id}}" style="float: right;">
                           <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                         </a>
                         <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> Shelf  </span>
@@ -143,9 +149,9 @@
                     </div>
                   <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                      <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/zone") }}">
-                        <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                      </a>
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.subwarehouse.index') }}/{{@$sSubwarehouse->id}}/edit">
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                        </a>
                     </div>
                   </div>
 
@@ -194,13 +200,14 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'w_code', title :'<center>รหัสคลัง</center>', className: 'text-center'},
             {data: 'w_name', title :'<center>ชื่อ Shelf </center>', className: 'text-center'},
-            {data: 'w_date_created', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'w_code', title :'<center>รหัส Shelf </center>', className: 'text-center'},
+            
+            // {data: 'w_date_created', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
             {data: 'w_warehouse', title :'<center>คลังหลัก</center>', className: 'text-center'},
             {data: 'w_subwarehouse', title :'<center>คลังย่อย</center>', className: 'text-center'},
             {data: 'w_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
-            {data: 'w_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
+            // {data: 'w_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
             {data: 'w_date_updated', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
             // {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
