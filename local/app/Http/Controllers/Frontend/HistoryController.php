@@ -123,6 +123,7 @@ class HistoryController extends Controller
 
 
             }else{
+                
 
                 return redirect('product-history')->withError('Upload Slip fail');
 

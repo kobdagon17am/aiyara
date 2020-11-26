@@ -233,11 +233,12 @@
  									</div>
  									<div class="row">
  										<div class="col-xs-6 p-1">
- 											<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
- 										</div>
- 										<div class="col-xs-6 p-1">
  											<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
  										</div>
+ 										<div class="col-xs-6 p-1">
+ 											<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
+ 										</div>
+ 										
  										
  									</div>
  								</div>
@@ -293,7 +294,7 @@
 
  				</table>
  				<div class="row" align="center">
- 					<a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-primary btn-block" >เลือกสินค้าเพิ่มเติม</a>
+ 					<a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-warning btn-block" ><font style="color: #000">เลือกสินค้าเพิ่มเติม</font> </a>
  				</div>
 
  			</div>

@@ -121,6 +121,9 @@ Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_
  
 
 Route::get('ai-pocket','Frontend\AipocketController@index')->name('ai-pocket');
+Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');
+
+
 
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');

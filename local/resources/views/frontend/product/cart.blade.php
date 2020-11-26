@@ -163,10 +163,10 @@
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
-          if (result.isConfirmed) {
-            $( "#cart_delete" ).attr('action',url);
+          if (result.isConfirmed){
+            $("#cart_delete" ).attr('action',url);
             $('#data_id').val(item_id);
-            $( "#cart_delete" ).submit();
+            $("#cart_delete" ).submit();
             // Swal.fire(
             //   'Deleted!',
             //   'Your file has been deleted.',

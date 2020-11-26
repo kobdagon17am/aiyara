@@ -21,33 +21,22 @@
                 <h6>จุดประสงค์การใช้</h6>
 
                 <div class="form-group row">
-                    <div class="col-md-4 m-t-5">
-
-                       <select class="form-control" name="type">
-                        @foreach($type as $value)
-                         
-
-                        <option value="{{ $value->group_id }}">{{ $value->orders_type }}</option>
-                         @endforeach
-                    </select>
-                </div>  
-
-                <div class="col-md-4 m-t-5">
 
 
-                    <div class="input-group input-group-button">
-                        <input type="text" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น">
-                        <span class="input-group-addon btn btn-primary" id="check_code">
-                            <span class="">Check Code</span>
-                        </span>
+                    <div class="col-md-6 m-t-5">
+                        <div class="input-group input-group-button">
+                            <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้">
+                            <span class="input-group-addon btn btn-primary" onclick="check()">
+                                <span class="">ทำรายการ</span>
+                            </span>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
     </div>
-</div>
 
 </div>
 
@@ -80,107 +69,146 @@
     </div>
 </div>
 
-
-<!-- Start Contact Info area-->
-<div class="contact-info-area mg-t-30" style="background-color: white;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="breadcomb-list">
-                    <h3>Pocket </h3><h4>จำนวนคะแนนที่เหลือ 1000 PV</h4>
-
+<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">ยืนยันการใช้ Ai-Pocket</h4>
                 </div>
-            </div>
-        </div>
-        <hr/>
 
-        <div class="row">
+                <div class="modal-body">
 
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" >
-                <div class="contact-form sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                   <p>   จุดประสงค์การใช้ :</p> 
-                   <select class="form-control form-control-user"  class="form-control form-control-user"  >
-                    <option value="0" selected="">ทำคุณสมบัติ</option>
-                    <option value="1">รักษาคุณสมบัติ</option>
-                    <option value="2">รักษาคุณสมบัติท่องเที่ยว</option>
-                </select><br/>
-                <input type="number"  id="member_id" class="form-control form-control-user"  placeholder="จำนวน PV"><br/>
-                <input type="text"  id="member_id" class="form-control form-control-user"  placeholder="รหัสสมาชิกที่ใช้">
-                <input type="checkbox"><font style="color: #00c454;">ใช้ให้ตนเอง</font><br/>
-                <button onclick="location.reload()" class="btn btn-lg btn-gray gray-icon-notika waves-effect" style=" background-color: #00c454; color: black">ทำรายการ</button>
-            </div>
+                    <div class="col-md-12 col-xl-12">
+                        <div class="card widget-statstic-card borderless-card">
+                            <div class="card-header">
+                                <div class="card-header-left">
+                                    <h4 id="text_username"></h4>
+                                    <p class="p-t-10 m-b-0 text-muted" id="name"> </p>
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <i class="fa fa-users st-icon bg-warning txt-lite-color"></i>
+                                <div class="text-left">
+                                    <h3 class="d-inline-block text-success" id="text_pv"></h3>
+                                    {{-- <i class="fa fa-long-arrow-down text-danger f-24 m-l-15"></i>
+                                    <span class="f-right bg-danger">-5%</span> --}}
+                                    <div class="col-sm-12 m-t-5">
+                                        <select class="form-control" name="type">
+                                            @foreach($type as $value)
+                                            <option value="{{ $value->group_id }}">{{ $value->orders_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 m-t-5">
+
+                                     <input type="text" name="pv" class="form-control autonumber" data-v-max="99999" data-v-min="0" placeholder="จำนวน PV">
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+              
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+
+            <button class="btn btn-success" type="submit" name="submit" id="submit_upload" value="upload">Confirm</button>
+
         </div>
+
     </div>
-    <hr>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" >
-            <div class="contact-form sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                <select style=" font-size: 20px; width: 100%;" >
-                    <option>รายการบันทึกทั้งหมด</option>
-                    <option>ทำคุณสมบัติ</option>
-                    <option value="1">รักษาคุณสมบัติ</option>
-                    <option value="2">รักษาคุณสมบัติท่องเที่ยว</option>
-                </select>
-            </div>
-        </div>
-
-
-
-
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-            <div class="contact-form sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-responsive" >
-                        <thead>
-                            <tr class="info">
-                                <th style="font-size: 12px;">วันที่</th>
-                                <th style="font-size: 12px;">Type</th>
-                                <th style="font-size: 12px;">ผู้รับ</th>
-                                <th style="font-size: 12px;">จำนวน</th>
-                                <th style="font-size: 12px;">สถานะ</th>
-                                <th style="font-size: 12px;">รายละเอียด</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>10/16/2563</td>
-                                <td>ทำคุณสมบัติ</td>
-                                <td>ตนเอง</td>
-                                <td>200</td>
-                                <td style="color:#00c454;">สำเร็จ</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>10/16/2563</td>
-                                <td>ทำคุณสมบัติ</td>
-                                <td>A903</td>
-                                <td>100(THB)</td>
-                                <td style="color: #ffcc00">รอดำเนินการ</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>10/16/2563</td>
-                                <td>ทำคุณสมบัติ</td>
-                                <td>ตนเอง</td>
-                                <td>1000</td>
-                                <td style="color: black;">ทำรายการไม่สำเร็จ</td>
-                                <td>-</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+</form>
 </div>
 </div>
-<!-- End Contact Info area-->
+
 
 
 @endsection
 @section('js')
+<!-- Masking js -->
+<script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+<script type="text/javascript">
+    function check(){
+    //var url = '{{ route('cart_delete') }}';
+    var username =$('#username').val();
+    $.ajax({
+        url: '{{ route('check_customer_id')}}',
+        type: 'POST',
+        data: {_token:'{{ csrf_token() }}','user_name':username}
+    })
+    .done(function(data) {
 
+        //console.log(data['data']['data']);
+        if(data['status'] == 'success'){
+            document.getElementById("text_username").innerHTML = "User ID : "+data['data']['data']['user_name']+' ('+ data['data']['data']['business_name'] +')';
+
+            document.getElementById("name").innerHTML = data['data']['data']['prefix_name']+' '+ data['data']['data']['first_name'] +' '+data['data']['data']['last_name'];
+
+            document.getElementById("text_pv").innerHTML = data['data']['data']['pv']+' PV';
+            
+            
+            $("#large-Modal").modal();
+            //alert(data['status']);
+
+        }else {
+         Swal.fire({ 
+          title: data['data']['message'],
+          // text: "You won't be able to revert this!",
+          icon: 'warning',
+          showConfirmButton: false,
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            //$( "#cart_delete" ).attr('action',url);
+           // $('#data_id').val(item_id);
+            //$( "#cart_delete" ).submit();
+            Swal.fire(
+             'Deleted!',
+             'Your file has been deleted.',
+             'success'
+             )
+
+        }
+    })
+  }
+})
+    .fail(function() {
+        console.log("error");
+    })
+
+    // Swal.fire({ 
+    //   title: 'Are you sure?',
+    //       // text: "You won't be able to revert this!",
+    //       icon: 'warning',
+    //       //showConfirmButton: false,
+    //       showCancelButton: true,
+    //       confirmButtonColor: '#3085d6',
+    //       cancelButtonColor: '#d33',
+    //       confirmButtonText: 'Yes, delete it!'
+    //   }).then((result) => {
+    //       if (result.isConfirmed) {
+    //         //$( "#cart_delete" ).attr('action',url);
+    //        // $('#data_id').val(item_id);
+    //         //$( "#cart_delete" ).submit();
+    //          Swal.fire(
+    //            'Deleted!',
+    //            'Your file has been deleted.',
+    //            'success'
+    //            )
+
+    //     }
+    // })
+}
+</script>
 
 @endsection
 
