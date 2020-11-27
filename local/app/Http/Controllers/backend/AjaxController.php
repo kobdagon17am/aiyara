@@ -234,7 +234,9 @@ class AjaxController extends Controller
      {
         // dd($id);
         $data = [$id];
-        $pdf = PDF::loadView('backend.delivery.pdf_view',compact('data'))->setPaper('a6', 'landscape');
+        $qrcode = \QrCode::size(150)->generate('0003-BL002');
+        // dd($qrcode);
+        $pdf = PDF::loadView('backend.delivery.pdf_view',compact('data','qrcode'))->setPaper('a6', 'landscape');
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
 

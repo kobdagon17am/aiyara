@@ -98,8 +98,13 @@ class Delivery_approveController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
-        $Customer = DB::select(" select * from customers where id=".$row->customer_id." ");
-        return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+        if($row->customer_id!=''){
+            $Customer = DB::select(" select * from customers where id=".$row->customer_id." ");
+            return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+        }else{
+            return '';
+        }
+        
       })
       ->addColumn('province_name', function($row) {
         $P = DB::select(" select * from dataset_provinces where code=".$row->province_code." ");

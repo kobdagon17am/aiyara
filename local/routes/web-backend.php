@@ -253,6 +253,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_borrow', 'Products_borrowController');
     Route::post('products_borrow/datatable', 'Products_borrowController@Datatable')->name('products_borrow.datatable');
 
+    Route::get('qrcode', function () {
+        return view('backend.delivery.qr_code');
+    });
 
 
     // }); 

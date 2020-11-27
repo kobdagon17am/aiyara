@@ -38,9 +38,12 @@ body{
       }
     }</style>
 
+
 <b>กรุณาส่ง..</b><br>
 
+
     <?php
+
               $value = DB::select(" 
                     SELECT
                     db_delivery_pending_code.id,
@@ -56,7 +59,8 @@ body{
                     customers_detail.district,
                     customers_detail.district_sub,
                     customers_detail.road,
-                    customers_detail.province
+                    customers_detail.province,
+                    customers.id as cus_id
                     FROM
                     db_delivery_pending_code
                     Left Join customers_detail ON db_delivery_pending_code.addr_id = customers_detail.id
@@ -87,3 +91,9 @@ body{
       ?>
       {{$addr}}<br>{{$value[0]->zipcode?$value[0]->zipcode:''}}
 
+     <?php 
+
+        $qrcode = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate($value[0]->cus_id));
+
+      ?>
+     <img src="data:image/png;base64, {!! $qrcode !!}" style="float: right;">
