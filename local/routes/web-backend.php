@@ -205,7 +205,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
-
+    Route::post('ajaxSelectAddr', 'AjaxController@ajaxSelectAddr');
+    Route::post('ajaxSelectAddrEdit', 'AjaxController@ajaxSelectAddrEdit');
+    Route::post('delivery/pdf{id}', 'AjaxController@createPDFCoverSheet');
+    Route::get('delivery/pdf/{id}', 'AjaxController@createPDFCoverSheet');
+    Route::post('delivery/print_receipt/{id}', 'AjaxController@createPDFReceipt');
+    Route::get('delivery/print_receipt/{id}', 'AjaxController@createPDFReceipt');
 
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
@@ -213,11 +218,16 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
 
+
     Route::resource('delivery_pending', 'DeliveryPendingController');
     Route::post('delivery_pending/datatable', 'DeliveryPendingController@Datatable')->name('delivery_pending.datatable');
 
+    Route::resource('delivery_pending_code', 'DeliveryPendingCodeController');
+    Route::post('delivery_pending_code/datatable', 'DeliveryPendingCodeController@Datatable')->name('delivery_pending_code.datatable');
+
     Route::resource('delivery_approve', 'Delivery_approveController');
     Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');
+
 
     Route::resource('check_orders', 'Check_ordersController');
     Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
@@ -243,6 +253,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_borrow', 'Products_borrowController');
     Route::post('products_borrow/datatable', 'Products_borrowController@Datatable')->name('products_borrow.datatable');
 
+    Route::get('qrcode', function () {
+        return view('backend.delivery.qr_code');
+    });
 
 
     // }); 

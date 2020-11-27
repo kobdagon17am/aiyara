@@ -35,7 +35,7 @@ class DeliveryPendingController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Delivery::find($id);
+       $sRow = \App\Models\Backend\DeliveryPending::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
@@ -56,9 +56,9 @@ class DeliveryPendingController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Delivery::find($id);
+            $sRow = \App\Models\Backend\DeliveryPending::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Delivery;
+            $sRow = new \App\Models\Backend\DeliveryPending;
           }
 
           $sRow->delivery_slip    = request('delivery_slip');
@@ -90,29 +90,10 @@ class DeliveryPendingController extends Controller
       // if( $sRow ){
       //   $sRow->forceDelete();
       // }
-      DB::update(" UPDATE db_delivery SET status_delivery='0' WHERE id = $id  ");
-      return response()->json(\App\Models\Alert::Msg('success'));
-      // return redirect()->to(url("backend/delivery"));
+      // return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','1')->orderBy('id', 'asc');
-      $sQuery = \DataTables::of($sTable);
-      return $sQuery
-      ->addColumn('customer_name', function($row) {
-        $Customer = DB::select(" select * from customers where id=".$row->customer_id." ");
-        return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
-      })
-      ->addColumn('province_name', function($row) {
-        $P = DB::select(" select * from dataset_provinces where code=".$row->province_code." ");
-        return $P[0]->name_th;
-      })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
-      })
-      ->make(true);
-    }
-
+  
 
 
 }

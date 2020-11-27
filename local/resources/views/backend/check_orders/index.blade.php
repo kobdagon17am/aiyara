@@ -64,6 +64,7 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
+
 @endsection
 
 @section('script')
@@ -111,7 +112,10 @@ $(function() {
           method: 'POST'
         },
         columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'qr',   title :'<center>Qr-code</center>', className: 'text-center w100 ',render: function(d) {
+               // return '<center><img  src="{{ asset('asset/qrcode/temp/qr.png') }}" style="width: 40%;" ></center>';
+                return '<center>'+d+'</center>';
+            }},
             {data: 'receipt', title :'<center>เลขที่ใบเสร็จ </center>', className: 'text-center'},
             {data: 'bill_no', title :'<center>เลขที่บิล </center>', className: 'text-center'},
             {data: 'product_code', title :'<center>รหัสสินค้า </center>', className: 'text-left'},
@@ -119,9 +123,7 @@ $(function() {
             {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
             {data: 'unit_price', title :'<center>ราคา/หน่วย </center>', className: 'text-center'},
             {data: 'total_price', title :'<center>ราคารวม </center>', className: 'text-center'},
-            {data: 'qrcode',   title :'<center>Qr-code</center>', className: 'text-center w100 ',render: function(d) {
-                return '<center><img  src="{{ asset('asset/qrcode/temp/qr.png') }}" style="width: 40%;" ></center>';
-            }},
+            
             {data: 'check_date', title :'<center>วันที่ </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
@@ -129,7 +131,6 @@ $(function() {
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
           }else{ 
-
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.check_orders.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.check_orders.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'

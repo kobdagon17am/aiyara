@@ -108,6 +108,9 @@ class Check_ordersController extends Controller
         $product_name = @$sProducts_details[0]->product_name?@$sProducts_details[0]->product_name:'-ยังไม่กำหนดชื่อสินค้าในเมนูสินค้า-';
         return $product_code.'-'.$product_name;
       })
+      ->addColumn('qr', function($row) {
+        return  \QrCode::size(80)->generate($row->receipt.$row->bill_no);
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
