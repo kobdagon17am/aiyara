@@ -60,12 +60,10 @@ class AipocketController extends Controller
           ->count();
 
           $totalFiltered = $totalData;
-
           $limit = $request->input('length');
           $start = $request->input('start');
         //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir');
-
+        ////$dir = $request->input('order.0.dir');
 
           $ai_pocket =  DB::table('ai_pocket')
           ->select('ai_pocket.*','c_use.business_name as business_name_use','c_to.business_name as business_name_to','c_use.user_name as c_use','c_to.user_name as c_to','dataset_orders_type.orders_type') 
