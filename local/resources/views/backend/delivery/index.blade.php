@@ -3,7 +3,41 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style type="text/css">
+	table.minimalistBlack {
+	  border: 2px solid #000000;
+	  width: 100%;
+	  text-align: left;
+	  border-collapse: collapse;
+	}
+	table.minimalistBlack td, table.minimalistBlack th {
+	  border: 1px solid #000000;
+	  padding: 5px 4px;
+	}
+	table.minimalistBlack tbody td {
+	  font-size: 13px;
+	}
+	table.minimalistBlack thead {
+	  background: #CFCFCF;
+	  background: -moz-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+	  background: -webkit-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+	  background: linear-gradient(to bottom, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+	  border-bottom: 2px solid #000000;
+	}
+	table.minimalistBlack thead th {
+	  font-size: 15px;
+	  font-weight: bold;
+	  color: #000000;
+	  text-align: center;
+	}
+	table.minimalistBlack tfoot td {
+	  font-size: 14px;
+	}
+</style>
+    <style type="text/css">
+    	.grow { transition: all .2s ease-in-out; }
+		.grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
+    </style>
 @endsection
 
 @section('content')
@@ -114,6 +148,73 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" name="save_select_addr" value="1" >
+            {{ csrf_field() }}
+
+	      <div class="modal-body">
+				<div id="select_addr_result"></div>
+	      </div>
+
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="submit" class="btn btn-primary">Save</button>
+	      </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" name="save_select_addr_edit" value="1" >
+            <!-- <input type="hidden" id="delivery_pending_code_id"  name="delivery_pending_code_id" > -->
+            {{ csrf_field() }}
+
+	      <div class="modal-body">
+				<div id="select_addr_result_edit"></div>
+	      </div>
+
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="submit" class="btn btn-primary">Save</button>
+	      </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -194,8 +295,10 @@ $(function() {
 
                     $('td:last-child', nRow).html(''
                       + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                      + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      
                     ).addClass('input');
+
+                    // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
                 }
               }
@@ -267,7 +370,7 @@ $(function() {
                   iDisplayLength: 10,
                   // stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.delivery_pending.datatable') }}',
+                    url: '{{ route('backend.delivery_pending_code.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -292,16 +395,32 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'id', title :'ID', className: 'text-center w50'},
-                      // {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                      // {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'pending_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
+                      // {data: 'pending_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
+                      //     return ;
+                      // }},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          return '';
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
                       }},
-                      {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                      {data: 'tel', title :'<center>เบอร์โทร </center>', className: 'text-center'},
-                      {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                      {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
-                          return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
+                      {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
+                      // {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
+                      {data: 'id',   title :'ใบจ่าหน้ากล่องส่ง', className: 'text-center ',render: function(d) {
+                          return '<center><a href="{{ URL::to('backend/delivery/pdf') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                      }},
+                      {data: 'id',   title :'พิมพ์ใบเสร็จ', className: 'text-center ',render: function(d) {
+                          return '<center><a href="{{ URL::to('backend/delivery/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
@@ -311,7 +430,8 @@ $(function() {
                     }else{ 
 
                         $('td:last-child', nRow).html(''
-                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_pending.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_pending_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                         ).addClass('input');
 
                     }
@@ -358,8 +478,66 @@ $(function() {
 
                 }); 
 
+                
+                $(document).on('click', '.btnEditAddr', function(event) {
+                	event.preventDefault();
+                	var id = $(this).data('id');
+                	$('#delivery_pending_code_id').val(id);
+                	$.ajax({
+		               type:'POST',
+		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
+		               data:{ _token: '{{csrf_token()}}',v:id },
+		                success:function(data){
+		                     // console.log(data); 
+		                     // location.reload();
+		                     $('#select_addr_result_edit').html(data);
+		                     $('#exampleModalCenterEdit').modal('show');
+
+		                  },
+		                error: function(jqXHR, textStatus, errorThrown) { 
+		                    console.log(JSON.stringify(jqXHR));
+		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+		                    $(".myloading").hide();
+		                }
+		            });
+                });
+             
           });
     </script> 
+
+
+
+<script type="text/javascript">
+
+    // $(window).on('load',function(){
+    	var v = "<?=@$_REQUEST['select_addr']?>";
+    	// alert(v);
+    	if(v){
+
+		        $.ajax({
+	               type:'POST',
+	               url: " {{ url('backend/ajaxSelectAddr') }} ", 
+	               data:{ _token: '{{csrf_token()}}',v:v },
+	                success:function(data){
+	                     // console.log(data); 
+	                     // location.reload();
+	                     $('#select_addr_result').html(data);
+	                     setTimeout(function(){
+							$('#exampleModalCenter').modal('show');
+						 }, 1500);
+	                  },
+	                error: function(jqXHR, textStatus, errorThrown) { 
+	                    console.log(JSON.stringify(jqXHR));
+	                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+	                    $(".myloading").hide();
+	                }
+	            });
+
+    	}
+        
+    // });
+</script>
+
 
 
 <script type="text/javascript">

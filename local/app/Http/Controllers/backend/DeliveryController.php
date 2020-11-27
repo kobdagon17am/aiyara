@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use PDF;
 
 class DeliveryController extends Controller
 {
@@ -16,6 +17,7 @@ class DeliveryController extends Controller
       return view('backend.delivery.index');
       
     }
+
 
  public function create()
     {
@@ -33,12 +35,58 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
       // dd($request->all());
-      $arr = implode(',', $request->row_id);
+      
       if(isset($request->save_to_pending)){
 
-        DB::update(" UPDATE db_delivery SET status_delivery='1' WHERE id in ($arr)  ");
+      	$arr = implode(',', $request->row_id);
 
-        return redirect()->to(url("backend/delivery"));
+        DB::update(" UPDATE db_delivery SET status_delivery='1',updated_at=now() WHERE id in ($arr)  ");
+
+        $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+
+        $rsDeliveryAddr = DB::select(" 
+        	SELECT
+			customers_detail.id as addr
+			FROM
+			db_delivery
+			Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
+			WHERE db_delivery.id in ($arr) 
+			ORDER BY customers_detail.id limit 1  ");
+
+	      $DeliveryPendingCode = new \App\Models\Backend\DeliveryPendingCode;
+	      if( $DeliveryPendingCode ){
+	      	$DeliveryPendingCode->addr_id = $rsDeliveryAddr[0]->addr;
+	      	$DeliveryPendingCode->created_at = date('Y-m-d H:i:s');
+	        $DeliveryPendingCode->save();
+	      }
+
+	     foreach ($rsDelivery as $key => $value) {
+	     	$DeliveryPending = new \App\Models\Backend\DeliveryPending;
+	     	$DeliveryPending->pending_code = $DeliveryPendingCode->id;
+	     	$DeliveryPending->delivery_id_fk = @$value->id;
+	     	$DeliveryPending->created_at = date('Y-m-d H:i:s');
+	        $DeliveryPending->save();
+	     }
+
+        return redirect()->to(url("backend/delivery?select_addr=".$DeliveryPendingCode->id."&"));
+
+        // return redirect()->to(url("backend/delivery/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
+
+      }elseif(isset($request->save_select_addr)){
+
+      		$DeliveryPendingCode = \App\Models\Backend\DeliveryPendingCode::find($request->id);
+      		$DeliveryPendingCode->addr_id = $request->addr;
+      		$DeliveryPendingCode->save();
+
+      		return redirect()->to(url("backend/delivery"));
+      
+      }elseif(isset($request->save_select_addr_edit)){     
+
+      		$DeliveryPendingCode = \App\Models\Backend\DeliveryPendingCode::find($request->id);
+      		$DeliveryPendingCode->addr_id = $request->addr;
+      		$DeliveryPendingCode->save();
+
+      		return redirect()->to(url("backend/delivery"));      			
 
       }else{
         return $this->form();
@@ -99,11 +147,11 @@ class DeliveryController extends Controller
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Delivery::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
-      }
-      return response()->json(\App\Models\Alert::Msg('success'));
+      // $sRow = \App\Models\Backend\Delivery::find($id);
+      // if( $sRow ){
+      //   $sRow->forceDelete();
+      // }
+      // return response()->json(\App\Models\Alert::Msg('success'));
     }
 
     public function Datatable(){
@@ -111,12 +159,22 @@ class DeliveryController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
-        $Customer = DB::select(" select * from customers where id=".$row->customer_id." ");
-        return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+      	if(@$row->customer_id!=''){
+         	$Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
+        	return @$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+      	}else{
+      		return '';
+      	}
       })
       ->addColumn('province_name', function($row) {
-        $P = DB::select(" select * from dataset_provinces where code=".$row->province_code." ");
-        return $P[0]->name_th;
+        if(@$row->province_code!=''){
+
+        	 $P = DB::select(" select * from dataset_provinces where code=".@$row->province_code." ");
+        	 return $P[0]->name_th;
+
+		}else{
+      		return '';
+      	}
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
