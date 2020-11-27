@@ -53,7 +53,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Sent</th>
-                                <th>Receive</th>
+                                <th>Receive(UserName)</th>
                                 <th>Date</th>
                                 <th>Type</th>
                                 <th>PV</th>
