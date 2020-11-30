@@ -41,7 +41,9 @@
                </table>
            </div>
            <div class="col-md-4 col-sm-6">
-            <h6 class="m-b-20">Invoice Number : @if($order->detail)<span> {{ $order->code_order }} </span> @endif</h6>
+            <h6 class="m-b-20">เลขใบสั่งซื้อ : @if($order->detail)<span> {{ $order->code_order }} </span> @endif</h6>
+
+            <h6 class="m-b-20 ">เลขใบเสร็จ : @if($order->order_payment_code)<span class="text-success"> {{ $order->order_payment_code }} </span> @endif</h6>
 
           {{--   <table class="table table-responsive invoice-table invoice-order table-borderless">
                 <tbody>
@@ -155,7 +157,7 @@
 
 
 @endsection
-@section('js')
+@section('js') 
 
 @endsection
 

@@ -40,6 +40,7 @@ class HistoryController extends Controller
         ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
         ->where('dataset_orders_type.lang_id','=','1')
         ->where('dataset_order_status.lang_id','=','1')
+        ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
         ->count();
         $totalFiltered = $totalData;
 
@@ -61,6 +62,7 @@ class HistoryController extends Controller
         ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
         ->where('dataset_order_status.lang_id','=','1')
         ->where('dataset_orders_type.lang_id','=','1')
+        ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
         ->offset($start)
         ->limit($limit)
         ->orderby('id','DESC')
@@ -146,10 +148,12 @@ class HistoryController extends Controller
             'dataset_business_major.province as office_province',
             'dataset_business_major.zipcode as office_zipcode',
             'dataset_business_major.tel as office_tel',
-            'dataset_business_major.email as office_email') 
+            'dataset_business_major.email as office_email',
+            'order_payment_code.order_payment_code') 
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
         ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
         ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','orders.type_address') 
+         ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id') 
         ->where('dataset_order_status.lang_id','=','1')
         ->where('dataset_orders_type.lang_id','=','1')
         ->where('orders.code_order','=',$code_order)

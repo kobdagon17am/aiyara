@@ -87,10 +87,9 @@
                   <div class="col-sm-12"><h6 class="f-16 f-w-600 m-t-10 m-b-10">Quantity</h6></div>
                   <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
                    <div class="p-l-0 m-b-25">
-
                      <div class="input-group">
                       <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-number shadow-none btn-sm" disabled="disabled" data-type="minus" data-field="quant[1]">
+                        <button type="button" class="btn btn-default btn-number shadow-none btn-sm btn-block" disabled="disabled" data-type="minus" data-field="quant[1]">
                           <span class="icofont icofont-minus m-0"></span>
                         </button>
                       </span>
@@ -101,17 +100,17 @@
                         </button>
                       </span>
                     </div>
-                  </div>
-
+                  </div> 
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-6 notifications">
-                 <button type="button" onclick="addcart({{$product->products_id}})" class="btn btn-primary waves-effect waves-light" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
+                 <button type="button" onclick="addcart({{$product->products_id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
 
               </div>
-              <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 col-12 text-center">
-               <a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">
+               <a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning btn-block" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
              </div>
 
 

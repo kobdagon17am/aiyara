@@ -45,6 +45,9 @@ Route::get('logout', function () {
 })->name('logout');
 
 
+Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
+
+
 Route::get('modal_tree','Frontend\HomeController@modal_tree')->name('modal_tree');
 Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
 Route::get('home','Frontend\HomeController@index')->name('home');
@@ -126,7 +129,6 @@ Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
 Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
 
-
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
 })->name('product-status');
@@ -157,7 +159,6 @@ Route::get('/cademy/membersetting', function () {
 Route::get('/walletindex', function () {
   return view('frontend/walletindex');
 })->name('walletindex');
-
 
 Route::get('/cart-payment', function () {
   return view('frontend/product/cart-payment');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
+use App\Models\Frontend\Pvpayment;
 
 class CartController extends Controller
 {
@@ -62,28 +63,35 @@ class CartController extends Controller
 				}
 				$pv_total = array_sum($pv);
 
+			}else{
+				$pv_total = 0;
+			}
+
+			$price = Cart::session($type)->getTotal();
+			$price_total = number_format($price,2);
+
+			$bill = array('price_total'=>$price_total,
+				'pv_total'=>$pv_total,
+				'count_item'=>$pv_total,
+				'data'=>$data,
+				'quantity'=>$quantity,
+				'status'=>'success'
+			);
+
+			return $bill;
+
 		}else{
-			$pv_total = 0;
+			$bill = array('status'=>'fail');
+			return $bill;
+
 		}
-
-		$price = Cart::session($type)->getTotal();
-		$price_total = number_format($price,2);
-
-		$bill = array('price_total'=>$price_total,
-			'pv_total'=>$pv_total,
-			'count_item'=>$pv_total,
-			'data'=>$data,
-			'quantity'=>$quantity,
-			'status'=>'success'
-		);
-
-		return $bill;
-
-	}else{
-		$bill = array('status'=>'fail');
-		return $bill;
 
 	}
 
-}
+	public function payment_test_type_1(){
+		$order_id = '52';//order_id
+		$admin_id = '99';//admin_id 
+		$resule = Pvpayment::PvPayment_type_1_success($order_id,$admin_id);
+		dd($resule);
+	}
 }

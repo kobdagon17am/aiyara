@@ -12,7 +12,19 @@ class Payment extends Model
 
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$code_order = date('Ymdhis').''.$customer_id;
+
+		// เลขใบเสร็จ
+		// ปีเดือน[รันเลข]
+		// 2020110 00001
+
+		$id = DB::table('orders')
+		->select('id')
+		->orderby('id','desc')
+		->first();
+		
+		$maxId  = $id->id +1;
+		$maxId = substr("00000".$maxId, -5);
+		$code_order = date('Ymd').''.$maxId;
 
 		try{
 			if($rs->receive == 'sent_address'){
@@ -169,8 +181,14 @@ class Payment extends Model
 public static function payment_not_uploadfile($rs){
 	DB::BeginTransaction();
 
-	$customer_id = Auth::guard('c_user')->user()->id;
-	$code_order = date('Ymdhis').''.$customer_id;
+	$id = DB::table('orders')
+	->select('id')
+	->orderby('id','desc')
+	->first();
+
+	$maxId  = $id->id +1;
+	$maxId = substr("00000".$maxId, -5);
+	$code_order = date('Ymd').''.$maxId;
 	try{
 
 		if($rs->receive == 'sent_address'){
@@ -305,7 +323,14 @@ public static function payment_not_uploadfile($rs){
 public static function credit_card($rs){
 	DB::BeginTransaction();
 	$customer_id = Auth::guard('c_user')->user()->id;
-	$code_order = date('Ymdhis').''.$customer_id;
+	$id = DB::table('orders')
+	->select('id')
+	->orderby('id','desc')
+	->first();
+
+	$maxId  = $id->id +1;
+	$maxId = substr("00000".$maxId, -5);
+	$code_order = date('Ymd').''.$maxId;
 	try{
 		if($rs->receive == 'sent_address'){
 
@@ -437,8 +462,14 @@ public static function credit_card($rs){
 
 public static function ai_cash($rs){
 	DB::BeginTransaction();
-	$customer_id = Auth::guard('c_user')->user()->id;
-	$code_order = date('Ymdhis').''.$customer_id;
+	$id = DB::table('orders')
+	->select('id')
+	->orderby('id','desc')
+	->first();
+
+	$maxId  = $id->id +1;
+	$maxId = substr("00000".$maxId, -5);
+	$code_order = date('Ymd').''.$maxId;
 	try{
 		if($rs->receive == 'sent_address'){
 
@@ -571,3 +602,4 @@ public static function ai_cash($rs){
 
 
 }
+ 
