@@ -46,7 +46,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รายการรอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18"> รายการเบิกสินค้า  </h4>
         </div>
     </div>
 </div>
@@ -77,78 +77,63 @@
         <div class="card">
             <div class="card-body">
 
-               <div class="myBorder">
-
-          <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_to_pending" value="1" >
-
-            {{ csrf_field() }}
-         
-                <div class="row">
-                  <div class="col-8">
-
-                  	<div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดส่ง </span>
-                          </div>
-                        </div>
-
-          <!--           <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าแจ้ง" name="topics_reported">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
-                  </div>
-
-                  <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.delivery.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
-                    </a>
-                  </div>
-
-                </div>
-
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
-
-                 <div class="col-md-6 text-right divBtnSave " style="display: none;">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิล Packing List
-                    </button>
-                  </div>
-
-              <!--     <p><b>Selected rows data:</b></p>
-              <pre id="example-console-rows"></pre>
-
-              <p><b>Form data as submitted to the server:</b></p>
-              <pre id="example-console-form"></pre>
-            -->
-
-              <div id="last_form"></div>
-
-              </form>
-
-
-
- </div>
-
-              <div class="myBorder">
-                      <div style="">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> Packing List รอจัดส่ง  </span>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <table id="data-table-pending" class="table table-bordered dt-responsive" style="width: 100%;">
-                            </table>
+                  <div class="myBorder">
+                    <form id="frm-example" action="{{ route('backend.pickup_goods.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                      <input type="hidden" name="save_to_set" value="1" >
+                      {{ csrf_field() }}
+                      
+                      <div class="row">
+                        <div class="col-8">
+                          <div class="form-group row">
+                            <div class="col-md-12">
+                              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอจัดเบิก (รายบิล) </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                   
-                    </div>
+                      <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                      </table>
+                      <div class="col-md-6 text-right divBtnSave " style="display: none;">
+                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
+                        <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรายการจัดเบิก
+                        </button>
+                      </div>
+                      <div id="last_form"></div>
+                    </form>
+                  </div>
 
+                  <div class="myBorder">
+                    <div style="">
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอจัดเบิก (Packing List)</span>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="myBorder">
+                    <div style="">
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอเบิกจากคลัง  </span>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <table id="data-table-pending" class="table table-bordered dt-responsive" style="width: 100%;">
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
             </div>
         </div>
@@ -246,39 +231,39 @@ $(function() {
         iDisplayLength: 10,
         // stateSave: true,
         ajax: {
-          url: '{{ route('backend.delivery.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
+          url: '{{ route('backend.pickup_goods.datatable') }}',
+                data: function ( d ) {
+                  d.Where={};
+                  $('.myWhere').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Like={};
+                  $('.myLike').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Custom={};
+                  $('.myCustom').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  oData = d;
+                },
+                method: 'POST'
+              },
               columns: [
                   {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'delivery_date', title :'<center>วันเวลา<br>ที่ออกบิล </center>', className: 'text-center'},
+                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center'},
                   // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
                   //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
                   // }},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                  {data: 'billing_employee', title :'<center>พนักงาน<br>ที่ออกบิล </center>', className: 'text-center'},
+                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
                   // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
                   //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
@@ -286,20 +271,20 @@ $(function() {
                   // {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
                   //     return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
                   // }},
-                  {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
-                  	if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
-                  	}else{
-                  		return '';
-                  	}
-                  }},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
+                  //     return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                  // }},
+                  // {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
+                  //     return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                  // }},
+                  // {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                  // 	if(d=='1'){
+                  //       return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
+                  // 	}else{
+                  // 		return '';
+                  // 	}
+                  // }},
+                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
                     'columnDefs': [
                {
@@ -312,42 +297,7 @@ $(function() {
             'select': {
                'style': 'multi'
             },
-
               rowCallback: function(nRow, aData, dataIndex){
-
-              	  if (aData['status_delivery'] == "1") {
-			        $('td', nRow).css('background-color', '#ffd9b3');
-			        $("td:eq(0)", nRow).html('');
-			        $("td:eq(6)", nRow).html('');
-			        $("td:eq(7)", nRow).html('');
-			        $("td:eq(9)", nRow).html('');
-			        var i;
-					for (i = 0; i < 10 ; i++) {
-					   $("td:eq("+i+")", nRow).prop('disabled',true); 
-					} 
-
-			      }else{
-			      	$("td:eq(6)", nRow).prop('disabled',true); 
-			      	$("td:eq(7)", nRow).prop('disabled',true); 
-			      	$("td:eq(9)", nRow).prop('disabled',true); 
-			      } 
-
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{ 
-
-                	if (aData['status_delivery'] != "1") {
-
-	                    $('td:last-child', nRow).html(''
-	                      + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                      
-	                    ).addClass('input');
-
-                    }
-
-                    // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
-                }
               }
           });
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -359,19 +309,13 @@ $(function() {
 
   					     setTimeout(function(){
   	            		if($('.select-info').text()!=''){
-  	            			var str = $('.select-info').text();
-        							var str = str.split(" ");
-        							if(parseInt(str[0])>1){
-        								$('.divBtnSave').show();
-        							}else{
-        								$('.divBtnSave').hide();
-        							}
+  	            			$('.divBtnSave').show();
   		            	}else{
   		            		$('.divBtnSave').hide();
   		            	}
   		            }, 500);
 
-            } );
+              } );
 
            // Handle form submission event 
            $('#frm-example').on('submit', function(e){
@@ -415,9 +359,10 @@ $(function() {
                });
 
 
+
           var oTable2;
           $(function() {
-              oTable2 = $('#data-table-pending').DataTable({
+              oTable2 = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
                   serverSide: true,
@@ -476,53 +421,94 @@ $(function() {
                       }},
                       {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
                       // {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                      {data: 'id',   title :'ใบจ่าหน้ากล่องส่ง', className: 'text-center ',render: function(d) {
-                          return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      }},
-                      {data: 'id',   title :'พิมพ์ใบเสร็จ', className: 'text-center ',render: function(d) {
-                          return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      }},
-                      {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
-	                  	if(d=='1'){
-	                        return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
-	                  	}else{
-	                  		return '';
-	                  	}
-	                  }},
-                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                  	if (aData['status_delivery'] == "1") {
-				        $('td', nRow).css('background-color', '#ffd9b3');
-				        // $("td:eq(0)", nRow).html('');
-				        $("td:eq(4)", nRow).html('');
-				        $("td:eq(5)", nRow).html('');
-				        $("td:eq(7)", nRow).html('');
-				        var i;
-						for (i = 0; i < 10 ; i++) {
-						   $("td:eq("+i+")", nRow).prop('disabled',true); 
-						} 
+                    
+                  }
+              });
 
-			      	}
+              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                oTable2.draw();
+              });
+          });
+
+
+
+          var oTable3;
+          $(function() {
+              oTable3 = $('#data-table-pending').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  ordering: false,
+                  scrollY: ''+($(window).height()-370)+'px',
+                  iDisplayLength: 10,
+                  // stateSave: true,
+                  ajax: {
+                    url: '{{ route('backend.pickup_goods_set.datatable') }}',
+                    data: function ( d ) {
+                      d.Where={};
+                      $('.myWhere').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Where[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Like={};
+                      $('.myLike').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Like[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Custom={};
+                      $('.myCustom').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      oData = d;
+                    },
+                    method: 'POST'
+                  },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50 '},
+                      {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center'},
+                      {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                      {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
+                      {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                      {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
+                          return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                      }},
+                   //    {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
+	                  // 	if(d=='1'){
+	                  //       return '<span style="color:red">อยู่ระหว่างการจัด</span>';
+	                  // 	}else{
+	                  // 		return '';
+	                  // 	}
+	                  // }},
+                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
 
                     if(sU!=''&&sD!=''){
                         $('td:last-child', nRow).html('-');
                     }else{ 
 
-                    	if (aData['status_delivery'] != "1") {
                     		$('td:last-child', nRow).html(''
 	                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_pending_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 	                        ).addClass('input');
-                		}
 
                     }
                   }
               });
 
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable2.draw();
+                oTable3.draw();
               });
           });
 
@@ -538,13 +524,7 @@ $(function() {
           	
                  setTimeout(function(){
                     if($('.select-info').text()!=''){
-                      var str = $('.select-info').text();
-                      var str = str.split(" ");
-                      if(parseInt(str[0])>1){
-                        $('.divBtnSave').show();
-                      }else{
-                        $('.divBtnSave').hide();
-                      }
+                      $('.divBtnSave').show();
                     }else{
                       $('.divBtnSave').hide();
                     }
@@ -556,13 +536,7 @@ $(function() {
 
                    setTimeout(function(){
                       if($('.select-info').text()!=''){
-                        var str = $('.select-info').text();
-                        var str = str.split(" ");
-                        if(parseInt(str[0])>1){
-                          $('.divBtnSave').show();
-                        }else{
-                          $('.divBtnSave').hide();
-                        }
+                        $('.divBtnSave').show();
                       }else{
                         $('.divBtnSave').hide();
                       }

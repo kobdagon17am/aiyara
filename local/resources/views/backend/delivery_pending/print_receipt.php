@@ -172,35 +172,37 @@ tr.border_bottom td {
 <?php 
 
 $value = DB::select(" 
-                    SELECT
-                    db_delivery.id,
-                    db_delivery.receipt,
-                    customers.prefix_name,
-                    customers.first_name,
-                    customers.last_name,
-                    customers_detail.house_no,
-                    customers_detail.house_name,
-                    customers_detail.moo,
-                    customers_detail.zipcode,
-                    customers_detail.soi,
-                    customers_detail.district,
-                    customers_detail.district_sub,
-                    customers_detail.road,
-                    customers_detail.province,
-                    customers.id as cus_id
-                    FROM
-                    db_delivery
-                    Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-                    Left Join customers ON customers_detail.customer_id = customers.id
-                    WHERE
-                    db_delivery.id = 
-                    ".$data[0]."
+          SELECT
+          db_delivery.receipt,
+          customers.prefix_name,
+          customers.first_name,
+          customers.last_name,
+          customers_detail.house_no,
+          customers_detail.house_name,
+          customers_detail.moo,
+          customers_detail.zipcode,
+          customers_detail.soi,
+          customers_detail.district,
+          customers_detail.district_sub,
+          customers_detail.road,
+          customers_detail.province
+          FROM
+          db_delivery_pending
+          Left Join db_delivery ON db_delivery_pending.delivery_id_fk = db_delivery.id
+          Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
+          Left Join customers ON db_delivery.customer_id = customers.id
+          WHERE db_delivery_pending.pending_code = 
+          ".$data[0]."
 
      ");
+      // $i=1;
+      // foreach ($dt as $key => $value) {
+         // echo $value[0]->receipt;
 
         // if($i>1){echo'<div class="page-break"></div>';}
 
  ?>
+   
 
     <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
@@ -395,5 +397,6 @@ NET AMOUNT </td>
 
 </div>
 
+<?php // $i++ ;  } ?>
 
  

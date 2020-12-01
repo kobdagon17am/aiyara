@@ -52,16 +52,6 @@ class AjaxController extends Controller
     public function ajaxSelectAddr(Request $request)
     {
 
-        // return $request->v;
-
-          // $DP = DB::table('db_delivery_pending')->where('pending_code',$request->v)->get();
-          // $array = array();
-          // foreach ($DP as $key => $value) {
-          //   $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-          //   $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
-          //   array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
-          // }
-
           $data = DB::select(" 
                 SELECT
                 db_delivery_pending.id,
@@ -230,7 +220,7 @@ class AjaxController extends Controller
 
     }
 
-    public function createPDFCoverSheet($id)
+    public function createPDFCoverSheet01($id)
      {
         // dd($id);
         $data = [$id];
@@ -242,11 +232,34 @@ class AjaxController extends Controller
 
     }
 
-    public function createPDFReceipt($id)
+    public function createPDFReceipt01($id)
      {
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.delivery.print_receipt',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+
+    public function createPDFCoverSheet02($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $qrcode = \QrCode::size(150)->generate('0003-BL002');
+        // dd($qrcode);
+        $pdf = PDF::loadView('backend.delivery_pending.pdf_view',compact('data','qrcode'))->setPaper('a6', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFReceipt02($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.delivery_pending.print_receipt',compact('data'));
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 

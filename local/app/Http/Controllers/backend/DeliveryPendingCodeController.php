@@ -40,7 +40,7 @@ class DeliveryPendingCodeController extends Controller
 
       $DP = DB::table('db_delivery_pending')->where('pending_code',$id)->get();
       foreach ($DP as $key => $value) {
-          DB::update(" UPDATE db_delivery SET status_delivery='0' WHERE id = ".$value->delivery_id_fk."  ");
+          DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
       }
 
       DB::update(" DELETE FROM db_delivery_pending WHERE pending_code = $id  ");

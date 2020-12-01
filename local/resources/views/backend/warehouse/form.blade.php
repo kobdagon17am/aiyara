@@ -51,7 +51,9 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่สร้าง :</label>
                     <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required >
+                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required data-date-format="DD MMMM YYYY" >
+
+
                     </div>
                 </div>
 
@@ -147,7 +149,10 @@
 
     </div>
 
-    
+<!-- <input type="date" id="dt" onchange="mydate1();" />
+ -->
+<!--  <input type="text" id="ndt"  onclick="mydate();"  /> -->
+
     </div> <!-- end col -->
 </div>
 <!-- end row -->
@@ -157,6 +162,23 @@
 @section('script')
 
 <script>
+
+  function mydate() {
+  //alert("");
+  document.getElementById("dt").hidden = false;
+  document.getElementById("ndt").hidden = true;
+}
+
+function mydate1() {
+  d = new Date(document.getElementById("dt").value);
+  dt = d.getDate();
+  mn = d.getMonth();
+  mn++;
+  yy = d.getFullYear();
+  document.getElementById("ndt").value = dt + "/" + mn + "/" + yy
+  document.getElementById("ndt").hidden = false;
+  document.getElementById("dt").hidden = true;
+}
 
 var w_warehouse_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
 
@@ -227,6 +249,8 @@ $(function() {
        window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
+
+
 </script>
 
 @endsection

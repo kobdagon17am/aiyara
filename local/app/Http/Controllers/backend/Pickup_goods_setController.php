@@ -8,13 +8,13 @@ use DB;
 use File;
 use PDF;
 
-class DeliveryController extends Controller
+class Pickup_goods_setController extends Controller
 {
 
     public function index(Request $request)
     {
 
-      return view('backend.delivery.index');
+      return view('backend.pickup_goods_set.index');
       
     }
 
@@ -25,7 +25,7 @@ class DeliveryController extends Controller
       $Province = DB::select(" select * from dataset_provinces ");
 
       $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery.form')->with(
+      return View('backend.pickup_goods_set.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
         ) );
@@ -108,7 +108,7 @@ class DeliveryController extends Controller
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery.form')->with(
+      return View('backend.pickup_goods_set.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
         ) );
@@ -148,7 +148,7 @@ class DeliveryController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\DeliveryController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Pickup_goods_setController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
@@ -162,7 +162,7 @@ class DeliveryController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','1')->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('delivery_date', function($row) {
