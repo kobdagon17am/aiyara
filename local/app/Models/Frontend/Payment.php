@@ -12,7 +12,6 @@ class Payment extends Model
 
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-
 		// เลขใบเสร็จ
 		// ปีเดือน[รันเลข]
 		// 2020110 00001
@@ -180,7 +179,7 @@ class Payment extends Model
 
 public static function payment_not_uploadfile($rs){
 	DB::BeginTransaction();
-
+	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
 	->select('id')
 	->orderby('id','desc')
@@ -462,6 +461,7 @@ public static function credit_card($rs){
 
 public static function ai_cash($rs){
 	DB::BeginTransaction();
+	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
 	->select('id')
 	->orderby('id','desc')
