@@ -108,6 +108,9 @@ class Po_approveController extends Controller
         ->orderby('id','DESC');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('price', function($row) {
+        return number_format($row->price + $row->shipping,2);
+      })
       ->addColumn('date', function($row) {
         return  date('d/m/Y H:i:s',strtotime($row->create_at));
       })
@@ -118,11 +121,13 @@ class Po_approveController extends Controller
     }
 
 
-
     public function DatatableSet(){
       $sTable = \App\Models\Backend\Orders::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('price', function($row) {
+        return number_format($row->price + $row->shipping,2);
+      })
       ->addColumn('type', function($row) {
         $D = DB::table('dataset_orders_type')->where('group_id','=',$row->type_id)->get();
         return @$D[0]->orders_type;
