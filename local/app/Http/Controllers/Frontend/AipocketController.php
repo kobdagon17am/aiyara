@@ -152,7 +152,7 @@ class AipocketController extends Controller
      }
 
      $nestedData['create_at'] = date('d/m/Y H:i:s',strtotime($value->create_at));
-     $nestedData['type'] = $value->detail;
+     $nestedData['type'] = $value->orders_type;
      $nestedData['pv'] = '<b class="text-success">'.$value->pv.'</b>';
 
      if( $value->status == 'success'){
