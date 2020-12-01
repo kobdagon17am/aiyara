@@ -77,31 +77,32 @@ class PvPayment extends Model
 				->select('*')
 				->where('id','=',$customer_id)
 				->first();
+				//dd($data_user);
 
 				$add_pv = $data_user->pv + $pv;
 				$update_pv = DB::table('Customers') 
 				->where('id',$customer_id)
 				->update(['pv' => $add_pv]);
+
 				//ทำคุณสมบัติตัวเอง
 				$upline_type = $data_user->line_type;
 				$upline_id = $data_user->upline_id;
 				$customer_id = $upline_id;
+				$last_upline_type = $upline_type;
 
-				$j = 2;
-				
-				for ($i=1; $i <= $j ; $i++){ 
+				if($customer_id != 'AA'){
+					$j = 2;
+					for ($i=1; $i <= $j ; $i++){ 
 
-					$data_user = DB::table('Customers')
-					->where('id','=',$customer_id)
-					->first();
+						$data_user = DB::table('Customers')
+						->where('id','=',$customer_id)
+						->first();
 
-					$upline_type = $data_user->line_type;
-					$upline_id = $data_user->upline_id;
-					
-					if(!empty($upline_id) and !empty($upline_type)){
+						$upline_type = $data_user->line_type;
+						$upline_id = $data_user->upline_id;
 
 						if($upline_id == 'AA'){
-							
+
 							if($last_upline_type == 'A'){
 
 								$add_pv = $data_user->pv_a + $pv;
@@ -174,14 +175,17 @@ class PvPayment extends Model
 								$j = 0;
 							}
 
-							
+
 						}
 
-					}else{
-						$resule = ['status'=>'fail','message'=>'Pv upline Type 1 Fail'];
-						$j =0;
+
 					}
+
+				}else{
+					$resule = ['status'=>'success','message'=>'Pv add Type AA Success'];
+
 				}
+				
 
 				if($resule['status'] == 'success'){
 					DB::commit();

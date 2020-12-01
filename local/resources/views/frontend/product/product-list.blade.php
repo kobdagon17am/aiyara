@@ -29,8 +29,8 @@
         </form> --}}
 
         <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
-         {{--  <label>หมวดสินค้า </label> --}}
-         <select class="form-control" id="category" name="category" onchange="select_category()">
+           {{--  <label>หมวดสินค้า </label> --}}
+           <select class="form-control" id="category" name="category" onchange="select_category()">
             @foreach($data['category'] as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="col-lg-5 col-md-5 col-sm-12 m-t-5">
+    <div class="col-lg-4 col-md-4 col-sm-12 m-t-5">
         <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#large-Modal">Code ticket</button>
 
         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
@@ -63,10 +63,10 @@
                     <div class="modal-body">
                         <div class="card">
                             <div class="card-header">
-                               {{--  <h5>Zero Configuration</h5> --}}
-                               <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
-                           </div>
-                           <div class="card-block">
+                             {{--  <h5>Zero Configuration</h5> --}}
+                             <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
+                         </div>
+                         <div class="card-block">
                             <div class="dt-responsive table-responsive">
                                 <table id="simpletable" class="table table-striped table-bordered nowrap">
                                     <thead>
@@ -131,18 +131,27 @@
         </div>
     </div>
 
-{{--     <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="row float-right m-r-10">
-             
+    <div class="col-lg-4 col-md-4 col-sm-12">
 
-            <i class="fa fa-shopping-cart text-c-blue d-block f-50"></i> <b class="text-c-blue" style="font-size: 20px">
-                {{Cart::session(1)->getTotalQuantity()}} </b> 
+        <div class="card widget-statstic-card borderless-card">
+            <div class="card-header">
+                <div class="card-header-left">
+                    <h5>Statistics</h5>
+                    <p class="p-t-10 m-b-0 text-muted">Compared to last week</p>
+                </div>
             </div>
-       
-
-        </div> --}}
-
+            <div class="card-block">
+                <i class="fa fa-calendar st-icon bg-primary"></i>
+                <div class="text-left">
+                    <h3 class="d-inline-block">5,456</h3>
+                    <i class="fa fa-long-arrow-up f-24 text-success m-l-15"></i>
+                    <span class="f-right bg-success">23%</span>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 
 </div>
 </div>
@@ -157,7 +166,7 @@
             <div class="prod-img">
                 <div class="option-hover">
 
-                   <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+                 <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
                     class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
                     <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
                         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">

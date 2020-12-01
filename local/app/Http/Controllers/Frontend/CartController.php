@@ -89,7 +89,7 @@ class CartController extends Controller
 	}
 
 	public function payment_test_type_1(){
-		$order_id = '52';//order_id
+		$order_id = '53';//order_id
 		$admin_id = '99';//admin_id 
 		$resule = Pvpayment::PvPayment_type_1_success($order_id,$admin_id);
 		dd($resule);
