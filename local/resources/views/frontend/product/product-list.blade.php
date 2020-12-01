@@ -2,25 +2,14 @@
 @section('conten')
 @section('css')
 @endsection
-
 <!-- Breadcomb area Start-->
+
+
 <div class="page-header card">
-    <div class="card-block">
-      @if($type == 1)
-      <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
-      @elseif($type == 2)
-      <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
-      @elseif($type == 3)
-      <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
-      @elseif($type == 4)
-      <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
-      @elseif($type == 5)
-      <h5>Gift Voucher</h5>
-      @elseif($type == 6)
-      <h5>คอร์สอบรม</h5>
-      @else
-      <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
-      @endif 
+    <div class="card-block" style="padding: 10px">
+
+      <h5 class="text-primary">@if($data['type']) {{ $data['type']->orders_type }} @else ไม่ทราบจุดประสงค์การสั่งซื้อ @endif</h5>
+      
       <div class="form-group row">
 
         {{-- <form action="{{route('product-list-1_c_id')}}" method="post">
@@ -28,28 +17,28 @@
             
         </form> --}}
 
-        <div class="col-lg-3 col-md-3 col-sm-6 m-t-5">
-           {{--  <label>หมวดสินค้า </label> --}}
-           <select class="form-control" id="category" name="category" onchange="select_category()">
+        <div class="col-lg-4 col-md-4 col-sm-6 m-t-5">
+         {{--  <label>หมวดสินค้า </label> --}}
+         <select class="form-control" id="category" name="category" onchange="select_category()">
             @foreach($data['category'] as $value)
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
         </select>
     </div>  
 
-    <div class="col-lg-4 col-md-4 col-sm-6 m-t-5">
+    <div class="col-lg-4 col-md-4 col-sm-12 m-t-5">
         {{-- <label>รหัสสินค้าโปรโมชั่น</label> --}} 
 
-        <div class="input-group input-group-button">
-            <input type="text" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น">
-            <span class="input-group-addon btn btn-primary" id="check_code">
-                <span class="">Check Code</span>
+
+        <div class="input-group input-group-button ">
+            <span class="input-group-addon btn btn-primary" id="basic-addon11" data-toggle="modal" data-target="#large-Modal">
+                <span class="">Code ticket</span>
+            </span>
+            <input type="text" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น" required="">
+            <span class="input-group-addon btn btn-primary" id="basic-addon12">
+                <span class="">ใช้งาน</span>
             </span>
         </div>
-    </div>
-
-    <div class="col-lg-4 col-md-4 col-sm-12 m-t-5">
-        <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#large-Modal">Code ticket</button>
 
         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
@@ -63,10 +52,10 @@
                     <div class="modal-body">
                         <div class="card">
                             <div class="card-header">
-                             {{--  <h5>Zero Configuration</h5> --}}
-                             <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
-                         </div>
-                         <div class="card-block">
+                               {{--  <h5>Zero Configuration</h5> --}}
+                               <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span>
+                           </div>
+                           <div class="card-block">
                             <div class="dt-responsive table-responsive">
                                 <table id="simpletable" class="table table-striped table-bordered nowrap">
                                     <thead>
@@ -131,47 +120,124 @@
         </div>
     </div>
 
-    <div class="col-lg-4 col-md-4 col-sm-12">
 
-        <div class="card widget-statstic-card borderless-card">
-            <div class="card-header">
-                <div class="card-header-left">
-                    <h5>Statistics</h5>
-                    <p class="p-t-10 m-b-0 text-muted">Compared to last week</p>
-                </div>
-            </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 ">
+        @if($type==1)
+        <div class="card bg-c-green order-card m-b-0">
             <div class="card-block">
-                <i class="fa fa-calendar st-icon bg-primary"></i>
-                <div class="text-left">
-                    <h3 class="d-inline-block">5,456</h3>
-                    <i class="fa fa-long-arrow-up f-24 text-success m-l-15"></i>
-                    <span class="f-right bg-success">23%</span>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div class="row">
+                    <div class="col-md-5">
+                     <h5 class="m-b-20">PV TOTAL</h5>
+
+                 </div>
+                 <div class="col-md-7">
+                  <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
+              </div>
+          </div>
+
+          <p class="m-b-0">จำนวนคะแนนคงเหลือ</p>
+      </div>
+  </div>
+  @elseif($type==2)
+  <div class="card bg-c-yellow order-card m-b-0">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-6">
+               <h5 class="m-b-10">คงเหลือ</h5>
+
+           </div>
+           <div class="col-md-6">
+              <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h3>
+          </div>
+      </div>
+
+      <p class="m-b-0" style="font-size: 16px">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p> 
+
+      <p><b style="color: #000;">Active ถึง 14/09/2020</b><span class="label label-danger f-right" style="font-size: 14px">หมดอายุ</span>  </p>
+      {{-- <p class="m-b-0" style="color: #000">Active ถึง 14/09/2020</p> --}}
+  </div>
+</div>
+@elseif($type==3)
+<div class="card bg-c-yellow order-card m-b-0">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-6">
+               <h5 class="m-b-10">คงเหลือ</h5>
+
+           </div>
+           <div class="col-md-6">
+              <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h3>
+          </div>
+      </div>
+
+      <p class="m-b-0" style="font-size: 15px">สถานะรักษาคุณสมบัติท่องเที่ยวของคุณ </p>  
+
+      <p><b style="color: #000;">Active ถึง 14/09/2020</b><span class="label label-danger f-right" style="font-size: 14px">หมดอายุ</span>  </p>
+      {{-- <p class="m-b-0" style="color: #000">Active ถึง 14/09/2020</p> --}}
+  </div>
+</div>
+@elseif($type==4)
+<div class="card bg-c-blue order-card m-b-0">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-4">
+             <h6 class="m-b-10" style="font-size: 16px">Ai Pocket</h6>
+
+         </div>
+         <div class="col-md-8">
+          <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
+      </div>
+  </div>
+
+  <p class="m-b-0">จำนวนคะแนนคงเหลือ</p>
+</div>
+</div>
+@elseif($type==5)
+<div class="card bg-c-pink order-card m-b-0">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-6">
+             <h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+
+         </div>
+         <div class="col-md-6">
+          <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} </span></h3>
+      </div>
+  </div>
+
+  <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p>
+</div>
+</div>
+@endif
+
+</div>
 
 
 
 </div>
 </div>
-<div class="row" id="product_list">
+</div>
 
-    @foreach($data['product'] as $value)
+<div class="page-header card">
+ <div class="card-block">
 
-    <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
-      <input type="hidden" id="item_id" value="{{$value->products_id}}">
-      <div class="card prod-view">
-        <div class="prod-item text-center">
-            <div class="prod-img">
-                <div class="option-hover">
+    <div class="row m-t-5" id="product_list">
+        @foreach($data['product'] as $value)
 
-                 <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
-                    class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                    <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
-                        class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
-                        <i class="icofont icofont-eye-alt f-20"></i>
-                    </a>
+        <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
+          <input type="hidden" id="item_id" value="{{$value->products_id}}">
+          <div class="card prod-view">
+            <div class="prod-item text-center">
+                <div class="prod-img">
+                    <div class="option-hover">
+
+                       <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+                        class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
+                        <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
+                            class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
+                            <i class="icofont icofont-eye-alt f-20"></i>
+                        </a>
                         <!-- <button type="button" class="btn btn-danger btn-icon waves-effect waves-light hvr-bounce-in option-icon">
               <i class="icofont icofont-heart-alt f-20"></i>
           </button> -->
@@ -204,6 +270,8 @@
         </div>
         {!! $product->links(); !!}
     </div> --}}
+</div>
+</div>
 </div>
 
 @endsection

@@ -326,7 +326,7 @@
 				<li class="{{ (request()->is('cart/2') || request()->is('product-list/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>2])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext">รักษาคุณสมบัติ</span>
+						<span class="pcoded-mtext">รักษาคุณสมบัติรายเดือน</span>
 						@if(Cart::session(2)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_2" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(2)->getTotalQuantity() }}</span>
 						@endif

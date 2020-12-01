@@ -17,6 +17,13 @@ class Product extends Model
         ->orderby('order')
         ->get();
 
+        $data_type = DB::table('dataset_orders_type')
+        ->where('lang_id', '=', 1)
+        ->where('group_id', '=',$type)
+        //->orderby('order')
+        ->first();
+
+
         $product = DB::table('products')
         ->select(
             'products.id as products_id',
@@ -40,6 +47,7 @@ class Product extends Model
 
         $data = array(
             'category' => $categories,
+            'type'=>$data_type,
             'product' => $product);
         return $data;
 
