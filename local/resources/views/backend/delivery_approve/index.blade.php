@@ -171,7 +171,6 @@ $(function() {
             {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
             {data: 'tel', title :'<center>เบอร์โทร </center>', className: 'text-center'},
             {data: 'province_name', title :'<center>จังหวัด </center>', className: 'text-center'},
-            {data: 'delivery_tatus', title :'<center>สถานะการจัดส่ง </center>', className: 'text-center'},
             // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
             //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             // }},

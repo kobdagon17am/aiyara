@@ -207,10 +207,15 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
     Route::post('ajaxSelectAddr', 'AjaxController@ajaxSelectAddr');
     Route::post('ajaxSelectAddrEdit', 'AjaxController@ajaxSelectAddrEdit');
-    Route::post('delivery/pdf{id}', 'AjaxController@createPDFCoverSheet');
-    Route::get('delivery/pdf/{id}', 'AjaxController@createPDFCoverSheet');
-    Route::post('delivery/print_receipt/{id}', 'AjaxController@createPDFReceipt');
-    Route::get('delivery/print_receipt/{id}', 'AjaxController@createPDFReceipt');
+
+    Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
+    Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
+    Route::get('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
+
+    Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
+    Route::post('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
+    Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
+
 
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
@@ -227,6 +232,19 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('delivery_approve', 'Delivery_approveController');
     Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');
+
+// รอจัดเบิกสินค้า
+    Route::resource('pickup_goods', 'Pickup_goodsController');
+    Route::post('pickup_goods/datatable', 'Pickup_goodsController@Datatable')->name('pickup_goods.datatable');
+
+// จัดเบิก
+    Route::resource('pickup_goods_set', 'Pickup_goods_setController');
+    Route::post('pickup_goods_set/datatable', 'Pickup_goods_setController@Datatable')->name('pickup_goods_set.datatable');
+
+// ใบสั่งซื้อรออนุมัติ
+    Route::resource('po_approve', 'Po_approveController');
+    Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
+    Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
 
 
     Route::resource('check_orders', 'Check_ordersController');

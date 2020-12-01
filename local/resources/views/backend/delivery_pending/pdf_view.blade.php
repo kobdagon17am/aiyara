@@ -46,7 +46,8 @@ body{
 
               $value = DB::select(" 
                     SELECT
-                    db_delivery.id,
+                    db_delivery_pending_code.id,
+                    db_delivery_pending_code.addr_id,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -61,11 +62,11 @@ body{
                     customers_detail.province,
                     customers.id as cus_id
                     FROM
-                    db_delivery
-                    Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
+                    db_delivery_pending_code
+                    Left Join customers_detail ON db_delivery_pending_code.addr_id = customers_detail.id
                     Left Join customers ON customers_detail.customer_id = customers.id
                     WHERE
-                    db_delivery.id = 
+                    db_delivery_pending_code.id = 
                     ".$data[0]."
 
                ");
@@ -81,7 +82,7 @@ body{
                 $addr .= $value[0]->district?", อ.".$value[0]->district:'';
                 $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
-                if($value[0]->house_no!=''&$value[0]->house_name!=''){
+                if($value[0]->addr_id!=''){
                     $addr = $addr;
                 }else{
                     $addr = "-ไม่พบข้อมูลที่อยู่-";

@@ -66,7 +66,6 @@ class Products_outController extends Controller
           $sRow->customer_id    = request('customer_id');
           $sRow->tel    = request('tel');
           $sRow->province_code    = request('province_code');
-          $sRow->delivery_tatus    = request('delivery_tatus');
           $sRow->delivery_date    = request('delivery_date');
                     
           $sRow->created_at = date('Y-m-d H:i:s');
