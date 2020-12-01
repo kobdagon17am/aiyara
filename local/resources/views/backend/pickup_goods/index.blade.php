@@ -103,6 +103,9 @@
                   </div>
 
                   <div class="myBorder">
+                  	<form id="frm-example-packing" action="{{ route('backend.pickup_goods.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                  		<input type="hidden" name="save_to_set_packing" value="1" >
+                      {{ csrf_field() }}
                     <div style="">
                       <div class="form-group row">
                         <div class="col-md-12">
@@ -113,26 +116,16 @@
                         <div class="col-md-12">
                           <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
                           </table>
+                          <div class="col-md-6 text-right divBtnSavePacking " style="display: none;">
+	                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSavePacking ">
+	                        <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรายการจัดเบิก
+	                        </button>
+	                      </div>
+	                      <div id="last_form_packing"></div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-
-                  <div class="myBorder">
-                    <div style="">
-                      <div class="form-group row">
-                        <div class="col-md-12">
-                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอเบิกจากคลัง  </span>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="col-md-12">
-                          <table id="data-table-pending" class="table table-bordered dt-responsive" style="width: 100%;">
-                          </table>
-                        </div>
-                      </div>
-                    </div>
+                </form>
                   </div>
 
             </div>
@@ -157,7 +150,7 @@
         </button>
       </div>
 
-       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+       	 <form id="frm-example-packing" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_select_addr" value="1" >
             {{ csrf_field() }}
 
@@ -263,7 +256,6 @@ $(function() {
                   // }},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
                   // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
                   //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
@@ -284,7 +276,11 @@ $(function() {
                   // 		return '';
                   // 	}
                   // }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                  {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
+                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                  }},
+                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
                     'columnDefs': [
                {
@@ -298,6 +294,18 @@ $(function() {
                'style': 'multi'
             },
               rowCallback: function(nRow, aData, dataIndex){
+
+                    if(sU!=''&&sD!=''){
+                        $('td:last-child', nRow).html('-');
+                    }else{ 
+
+                    		$('td:last-child', nRow).html(''
+	                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	                       
+	                        ).addClass('input');
+
+                    }
+
               }
           });
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -399,7 +407,7 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      // {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'id', title :'ID', className: 'text-center w50'},
                       {data: 'pending_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
                       
                       // {data: 'pending_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
@@ -421,76 +429,12 @@ $(function() {
                       }},
                       {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
                       // {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-
-                    
-                  }
-              });
-
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable2.draw();
-              });
-          });
-
-
-
-          var oTable3;
-          $(function() {
-              oTable3 = $('#data-table-pending').DataTable({
-              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                  processing: true,
-                  serverSide: true,
-                  scroller: true,
-                  scrollCollapse: true,
-                  scrollX: true,
-                  ordering: false,
-                  scrollY: ''+($(window).height()-370)+'px',
-                  iDisplayLength: 10,
-                  // stateSave: true,
-                  ajax: {
-                    url: '{{ route('backend.pickup_goods_set.datatable') }}',
-                    data: function ( d ) {
-                      d.Where={};
-                      $('.myWhere').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Where[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Like={};
-                      $('.myLike').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Like[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Custom={};
-                      $('.myCustom').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      oData = d;
-                    },
-                    method: 'POST'
-                  },
-                  columns: [
-                      {data: 'id', title :'ID', className: 'text-center w50 '},
-                      {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center'},
-                      {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
-                      {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                      {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                      {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
-                          return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      }},
-                   //    {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
-	                  // 	if(d=='1'){
-	                  //       return '<span style="color:red">อยู่ระหว่างการจัด</span>';
-	                  // 	}else{
-	                  // 		return '';
-	                  // 	}
-	                  // }},
+                      // {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+	                  {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
+	                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -498,25 +442,77 @@ $(function() {
                         $('td:last-child', nRow).html('-');
                     }else{ 
 
-                    		$('td:last-child', nRow).html(''
-	                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_pending_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-	                        ).addClass('input');
+                		$('td:last-child', nRow).html(''
+                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                      
+                        ).addClass('input');
 
                     }
+
                   }
               });
 
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable3.draw();
+                	oTable2.draw();
               });
+
+              $('#data-table-packing').on( 'click', 'tr', function () {
+
+  					setTimeout(function(){
+  	            		if($('.select-info').text()!=''){
+  	            			$('.divBtnSave').show();
+  		            	}else{
+  		            		$('.divBtnSave').hide();
+  		            	}
+  		            }, 500);
+
+              } );
+
+           // Handle form submission event 
+           $('#frm-example-packing').on('submit', function(e){
+              var form = this;
+
+              console.log(form);
+              
+              var rows_selected = oTable2.column(0).checkboxes.selected();
+
+              console.log(rows_selected);
+
+              // Iterate over all selected checkboxes
+              $.each(rows_selected, function(index, rowId){
+
+                console.log(rowId);
+                // $("#last_form").after("<input type='text' name='row_id[]' value='"+rowId+"' >");
+                 // Create a hidden element 
+                $('#last_form_packing').after(
+                     $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', 'row_id[]')
+                        .val(rowId)
+                 );
+              });
+
+              // FOR DEMONSTRATION ONLY
+              // The code below is not needed in production
+              
+              // Output form data to a console     
+              // $('#example-console-rows').text(rows_selected.join(","));
+              
+              // Output form data to a console     
+              // $('#example-console-form').text($(form).serialize());
+               
+              // Remove added elements
+              // $('input[name="id\[\]"]', form).remove();
+               
+              // Prevent actual form submission
+              // e.preventDefault();
+
+               });
+
+
           });
 
-</script>
 
-  <script> 
-
-        
 
           $(document).ready(function() {
 
@@ -570,11 +566,7 @@ $(function() {
 
 
           });
-    </script> 
 
-
-
-<script type="text/javascript">
 
     // $(window).on('load',function(){
     	var v = "<?=@$_REQUEST['select_addr']?>";
@@ -604,8 +596,6 @@ $(function() {
         
     // });
 </script>
-
-
 
 <script type="text/javascript">
 

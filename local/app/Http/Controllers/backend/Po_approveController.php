@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Frontend\Pvpayment;
 
 class Po_approveController extends Controller
 {
@@ -73,7 +71,7 @@ class Po_approveController extends Controller
 
           if(request('status_slip')==true){
              // dd($id." : ".(\Auth::user()->id));
-             Pvpayment::PvPayment_type_1_success($id,\Auth::user()->id);
+             \App\Models\Frontend\Pvpayment::PvPayment_type_1_success($id,\Auth::user()->id);
           }
 
           \DB::commit();
