@@ -80,7 +80,7 @@ class Po_approveController extends Controller
           //   return redirect()->action('backend\OrdersController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
           // }else{
             //return redirect()->to(url("backend/po_approve/".$sRow->id."/edit"));
-            return redirect()->to(url("backend/po_approve/")->with(['alert'=>\App\Models\Alert::Msg('success')]);//golf แก้
+            return redirect()->action('backend\Po_approveController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
           // }
           
