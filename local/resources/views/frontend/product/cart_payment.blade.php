@@ -2,6 +2,7 @@
  @section('css')
  @endsection
  @section('conten')
+ <?php //dd($customer); ?>
  
  <div class="row">
  	<div class="col-md-8 col-sm-12">
@@ -271,9 +272,9 @@
  						<td><strong>Vat({{ $bill['vat'] }}%)</strong></td>
  						<td align="right"><strong id="sent"> {{ $bill['p_vat'] }}</strong></td>
  					</tr>
-
+ 
  					<tr>
- 						<td><strong>รวม</strong></td>
+ 						<td><strong>มูลค่าสินค้า + Vat</strong></td>
  						<td align="right"><strong id="sent"> {{ $bill['price'] }}</strong></td>
  					</tr>
  					<tr>

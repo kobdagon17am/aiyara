@@ -127,33 +127,33 @@
             <div class="card-block">
                 <div class="row">
                     <div class="col-md-5">
-                     <h5 class="m-b-20">PV TOTAL</h5>
+                     <h5 class="m-b-20" style="color: #000">คะแนนสะสม</h5>
 
                  </div>
                  <div class="col-md-7">
-                  <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
+                  <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
               </div>
           </div>
 
-          <p class="m-b-0">จำนวนคะแนนคงเหลือ</p>
+          <p class="m-b-0" style="font-size: 16px"><b class="f-right"><i class="fa fa-star p-2 m-b-0"></i>  BRONZE STAR AWARD ( BSA )</b></p>
       </div>
   </div>
   @elseif($type==2)
   <div class="card bg-c-yellow order-card m-b-0">
     <div class="card-block">
-        <div class="row">
+        <div class="row"> 
             <div class="col-md-6">
-               <h5 class="m-b-10">คงเหลือ</h5>
+               <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
 
            </div>
            <div class="col-md-6">
-              <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h3>
+              <h3 class="text-right" style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h3>
           </div>
       </div>
 
-      <p class="m-b-0" style="font-size: 16px">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p> 
+      <p style="font-size: 15px;color: #000;s">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p> 
 
-      <p><b style="color: #000;">Active ถึง 14/09/2020</b><span class="label label-danger f-right" style="font-size: 14px">หมดอายุ</span>  </p>
+      <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง 14/09/2020 </span>  </p>
       {{-- <p class="m-b-0" style="color: #000">Active ถึง 14/09/2020</p> --}}
   </div>
 </div>

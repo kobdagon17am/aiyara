@@ -29,11 +29,20 @@ class PvPayment extends Model
 
 			try {
 				DB::BeginTransaction();
+				if($order_data->type_address == 0){
+					$orderstatus_id = 4;
+					# code...
+				}else{
+					$orderstatus_id = 5;
+
+				}
+
+				 
 
 				$update_order = DB::table('orders')//update บิล
 				->where('id',$order_id)
 				->update(['id_admin_check' => $admin_id,
-					'orderstatus_id'=> 4,
+					'orderstatus_id'=> $orderstatus_id,
 					'date_payment'=> date('Y-m-d H:i:s')]);
 
 				$last_id = DB::table('order_payment_code')//เจนเลข payment order
@@ -138,7 +147,7 @@ class PvPayment extends Model
 
 						}else{
 
-							if($upline_type == 'A'){
+							if($last_upline_type == 'A'){
 
 								$add_pv = $data_user->pv_a + $pv;
 								$update_pv = DB::table('Customers') 
@@ -150,7 +159,7 @@ class PvPayment extends Model
 								$j = $j+1;
 
 
-							}elseif($upline_type =='B'){
+							}elseif($last_upline_type =='B'){
 								$add_pv = $data_user->pv_b + $pv;
 								$update_pv = DB::table('Customers') 
 								->where('id',$customer_id)
@@ -160,7 +169,7 @@ class PvPayment extends Model
 								$last_upline_type = $upline_type;
 								$j = $j+1;
 
-							}elseif($upline_type == 'C'){
+							}elseif($last_upline_type == 'C'){
 								$add_pv = $data_user->pv_c + $pv; 
 								$update_pv = DB::table('Customers') 
 								->where('id',$customer_id)

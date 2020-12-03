@@ -6159,9 +6159,9 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .label-success {
-    background: linear-gradient(45deg, #2ed8b6, #59e0c5)
+    background: linear-gradient(45deg, #19c261, #19c261)
 }
-
+ 
 .label-inverse {
     color: ;
     background: linear-gradient(45deg, #000, #3c3c3c)

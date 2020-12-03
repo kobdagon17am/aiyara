@@ -67,6 +67,9 @@ class HistoryController extends Controller
         ->limit($limit)
         ->orderby('id','DESC')
         ->get(); 
+
+        $data = array();
+
         $i = 0;
         foreach ($orders as $value){
             $i++;
@@ -76,7 +79,10 @@ class HistoryController extends Controller
             $nestedData['pv_total'] = '<b class="text-success">'.$value->pv_total.'</b>';
             $nestedData['date'] = date('d/m/Y H:i:s',strtotime($value->create_at));
             $nestedData['type'] = $value->type;
-            $nestedData['status'] = '<span style="font-size: 14px;"class="pcoded-badge label label-'.$value->css_class.'"><font style="color:#000">'.$value->detail.'</font></span>';
+
+
+            $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b>'.$value->detail.'</b></button>'; 
+
             if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
                 $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$value->id.')"><i class="fa fa-file-text-o"></i> Upload </button>';
             }else{
@@ -98,8 +104,9 @@ class HistoryController extends Controller
 
         return json_encode($json_data);
     }
-    public function upload_slip(Request $request){
 
+
+    public function upload_slip(Request $request){
         $file_slip = $request->file_slip;
         if(isset($file_slip)){
             $url='local/public/files_slip/'.date('Ym');
@@ -125,7 +132,7 @@ class HistoryController extends Controller
 
 
             }else{
-                
+
 
                 return redirect('product-history')->withError('Upload Slip fail');
 
@@ -153,7 +160,7 @@ class HistoryController extends Controller
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
         ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
         ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','orders.type_address') 
-         ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id') 
+        ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id') 
         ->where('dataset_order_status.lang_id','=','1')
         ->where('dataset_orders_type.lang_id','=','1')
         ->where('orders.code_order','=',$code_order)
@@ -166,8 +173,8 @@ class HistoryController extends Controller
         //dd($order_items);
 
         if(!empty($order)){ 
-           return view('frontend/product/cart-payment-history',compact('order','order_items'));
-       }else{
+         return view('frontend/product/cart-payment-history',compact('order','order_items'));
+     }else{
         return redirect('product-history')->withError('Payment Data is Null');
     }
 

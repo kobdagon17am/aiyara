@@ -35,7 +35,7 @@
 				</div>
 
  
-				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" >
 					<div class="modal-dialog modal-md" role="document">
 						<form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
 							@csrf
@@ -58,6 +58,7 @@
 
 									</div>
 								</div>
+								 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
 

@@ -47,6 +47,7 @@ Route::get('logout', function () {
 
 Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
 
+Route::get('check_user','Frontend\RegisterController@check_user')->name('check_user');
 
 Route::get('modal_tree','Frontend\HomeController@modal_tree')->name('modal_tree');
 Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
