@@ -36,7 +36,7 @@ class Pickup_goods_setController extends Controller
     {
       // dd($request->all());
       
-      if(isset($request->save_to_pending)){
+      if(isset($request->save_to_packing)){
 
       	$arr = implode(',', $request->row_id);
 
@@ -53,46 +53,46 @@ class Pickup_goods_setController extends Controller
     			WHERE db_delivery.id in ($arr) 
     			ORDER BY customers_detail.id limit 1  ");
 
-  	      $DeliveryPendingCode = new \App\Models\Backend\DeliveryPendingCode;
-  	      if( $DeliveryPendingCode ){
-  	      	$DeliveryPendingCode->addr_id = $rsDeliveryAddr[0]->addr;
-  	      	$DeliveryPendingCode->created_at = date('Y-m-d H:i:s');
-  	        $DeliveryPendingCode->save();
+  	      $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
+  	      if( $DeliveryPackingCode ){
+  	      	$DeliveryPackingCode->addr_id = $rsDeliveryAddr[0]->addr;
+  	      	$DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
+  	        $DeliveryPackingCode->save();
   	      }
 
   	     foreach ($rsDelivery as $key => $value) {
-  	     	$DeliveryPending = new \App\Models\Backend\DeliveryPending;
-  	     	$DeliveryPending->pending_code = $DeliveryPendingCode->id;
-  	     	$DeliveryPending->delivery_id_fk = @$value->id;
-  	     	$DeliveryPending->created_at = date('Y-m-d H:i:s');
-  	        $DeliveryPending->save();
+  	     	$DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
+  	     	$DeliveryPacking->packing_code = $DeliveryPackingCode->id;
+  	     	$DeliveryPacking->delivery_id_fk = @$value->id;
+  	     	$DeliveryPacking->created_at = date('Y-m-d H:i:s');
+  	        $DeliveryPacking->save();
   	     }
 
          // เพื่อเอาไว้ไปทำตารางเบิก
          DB::update(" UPDATE
             db_delivery
-            Inner Join db_delivery_pending ON db_delivery.id = db_delivery_pending.delivery_id_fk
+            Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
             SET
-            db_delivery.pending_code=
-            db_delivery_pending.pending_code ");
+            db_delivery.packing_code=
+            db_delivery_packing.packing_code ");
 
-        return redirect()->to(url("backend/delivery?select_addr=".$DeliveryPendingCode->id."&"));
+        return redirect()->to(url("backend/delivery?select_addr=".$DeliveryPackingCode->id."&"));
 
         // return redirect()->to(url("backend/delivery/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
 
       }elseif(isset($request->save_select_addr)){
 
-      		$DeliveryPendingCode = \App\Models\Backend\DeliveryPendingCode::find($request->id);
-      		$DeliveryPendingCode->addr_id = $request->addr;
-      		$DeliveryPendingCode->save();
+      		$DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find($request->id);
+      		$DeliveryPackingCode->addr_id = $request->addr;
+      		$DeliveryPackingCode->save();
 
       		return redirect()->to(url("backend/delivery"));
       
       }elseif(isset($request->save_select_addr_edit)){     
 
-      		$DeliveryPendingCode = \App\Models\Backend\DeliveryPendingCode::find($request->id);
-      		$DeliveryPendingCode->addr_id = $request->addr;
-      		$DeliveryPendingCode->save();
+      		$DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find($request->id);
+      		$DeliveryPackingCode->addr_id = $request->addr;
+      		$DeliveryPackingCode->save();
 
       		return redirect()->to(url("backend/delivery"));      			
 
@@ -162,9 +162,29 @@ class Pickup_goods_setController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','1')->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','1')->orderBy('id', 'asc');
+      $sTable = DB::select(" 
+        select * from db_delivery WHERE status_pack=0 and status_delivery=1 
+        UNION
+        select * from db_delivery WHERE status_pack=1 and status_delivery=1 GROUP BY packing_code
+        ORDER BY updated_at DESC
+         ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('receipt', function($row) {
+        if($row->packing_code!=0){
+            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->packing_code)->get();
+            $array = array();
+            foreach ($DP as $key => $value) {
+              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+              array_push($array, @$rs[0]->receipt);
+            }
+            $arr = implode(',', $array);
+            return $arr;
+        }else{
+          return $row->receipt;
+        }
+      })
       ->addColumn('delivery_date', function($row) {
           $d = strtotime($row->delivery_date);
           return date("d/m/", $d).(date("Y", $d)+543);
@@ -178,18 +198,28 @@ class Pickup_goods_setController extends Controller
       	}
       })
       ->addColumn('billing_employee', function($row) {
-        $sD = DB::select(" select * from ck_users_admin where id=".$row->billing_employee." ");
-        return $sD[0]->name;
+        if(@$row->billing_employee!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->billing_employee." ");
+           return @$sD[0]->name;
+        }else{
+          return '';
+        }
       })
       ->addColumn('province_name', function($row) {
         if(@$row->province_code!=''){
-
-        	 $P = DB::select(" select * from dataset_provinces where code=".@$row->province_code." ");
-        	 return $P[0]->name_th;
-
-	  	}else{
-      		return '';
-      	}
+           $P = DB::select(" select * from dataset_provinces where code=".@$row->province_code." ");
+             return @$P[0]->name_th;
+        }else{
+             return @$row->province_name;
+        }
+      })
+      ->addColumn('print', function($row) {
+           $D = DB::select(" select * from db_delivery where id=".@$row->id." ");
+           return @$row->status_pack.':'.@$D[0]->id;
+      })
+      ->addColumn('approved', function($row) {
+           $D = DB::select(" select * from db_delivery where id=".@$row->id." ");
+           return @$row->approver.':'.@$D[0]->id;
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

@@ -80,7 +80,7 @@
                <div class="myBorder">
 
           <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_to_pending" value="1" >
+            <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
          
@@ -100,12 +100,12 @@
                     <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}">
+              <!--     <div class="col-4 text-right" style="{{@$sC}}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.delivery.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
                   </div>
-
+ -->
                 </div>
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
@@ -141,7 +141,7 @@
                         </div>
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <table id="data-table-pending" class="table table-bordered dt-responsive" style="width: 100%;">
+                            <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
                             </table>
                           </div>
                         </div>
@@ -204,7 +204,6 @@
 
        	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_select_addr_edit" value="1" >
-            <!-- <input type="hidden" id="delivery_pending_code_id"  name="delivery_pending_code_id" > -->
             {{ csrf_field() }}
 
 	      <div class="modal-body">
@@ -294,12 +293,12 @@ $(function() {
                   }},
                   {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
                   	if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
+                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
                   	}else{
-                  		return '';
+                  		return '-รอจัดส่ง-';
                   	}
                   }},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
                     'columnDefs': [
                {
@@ -338,10 +337,10 @@ $(function() {
 
                 	if (aData['status_delivery'] != "1") {
 
-	                    $('td:last-child', nRow).html(''
-	                      + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	                    // $('td:last-child', nRow).html(''
+	                    //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                      
-	                    ).addClass('input');
+	                    // ).addClass('input');
 
                     }
 
@@ -417,7 +416,7 @@ $(function() {
 
           var oTable2;
           $(function() {
-              oTable2 = $('#data-table-pending').DataTable({
+              oTable2 = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
                   serverSide: true,
@@ -429,7 +428,7 @@ $(function() {
                   iDisplayLength: 10,
                   // stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.delivery_pending_code.datatable') }}',
+                    url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -455,9 +454,9 @@ $(function() {
                   },
                   columns: [
                       // {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'pending_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
+                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
                       
-                      // {data: 'pending_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
+                      // {data: 'packing_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
                       //     return ;
                       // }},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
@@ -484,9 +483,9 @@ $(function() {
                       }},
                       {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
-	                        return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
+	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
-	                  		return '';
+	                  		return '-รอจัดส่ง-';
 	                  	}
 	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -513,7 +512,7 @@ $(function() {
                     	if (aData['status_delivery'] != "1") {
                     		$('td:last-child', nRow).html(''
 	                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_pending_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 	                        ).addClass('input');
                 		}
 
@@ -574,7 +573,6 @@ $(function() {
                 $(document).on('click', '.btnEditAddr', function(event) {
                 	event.preventDefault();
                 	var id = $(this).data('id');
-                	$('#delivery_pending_code_id').val(id);
                 	$.ajax({
 		               type:'POST',
 		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
@@ -634,15 +632,14 @@ $(function() {
 
 
 <script type="text/javascript">
-
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
+//  sessionStorage.setItem("role_group_id", role_group_id);
+//  var role_group_id = sessionStorage.getItem("role_group_id");
+//  var menu_id = sessionStorage.getItem("menu_id");
+//    window.onload = function() {
+//    if(!window.location.hash) {
+//       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
+//    }
+//  }
 </script>
 
 @endsection

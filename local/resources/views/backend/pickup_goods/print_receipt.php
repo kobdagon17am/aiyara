@@ -173,8 +173,7 @@ tr.border_bottom td {
 
 $value = DB::select(" 
                     SELECT
-                    db_delivery.id,
-                    db_delivery.receipt,
+                    db_delivery.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -187,11 +186,15 @@ $value = DB::select("
                     customers_detail.district_sub,
                     customers_detail.road,
                     customers_detail.province,
-                    customers.id as cus_id
+                    customers.id as cus_id,
+                    orders.id as order_id,
+                    orders.shipping
+
                     FROM
                     db_delivery
                     Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
+                    Left Join orders ON db_delivery.receipt = orders.code_order
                     WHERE
                     db_delivery.id = 
                     ".$data[0]."
@@ -225,7 +228,7 @@ E-MAIL : info@aiyara.co.th
       <table style="border-collapse: collapse;" >
         <tr> 
           <th style="text-align: center;font-size: 30px;">
-           <center> ต้นฉบับใบกำกับภาษี/ใบส่งสินค้า </center>
+           <center> ใบเบิกสินค้าจากคลัง </center>
           </th>
         </tr>
       </table>
@@ -269,8 +272,8 @@ E-MAIL : info@aiyara.co.th
         วันที่ / Date
       </td>
       <td style="width:10%;vertical-align: top;" > 
-         IV20201102001 <br>
-         02/11/2020
+         <?=$value[0]->receipt?> <br>
+         <?php $d = strtotime($value[0]->delivery_date); echo date("d/m/", $d).(date("Y", $d)+543); ?>
       </td>
         
       </tr>
@@ -279,7 +282,7 @@ E-MAIL : info@aiyara.co.th
   <br>
 
 
-  <div style="border-radius: 5px; height: 80mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 70mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr style="background-color: #e6e6e6;">
         <td style="width:8%;border-bottom: 1px solid #ccc;text-align: center;" > ลำดับที่ <br> Item
@@ -291,27 +294,78 @@ Description </td>
 Quantity </td>
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
 Unit Price </td>
-        
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV   
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;">  ค่าจัดส่ง
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
 Amount </td>
 
       </tr>
 
-      <tr>
-        <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > 1 </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> ชื่อสินค้า </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> 1  </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> 5,600.00 </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> 5,600.00  </td>
-      </tr>
+<!-- รายการสินค้า -->
+<?php 
 
-<?php for ($i=0; $i < 5 ; $i++) {  ?>
+     $P = DB::select(" 
+        SELECT
+        order_items.id,
+        order_items.order_id,
+        order_items.product_id,
+        order_items.product_name,
+        order_items.quantity,
+        order_items.list_price,
+        order_items.pv,
+        order_items.discount,
+        order_items.create_at,
+        order_items.update_at,
+        orders.shipping
+        FROM order_items 
+        Left Join orders ON order_items.order_id = orders.id
+        WHERE
+        order_items.order_id = ".$value[0]->order_id."
+
+     ");
+
+    $i=1;
+
+     $Total = 0;
+     $shipping = 0;
+
+     // echo count($P);
+     // exit;
+
+    foreach ($P as $key => $v) {
+
+     ?>
+
+          <tr>
+            <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->product_name?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->quantity?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->list_price?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->pv?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->shipping?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->quantity*$v->list_price,2)?>  </td>
+          </tr>
+
+    <?php  
+    $i++; 
+    $Total += $v->quantity*$v->list_price;  
+    $shipping += $v->shipping ;  
+
+  } 
+
+  $n = 5 - $i; 
+
+  ?>
+
+<?php for ($i=0; $i < $n ; $i++) {  ?>
       <tr>
-        <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > &nbsp;  </td>
+        <td style="border-bottom: 1px solid #ccc;text-align: center;" > &nbsp;  </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;">   </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;">   </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
       </tr>
 <?php } ?>
 
@@ -324,19 +378,42 @@ Amount </td>
     <table style="border-collapse: collapse;vertical-align: top;" >
 
       <tr>
-        <td rowspan="3"  style="width:55%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;">
+        <td rowspan="4"  style="width:55%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;">
 
        
 <br>
 <br>
 <br>
 <br>
-      <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center>
+      <!-- <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center> -->
       </td>
+
+      <?php 
+
+            $net_price = str_replace(',', '', $Total);
+
+            // echo $net_price;
+            // exit;
+            // ภาษีมูลค่าเพิ่ม ( VAT 7% )  
+            $vat = intval($net_price) - (intval($net_price)/1.07) ;
+
+            // echo $net_price;
+            // echo $shipping;
+            // exit;
+            // รวมเงิน
+            $total_price = $net_price + $shipping;
+            $total_price = number_format($total_price,2) ;
+            // echo $total_price;
+            // exit;
+            $net_price =  number_format($net_price,2) ;
+            $vat =  number_format($vat,2) ;
+            $shipping =  number_format($shipping,2) ;
+
+         ?>
 
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> รวมเงิน <br>
 TOTAL </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> 5,233.64 </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$net_price?> </td>
 
       </tr>
 
@@ -345,15 +422,19 @@ TOTAL </td>
       
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ภาษีมูลค่าเพิ่ม  <br>
 ( VAT 7% ) </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> 366.36 </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$vat?> </td>
 
       </tr>
+          <tr>
+        <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ค่าจัดส่ง  </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$shipping?> </td>
 
+      </tr>
       <tr>
   
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ยอดเงินสุทธิ  <br>
 NET AMOUNT </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> 5,600.00 </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$total_price?> </td>
 
       </tr>
 
@@ -379,7 +460,7 @@ NET AMOUNT </td>
          </td>
 
 
-        <td style="border-left: 1px solid #ccc;"> ในนามบริษัท.....
+        <td style="border-left: 1px solid #ccc;"> ในนาม บริษัท ไอยรา แพลนเน็ต จำกัด
         <br>
         <img src="" width="100" > (ลายเซ็น)
         <br>

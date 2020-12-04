@@ -54,7 +54,7 @@ class AjaxController extends Controller
 
           $data = DB::select(" 
                 SELECT
-                db_delivery_pending.id,
+                db_delivery_packing.id,
                 db_delivery.customer_id,customers.prefix_name,
                 customers.first_name,
                 customers.last_name,
@@ -69,11 +69,11 @@ class AjaxController extends Controller
                 customers_detail.province,
                 customers_detail.id as addr_id
                 FROM
-                db_delivery_pending
-                Left Join db_delivery ON db_delivery_pending.delivery_id_fk = db_delivery.id
+                db_delivery_packing
+                Left Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                 Left Join customers ON db_delivery.customer_id = customers.id
                 Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-                WHERE pending_code=".$request->v."
+                WHERE db_delivery_packing.packing_code=".$request->v."
 
            ");
 
@@ -139,7 +139,7 @@ class AjaxController extends Controller
 
           $data = DB::select(" 
                 SELECT
-                db_delivery_pending.id,
+                db_delivery_packing.id,
                 db_delivery.customer_id,customers.prefix_name,
                 customers.first_name,
                 customers.last_name,
@@ -153,14 +153,14 @@ class AjaxController extends Controller
                 customers_detail.road,
                 customers_detail.province,
                 customers_detail.id as addr_id,
-                db_delivery_pending_code.addr_id AS addr_id2
+                db_delivery_packing_code.addr_id AS addr_id2
                 FROM
-                db_delivery_pending
-                Left Join db_delivery ON db_delivery_pending.delivery_id_fk = db_delivery.id
+                db_delivery_packing
+                Left Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                 Left Join customers ON db_delivery.customer_id = customers.id
                 Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-                Left Join db_delivery_pending_code ON db_delivery_pending.pending_code = db_delivery_pending_code.id
-                WHERE pending_code=".$request->v."
+                Left Join db_delivery_packing_code ON db_delivery_packing.packing_code = db_delivery_packing_code.id
+                WHERE db_delivery_packing.packing_code=".$request->v."
 
            ");
 
@@ -249,7 +249,7 @@ class AjaxController extends Controller
         $data = [$id];
         $qrcode = \QrCode::size(150)->generate('0003-BL002');
         // dd($qrcode);
-        $pdf = PDF::loadView('backend.delivery_pending.pdf_view',compact('data','qrcode'))->setPaper('a6', 'landscape');
+        $pdf = PDF::loadView('backend.delivery_packing.pdf_view',compact('data','qrcode'))->setPaper('a6', 'landscape');
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
 
@@ -259,9 +259,45 @@ class AjaxController extends Controller
      {
         // dd($id);
         $data = [$id];
-        $pdf = PDF::loadView('backend.delivery_pending.print_receipt',compact('data'));
+        $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+
+    public function createPDFReceipt03($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.pickup_goods.print_receipt',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+
+    public function createPDFReceipt04($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.pickup_goods.print_receipt_pack',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function ajaxApprovePickupGoods(Request $req)
+    {
+        // return($req->id);
+        $d = DB::select(" select * from db_delivery WHERE id=".$req->id." ");
+        // return $d;
+        if($d[0]->approver=="0"){
+            $user = \Auth::user()->id;
+            DB::select(" UPDATE db_delivery SET approver='$user',approved_date=CURDATE() WHERE id=".$req->id." ");
+        }else{
+            DB::select(" UPDATE db_delivery SET approver=0,approved_date=NULL WHERE id=".$req->id." ");
+        }
 
     }
 

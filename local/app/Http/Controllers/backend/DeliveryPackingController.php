@@ -7,13 +7,13 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class DeliveryPendingController extends Controller
+class DeliveryPackingController extends Controller
 {
 
     public function index(Request $request)
     {
 
-      return view('backend.delivery_pending.index');
+      return view('backend.delivery_packing.index');
       
     }
 
@@ -23,7 +23,7 @@ class DeliveryPendingController extends Controller
       $Province = DB::select(" select * from dataset_provinces ");
 
       $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery_pending.form')->with(
+      return View('backend.delivery_packing.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
         ) );
@@ -35,11 +35,11 @@ class DeliveryPendingController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\DeliveryPending::find($id);
+       $sRow = \App\Models\Backend\DeliveryPacking::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
-      return View('backend.delivery_pending.form')->with(
+      return View('backend.delivery_packing.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
         ) );
@@ -56,9 +56,9 @@ class DeliveryPendingController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\DeliveryPending::find($id);
+            $sRow = \App\Models\Backend\DeliveryPacking::find($id);
           }else{
-            $sRow = new \App\Models\Backend\DeliveryPending;
+            $sRow = new \App\Models\Backend\DeliveryPacking;
           }
 
           $sRow->delivery_slip    = request('delivery_slip');
@@ -79,7 +79,7 @@ class DeliveryPendingController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\DeliveryPendingController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\DeliveryPackingController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

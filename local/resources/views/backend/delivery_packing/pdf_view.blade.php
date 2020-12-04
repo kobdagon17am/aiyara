@@ -46,8 +46,8 @@ body{
 
               $value = DB::select(" 
                     SELECT
-                    db_delivery_pending_code.id,
-                    db_delivery_pending_code.addr_id,
+                    db_delivery_packing_code.id,
+                    db_delivery_packing_code.addr_id,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -62,11 +62,11 @@ body{
                     customers_detail.province,
                     customers.id as cus_id
                     FROM
-                    db_delivery_pending_code
-                    Left Join customers_detail ON db_delivery_pending_code.addr_id = customers_detail.id
+                    db_delivery_packing_code
+                    Left Join customers_detail ON db_delivery_packing_code.addr_id = customers_detail.id
                     Left Join customers ON customers_detail.customer_id = customers.id
                     WHERE
-                    db_delivery_pending_code.id = 
+                    db_delivery_packing_code.id = 
                     ".$data[0]."
 
                ");

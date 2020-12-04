@@ -7,13 +7,13 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class DeliveryPendingCodeController extends Controller
+class DeliveryPackingCodeController extends Controller
 {
 
     public function index(Request $request)
     {
 
-      // return view('backend.delivery_pending.index');
+      // return view('backend.delivery_packing.index');
       
     }
 
@@ -38,14 +38,14 @@ class DeliveryPendingCodeController extends Controller
     public function destroy($id)
     {
 
-      $DP = DB::table('db_delivery_pending')->where('pending_code',$id)->get();
+      $DP = DB::table('db_delivery_packing')->where('packing_code',$id)->get();
       foreach ($DP as $key => $value) {
           DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
       }
 
-      DB::update(" DELETE FROM db_delivery_pending WHERE pending_code = $id  ");
+      DB::update(" DELETE FROM db_delivery_packing WHERE packing_code = $id  ");
 
-      $sRow = \App\Models\Backend\DeliveryPendingCode::find($id);
+      $sRow = \App\Models\Backend\DeliveryPackingCode::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
@@ -54,12 +54,12 @@ class DeliveryPendingCodeController extends Controller
       // return redirect()->to(url("backend/delivery"));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\DeliveryPendingCode::search()->orderBy('id', 'asc');
+    public function Datatable(){      
+      $sTable = \App\Models\Backend\DeliveryPackingCode::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('receipt', function($row) {
-          $DP = DB::table('db_delivery_pending')->where('pending_code',$row->id)->get();
+          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
           $array = array();
           foreach ($DP as $key => $value) {
             $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
@@ -69,7 +69,7 @@ class DeliveryPendingCodeController extends Controller
           return $arr;
       })
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_delivery_pending')->where('pending_code',$row->id)->get();
+          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
           $array = array();
           foreach ($DP as $key => $value) {
             $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
@@ -79,7 +79,7 @@ class DeliveryPendingCodeController extends Controller
           $arr = implode(',', $array);
           return $arr;
       })
-      ->addColumn('pending_code_desc', function($row) {
+      ->addColumn('packing_code_desc', function($row) {
         return sprintf("%05d",$row->id);
       })
       ->addColumn('addr_to_send', function($row) {

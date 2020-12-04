@@ -103,29 +103,19 @@
                   </div>
 
                   <div class="myBorder">
-                  	<form id="frm-example-packing" action="{{ route('backend.pickup_goods.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                  		<input type="hidden" name="save_to_set_packing" value="1" >
-                      {{ csrf_field() }}
                     <div style="">
                       <div class="form-group row">
                         <div class="col-md-12">
-                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอจัดเบิก (Packing List)</span>
+                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอเบิกจากคลัง  </span>
                         </div>
                       </div>
                       <div class="form-group row">
                         <div class="col-md-12">
                           <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
                           </table>
-                          <div class="col-md-6 text-right divBtnSavePacking " style="display: none;">
-	                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSavePacking ">
-	                        <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรายการจัดเบิก
-	                        </button>
-	                      </div>
-	                      <div id="last_form_packing"></div>
                         </div>
                       </div>
                     </div>
-                </form>
                   </div>
 
             </div>
@@ -134,71 +124,6 @@
 </div> <!-- end row -->
 
 
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-       	 <form id="frm-example-packing" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr_edit" value="1" >
-            <!-- <input type="hidden" id="delivery_pending_code_id"  name="delivery_pending_code_id" > -->
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result_edit"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
 
 @endsection
 
@@ -220,8 +145,9 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        "searching": false,
         scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 10,
+        // iDisplayLength: 10,
         // stateSave: true,
         ajax: {
           url: '{{ route('backend.pickup_goods.datatable') }}',
@@ -251,36 +177,13 @@ $(function() {
               columns: [
                   {data: 'id', title :'ID', className: 'text-center w50 '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+             
+                  {data: 'receipt', title :'ใบเสร็จ', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  // {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
-                  //     return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
-                  // }},
-                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
-                  //     return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  // }},
-                  // {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
-                  //     return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  // }},
-                  // {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
-                  // 	if(d=='1'){
-                  //       return '<span style="color:red">อยู่ระหว่างการจัดส่ง</span>';
-                  // 	}else{
-                  // 		return '';
-                  // 	}
-                  // }},
+      
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                  {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+             
               ],
                     'columnDefs': [
                {
@@ -293,25 +196,28 @@ $(function() {
             'select': {
                'style': 'multi'
             },
+
               rowCallback: function(nRow, aData, dataIndex){
 
-                    if(sU!=''&&sD!=''){
-                        $('td:last-child', nRow).html('-');
-                    }else{ 
+                    // if(sU!=''&&sD!=''){
+                    //     $('td:last-child', nRow).html('-');
+                    // }else{ 
 
-                    		$('td:last-child', nRow).html(''
-	                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                    // 		$('td:last-child', nRow).html(''
+	                   //        + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                       
-	                        ).addClass('input');
+	                   //      ).addClass('input');
 
-                    }
+                    // }
 
               }
           });
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
                 oTable.draw();
               });
+
           });
+
 
             $('#data-table').on( 'click', 'tr', function () {
 
@@ -368,9 +274,9 @@ $(function() {
 
 
 
-          var oTable2;
+          var oTable3;
           $(function() {
-              oTable2 = $('#data-table-packing').DataTable({
+              oTable3 = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
                   serverSide: true,
@@ -382,7 +288,7 @@ $(function() {
                   iDisplayLength: 10,
                   // stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.delivery_pending_code.datatable') }}',
+                    url: '{{ route('backend.pickup_goods_set.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -407,111 +313,63 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'pending_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
-                      
-                      // {data: 'pending_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
-                      //     return ;
+                      {data: 'id', title :'ID', className: 'text-center w50 '},
+                      {data: 'delivery_date', title :'วันเวลาที่ออกบิล', className: 'text-center'},
+                      {data: 'receipt', title :'ใบเสร็จ', className: 'text-center'},
+                      {data: 'customer_name', title :'ชื่อลูกค้า', className: 'text-center'},
+                      {data: 'billing_employee', title :'พนักงานที่ออกบิล', className: 'text-center'},
+                      // {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
+                      //     return '<a href="{{ URL::to('backend/pickup_goods/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
                       // }},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
+                      {data: 'print',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
+                           var str = d.split(":");
+                           // return str[0];
+                           if(str[0]==0){
+                              return '<a href="{{ URL::to('backend/pickup_goods/print_receipt') }}/'+str[1]+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
+                           }else{
+                              return '<a href="{{ URL::to('backend/pickup_goods/print_receipt_pack') }}/'+str[1]+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
+                           }
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
+                      {data: 'approved',   title :'อนุมัติ', className: 'text-center ',render: function(d) {
+                          var v = d.split(":");
+                          if(v[0]==1){
+                              return '<input type="checkbox" class="approved" checked value="'+v[1]+'" style="transform: scale(2);margin:12%;">';
+                           }else{
+                              return '<input type="checkbox" class="approved" value="'+v[1]+'" style="transform: scale(2);margin:12%;">';
+                           }
+
+                          
+                          // return '<i class="bx bxs-check-circle" style="font-size:18px;color:green;"></i>';
                       }},
-                      {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
-                      // {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                      // {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-	                  {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
-	                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                    if(sU!=''&&sD!=''){
-                        $('td:last-child', nRow).html('-');
-                    }else{ 
+                      if(aData['approver']==0){
 
-                		$('td:last-child', nRow).html(''
-                          + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                      
-                        ).addClass('input');
 
-                    }
+                        if(sU!=''&&sD!=''){
+                            $('td:last-child', nRow).html('-');
+                        }else{ 
+
+                            $('td:last-child', nRow).html(''
+                                + '<a href="backend/pickup_goods/" data-url="{{ route('backend.pickup_goods.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+
+                        }
+
+                      }else{
+                        $('td:last-child', nRow).html('');
+                      }
+
 
                   }
               });
 
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                	oTable2.draw();
+                oTable3.draw();
               });
-
-              $('#data-table-packing').on( 'click', 'tr', function () {
-
-  					setTimeout(function(){
-  	            		if($('.select-info').text()!=''){
-  	            			$('.divBtnSave').show();
-  		            	}else{
-  		            		$('.divBtnSave').hide();
-  		            	}
-  		            }, 500);
-
-              } );
-
-           // Handle form submission event 
-           $('#frm-example-packing').on('submit', function(e){
-              var form = this;
-
-              console.log(form);
-              
-              var rows_selected = oTable2.column(0).checkboxes.selected();
-
-              console.log(rows_selected);
-
-              // Iterate over all selected checkboxes
-              $.each(rows_selected, function(index, rowId){
-
-                console.log(rowId);
-                // $("#last_form").after("<input type='text' name='row_id[]' value='"+rowId+"' >");
-                 // Create a hidden element 
-                $('#last_form_packing').after(
-                     $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', 'row_id[]')
-                        .val(rowId)
-                 );
-              });
-
-              // FOR DEMONSTRATION ONLY
-              // The code below is not needed in production
-              
-              // Output form data to a console     
-              // $('#example-console-rows').text(rows_selected.join(","));
-              
-              // Output form data to a console     
-              // $('#example-console-form').text($(form).serialize());
-               
-              // Remove added elements
-              // $('input[name="id\[\]"]', form).remove();
-               
-              // Prevent actual form submission
-              // e.preventDefault();
-
-               });
-
-
           });
-
 
 
           $(document).ready(function() {
@@ -540,11 +398,37 @@ $(function() {
 
                 }); 
 
+                $(document).on('click', '.approved', function(event) {
+
+                    var id = $(this).val();
+
+                      if (!confirm("ยืนยัน ? ")){
+                          return false;
+                      }else{
+
+                          $.ajax({
+                               type:'POST',
+                               url: " {{ url('backend/ajaxApprovePickupGoods') }} ", 
+                               data:{ _token: '{{csrf_token()}}',id:id },
+                                success:function(data){
+                                     console.log(data); 
+                                     location.reload();
+                                  },
+                                error: function(jqXHR, textStatus, errorThrown) { 
+                                    console.log(JSON.stringify(jqXHR));
+                                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                    $(".myloading").hide();
+                                }
+                            });
+
+                      }
+
+                }); 
+
                 
                 $(document).on('click', '.btnEditAddr', function(event) {
                 	event.preventDefault();
                 	var id = $(this).data('id');
-                	$('#delivery_pending_code_id').val(id);
                 	$.ajax({
 		               type:'POST',
 		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
@@ -598,15 +482,14 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
+//  sessionStorage.setItem("role_group_id", role_group_id);
+//  var role_group_id = sessionStorage.getItem("role_group_id");
+//  var menu_id = sessionStorage.getItem("menu_id");
+//    window.onload = function() {
+//    if(!window.location.hash) {
+//       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
+//    }
+//  }
 </script>
 
 @endsection

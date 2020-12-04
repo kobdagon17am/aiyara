@@ -208,13 +208,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxSelectAddr', 'AjaxController@ajaxSelectAddr');
     Route::post('ajaxSelectAddrEdit', 'AjaxController@ajaxSelectAddrEdit');
 
+    Route::post('ajaxApprovePickupGoods', 'AjaxController@ajaxApprovePickupGoods');
+
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
     Route::get('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
-    Route::post('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
+
+    Route::get('pickup_goods/print_receipt/{id}', 'AjaxController@createPDFReceipt03');
+    Route::get('pickup_goods/print_receipt_pack/{id}', 'AjaxController@createPDFReceipt04');
 
 
     Route::resource('ce_regis', 'Ce_regisController');
@@ -224,11 +228,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
 
 
-    Route::resource('delivery_pending', 'DeliveryPendingController');
-    Route::post('delivery_pending/datatable', 'DeliveryPendingController@Datatable')->name('delivery_pending.datatable');
+    Route::resource('delivery_packing', 'DeliveryPackingController');
+    Route::post('delivery_packing/datatable', 'DeliveryPackingController@Datatable')->name('delivery_packing.datatable');
 
-    Route::resource('delivery_pending_code', 'DeliveryPendingCodeController');
-    Route::post('delivery_pending_code/datatable', 'DeliveryPendingCodeController@Datatable')->name('delivery_pending_code.datatable');
+    Route::resource('delivery_packing_code', 'DeliveryPackingCodeController');
+    Route::post('delivery_packing_code/datatable', 'DeliveryPackingCodeController@Datatable')->name('delivery_packing_code.datatable');
 
     Route::resource('delivery_approve', 'Delivery_approveController');
     Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');
