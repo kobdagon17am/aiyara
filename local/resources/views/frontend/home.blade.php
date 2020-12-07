@@ -38,74 +38,86 @@
       <div class="card-block">
         โครงสร้างสายงาน
         <div class="card-header" style="padding: 0px">
-          <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
-          @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
-          <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
-            <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
-            @else
+          <div class="row">
+            <div class="col-md-8">
+              <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
+              @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+              <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
+                <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
+                @else
 
-            <a href="#"  onclick="event.preventDefault();
-            document.getElementById('upline_id').submit();"
-            class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></a>
-            <form id="upline_id" action="{{ route('home') }}" method="POST" style="display: none;">
-              <input type="hidden" name="id" value="{{$data['lv1']->upline_id}}">
-              @csrf
-            </form>
-            @endif
+                <a href="#"  onclick="event.preventDefault();
+                document.getElementById('upline_id').submit();"
+                class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></a>
+                <form id="upline_id" action="{{ route('home') }}" method="POST" style="display: none;">
+                  <input type="hidden" name="id" value="{{$data['lv1']->upline_id}}">
+                  @csrf
+                </form>
+                @endif
+
+                @if(empty($data['lv2_a']) || empty($data['lv3_a_a']))
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
+
+                @else
+                <a href="#" onclick="event.preventDefault();
+                document.getElementById('under_a').submit();" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</a>
+
+                <form id="under_a" action="{{ route('under_a') }}" method="POST" style="display: none;">
+                  <input type="hidden" name="id" value="{{$data['lv3_a_a']->id}}">
+                  @csrf
+                </form>
+
+                @endif
 
 
+                @if(empty($data['lv2_b']) || empty($data['lv3_b_b']))
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
 
-            @if(empty($data['lv2_a']) || empty($data['lv3_a_a']))
-            <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
+                @else
+                <a href="#" onclick="event.preventDefault();
+                document.getElementById('under_b').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</a>
 
-            @else
-            <a href="#" onclick="event.preventDefault();
-            document.getElementById('under_a').submit();" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</a>
+                <form id="under_b" action="{{ route('under_b') }}" method="POST" style="display: none;">
+                  <input type="hidden" name="id" value="{{$data['lv3_b_b']->id}}">
+                  @csrf
+                </form>
+                @endif 
 
-            <form id="under_a" action="{{ route('under_a') }}" method="POST" style="display: none;">
-              <input type="hidden" name="id" value="{{$data['lv3_a_a']->id}}">
-              @csrf
-            </form>
+                @if(empty($data['lv2_c']) || empty($data['lv3_c_c']))
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
 
-            @endif
+                @else 
+                <a href="#" onclick="event.preventDefault();
+                document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
+
+                <form id="under_c" action="{{route('under_c')}}" method="POST" style="display: none;">
+                  <input type="hidden" name="id" value="{{$data['lv3_c_c']->id}}">
+                  @csrf
+                </form>
+
+                @endif
+
+              </div>
+              <div class="col-md-4">
+
+               <div class="input-group input-group-button">
+                <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Search ID" value="{{ old('search_username') }}">
+                <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="search_user()" style="margin-top: 0px;">
+                  <span class="">Search</span>
+                </span>
+              </div>
 
 
-            @if(empty($data['lv2_b']) || empty($data['lv3_b_b']))
-            <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
-
-            @else
-            <a href="#" onclick="event.preventDefault();
-            document.getElementById('under_b').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</a>
-
-            <form id="under_b" action="{{ route('under_b') }}" method="POST" style="display: none;">
-              <input type="hidden" name="id" value="{{$data['lv3_b_b']->id}}">
-              @csrf
-            </form>
-            @endif 
-
-            @if(empty($data['lv2_c']) || empty($data['lv3_c_c']))
-            <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
-
-            @else 
-            <a href="#" onclick="event.preventDefault();
-            document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
-
-            <form id="under_c" action="{{route('under_c')}}" method="POST" style="display: none;">
-              <input type="hidden" name="id" value="{{$data['lv3_c_c']->id}}">
-              @csrf
-            </form>
-
-            @endif
-
+            </div>
           </div>
-
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Tab variant tab card start -->
-  <div class="card">
+<!-- Tab variant tab card start -->
+<div class="card">
    {{--  <div class="card-header">
       <h5>Tab variant</h5>
     </div> --}}
@@ -271,7 +283,7 @@
                     <div class="card-block">
                       <i class="fa fa-line-chart st-icon btn-warning"></i>
                       <div class="usre-image">
-                        <img src="frontend/assets/icon/add_user.png" class="img-radius zoom" alt="User-Profile-Image">
+                        <img src="{{asset('frontend/assets/icon/add_user.png')}}" class="img-radius zoom" alt="User-Profile-Image">
                       </div>
                             <!-- <h6 class="f-w-600 m-t-15 m-b-10">Alessa Robert</h6>
                               <p class="text-muted">Active | Male | Born 23.05.1992</p> -->
@@ -283,7 +295,7 @@
                         <div class="col-lg-4"> 
                         </div>
                       </div>
- 
+
                       <div class="verticalLine"></div>
 
                       <div class="row text-center">
@@ -373,7 +385,7 @@
                             @endif
 
 
-                            <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
+                            <h6 class="m-t-15 m-b-0" style="font-size: 13px">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
                           </div>
 
 
@@ -382,7 +394,7 @@
                           <div class="col-auto col-sm-4 col-4 text-center">
 
 
-                           <a onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-60 zoom"></a>
+                           <a onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img" class="img-radius img-60 zoom"></a>
 
                            <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
                            <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
@@ -391,7 +403,7 @@
                          @else
                          <div class="col-auto text-center">
                           <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-60 zoom">
-                          <h6 class="m-t-15 m-b-0">สาย {{$line_lv3}}</h6>
+                          <h6 class="m-t-15 m-b-0" style="font-size: 13px">สาย {{$line_lv3}}</h6>
 
                         </div>
                         @endif
@@ -409,7 +421,7 @@
                     <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
                     <div class="text-center">
                      <span onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')">
-                      <img src="frontend/assets/icon/add_user.png" alt="img" class="img-radius img-80 zoom">
+                      <img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img" class="img-radius img-80 zoom">
                     </span>
 
 
@@ -418,19 +430,19 @@
                   <p class="text-muted">ภายใต้ : @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif </p>
 
                   <hr> 
-                  <div class="row ml-auto">
-                   <div class="col-auto col-sm-4 text-center">
-                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                  <div class="row ml-auto text-center"  align="center">
+                   <div class="col-sm-4 col-4 text-center">
+                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
                     <h6 class="m-t-15 m-b-0">สาย A </h6>
 
                   </div>
-                  <div class="col-auto col-sm-4 text-center">
-                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                  <div class="col-sm-4 col-4 text-center">
+                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
                     <h6 class="m-t-15 m-b-0">สาย B </h6>
 
                   </div>
-                  <div class="col-auto col-sm-4 text-center">
-                    <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-60">
+                  <div class="col-sm-4 col-4 text-center">
+                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
                     <h6 class="m-t-15 m-b-0">สาย C </h6>
 
                   </div>
@@ -457,6 +469,11 @@
 
 <div id="modal_tree"></div>
 <div id="modal_add"></div>
+
+<form action="{{ route('search') }}" method="post" id="home_search">
+  @csrf
+  <input type="hidden" id="home_search_id" name="home_search_id" value="">
+</form>
 
 @endsection
 @section('js')
@@ -549,5 +566,39 @@
       });
       
     }
+
+    function search_user(){
+      var user_name = $('#search_username').val();
+      $.ajax({
+        url: '{{ route('home_check_customer_id') }}',
+        type: 'GET',
+        data: {user_name:user_name},
+      })
+      .done(function(data) {
+        if(data['status'] == 'success'){
+          //alert(data['data'])
+          $('#home_search_id').val(data['id']);
+          document.getElementById("home_search").submit();
+
+        }else{
+          console.log();
+          Swal.fire({
+            icon: 'error',
+            title: data['data']['message'],
+          })
+
+        }
+        //console.log("success");
+        //console.log(data);
+      })
+      .fail(function() {
+        console.log("error");
+      })
+      .always(function() {
+        console.log("complete");
+      });
+      
+    }
+
   </script>
   @endsection

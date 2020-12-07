@@ -23,11 +23,15 @@ class RegisterController extends Controller
       return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
 
     }else{
-    	$data = DB::table('Customers')
+    	$resule = DB::table('Customers')
     	->select('*')
     	->where('id','=',$id)
     	->limit(1)
     	->first();
+
+      $data = ['data'=>$resule,'line_type_back'=>$line_type];
+
+
 
       return view('frontend/newregister',compact('data'));
 
@@ -57,10 +61,10 @@ class RegisterController extends Controller
 
       if($data['status'] == 'success'){
 
-        return redirect('register/30/B')->withInput()->withSuccess($data['massage']);
+        return redirect('home')->withInput()->withSuccess($data['massage']);
 
       }else{
-        return redirect('register/30/B')->withInput()->withError($data['massage']);
+        return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);
 
       }
     }else{
@@ -73,13 +77,13 @@ class RegisterController extends Controller
         $data = Register::register($req,$introduce_id->id);
 
         if($data['status'] == 'success'){         
-          return redirect('register/30/B')->withInput()->withSuccess($data['massage']);
+          return redirect('home')->withInput()->withSuccess($data['massage']);
         }else{
-          return redirect('register/30/B')->withInput()->withError($data['massage']);
+          return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);
         }
 
       }else{
-        return redirect('register/30/B')->withInput()->withError('ไม่มีข้อมูลรหัสผู้แนะนำในระบบ');
+        return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError('ไม่มีข้อมูลรหัสผู้แนะนำในระบบ');
       }
 
     }

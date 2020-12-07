@@ -183,7 +183,6 @@ class AipocketController extends Controller
 
 
 public function check_customer_id(Request $request){
-
   $resule =LineModel::check_line($request->user_name);
   if($resule['status'] == 'success'){
     $data = array('status'=>'success','data'=>$resule);
