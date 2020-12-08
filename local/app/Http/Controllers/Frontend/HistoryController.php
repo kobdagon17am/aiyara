@@ -81,8 +81,8 @@ class HistoryController extends Controller
             $nestedData['type'] = $value->type;
 
 
-            $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b>'.$value->detail.'</b></button>'; 
-
+            $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>'; 
+ 
             if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
                 $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$value->id.')"><i class="fa fa-file-text-o"></i> Upload </button>';
             }else{

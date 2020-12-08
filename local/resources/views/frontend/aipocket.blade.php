@@ -46,18 +46,19 @@
                 <h5>ประวัติการสั่งซื้อ</h5>
                 {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
             </div>
+
             <div class="card-block">
                 <div class="table-responsive dt-responsive">
                     <table id="history" class="table table-striped table-bordered nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Sent</th>
-                                <th>Receive(UserName)</th>
                                 <th>Date</th>
+                                <th>Send</th>
+                                <th>Receive(UserName)</th>
                                 <th>Type</th>
                                 <th>PV</th>
-                                <th>Status</th>
+                                <th>Banlance</th>
                                 <th>Detail</th>
                             </tr>
                         </thead>
@@ -80,17 +81,71 @@
                 <div class="modal-body">
 
                     <div class="col-md-12 col-xl-12">
-                        <div class="card widget-statstic-card borderless-card">
-                            <div class="card-header">
-                                <div class="card-header-left">
-                                    <h4 id="text_username"></h4>
-                                    <p class="p-t-10 m-b-0 text-muted" id="name"> </p>
+                        <div class="card bg-c-yellow order-card m-b-0">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 id="text_username" style="color: #000"></h5>
+                                        <h6 class="m-b-0" id="name" style="color: #000"></h6>
+
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                     <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>  BRONZE STAR AWARD ( BSA )</h6>
+
+                                 </div>
+
+                             </div> 
+                             <hr class="m-b-5 m-t-5">
+                             <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="m-b-0" style="color: #000">คะแนนสะสม</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="m-b-0 text-right" id="text_pv" style="color: #000"></h5>
                                 </div>
                             </div>
-                            <div class="card-block">
-                                <i class="fa fa-users st-icon bg-warning txt-lite-color"></i>
-                                <div class="text-left">
-                                    <h3 class="d-inline-block text-success" id="text_pv"></h3>
+                            <hr class="m-b-5 m-t-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020 </span>
+                                </div>
+                            </div>
+
+                            <hr class="m-b-5 m-t-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020 </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+
+
+                <div class="col-md-12 col-xl-12">
+                    <div class="card widget-statstic-card borderless-card">
+                        <div class="card-header">
+                            <div class="card-header-left">
+                                {{-- <h4 id="text_username"></h4> --}}
+                                {{-- <p class="p-t-10 m-b-0 text-muted" id="name"> คุณ ชฎาพร1 พิกุล </p> --}}
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <i class="ti-wallet f-left st-icon bg-primary txt-lite-color"></i>
+                            <div class="text-left">
+                                {{--<h3 class="d-inline-block text-success" id="text_pv"></h3> --}}
                                     {{-- <i class="fa fa-long-arrow-down text-danger f-24 m-l-15"></i>
                                     <span class="f-right bg-danger">-5%</span> --}}
                                     <div class="col-sm-12 m-t-5">
@@ -115,7 +170,7 @@
                <div class="modal-footer">
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
 
-                <button class="btn btn-success" type="submit" >Confirm</button>
+                <button class="btn btn-success"  type="submit" >Confirm</button>
 
             </div>
 
@@ -148,7 +203,7 @@
 
         //console.log(data['data']['data']);
         if(data['status'] == 'success'){
-            document.getElementById("text_username").innerHTML = "User ID : "+data['data']['data']['user_name']+' ('+ data['data']['data']['business_name'] +')';
+            document.getElementById("text_username").innerHTML = data['data']['data']['business_name']+' ('+ data['data']['data']['user_name'] +')';
 
             document.getElementById("name").innerHTML = data['data']['data']['prefix_name']+' '+ data['data']['data']['first_name'] +' '+data['data']['data']['last_name'];
 
@@ -156,12 +211,12 @@
             $("#input_username").val(data['data']['data']['user_name']);
 
             
-            
             $("#large-Modal").modal();
             //alert(data['status']);
 
         }else {
-           Swal.fire({ 
+            console.log(data);
+            Swal.fire({ 
               title: data['data']['message'],
           // text: "You won't be able to revert this!",
           icon: 'warning',
@@ -227,27 +282,22 @@
 
                 columns:[
                 {"data": "order"},
+                {"data": "create_at"},
                 {"data": "customer_id"},
                 {"data": "to_customer_id"},
-                {"data": "create_at"},
                 {"data": "type"},
                 {"data": "pv"},
-                {"data": "status"},
+                {"data": "banlance"},
                 {"data": "detail"},
-                // {"data": "interesting"},
-                // {"data": "course"},
-                // {"data": "step"},
-                // {"data": "date_create"},
-                // {"data": "comment", },
-                // {"data": "source"},
-                // {"data": "payment_status"}
+                // {"data": "status"},
+
                 ],
                 //order: [[ "0", "desc" ]],
             });
         }
     });
- 
- 
+
+
 </script>
 
 @endsection

@@ -34,13 +34,14 @@ class AipocketController extends Controller
 
     $columns = array(
       0 => 'order',
-      1 => 'customer_id',
-      2 => 'to_customer_id',
-      3 => 'create_at',
+      1 => 'create_at',
+      2 => 'customer_id',
+      3 => 'to_customer_id',
       4 => 'type',
       5 => 'pv',
-      6 => 'status',
+      6 => 'banlance',
       7 => 'detail',
+      //status
     );
 
         //1 รอส่งเอกสารการชำระเงิน warning
@@ -76,7 +77,7 @@ class AipocketController extends Controller
       ->whereRaw('(ai_pocket.customer_id = '.Auth::guard('c_user')->user()->id.' or  ai_pocket.to_customer_id ='.Auth::guard('c_user')->user()->id.')')
       ->offset($start)
       ->limit($limit)
-      ->orderby('ai_pocket.create_at','DESC')
+      ->orderby('ai_pocket.update_at','DESC')
       ->get(); 
 
     }else{
@@ -110,7 +111,7 @@ class AipocketController extends Controller
       ->whereRaw('(c_use.user_name LIKE "%'.$search.'%" or c_to.user_name LIKE "%'.$search.'%" or c_use.business_name LIKE "%'.$search.'%" or c_to.business_name LIKE "%'.$search.'%")' )
       ->offset($start)
       ->limit($limit)
-      ->orderby('ai_pocket.create_at','DESC')
+      ->orderby('ai_pocket.update_at','DESC')
       ->get(); 
 
           //dd($ai_pocket);
@@ -125,12 +126,12 @@ class AipocketController extends Controller
       $i++;
       $columns = array(
         0 => 'order',
-        1 => 'customer_id',
-        2 => 'to_customer_id',
-        3 => 'create_at',
+        1 => 'create_at',
+        2 => 'customer_id',
+        3 => 'to_customer_id',
         4 => 'type',
         5 => 'pv',
-        6 => 'status',
+        6 => 'banlance',
         7 => 'detail',
       );
 
@@ -153,37 +154,61 @@ class AipocketController extends Controller
 
      $nestedData['create_at'] = date('d/m/Y H:i:s',strtotime($value->create_at));
      $nestedData['type'] = $value->orders_type;
-     $nestedData['pv'] = '<b class="text-success">'.$value->pv.'</b>';
 
-     if( $value->status == 'success'){
-      $class_css = 'success';
+     if($value->type_id == 4 ){
+      $pv='<b class="text-success">'.$value->pv.'</b>';
+    }else{
+      $pv='<b class="text-danger"> -'.$value->pv.'</b>';
+
+    }
+
+
+    $nestedData['pv'] = $pv;
+
+    if( $value->status == 'success'){
+      if(empty($value->banlance)){
+        $banlance = '';
+      }else{
+        $banlance = number_format($value->banlance);
+      }
+
     }elseif ($value->status == 'panding'){
      $class_css = 'warning';
+     $banlance ='<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
    }else{
      $class_css = 'danger'; 
    }
 
-   $nestedData['status'] =  '<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
-   $nestedData['detail'] = $value->detail;
+   // $nestedData['status'] =  '<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
 
-   $data[] = $nestedData;
- }
+   $nestedData['banlance'] = $banlance;
 
- $json_data = array(
+   if($value->detail == 'Sent Ai-Pocket'){
+    $detail = '';
+  }else{
+    $detail = $value->detail;
+
+  }
+
+  $nestedData['detail'] = $detail;
+
+  $data[] = $nestedData;
+}
+
+$json_data = array(
   "draw" => intval($request->input('draw')),
   "recordsTotal" => intval($totalData),
   "recordsFiltered" => intval($totalFiltered),
   "data" => $data,
 );
 
- return json_encode($json_data);
+return json_encode($json_data);
 }
 
 
-
-
 public function check_customer_id(Request $request){
-  $resule =LineModel::check_line($request->user_name);
+
+  $resule =LineModel::check_line_aipocket($request->user_name);
   if($resule['status'] == 'success'){
     $data = array('status'=>'success','data'=>$resule);
   }else{
@@ -202,22 +227,33 @@ public function use_aipocket(Request $request){
     return redirect('ai-pocket')->withError('PV Ai-Pocket ของคุณมีไม่เพียงพอ ');
 
   }else{
-    $resule = Runpv::run_pv($type,$pv,$username);
-    if($resule['status'] == 'success'){
-      $to_customer_id = DB::table('customers')
-      ->where('user_name','=',$username)
-      ->first();
-      DB::table('ai_pocket')
-      ->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'to_customer_id'=>$to_customer_id->id,'pv'=>$pv,'status'=>'success','type_id'=>$type,'detail'=>'Sent Ai-Pocket']);
+    if($type == 1){
 
-      return redirect('ai-pocket')->withSuccess('Sent Ai-Pocket Success');
+      $resule = Runpv::run_pv($type,$pv,$username);
+      //dd($resule);
+      if($resule['status'] == 'success'){
 
-    }else{
-     return redirect('ai-pocket')->withError('Sent Ai-Pocket Fail');
 
-   }
 
- }
+        return redirect('ai-pocket')->withSuccess('Sent Ai-Pocket Success');
+
+      }else{
+       return redirect('ai-pocket')->withError('Sent Ai-Pocket Fail');
+
+     }
+
+   }elseif($type == 2){
+    dd($type);
+
+  }elseif ($type == 3) {
+    dd($type);
+  }else{
+    return redirect('ai-pocket')->withError('ไม่มีคุณสมบัติที่เลือก');
+  }
+
+
+
+}
 
 }
 

@@ -99,7 +99,6 @@
 
               </div>
               <div class="col-md-4">
-
                <div class="input-group input-group-button">
                 <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Search ID" value="{{ old('search_username') }}">
                 <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="search_user()" style="margin-top: 0px;">
