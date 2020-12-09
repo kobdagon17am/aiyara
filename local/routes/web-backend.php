@@ -203,6 +203,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('excelImport', 'ExcelController@excelImport');
 
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
+
+    Route::post('ajaxGetSubwarehouse', 'AjaxController@ajaxGetSubwarehouse');
+    Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
+    Route::post('ajaxGetShelf', 'AjaxController@ajaxGetShelf');
+
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
     Route::post('ajaxSelectAddr', 'AjaxController@ajaxSelectAddr');
@@ -217,12 +222,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
 
-    Route::get('pickup_goods/print_receipt/{id}', 'AjaxController@createPDFReceipt03');
-    Route::get('pickup_goods/print_receipt_pack/{id}', 'AjaxController@createPDFReceipt04');
-
-
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
+
+    Route::resource('product_in_cause', 'Product_in_causeController');
+    Route::post('product_in_cause/datatable', 'Product_in_causeController@Datatable')->name('product_in_cause.datatable');
+
+    Route::resource('product_out_cause', 'Product_out_causeController');
+    Route::post('product_out_cause/datatable', 'Product_out_causeController@Datatable')->name('product_out_cause.datatable');
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
@@ -241,6 +248,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pickup_goods', 'Pickup_goodsController');
     Route::post('pickup_goods/datatable', 'Pickup_goodsController@Datatable')->name('pickup_goods.datatable');
 
+    Route::get('pickup_goods/print_receipt/{id}', 'AjaxController@createPDFReceipt03');
+    Route::get('pickup_goods/print_receipt_pack/{id}', 'AjaxController@createPDFReceipt04');
+
 // จัดเบิก
     Route::resource('pickup_goods_set', 'Pickup_goods_setController');
     Route::post('pickup_goods_set/datatable', 'Pickup_goods_setController@Datatable')->name('pickup_goods_set.datatable');
@@ -250,7 +260,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
     Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
 
-
     Route::resource('check_orders', 'Check_ordersController');
     Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
 
@@ -259,6 +268,20 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('po_in', 'Po_inController');
     Route::post('po_in/datatable', 'Po_inController@Datatable')->name('po_in.datatable');
+
+    Route::resource('general_receive', 'General_receiveController');
+    Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');
+
+
+    Route::resource('check_stock', 'Check_stockController');
+    Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+
+
+    Route::resource('general_takeout', 'General_takeoutController');
+    Route::post('general_takeout/datatable', 'General_takeoutController@Datatable')->name('general_takeout.datatable');
+
+    Route::resource('transfer_warehouses', 'Transfer_warehousesController');
+    Route::post('transfer_warehouses/datatable', 'Transfer_warehousesController@Datatable')->name('transfer_warehouses.datatable');
 
     Route::resource('products_return', 'Products_returnController');
     Route::post('products_return/datatable', 'Products_returnController@Datatable')->name('products_return.datatable');
@@ -298,3 +321,5 @@ Route::group(['prefix' => 'aboutfile', 'as' => 'aboutfile.'], function() {
 Route::post('excel-import-upload', 'backend\ExcelController@excelExport');               
 #===========================================================================
 }); //route group report
+
+

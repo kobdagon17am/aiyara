@@ -71,7 +71,7 @@ class Po_approveController extends Controller
 
           if(request('status_slip')==true){
              // dd($id." : ".(\Auth::user()->id));
-             \App\Models\Frontend\PvPayment::PvPayment_type_1_success($id,\Auth::user()->id);
+             \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id,\Auth::user()->id);
           }
 
           \DB::commit();

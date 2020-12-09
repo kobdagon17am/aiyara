@@ -51,9 +51,7 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">วันที่สร้าง :</label>
                     <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required data-date-format="DD MMMM YYYY" >
-
-
+                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required  >
                     </div>
                 </div>
 

@@ -411,20 +411,15 @@ Amount </td>
 
   <div style="border-radius: 5px; border: 1px solid grey;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
-
-      <tr>
+      <tr style="vertical-align: top;"  >
         <td rowspan="4"  style="width:55%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;">
-
-       
-<center>
-<?php //echo str_replace(',', '<br>', $arr_receipt); ?>
-<?php echo "<b>Invoice :</b> <br>" ?>
-<?php echo $arr_receipt; ?>
-<br>
-<br>
-<br>
-      <!-- <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center> -->
-      </center>
+        <?php //echo str_replace(',', '<br>', $arr_receipt); ?>
+        <?php echo "<b>Invoice :</b> <br>" ?>
+        <?php echo str_replace(',', ' , ',$arr_receipt); ?>
+        <br>
+        <br>
+        <br>
+              <!-- <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center> -->
       </td>
 
       <?php 

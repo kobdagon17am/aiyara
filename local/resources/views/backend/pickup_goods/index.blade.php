@@ -34,10 +34,42 @@
 	  font-size: 14px;
 	}
 </style>
-    <style type="text/css">
-    	.grow { transition: all .2s ease-in-out; }
-		.grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
-    </style>
+<style type="text/css">
+	.grow { transition: all .2s ease-in-out; }
+	.grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
+</style>
+<style>
+	.tooltip_packing {
+	  position: relative ;
+	}
+	.tooltip_packing:hover::after {
+	  content: "Packing List" ;
+	  position: absolute ;
+	  top: 1.1em ;
+	  left: -4em ;
+	  min-width: 80px ;
+	  border: 1px #808080 solid ;
+	  padding: 8px ;
+	  color: black ;
+	  background-color: #cfc ;
+	  z-index: 1 ;
+	} 
+	.tooltip_invoice {
+	  position: relative ;
+	}
+	.tooltip_invoice:hover::after {
+	  content: "Invoice" ;
+	  position: absolute ;
+	  top: 1.1em ;
+	  left: -4em ;
+	  min-width: 80px ;
+	  border: 1px #808080 solid ;
+	  padding: 8px ;
+	  color: black ;
+	  background-color: #cfc ;
+	  z-index: 1 ;
+	}
+</style>
 @endsection
 
 @section('content')
@@ -77,7 +109,9 @@
         <div class="card">
             <div class="card-body">
 
+
                   <div class="myBorder">
+
                     <form id="frm-example" action="{{ route('backend.pickup_goods.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                       <input type="hidden" name="save_to_set" value="1" >
                       {{ csrf_field() }}
@@ -182,7 +216,15 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
       
-                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                  {data: 'billing_employee', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
+                  {data: 'status_pack',   title :'<center>Type</center>', className: 'text-center ',render: function(d) {
+                  		if(d==1){
+                  			return '<span class="badge badge-pill badge-soft-warning font-size-16"><i class="fab fa-medium-p"><span class="tooltip_packing" >P</span></i></span>';
+                  		}else{
+                  			return '<span class="badge badge-pill badge-soft-info font-size-16"><i class="fab fa-medium-i"><span class="tooltip_invoice" >I</span></i></span>';
+                  		}
+                      
+                  }},
              
               ],
                     'columnDefs': [
@@ -480,6 +522,7 @@ $(function() {
         
     // });
 </script>
+
 
 <script type="text/javascript">
 //  sessionStorage.setItem("role_group_id", role_group_id);

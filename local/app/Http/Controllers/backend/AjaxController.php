@@ -302,4 +302,30 @@ class AjaxController extends Controller
     }
 
 
+    public function ajaxGetSubwarehouse(Request $request)
+    {
+        if($request->ajax()){
+          $query = \App\Models\Backend\Subwarehouse::where('w_warehouse_id_fk',$request->warehouse_id_fk)->get()->toArray();
+          return response()->json($query);      
+        }
+    }    
+
+    public function ajaxGetZone(Request $request)
+    {
+        if($request->ajax()){
+          $query = \App\Models\Backend\Zone::where('w_subwarehouse_id_fk',$request->subwarehouse_id_fk)->get()->toArray();
+          return response()->json($query);      
+        }
+    }    
+
+    public function ajaxGetShelf(Request $request)
+    {
+        if($request->ajax()){
+          $query = \App\Models\Backend\Shelf::where('w_zone_id_fk',$request->zone_id_fk)->get()->toArray();
+          return response()->json($query);      
+        }
+    }    
+
+
+
 }

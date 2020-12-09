@@ -146,9 +146,9 @@ class Pickup_goodsController extends Controller
       // $sTable = \App\Models\Backend\Delivery::search()->where('status_delivery','0')->orderBy('id', 'asc');
       $sTable = DB::select(" 
       	select * from db_delivery WHERE status_pack=0 and status_delivery=0 
-		UNION
-		select * from db_delivery WHERE status_pack=1 and status_delivery=0 GROUP BY packing_code
-		ORDER BY updated_at DESC
+    		UNION
+    		select * from db_delivery WHERE status_pack=1 and status_delivery=0 GROUP BY packing_code
+    		ORDER BY updated_at DESC
 		 ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
