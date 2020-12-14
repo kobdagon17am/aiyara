@@ -38,6 +38,12 @@ Route::get('login', function () {
   }
 });
 
+
+Route::get('register_success', function () {
+  return view('frontend/register_success');
+
+});
+
 Route::get('logout', function () {
   Auth::guard('c_user')->logout();
   //Session::flush();
@@ -58,9 +64,12 @@ Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
 Route::get('home','Frontend\HomeController@index')->name('home');
 Route::get('home_type_tree','Frontend\HomeController@home_type_tree')->name('home_type_tree');
 Route::post('home','Frontend\HomeController@index')->name('home');
+
 Route::post('login','Frontend\LoginController@login')->name('login');
 Route::post('register_new_member','Frontend\RegisterController@register_new_member')->name('register_new_member');
 Route::get('register/{id?}/{line_type?}','Frontend\RegisterController@index')->name('register');
+
+Route::get('location','Frontend\RegisterController@location')->name('location');
 //ดิ่ง line A B C
 Route::post('under_a','Frontend\HomeController@under_a')->name('under_a');
 Route::post('under_b','Frontend\HomeController@under_b')->name('under_b');
@@ -81,6 +90,7 @@ Route::post('docs_upload','Frontend\DocsController@docs_upload')->name('docs_upl
 
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
+
 
 
 

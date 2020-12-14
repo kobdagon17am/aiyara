@@ -30,7 +30,6 @@ class Runpv extends Model
 						->where('id',$id)
 						->update(['pv_aipocket' => $pv_total ]);
 
-						
 						//run slot
 						if($type == 1){//ทำคุณสมบติ
 

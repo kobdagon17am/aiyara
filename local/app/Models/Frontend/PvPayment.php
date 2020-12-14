@@ -9,6 +9,7 @@ class PvPayment extends Model
 {
 
 	public static function PvPayment_type_1_success($order_id,$admin_id){//ทำคุณสมบัติ
+		//dd('ssss');die;
 
 		$order_data = DB::table('orders')
 		->where('id','=',$order_id)

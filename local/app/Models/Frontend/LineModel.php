@@ -333,7 +333,7 @@ public static function check_line($username){
 
 	if(!empty($data_user)){
 
-		$use_id =Auth::guard('c_user')->user()->id;
+		$use_id = Auth::guard('c_user')->user()->id;
 		
 		if( $data_user->id == $use_id){
 
@@ -393,10 +393,11 @@ public static function check_line_aipocket($username){
 	->select('*')
 	->where('user_name','=',$username)
 	->first();
-	$id_username = $data_user->id;
+	
 
 	if(!empty($data_user)){
 
+		$id_username = $data_user->id;
 		$use_id =Auth::guard('c_user')->user()->id;
 		
 		if( $id_username == $use_id){

@@ -438,13 +438,13 @@
 				</a>
 			</li>
 
-			<li class="{{ (request()->is('benefits')) ? 'active' : '' }}">
+		{{-- 	<li class="{{ (request()->is('benefits')) ? 'active' : '' }}">
 				<a href="{{route('benefits')}}">
 					<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 					<span class="pcoded-mtext">ข้อมูลสิทธิประโยชน์</span>
 					<span class="pcoded-mcaret"></span>
 				</a>
-			</li>
+			</li> --}}
 
 			<li class="{{ (request()->is('course')) ? 'active' : '' }}">
 				<a href="{{route('course')}}">
