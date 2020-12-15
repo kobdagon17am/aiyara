@@ -16,33 +16,34 @@ class RegisterController extends Controller
   public function __construct()
   {
     $this->middleware('customer');
-  }
+  } 
 
   public function index($id,$line_type){
+    
 
-    if(empty($id) || empty($line_type)){
-      return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
+      if(empty($id) || empty($line_type)){
+        return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
 
-    }else{
-    	$resule = DB::table('customers')
-    	->select('*')
-    	->where('id','=',$id)
-    	->limit(1)
-    	->first();
+      }else{
+       $resule = DB::table('customers')
+       ->select('*')
+       ->where('id','=',$id)
+       ->limit(1)
+       ->first();
 
-      $provinces = DB::table('dataset_provinces')
-      ->select('*')
-      ->get();
+       $provinces = DB::table('dataset_provinces')
+       ->select('*')
+       ->get();
 
-      $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces];
+       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces];
 
-      return view('frontend/newregister',compact('data'));
+       return view('frontend/newregister',compact('data'));
 
-    }
+     }
 
-  }
+   }
 
-  public function location(Request $request){
+   public function location(Request $request){
 
     if (isset($request->function) && $request->function == 'provinces') {
       $id = $request->id;
@@ -59,7 +60,7 @@ class RegisterController extends Controller
       return $data_amphures;
     }
 
- 
+
 
     if (isset($request->function) && $request->function == 'district') {
       $id = $request->id;
@@ -77,7 +78,7 @@ class RegisterController extends Controller
     }
 
 
-     if (isset($request->function) && $request->function == 'district_sub') {
+    if (isset($request->function) && $request->function == 'district_sub') {
       $id = $request->id;
       $district = DB::table('dataset_districts')
       ->select('*')

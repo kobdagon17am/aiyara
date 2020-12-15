@@ -17,7 +17,7 @@ class Register extends Model
 
         $username ="A".$new_id;
 
-        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
         $pass = array(); //remember to declare $pass as an array
 
     $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
@@ -155,6 +155,10 @@ class Register extends Model
    }else{
        try {
           DB::BeginTransaction();
+  //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร  
+          $strtime = strtotime(date('Y-m-t'));
+          $caltime=strtotime("+1 Month",$strtime);
+          $two_month = date("Y-m-t", $caltime);
 
           $data_customer = [
              'user_name'=>$username,
@@ -170,7 +174,8 @@ class Register extends Model
              'upline_id'=>$upline_id,
              'birth_day'=>$birth_day,
              'introduce_id'=>$introduce_id,
-             'head_line_id'=>$head_line_id];
+             'head_line_id'=>$head_line_id,
+             'pv_mt_active'=>$two_month];
              $id = DB::table('customers')->insertGetId($data_customer);
 
              $data_customer_detail = ['house_no'=>$house_no,

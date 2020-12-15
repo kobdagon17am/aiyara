@@ -151,7 +151,7 @@
   <div class="col-sm-3">
     <label>เขต/อำเภอ <font class="text-danger">*</font></label>
     <select class="js-example-basic-single col-sm-12" name="card_district" id="card_district" required="">
-      <option value="">Select</option>
+      <option value="" >Select</option>
     </select>
     {{--  <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="card_district" name="card_district" value="{{ old('card_district') }}"> --}}
   </div>

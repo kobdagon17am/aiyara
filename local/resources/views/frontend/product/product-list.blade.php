@@ -173,7 +173,7 @@
 
                            </div>
                            <div class="col-md-6">
-                            <h3 class="text-right" style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h3>
+                            <h3 class="text-right" style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_tv) }} PV</span></h3>
                           </div>
                         </div>
 
@@ -191,12 +191,13 @@
                     <div class="card bg-c-blue order-card m-b-0">
                       <div class="card-block">
                         <div class="row">
-                          <div class="col-md-4">
-                           <h6 class="m-b-10" {{-- style="font-size: 16px;color:#000" --}}>Ai Pocket</h6>
+                          <div class="col-md-5">
+                            <h5 class="m-b-20" style="color: #000">Ai Pocket</h5>
+                          
 
                          </div>
-                         <div class="col-md-8">
-                          <h3 class="text-right" {{-- style="color: #000" --}}>{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
+                         <div class="col-md-7">
+                           <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
                         </div>
                       </div>
 
