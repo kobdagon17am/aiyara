@@ -154,7 +154,7 @@
                           <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p>
  
                           @if(empty(Auth::guard('c_user')->user()->pv_mt_active) || (strtotime(Auth::guard('c_user')->user()->pv_mt_active) < strtotime(date('Ymd')) ))
-                          <p class="m-b-0"><span class="label label-danger" style="font-size: 14px">Not Active </span>  </p>
+                          <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }}" style="font-size: 14px">Not Active </span>  </p>
                           @else
 
                           <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }} </span>  </p>
@@ -173,14 +173,25 @@
 
                            </div>
                            <div class="col-md-6">
-                            <h3 class="text-right" style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_tv) }} PV</span></h3>
+                            <h3 class="text-right" style="color: #000"> <span>{{ number_format(Auth::guard('c_user')->user()->pv_tv) }} PV</span></h3>
                           </div>
                         </div>
 
-                        <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติท่องเที่ยวของคุณ </p>  
+                        <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติท่องเที่ยวของคุณ </p>
+
+                        <?php 
+                        $pv_tv_active = Auth::guard('c_user')->user()->pv_tv_active;
+                        if(!empty($pv_tv_active)){
+                          $pv_tv_active = date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active));
+                        }else{
+                          $pv_tv_active = '';
+
+                        }
+
+                        ?>  
 
                           @if(empty(Auth::guard('c_user')->user()->pv_tv_active) || (strtotime(Auth::guard('c_user')->user()->pv_tv_active) < strtotime(date('Ymd')) ))
-                          <p class="m-b-0"><span class="label label-danger" style="font-size: 14px">Not Active </span>  </p>
+                          <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ $pv_tv_active }}" style="font-size: 14px">Not Active </span>  </p>
                           @else
 
                           <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active)) }} </span>  </p>

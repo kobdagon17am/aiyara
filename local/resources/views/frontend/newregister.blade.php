@@ -108,34 +108,32 @@
 
 <div class="form-group row">
   <div class="col-sm-3">
-    <label>บ้านเลขที่</label>
-    <input type="text" class="form-control" placeholder="บ้านเลขที่" id="card_house_no" name="card_house_no" value="{{ old('card_house_no') }}">
+    <label>บ้านเลขที่ <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="บ้านเลขที่" id="card_house_no" name="card_house_no" value="{{ old('card_house_no') }}" required="">
   </div>
 
   <div class="col-sm-3">
-    <label>หมู่บ้าน/อาคาร</label>
-    <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="card_house_name" name="card_house_name" value="{{ old('card_house_name') }}">
+    <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="card_house_name" name="card_house_name" value="{{ old('card_house_name') }}" required="">
   </div>
 
   <div class="col-sm-3">
-    <label>หมู่ที่</label>
-    <input type="text" class="form-control" placeholder="หมู่ที่" id="card_moo" name="card_moo" value="{{ old('card_moo') }}">
+    <label>หมู่ที่ <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="หมู่ที่" id="card_moo" name="card_moo" value="{{ old('card_moo') }}" required="">
   </div>
 
   <div class="col-sm-3">
-    <label>ตรอก/ซอย</label>
-    <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="card_soi" name="card_soi" value="{{ old('card_soi') }}">
+    <label>ตรอก/ซอย <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="card_soi" name="card_soi" value="{{ old('card_soi') }}" required="">
   </div>
 
   <div class="col-sm-3">
-    <label>ถนน</label>
-    <input type="text" class="form-control" placeholder="ถนน" id="card_road" name="card_road" value="{{ old('card_road') }}">
+    <label>ถนน <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="ถนน" id="card_road" name="card_road" value="{{ old('card_road') }}" required="">
   </div>
 </div>
 
 <div class="form-group row">
-
-
   <div class="col-sm-3">
     <label>จังหวัด <font class="text-danger">*</font></label>
     <select class="js-example-basic-single col-sm-12" id="card_province" name="card_province" required="">
@@ -190,28 +188,28 @@
 
 <div class="form-group row">
  <div class="col-sm-3">
-  <label>บ้านเลขที่</label>
-  <input type="text" class="form-control" placeholder="บ้านเลขที่" id="house_no" name="house_no" value="{{ old('house_no') }}">
+  <label>บ้านเลขที่ <font class="text-danger">*</font></label>
+  <input type="text" class="form-control" placeholder="บ้านเลขที่" id="house_no" name="house_no" value="{{ old('house_no') }}" required="">
 </div>
 
 <div class="col-sm-3">
-  <label>หมู่บ้าน/อาคาร</label>
-  <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="house_name" name="house_name" value="{{ old('house_name') }}">
+  <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font></label>
+  <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="house_name" name="house_name" value="{{ old('house_name') }}" required="">
 </div>
 
 <div class="col-sm-3">
-  <label>หมู่ที่</label>
-  <input type="text" class="form-control" placeholder="หมู่ที่" id="moo" name="moo" value="{{ old('moo') }}">
+  <label>หมู่ที่ <font class="text-danger">*</font></label>
+  <input type="text" class="form-control" placeholder="หมู่ที่" id="moo" name="moo" value="{{ old('moo') }}" required="">
+</div> 
+
+<div class="col-sm-3">
+  <label>ตรอก/ซอย <font class="text-danger">*</font></label>
+  <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="soi" name="soi" value="{{ old('soi') }}" required="">
 </div>
 
 <div class="col-sm-3">
-  <label>ตรอก/ซอย</label>
-  <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="soi" name="soi" value="{{ old('soi') }}">
-</div>
-
-<div class="col-sm-3">
-  <label>ถนน</label>
-  <input type="text" class="form-control" placeholder="ถนน" id="road" name="road" value="{{ old('road') }}">
+  <label>ถนน <font class="text-danger">*</font></label>
+  <input type="text" class="form-control" placeholder="ถนน" id="road" name="road" value="{{ old('road') }}" required="">
 </div>
 </div>
 

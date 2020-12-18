@@ -127,7 +127,7 @@
         </div>
     </div>
 </div>
-
+ 
 <form action="" method="POST" id="cart_delete">
     @csrf
     <input type="hidden" id="data_id" name="data_id">
@@ -179,11 +179,12 @@
 
   function quantity_change(item_id){ 
     var qty = $('#quantity_'+item_id).val();
+    var type = {{ $type }}; 
 
     $.ajax({
         url: '{{ route('edit_item') }}',
         type: 'POST',
-        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':'$type'},
+        data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':type},
     })
     .done(function(data) {
         $('#price').html(data['price_total']);

@@ -79,7 +79,7 @@ class Product extends Model
         ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
         ->where('products.orders_type_id','LIKE','%'.$type.'%')
         ->whereRaw(('case WHEN '.$c_id.' != 1 THEN products.category_id = '.$c_id.' else products.category_id != '.$c_id.' END'))
-        ->where('products.category_id', '=',$c_id)
+        // ->where('products.category_id', '=',$c_id)
         ->where('products_images.image_default', '=', 1)
         ->where('products_details.lang_id', '=', 1)
         ->where('products_cost.business_location_id','=', 1)

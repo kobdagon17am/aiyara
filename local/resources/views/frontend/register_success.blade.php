@@ -38,11 +38,9 @@
             <hr>
             <div class="row">
                 <div class="col-md-12 text-center">
-         
-
                     <form action="{{ route('search') }}" method="post" id="home_search">
                       @csrf
-                      <input type="hidden" id="home_search_id" name="home_search_id" value="{{ $data['search_id'] }}">
+                      <input type="hidden" id="home_search_id" name="home_search_id" value="{{ $data['data']['upline_id'] }}">
 
                       <button type="submit" class="btn btn-primary"><i class="fa fa-sitemap"></i> View </button>
                   </form>

@@ -90,7 +90,7 @@ class RegisterController extends Controller
   }
   
   public function check_user(Request $request){
-    $data =DB::table('Customers')
+    $data =DB::table('customers')
     ->where('user_name','=',$request->user_name)
     ->first();
 
@@ -121,7 +121,7 @@ class RegisterController extends Controller
 
     }else{
 
-      $introduce_id = DB::table('Customers')
+      $introduce_id = DB::table('customers')
       ->where('user_name','=',$req->introduce)
       ->first();
 

@@ -52,6 +52,8 @@ Route::get('logout', function () {
 
 
 Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
+Route::get('add_gif','Frontend\CartController@add_gif')->name('add_gif');
+
 
 Route::get('check_user','Frontend\RegisterController@check_user')->name('check_user');
 

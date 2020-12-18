@@ -21,11 +21,14 @@
 						<thead>
 							<tr>
 								<th>#</th>
+								<th>วันที่สั่งซื้อ</th>
 								<th>เลขใบสั่งซื้อ</th>
 								<th>ยอดชำระ</th>
 								<th>PV</th>
+								<th>คงเหลือ</th>
+								<th>Active</th>
 								<th>จุดประสงค์การสั่งซื้อ</th>
-								<th>วันที่สั่งซื้อ</th>
+								
 								<th>สถานะ</th>
 								<th>#</th>
 							</tr>
@@ -113,13 +116,15 @@
 
 				columns:[
 				{"data": "id"},
+				{"data": "date"},
 				{"data": "code_order"},
 				{"data": "price"},
 				{"data": "pv_total"},
+				{"data": "banlance"},
+				{"data": "date_active"},
 				{"data": "type"},
-				{"data": "date"},
 				{"data": "status"},
-				{"data": "action"},
+				{"data": "action"}
 				// {"data": "interesting"},
 				// {"data": "course"},
 				// {"data": "step"},
@@ -132,6 +137,7 @@
 			});
 		}
 	});
+
 
 	function upload_slip(order_id){
 		$('#order_id').val(order_id);

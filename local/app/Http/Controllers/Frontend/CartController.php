@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
 use App\Models\Frontend\Pvpayment;
+use App\Models\Frontend\GiftVoucher;
 
 class CartController extends Controller
 {
@@ -45,7 +46,7 @@ class CartController extends Controller
 
 	public function edit_item(Request $request){
 		$type = $request->type;
-
+//dd($request->all());
 		if($request->item_id){
 			Cart::session($type)->update($request->item_id,array(
 				'quantity' => array (
@@ -93,5 +94,23 @@ class CartController extends Controller
 		$admin_id = '99';//admin_id 
 		$resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
 		dd($resule);
+	}
+
+	public function add_gif(){
+
+		$rs= \App\Helpers\Frontend::gv();
+		dd($rs);
+		// $user_name = '0001';
+		// $gv = '500';
+		// $code = 'ABCD';
+		// $admin_id = '99';
+		// $expri_date = '2021-01-01 23:59:59';
+		// $rs = GiftVoucher::add_gift($user_name,$gv,$code,$expri_date,$admin_id);
+
+		// dd($rs);
+		//$order_id = '57';//order_id
+		//$admin_id = '99';//admin_id 
+		//$resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
+		//dd($resule);
 	}
 }

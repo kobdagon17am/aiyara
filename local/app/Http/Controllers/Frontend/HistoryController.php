@@ -26,14 +26,17 @@ class HistoryController extends Controller
 
         $columns = array(
             0 => 'id',
-            1 => 'code_order',
-            2 => 'price',
-            3 => 'pv_total',
-            4 => 'type',
-            5 => 'date',
-            6 => 'status',
-            7 => 'action',
+            1 => 'date',
+            2 => 'code_order',
+            3 => 'price',
+            4 => 'pv_total',
+            5 => 'banlance',
+            6 => 'date_active',
+            7 => 'type',
+            8 => 'status',
+            9 => 'action',
         );
+
 
         $totalData =  DB::table('orders')
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
@@ -67,10 +70,9 @@ class HistoryController extends Controller
         ->limit($limit)
         ->orderby('id','DESC')
         ->get(); 
-
+        
         $data = array();
-
-        $i = 0;
+        $i=0;
         foreach ($orders as $value){
             $i++;
             $nestedData['id'] = $i;
@@ -82,7 +84,7 @@ class HistoryController extends Controller
 
 
             $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>'; 
- 
+
             if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
                 $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$value->id.')"><i class="fa fa-file-text-o"></i> Upload </button>';
             }else{
@@ -91,6 +93,15 @@ class HistoryController extends Controller
             
 
             $nestedData['action'] = '<a class="btn btn-sm btn-primary" href="'.route('cart-payment-history',['code_order'=>$value->code_order]).'" ><i class="fa fa-file-text-o"></i> View </a> '.$upload;
+
+            $nestedData['banlance'] = '<b class="text-primary">'.$value->banlance.'</b>';
+            if(empty($value->active_mt_tv_date)){
+                $nestedData['date_active'] = '';
+
+            }else{
+                $nestedData['date_active'] = date('d/m/Y',strtotime($value->active_mt_tv_date));
+            }
+
 
             $data[] = $nestedData;
         }
