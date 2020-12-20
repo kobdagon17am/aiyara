@@ -110,6 +110,16 @@ class RoleController extends Controller
                 }
               }
 
+              if(!empty(request('can_approve'))){
+                $can_approve = request('can_approve');
+                if(!empty($can_approve)){
+                    foreach ($can_approve AS $row) {
+                         DB::update(" UPDATE role_permit SET can_approve=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
+              
           }
 
           $sRow->save();

@@ -31,14 +31,13 @@ class General_receiveController extends Controller
       // dd($Products);
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
-      $Subwarehouse = \App\Models\Backend\Subwarehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
       return View('backend.general_receive.form')->with(
         array(
            'Product_in_cause'=>$Product_in_cause,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Subwarehouse'=>$Subwarehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
         ) );
     }
     public function store(Request $request)
@@ -60,7 +59,6 @@ class General_receiveController extends Controller
             WHERE lang_id=1");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();       
       $Warehouse = \App\Models\Backend\Warehouse::get();
-      $Subwarehouse = \App\Models\Backend\Subwarehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();      
       return View('backend.general_receive.form')->with(
@@ -69,7 +67,7 @@ class General_receiveController extends Controller
            'Product_in_cause'=>$Product_in_cause,
            'Recipient'=>$Recipient,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Subwarehouse'=>$Subwarehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
         ) );
     }
 
@@ -96,7 +94,6 @@ class General_receiveController extends Controller
           $sRow->amt    = request('amt');
           $sRow->product_unit_id_fk    = request('product_unit_id_fk');
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
-          $sRow->subwarehouse_id_fk    = request('subwarehouse_id_fk');
           $sRow->zone_id_fk    = request('zone_id_fk');
           $sRow->shelf_id_fk    = request('shelf_id_fk');
           $sRow->delivery_person    = request('delivery_person');

@@ -12,11 +12,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> คลังสินค้าหลัก </h4>
+            <h4 class="mb-0 font-size-18"> คลังสินค้า </h4>
         </div>
     </div>
 </div>
 <!-- end page title -->
+
+
   <?php 
     $sPermission = \Auth::user()->permission ;
     $menu_id = @$_REQUEST['menu_id'];
@@ -32,6 +34,7 @@
       $sD = @$menu_permit->d==1?'':'display:none;';
     }
    ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -41,7 +44,7 @@
                     <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="" name="package_name"> -->
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}" > 
+                  <div class="col-4 text-right"  style="{{@$sC}}"  >
                     <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.warehouse.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
@@ -62,8 +65,10 @@
 @section('script')
 
 <script>
+
 var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";  
+var sD = "{{@$sD}}";
+
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -106,12 +111,10 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'w_code', title :'<center>รหัสคลัง</center>', className: 'text-center'},
             {data: 'w_name', title :'<center>ชื่อคลัง</center>', className: 'text-center'},
-            {data: 'w_date_created', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
             {data: 'w_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
-            {data: 'w_location', title :'<center>สถานที่</center>', className: 'text-center'},
             {data: 'w_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
-            {data: 'w_date_updated', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
@@ -123,10 +126,10 @@ $(function() {
               $('td:last-child', nRow).html('-');
           }else{ 
 
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.warehouse.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
+            $('td:last-child', nRow).html(''
+              + '<a href="{{ route('backend.warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+              + '<a href="javascript: void(0);" data-url="{{ route('backend.warehouse.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            ).addClass('input');
 
           }
 
@@ -138,7 +141,6 @@ $(function() {
 });
 </script>
 
-
 <script type="text/javascript">
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
@@ -147,7 +149,6 @@ $(function() {
     }
   }
 </script>
-
 
 @endsection
 

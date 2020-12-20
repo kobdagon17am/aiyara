@@ -77,6 +77,22 @@
                 </div>
 
                 <div class="form-group row">
+                   <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
+                        <div class="col-md-6">
+                          <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
+                             <option value="0">Select</option>
+                             @if(@$sBranchs)
+                              @foreach(@$sBranchs AS $r)
+                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                {{$r->b_name}}
+                              </option>
+                              @endforeach
+                              @endif
+                          </select>
+                        </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">แผนก :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->department }}" name="department" >
@@ -92,7 +108,7 @@
 
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ : * </label>
-                  <div class="col-md-10">
+                  <div class="col-md-6">
                     <select name="permission" class="form-control select2-templating " required >
                       <option value="">Select</option>
                          <option value="1" {{ (@$sRow->permission==1)?'selected':'' }} >Super Admin</option>
@@ -103,7 +119,7 @@
 
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์ : * </label>
-                  <div class="col-md-10">
+                  <div class="col-md-6">
                     <select name="role_group_id_fk" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sRole_group)

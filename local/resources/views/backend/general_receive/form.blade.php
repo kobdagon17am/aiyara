@@ -135,7 +135,7 @@
 
 
         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังสินค้าหลัก : * </label>
+                            <label for="example-text-input" class="col-md-2 col-form-label"> สาขา : * </label>
                             <div class="col-md-10">
                               <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
@@ -154,10 +154,10 @@
                     @if( empty(@$sRow) )
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังย่อย : * </label>
+                            <label for="warehouse_id_fk" class="col-md-2 col-form-label"> คลัง : * </label>
                             <div class="col-md-10">
-                              <select id="subwarehouse_id_fk" name="subwarehouse_id_fk" class="form-control select2-templating " required >
-                                    <option disabled selected>กรุณาเลือกคลังหลักก่อน</option>
+                              <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
+                                    <option disabled selected>กรุณาเลือกสาขาก่อน</option>
                               </select>
                             </div>
                           </div>
@@ -184,13 +184,13 @@
                     @else
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังย่อย : * </label>
+                            <label for="warehouse_id_fk" class="col-md-2 col-form-label"> คลัง : * </label>
                             <div class="col-md-10">
-                              <select id="subwarehouse_id_fk" name="subwarehouse_id_fk" class="form-control select2-templating " required >
+                              <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
                                   <option value="">กรุณาเลือกคลังหลักก่อน</option>
-                                    @if(@$Subwarehouse)
-                                      @foreach(@$Subwarehouse AS $r)
-                                      <?php if(@$r->id==@$sRow->subwarehouse_id_fk){ ?>
+                                    @if(@$Warehouse)
+                                      @foreach(@$Warehouse AS $r)
+                                      <?php if(@$r->id==@$sRow->warehouse_id_fk){ ?>
                                         <option value="{{$r->id}}" selected >
                                           {{$r->w_name}}
                                         </option>
@@ -321,6 +321,7 @@
 
 <script type="text/javascript">
 
+
        $('#warehouse_id_fk').change(function(){
 
           var warehouse_id_fk = this.value;
@@ -328,43 +329,10 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetSubwarehouse') }} ", 
-                  method: "post",
-                  data: {
-                    warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
-                  },
-                  success:function(data)
-                  { 
-                   if(data == ''){
-                       alert('ไม่พบข้อมูลคลังย่อย !!.');
-                   }else{
-                       var layout = '<option value="" selected>- เลือกคลังย่อย -</option>';
-                       $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-                       });
-                       $('#subwarehouse_id_fk').html(layout);
-                       $('#zone_id_fk').html('กรุณาเลือกคลังย่อยก่อน');
-                       $('#shelf_id_fk').html('กรุณาเลือกโซนก่อน');
-                   }
-                  }
-                })
-           }
- 
-      });
-
-
-       $('#subwarehouse_id_fk').change(function(){
-
-          var subwarehouse_id_fk = this.value;
-          // alert(subwarehouse_id_fk);
-
-           if(subwarehouse_id_fk != ''){
-             $.ajax({
                    url: " {{ url('backend/ajaxGetZone') }} ", 
                   method: "post",
                   data: {
-                    subwarehouse_id_fk:subwarehouse_id_fk,
+                    warehouse_id_fk:warehouse_id_fk,
                     "_token": "{{ csrf_token() }}", 
                   },
                   success:function(data)

@@ -64,12 +64,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('course_history_list/datatable', 'Course_history_listController@Datatable')->name('course_history_list.datatable');
     Route::get('course_history_list/index/{id}', 'Course_history_listController@index');
 
-	Route::resource('warehouse', 'WarehouseController');
-    Route::post('warehouse/datatable', 'WarehouseController@Datatable')->name('warehouse.datatable');
+// สาขา / คลัง @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    Route::resource('branchs', 'BranchsController');
+    Route::post('branchs/datatable', 'BranchsController@Datatable')->name('branchs.datatable');
 
-	Route::resource('subwarehouse', 'SubwarehouseController');
-    Route::post('subwarehouse/datatable', 'SubwarehouseController@Datatable')->name('subwarehouse.datatable');
-    Route::get('subwarehouse/create/{id}', 'SubwarehouseController@create');
+    Route::resource('warehouse', 'WarehouseController');
+    Route::post('warehouse/datatable', 'WarehouseController@Datatable')->name('warehouse.datatable');
+    Route::get('warehouse/create/{id}', 'WarehouseController@create');
 
     Route::resource('zone', 'ZoneController');
     Route::post('zone/datatable', 'ZoneController@Datatable')->name('zone.datatable');
@@ -78,6 +79,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('shelf', 'ShelfController');
     Route::post('shelf/datatable', 'ShelfController@Datatable')->name('shelf.datatable');
     Route::get('shelf/create/{id}', 'ShelfController@create');
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     Route::resource('categories', 'CategoriesController');
     Route::post('categories/datatable', 'CategoriesController@Datatable')->name('categories.datatable');
@@ -202,9 +205,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('excelImport', 'ExcelController@excelImport');
 
+    Route::post('ajaxSetSession', 'AjaxController@ajaxSetSession');
+    
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
 
-    Route::post('ajaxGetSubwarehouse', 'AjaxController@ajaxGetSubwarehouse');
+    Route::post('ajaxGetWarehouse', 'AjaxController@ajaxGetWarehouse');
     Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
     Route::post('ajaxGetShelf', 'AjaxController@ajaxGetShelf');
 
@@ -215,6 +220,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxApprovePickupGoods', 'AjaxController@ajaxApprovePickupGoods');
 
+    Route::post('ajaxGetSetToWarehouse', 'AjaxController@ajaxGetSetToWarehouse');
+    Route::post('ajaxGetSetToWarehouseBranch', 'AjaxController@ajaxGetSetToWarehouseBranch');
+
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
     Route::get('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -224,6 +232,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
+
+    Route::resource('frontstore', 'FrontstoreController');
+    Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
+
 
     Route::resource('product_in_cause', 'Product_in_causeController');
     Route::post('product_in_cause/datatable', 'Product_in_causeController@Datatable')->name('product_in_cause.datatable');
@@ -260,6 +272,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
     Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
 
+// ใบโอน
+    Route::get('transfer_warehouses/print_transfer/{id}', 'AjaxController@createPDFTransfer');
+    Route::get('transfer_branch/print_transfer/{id}', 'AjaxController@createPDFTransfer_branch');
+
     Route::resource('check_orders', 'Check_ordersController');
     Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
 
@@ -272,16 +288,29 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('general_receive', 'General_receiveController');
     Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');
 
-
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
 
+    Route::resource('transfer_choose', 'Transfer_chooseController');
+    Route::post('transfer_choose/datatable', 'Transfer_chooseController@Datatable')->name('transfer_choose.datatable');
+
+    Route::resource('transfer_choose_branch', 'Transfer_choose_branchController');
+    Route::post('transfer_choose_branch/datatable', 'Transfer_choose_branchController@Datatable')->name('transfer_choose_branch.datatable');
 
     Route::resource('general_takeout', 'General_takeoutController');
     Route::post('general_takeout/datatable', 'General_takeoutController@Datatable')->name('general_takeout.datatable');
 
     Route::resource('transfer_warehouses', 'Transfer_warehousesController');
     Route::post('transfer_warehouses/datatable', 'Transfer_warehousesController@Datatable')->name('transfer_warehouses.datatable');
+
+    Route::resource('transfer_warehouses_code', 'Transfer_warehouses_codeController');
+    Route::post('transfer_warehouses_code/datatable', 'Transfer_warehouses_codeController@Datatable')->name('transfer_warehouses_code.datatable');
+
+    Route::resource('transfer_branch', 'Transfer_branchController');
+    Route::post('transfer_branch/datatable', 'Transfer_branchController@Datatable')->name('transfer_branch.datatable');
+
+    Route::resource('transfer_branch_code', 'Transfer_branch_codeController');
+    Route::post('transfer_branch_code/datatable', 'Transfer_branch_codeController@Datatable')->name('transfer_branch_code.datatable');
 
     Route::resource('products_return', 'Products_returnController');
     Route::post('products_return/datatable', 'Products_returnController@Datatable')->name('products_return.datatable');

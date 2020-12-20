@@ -37,7 +37,7 @@
                      <div class="form-group row">
                         <label for="example-text-input" class="col-md-2 col-form-label">ชื่อกลุ่มสิทธิ์ :</label>
                         <div class="col-md-10">
-                            <input class="form-control" type="text" value="{{ @$sRow->role_name }}" name="role_name" required >
+                            <input class="form-control" type="text" value="{{ @$sRow->role_name }}" name="role_name" required style="color: blue;font-weight: bold;font-size: 24px;" >
                         </div>
                     </div>
 
@@ -56,7 +56,9 @@
                           <div class="card">
                             <div class="card-header">
                               <h5>กำหนดสิทธิ์การเข้าถึงเมนู</h5>
-                              <div class="card-header-right"><i class="icofont icofont-spinner-alt-5"></i></div>
+                                  <label class="checkbox-inline" style="float: right;margin-right: 4.1%;margin-top: -4%;font-weight: bold;font-size: 14px;">
+                                    <input type="checkbox" class="checkAll"> Check All 
+                                  </label> 
                             </div>
                             <div class="card-block">
                               <section class="task-panel tasks-widget">
@@ -65,7 +67,7 @@
                                  
                                     <input type="hidden" name="id_user" value="{{@$id}}">
 
-                                    <div class="task-content">
+                                    <div class="task-content ">
                                       @foreach(@$sMenu_All AS $row)
                                       @php
                                       $menu_admin = DB::table('role_permit')->where('role_group_id_fk',@$id)->where('menu_id_fk',@$row->id)->first();
@@ -74,29 +76,24 @@
                                       <div class="to-do-label">
                                         <div class="checkbox-fade fade-in-primary">
 
-                                        <div class="row">
+                                        <div class="row aaa ">
 
                                         	<div class="col-md-4">
-
-                                          <label class="check-task" onclick="checkedMenu({{@$row->id}})">
 
                                             <input type="hidden" name="id_menuAd[]" value="{{@$menu_admin->id}}">
 
                                             <input type="hidden" name="menu_id_fk[]" value="{{@$menu_admin->menu_id_fk}}">
-                                            
+                                            <label class="checkbox-inline">
                                               @IF(@$row->ref==0)
-                                                <input type="checkbox" class="check_m" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!}
-		                                            class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" id="m{{@$row->id}}" >
-                                              @ELSE
-                                                <input type="checkbox" class="check_s" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!}
-		                                            class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" data-id="{{@$row->ref}}" id="s{{@$row->ref}}" >
-                                              @ENDIF
-                                           
+                                              
+                                                <input type="checkbox" class="check_m" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" id="m{{@$row->id}}" >
 
-                                            <span class="cr"><i
-                                            class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                            <span
-                                              class="task-title-sp">
+                                              @ELSE
+                                                <input type="checkbox" class="check_s" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" data-id="{{@$row->ref}}" id="s{{@$row->ref}}" >
+                                              @ENDIF
+
+                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                            <span class="task-title-sp">
                                               @IF(@$row->ref==0)
                                               <span style="font-size: 16px;font-weight: bold;color: blue;"><i class="{{@$row->icon}}"></i>&nbsp;&nbsp;&nbsp;{{@$row->name}}</span>
                                               @ELSE
@@ -109,50 +106,65 @@
 
                                        </div>
 
-                                       	<div class="col-md-8">
+             <div class="col-md-8">
 
-	                                     @IF(@$row->ref!=0)
+	                  @IF(@$row->ref!=0)
+
 												<label class="checkbox-inline">
 													<input type="hidden" value="{{@$menu_admin->c}}">
-													<input type="checkbox" name="data_c[]" {!! (@$menu_admin->c == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
+													<input class="checks" type="checkbox" name="data_c[]" {!! (@$menu_admin->c == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
 													สิทธ์เพิ่ม &nbsp;&nbsp;&nbsp;
 												</label>
 												<label class="checkbox-inline">
 													<input type="hidden" value="{{@$menu_admin->u}}">
-													<input type="checkbox" name="data_u[]" {!! (@$menu_admin->u == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
+													<input class="checks" type="checkbox" name="data_u[]" {!! (@$menu_admin->u == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
 													สิทธ์แก้ไข &nbsp;&nbsp;&nbsp;
 												</label>
 												<label class="checkbox-inline">
 													<input type="hidden" value="{{@$menu_admin->d}}">
-													<input type="checkbox" name="data_d[]" {!! (@$menu_admin->d == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
+													<input class="checks" type="checkbox" name="data_d[]" {!! (@$menu_admin->d == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
 													สิทธ์ลบ &nbsp;&nbsp;&nbsp;
 												</label>
 
-							                        @IF(@$row->name=='CRM' || @$row->name=='PM')
-							                        <label class="checkbox-inline">
-							                          <input type="hidden" value="{{@$menu_admin->can_answer}}">
-							                          <input type="checkbox" name="can_answer[]" {!! (@$menu_admin->can_answer == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
-							                          สิทธ์ตอบคำถาม
-							                        </label>
-							                        @ENDIF
+                          @IF(@$row->isApprove=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_approve}}">
+                            <input class="checks" type="checkbox" name="can_approve[]" {!! (@$menu_admin->can_approve == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์อนุมัติ
+                          </label>
+                          @ENDIF
 
-										@ELSE
-											<label class="checkbox-inline" style="display: none;">
-												<input type="checkbox" name="data_c[]" checked value="{{@$row->id}}"  >
-											</label>
-											<label class="checkbox-inline" style="display: none;">
-												<input type="checkbox" name="data_u[]" checked value="{{@$row->id}}"   >
-											</label>
-											<label class="checkbox-inline" style="display: none;">
-												<input type="checkbox" name="data_d[]" checked value="{{@$row->id}}"  >
-											</label>
-											<label class="checkbox-inline" style="display: none;">
-												<input type="checkbox" name="can_answer[]" checked value="{{@$row->id}}"  >
-											</label>
-					                    @ENDIF
+	                        @IF(@$row->isAnswer=="Y")
+	                        <label class="checkbox-inline">
+	                          <input type="hidden" value="{{@$menu_admin->can_answer}}">
+	                          <input class="checks" type="checkbox" name="can_answer[]" {!! (@$menu_admin->can_answer == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+	                          สิทธ์ตอบคำถาม
+	                        </label>
+	                        @ENDIF
+
+            				@ELSE
+
+                        <label class="checkbox-inline" style="display: none;">
+                          <input class="checks" type="checkbox" name="data_c[]" checked value="{{@$row->id}}"  >
+                        </label>
+                        <label class="checkbox-inline" style="display: none;">
+                          <input class="checks" type="checkbox" name="data_u[]" checked value="{{@$row->id}}"   >
+                        </label>
+                        <label class="checkbox-inline" style="display: none;">
+                          <input class="checks" type="checkbox" name="data_d[]" checked value="{{@$row->id}}"  >
+                        </label>
+                        <label class="checkbox-inline" style="display: none;">
+                          <input class="checks" type="checkbox" name="can_approve[]" checked value="{{@$row->id}}"  >
+                        </label>
+                        <label class="checkbox-inline" style="display: none;">
+                          <input class="checks" type="checkbox" name="can_answer[]" checked value="{{@$row->id}}"  >
+                        </label>
+
+					      @ENDIF
                                           
                                       
-		  								</div>
+		  								    </div>
+
 		  								</div>
                                           
                                         </div>
@@ -169,7 +181,7 @@
                       </div>
               <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
                   <hr>
-                   <div class="form-group row">
+                   <div class="form-group row" style="display: none;">
                         <label class="col-md-2 col-form-label">สถานะ :</label>
                         <div class="col-md-10 mt-2">
                           <div class="custom-control custom-switch">
@@ -208,19 +220,31 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $(".checkAll").click(function(){
+            $('.check1,.check_m,.check_s,.checkm,.checks').not(this).prop('checked', this.checked);
+        });
+
         $(".check_s").click(function(){
             var id = $(this).data('id');
             // alert(id);
               if (this.checked) {
                 $("input[id=m"+id+"]").prop('checked', true);
               }
+              $(this).closest(".aaa").find(".checks").not(this).prop('checked', this.checked);
         });
 
+        $(".checks").click(function(){
+              if (this.checked) {
+                $(this).closest(".aaa").find(".check_s").not(this).prop('checked', this.checked);
+              }
+        });
+        
         $(".check_m").click(function(){
             var id = $(this).val();
             // alert(id);
               if (this.checked) {
                 $("input[id=s"+id+"]").prop('checked', true);
+                $("input[id=ss"+id+"]").prop('checked', true);
               }else{
               	$("input[id=s"+id+"]").prop('checked', false);
               	$("input[id=ss"+id+"]").prop('checked', false);

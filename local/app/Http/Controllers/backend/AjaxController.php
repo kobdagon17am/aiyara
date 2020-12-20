@@ -18,6 +18,20 @@ use PDF;
 class AjaxController extends Controller
 {
 
+    public function ajaxSetSession(Request $request)
+    {
+        Session::put('session_menu_id', $request->session_menu_id);
+         // echo "session created";
+        echo (Session::get('session_menu_id'));
+
+        $roleApprove = DB::select(" SELECT can_approve from role_permit WHERE role_group_id_fk=(SELECT role_group_id_fk FROM ck_users_admin WHERE id=".(\Auth::user()->id).") and menu_id_fk='$request->session_menu_id'  ; ");
+        // echo $roleApprove[0]->can_approve;
+        Session::put('roleApprove', $roleApprove[0]->can_approve);
+        echo (Session::get('roleApprove'));
+
+    }
+
+
     public function ajaxClearDataPm_broadcast()
     {
         DB::delete(" TRUNCATE `pm_broadcast` ");
@@ -287,6 +301,32 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFTransfer($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.transfer_warehouses.print_transfer',compact('data'));
+        $pdf->setPaper('A4', 'landscape');
+        
+        // $pdf->showWatermarkImage = true;
+        // $pdf->showWatermarkImage(public_path('images/logo.png'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFTransfer_branch($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.transfer_branch.print_transfer',compact('data'));
+        $pdf->setPaper('A4', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    
     public function ajaxApprovePickupGoods(Request $req)
     {
         // return($req->id);
@@ -302,18 +342,18 @@ class AjaxController extends Controller
     }
 
 
-    public function ajaxGetSubwarehouse(Request $request)
+    public function ajaxGetWarehouse(Request $request)
     {
         if($request->ajax()){
-          $query = \App\Models\Backend\Subwarehouse::where('w_warehouse_id_fk',$request->warehouse_id_fk)->get()->toArray();
+          $query = \App\Models\Backend\Warehouse::where('branch_id_fk',$request->branch_id_fk)->get()->toArray();
           return response()->json($query);      
         }
-    }    
+    }   
 
     public function ajaxGetZone(Request $request)
     {
         if($request->ajax()){
-          $query = \App\Models\Backend\Zone::where('w_subwarehouse_id_fk',$request->subwarehouse_id_fk)->get()->toArray();
+          $query = \App\Models\Backend\Zone::where('warehouse_id_fk',$request->warehouse_id_fk)->get()->toArray();
           return response()->json($query);      
         }
     }    
@@ -321,10 +361,81 @@ class AjaxController extends Controller
     public function ajaxGetShelf(Request $request)
     {
         if($request->ajax()){
-          $query = \App\Models\Backend\Shelf::where('w_zone_id_fk',$request->zone_id_fk)->get()->toArray();
+          $query = \App\Models\Backend\Shelf::where('zone_id_fk',$request->zone_id_fk)->get()->toArray();
           return response()->json($query);      
         }
     }    
+
+
+
+    public function ajaxGetSetToWarehouse(Request $request)
+    {
+       // return $request->id;
+        $sRow = \App\Models\Backend\Transfer_choose::where('id',$request->id)->get();
+        // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
+        // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
+        // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
+
+        foreach ($sRow as $key => $value) {
+            $json_result[] = [
+                'id'=>$value->id ,
+                'branch_id_fk'=>$value->branch_id_fk ,
+                'warehouse_id_fk'=>$value->warehouse_id_fk ,
+                'zone_id_fk'=>$value->zone_id_fk ,
+                'shelf_id_fk'=>$value->shelf_id_fk ,
+            ];
+        }
+
+        return json_encode($json_result);
+
+
+    }    
+
+    public function ajaxGetSetToWarehouseBranch(Request $request)
+    {
+       // return $request->id;
+        $sRow = \App\Models\Backend\Transfer_choose_branch::where('action_user','=',\Auth::user()->id)->get();
+        // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
+        // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
+        // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
+
+        foreach ($sRow as $key => $value) {
+            $json_result[] = [
+                'id'=>$value->id ,
+                'branch_id_fk'=>$value->branch_id_fk ,
+                'branch_id_fk_to'=>$value->branch_id_fk_to ,
+            ];
+        }
+
+        return json_encode($json_result);
+
+
+    } 
+
+
+    public function ajaxGetSetToBranch(Request $request)
+    {
+       // return $request->id;
+        $sRow = \App\Models\Backend\Transfer_choose_branch::where('id',$request->id)->get();
+        // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
+        // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
+        // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
+
+        foreach ($sRow as $key => $value) {
+            $json_result[] = [
+                'id'=>$value->id ,
+                'branch_id_fk'=>$value->branch_id_fk ,
+                'warehouse_id_fk'=>$value->warehouse_id_fk ,
+                'zone_id_fk'=>$value->zone_id_fk ,
+                'shelf_id_fk'=>$value->shelf_id_fk ,
+            ];
+        }
+
+        return json_encode($json_result);
+
+
+    }  
+
 
 
 

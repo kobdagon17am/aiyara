@@ -12,7 +12,22 @@ class Check_stockController extends Controller
 
     public function index(Request $request)
     {
-      return view('backend.check_stock.index');
+
+      $Products = DB::select("SELECT products.id as product_id,
+      products.product_code,
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      FROM
+      products_details
+      Left Join products ON products_details.product_id_fk = products.id
+      WHERE lang_id=1");
+
+      $Check_stock = \App\Models\Backend\Check_stock::get();
+
+      return View('backend.check_stock.index')->with(
+        array(
+           'Products'=>$Products,'Check_stock'=>$Check_stock,
+        ) );
+
     }
 
     public function create()
@@ -64,11 +79,11 @@ class Check_stockController extends Controller
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('warehouses', function($row) {
+        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
-        $subwarehouse = DB::select(" select * from subwarehouse where id=".$row->subwarehouse_id_fk." ");
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
-        return @$warehouse[0]->w_name.'/'.@$subwarehouse[0]->w_name.'/'.@$zone[0]->w_name.'/'.@$shelf[0]->w_name;
+        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
       })      
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

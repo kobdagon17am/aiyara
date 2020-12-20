@@ -15,23 +15,35 @@
 		{
 
 			$spreadsheet = new Spreadsheet();
-			$sheet = $spreadsheet->getActiveSheet();
-			$sheet->setTitle("Sheet1");
+			$amt_sheet = 1;
 
-			$sRow = \App\Models\Backend\Pm_broadcast::get();
+			for ($j=0; $j < $amt_sheet ; $j++) { 
 
-			$sheet->setCellValue('A1', 'CustomerId');
-			$sheet->setCellValue('B1', 'Message');
-			$sheet->setCellValue('C1', 'Show_from');
-			$sheet->setCellValue('D1', 'Show_to');
-			$sheet->setCellValue('E1', 'Remark');
+				if($j>0){
+					$spreadsheet->createSheet();
+				}
 
-			for ($i=0; $i < count($sRow) ; $i++) { 
-				$sheet->setCellValue('A'.($i+2), $sRow[$i]->customers_id_fk);
-				$sheet->setCellValue('B'.($i+2), $sRow[$i]->txt_msg);
-				$sheet->setCellValue('C'.($i+2), $sRow[$i]->show_from);
-				$sheet->setCellValue('D'.($i+2), $sRow[$i]->show_to);
-				$sheet->setCellValue('E'.($i+2), $sRow[$i]->remark);
+				$spreadsheet->setActiveSheetIndex($j);
+				$sheet = $spreadsheet->getActiveSheet();
+				$sheet->setTitle("Sheet".($j+1));
+
+				$sRow = \App\Models\Backend\Pm_broadcast::get();
+
+				$sheet->setCellValue('A1', 'CustomerId');
+				$sheet->setCellValue('B1', 'Message');
+				$sheet->setCellValue('C1', 'Show_from');
+				$sheet->setCellValue('D1', 'Show_to');
+				$sheet->setCellValue('E1', 'Remark');
+
+				for ($i=0; $i < count($sRow) ; $i++) { 
+					$sheet->setCellValue('A'.($i+2), $sRow[$i]->customers_id_fk);
+					$sheet->setCellValue('B'.($i+2), $sRow[$i]->txt_msg);
+					$sheet->setCellValue('C'.($i+2), $sRow[$i]->show_from);
+					$sheet->setCellValue('D'.($i+2), $sRow[$i]->show_to);
+					$sheet->setCellValue('E'.($i+2), $sRow[$i]->remark);
+				}
+
+
 			}
 
 			$file = 'pm_broadcast.xlsx';
@@ -40,7 +52,6 @@
 
 			$writer = new Xlsx($spreadsheet);
 			$writer->save('local/public/excel_files/'.$file);
-
 
 		}
 

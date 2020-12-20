@@ -106,15 +106,12 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'w_code', title :'<center>รหัสคลัง</center>', className: 'text-center'},
-            {data: 'w_name', title :'<center>ชื่อ Zone</center>', className: 'text-center'},
-            {data: 'w_date_created', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
-            {data: 'w_warehouse', title :'<center>คลังหลัก</center>', className: 'text-center'},
-            {data: 'w_subwarehouse', title :'<center>คลังย่อย</center>', className: 'text-center'},
-            {data: 'w_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
-            {data: 'w_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
-            {data: 'w_date_updated', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
+            {data: 'z_code', title :'<center>รหัสคลัง</center>', className: 'text-center'},
+            {data: 'z_name', title :'<center>ชื่อ Zone</center>', className: 'text-center'},
+            {data: 'z_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
+            {data: 'z_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

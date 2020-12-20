@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> คลังสินค้าย่อย </h4>
+            <h4 class="mb-0 font-size-18"> คลังสินค้า </h4>
         </div>
     </div>
 </div>

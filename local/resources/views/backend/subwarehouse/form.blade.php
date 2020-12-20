@@ -37,21 +37,7 @@
                  <input type="hidden" name="w_warehouse_id_fk" value="{{@$sWarehouse->id}}" >
               @endif
                 {{ csrf_field() }}
-<!-- 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เลือกคลังสินค้าหลัก :</label>
-                    <div class="col-md-10">
-                         <select name="w_warehouse" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                            @if(@$dsWarehouse)
-                                @foreach(@$dsWarehouse AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->w_warehouse_id_fk)?'selected':'' }} >{{@$r->w_name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
- -->
+
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">รหัสคลัง :</label>
@@ -61,7 +47,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อคลังย่อย :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อคลัง :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
                     </div>

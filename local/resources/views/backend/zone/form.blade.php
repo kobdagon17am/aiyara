@@ -13,9 +13,9 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> 
+                {{ @$sBranchs->b_name?' สาขา > '.@$sBranchs->b_name:'' }} 
                 {{ @$sWarehouse->w_name?' > '.@$sWarehouse->w_name:'' }} 
-                {{ @$sSubwarehouse->w_name?' \ '.@$sSubwarehouse->w_name:'' }} 
-                {{ @$sRow->w_name?' \ '.@$sRow->w_name:'' }} 
+                {{ @$sRow->z_name?' > '.@$sRow->z_name:'' }} 
             </h4>
         </div>
     </div>
@@ -33,70 +33,52 @@
 
               @if( empty($sRow) )
               <form action="{{ route('backend.zone.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input type="hidden" name="w_subwarehouse_id_fk" value="{{@$sSubwarehouse->id}}" >
+                <input type="hidden" name="warehouse_id_fk" value="{{@$sWarehouse->id}}" >
               @else
               <form action="{{ route('backend.zone.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
-                <input type="hidden" name="w_subwarehouse_id_fk" value="{{@$sSubwarehouse->id}}" >
+                <input type="hidden" name="warehouse_id_fk" value="{{@$sWarehouse->id}}" >
               @endif
                 {{ csrf_field() }}
 
-       <!--          <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เลือกคลังสินค้าย่อย :</label>
+
+                <div class="form-group row">
+                    <label for="z_code" class="col-md-2 col-form-label">รหัส Zone :</label>
                     <div class="col-md-10">
-                         <select name="w_subwarehouse" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                            @if(@$dsSubwarehouse)
-                                @foreach(@$dsSubwarehouse AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->w_subwarehouse_id_fk)?'selected':'' }} >{{@$r->w_name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
+                        <input class="form-control" type="text" value="{{ @$sRow->z_code }}" name="z_code" required>
                     </div>
                 </div>
- -->
+
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Zone :</label>
+                    <label for="z_name" class="col-md-2 col-form-label">ชื่อ Zone :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->z_name }}" name="z_name" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัส Zone :</label>
+                    <label for="z_details" class="col-md-2 col-form-label">รายละเอียด :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_code }}" name="w_code" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->z_details }}" name="z_details" required>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่สร้าง :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required >
-                    </div>
-                </div>
+                 <div class="form-group row">
+                      <label for="z_maker" class="col-md-2 col-form-label"> ผู้ทำรายการ : </label>
+                      <div class="col-md-10">
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_details }}" name="w_details" required>
-                    </div>
-                </div>
+                        @if( empty(@$sRow) )
+                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="z_maker" >
+                            @else
+                              <input class="form-control" type="text" value="{{@$sMaker_name[0]->name}}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ @$sRow->z_maker }}" name="z_maker" >
+                         @endif
+                          
+                      </div>
+                  </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ผู้ทำรายการ :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_maker }}" name="w_maker" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่อัพเดท :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_updated }}" name="w_date_updated" required>
-                    </div>
-                </div>
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">สถานะ :</label>
@@ -115,7 +97,7 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.subwarehouse.index') }}/{{@$sSubwarehouse->id}}/edit">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.warehouse.index') }}/{{@$sWarehouse->id}}/edit">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -149,7 +131,7 @@
                     </div>
                   <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.subwarehouse.index') }}/{{@$sSubwarehouse->id}}/edit">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.warehouse.index') }}/{{@$sWarehouse->id}}/edit">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -171,7 +153,7 @@
 
 <script>
     
-var w_zone_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+var zone_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
 
 var sU = "{{@$sU}}"; 
 var sD = "{{@$sD}}";
@@ -192,24 +174,19 @@ $(function() {
           url: '{{ route('backend.shelf.datatable') }}',
           data: function ( d ) {
                 d.Where={};
-                d.Where['w_zone_id_fk'] = w_zone_id_fk ;
+                d.Where['zone_id_fk'] = zone_id_fk ;
                 oData = d;
               },
           method: 'POST',
         },
-
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'w_name', title :'<center>ชื่อ Shelf </center>', className: 'text-center'},
-            {data: 'w_code', title :'<center>รหัส Shelf </center>', className: 'text-center'},
-            
-            // {data: 'w_date_created', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
-            {data: 'w_warehouse', title :'<center>คลังหลัก</center>', className: 'text-center'},
-            {data: 'w_subwarehouse', title :'<center>คลังย่อย</center>', className: 'text-center'},
-            {data: 'w_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
-            // {data: 'w_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
-            {data: 'w_date_updated', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
-            // {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
+            {data: 's_code', title :'<center>รหัส Shelf</center>', className: 'text-center'},
+            {data: 's_name', title :'<center>ชื่อ Shelf </center>', className: 'text-center'},
+            {data: 's_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
+            {data: 's_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันที่อัพเดท</center>', className: 'text-center'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

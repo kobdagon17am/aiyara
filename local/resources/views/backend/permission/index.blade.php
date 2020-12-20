@@ -118,6 +118,7 @@ $(function() {
             @endif
             {data: 'name', title :'<center>Name</center>', className: 'text-center'},
             {data: 'email', title :'<center>E-Mail</center>', className: 'text-left'},
+            {data: 'branch', title :'<center>สาขา</center>', className: 'text-left'},
             {data: 'isActive', title :'<center>Active</center>', className: 'text-center'},
             {data: 'updated_at', title :'Updated At', className: 'text-center w130'},
             {data: 'id', title :'Action', className: 'text-center w200'},

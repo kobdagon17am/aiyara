@@ -140,6 +140,27 @@
                   @endif
 
 
+                <div class="form-group row">
+                      <label class="col-md-2 col-form-label">  </label>
+                      <div class="col-md-10 mt-2">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch2" name="order_by_member" value="1" {{ ( @$sRow->order_by_member=='1')?'checked':'' }}>
+                            <label class="custom-control-label" for="customSwitch2">สั่งซื้อโดยสมาชิก</label>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="form-group row">
+                      <label class="col-md-2 col-form-label"> </label>
+                      <div class="col-md-10 mt-2">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch3" name="order_by_staff" value="1" {{ ( @$sRow->order_by_staff=='1')?'checked':'' }}>
+                            <label class="custom-control-label" for="customSwitch3">สั่งซื้อโดยพนักงาน</label>
+                        </div>
+                      </div>
+                </div>
+
+
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">

@@ -13,10 +13,10 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> 
+                {{ @$sBranchs->b_name?' สาขา > '.@$sBranchs->b_name:'' }} 
                 {{ @$sWarehouse->w_name?' > '.@$sWarehouse->w_name:'' }} 
-                {{ @$sSubwarehouse->w_name?' \ '.@$sSubwarehouse->w_name:'' }} 
-                {{ @$sZone->w_name?' \ '.@$sZone->w_name:'' }} 
-                {{ @$sRow->w_name?' \ '.@$sRow->w_name:'' }}
+                {{ @$sZone->z_name?' > '.@$sZone->z_name:'' }} 
+                {{ @$sRow->s_name?' > '.@$sRow->s_name:'' }}
             </h4>
         </div>
     </div>
@@ -29,78 +29,50 @@
             <div class="card-body">
               @if( empty($sRow) )
               <form action="{{ route('backend.shelf.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input type="hidden" name="w_zone_id_fk" value="{{@$sZone->id}}" >
+                <input type="hidden" name="zone_id_fk" value="{{@$sZone->id}}" >
               @else
               <form action="{{ route('backend.shelf.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
-                <input type="hidden" name="w_zone_id_fk" value="{{@$sZone->id}}" >
+                <input type="hidden" name="zone_id_fk" value="{{@$sZone->id}}" >
               @endif
                 {{ csrf_field() }}
 
-              <!--   <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เลือก Zone :</label>
-                    <div class="col-md-10">
-                         <select name="w_zone" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                            @if(@$dsZone)
-                                @foreach(@$dsZone AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->w_zone_id_fk)?'selected':'' }} >{{@$r->w_name}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div> -->
-
-              <!--   <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Zone :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sZone->w_name }}"readonly >
-                    </div>
-                </div> -->
-
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อ Shelf :</label>
+                    <label for="s_code" class="col-md-2 col-form-label">รหัส Shelf :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_name }}" name="w_name" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->s_code }}" name="s_code" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัส Shelf :</label>
+                    <label for="s_name" class="col-md-2 col-form-label">ชื่อ Shelf :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_code }}" name="w_code" required>
-                    </div>
-                </div>
-
-               
-
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่สร้าง :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_created }}" name="w_date_created" required >
+                        <input class="form-control" type="text" value="{{ @$sRow->s_name }}" name="s_name" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
+                    <label for="s_details" class="col-md-2 col-form-label">รายละเอียด :</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_details }}" name="w_details" required>
+                        <input class="form-control" type="text" value="{{ @$sRow->s_details }}" name="s_details" required>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ผู้ทำรายการ :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->w_maker }}" name="w_maker" required>
-                    </div>
-                </div>
+                 <div class="form-group row">
+                      <label for="s_maker" class="col-md-2 col-form-label"> ผู้ทำรายการ : </label>
+                      <div class="col-md-10">
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่อัพเดท :</label>
-                    <div class="col-md-3">
-                        <input class="form-control" type="date" value="{{ @$sRow->w_date_updated }}" name="w_date_updated" required>
-                    </div>
-                </div>
+                        @if( empty(@$sRow) )
+                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="s_maker" >
+                            @else
+                              <input class="form-control" type="text" value="{{@$sMaker_name[0]->name}}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ @$sRow->s_maker }}" name="s_maker" >
+                         @endif
+                          
+                      </div>
+                  </div>
+  
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">สถานะ :</label>

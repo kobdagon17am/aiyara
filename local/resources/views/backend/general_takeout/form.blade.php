@@ -135,7 +135,7 @@
 
 
         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังสินค้าหลัก : * </label>
+                            <label for="example-text-input" class="col-md-2 col-form-label"> สาขา : * </label>
                             <div class="col-md-10">
                               <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
@@ -154,7 +154,7 @@
                     @if( empty(@$sRow) )
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังย่อย : * </label>
+                            <label for="example-text-input" class="col-md-2 col-form-label"> คลัง : * </label>
                             <div class="col-md-10">
                               <select id="subwarehouse_id_fk" name="subwarehouse_id_fk" class="form-control select2-templating " required >
                                     <option disabled selected>กรุณาเลือกคลังหลักก่อน</option>

@@ -96,10 +96,6 @@ class Products_out_approveController extends Controller
       $sTable = \App\Models\Backend\Products_out_approve::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('subwarehouse', function($row) {
-        $D = DB::select(" select * from subwarehouse where id=".$row->subwarehouse_id_fk." ");
-        return @$D[0]->w_name;
-      })
       ->addColumn('zone', function($row) {
         $D = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         return @$D[0]->w_name;

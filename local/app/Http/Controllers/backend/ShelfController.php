@@ -12,18 +12,14 @@ class ShelfController extends Controller
 
     public function index(Request $request)
     {
-
-      $dsZone  = \App\Models\Backend\Shelf::get();
-      return view('backend.shelf.index')->with(['dsZone'=>$dsZone]);
-
     }
 
- public function create($id)
+    public function create($id)
     {
       $sZone = \App\Models\Backend\Zone::find($id);
-      $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($sZone->w_subwarehouse_id_fk);
-      $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
-      return View('backend.shelf.form')->with(array('sZone'=>$sZone,'sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse) );
+      $sWarehouse = \App\Models\Backend\Warehouse::find($sZone->warehouse_id_fk);
+      $sBranchs = \App\Models\Backend\Branchs::find($sWarehouse->branch_id_fk);
+      return View('backend.shelf.form')->with(array('sZone'=>$sZone,'sWarehouse'=>$sWarehouse,'sBranchs'=>$sBranchs) );
     }
 
     public function store(Request $request)
@@ -34,10 +30,11 @@ class ShelfController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Shelf::find($id);
-       $sZone = \App\Models\Backend\Zone::find($sRow->w_zone_id_fk);
-       $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($sZone->w_subwarehouse_id_fk);
-       $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
-       return view('backend.shelf.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sZone'=>$sZone ,'sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse ]);
+       $sZone = \App\Models\Backend\Zone::find($sRow->zone_id_fk);
+       $sWarehouse = \App\Models\Backend\Warehouse::find($sZone->warehouse_id_fk);
+       $sBranchs = \App\Models\Backend\Branchs::find($sWarehouse->branch_id_fk);
+       $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->s_maker." ");
+       return view('backend.shelf.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sZone'=>$sZone ,'sWarehouse'=>$sWarehouse,'sBranchs'=>$sBranchs,'sMaker_name'=>$sMaker_name  ]);
     }
 
     public function update(Request $request, $id)
@@ -53,30 +50,24 @@ class ShelfController extends Controller
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Shelf::find($id);
+            $sRow->updated_at = date('Y-m-d H:i:s');
           }else{
             $sRow = new \App\Models\Backend\Shelf;
           }
 
-          // dd(request('w_warehouse'));
-
-          $sRow->w_zone_id_fk    = request('w_zone_id_fk');
-          $sRow->w_code    = request('w_code');
-          $sRow->w_name    = request('w_name');
-          $sRow->w_date_created    = request('w_date_created');
-          $sRow->w_date_updated    = request('w_date_updated');
-          $sRow->w_details    = request('w_details');
-          $sRow->w_maker    = request('w_maker');
+          $sRow->zone_id_fk    = request('zone_id_fk');
+          $sRow->s_code    = request('s_code');
+          $sRow->s_name    = request('s_name');
+          $sRow->s_details    = request('s_details');
+          $sRow->s_maker    = request('s_maker');
 
           $sRow->status    = request('status')?request('status'):0;
-                    
-          $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
 
           \DB::commit();
-
-           // return redirect()->action('backend\ShelfController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-          return redirect()->to(url("backend/zone/".request('w_zone_id_fk')."/edit"));
+ 
+           return redirect()->to(url("backend/shelf/".($id?$id:$sRow->id)."/edit"));
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -98,23 +89,23 @@ class ShelfController extends Controller
       $sTable = \App\Models\Backend\Shelf::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('w_warehouse', function($row) {
-         $dsZone = \App\Models\Backend\Zone::find($row->w_zone_id_fk);
-         $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($dsZone->w_subwarehouse_id_fk);
-         $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
-         return $dsWarehouse->w_name;
-      })      
-      ->addColumn('w_subwarehouse', function($row) {
-         $dsZone = \App\Models\Backend\Zone::find($row->w_zone_id_fk);
-         $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($dsZone->w_subwarehouse_id_fk);
-         return $dsSubwarehouse->w_name;
-         // return $row->w_zone_id_fk;
-         // return $dsZone->w_subwarehouse_id_fk;
-      })
-      ->addColumn('w_zone', function($row) {
-         $dsZone = \App\Models\Backend\Zone::find($row->w_zone_id_fk);
-         return $dsZone->w_name;
-      })
+       ->addColumn('s_maker', function($row) {
+        if(@$row->s_maker!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->s_maker." ");
+           return @$sD[0]->name;
+        }else{
+           return '';
+        }
+      })        
+      // ->addColumn('w_warehouse', function($row) {
+      //    $dsZone = \App\Models\Backend\Zone::find($row->w_zone_id_fk);
+      //    $dsWarehouse = \App\Models\Backend\Warehouse::find($dsZone->warehouse_id_fk);
+      //    return $dsWarehouse->w_name;
+      // })      
+      // ->addColumn('w_zone', function($row) {
+      //    $dsZone = \App\Models\Backend\Zone::find($row->w_zone_id_fk);
+      //    return $dsZone->w_name;
+      // })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

@@ -45,6 +45,47 @@
         <div class="card">
             <div class="card-body">
 
+
+                <div class="row" >
+                  <div class="col-8">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                              <select name="product" id="product" class="form-control select2-templating "  >
+                                <option value="">-รหัสสินค้า : ชื่อสินค้า-</option>
+                                   @if(@$Products)
+                                        @foreach(@$Products AS $r)
+                                          <option value="{{@$r->product_id}}" >
+                                            {{@$r->product_code." : ".@$r->product_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                              </select>
+                            </div>
+
+                            <div class="col-md-3">
+                              <select name="lot_number" id="lot_number" class="form-control select2-templating "  >
+                                <option value="">-Lot Number-</option>
+                                   @if(@$Check_stock)
+                                        @foreach(@$Check_stock AS $r)
+                                          <option value="{{@$r->product_id}}" >
+                                            {{@$r->lot_number}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                              </select>
+                            </div>
+
+                            <div class="col-2" >
+                              <a class="btn btn-info btn-sm btnSearch " href="{{ route('backend.check_stock.index') }}" style="font-size: 14px !important;" >
+                                <i class="bx bx-search align-middle "></i> SEARCH
+                              </a>
+                            </div>
+
+                      </div>
+                  </div>
+
+                </div>
+
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
@@ -632,6 +673,8 @@ $(function() {
                         return a + b*1;
                     }, 0) / rows.count();
                 // sum = $.fn.dataTable.render.number(',', '.', 0, '$').display( sum );
+
+                sum = 0;
  
                 return $('<tr/ style=" background-color:#f2f2f2 !important;">')
                     .append( '<td colspan="4" style="text-align:center;">Total for '+group+'</td>' )

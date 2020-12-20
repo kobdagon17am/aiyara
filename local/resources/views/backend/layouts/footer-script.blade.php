@@ -47,6 +47,8 @@
 
             $(document).on('click', '.click_link', function(event) {
 
+                // event.preventDefault();
+
                 // alert("xxxxxx");
                 var role_group_id = "{{!empty(\Auth::user()->role_group_id_fk)?\Auth::user()->role_group_id_fk:0}}";
 
@@ -55,7 +57,26 @@
                 var menu_id = $(this).data('id');
                 sessionStorage.setItem("menu_id", menu_id);
 
+                $.ajax({
+
+                       type:'POST',
+                       url: " {{ url('backend/ajaxSetSession') }} ", 
+                       data:{ _token: '{{csrf_token()}}',session_menu_id:menu_id },
+                        success:function(data){
+                             console.log(data); 
+                             // return false;
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                        }
+                  });                    
+
+
+
                 // alert(role_group_id+":"+menu_id);
+
+                localStorage.clear();
 
             });
 

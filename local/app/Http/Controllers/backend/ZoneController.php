@@ -12,17 +12,13 @@ class ZoneController extends Controller
 
     public function index(Request $request)
     {
-
-      $dsZone  = \App\Models\Backend\Zone::get();
-      return view('backend.zone.index')->with(['dsZone'=>$dsZone]);
-
     }
 
     public function create($id)
     {
-      $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($id);
-      $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
-      return View('backend.zone.form')->with(array('sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse) );
+      $sWarehouse = \App\Models\Backend\Warehouse::find($id);
+      $sBranchs = \App\Models\Backend\Branchs::find($sWarehouse->branch_id_fk);
+      return View('backend.zone.form')->with(array('sWarehouse'=>$sWarehouse,'sBranchs'=>$sBranchs) );
     }
 
     public function store(Request $request)
@@ -32,10 +28,13 @@ class ZoneController extends Controller
 
     public function edit($id)
     {
+       // dd($id);
        $sRow = \App\Models\Backend\Zone::find($id);
-       $sSubwarehouse = \App\Models\Backend\Subwarehouse::find($sRow->w_subwarehouse_id_fk);
-       $sWarehouse = \App\Models\Backend\Warehouse::find($sSubwarehouse->w_warehouse_id_fk);
-       return view('backend.zone.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sSubwarehouse'=>$sSubwarehouse,'sWarehouse'=>$sWarehouse ]);
+       // dd($sRow);
+       $sWarehouse = \App\Models\Backend\Warehouse::find($sRow->warehouse_id_fk);
+       $sBranchs = \App\Models\Backend\Branchs::find($sWarehouse->branch_id_fk);
+       $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->z_maker." ");
+       return view('backend.zone.form')->with(['sRow'=>$sRow, 'id'=>$id ,'sWarehouse'=>$sWarehouse,'sBranchs'=>$sBranchs , 'sMaker_name'=>$sMaker_name ]);
     }
 
 
@@ -52,34 +51,27 @@ class ZoneController extends Controller
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Zone::find($id);
+            $sRow->updated_at = date('Y-m-d H:i:s');
           }else{
             $sRow = new \App\Models\Backend\Zone;
           }
 
-          // dd(request('w_warehouse'));
-
-          $sRow->w_subwarehouse_id_fk    = request('w_subwarehouse_id_fk');
-          $sRow->w_code    = request('w_code');
-          $sRow->w_name    = request('w_name');
-          $sRow->w_date_created    = request('w_date_created');
-          $sRow->w_date_updated    = request('w_date_updated');
-          $sRow->w_details    = request('w_details');
-          $sRow->w_maker    = request('w_maker');
+          $sRow->warehouse_id_fk    = request('warehouse_id_fk');
+          $sRow->z_code    = request('z_code');
+          $sRow->z_name    = request('z_name');
+          $sRow->z_details    = request('z_details');
+          $sRow->z_maker    = request('z_maker');
 
           $sRow->status    = request('status')?request('status'):0;
-                    
-          $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
-
 
           \DB::commit();
           
-          if( $id ){
-            return redirect()->to(url("backend/zone/".$id."/edit"));
-          }else{
-            // return redirect()->action('backend\ZoneController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-            return redirect()->to(url("backend/subwarehouse/".request('w_subwarehouse_id_fk')."/edit"));
-          }          
+          // if( $id ){
+            return redirect()->to(url("backend/zone/".($id?$id:$sRow->id)."/edit"));
+          // }else{
+          //   return redirect()->to(url("backend/warehouse/".request('warehouse_id_fk')."/edit"));
+          // }          
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -101,18 +93,17 @@ class ZoneController extends Controller
       $sTable = \App\Models\Backend\Zone::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+       ->addColumn('z_maker', function($row) {
+        if(@$row->z_maker!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->z_maker." ");
+           return @$sD[0]->name;
+        }else{
+           return '';
+        }
+      })  
       ->addColumn('w_warehouse', function($row) {
-         // $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
-         // $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
-         // return $dsWarehouse->w_name;
-        $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
-        $dsWarehouse = \App\Models\Backend\Warehouse::find($dsSubwarehouse->w_warehouse_id_fk);
+        $dsWarehouse = \App\Models\Backend\Warehouse::find($row->warehouse_id_fk);
         return $dsWarehouse->w_name;
-
-      })
-      ->addColumn('w_subwarehouse', function($row) {
-         $dsSubwarehouse = \App\Models\Backend\Subwarehouse::find($row->w_subwarehouse_id_fk);
-         return $dsSubwarehouse->w_name;
 
       })
       ->addColumn('updated_at', function($row) {

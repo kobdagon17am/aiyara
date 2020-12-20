@@ -12,16 +12,12 @@ class WarehouseController extends Controller
 
     public function index(Request $request)
     {
-
-      $dsWarehouse  = \App\Models\Backend\Warehouse::get();
-      return view('backend.warehouse.index')->with(['dsWarehouse'=>$dsWarehouse]);
-
     }
 
- public function create()
+    public function create($id)
     {
-      $sLocale  = \App\Models\Locale::all();
-      return view('backend.warehouse.form');
+      $sBranchs = \App\Models\Backend\Branchs::find($id);
+      return View('backend.warehouse.form')->with(array('sBranchs'=>$sBranchs) );
     }
 
     public function store(Request $request)
@@ -32,7 +28,9 @@ class WarehouseController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Warehouse::find($id);
-       return View('backend.warehouse.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sBranchs = \App\Models\Backend\Branchs::find($sRow->branch_id_fk);
+       $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->w_maker." ");
+       return View('backend.warehouse.form')->with(array('sRow'=>$sRow, 'id'=>$id,'sBranchs'=>$sBranchs, 'sMaker_name'=>$sMaker_name) );
     }
 
     public function update(Request $request, $id)
@@ -48,28 +46,27 @@ class WarehouseController extends Controller
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Warehouse::find($id);
+            $sRow->updated_at = date('Y-m-d H:i:s');
           }else{
             $sRow = new \App\Models\Backend\Warehouse;
           }
 
+          $sRow->branch_id_fk    = request('branch_id_fk');
           $sRow->w_code    = request('w_code');
           $sRow->w_name    = request('w_name');
-          $sRow->w_date_created    = request('w_date_created');
-          $sRow->w_date_updated    = request('w_date_updated');
-          $sRow->w_location    = request('w_location');
           $sRow->w_details    = request('w_details');
           $sRow->w_maker    = request('w_maker');
 
           $sRow->status    = request('status')?request('status'):0;
-                    
-          $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
-
           \DB::commit();
-
-         // return redirect()->action('backend\WarehouseController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-          return redirect()->to(url("backend/warehouse/".($id?$id:0)."/edit"));
+          
+          // if( $id ){
+            return redirect()->to(url("backend/warehouse/".($id?$id:$sRow->id)."/edit"));
+          // }else{
+          //   return redirect()->to(url("backend/branchs/".request('branch_id_fk')."/edit"));
+          // }  
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -91,11 +88,27 @@ class WarehouseController extends Controller
       $sTable = \App\Models\Backend\Warehouse::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('name', function($row) {
-        // return $row->fname.' '.$row->surname;
+      ->addColumn('w_maker', function($row) {
+        if(@$row->w_maker!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->w_maker." ");
+           return @$sD[0]->name;
+        }else{
+           return '';
+        }
+      })  
+      ->addColumn('created_at', function($row) {
+        if(!is_null($row->created_at)){
+            $d = strtotime($row->created_at); return date("d/m/", $d).(date("Y", $d)+543).' '.date("H:i:s", $d);
+        }else{
+            return '';
+        }
       })
       ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
+        if(!is_null($row->updated_at)){
+            $d = strtotime($row->updated_at); return date("d/m/", $d).(date("Y", $d)+543).' '.date("H:i:s", $d);
+        }else{
+            return '';
+        }
       })
       ->make(true);
     }

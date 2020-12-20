@@ -24,7 +24,21 @@ class AdminController extends Controller
   public function create()
   {
     $sRole_group = \App\Models\Backend\Role::get();
-    return view('backend.permission.form',['sRole_group'=>$sRole_group]);
+    $sBranchs = \App\Models\Backend\Branchs::get();
+    return view('backend.permission.form',['sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs]);
+  }
+
+  public function edit($id)
+  {
+    try {
+      $sLocale  = \App\Models\Locale::all();
+      $sRow = \App\Models\Backend\Permission\Admin::find($id);
+      $sRole_group = \App\Models\Backend\Role::get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
+      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs));
+    } catch (\Exception $e) {
+      return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+    }
   }
 
   public function store(Request $request)
@@ -51,6 +65,7 @@ class AdminController extends Controller
         $sRow->name    = request('name');
         $sRow->email    = request('email');
         $sRow->tel    = request('tel');
+        $sRow->branch_id_fk    = request('branch_id_fk');
         $sRow->department    = request('department');
         $sRow->position    = request('position');
         
@@ -75,18 +90,6 @@ class AdminController extends Controller
     }
   }
 
-
-  public function edit($id)
-  {
-    try {
-      $sLocale  = \App\Models\Locale::all();
-      $sRow = \App\Models\Backend\Permission\Admin::find($id);
-      $sRole_group = \App\Models\Backend\Role::get();
-      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group));
-    } catch (\Exception $e) {
-      return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
-    }
-  }
 
   public function roles($id)
   {
@@ -161,6 +164,14 @@ class AdminController extends Controller
     }
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('branch', function($row) {
+        if(@$row->branch_id_fk!=''){
+          $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+           return @$sD[0]->b_name;
+        }else{
+           return '';
+        }
+      }) 
       ->make(true);
   }
 }

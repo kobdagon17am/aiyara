@@ -96,10 +96,6 @@ class Products_borrowController extends Controller
       $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('subwarehouse_name', function($row) {
-        $D = DB::select(" select * from subwarehouse where id=".@$row->subwarehouse_id_fk." ");
-        return @$D[0]->w_name;
-      })
       ->addColumn('approver_name', function($row) {
         $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
         return $sD[0]->name;
