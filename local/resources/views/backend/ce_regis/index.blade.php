@@ -19,7 +19,8 @@
 <!-- end page title -->
   <?php 
       $sPermission = \Auth::user()->permission ;
-      $menu_id = @$_REQUEST['menu_id'];
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
       if($sPermission==1){
         $sC = '';
         $sU = '';
@@ -145,7 +146,7 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-
+/*
   sessionStorage.setItem("role_group_id", role_group_id);
   var role_group_id = sessionStorage.getItem("role_group_id");
   var menu_id = sessionStorage.getItem("menu_id");
@@ -154,6 +155,7 @@ $(function() {
        window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
+  */
 </script>
 
 @endsection

@@ -13,6 +13,8 @@ class Transfer_warehousesController extends Controller
     public function index(Request $request)
     {
 
+      // dd(\Auth::user()->permission .":". \Auth::user()->branch_id_fk.":". \Auth::user()->id);
+
       $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
@@ -149,6 +151,35 @@ class Transfer_warehousesController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
+      if(!empty($request->approve_status) && $request->approve_status==1){
+          // dd($request->approve_status);
+
+        $rsWarehouses_details = DB::select("  
+           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
+        $arr1 = [];
+        foreach ($rsWarehouses_details as $key => $value) {
+          array_push($arr1, $value->stocks_id_fk);
+        }
+
+        $arr1 = implode(",", $arr1);
+
+        $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
+              // dd($rsStock);
+        foreach ($rsStock as $key => $value) {
+            DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
+        }
+
+         $rsWarehouses_details = DB::select("  
+           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
+         foreach ($rsWarehouses_details as $key => $value) {
+              DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
+         }
+
+      }
+
+      // dd();
+
+      // dd($request->all());
       return $this->form($id);
     }
 
@@ -177,7 +208,8 @@ class Transfer_warehousesController extends Controller
 
           \DB::commit();
 
-           return redirect()->to(url("backend/transfer_warehouses/".$id."/edit?list_id=".$id.""));
+           // return redirect()->to(url("backend/transfer_warehouses/".$id."/edit?list_id=".$id.""));
+           return redirect()->to(url("backend/transfer_warehouses"));
            
 
       } catch (\Exception $e) {

@@ -186,35 +186,36 @@ class Transfer_branch_codeController extends Controller
     }
 
     public function Datatable(){
-
       /*
-      user 4 levels
-      1=Super Admin
-      2=User > branch = 0
-      3=User > branch != 0 > approver
-      4=User > branch != 0 > no approver
+      Super Admin   => see all 
+    1) ถ้าทำ เห็น  
+    2) ระบุ สาขา จะเห็น ในสาขา นั้น    =>  1 Or 2
+    3) ถ้ามีสิทธิ์อนุมัติ แสดงปุ่มอนุมัติ  (0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ)
       */
-      if(\Auth::user()->permission==1){
-        // 1=Super Admin > see all
-        $sTable = \App\Models\Backend\Transfer_branch_code::search()->orderBy('action_date', 'desc');
-
-      }else if(\Auth::user()->branch_id_fk==0){
-        // 2=User > branch = 0 > ตามสาขาที่เลือก ไป where ที่หน้า View อีกที 
-        $sTable = \App\Models\Backend\Transfer_branch_code::search()->orderBy('action_date', 'desc');
-
-      }else if(\Auth::user()->branch_id_fk!=0 && Session::get('roleApprove')==1){
-         // 3=User > branch != 0 > approver
-        $sTable = \App\Models\Backend\Transfer_branch_code::where('branch_id_fk',\Auth::user()->branch_id_fk)->orderBy('action_date', 'desc');
-      }else{
-        // 4=User > branch != 0 > no approver
-        $sTable = \App\Models\Backend\Transfer_branch_code::where('action_user',\Auth::user()->id)->orderBy('action_date', 'desc');
-      }
-      
-      // if(\Auth::user()->branch_id_fk==0){
+      // if(\Auth::user()->permission==1){
+      //   // 1=Super Admin > see all
       //   $sTable = \App\Models\Backend\Transfer_branch_code::search()->orderBy('action_date', 'desc');
-      // }else{
-      //   $sTable = \App\Models\Backend\Transfer_branch_code::where('action_user',\Auth::user()->id)->orderBy('action_date', 'desc');
+      // }else if(\Auth::user()->branch_id_fk==0){
+      //    // 2=User > branch = 0  ไม่ระบุสาขา เห็นทั้งหมด 
+      //   $sTable = \App\Models\Backend\Transfer_branch_code::search()->orderBy('action_date', 'desc');
+      //  }else{
+      //   // กรณีระบุสาขา เห็นเฉพาะสาขาตัวเอง 
+      //   if(\Auth::user()->branch_id_fk!=0  && Session::get('roleApprove')==0){
+      //     $sTable = \App\Models\Backend\Transfer_branch_code::where('action_user',\Auth::user()->id)->orderBy('action_date', 'desc');
+      //   }else if(\Auth::user()->branch_id_fk!=0  && Session::get('roleApprove')==1){
+      //     $sTable = \App\Models\Backend\Transfer_branch_code::where('branch_id_fk',\Auth::user()->branch_id_fk)->orderBy('action_date', 'desc');
+      //   }else{
+      //     // กรณีไม่ระบุสาขา 
+      //       $sTable = \App\Models\Backend\Transfer_branch_code::search()->orderBy('action_date', 'desc');
+      //   }
       // }
+
+
+      $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
+          WHERE action_user LIKE ".(\Auth::user()->id)." OR 
+          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".(\Auth::user()->branch_id_fk)." END)
+          ORDER BY action_date DESC ");
+
       $sQuery = \DataTables::of($sTable);
        return $sQuery
       ->addColumn('action_user', function($row) {

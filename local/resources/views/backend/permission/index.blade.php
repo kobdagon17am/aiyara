@@ -21,7 +21,8 @@
 
   <?php 
     $sPermission = \Auth::user()->permission ;
-    $menu_id = @$_REQUEST['menu_id'];
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
       $sC = '';
       $sU = '';
@@ -124,17 +125,25 @@ $(function() {
             {data: 'id', title :'Action', className: 'text-center w200'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          if(sPermission==1){
-            if(aData['permission']==1&&aData['id']==1){
-                  $('td:last-child', nRow).html(''
-                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              ).addClass('input');
-            }else{
-                $('td:last-child', nRow).html(''
-                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger cDelete" style="'+sD+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-              ).addClass('input');
-            }
+
+        	if(aData['permission']==1){
+        		$('td:eq(3)', nRow).html('(Super Admin)');
+        	}else if(aData['branch']==0){
+        		$('td:eq(3)', nRow).html('(ไม่ระบุสาขา)');
+        	}
+
+            if(sPermission==1){
+
+	            if(aData['permission']==1&&aData['id']==1){
+	                  $('td:last-child', nRow).html(''
+	                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	              ).addClass('input');
+	            }else{
+	                $('td:last-child', nRow).html(''
+	                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	                + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger cDelete" style="'+sD+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+	              ).addClass('input');
+	            }
                
           }else{
                 $('td:last-child', nRow).html(''
@@ -152,12 +161,14 @@ $(function() {
 
 
 <script type="text/javascript">
+/*	
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
     if(!window.location.hash) {
        window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
+  */
 </script>
 @endsection
 

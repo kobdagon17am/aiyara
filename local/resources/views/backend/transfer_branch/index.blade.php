@@ -9,6 +9,9 @@
           max-width: 1200px !important; /* New width for default modal */
         }
     }
+
+    .select2-selection {height: 34px !important;margin-left: 3px;}
+    .border-left-0 {height: fit-content;}
 </style>
 @endsection
 
@@ -211,6 +214,56 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="row">
+                    <div class="col-12 d-flex ">
+                      <div class="col-md-3 ">
+                        <div class="form-group row">
+                          <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
+                            <option value="">สาขา</option>
+                            @if(@$sBranchs)
+                            @foreach(@$sBranchs AS $r)
+                            <option value="{{$r->id}}"  >
+                              {{$r->b_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group row">
+                          <select id="warehouse_id_search" name="warehouse_id_search" class="form-control select2-templating "  >
+                            <option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-group row">
+                          <select id="status_search" name="status_search" class="form-control select2-templating " >
+                            <!--   `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ', -->
+                            <option value="" >สถานะ</option>
+                            <option value="0" >รออนุมัติ</option>
+                            <option value="1" >อนุมัติ</option>
+                            <option value="3" >ไม่อนุมัติ</option>
+                            <option value="2" >ยกเลิก</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3 d-flex  ">
+                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
+                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group row"> &nbsp; &nbsp;
+                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
+                          <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
                   </table>
                 </div>
@@ -764,7 +817,7 @@
                     $('td:last-child', nRow).html('-');
                 }else{ 
 
-                  if(aData['approve_status']==2){
+                  if(aData['approve_status']!=0){
 
                     // $('td:eq(6)', nRow).html( '' );
 
@@ -1167,9 +1220,187 @@
            
         });
 
+
+       $('#branch_id_search').change(function(){
+
+          var branch_id_fk = this.value;
+          // alert(warehouse_id_fk);
+
+           if(branch_id_fk != ''){
+             $.ajax({
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                  method: "post",
+                  data: {
+                    branch_id_fk:branch_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลคลัง !!.'); 
+                       $("#warehouse_id_search").val('').trigger('change'); 
+                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
+                   }else{
+                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                       });
+                       $('#warehouse_id_search').html(layout);
+                   }
+                  }
+                })
+           }
+ 
+      });
+
+
+
     });
 
+
+
 </script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#startDate').datepicker({
+             format: 'dd/mm/yyyy',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // minDate: today,
+            maxDate: function () {
+                return $('#endDate').val();
+            }
+        });
+        $('#endDate').datepicker({
+            format: 'dd/mm/yyyy',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                return $('#startDate').val();
+            }
+        });
+
+        $(document).ready(function() {
+          
+            $(document).on('click', '.btnSearchInList', function(event) {
+                  // event.preventDefault();
+                  var branch_id_search = $('#branch_id_search').val();
+                  var warehouse_id_search = $('#warehouse_id_search').val();
+                  var warehouse_id_search = warehouse_id_search==null?"":warehouse_id_search;
+                  var status_search = $('#status_search').val();
+                  // var startDated = $('#startDate').val();
+
+                  var s_date = $('#startDate').val();
+                  var startDated = s_date.split("/").reverse().join("-");
+                  var e_date = $('#endDate').val();
+                  var endDate = e_date.split("/").reverse().join("-");
+                  
+                  console.log(branch_id_search);
+                  console.log(warehouse_id_search);
+                  console.log(status_search);
+                  console.log(startDated);
+                  console.log(endDate);
+
+
+                        var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+                        var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+                        var sU = "{{@$sU}}"; //alert(sU);
+                        var sD = "{{@$sD}}"; //alert(sD);
+                        var oTable;
+                        $(function() {
+
+                          var branch_id_fk = branch_id_search?branch_id_search:0; //alert(branch_id_fk); // 0 = All
+                          var approve_status = status_search; //alert(branch_id_fk); // 0 = All
+
+                          oTable = $('#data-table-transfer-list').DataTable({
+                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                              processing: true,
+                              serverSide: true,
+                              scroller: true,
+                              scrollCollapse: true,
+                              scrollX: true,
+                              ordering: false,
+                              destroy: true,
+                              scrollY: ''+($(window).height()-370)+'px',
+                              iDisplayLength: 25,
+                              ajax: {
+                                url: '{{ route('backend.transfer_warehouses_code.datatable') }}',
+                                data: function ( d ) {
+                                  d.myWhere={};
+                                  d.myWhere['branch_id_fk'] = branch_id_fk ;
+                                  d.myWhere['approve_status'] = approve_status ;
+                                  d.myWhere['action_date'] = startDated+":"+endDate ;
+                                  oData = d;
+                                  $("#spinner_frame").hide();
+                                },
+                                 method: 'POST',
+                               },
+
+                              columns: [
+                                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                                  {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
+                                  {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
+                                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                                    if(d==1){
+                                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                                    }else if(d==2){
+                                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+                                    }else if(d==3){
+                                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+                                    }else{
+                                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+                                    }
+                                  }},
+                                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
+                                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
+                                      return '<center><a href="{{ URL::to('backend/transfer_warehouses/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                                  }},
+                                  {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                                      return d ;
+                                  }},
+                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                              ],
+                              rowCallback: function(nRow, aData, dataIndex){
+
+                                // if(sU!=''&&sD!=''){
+                                //     $('td:last-child', nRow).html('-');
+                                // }else{ 
+
+                                  if(aData['approve_status']==2){
+
+                                    // $('td:eq(6)', nRow).html( '' );
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_warehouses.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
+                                    ).addClass('input');
+
+                                  }else{
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_warehouses.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary " style=" font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
+                                    ).addClass('input');
+
+                                  }
+
+                                // }
+                              }
+                          });
+              
+                      });
+
+
+            });
+
+        }); 
+    </script>
+
 
 @endsection
 

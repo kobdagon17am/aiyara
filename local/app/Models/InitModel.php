@@ -73,6 +73,28 @@ class InitModel extends Model
 
     public function scopesearch($sQuery)
     {
+
+      if( request('myWhere') ){
+        foreach(request('myWhere') AS $sKey => $sValue){
+          if( $sValue && $sKey!='action_date'){
+              $sQuery->where($sKey, $sValue);
+          }else if($sKey=='approve_status' ){
+            if($sValue=='0'){
+              $sQuery->where('approve_status', '0');
+            }
+          }else if($sKey=='action_date' ){
+              $str = explode(":", $sValue);
+              $sQuery->where($sKey,'>=', $str[0] );
+              if(!empty($str[1])){
+                $sQuery->where($sKey,'<=', $str[1] );
+              }
+          }
+        }
+
+        return $sQuery;
+
+      }
+
   		if( request('Where') ){
   			foreach(request('Where') AS $sKey => $sValue){
   				if( $sValue ){

@@ -20,7 +20,8 @@
 
   <?php 
       $sPermission = \Auth::user()->permission ;
-      $menu_id = @$_REQUEST['menu_id'];
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
       if($sPermission==1){
         $sC = '';
         $sU = '';
@@ -133,12 +134,14 @@ $(function() {
 </script>
 
 <script type="text/javascript">
+	/*
   var menu_id = sessionStorage.getItem("menu_id");
     window.onload = function() {
     if(!window.location.hash) {
        window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
     }
   }
+  */
 </script>
 
 @endsection

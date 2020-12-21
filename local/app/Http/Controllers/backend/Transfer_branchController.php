@@ -153,6 +153,34 @@ class Transfer_branchController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
+            // dd($request->all());
+      if(!empty($request->approve_status) && $request->approve_status==1){
+          // dd($request->approve_status);
+
+        $rsBranch_details = DB::select("  
+           select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
+        $arr1 = [];
+        foreach ($rsBranch_details as $key => $value) {
+          array_push($arr1, $value->stocks_id_fk);
+        }
+
+        $arr1 = implode(",", $arr1);
+
+        $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
+              // dd($rsStock);
+        foreach ($rsStock as $key => $value) {
+            DB::update(" UPDATE db_transfer_branch_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_branch_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
+        }
+
+         $rsBranch_details = DB::select("  
+           select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
+         foreach ($rsBranch_details as $key => $value) {
+              DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
+         }
+
+      }
+
+
       return $this->form($id);
     }
 
@@ -181,7 +209,8 @@ class Transfer_branchController extends Controller
 
           \DB::commit();
 
-           return redirect()->to(url("backend/transfer_branch/".$id."/edit?list_id=".$id.""));
+           // return redirect()->to(url("backend/transfer_branch/".$id."/edit?list_id=".$id.""));
+           return redirect()->to(url("backend/transfer_branch"));
            
 
       } catch (\Exception $e) {
