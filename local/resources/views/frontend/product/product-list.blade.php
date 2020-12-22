@@ -152,7 +152,7 @@
                           </div>
 
                           <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p>
- 
+
                           @if(empty(Auth::guard('c_user')->user()->pv_mt_active) || (strtotime(Auth::guard('c_user')->user()->pv_mt_active) < strtotime(date('Ymd')) ))
                           <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }}" style="font-size: 14px">Not Active </span>  </p>
                           @else
@@ -190,12 +190,12 @@
 
                         ?>  
 
-                          @if(empty(Auth::guard('c_user')->user()->pv_tv_active) || (strtotime(Auth::guard('c_user')->user()->pv_tv_active) < strtotime(date('Ymd')) ))
-                          <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ $pv_tv_active }}" style="font-size: 14px">Not Active </span>  </p>
-                          @else
+                        @if(empty(Auth::guard('c_user')->user()->pv_tv_active) || (strtotime(Auth::guard('c_user')->user()->pv_tv_active) < strtotime(date('Ymd')) ))
+                        <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ $pv_tv_active }}" style="font-size: 14px">Not Active </span>  </p>
+                        @else
 
-                          <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active)) }} </span>  </p>
-                          @endif
+                        <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active)) }} </span>  </p>
+                        @endif
                       </div>
                     </div>
                     @elseif($type==4)
@@ -204,19 +204,19 @@
                         <div class="row">
                           <div class="col-md-5">
                             <h5 class="m-b-20" style="color: #000">Ai Pocket</h5>
-                          
 
-                         </div>
-                         <div class="col-md-7">
+
+                          </div>
+                          <div class="col-md-7">
                            <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
-                        </div>
-                      </div>
+                         </div>
+                       </div>
 
-                      <p class="m-b-0" {{-- style="color:#000" --}}>จำนวนคะแนนคงเหลือ</p>
-                    </div>
-                  </div>
-                  @elseif($type==5)
-                  <div class="card bg-c-pink order-card m-b-0">
+                       <p class="m-b-0" {{-- style="color:#000" --}}>จำนวนคะแนนคงเหลือ</p>
+                     </div>
+                   </div>
+                   @elseif($type==5)
+                   <div class="card bg-c-pink order-card m-b-0">
                     <div class="card-block">
                       <div class="row">
                         <div class="col-md-6">
@@ -224,7 +224,10 @@
 
                        </div>
                        <div class="col-md-6">
-                        <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} </span></h3>
+                        <?php  
+                        $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                        ?>
+                        <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
                       </div>
                     </div>
 
@@ -280,7 +283,7 @@
       </div> -->
 
       <span class="prod-price" style="font-size: 20px"> {!! $value->icon !!} {{number_format($value->member_price,2)}} <b
-        style="color:#00c454">[{{$value->pv}} PV]</b></span>
+        style="color:#00c454">@if($type==5)[0 PV]@else[{{$value->pv}} PV]@endif</b></span>
       </div>
     </div>
   </div>

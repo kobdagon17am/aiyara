@@ -21,13 +21,13 @@
                         @if($type == 1)
                         <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
                         @elseif($type == 2)
-                        <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h4>
+                        <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติรายเดือน</h4>
                         @elseif($type == 3)
                         <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h4>
                         @elseif($type == 4)
-                        <h4>รายการสั่งซื้อเพื่อเติม AiPocket</h4>
+                        <h4>รายการสั่</h4>
                         @elseif($type == 5)
-                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
+                        <h4>Gift Voucher</h4>
                         @elseif($type == 6)
                         @else
                         <h4 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h4>
@@ -95,7 +95,15 @@
             </div>
             <div class="card-block">
                 <div class="col-md-12">
-                    <table class="table table-responsive" >
+                 <?php  
+                 $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                 ?>
+                 <table class="table table-responsive" >
+                    <tr>
+                        <td><strong class="text-primary">Gift Voucher </td>
+                            <td align="right"><strong class="text-primary" id="gv"> {{ number_format($gv->sum_gv) }} </strong></td>
+                        </tr>
+
                         <tr>
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $bill['quantity'] }}) ชิ้น</strong></td>
                             <td align="right"><strong id="price"> {{ $bill['price_total'] }} </strong></td>
@@ -127,7 +135,7 @@
         </div>
     </div>
 </div>
- 
+
 <form action="" method="POST" id="cart_delete">
     @csrf
     <input type="hidden" id="data_id" name="data_id">

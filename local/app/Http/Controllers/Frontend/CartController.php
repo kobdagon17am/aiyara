@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Cart;
 use App\Models\Frontend\Pvpayment;
 use App\Models\Frontend\GiftVoucher;
+use Auth;
 
 class CartController extends Controller
 {
 	public function cart($type){
+
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
 
@@ -28,11 +30,13 @@ class CartController extends Controller
 		$price = Cart::session($type)->getTotal();
 		$price_total = number_format($price,2);
 
+
 		$bill = array('price_total'=>$price_total,
 			'pv_total'=>$pv_total,
 			'data'=>$data,
 			'quantity'=>$quantity,
-			'status'=>'success'
+			'status'=>'success',
+			
 		);
 		return view('frontend/product/cart',compact('bill','type'));
 	}
@@ -98,8 +102,11 @@ class CartController extends Controller
 
 	public function add_gif(){
 
-		$rs= \App\Helpers\Frontend::gv();
-		dd($rs);
+		
+
+	dd('end');
+
+				// dd($rs);
 		// $user_name = '0001';
 		// $gv = '500';
 		// $code = 'ABCD';
@@ -112,5 +119,7 @@ class CartController extends Controller
 		//$admin_id = '99';//admin_id 
 		//$resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
 		//dd($resule);
-	}
+
+
+}
 }

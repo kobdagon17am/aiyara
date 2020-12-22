@@ -76,8 +76,16 @@ class HistoryController extends Controller
         foreach ($orders as $value){
             $i++;
             $nestedData['id'] = $i;
+
             $nestedData['code_order'] = $value->code_order;
-            $nestedData['price'] = number_format($value->price + $value->shipping,2);
+            if($value->type_id == 5){
+                $nestedData['price'] = number_format($value->price_remove_gv,2);
+
+            }else{
+                $nestedData['price'] = number_format($value->price + $value->shipping,2);
+
+            }
+            
             $nestedData['pv_total'] = '<b class="text-success">'.$value->pv_total.'</b>';
             $nestedData['date'] = date('d/m/Y H:i:s',strtotime($value->create_at));
             $nestedData['type'] = $value->type;
@@ -167,11 +175,14 @@ class HistoryController extends Controller
             'dataset_business_major.zipcode as office_zipcode',
             'dataset_business_major.tel as office_tel',
             'dataset_business_major.email as office_email',
-            'order_payment_code.order_payment_code') 
+            'order_payment_code.order_payment_code',
+            'dataset_pay_type.detail as pay_type_name') 
         ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
         ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
         ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','orders.type_address') 
-        ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id') 
+        ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id')
+        ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id')
+    
         ->where('dataset_order_status.lang_id','=','1')
         ->where('dataset_orders_type.lang_id','=','1')
         ->where('orders.code_order','=',$code_order)

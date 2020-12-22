@@ -42,8 +42,6 @@ class CartPaymentController extends Controller
 		$vat = $vat->txt_value;
 		$shipping = $shipping->price_shipping;
 		
-
-
         //ราคาสินค้า
 		$price = Cart::session($type)->getTotal();
 
@@ -53,8 +51,28 @@ class CartPaymentController extends Controller
 		 //มูลค่าสินค้า
 		$price_vat =  $price - $p_vat;
 
-		$price_total = number_format($price + $shipping,2);
+		$price_total = $price + $shipping;
 
+		if($type == 5){
+			$data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+			$gv = $data_gv->sum_gv; 
+			$gv_total = $gv - $price_total;
+
+			if($gv_total < 0){
+				$gv_total = 0;
+				$price_total_type5 = abs($gv - $price_total);
+
+			}else{
+				$gv_total = $gv_total;
+				$price_total_type5 = 0;
+			}
+			
+
+		}else{
+			$gv_total = null;
+			$price_total_type5 = null;
+		}
+		
 
 		$bill = array('vat'=>$vat,
 			'shipping'=>$shipping,
@@ -65,6 +83,8 @@ class CartPaymentController extends Controller
 			'pv_total'=>$pv_total,
 			'data'=>$data,
 			'quantity'=>$quantity,
+			'gv_total'=>$gv_total,
+			'price_total_type5'=>$price_total_type5,
 			'type'=>$type,
 			'status'=>'success'
 		);
@@ -81,6 +101,7 @@ class CartPaymentController extends Controller
 	}
 	
 	public function payment_submit(Request $request){
+		//dd($request->all());
 
 		if($request->submit == 'upload'){
 			$resule = Payment::payment_uploadfile($request);
@@ -118,7 +139,19 @@ class CartPaymentController extends Controller
 			}else{
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
-		}else{
+		}elseif($request->submit == 'gift_voucher'){
+			$resule = Payment::gift_voucher($request);
+			if($resule['status'] == 'success'){
+				return redirect('product-history')->withSuccess($resule['message']);
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			} 
+		}
+
+
+		else{
 			return redirect('product-history')->withError('Payment submit Fail');
 		}
 

@@ -16,6 +16,7 @@
  			<input type="hidden" name="p_vat" value="{{ $bill['p_vat'] }}">
  			<input type="hidden" name="price_total" value="{{ $bill['price_total'] }}">
  			<input type="hidden" name="pv_total" value="{{ $bill['pv_total'] }}">
+ 			<input type="hidden" name="price_total_type5" value="{{$bill['price_total_type5'] }}">
  			
  			<!-- Choose Your Payment Method start -->
  			<div class="card card-border-success">
@@ -23,7 +24,7 @@
  					@if($bill['type'] == 1)
  					<h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
  					@elseif($bill['type'] == 2)
- 					<h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติ</h5>
+ 					<h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติรายเดือน</h5>
  					@elseif($bill['type'] == 3)
  					<h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
  					@elseif($bill['type'] == 4)
@@ -90,9 +91,9 @@
  								<div class="row m-t-5">
  									<div class="col-md-6 col-sm-6 col-6">
  										<label>Email <b class="text-danger">*</b></label>
- 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
+ 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}" {{-- required="" --}}>
  									</div>
- 								 
+
  								</div>
 
  								<div class="row m-t-5">
@@ -170,7 +171,7 @@
  										<label>Email <b class="text-danger">*</b></label>
  										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
  									</div>
- 								 
+
  								</div>
  							</div>
 
@@ -183,6 +184,71 @@
  					</div>
 
  					<div class="tab-pane" id="credit-card" role="tabpanel">
+ 						@if($bill['price_total_type5'] == 0 and $bill['type'] == 5) 
+ 						<div class="row">
+ 							<div class="col-md-12 col-xl-12">
+ 								<div class="card bg-c-pink order-card m-b-0">
+ 									<div class="card-block">
+ 										<div class="row">
+ 											<div class="col-md-8 col-sx-8 col-8">
+ 												<h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+
+ 											</div>
+ 											<div class="col-md-4 col-sx-4 col-4">
+ 												<?php  
+ 												$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+ 												?>
+ 												<h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
+ 											</div>
+ 										</div>
+
+ 										{{-- <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p> --}}
+ 										<hr>
+
+ 										<div class="row">
+ 											<div class="col-md-8 col-sx-8 col-8">
+ 												<h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
+
+ 											</div>
+ 											<div class="col-md-4 col-sx-4 col-4">
+
+ 												<h3 class="text-right"> <span> {{ $bill['price_total'] }} </span></h3>
+ 											</div>
+ 										</div>
+
+ 										<hr>
+ 										<div class="row">
+ 											<div class="col-md-8 col-sx-8 col-8">
+ 												<h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
+
+ 											</div>
+ 											<div class="col-md-4 col-sx-4 col-4">
+
+ 												<h3 class="text-right"> <span> {{ $bill['gv_total'] }} </span></h3>
+ 											</div>
+ 										</div>
+ 									</div>
+
+ 								</div>
+
+ 								<div class="row m-t-5">
+ 									<div class="col-sm-6">
+ 									</div>
+ 									<div class="col-sm-6 text-right">
+ 										<button class="btn btn-success btn-block" type="submit" name="submit" value="gift_voucher">ชำระเงิน</button>
+ 									</div>
+ 								</div>
+
+ 								
+
+ 							</div>
+ 							
+ 						</div>
+ 						
+ 						
+ 						
+ 						@else
+
  						<div class="demo-container card-block">
 
  							<div class="row">
@@ -247,6 +313,8 @@
  							</div>
 
  						</div>
+ 						@endif
+
  					</div>
 
  				</div>
@@ -270,23 +338,53 @@
  					</tr>
  					<tr>
  						<td><strong>Vat({{ $bill['vat'] }}%)</strong></td>
- 						<td align="right"><strong id="sent"> {{ $bill['p_vat'] }}</strong></td>
+ 						<td align="right"><strong > {{ $bill['p_vat'] }}</strong></td>
  					</tr>
- 
+
  					<tr>
  						<td><strong>มูลค่าสินค้า + Vat</strong></td>
- 						<td align="right"><strong id="sent"> {{ $bill['price'] }}</strong></td>
+ 						<td align="right"><strong > {{ number_format($bill['price'],2) }}</strong></td>
  					</tr>
  					<tr>
  						<td><strong>ค่าจัดส่ง</strong></td>
- 						<td align="right"><strong id="sent"> {{ $bill['shipping'] }}</strong></td>
+ 						<td align="right"><strong > {{  number_format($bill['shipping'],2) }}</strong></td>
  					</tr>
  					
+ 					@if($bill['type'] == 5)
+ 					<?php  
+ 					$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+ 					?>
  					<tr>
- 						<td><strong>ยอดที่ต้องชำระ</strong></td>
- 						<td align="right"><strong id="price_total"> {{ $bill['price_total'] }}</strong>
+ 						<td><strong>ยอดรวม</strong></td>
+ 						<td align="right"><strong> {{ number_format($bill['price_total'],2) }}</strong>
  						</td>
  					</tr>
+ 					<tr>
+ 						<td><strong class="text-primary">Gift Voucher</strong></td>
+ 						<td align="right"><strong class="text-primary"> {{ $gv->sum_gv }}</strong>
+ 						</td>
+ 					</tr>
+ 					<tr>
+ 						<td><strong class="text-primary" style="font-size: 13px">Gift Voucher คงเหลือ</strong></td>
+ 						<td align="right"><strong  class="text-primary"> {{  $bill['gv_total'] }}</strong>
+ 						</td>
+ 					</tr>
+
+ 					<tr>
+ 						<td><strong>ยอดที่ต้องชำระเพิ่ม</strong></td>
+ 						<td align="right"><strong> {{  number_format($bill['price_total_type5'],2) }}</strong>
+ 						
+ 						</td>
+ 					</tr>
+
+ 					@else
+ 					<tr>
+ 						<td><strong>ยอดที่ต้องชำระ</strong></td>
+ 						<td align="right"><strong > {{ $bill['price_total'] }}</strong>
+ 						</td>
+ 					</tr>
+ 					@endif
+ 					
  					<tr>
  						<td><strong>คะแนนที่ได้รับ</strong></td>
  						<td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>

@@ -76,7 +76,7 @@
                   </select>
                 </div> -->
                 <div class="col-lg-12">
-                  <h4>{!! $product->icon !!} {{number_format($product->member_price,2)}} <b style="color:#00c454">[{{$product->pv}} PV]</b></h4>
+                  <h4>{!! $product->icon !!} {{number_format($product->member_price,2)}} <b style="color:#00c454">@if($type==5)[0 PV]@else[{{$product->pv}} PV]@endif</b></h4>
                   <hr>
                   {!! $product->descriptions !!}
                   
@@ -149,10 +149,16 @@
 <script type="text/javascript">
   function addcart(id) { 
     <?php $img = $img[0]->img_url.''.$img[0]->product_img; ?>
+    var type = {{ $type }};
     var quantity = $('#quant').val();
     var name = '{{$product->product_name}}';
     var price = {{$product->member_price}};
-    var pv = {{$product->pv}};
+    if(type == 5){
+      var pv = 0;
+    }else {
+      var pv = {{$product->pv}};
+    }
+    
     var img = '{{$img}}';
     var title = '{{$product->title}}';
     var promotion = 'code promotion';

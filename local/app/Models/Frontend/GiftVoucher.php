@@ -41,6 +41,94 @@ class GiftVoucher extends Model
 
 	}
 
+	public static function log_gift($price_total,$customer_id,$order_id){
+		// $admin_id = 99;
+		// $price_total = 900;
+		// $order_id = 99;
+		$id = Auth::guard('c_user')->user()->id;  
+		$gv_customer = \App\Helpers\Frontend::get_gitfvoucher($id);
+		$gv_sum=$gv_customer->sum_gv;
+
+		$data_gv = DB::table('gift_voucher')
+		->where('customer_id','=',$id)
+		->where('banlance','>',0)
+		->where('expiry_date','>',date('Y-m-d H:i:s'))
+		->orderby('expiry_date')
+		->get();
+
+		try {
+			DB::BeginTransaction();
+
+			if($price_total >= $gv_sum){
+				
+				foreach ($data_gv as $value){
+				$update_giftvoucher = DB::table('gift_voucher')//update บิล
+				->where('id',$value->id)
+				->update(['banlance' => 0 ]);
+
+				$insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+					'customer_id'=>$id,
+					'gift_voucher_id'=>$value->id,
+					'order_id'=>$order_id,
+					'gv'=>$value->banlance,
+					'status'=>'order',
+				]);
+			}
+			DB::commit();
+			$resule = ['status'=>'success','message'=>'Use GiftVoucher Success'];
+			return $resule;
+		}else{
+			foreach ($data_gv as $value){
+				$gv_rs = $price_total - $value->banlance;
+				
+				if($gv_rs > 0){
+
+					$update_giftvoucher = DB::table('gift_voucher')//update บิล
+					->where('id',$value->id)
+					->update(['banlance' => 0 ]);
+
+					$insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+						'customer_id'=>$id,
+						'gift_voucher_id'=>$value->id,
+						'order_id'=>$order_id,
+						'gv'=>$value->banlance,
+						'status'=>'order',
+					]);
+
+					$price_total = $gv_rs;
+
+				}else{
+
+
+					$update_giftvoucher = DB::table('gift_voucher')//update บิล
+					->where('id',$value->id)
+					->update(['banlance' => abs($gv_rs) ]);
+
+					$insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+						'customer_id'=>$id,
+						'gift_voucher_id'=>$value->id,
+						'order_id'=>$order_id,
+						'gv'=>$price_total,
+						'status'=>'order',
+					]);
+
+					DB::commit();
+					$resule = ['status'=>'success','message'=>'Use GiftVoucher Success'];
+					return $resule;
+				}
+			}	
+		}
+
+	}catch(Exception $e) {
+		DB::rollback();
+		$resule = ['status'=>'fail','message'=>$e]; 
+		return $resule;
+
+	}
+
+
+}
+
 
 
 }
