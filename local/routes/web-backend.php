@@ -333,6 +333,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_borrow_choose', 'Products_borrow_chooseController');
     Route::post('products_borrow_choose/datatable', 'Products_borrow_chooseController@Datatable')->name('products_borrow_choose.datatable');
 
+    Route::resource('borrow_cause', 'Borrow_causeController');
+    Route::post('borrow_cause/datatable', 'Borrow_causeController@Datatable')->name('borrow_cause.datatable');
+
 // ใบยืม
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
 
