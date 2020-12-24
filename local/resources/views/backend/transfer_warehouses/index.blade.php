@@ -1315,13 +1315,13 @@ $(document).ready(function() {
     <script>
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#startDate').datepicker({
-             format: 'dd/mm/yyyy',
+            format: 'dd/mm/yyyy',
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
             // minDate: today,
-            maxDate: function () {
-                return $('#endDate').val();
-            }
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
         });
         $('#endDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -1331,6 +1331,10 @@ $(document).ready(function() {
                 return $('#startDate').val();
             }
         });
+
+         $('#startDate').change(function(event) {
+           $('#endDate').val($(this).val());
+         });
 
         $(document).ready(function() {
           
@@ -1379,21 +1383,28 @@ $(document).ready(function() {
                               iDisplayLength: 25,
                               ajax: {
                                 url: '{{ route('backend.transfer_warehouses_code.datatable') }}',
-                                data: function ( d ) {
-                                  d.myWhere={};
-                                  d.myWhere['branch_id_fk'] = branch_id_fk ;
-                                  d.myWhere['approve_status'] = approve_status ;
-                                  d.myWhere['action_date'] = startDated+":"+endDate ;
-                                  oData = d;
-                                  $("#spinner_frame").hide();
+                                data :{
+                                  branch_id:branch_id_fk,
+                                  approve_status:approve_status,
+                                  startDated:startDated,
+                                  endDate:endDate,
                                 },
+                                // กรณีนี้จะไม่ทำงาน ถ้าเป็น Datatable คิวรี่แบบธรรมดา  $sTable = DB::select();
+                                // จะใช้ได้กับแบบที่เป็น Models => $sTable = \App\Models\Backend\;
+                                // data: function ( d ) {
+                                //   d.myWhere={};
+                                //   d.myWhere['branch_id_fk'] = branch_id_fk ;
+                                //   d.myWhere['approve_status'] = approve_status ;
+                                //   d.myWhere['action_date'] = startDated+":"+endDate ;
+                                //   oData = d;
+                                  // $("#spinner_frame").hide();
+                                // },
                                  method: 'POST',
                                },
 
                               columns: [
                                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
                                   {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
-                                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
                                   {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
                                   {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
                                     if(d==1){
@@ -1440,12 +1451,20 @@ $(document).ready(function() {
                                   }
 
                                 // }
+                              },
+
+                              drawCallback : function( settings ) {
+                                  var api = this.api();
+                                  // Output the data for the visible rows to the browser's console
+                                  console.log( api.rows( {page:'current'} ).data() );
+                                   $("#spinner_frame").hide();
                               }
+
                           });
+
+                         
               
                       });
-
-
                
                
             });

@@ -326,7 +326,23 @@ class AjaxController extends Controller
 
     }
 
-    
+
+
+    public function createPDFBorrow($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.products_borrow.print_products_borrow',compact('data'));
+        $pdf->setPaper('A4', 'landscape');
+        
+        // $pdf->showWatermarkImage = true;
+        // $pdf->showWatermarkImage(public_path('images/logo.png'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+        
     public function ajaxApprovePickupGoods(Request $req)
     {
         // return($req->id);

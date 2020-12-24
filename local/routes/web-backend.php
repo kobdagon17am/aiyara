@@ -327,6 +327,15 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_borrow', 'Products_borrowController');
     Route::post('products_borrow/datatable', 'Products_borrowController@Datatable')->name('products_borrow.datatable');
 
+    Route::resource('products_borrow_code', 'Products_borrow_codeController');
+    Route::post('products_borrow_code/datatable', 'Products_borrow_codeController@Datatable')->name('products_borrow_code.datatable');
+
+    Route::resource('products_borrow_choose', 'Products_borrow_chooseController');
+    Route::post('products_borrow_choose/datatable', 'Products_borrow_chooseController@Datatable')->name('products_borrow_choose.datatable');
+
+// ใบยืม
+    Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
+
     Route::get('qrcode', function () {
         return view('backend.delivery.qr_code');
     });

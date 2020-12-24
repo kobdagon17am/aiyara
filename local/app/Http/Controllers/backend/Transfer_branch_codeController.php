@@ -185,7 +185,7 @@ class Transfer_branch_codeController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
+    public function Datatable(Request $req){
       /*
       Super Admin   => see all 
     1) ถ้าทำ เห็น  
@@ -211,9 +211,43 @@ class Transfer_branch_codeController extends Controller
       // }
 
 
+      $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
+      if($branch_id>0){
+        $branch_id2 = " branch_id_fk = ".$req->branch_id." AND ";
+      }else{
+        $branch_id2 = "";
+      }
+      // '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ'
+      switch ($req->approve_status) {
+        case '':
+          $approve_status = "";
+          break;
+        case '0':
+          $approve_status = " approve_status = 0 AND ";
+          break;    
+        case '1' :
+        case '2' :
+        case '3' :
+          $approve_status = " approve_status = ".$req->approve_status." AND ";
+          break;                 
+        default:
+          $approve_status = "";
+          break;
+      }
+      
+      if(!empty($req->startDated)){
+          $action_date = "  AND action_date between '".($req->startDated)."' AND  '".($req->endDate)."' ";
+      }else{
+          $action_date = "";
+      }
+      
       $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
-          WHERE action_user LIKE ".(\Auth::user()->id)." OR 
-          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".(\Auth::user()->branch_id_fk)." END)
+          WHERE 
+          ".$branch_id2." 
+          ".$approve_status." 
+          (action_user LIKE ".(\Auth::user()->id)." OR 
+          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
+          ".$action_date." 
           ORDER BY action_date DESC ");
 
       $sQuery = \DataTables::of($sTable);

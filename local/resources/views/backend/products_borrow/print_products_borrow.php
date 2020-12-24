@@ -167,7 +167,6 @@ tr.border_bottom td {
     page-break-after: always;
 }
 
-
   #watermark {
 
        position: fixed;
@@ -185,33 +184,49 @@ tr.border_bottom td {
       z-index:  -1000;
   }
 
-
 </style>
+
 
 
     <?php 
 
-    $tr_number = DB::select(" 
-            SELECT
-            db_transfer_branch_code.tr_number
-            FROM
-            db_transfer_branch_details
-            Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
+
+         $borrow_code = DB::select(" 
+            SELECT *
+            FROM db_products_borrow_code 
             WHERE
-            db_transfer_branch_details.transfer_branch_code_id=".$data[0]."
-            LIMIT 1
+            id = ".$data[0]."
          ");
 
-     ?>
+        if(@$borrow_code[0]->borrow_cause_id_fk!=''){
+          $borrow_cause = DB::select(" select * from dataset_borrow_cause where id=".@$borrow_code[0]->borrow_cause_id_fk." ");
+          $borrow_cause = @$borrow_cause[0]->txt_desc;
+        }else{
+          $borrow_cause = '';
+        }
+
+         $branchs_from = DB::select(" 
+            SELECT
+            branchs.b_name
+            FROM
+            db_transfer_branch_code
+            Left Join branchs ON db_transfer_branch_code.branch_id_fk = branchs.id
+            WHERE db_transfer_branch_code.id = ".$data[0]."
+         ");
+
+       
+?>
 
     <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
         <tr>
-          <th style="text-align: left;">
+           <th style="text-align: left;">
             <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
-          </th>
+          </th> 
+
+
           <th style="text-align: right;">
-            <span style="font-size: 24px;font-weight: bold;">[ <?php echo $tr_number[0]->tr_number; ?> ]</span><br>
+            <span style="font-size: 24px;font-weight: bold;">[ <?php echo $borrow_code[0]->borrow_number; ?> ]</span><br>
               2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
               แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
               TEL : +66 (0) 2026 3555 
@@ -227,15 +242,34 @@ tr.border_bottom td {
       <table style="border-collapse: collapse;" >
         <tr> 
           <th style="text-align: center;font-size: 30px;">
-           <center> ใบโอนสินค้าระหว่างสาขา </center>
+           <center> ใบเบิก/ยืมสินค้า</center>
           </th>
         </tr>
       </table>
     </div>
 
+
+<div class="NameAndAddress" >
+  <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
+    <table style="border-collapse: collapse;vertical-align: top;" >
+      <tr>
+        <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขา : <?=@$branchs_from[0]->b_name?>
+          <br>
+          <br>
+        </td>
+        <td style="border-left: 1px solid #ccc;font-weight: bold;">เหตุผลที่เบิก : <?=$borrow_cause?>
+          <br>
+          <br>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
 <div class="" >
 
-  <div style="border-radius: 5px; height: 90mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 70mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;width:100%;" >
       <tr style="background-color: #e6e6e6;">
 
@@ -244,8 +278,7 @@ tr.border_bottom td {
         <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ล็อตนัมเบอร์ </td>
         <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> วันหมดอายุ </td>
         <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนที่มีในคลัง
-        <td style="width:9%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  จำนวนที่ต้องการโอน
-        <td style="width:30%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> โอนย้ายไปยังสาขา  </td>
+        <td style="width:9%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  จำนวนที่ต้องการเบิก/ยืม
 
       </tr>
 
@@ -255,9 +288,9 @@ tr.border_bottom td {
 
      $Dt = DB::select(" 
         SELECT *
-        FROM db_transfer_branch_details 
+        FROM db_products_borrow_details 
         WHERE
-        transfer_branch_code_id = ".$data[0]."
+        products_borrow_code_id = ".$data[0]."
      ");
 
      $j=1;
@@ -278,8 +311,11 @@ tr.border_bottom td {
            $Check_stock = DB::select(" select * from db_stocks where id=".$v->stocks_id_fk." ");
            $amt_in_warehouse = @$Check_stock[0]->amt;
 
-            $sBranchs = DB::select(" select * from branchs where id=".$v->branch_id_fk." ");
-            $branchs = @$sBranchs[0]->b_name;
+            // $sBranchs = DB::select(" select * from branchs where id=".$v->branch_id_fk." ");
+            // $warehouse = DB::select(" select * from warehouse where id=".$v->warehouse_id_fk." ");
+            // $zone = DB::select(" select * from zone where id=".$v->zone_id_fk." ");
+            // $shelf = DB::select(" select * from shelf where id=".$v->shelf_id_fk." ");
+            // $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
 
              $d_lot_expired_date = strtotime($v->lot_expired_date); 
              $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
@@ -307,7 +343,6 @@ tr.border_bottom td {
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$lot_expired_date?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$amt_in_warehouse?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$branchs?>  </td>
           </tr>
 
     <?php  
@@ -330,7 +365,7 @@ tr.border_bottom td {
 
          $warehouses_code = DB::select(" 
             SELECT *
-            FROM db_transfer_branch_code 
+            FROM db_products_borrow_code 
             WHERE
             id = ".$data[0]."
          ");
@@ -348,9 +383,8 @@ tr.border_bottom td {
         }else{
           $approve_date =  '';
         }
-
-?>
-
+        
+      ?>
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
         <div id="watermark">
@@ -366,7 +400,6 @@ tr.border_bottom td {
         </div>
       <?php } ?>
 
-      
 <div class="NameAndAddress" >
 
   <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
@@ -374,7 +407,7 @@ tr.border_bottom td {
       
       <tr>
 
-        <td  style="border-left: 1px solid #ccc;"> ผู้ทำรายการโอน
+        <td  style="border-left: 1px solid #ccc;"> ผู้ทำรายการเบิก/ยืม
 
         <br>
         <?=@$action_user?>

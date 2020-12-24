@@ -74,6 +74,7 @@ class InitModel extends Model
     public function scopesearch($sQuery)
     {
 
+      // ยังไม่ได้ใช้
       if( request('myWhere') ){
         foreach(request('myWhere') AS $sKey => $sValue){
           if( $sValue && $sKey!='action_date'){
@@ -90,9 +91,7 @@ class InitModel extends Model
               }
           }
         }
-
         return $sQuery;
-
       }
 
   		if( request('Where') ){
