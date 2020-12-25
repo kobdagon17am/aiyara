@@ -11,8 +11,7 @@
     }
 
     .select2-selection {height: 34px !important;margin-left: 3px;}
-    .border-left-0 {height: 94%;}
-    .gj-timepicker {width: 65%;}
+    .border-left-0 {height: 67%;}
 </style>
 @endsection
 
@@ -189,7 +188,7 @@
                         </div>
 
                         <div class="col-2" >
-                          <a class="btn btn-info btn-sm btnSearch " href="{{ route('backend.products_borrow.index') }}" style="font-size: 14px !important;" >
+                          <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                             <i class="bx bx-search align-middle "></i> SEARCH
                           </a>
                         </div>
@@ -1371,9 +1370,9 @@ $(document).ready(function() {
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
             // minDate: today,
-            maxDate: function () {
-                return $('#endDate').val();
-            }
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
         });
         $('#endDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -1384,6 +1383,10 @@ $(document).ready(function() {
             }
         });
 
+         $('#startDate').change(function(event) {
+           $('#endDate').val($(this).val());
+         });
+         
         $(document).ready(function() {
           
             $(document).on('click', '.btnSearchInList', function(event) {

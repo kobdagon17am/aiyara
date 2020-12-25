@@ -11,7 +11,7 @@
     }
 
     .select2-selection {height: 34px !important;margin-left: 3px;}
-    .border-left-0 {height: fit-content;}
+    .border-left-0 {height: 67%;}
 </style>
 @endsection
 

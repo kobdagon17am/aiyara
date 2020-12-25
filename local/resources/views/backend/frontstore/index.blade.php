@@ -3,7 +3,47 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
+<style type="text/css">
 
+  .border-left-0 {height: 95%;}
+  label { font-size: 14px;font-weight: bold !important; }
+
+</style>
+
+<style type="text/css">
+  /* DivTable.com */
+.divTable{
+  display: table;
+  width: 100%;
+  
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  border: 1px solid white;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+}
+.divTH {text-align: right;}
+</style>
 @endsection
 
 @section('content')
@@ -39,59 +79,275 @@
       // echo $role_group_id;
       // echo $menu_id;     
    ?>
+
+
 <div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                  <div class="col-4">
-          <!--           <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าแจ้ง" name="topics_reported">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
-
-                              <select name="customer_id" class="form-control select2-templating " required >
-                                <option value="">รหัสลูกค้า : ชื่อลูกค้า</option>
-                                  @if(@$Customer)
-                                    @foreach(@$Customer AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id)?'selected':'' }} >
-                                        {{$r->id}} : {{$r->prefix_name}}{{$r->first_name}} 
-                                        {{$r->last_name}}
-                                      </option>
-                                    @endforeach
-                                  @endif
-                              </select>
-
-
-                  </div>
-
-                  <div class="col-2">
-                               <a class="btn btn-info btn-sm mt-1 " href="{{ url("backend/frontstore") }}"><i class="bx bx-search font-size-20 align-middle mr-1"></i>ซื้อสินค้า
-                              </a>
-
-                  </div>
-<!-- 
-                  <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD / Import / Export 
-                    </a>
-                  </div> -->
-       
-                </div>
-
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
-
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="divTable">
+          <div class="divTableBody">
+            <div class="divTableRow">
+              <div class="divTH">
+                <label for="startDate" >วันสร้างเริ่มต้น : </label>
+              </div>
+              <div class="divTableCell">
+                <input id="startDate" class="form-control" autocomplete="off" />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="endDate" >วันสร้างสิ้นสุด : </label>
+              </div>
+              <div class="divTableCell">
+                <input id="endDate" class="form-control" autocomplete="off" />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="" >เลขที่ใบสั่งซื้อ : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <input id="" name="" class="form-control"  />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
             </div>
+            <div class="divTableRow">
+              <div class="divTH">
+                <label for="" >รหัสลูกค้า : </label>
+              </div>
+              <div class="divTableCell">
+                <input id="" name="" class="form-control"  />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="" >ชื่อลูกค้า : </label>
+              </div>
+              <div class="divTableCell">
+                <input id="" name="" class="form-control"  />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="" >เลขที่ใบเสร็จ : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <input id="" name="" class="form-control"  />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+            </div>
+            <div class="divTableRow">
+              <div class="divTH">
+                <label for="" >ผู้สร้าง : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <select name="" class="form-control select2-templating "  >
+                  <option value="">Select</option>
+                  
+                </select>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="" >สถานะ : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <select name="" class="form-control select2-templating "  >
+                  <option value="">Select</option>
+                  
+                </select>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+            </div>
+            <div class="divTableRow">
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-warning" style="color:black;float: right;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-info" style="float: left;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
+              </div>
+            </div>
+          </div>
         </div>
+        <!-- DivTable.com -->
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="divTable">
+          <div class="divTableBody">
+            <div class="divTableRow">
+              <div class="divTableCell" style="text-align: right;width: 50%;" >&nbsp; </div>
+              <div class="divTableCell" style="text-align: right;" >
+                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> ดูทั้งหมด</button>
+              </div>
+              <div class="divTableCell" style="text-align: right;" >
+                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> เฉพาะซื้อแบบปกติ</button>
+              </div>
+              <div class="divTableCell" style="text-align: right;" >
+                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> เฉพาะซื้อแบบใช้ Voucher</button>
+              </div>
+              <div class="divTableCell" style="text-align: right;" >
+                    <a  href="{{ route('backend.frontstore.create') }}">
+                <button type="button" class="btn btn-success" ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
+                 </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+        </table>
+        <div class="row">
+          <div class="col-lg-5">
+            <div class="card">
+              <div class="card-body">
+                
+                <div class="table-responsive">
+                  <table class="table table-striped mb-0">
+                    
+                    <thead>
+                      <tr style="background-color: #f2f2f2;text-align: right;">
+                        <th></th>
+                        <th>รายการ</th>
+                        <th>PV</th>
+                        <th>จำนวนเงิน</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="color: red" >
+                        <th scope="row">สถานะรอตรวจสอบ/รอชำระ</th>
+                        <td style="text-align: right;">0 รายการ</td>
+                        <td style="text-align: right;">0</td>
+                        <td style="text-align: right;">0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">สถานะ รอเบิก/สำเร็จ</th>
+                        <td style="text-align: right;">0 รายการ</td>
+                        <td style="text-align: right;">0</td>
+                        <td style="text-align: right;">0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">รวมทั้งหมด</th>
+                        <td style="text-align: right;">0 รายการ</td>
+                        <td style="text-align: right;">0</td>
+                        <td style="text-align: right;">0.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="card">
+              <div class="card-body">
+                
+                <div class="table-responsive">
+                  <table class="table table-sm m-0">
+                    <thead>
+                      <tr style="background-color: #f2f2f2;"><th colspan="7">
+                        ADMIN AIYARA : 25/12/2020 - 25/12/2020
+                      </th></tr>
+                      <tr>
+                        <th>พนักงานขาย</th>
+                        <th>เงินสด</th>
+                        <th>เงินโอน</th>
+                        <th>เครดิต</th>
+                        <th>รวมทั้งสิ้น</th>
+                        <th>รายการ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     </div> <!-- end col -->
-</div> <!-- end row -->
+    </div> <!-- end row -->
+  </div>
+</div>
+</div>
+</div>
 
 @endsection
 
 @section('script')
-
+<link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+<script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
@@ -100,36 +356,19 @@ var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
         scroller: true,
         scrollCollapse: true,
         scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        ordering: true,
+        paging:   true,
+        searching: true,
+        bLengthChange: true ,
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
+          
             oData = d;
           },
           method: 'POST'
@@ -137,20 +376,54 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'orders_id', title :'<center>ใบสั่งซื้อหน้าร้าน </center>', className: 'text-center'},
-            {data: 'orders_id',   title :'<center>ใบสั่งซื้อหน้าร้าน</center>', className: 'text-center ',render: function(d) {
-                return '<a href="{{ url("backend/frontstore") }}"><span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span></a>';
+            {data: 'regis_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
+            {data: 'regis_date', title :'<center>วันแก้ไข </center>', className: 'text-center'},
+             {data: 'id',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
+                return '<span class="badge badge-pill badge-soft-success font-size-16">N</span>';
             }},
-            {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-            // {data: 'ticket_number', title :'<center>หมายเลขบัตร </center>', className: 'text-center'},
-            // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-            //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-            // }},
-            {data: 'regis_date', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-            {data: 'regis_date', title :'<center>วันที่ชำระเงิน </center>', className: 'text-center'},
+            {data: 'orders_id',   title :'<center>รหัส</center>', className: 'text-center ',render: function(d) {
+                return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+            }},
+            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-center'},
+            {data: 'id',   title :'<center>รวมทั้งสิ้น</center>', className: 'text-center ',render: function(d) {
+                return '999';
+            }},
+            {data: 'orders_id',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+            }},
+            {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+              if(d==1){
+                  return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+              }else if(d==2){
+                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+              }else if(d==3){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+              }
+            }},
+            {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
+                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+            }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
+        'columnDefs': [
+          {
+                  'targets': 0,
+                  'checkboxes': {
+                     'selectRow': true
+                  }
+               }
+            ],
+            'select': {
+               'style': 'multi'
+            },
+
         rowCallback: function(nRow, aData, dataIndex){
+
+        	$("td:eq(9)", nRow).prop('disabled',true); 
+        	$("td:eq(10)", nRow).prop('disabled',true); 
+
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
           }else{ 
@@ -163,23 +436,47 @@ $(function() {
           }
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+
+
+
 });
 </script>
 
-<script type="text/javascript">
-/*
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#startDate').datepicker({
+            format: 'dd/mm/yyyy',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // minDate: today,
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
+        });
+
+        $('#endDate').datepicker({
+            format: 'dd/mm/yyyy',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                return $('#startDate').val();
+            }
+        });
+
+        $('#startDate2').datepicker({
+            format: 'dd/mm/yyyy',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // minDate: today,
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
+        });
+
 </script>
 
 @endsection

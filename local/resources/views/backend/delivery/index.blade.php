@@ -34,10 +34,7 @@
 	  font-size: 14px;
 	}
 </style>
-    <style type="text/css">
-    	.grow { transition: all .2s ease-in-out; }
-		.grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
-    </style>
+
 @endsection
 
 @section('content')
@@ -296,7 +293,7 @@ $(function() {
                   	if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
                   	}else{
-                  		return '-รอจัดส่ง-';
+                  		  return '-รอจัดส่ง-';
                   	}
                   }},
                   // {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -315,22 +312,22 @@ $(function() {
 
               rowCallback: function(nRow, aData, dataIndex){
 
-              	  if (aData['status_delivery'] == "1") {
-			        $('td', nRow).css('background-color', '#ffd9b3');
-			        $("td:eq(0)", nRow).html('');
-			        $("td:eq(6)", nRow).html('');
-			        $("td:eq(7)", nRow).html('');
-			        $("td:eq(9)", nRow).html('');
-			        var i;
-					for (i = 0; i < 10 ; i++) {
-					   $("td:eq("+i+")", nRow).prop('disabled',true); 
-					} 
+              	 if (aData['status_delivery'] == "1") {
+          			        $('td', nRow).css('background-color', '#ffd9b3');
+          			        $("td:eq(0)", nRow).html('');
+          			        $("td:eq(6)", nRow).html('');
+          			        $("td:eq(7)", nRow).html('');
+          			        $("td:eq(9)", nRow).html('');
+          			        var i;
+              					for (i = 0; i < 10 ; i++) {
+              					   $("td:eq("+i+")", nRow).prop('disabled',true); 
+              					} 
 
-			      }else{
-			      	$("td:eq(6)", nRow).prop('disabled',true); 
-			      	$("td:eq(7)", nRow).prop('disabled',true); 
-			      	$("td:eq(9)", nRow).prop('disabled',true); 
-			      } 
+    			      }else{
+      			      	$("td:eq(6)", nRow).prop('disabled',true); 
+      			      	$("td:eq(7)", nRow).prop('disabled',true); 
+      			      	$("td:eq(9)", nRow).prop('disabled',true); 
+    			      } 
 
                 if(sU!=''&&sD!=''){
                     $('td:last-child', nRow).html('-');
@@ -494,17 +491,16 @@ $(function() {
                   rowCallback: function(nRow, aData, dataIndex){
 
                   	if (aData['status_delivery'] == "1") {
-				        $('td', nRow).css('background-color', '#ffd9b3');
-				        // $("td:eq(0)", nRow).html('');
-				        $("td:eq(4)", nRow).html('');
-				        $("td:eq(5)", nRow).html('');
-				        $("td:eq(7)", nRow).html('');
-				        var i;
-						for (i = 0; i < 10 ; i++) {
-						   $("td:eq("+i+")", nRow).prop('disabled',true); 
-						} 
-
-			      	}
+        				        $('td', nRow).css('background-color', '#ffd9b3');
+        				        // $("td:eq(0)", nRow).html('');
+        				        $("td:eq(4)", nRow).html('');
+        				        $("td:eq(5)", nRow).html('');
+        				        $("td:eq(7)", nRow).html('');
+        				        var i;
+            						for (i = 0; i < 10 ; i++) {
+            						   $("td:eq("+i+")", nRow).prop('disabled',true); 
+            						} 
+			      	      }
 
                     if(sU!=''&&sD!=''){
                         $('td:last-child', nRow).html('-');

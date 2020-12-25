@@ -65,5 +65,9 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      
+
+
+    .grow { transition: all .2s ease-in-out; }
+    .grow:hover { transform: scale(1.5); z-index: 1;position: relative; }
+
 </style>

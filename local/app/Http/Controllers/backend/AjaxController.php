@@ -453,6 +453,15 @@ class AjaxController extends Controller
     }  
 
 
+    public function createPDFReceiptFrontstore($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.frontstore.print_receipt',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
 
 
 }

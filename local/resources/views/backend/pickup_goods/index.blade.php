@@ -33,12 +33,7 @@
 	table.minimalistBlack tfoot td {
 	  font-size: 14px;
 	}
-</style>
-<style type="text/css">
-	.grow { transition: all .2s ease-in-out; }
-	.grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
-</style>
-<style>
+
 	.tooltip_packing {
 	  position: relative ;
 	}

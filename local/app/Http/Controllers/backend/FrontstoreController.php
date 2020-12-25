@@ -12,6 +12,11 @@ class FrontstoreController extends Controller
 
     public function index(Request $request)
     {
+
+      $Frontstore = \App\Models\Backend\Frontstore::get();
+      // dd($Frontstore);
+
+
       $Customer = DB::select(" select * from customers ");
       return View('backend.frontstore.index')->with(
         array(

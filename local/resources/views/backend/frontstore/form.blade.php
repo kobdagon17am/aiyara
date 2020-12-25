@@ -4,16 +4,76 @@
 
 @section('css')
 
+<style type="text/css">
+  /* DivTable.com */
+.divTable{
+  display: table;
+  width: 100%;
+  
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  border: 1px solid white;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+}
+.divTH {text-align: right;}
+
+
+.inline-group {
+  max-width: 5rem;
+  padding: .5rem;
+}
+
+.inline-group .form-control {
+  text-align: right;
+}
+
+.form-control[type="number"]::-webkit-inner-spin-button,
+.form-control[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity {width: 50px;text-align: right;color: blue;font-weight: bold;font-size: 16px;}
+
+
+</style>
 @endsection
 
 @section('content')
 <div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
-    <div class="col-12">
+    <div class="col-10">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน </h4>
+            <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย </h4>
+
+                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore") }}">
+                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                    </a>
+
         </div>
+
     </div>
 </div>
 <!-- end page title -->
@@ -43,9 +103,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty(@$sRow) )
-              <form action="{{ route('backend.ce_regis.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.frontstore.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.ce_regis.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.frontstore.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -53,24 +113,9 @@
 
                       <div class="myBorder">
 
-                        <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">Course/Event : * </label>
-                            <div class="col-md-10">
-                              <select name="ce_id_fk" class="form-control select2-templating " required >
-                                <option value="">Select</option>
-                                  @if(@$sCourse)
-                                    @foreach(@$sCourse AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->ce_id_fk)?'selected':'' }} >{{$r->ce_name}}</option>
-                                    @endforeach
-                                  @endif
-                              </select>
-                            </div>
-                          </div>
-
-
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> ชื่อลูกค้า : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า : * </label>
+                            <div class="col-md-9">
                               <select name="customers_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Customer)
@@ -86,23 +131,73 @@
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">วันที่ลงทะเบียน : * </label>
-                            <div class="col-md-3">
-                              <input class="form-control" type="date" value="{{ @$sRow->regis_date }}" name="regis_date" required >
+                            <label for="" class="col-md-3 col-form-label"> ช่องทางการจำหน่าย : * </label>
+                            <div class="col-md-9">
+                              <select name="" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                              </select>
                             </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">หมายเหตุ :</label>
-                            <div class="col-md-10">
-                              <input class="form-control" type="text" value="{{ @$sRow->ticket_number }}" id='autocomplete' name="ticket_number" >
+                            <label for="" class="col-md-3 col-form-label"> ประเภทการสั่งซื้อ : </label>
+                            <div class="col-md-9">
+                              <select name="" class="form-control select2-templating "  >
+                                <option value="">Select</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> รูปแบบการชำระ : * </label>
+                            <div class="col-md-9">
+                              <select name="" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                              </select>
                             </div>
                           </div>
 
 
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label">หมายเหตุ :</label>
+                            <div class="col-md-9">
+                              <textarea class="form-control" name="" rows="3"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> Tracking Type : </label>
+                            <div class="col-md-9">
+                              <select name="" class="form-control select2-templating " disabled="" >
+                                <option value=""></option>
+                              </select>
+                            </div>
+                          </div>
+
+                           <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label">Tracking No. :</label>
+                            <div class="col-md-9">
+                              <input type="text" value="" disabled="" >
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label">การแจ้งชำระ :</label>
+                            <div class="col-md-9">
+                              <input type="text" value="รอชำระเงิน" disabled="" >
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label">Currency :</label>
+                            <div class="col-md-9">
+                              <input type="text" value="THB" disabled="" >
+                            </div>
+                          </div>
+
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง (User Login) :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ (User Login) :</label>
+                                <div class="col-md-9">
 
                                 	@if( empty(@$sRow) )
                                 		<input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -118,7 +213,7 @@
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
-                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/ce_regis") }}">
+                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                     </a>
                   </div>
@@ -137,213 +232,720 @@
               </div>
 
 
-                <div class="row">
-                  <div class="col-6">
-                    <div class="myBorder">
-
-                      <form class="form-horizontal" method="POST" action="backend/uploadCe_regisCSV" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                          <label for="csv_file" class="col-md-4 control-label"><b>CSV file to import</b></label>
-                          <div class="col-md-6">
-                            <input type="file" accept=".csv" class="form-control" name="fileCSV" required>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="col-md-10 col-md-offset-4">
-                            <input type='submit' name='submit' class="btn btn-primary btnImCSV " value='Import CSV'>
-                          </div>
-                        </div>
-                      </form>
-
-                      <hr>
-
-					<div class="form-group">
-						<div class="col-md-12">
-							<select id="ce_id_fk_csv" name="ce_id_fk_csv" class="form-control select2-templating " required >
-								<option value="">-เลือกกิจกรรม/อีเว้นท์-</option>
-								@if(@$sCourse)
-								@foreach(@$sCourse AS $r)
-								<option value="{{$r->id}}">{{$r->ce_name}}</option>
-								@endforeach
-								@endif
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-md-10 col-md-offset-4">
-							<input type='button' class="btn btn-success btnExportCSV " value='Export CSV'> &nbsp;&nbsp;
-						</div>
-					</div>
-
-
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="myBorder">
-                      <form class="form-horizontal" method="POST" action="backend/uploadCe_regis" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                          <label for="csv_file" class="col-md-4 control-label"><b>XLSX file to import</b></label>
-                          <div class="col-md-6">
-                            <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="col-md-10 col-md-offset-4">
-                            <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import XLSX'>
-                          </div>
-                        </div>
-                      </form>
-
-                      <hr>
-
-						<div class="form-group">
-							<div class="col-md-12">
-								<select id="ce_id_fk_xls" name="ce_id_fk_xls" class="form-control select2-templating " required >
-									<option value="">-เลือกกิจกรรม/อีเว้นท์-</option>
-									@if(@$sCourse)
-									@foreach(@$sCourse AS $r)
-									<option value="{{$r->id}}" >{{$r->ce_name}}</option>
-									@endforeach
-									@endif
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-10 col-md-offset-4">
-								<input type='button' class="btn btn-success btnExport " value='Export excel'> &nbsp;&nbsp;
-							</div>
-						</div>
-
-                    </div>
-                  </div>
-
-                </div>
-
-
-                <div class="form-group mb-0 row">
-                  <div class="col-md-6">
-                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/ce_regis") }}">
-                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                    </a>
-                  </div>
-                </div>
-
             </div>
         </div>
     </div> <!-- end col -->
+
 </div>
 <!-- end row -->
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="myBorder">
+          
+          <div class="page-title-box d-flex  justify-content-between ">
+            <h4 class=" col-6 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย </h4>
+
+            <a class="btn btn-info btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/1" target=_blank >
+              <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> พิมพ์ใบเสร็จ</span>
+            </a>
+
+
+            <a class="btn btn-info btn-sm mt-1 btnAddFromPromotion " href="#" >
+              <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
+            </a>
+
+            <a class="btn btn-info btn-sm mt-1 btnAddFromProdutcsList " href="#" >
+              <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มแบบ List</span>
+            </a>
+
+            <a class="btn btn-info btn-sm mt-1 btnAddList " href="#" >
+              <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่ม</span>
+            </a>
+
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <table id="data-table-list" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+
+
+
+   
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="divTable">
+          <div class="divTableBody">
+
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
+                <div class="divTH">
+                  <label for="" >รวม : </label>
+                </div>
+                <div class="divTableCell">
+                  <input id="" class="form-control" autocomplete="off" />
+                </div>
+                <div class="divTableCell">
+                </div>
+              </div>
+
+             <div class="divTableRow">
+                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
+                <div class="divTH">
+                  <label for="" >ภาษี 7.00 % : </label>
+                </div>
+                <div class="divTableCell">
+                  <input id="" class="form-control" autocomplete="off" />
+                </div>
+                <div class="divTableCell">
+                </div>
+              </div>
+
+             <div class="divTableRow">
+                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
+                <div class="divTH">
+                  <label for="" >รวมค่าสินค้า : </label>
+                </div>
+                <div class="divTableCell">
+                  <input id="" class="form-control" autocomplete="off" />
+                </div>
+                <div class="divTableCell">
+                </div>
+              </div>
+
+             <div class="divTableRow">
+                <div class="divTableCell" style="width: 60% !important ;">
+                สถานที่จัดส่ง : <span style="color: red;">รับสินค้าด้วยตัวเอง / สาขา ศูนย์การขายสินค้า </span> </div>
+                <div class="divTH">
+                  <label for="" >ค่าจัดส่ง : </label>
+                </div>
+                <div class="divTableCell">
+                  <input id="" class="form-control" autocomplete="off" />
+                </div>
+                <div class="divTableCell">
+                  <button type="button" class="btn btn-success btn-sm waves-effect font-size-14 btnDelivery ">
+                    <i class="bx bx-edit font-size-16 align-middle mr-1"></i> การจัดส่ง
+                    </button>
+                </div>
+              </div>
+
+
+
+             <div class="divTableRow"> 
+                <div class="divTableCell" style="width: 60% !important ;">
+                การชำระ : </div>
+                <div class="divTH">
+                  <label for="" >รวมทั้งสิ้น : </label>
+                </div>
+                <div class="divTableCell">
+                  <input id="" class="form-control" autocomplete="off" />
+                </div>
+                <div class="divTableCell">
+              
+                </div>
+              </div>
+
+
+              <br>
+              <br>
+
+            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore") }}">
+            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+            </a>
+
+          </div>
+        </div>
+        <!-- DivTable.com -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modalAddFromPromotion" tabindex="-1" role="dialog" aria-labelledby="modalAddFromPromotionTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddFromPromotionTitle"><b><i class="bx bx-play"></i>รายการรหัสโปรโมชั่น</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+     
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body" >
+
+                <div class="page-title-box d-flex">
+                  <label for="" class="col-2" ><b>รหัสโปรโมชั่น : </b></label>
+                  <input class="col-4 form-control " type="text" name="" value="" > &nbsp; &nbsp;
+                  <button class="btn btn-success " >ตรวจสอบ</button>
+                </div>
+
+                <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+           
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modalAddFromProductsList" tabindex="-1" role="dialog" aria-labelledby="modalAddFromProductsListTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddFromProductsListTitle"><b><i class="bx bx-play"></i>รายการสินค้า</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+     
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body" >
+
+                <div class=" d-flex " >
+                  <button class="btn btn-success " style="margin-right: 1%;" >ทั้งหมด</button>
+                  <button class="btn btn-success " style="margin-right: 1%;" >AiLADA</button>
+                  <button class="btn btn-success " style="margin-right: 1%;" >AiHealth</button>
+                  <button class="btn btn-success " style="margin-right: 1%;" >AiBODY</button>
+                  <button class="btn btn-success " style="margin-right: 1%;" >Promotion</button>
+                </div>
+
+                <table id="data-table-products-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+       
+      </div>
+           
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ข้อมูลการจัดส่งสินค้า</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     
+      <div class="modal-body">
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body" >
+
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ประเภทการรับสินค้า : </label>
+                  <div class="col-md-7">
+                    <select name="" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ตัวเลือกที่อยู่จัดส่ง : </label>
+                  <div class="col-md-7">
+                    <select name="" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ที่อยู่การจัดส่ง : </label>
+                  <div class="col-md-7">
+                    <textarea name="" class="form-control" rows="3"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> โทร : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+      </div>
+           
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modalAddList" tabindex="-1" role="dialog" aria-labelledby="modalAddListTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddListTitle"><b><i class="bx bx-play"></i>เพิ่มรายการย่อย</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     
+      <div class="modal-body">
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body" >
+
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ค้นหาสินค้า : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" placeholder="">
+                  </div>
+                </div>
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> รหัสสินค้า : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" disabled="">
+                  </div>
+                </div>
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ชื่อสินค้า : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" disabled="">
+                  </div>
+                </div>                
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> จำนวน : </label>
+                  <div class="col-md-7">
+                    <input type="number" name="" class="form-control" value="" disabled="">
+                  </div>
+                </div>  
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> หน่วย : </label>
+                  <div class="col-md-7">
+                    <select name="" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> PV : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" disabled="">
+                  </div>
+                </div>   
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ราคาขาย : </label>
+                  <div class="col-md-7">
+                    <input type="text" name="" class="form-control" value="" disabled="">
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+      </div>
+           
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 @endsection
 
 @section('script')
 
-<script>
+<script type="text/javascript">
+  
+            var product_id_fk = "1";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-list').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    "info":     false,
+                    "paging":   false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.products_cost.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['product_id_fk'] = product_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                    columns: [
+                        {data: 'id',   title :'<center>#</center>', className: 'text-center w50 ',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>หน่วย</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>PV</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>ราคาขาย</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>รวม PV</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+                        {data: 'id',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
+                           return '';
+                        }},
+    
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                     'columnDefs': [
+                     {
+                            'targets': 0,
+                            'checkboxes': {
+                               'selectRow': true
+                            }
+                         }
+                      ],
+                      'select': {
+                         'style': 'multi'
+                      },
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+
+            });
+              
+
+</script>
+
+<script type="text/javascript">
 
     $(document).ready(function() {
+        $(document).on('click', '.btnAddFromPromotion', function(event) {
+          event.preventDefault();
 
-      // $(".myloading").show();
+            $("#spinner_frame").show();
 
-      $(".btnExport").click(function(event) {
-            /* Act on the event */
-            var ce_id_fk_xls = $("#ce_id_fk_xls").val();
-            // alert(ce_id_fk_xls);
-            if(ce_id_fk_xls==''){
-            	alert("กรุณา เลือกกิจกรรม/อีเว้นท์ ");
-            	return false;
-            }
+            var oTable;
+            $(function() {
 
-            $(".myloading").show();
-            $.ajax({
-
-                   type:'POST',
-                   url: " {{ url('backend/excelExportCe_regis') }} ", 
-                   data:{ _token: '{{csrf_token()}}',ce_id:ce_id_fk_xls },
-                    success:function(data){
-                         console.log(data); 
-                         // location.reload();
-
-                         setTimeout(function(){
-                            var url='local/public/excel_files/ce_regis.xlsx';
-                            window.open(url, 'Download');  
-                            $(".myloading").hide();
-                        },3000);
-
+                oTable = $('#data-table-promotion').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ordering: false,
+                    "info":     false,
+                    destroy: true,
+                    searching: false,
+                    paging: false,
+                    ajax: {
+                      url: '{{ route('backend.check_stock.datatable') }}',
+                      data: function ( d ) {
+                        d.Where={};
+                        d.Where['branch_id_fk'] = 1 ;
+                        d.Where['product_id_fk'] = 1 ;
+                        oData = d;
                       },
-                    error: function(jqXHR, textStatus, errorThrown) { 
-                        console.log(JSON.stringify(jqXHR));
-                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                        $(".myloading").hide();
-                    }
+                      method: 'POST'
+                    },
+                    columns: [
+                        {data: 'id',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                        {data: 'id',   title :'<center>PV</center>', className: 'text-center',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'id',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
+                           return '<div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button class="btn btn-outline-secondary btn-minus"> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity" value="0" type="number" >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button class="btn btn-outline-secondary btn-plus"> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' ;
+                        }},
+                    ],
+
                 });
-          });
+              
+            });
+
+                  $('#modalAddFromPromotion').modal('show');
+          
+        });
 
 
-          $(".btnExportCSV").click(function(event) {
-            /* Act on the event */
-            var ce_id_fk_csv = $("#ce_id_fk_csv").val();
-            // alert(ce_id_fk_csv);
-            if(ce_id_fk_csv==''){
-            	alert("กรุณา เลือกกิจกรรม/อีเว้นท์ ");
-            	return false;
-            }
+            $('#modalAddFromPromotion').on('focus', function () {
+                $("#spinner_frame").hide();
+            });
 
-            $(".myloading").show();
-            $.ajax({
+      });
 
-                   type:'POST',
-                   url: " {{ url('backend/csvExportCe_regis') }} ", 
-                   data:{ _token: '{{csrf_token()}}',ce_id:ce_id_fk_csv },
-                    success:function(data){
-                         console.log(data); 
-                         // location.reload();
 
-                         setTimeout(function(){
-                            var url='local/public/excel_files/ce_regis.csv';
-                            window.open(url, 'Download');  
-                            $(".myloading").hide();
-                        },3000);
 
+
+    $(document).ready(function() {
+        $(document).on('click', '.btnAddFromProdutcsList', function(event) {
+          event.preventDefault();
+
+            $("#spinner_frame").show();
+
+            var oTable;
+            $(function() {
+
+                oTable = $('#data-table-products-list').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ordering: false,
+                    "info":     false,
+                    destroy: true,
+                    searching: false,
+                    paging: false,
+                    ajax: {
+                      url: '{{ route('backend.check_stock.datatable') }}',
+                      data: function ( d ) {
+                        d.Where={};
+                        d.Where['branch_id_fk'] = 1 ;
+                        d.Where['product_id_fk'] = 1 ;
+                        oData = d;
                       },
-                    error: function(jqXHR, textStatus, errorThrown) { 
-                        console.log(JSON.stringify(jqXHR));
-                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                        $(".myloading").hide();
-                    }
+                      method: 'POST'
+                    },
+                    columns: [
+                        {data: 'id',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                        {data: 'id',   title :'<center>PV</center>', className: 'text-center',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'id',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
+                           return '' ;
+                        }},
+                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
+                           return '<div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button class="btn btn-outline-secondary btn-minus"> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity" value="0" type="number" >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button class="btn btn-outline-secondary btn-plus"> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' ;
+                        }},
+                    ],
+
                 });
-          });
+              
+            });
+
+                  $('#modalAddFromProductsList').modal('show');
+          
+        });
 
 
-
-         $(".btnImCSV").click(function(event) {
-                /* Act on the event */
-                var v = $("input[name=fileCSV]").val();
-                if(v!=''){
-                  $(".myloading").show();
-                }
-                
-          });
+            $('#modalAddFromProductsList').on('focus', function () {
+                $("#spinner_frame").hide();
+            });
 
 
-         $(".btnImXlsx").click(function(event) {
-                /* Act on the event */
-                var v = $("input[name=fileXLS]").val();
-                if(v!=''){
-                  $(".myloading").show();
-                }
-                
-          });
+            $(document).on('click', '.btnDelivery', function(event) {
+                event.preventDefault();
+                $('#modalDelivery').modal('show');
+            });
+
+
+            $(document).on('click', '.btnAddList', function(event) {
+                event.preventDefault();
+                $('#modalAddList').modal('show');
+            });
 
 
       });
 
 
-      
-    </script>
+    $(document).ready(function() {
 
+      // $('.btnDelivery').trigger('click');
+      // $('.btnAddFromPromotion').trigger('click');
+      // $('#modalAddFromPromotion').modal('show');
+
+
+      $(document).on('click', '.btn-plus, .btn-minus', function(e) {
+        event.preventDefault();
+          const isNegative = $(e.target).closest('.btn-minus').is('.btn-minus');
+          const input = $(e.target).closest('.input-group').find('input');
+          if (input.is('input')) {
+            input[0][isNegative ? 'stepDown' : 'stepUp']()
+          }
+        })
+
+
+    });
+
+</script>
 
 @endsection
 

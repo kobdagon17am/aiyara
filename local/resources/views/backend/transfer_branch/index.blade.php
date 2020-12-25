@@ -11,7 +11,7 @@
     }
 
     .select2-selection {height: 34px !important;margin-left: 3px;}
-    .border-left-0 {height: fit-content;}
+    .border-left-0 {height: 67%;}
 </style>
 @endsection
 
@@ -1271,9 +1271,9 @@
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
             // minDate: today,
-            maxDate: function () {
-                return $('#endDate').val();
-            }
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
         });
         $('#endDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -1284,6 +1284,10 @@
             }
         });
 
+         $('#startDate').change(function(event) {
+           $('#endDate').val($(this).val());
+         });
+         
         $(document).ready(function() {
           
             $(document).on('click', '.btnSearchInList', function(event) {

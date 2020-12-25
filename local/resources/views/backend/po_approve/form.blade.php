@@ -3,12 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-    <style type="text/css">
-    
-      .grow { transition: all .2s ease-in-out; }
-      .grow:hover { transform: scale(2.5); z-index: 1;position: relative; }
 
-    </style> 
 @endsection
 
 @section('content')

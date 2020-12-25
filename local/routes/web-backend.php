@@ -235,6 +235,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
+    Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');
@@ -338,6 +339,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 // ใบยืม
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
+
+
+    Route::resource('products_giveaway', 'Products_giveawayController');
+    Route::post('products_giveaway/datatable', 'Products_giveawayController@Datatable')->name('products_giveaway.datatable');
+
 
     Route::get('qrcode', function () {
         return view('backend.delivery.qr_code');
