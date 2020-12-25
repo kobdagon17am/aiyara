@@ -1,4 +1,3 @@
-      
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
 <!-- Data Table Css -->
@@ -12,17 +11,29 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<h5>ประวัติการสั่งซื้อ</h5>
-				{{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
+				<div class="row">
+					<div class="col-md-4">
+						<select class="form-control" id="order_type" >
+							<option value="">ทั้งหมด</option>
+							@foreach($data as $value)
+							<option value="{{ $value->group_id }}">{{ $value->orders_type }}</option>
+							@endforeach
+						</select>
+					</div>
+				
+
+				</div>
 			</div>
 			<div class="card-block">
 				<div class="table-responsive dt-responsive">
+
 					<table id="history" class="table table-striped table-bordered nowrap">
 						<thead>
 							<tr>
 								<th>#</th>
 								<th>วันที่สั่งซื้อ</th>
 								<th>เลขใบสั่งซื้อ</th>
+								<th>TRACKING</th>
 								<th>ยอดชำระ</th>
 								<th>PV</th>
 								<th>คงเหลือ</th>
@@ -36,7 +47,7 @@
 					</table>
 				</div>
 
- 
+
 				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" >
 					<div class="modal-dialog modal-md" role="document">
 						<form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
@@ -60,7 +71,7 @@
 
 									</div>
 								</div>
-								 
+
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
 
@@ -99,24 +110,29 @@
 	$(document).ready(function() {
 		fetch_data();
 
-		function fetch_data() {
-			$('#history').DataTable({
-				scrollX: true,
-				scrollCollapsed: true,
+	});
+
+
+	function fetch_data(order_type = '') {
+		
+		$('#history').DataTable({
+				// scrollX: true,
+				// scrollCollapsed: true,
 				processing: true,
 				serverSide: true,
-				//searching: true,
+				searching: true,
 				ajax: {
 					url: "{{ route('dt_history') }}",
 					dataType: "json",
 					type: "POST",
-					data: {_token:'{{ csrf_token() }}'}
+					data: {_token:'{{ csrf_token() }}',order_type:order_type}
 				},
 
 				columns:[
 				{"data": "id"},
 				{"data": "date"},
 				{"data": "code_order"},
+				{"data": "tracking"},
 				{"data": "price"},
 				{"data": "pv_total"},
 				{"data": "banlance"},
@@ -134,9 +150,13 @@
 				],
 				//order: [[ "0", "desc" ]],
 			});
-		}
-	});
+	}
 
+	$('#order_type').on('change',function(){
+		var order_type = $(this).val();
+		$('#history').DataTable().destroy();
+		fetch_data(order_type);
+	});
 
 	function upload_slip(order_id){
 		$('#order_id').val(order_id);

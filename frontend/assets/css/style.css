@@ -6160,7 +6160,7 @@ a[data-toggle="lightbox"] .img-fluid {
 .label-success {
     background: linear-gradient(45deg, #19c261, #19c261)
 }
- 
+
 .label-inverse {
     color: ;
     background: linear-gradient(45deg, #000, #3c3c3c)
@@ -6235,7 +6235,8 @@ a[data-toggle="lightbox"] .img-fluid {
 
 .bg-danger {
     background-color: #FF5370 !important;
-    color: #fff
+    color: #fff;
+    border-radius: 11px;
 }
 
 .bg-success {
@@ -14266,9 +14267,9 @@ span.badge {
 }
 
 .label-inverse-success {
-    border: 1px solid;
-    border-color: #2ed8b6;
-    color: #2ed8b6 !important
+    border: 1.5px solid;
+    border-color: #19c261;
+    color: #000000 !important;
 }
 
 .label-inverse-warning {

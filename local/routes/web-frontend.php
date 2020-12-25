@@ -138,7 +138,14 @@ Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_hist
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 
- 
+
+Route::get('giftvoucher_history','Frontend\GiftVoucherController@index')->name('giftvoucher_history');
+Route::get('dt_giftvoucher_history','Frontend\GiftVoucherController@dt_giftvoucher_history')->name('dt_giftvoucher_history');
+
+Route::get('gift_order_history','Frontend\GiftVoucherController@gift_order_history')->name('gift_order_history');
+Route::get('dt_gift_order_history','Frontend\GiftVoucherController@dt_gift_order_history')->name('dt_gift_order_history');
+
+
 
 Route::get('ai-pocket','Frontend\AipocketController@index')->name('ai-pocket');
 Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');

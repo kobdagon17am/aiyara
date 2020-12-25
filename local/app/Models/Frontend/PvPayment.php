@@ -230,8 +230,9 @@ class PvPayment extends Model
 
 				          	  $update_order_type_2 = DB::table('orders')//update บิล
 				          	  ->where('id',$order_id)
-				          	  ->update(['banlance' => $pv_mt_all]);
+				          	  ->update(['banlance' => $pv_mt_all,'active_mt_tv_date'=>$data_user->pv_mt_active]);
 				          	}
+
 				          	$upline_type = $data_user->line_type;
 				          	$upline_id = $data_user->upline_id;
 				          	$customer_id = $upline_id;
@@ -299,8 +300,8 @@ class PvPayment extends Model
 				      	->update(['pv_tv' => $pv_tv_all]);
 
 				      	$update_order_type_3 = DB::table('orders')//update บิล
-				          ->where('id',$order_id)
-				          ->update(['banlance' => $pv_tv_all ]);
+				      	->where('id',$order_id)
+				      	->update(['banlance' => $pv_tv_all,'active_mt_tv_date'=>$data_user->pv_tv_active ]);
 				      }
 				      $upline_type = $data_user->line_type;
 				      $upline_id = $data_user->upline_id;

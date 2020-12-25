@@ -11,9 +11,9 @@
         <h4 class="sub-title"><i class="fa fa-user"></i> ข้อมูลส่วนตัว</h4>
       </div>
       <div class="card-block">
-        <div class="row">
+        <div class="row col-md-12">
           <div class="col-md-4 col-xl-4">
-           <div class="card bg-c-green order-card m-b-0">
+           <div class="card bg-c-green order-card m-b-5">
             <div class="card-block">
               <div class="row">
                 <div class="col-md-5">
@@ -31,7 +31,7 @@
       </div>
 
       <div class="col-md-4 col-xl-4">
-        <div class="card bg-c-yellow order-card m-b-0">
+        <div class="card bg-c-yellow order-card m-b-5">
           <div class="card-block">
             <div class="row"> 
               <div class="col-md-6">
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-yellow order-card m-b-0">
+      <div class="card bg-c-yellow order-card m-b-5">
         <div class="card-block">
           <div class="row">
             <div class="col-md-6">
@@ -90,13 +90,16 @@
         @endif
       </div>
     </div>
-  </div>
-  <div class="col-md-4 col-xl-4">
-   <div class="card bg-c-blue order-card m-b-0">
+  </div> 
+</div>
+<div class="row col-md-12">
+
+    <div class="col-xl-4 col-lg-4 col-md-4">
+   <div class="card bg-c-blue order-card m-b-5">
     <div class="card-block">
       <div class="row">
         <div class="col-md-5">
-          <h5 class="m-b-20" style="color: #000">Ai Pocket</h5>
+          <h5 class="m-b-20" style="color: #000">Ai-Stockist</h5>
 
 
         </div>
@@ -109,11 +112,32 @@
    </div>
  </div>
 
+</div> 
+
+<div class="col-xl-4 col-lg-4 col-md-4">
+ <div class="card bg-c-pink order-card m-b-5">
+  <div class="card-block">
+    <div class="row">
+      <div class="col-md-5">
+       <h6 class="m-b-20" style="font-size: 16px">Gift Voucher </h6>
+
+     </div>
+     <div class="col-md-6">
+      <?php  
+      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+      ?>
+      <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
+    </div>
+  </div>
+
+  <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p>
+</div>
+</div>
+</div>
+  
 </div>
 
-
-
-</div>
+ 
 </div>
 
 </div>

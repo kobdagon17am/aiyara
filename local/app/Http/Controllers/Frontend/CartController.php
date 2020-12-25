@@ -101,25 +101,18 @@ class CartController extends Controller
 	}
 
 	public function add_gif(){
-
-		
-
-	dd('end');
-
-				// dd($rs);
-		// $user_name = '0001';
-		// $gv = '500';
-		// $code = 'ABCD';
-		// $admin_id = '99';
-		// $expri_date = '2021-01-01 23:59:59';
-		// $rs = GiftVoucher::add_gift($user_name,$gv,$code,$expri_date,$admin_id);
-
-		// dd($rs);
-		//$order_id = '57';//order_id
-		//$admin_id = '99';//admin_id 
-		//$resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
-		//dd($resule);
-
-
-}
+ 
+		$user_name = '0001';
+		$gv = '500';
+		$code = 'ABCD';
+		$admin_id = '99';
+		$expri_date = '2021-01-01 23:59:59';
+		$rs = GiftVoucher::add_gift($user_name,$gv,$code,$expri_date,$admin_id);
+		 dd($rs);
+		 
+		// $order_id = '57';//order_id
+		// $admin_id = '99';//admin_id 
+		// $resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
+		// dd($resule);
+	}
 }

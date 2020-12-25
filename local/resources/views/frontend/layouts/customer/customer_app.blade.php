@@ -41,15 +41,11 @@
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
 
-
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/jquery.mCustomScrollbar.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/sweetalert/css/sweetalert.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/component.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery.steps/css/jquery.steps.css')}}">
-
- 
- 
 
 </head>
 <body>
@@ -131,7 +127,7 @@
 								</a>
 
 								@else
-								 
+
 								<a href="{{route('cart',['type'=>1])}}">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
@@ -348,7 +344,7 @@
 				<li class="{{ (request()->is('cart/4') || request()->is('product-list/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>4])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext">เติม AiPocket</span>
+						<span class="pcoded-mtext">เติม Ai-Pocket</span>
 						@if(Cart::session(4)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_4" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(4)->getTotalQuantity() }}</span>
 						@endif
@@ -396,47 +392,71 @@
 			</ul>
 		</li>
 
-		<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
-			<a href="{{route('comission')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>รายงานคอมมิชชั่น</b></span>
-				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-
-		<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
-			<a href="{{route('walletindex')}}">
-				<span class="pcoded-micon"><i class="fa fa-money"></i></i><b>Ai-Cash</b></span>
-				<span class="pcoded-mtext">Ai-Cash</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-
-		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
-			<a href="{{route('ai-pocket')}}">
-				<span class="pcoded-micon"><i class="ti-mobile"></i><b>Ai-Pocket</b></span>
-				<span class="pcoded-mtext">Ai-Pocket</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-
-
-
-		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') 
-		|| request()->is('course') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 		<a href="javascript:void(0)">
-			<span class="pcoded-micon"><i class="fa fa-gift"></i><b>สิทธิประโยชน์</b></span>
-			<span class="pcoded-mtext">สิทธิประโยชน์</span>
+			<span class="pcoded-micon"><i class="fa fa-gift"></i><b>Gift Voucher</b></span>
+			<span class="pcoded-mtext">Gift Voucher</span>
 			<span class="pcoded-mcaret"></span>
 		</a>
+
 		<ul class="pcoded-submenu">
-			<li class="{{ (request()->is('reward-history')) ? 'active' : '' }}">
-				<a href="{{route('reward-history')}}">
+			<li class="{{ (request()->is('giftvoucher_history')) ? 'active' : '' }}">
+				<a href="{{route('giftvoucher_history')}}"> 
 					<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-					<span class="pcoded-mtext">รางวัลเกียรติยศ</span>
+					<span class="pcoded-mtext">ความเคลื่อนไหว</span>
 					<span class="pcoded-mcaret"></span>
 				</a>
 			</li>
+
+			<li class="{{ (request()->is('gift_order_history')) ? 'active' : '' }}">
+				<a href="{{route('gift_order_history')}}">
+					<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+					<span class="pcoded-mtext">แลกสินค้า</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+			</li>	 
+		</ul>
+	</li>
+
+	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
+		<a href="{{route('comission')}}">
+			<span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>รายงานคอมมิชชั่น</b></span>
+			<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
+			<span class="pcoded-mcaret"></span>
+		</a>
+	</li>
+
+	<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
+		<a href="{{route('walletindex')}}">
+			<span class="pcoded-micon"><i class="fa fa-money"></i><b>Ai-Cash</b></span>
+			<span class="pcoded-mtext">Ai-Cash</span>
+			<span class="pcoded-mcaret"></span>
+		</a>
+	</li>
+
+	<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
+		<a href="{{route('ai-pocket')}}">
+			<span class="pcoded-micon"><i class="ti-mobile"></i><b>Ai-Stockist</b></span>
+			<span class="pcoded-mtext">Ai-Stockist</span>
+			<span class="pcoded-mcaret"></span>
+		</a>
+	</li>
+
+	<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') 
+	|| request()->is('course') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+	<a href="javascript:void(0)">
+		<span class="pcoded-micon"><i class="fa fa-gift"></i><b>สิทธิประโยชน์</b></span>
+		<span class="pcoded-mtext">สิทธิประโยชน์</span>
+		<span class="pcoded-mcaret"></span>
+	</a>
+	<ul class="pcoded-submenu">
+		<li class="{{ (request()->is('reward-history')) ? 'active' : '' }}">
+			<a href="{{route('reward-history')}}">
+				<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+				<span class="pcoded-mtext">รางวัลเกียรติยศ</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
 
 		{{-- 	<li class="{{ (request()->is('benefits')) ? 'active' : '' }}">
 				<a href="{{route('benefits')}}">
@@ -557,7 +577,6 @@
 <script  src="{{asset('frontend/bower_components/sweetalert/js/sweetalert.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
- 
 @include('frontend.layouts.flash-message')
 @yield('js')
 

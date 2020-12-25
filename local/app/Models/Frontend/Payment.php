@@ -82,7 +82,7 @@ class Payment extends Model
 					'email' => $rs->email,
 				]
 			);
-				if($rs->type == 4){//เติม Ai-pocket
+				if($rs->type == 4){//เติม Ai-Stockist
 					$ai_pocket = DB::table('ai_pocket')->insert(
 						['customer_id'=>$customer_id,
 						'to_customer_id'=>$customer_id,
@@ -90,7 +90,7 @@ class Payment extends Model
 						'pv'=>$rs->pv_total,
 						'type_id'  => $rs->type,
 						'status' => 'panding',
-						'detail' => 'Payment Add Ai-pocket',
+						'detail' => 'Payment Add Ai-Stockist',
 					]);
 
 				}
@@ -179,7 +179,7 @@ class Payment extends Model
 				]
 			);
 
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -187,7 +187,7 @@ class Payment extends Model
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -313,7 +313,7 @@ public static function payment_not_uploadfile($rs){
 			]
 		);
 
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -321,7 +321,7 @@ public static function payment_not_uploadfile($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -400,7 +400,7 @@ public static function payment_not_uploadfile($rs){
 				'email' => $rs->email,
 			]
 		);
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -408,7 +408,7 @@ public static function payment_not_uploadfile($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -520,7 +520,7 @@ public static function credit_card($rs){
 				'email' => $rs->email,
 			]
 		);
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -528,7 +528,7 @@ public static function credit_card($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -606,7 +606,7 @@ public static function credit_card($rs){
 				'email' => $rs->email,
 			]
 		);
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -614,7 +614,7 @@ public static function credit_card($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -725,7 +725,7 @@ public static function ai_cash($rs){
 				'email' => $rs->email,
 			]
 		);
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -733,7 +733,7 @@ public static function ai_cash($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}
@@ -812,7 +812,7 @@ public static function ai_cash($rs){
 				'email' => $rs->email,
 			]
 		);
-			if($rs->type == 4){//เติม Ai-pocket
+			if($rs->type == 4){//เติม Ai-Stockist
 				$ai_pocket = DB::table('ai_pocket')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
@@ -820,7 +820,7 @@ public static function ai_cash($rs){
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
-					'detail' => 'Payment Add Ai-pocket',
+					'detail' => 'Payment Add Ai-Stockist',
 				]);
 
 			}

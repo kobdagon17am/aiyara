@@ -8,7 +8,7 @@
     <div class="col-md-3 col-xl-3">
         <div class="card bg-c-blue order-card">
             <div class="card-block">
-                <h5 class="m-b-20">Ai-PocKet</h5>
+                <h5 class="m-b-20">Ai-Stockist</h5>
                 <h3 class="text-right"><i class="ti-wallet f-left"></i><span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
                 <p class="m-b-0">จำนวนคะแนนที่เหลือ{{-- <span class="f-right">$542</span> --}}</p>
             </div>
@@ -18,7 +18,7 @@
     <div class="col-md-9 col-xl-9">
         <div class="card">
             <div class="card-block">
-                <h6>ใช้ Ai-PocKet</h6>
+                <h6>ใช้ Ai-Stockist</h6>
 
                 <div class="form-group row">
 
@@ -75,7 +75,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">ยืนยันการใช้ Ai-Pocket</h4>
+                    <h4 class="modal-title">ยืนยันการใช้ Ai-Stockist</h4>
                 </div>
 
                 <div class="modal-body">
