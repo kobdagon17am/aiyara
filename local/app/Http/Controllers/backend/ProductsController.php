@@ -145,6 +145,10 @@ class ProductsController extends Controller
       	$sProducts_details = \App\Models\Backend\Products_details::where('product_id_fk',$row->id)->where('lang_id',1)->get();
         return @$sProducts_details[0]->product_name?@$sProducts_details[0]->product_name:'-ยังไม่กำหนด-';
       })
+      ->addColumn('Categories', function($row) {
+        $Categories = \App\Models\Backend\Categories::where('category_id', $row->category_id)->get();
+        return @$Categories[0]->category_name;
+      })      
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

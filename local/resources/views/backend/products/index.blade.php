@@ -106,6 +106,7 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'product_code', title :'<center>Product Code</center>', className: 'text-center'},
             {data: 'pname', title :'<center>Product Name</center>', className: 'text-left'},
+            {data: 'Categories', title :'<center>Category</center>', className: 'text-left'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

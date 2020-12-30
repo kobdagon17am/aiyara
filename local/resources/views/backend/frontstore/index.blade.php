@@ -152,7 +152,13 @@
               <div class="divTableCell" style="width: 15%">
                 <select name="" class="form-control select2-templating "  >
                   <option value="">Select</option>
-                  
+                  @if(@$sUser)
+                    @foreach(@$sUser AS $r)
+                      <option value="{{$r->id}}"  >
+                        {{$r->name}} 
+                      </option>
+                    @endforeach
+                  @endif
                 </select>
               </div>
               <div class="divTableCell">
@@ -164,7 +170,13 @@
               <div class="divTableCell" style="width: 15%">
                 <select name="" class="form-control select2-templating "  >
                   <option value="">Select</option>
-                  
+                  @if(@$sApproveStatus)
+                    @foreach(@$sApproveStatus AS $r)
+                      <option value="{{$r->id}}"  >
+                        {{$r->txt_desc}} 
+                      </option>
+                    @endforeach
+                  @endif
                 </select>
               </div>
               <div class="divTableCell">
@@ -238,7 +250,7 @@
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
-                <button type="button" class="btn btn-success" ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
+                <button type="button" class="btn btn-success btnAdd " ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
                  </a>
               </div>
             </div>
@@ -368,28 +380,28 @@ $(function() {
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
-          
             oData = d;
           },
           method: 'POST'
         },
 
         columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'regis_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
-            {data: 'regis_date', title :'<center>วันแก้ไข </center>', className: 'text-center'},
-             {data: 'id',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
-                return '<span class="badge badge-pill badge-soft-success font-size-16">N</span>';
-            }},
-            {data: 'orders_id',   title :'<center>รหัส</center>', className: 'text-center ',render: function(d) {
+            {data: 'id', title :'ID', className: 'text-center w10'},
+            {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันแก้ไข </center>', className: 'text-center'},
+            // {data: 'purchase_type', title :'<center>ประเภทการสั่งซื้อ </center>', className: 'text-center'},
+            {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
                 return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},
+            // {data: 'id',   title :'<center>รหัส</center>', className: 'text-center ',render: function(d) {
+            //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
+            // }},
             {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-center'},
-            {data: 'id',   title :'<center>รวมทั้งสิ้น</center>', className: 'text-center ',render: function(d) {
-                return '999';
+            {data: 'total_price',   title :'<center>รวมทั้งสิ้น</center>', className: 'text-center ',render: function(d) {
+                return d ;
             }},
-            {data: 'orders_id',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+            {data: 'id',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                return '<span class="badge badge-pill badge-soft-primary font-size-16">INV000'+d+'</span>';
             }},
             {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
               if(d==1){
@@ -429,7 +441,7 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 
@@ -475,6 +487,13 @@ $(function() {
             // maxDate: function () {
             //     return $('#endDate').val();
             // }
+        });
+
+
+        $(document).ready(function() {
+            $(document).on('click', '.btnAdd', function(event) {
+              localStorage.clear();
+            });
         });
 
 </script>

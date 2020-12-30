@@ -90,7 +90,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group row">
+  <!--               <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">คุณสมบัติของผู้จอง :</label>
                     <div class="col-md-10">
                          <select name="ce_features_booker" class="form-control select2-templating " >
@@ -102,7 +102,7 @@
                             @endif
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">สมาชิก 1 คน  สามารถจองได้ (จำนวนบัตร) :</label>
                     <div class="col-md-10">

@@ -119,7 +119,7 @@ class Course_eventController extends Controller
           $sRow->ce_ticket_price    = request('ce_ticket_price');
           $sRow->ce_sdate    = request('ce_sdate');
           $sRow->ce_edate    = request('ce_edate');
-          $sRow->ce_features_booker    = request('ce_features_booker');
+          // $sRow->ce_features_booker    = request('ce_features_booker');
           $sRow->ce_can_reserve    = request('ce_can_reserve');
           $sRow->ce_limit    = request('ce_limit');
           

@@ -94,6 +94,7 @@ class InitModel extends Model
         return $sQuery;
       }
 
+
   		if( request('Where') ){
   			foreach(request('Where') AS $sKey => $sValue){
   				if( $sValue ){
@@ -107,6 +108,7 @@ class InitModel extends Model
   					}
   				}
   			}
+        return $sQuery;
   		}
 
   		if( request('Like') ){
@@ -122,8 +124,9 @@ class InitModel extends Model
   					}
   				}
   			}
+        return $sQuery;
   		}
-       return $sQuery;
+       // return $sQuery;
     }
 
 

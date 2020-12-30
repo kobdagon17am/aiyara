@@ -1,5 +1,11 @@
         <!-- JAVASCRIPT -->
-        <script src="{{ URL::asset('backend/libs/jquery/jquery.min.js')}}"></script>
+        <!-- <script src="{{ URL::asset('backend/libs/jquery/jquery.min.js')}}"></script> -->
+        <script
+              src="https://code.jquery.com/jquery-3.5.1.js"
+              integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+              crossorigin="anonymous"></script>
+
+
         <script src="{{ URL::asset('backend/libs/bootstrap/bootstrap.min.js')}}"></script>
         <script src="{{ URL::asset('backend/libs/metismenu/metismenu.min.js')}}"></script>
         <script src="{{ URL::asset('backend/libs/simplebar/simplebar.min.js')}}"></script>
@@ -43,6 +49,11 @@
             });
         </script>
 
+
+
+
+
+
         <script type="text/javascript">
 
             $(document).on('click', '.click_link', function(event) {
@@ -73,12 +84,13 @@
                   });                    
 
 
-
                 // alert(role_group_id+":"+menu_id);
 
                 localStorage.clear();
 
             });
+
+            // console.log("jQuery version "+jQuery().jquery);
 
         </script>
 

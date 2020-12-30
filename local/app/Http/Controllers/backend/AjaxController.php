@@ -464,4 +464,56 @@ class AjaxController extends Controller
     }
 
 
+
+   public function ajaxGetProduct(Request $request)
+    {
+        // echo $request->product_id_fk;
+
+          $Products = DB::select(" 
+                SELECT products.id as product_id,
+                  products.product_code,
+                  (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                  products_cost.selling_price,
+                  products_cost.pv
+                  FROM
+                  products_details
+                  Left Join products ON products_details.product_id_fk = products.id
+                  LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                  WHERE lang_id=1 AND products.id= ".$request->product_id_fk."
+
+           ");
+
+            $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+            $pv = @$Products[0]->pv;
+            $selling_price = @$Products[0]->selling_price;
+
+
+            $p_unit = DB::select("
+              SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = ".$request->product_id_fk." AND  lang_id=1 ");
+
+            $unit =  @$p_unit[0]->product_unit;
+
+            $p_amt = DB::select("
+              SELECT amt
+              FROM
+              db_frontstore_products_list
+              WHERE product_id_fk = ".$request->product_id_fk." AND frontstore_id_fk=".$request->frontstore_id." ");
+            $p_amt =  @$p_amt[0]->amt;
+
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
+
+            $tb = '<textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
+            <input type="hidden" id="p_amt" value="'.$p_amt.'">';
+
+            return $tb;
+
+
+
+    }
+
+
+
 }

@@ -222,6 +222,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxGetSetToWarehouse', 'AjaxController@ajaxGetSetToWarehouse');
     Route::post('ajaxGetSetToWarehouseBranch', 'AjaxController@ajaxGetSetToWarehouseBranch');
+    Route::post('ajaxGetProduct', 'AjaxController@ajaxGetProduct');
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -291,6 +292,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+
+    Route::resource('productsList', 'ProductsListController');
+    Route::post('productsList/datatable', 'ProductsListController@Datatable')->name('productsList.datatable');
+
+    Route::resource('frontstorelist', 'FrontstorelistController');
+    Route::post('frontstorelist/datatable', 'FrontstorelistController@Datatable')->name('frontstorelist.datatable');
+    Route::post('frontstorelist/plus', 'FrontstorelistController@plus');
+    Route::post('frontstorelist/minus', 'FrontstorelistController@minus');
 
     Route::resource('transfer_choose', 'Transfer_chooseController');
     Route::post('transfer_choose/datatable', 'Transfer_chooseController@Datatable')->name('transfer_choose.datatable');

@@ -20,7 +20,18 @@ class Products_giveawayController extends Controller
  public function create()
     {
       $sLang = \App\Models\Backend\Language::get();
-      return View('backend.products_giveaway.form')->with(array('sLang'=>$sLang) );
+      $sPurchase_type = DB::select(" select * from dataset_purchase_type where status=1 ");
+      $sGiveaway_type = DB::select(" select * from dataset_giveaway_type where status=1 ");
+      $sGiveaway_time = DB::select(" select * from dataset_giveaway_time where status=1 ");
+      $sGiveaway_obtion = DB::select(" select * from dataset_giveaway_obtion where status=1 ");
+
+      return View('backend.products_giveaway.form')->with(array(
+        'sLang'=>$sLang,
+        'sPurchase_type'=>$sPurchase_type,
+        'sGiveaway_type'=>$sGiveaway_type,
+        'sGiveaway_time'=>$sGiveaway_time,
+        'sGiveaway_obtion'=>$sGiveaway_obtion,
+      ) );
     }
 
     public function store(Request $request)

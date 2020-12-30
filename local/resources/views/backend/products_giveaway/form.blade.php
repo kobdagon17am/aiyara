@@ -67,6 +67,13 @@
                     <div class="col-md-9">
                       <select name="" class="form-control select2-templating " >
                         <option value="">Select</option>
+                            @if(@$sPurchase_type)
+                              @foreach(@$sPurchase_type AS $r)
+                                <option value="{{$r->id}}"  >
+                                  {{$r->txt_desc}} 
+                                </option>
+                              @endforeach
+                            @endif                        
                       </select>
                     </div>
                   </div>
@@ -77,6 +84,13 @@
                     <div class="col-md-9">
                       <select name="" class="form-control select2-templating " >
                         <option value="">Select</option>
+                            @if(@$sGiveaway_type)
+                              @foreach(@$sGiveaway_type AS $r)
+                                <option value="{{$r->id}}"  >
+                                  {{$r->txt_desc}} 
+                                </option>
+                              @endforeach
+                            @endif                         
                       </select>
                     </div>
                   </div>
@@ -86,6 +100,13 @@
                     <div class="col-md-9">
                       <select name="" class="form-control select2-templating " >
                         <option value="">Select</option>
+                            @if(@$sGiveaway_time)
+                              @foreach(@$sGiveaway_time AS $r)
+                                <option value="{{$r->id}}"  >
+                                  {{$r->txt_desc}} 
+                                </option>
+                              @endforeach
+                            @endif   
                       </select>
                     </div>
                   </div>
@@ -102,6 +123,13 @@
                     <div class="col-md-9">
                       <select name="" class="form-control select2-templating " >
                         <option value="">Select</option>
+                            @if(@$sGiveaway_obtion)
+                              @foreach(@$sGiveaway_obtion AS $r)
+                                <option value="{{$r->id}}"  >
+                                  {{$r->txt_desc}} 
+                                </option>
+                              @endforeach
+                            @endif                           
                       </select>
                     </div>
                   </div>
