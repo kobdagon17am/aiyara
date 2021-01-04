@@ -16,8 +16,8 @@
 					<div class="col-md-4">
 						<select class="form-control" id="status" >
 							<option value="">ทั้งหมด</option>
-							<option value="not_expiry_date">ยังไม่หมดอายุ</option>
-							<option value="expiry_date">หมดอายุ</option>
+							<option value="success">Success</option>
+							<option value="cancel">Cancle</option>
 						</select> 
 					</div>
 					<div class="col">
@@ -39,13 +39,10 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>วันที่ได้รับ</th>
-								<th>วันหมดอายุ</th>
-								<th>CODE</th>
-								<th>รายละเอียด</th>
-								<th>Bill</th>
+								<th>Date</th>
+								<th>Order</th>
 								<th>Gift Voucher</th>
-								<th>คงเหลือ</th>
+								<th>Status</th>
 							</tr>
 						</thead>
 
@@ -90,7 +87,7 @@
 				serverSide: true,
 				searching: true,
 				ajax: {
-					url: "{{ route('dt_giftvoucher_history') }}",
+					url: "{{ route('dt_gift_order_history') }}",
 					dataType: "json",
 					type: "get",
 					data: {status:status}
@@ -99,13 +96,9 @@
 				columns:[
 				{"data": "id"},
 				{"data": "date"},
-				{"data": "expiry_date"},
-				{"data": "code"},
-				{"data": "detail"},
-				{"data": "bill"},
+				{"data": "order"},
 				{"data": "gv"},
-				{"data": "banlance"},
-
+				{"data": "status"},
 				],
 				//order: [[ "0", "desc" ]],
 			});

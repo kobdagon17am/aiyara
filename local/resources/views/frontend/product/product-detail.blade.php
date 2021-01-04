@@ -1,6 +1,5 @@
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
-
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery-bar-rating/css/bars-1to10.css')}}">
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery-bar-rating/css/bars-horizontal.css')}}">
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jquery-bar-rating/css/bars-movie.css')}}">
@@ -35,7 +34,11 @@
                 <div id="big_banner">
                   @foreach($img as $value_img)
                   <div class="port_big_img">
+                    @if($type == '6')
+                    <img class="img img-fluid" src="{{asset($value_img->img_url.'/'.$value_img->img_name)}}" alt="">
+                    @else
                     <img class="img img-fluid" src="{{asset($value_img->img_url.'/'.$value_img->product_img)}}" alt="">
+                    @endif
                   </div>
                   @endforeach
                 </div>
@@ -44,14 +47,18 @@
                 <div id="small_banner">
                  @foreach($img as $value_img_small)
                  <div>
-                  <img class="img img-fluid" width="120" src="{{asset($value_img_small->img_url.'/'.$value_img_small->product_img)}}" alt="">
-                </div>
-                @endforeach
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-7 col-xs-12 product-detail" id="product-detail">
+                   @if($type == '6')
+                   <img class="img img-fluid" width="120" src="{{asset($value_img->img_url.'/'.$value_img->img_name)}}" alt="">
+                   @else
+                   <img class="img img-fluid" width="120" src="{{asset($value_img->img_url.'/'.$value_img->product_img)}}" alt="">
+                   @endif
+                 </div>
+                 @endforeach
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col-lg-7 col-xs-12 product-detail" id="product-detail">
           <div class="row">
             <div>
                <!--  <div class="col-lg-12">
@@ -59,13 +66,16 @@
                   <span class="f-right">Availability : <a href="#!"> In Stock </a> </span>
                 </div> -->
                 <div class="col-lg-12">
-
-
+                  @if($type=='6')
+                  <h4 class="pro-desc">{{$couse_event->ce_name}}</h4>
+                  @else
                   <h4 class="pro-desc">{{$product->product_name}}</h4>
+                  @endif
+                  
                 </div>
            {{--      <div class="col-lg-12">
                    {{$product->descriptions}}
-                </div> --}}
+                 </div> --}}
             <!--     <div class="stars stars-example-css m-t-15 detail-stars col-lg-12">
                   <select id="product-view" class="rating-star" name="rating" autocomplete="off">
                     <option value="1">1</option>
@@ -75,14 +85,27 @@
                     <option value="5">5</option>
                   </select>
                 </div> -->
+
+                
+                @if($type == 6)
                 <div class="col-lg-12">
-                  <h4>{!! $product->icon !!} {{number_format($product->member_price,2)}} <b style="color:#00c454">@if($type==5)[0 PV]@else[{{$product->pv}} PV]@endif</b></h4>
+
+                  <h4> {{number_format($couse_event->ce_ticket_price,2)}} <b style="color:#00c454"> [{{$couse_event->pv}} PV] </b></h4>
+                  <hr>
+                  {!! $couse_event->ce_place !!} 
+                  <hr>
+                </div>
+                
+                @else
+                <div class="col-lg-12">
+                  <h4>{!! $product->icon !!} {{number_format($product->member_price,2)}} <b style="color:#00c454">@if($type == 5)[0 PV]@else[{{$product->pv}} PV]@endif</b></h4>
                   <hr>
                   {!! $product->descriptions !!}
-                  
                   <hr>
-
                 </div>
+                @endif
+
+
                 <div class="row col-lg-12">
                   <div class="col-sm-12"><h6 class="f-16 f-w-600 m-t-10 m-b-10">Quantity</h6></div>
                   <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
@@ -102,8 +125,18 @@
                     </div>
                   </div> 
                 </div>
-
+                @if($type == 6)
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
+                  <button type="button" onclick="addcart({{$couse_event->id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
+                    <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
+                  </button>
+
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">
+                 <a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning btn-block" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
+               </div>
+               @else
+               <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
                  <button type="button" onclick="addcart({{$product->products_id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
@@ -112,6 +145,8 @@
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">
                <a href="{{ route('product-list',['type'=>$type]) }}" class="btn btn-warning btn-block" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
              </div>
+             @endif
+
 
 
            </div>
@@ -126,8 +161,11 @@
       <hr>
 
       {{-- <h2>{{$product->product_name}}</h2> --}}
+      @if($type == 6)
+      <p>{!! $couse_event->detail !!}</p>
+      @else
       <p>{!! $product->products_details !!}</p>
-
+      @endif
     </div>
   </div>
 
@@ -137,6 +175,17 @@
 </div>
 </div>
 
+<?php 
+
+if($type == 6 ){
+  $img = $img[0]->img_url.''.$img[0]->img_name; 
+
+}else{
+  $img = $img[0]->img_url.''.$img[0]->product_img;
+
+}
+
+?>
 
 @endsection
 @section('js')
@@ -148,36 +197,49 @@
 <script  src="{{asset('frontend/assets/pages/product-detail/product-detail.js')}}"></script>
 <script type="text/javascript">
   function addcart(id) { 
-    <?php $img = $img[0]->img_url.''.$img[0]->product_img; ?>
     var type = {{ $type }};
+    if(type == 6 ){
+     var type = {{ $type }};
+     var quantity = $('#quant').val();
+     var name = '{{@$couse_event->ce_name}}';
+     var title = '{{@$couse_event->ce_place}}';
+     var price = '{{@$couse_event->ce_ticket_price}}';
+
+   }else{
     var quantity = $('#quant').val();
-    var name = '{{$product->product_name}}';
-    var price = {{$product->member_price}};
-    if(type == 5){
-      var pv = 0;
-    }else {
-      var pv = {{$product->pv}};
-    }
-    
-    var img = '{{$img}}';
-    var title = '{{$product->title}}';
-    var promotion = 'code promotion';
-    $.ajax({
-      url: '{{ route('add_cart') }}',
-      type: 'get',
+    var name = '{{@$product->product_name}}';
+    var price = '{{@$product->member_price}}';
+    var title = '{{@$product->title}}';
+  }
+
+
+  if(type == 5 ){
+    var pv = 0;
+  }else if(type == 6){
+    var pv = '{{@$couse_event->pv}}';
+  }else {
+    var pv = '{{@$product->pv}}';
+  }
+
+  var img = '{{$img}}';
+  var promotion = 'code promotion';
+
+  $.ajax({
+    url: '{{ route('add_cart') }}',
+    type: 'get',
             // dataType: 'json',
             data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,promotion:promotion,type:'{{ $type }}'},
           })
-    .done(function(data) {
-     $('#count_cart').html(data);
-     var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
-     $('#count_cart_1').html(count_cart);
+  .done(function(data) {
+   $('#count_cart').html(data);
+   var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
+   $('#count_cart_1').html(count_cart);
           //console.log(data);
         })
-    .fail(function() {
-      console.log("error");
-    });
-  }
+  .fail(function() {
+    console.log("error");
+  });
+}
 </script>
 <script  src="{{asset('frontend/assets/js/bootstrap-growl.min.js')}}"></script>
 <script  src="{{asset('frontend/assets/pages/notification/notification.js')}}"></script>

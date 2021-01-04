@@ -40,6 +40,12 @@
  				</div>
  				<div class="card-block payment-tabs">
  					<ul class="nav nav-tabs md-tabs" role="tablist">
+ 						@if($bill['type'] == 6)
+ 						<li class="nav-item">
+ 							<a class="nav-link active" data-toggle="tab" id="nav_card" href="#credit-card" role="tab">ชำระเงิน</a>
+ 							<div class="slide"></div>
+ 						</li>
+ 						@else
  						<li class="nav-item">
  							<a class="nav-link active" id="nav_address" data-toggle="tab" href="#address" role="tab">ที่อยู่การจัดส่ง</a>
  							<div class="slide"></div>
@@ -48,6 +54,10 @@
  							<a class="nav-link" data-toggle="tab" id="nav_card" href="#credit-card" role="tab">ชำระเงิน</a>
  							<div class="slide"></div>
  						</li>
+ 						@endif
+
+ 						
+
  					{{-- <li class="nav-item">
  						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
  						<div class="slide"></div>
@@ -56,7 +66,13 @@
 
  				</ul>
  				<div class="tab-content m-t-15">
+
+ 					@if($bill['type'] == 6)
+ 					<div class="tab-pane" id="address" role="tabpanel">
+ 					@else
  					<div class="tab-pane active" id="address" role="tabpanel">
+ 					@endif
+ 					
  						<div class="card-block p-b-0" style="padding:10px">
 
  							<div class="form-radio">
@@ -183,7 +199,13 @@
  						</div>
  					</div>
 
+ 					@if($bill['type'] == 6)
+ 					<div class="tab-pane active" id="credit-card" role="tabpanel">
+ 					@else
  					<div class="tab-pane" id="credit-card" role="tabpanel">
+ 					@endif
+
+ 					
  						@if($bill['price_total_type5'] == 0 and $bill['type'] == 5) 
  						<div class="row">
  							<div class="col-md-12 col-xl-12">
@@ -340,16 +362,19 @@
  						<td><strong>Vat({{ $bill['vat'] }}%)</strong></td>
  						<td align="right"><strong > {{ $bill['p_vat'] }}</strong></td>
  					</tr>
-
  					<tr>
  						<td><strong>มูลค่าสินค้า + Vat</strong></td>
  						<td align="right"><strong > {{ number_format($bill['price'],2) }}</strong></td>
  					</tr>
+
+ 					@if($bill['type'] != 6)
+ 					
  					<tr>
  						<td><strong>ค่าจัดส่ง</strong></td>
  						<td align="right"><strong > {{  number_format($bill['shipping'],2) }}</strong></td>
  					</tr>
- 					
+
+ 					@endif
  					@if($bill['type'] == 5)
  					<?php  
  					$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
@@ -373,7 +398,13 @@
  					<tr>
  						<td><strong>ยอดที่ต้องชำระเพิ่ม</strong></td>
  						<td align="right"><strong> {{  number_format($bill['price_total_type5'],2) }}</strong>
- 						
+
+ 						</td>
+ 					</tr>
+ 					@elseif($bill['type'] == 6)
+ 					<tr>
+ 						<td><strong>ยอดที่ต้องชำระ</strong></td>
+ 						<td align="right"><strong > {{ $bill['price'] }}</strong>
  						</td>
  					</tr>
 
@@ -389,7 +420,6 @@
  						<td><strong>คะแนนที่ได้รับ</strong></td>
  						<td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>
  					</tr>
-
 
  				</table>
  				<div class="row" align="center">

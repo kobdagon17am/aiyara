@@ -68,7 +68,7 @@ class HistoryController extends Controller
            ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
            ->offset($start)
            ->limit($limit)
-           ->orderby('id','DESC')
+           ->orderby('updated_at','DESC')
            ->get(); 
 // dd($request->input('order_type'));
 
@@ -107,7 +107,7 @@ class HistoryController extends Controller
            ->whereRaw( "(orders.code_order LIKE '%{$search}%' or orders.tracking_number LIKE '%{$search}%')" )
            ->offset($start) 
            ->limit($limit)
-           ->orderby('id','DESC')
+           ->orderby('updated_at','DESC')
            ->get(); 
 
        }
@@ -128,6 +128,9 @@ class HistoryController extends Controller
 
        if($value->type_id == 5){
         $nestedData['price'] = number_format($value->price_remove_gv,2);
+
+    }elseif($value->type_id == 6){
+       $nestedData['price'] = number_format($value->price,2);
 
     }else{
         $nestedData['price'] = number_format($value->price + $value->shipping,2);

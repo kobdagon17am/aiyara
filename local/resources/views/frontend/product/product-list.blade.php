@@ -4,6 +4,7 @@
 @endsection
 <!-- Breadcombssss  area Start-->
 
+@if($type!=6)
 <div class="page-header card">
   <div class="card-block" style="padding: 10px">
 
@@ -16,6 +17,7 @@
             
           </form> --}}
 
+
           <div class="col-lg-4 col-md-4 col-sm-6 m-t-5">
            {{--  <label>หมวดสินค้า </label> --}}
            <select class="form-control" id="category" name="category" onchange="select_category()">
@@ -23,12 +25,11 @@
             <option value="{{$value->category_id}}">{{$value->category_name}}</option>
             @endforeach
           </select>
-        </div>  
+        </div>
+
 
         <div class="col-lg-4 col-md-4 col-sm-12 m-t-5">
           {{-- <label>รหัสสินค้าโปรโมชั่น</label> --}} 
-
-
           <div class="input-group input-group-button ">
             <span class="input-group-addon btn btn-primary" id="basic-addon11" data-toggle="modal" data-target="#large-Modal">
               <span class="">Code ticket</span>
@@ -201,7 +202,7 @@
                     @elseif($type==4)
                     <div class="card bg-c-blue order-card m-b-0">
                       <div class="card-block">
-                        <div class="row">
+                        <div class="row"> 
                           <div class="col-md-5">
                             <h5 class="m-b-20" style="color: #000">Ai Pocket</h5>
 
@@ -234,35 +235,51 @@
                     <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p>
                   </div>
                 </div>
-                @endif
+                @elseif($type==6)
 
+                <div class="card bg-c-green order-card m-b-0">
+                  <div class="card-block">
+                    <div class="row">
+                      <div class="col-md-5">
+                       <h5 class="m-b-20" style="color: #000">คะแนนสะสม</h5>
+                     </div>
+                     <div class="col-md-7">
+                      <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv) }} PV</span></h3>
+                    </div>
+                  </div>
+
+                  <p class="m-b-0" style="font-size: 16px"><b class="f-right"><i class="fa fa-star p-2 m-b-0"></i>  BRONZE STAR AWARD ( BSA )</b></p>
+                </div>
               </div>
 
-
-
+              @endif
             </div>
+
+
+
           </div>
         </div>
+      </div>
+      @endif
+      <div class="page-header card">
+       <div class="card-block">
 
-        <div class="page-header card">
-         <div class="card-block">
+        <div class="row m-t-5" id="product_list">
+          @if($type != 6)
+          @foreach($data['product'] as $value)
+          <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
+            <input type="hidden" id="item_id" value="{{$value->products_id}}">
+            <div class="card prod-view">
+              <div class="prod-item text-center">
+                <div class="prod-img">
+                  <div class="option-hover">
 
-          <div class="row m-t-5" id="product_list">
-            @foreach($data['product'] as $value)
-
-            <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
-              <input type="hidden" id="item_id" value="{{$value->products_id}}">
-              <div class="card prod-view">
-                <div class="prod-item text-center">
-                  <div class="prod-img">
-                    <div class="option-hover">
-
-                     <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
-                      class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-                      <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
-                        class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
-                        <i class="icofont icofont-eye-alt f-20"></i>
-                      </a>
+                   <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+                    class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
+                    <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
+                      class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
+                      <i class="icofont icofont-eye-alt f-20"></i>
+                    </a>
                         <!-- <button type="button" class="btn btn-danger btn-icon waves-effect waves-light hvr-bounce-in option-icon">
               <i class="icofont icofont-heart-alt f-20"></i>
             </button> -->
@@ -289,6 +306,51 @@
   </div>
 </div>
 @endforeach
+@else
+@foreach($data['couse_event'] as $value)
+<div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
+  <input type="hidden" id="item_id" value="{{$value->id}}">
+  <div class="card prod-view"> 
+    <div class="prod-item text-center">
+      <div class="prod-img">
+        <div class="option-hover">
+
+         <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}" type="button" 
+          class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
+          <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}"
+            class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
+            <i class="icofont icofont-eye-alt f-20"></i>
+          </a>
+                        <!-- <button type="button" class="btn btn-danger btn-icon waves-effect waves-light hvr-bounce-in option-icon">
+              <i class="icofont icofont-heart-alt f-20"></i>
+            </button> -->
+          </div>
+          <a href="#!" class="hvr-shrink">
+            <img src="{{asset($value->img_url.''.$value->img_name)}}" class="img-fluid o-hidden" alt="">
+          </a>
+          <!-- <div class="p-new"><a href=""> New </a></div> -->
+        </div>
+        <div class="prod-info">
+          <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}" class="txt-muted">
+            <h5 style="font-size: 15px">{{$value->ce_name}}</h5>
+            {{-- <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->ce_place!!}</p> 
+            --}}
+          </a> 
+        <!--<div class="m-b-10">
+        <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
+      </div> -->
+
+      <span class="prod-price" style="font-size: 20px"> @if($type==6) @else {!! $value->icon !!} @endif {{number_format($value->ce_ticket_price,2)}} <b
+        style="color:#00c454">@if($type==5)[0 PV] 
+        @elseif( $type==6 )
+        [{{$value->pv}} PV]
+        @else [{{$value->pv}} PV]@endif</b></span>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
+@endif
         {{-- <div class="row justify-content-end">
         <div class="col-ml-12">
         
@@ -320,8 +382,8 @@
     .always(function() {
       console.log("complete");
     });
-
   }
+  
 </script>
 
 

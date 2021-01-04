@@ -147,10 +147,12 @@
                     <th>รวม : </th>
                     <td> {{ number_format($order->price,2) }}</td>
                 </tr>
+                 @if($order->type_id != 6)
                 <tr>
                     <th>ค่าจัดส่ง : </th>
                     <td> {{ number_format($order->shipping,2) }} </td>
                 </tr>
+                @endif
                 <tr>
                     <th>คะแนนที่ได้รับ : </th>
                     <td class="text-success"><b> {{ $order->pv_total }} PV </b></td>
@@ -177,6 +179,12 @@
                     </td>
                 </tr>
 
+                @elseif($order->type_id == 6)
+                  <tr>
+                    <td><strong>ยอดชำระ</strong></td>
+                    <td align="right"><strong > {{ number_format($order->price,2) }}</strong>
+                    </td>
+                </tr>
                 @else
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>

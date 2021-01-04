@@ -9,6 +9,7 @@ use Cart;
 use Auth;
 use App\Models\Frontend\Location;
 use App\Models\Frontend\Payment;
+use App\Models\Frontend\PaymentCourse;
 
 class CartPaymentController extends Controller
 {
@@ -104,7 +105,13 @@ class CartPaymentController extends Controller
 		//dd($request->all());
 
 		if($request->submit == 'upload'){
-			$resule = Payment::payment_uploadfile($request);
+			if($request->type == '6'){
+				$resule = PaymentCourse::payment_uploadfile($request);
+
+			}else{
+				$resule = Payment::payment_uploadfile($request);
+			}
+			
 			if($resule['status'] == 'success'){
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {
@@ -113,7 +120,16 @@ class CartPaymentController extends Controller
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
 		}elseif($request->submit == 'not_upload'){
-			$resule = Payment::payment_not_uploadfile($request);
+
+			if($request->type == '6'){
+				$resule = PaymentCourse::payment_not_uploadfile($request);
+
+			}else{
+				$resule = Payment::payment_not_uploadfile($request);
+				dd($resule);
+			}
+
+			
 			if($resule['status'] == 'success'){
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {
@@ -122,7 +138,13 @@ class CartPaymentController extends Controller
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
 		}elseif($request->submit == 'credit_card'){
-			$resule = Payment::credit_card($request);
+			if($request->type == '6'){
+				$resule = PaymentCourse::credit_card($request);
+
+			}else{
+				$resule = Payment::credit_card($request);
+			}
+			
 			if($resule['status'] == 'success'){
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {
@@ -131,7 +153,13 @@ class CartPaymentController extends Controller
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
 		}elseif($request->submit == 'ai_cash'){
-			$resule = Payment::ai_cash($request);
+
+			if($request->type == '6'){
+				$resule = PaymentCourse::ai_cash($request);
+			}else{
+				$resule = Payment::ai_cash($request);
+			}
+			
 			if($resule['status'] == 'success'){
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {
@@ -148,10 +176,7 @@ class CartPaymentController extends Controller
 			}else{
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
-		}
-
-
-		else{
+		}else{
 			return redirect('product-history')->withError('Payment submit Fail');
 		}
 

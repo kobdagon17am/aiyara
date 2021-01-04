@@ -32,7 +32,6 @@
                         @else
                         <h4 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h4>
                         @endif
-
                         
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
@@ -48,7 +47,6 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-
                                         <th>Image</th>
                                         <th>Product Name</th>
                                         <th width="100">Quantity</th>
@@ -99,11 +97,13 @@
                  $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
                  ?>
                  <table class="table table-responsive" >
-                    <tr>
+                    @if($type == 5)
+                       <tr>
                         <td><strong class="text-primary">Gift Voucher </td>
                             <td align="right"><strong class="text-primary" id="gv"> {{ number_format($gv->sum_gv) }} </strong></td>
                         </tr>
-
+                    @endif
+                    
                         <tr>
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $bill['quantity'] }}) ชิ้น</strong></td>
                             <td align="right"><strong id="price"> {{ $bill['price_total'] }} </strong></td>
