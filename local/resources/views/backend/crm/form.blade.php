@@ -62,8 +62,8 @@
                       <div class="myBorder">
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> หมวดหลัก : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> หมวดหลัก : * </label>
+                            <div class="col-md-8">
                               <select name="role_group_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$sMainGroup)
@@ -77,8 +77,8 @@
 
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> หมวดย่อย : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> หมวดย่อย : * </label>
+                            <div class="col-md-8">
                               <select name="crm_gettopic_id" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$sCrm_topic)
@@ -92,8 +92,8 @@
 
 
                            <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> ชื่อลูกค้า : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> ชื่อลูกค้า : * </label>
+                            <div class="col-md-8">
                               <select name="customers_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Customer)
@@ -111,36 +111,36 @@
 
 
                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">เลขใบรับเรื่อง :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">เลขใบรับเรื่อง :</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" value="{{ @$sRow->subject_receipt_number }}" name="subject_receipt_number"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">วันที่รับเรื่อง :</label>
+                                <label for="example-text-input" class="col-md-3 col-form-label">วันที่รับเรื่อง :</label>
                                 <div class="col-md-3">
                                     <input class="form-control" type="date" value="{{ @$sRow->receipt_date }}" name="receipt_date"  >
                                 </div>
                             </div>
 
                               <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">หัวข้อที่ลูกค้าแจ้ง :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">หัวข้อที่ลูกค้าแจ้ง :</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" value="{{ @$sRow->topics_reported }}" name="topics_reported"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดที่รับเรื่อง :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดที่รับเรื่อง :</label>
+                                <div class="col-md-8">
                                     <textarea class="form-control" rows="5" name="contact_details" >{{@$sRow->contact_details}}</textarea>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้รับเรื่อง :</label>
+                                <div class="col-md-8">
 
                                 	@if( empty($sRow) )
                                 		<input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -155,8 +155,8 @@
 
 
                           <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ(User Login):</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
+                                <div class="col-md-8">
 
                                   @if( empty($sRow) )
                                     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -171,7 +171,7 @@
 
 
                   <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันที่อัพเดตล่าสุด :</label>
+                    <label for="example-text-input" class="col-md-3 col-form-label">วันที่อัพเดตล่าสุด :</label>
                     <div class="col-md-3">
                       <input class="form-control" type="date" value="{{ @$sRow->last_update }}" name="last_update" >
                     </div>
@@ -215,8 +215,8 @@
                     <div class="myBorder">
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะการปิดการรับเรื่อง :</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label">สถานะการปิดการรับเรื่อง :</label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_close_job" value="1" >
@@ -229,8 +229,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label">สถานะ :</label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >

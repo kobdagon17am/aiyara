@@ -177,5 +177,48 @@
 
 			}
 
+
+				public function excelExportPromotionCus()
+					{	
+
+						$spreadsheet = new Spreadsheet();
+						$amt_sheet = 1;
+
+						for ($j=0; $j < $amt_sheet ; $j++) { 
+
+							if($j>0){
+								$spreadsheet->createSheet();
+							}
+
+							$spreadsheet->setActiveSheetIndex($j);
+							$sheet = $spreadsheet->getActiveSheet();
+							$sheet->setTitle("Sheet".($j+1));
+
+							$sRow = \App\Models\Backend\PromotionCus::get();
+
+							$sheet->setCellValue('A1', 'promotion_code');
+							$sheet->setCellValue('B1', 'customer_id_fk');
+							$sheet->setCellValue('C1', 'created_at');
+
+							for ($i=0; $i < count($sRow) ; $i++) { 
+								$sheet->setCellValue('A'.($i+2), $sRow[$i]->promotion_code);
+								$sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_id_fk);
+								$sheet->setCellValue('C'.($i+2), $sRow[$i]->created_at);
+							}
+
+
+						}
+
+						$file = 'promotion_cus.xlsx';
+						header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+						header('Content-disposition: attachment; filename='.$file);
+
+						$writer = new Xlsx($spreadsheet);
+						$writer->save('local/public/excel_files/'.$file);
+
+					}
+
+
+
 		
 	}

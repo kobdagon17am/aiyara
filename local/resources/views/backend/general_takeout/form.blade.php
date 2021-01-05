@@ -54,8 +54,8 @@
                       <div class="myBorder">
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> สาเหตุที่นำออก : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> สาเหตุที่นำออก : * </label>
+                            <div class="col-md-8">
                               <select name="product_out_cause_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Product_out_cause)
@@ -71,16 +71,16 @@
 
 
                           <div class="form-group row">
-                            <label for="receive_person" class="col-md-2 col-form-label">ผู้รับ : *</label>
-                            <div class="col-md-10">
+                            <label for="receive_person" class="col-md-3 col-form-label">ผู้รับ : *</label>
+                            <div class="col-md-8">
                               <input class="form-control" type="text" value="{{ @$sRow->receive_person }}" name="receive_person" required >
                             </div>
                           </div>
 
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> รหัสสินค้า : ชื่อสินค้า : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> รหัสสินค้า : ชื่อสินค้า : * </label>
+                            <div class="col-md-8">
 
                               <select name="product_id_fk" class="form-control select2-templating " required >
 
@@ -98,14 +98,14 @@
 
 
                           <div class="form-group row">
-                            <label for="lot_number" class="col-md-2 col-form-label">Lot Number : * </label>
-                            <div class="col-md-10">
+                            <label for="lot_number" class="col-md-3 col-form-label">Lot Number : * </label>
+                            <div class="col-md-8">
                               <input class="form-control" type="text" value="{{ @$sRow->lot_number }}" name="lot_number" required >
                             </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="lot_expired_date" class="col-md-2 col-form-label">วันหมดอายุ : * </label>
+                            <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * </label>
                             <div class="col-md-3">
                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" required >
                             </div>
@@ -113,14 +113,14 @@
 
 
                           <div class="form-group row">
-                            <label for="amt" class="col-md-2 col-form-label">จำนวน :</label>
+                            <label for="amt" class="col-md-3 col-form-label">จำนวน :</label>
                             <div class="col-md-3">
                               <input class="form-control" type="number" value="{{ @$sRow->amt }}" name="amt" >
                             </div>
                           </div>
 
                         <div class="form-group row">
-                          <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับ : * </label>
+                          <label for="example-text-input" class="col-md-3 col-form-label">หน่วยนับ : * </label>
                           <div class="col-md-3">
                             <select name="product_unit_id_fk" class="form-control select2-templating " required >
                               <option value="">Select</option>
@@ -135,8 +135,8 @@
 
 
         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> สาขา : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> สาขา : * </label>
+                            <div class="col-md-8">
                               <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Warehouse)
@@ -154,8 +154,8 @@
                     @if( empty(@$sRow) )
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลัง : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> คลัง : * </label>
+                            <div class="col-md-8">
                               <select id="subwarehouse_id_fk" name="subwarehouse_id_fk" class="form-control select2-templating " required >
                                     <option disabled selected>กรุณาเลือกคลังหลักก่อน</option>
                               </select>
@@ -163,8 +163,8 @@
                           </div>
                           
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> Zone : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> Zone : * </label>
+                            <div class="col-md-8">
                               <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating " required >
                                 <option disabled selected>กรุณาเลือกคลังย่อยก่อน</option>
                               </select>
@@ -172,8 +172,8 @@
                           </div>
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> Shelf : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> Shelf : * </label>
+                            <div class="col-md-8">
                               <select id="shelf_id_fk"  name="shelf_id_fk" class="form-control select2-templating " required >
                                  <option disabled selected>กรุณาเลือกโซนก่อน</option>
                               </select>
@@ -184,8 +184,8 @@
                     @else
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> คลังย่อย : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> คลังย่อย : * </label>
+                            <div class="col-md-8">
                               <select id="subwarehouse_id_fk" name="subwarehouse_id_fk" class="form-control select2-templating " required >
                                   <option value="">กรุณาเลือกคลังหลักก่อน</option>
                                     @if(@$Subwarehouse)
@@ -202,8 +202,8 @@
                           </div>
                           
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> Zone : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> Zone : * </label>
+                            <div class="col-md-8">
                               <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating " required >
                                 <option value="">กรุณาเลือกคลังย่อยก่อน</option>
                                    @if(@$Zone)
@@ -220,8 +220,8 @@
                           </div>
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> Shelf : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> Shelf : * </label>
+                            <div class="col-md-8">
                               <select id="shelf_id_fk"  name="shelf_id_fk" class="form-control select2-templating " required >
                                  <option value="">กรุณาเลือกโซนก่อน</option>
                                   @if(@$Shelf)
@@ -243,11 +243,11 @@
 
                           <div class="form-group row">
                                 @if( empty(@$sRow) )
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ (User Login) :</label>
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ (User Login) :</label>
                                 @else
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้ดำเนินการ  :</label>
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ  :</label>
                                 @endif
-                                <div class="col-md-10">
+                                <div class="col-md-8">
                                   @if( empty(@$sRow) )
                                     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="recipient" >
@@ -260,8 +260,8 @@
                             </div>
 
                            <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                                <div class="col-md-8">
                                   @if( empty(@$sRow) )
                                     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
@@ -274,8 +274,8 @@
                             </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะการอนุมัติ :</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label">สถานะการอนุมัติ :</label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="approve_status" value="1"  >

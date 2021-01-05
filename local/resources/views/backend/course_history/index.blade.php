@@ -95,7 +95,8 @@ $(function() {
                return '<a class="btn btn-info btn-sm mt-1" href="backend/course_history_list/'+d+'" >ตรวจสอบ</a>';
             }},
             {data: 'file_download',   title :'<center>Download</center>', className: 'text-center',render: function(d) {
-               return '<a class="btn btn-info btn-sm mt-1" href="{{ asset('local/public/file_download/') }}/'+d+'" download >Download</a>';
+               // return '<a class="btn btn-info btn-sm mt-1" href="{{ asset('local/public/file_download/') }}/'+d+'" download >Download</a>';
+               return '-อยู่ระหว่างการปรับปรุง-';
             }},
         ],
 

@@ -31,8 +31,8 @@
                 {{ csrf_field() }}
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">Business Location : * </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">Business Location : * </label>
+                  <div class="col-md-8">
                     <select name="business_location" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sBusiness_location)
@@ -45,8 +45,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">ประเภทสินค้า : * </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">ประเภทสินค้า : * </label>
+                  <div class="col-md-8">
                     <select name="product_type" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sProduct_group)
@@ -59,93 +59,93 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัส : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รหัส : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->pcode }}" name="pcode" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อภาษาไทย : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อภาษาไทย : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_thai }}" name="name_thai" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อภาษาอังกฤษ : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อภาษาอังกฤษ : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_eng }}" name="name_eng" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อภาษาลาว : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อภาษาลาว : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_laos }}" name="name_laos" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อภาษาพม่า : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อภาษาพม่า : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_burma }}" name="name_burma" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อภาษากัมพูชา : * </label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อภาษากัมพูชา : * </label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_cambodia }}" name="name_cambodia" required>
                     </div>
                 </div>
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดภาษาไทย :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดภาษาไทย :</label>
+                    <div class="col-md-8">
                       <textarea class="form-control" id="detail_thai" name="detail_thai" rows="3"  >{{ @$sRow->detail_thai }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดภาษาอังกฤษ :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดภาษาอังกฤษ :</label>
+                    <div class="col-md-8">
                         <textarea class="form-control" id="detail_eng" name="detail_eng" rows="3"  >{{ @$sRow->detail_eng }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดภาษาลาว :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดภาษาลาว :</label>
+                    <div class="col-md-8">
                         <textarea class="form-control" id="detail_laos" name="detail_laos" rows="3"  >{{ @$sRow->detail_laos }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดภาษาพม่า :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดภาษาพม่า :</label>
+                    <div class="col-md-8">
                         <textarea class="form-control" id="detail_burma" name="detail_burma" rows="3"  >{{ @$sRow->detail_burma }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียดภาษากัมพูชา :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">รายละเอียดภาษากัมพูชา :</label>
+                    <div class="col-md-8">
                       <textarea class="form-control" id="detail_cambodia" name="detail_cambodia" rows="3"  >{{ @$sRow->detail_cambodia }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">PV :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">PV :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->pv }}" name="pv" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับ : * </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">หน่วยนับ : * </label>
+                  <div class="col-md-8">
                     <select name="main_unit" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sProduct_unit)
@@ -158,29 +158,29 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันเริ่มต้นการแสดง :</label>
+                    <label for="example-text-input" class="col-md-3 col-form-label">วันเริ่มต้นการแสดง :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->show_startdate }}" name="show_startdate" required >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">วันสิ้นสุดการแสดง :</label>
+                    <label for="example-text-input" class="col-md-3 col-form-label">วันสิ้นสุดการแสดง :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->show_enddate }}" name="show_enddate" required >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">จำนวนที่สามารถซื้อได้ทั้งหมด :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">จำนวนที่สามารถซื้อได้ทั้งหมด :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="number" value="{{ @$sRow->all_available_purchase }}" name="all_available_purchase" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">ประเภทจำนวนจำกัด : * </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">ประเภทจำนวนจำกัด : * </label>
+                  <div class="col-md-8">
                     <select name="limited_amt_type" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sLimited_amt_type)
@@ -193,15 +193,15 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">จำนวนจำกัดต่อคน :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-3 col-form-label">จำนวนจำกัดต่อคน :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="number" value="{{ @$sRow->limited_amt_person }}" name="limited_amt_person" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label"></label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label"></label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="promotion_coupon_status" name="promotion_coupon_status" value="1" {{ ( @$sRow->promotion_coupon_status=='1')?'checked':'' }}>
                           <label class="custom-control-label" for="promotion_coupon_status"><b>promotion coupon status</b></label>
@@ -210,8 +210,8 @@
                 </div>
 
               <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
+                  <div class="col-md-8">
                     <select name="minimum_package_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sPackage)
@@ -224,8 +224,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
+                  <div class="col-md-8">
                     <select name="reward_qualify_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sQualification)
@@ -238,8 +238,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
+                  <div class="col-md-8">
                     <select name="keep_personal_quality" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sPersonal_quality)
@@ -253,8 +253,8 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
+                  <div class="col-md-8">
                     <select name="maintain_travel_feature" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sTravel_feature)
@@ -268,8 +268,8 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">aistockist : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">aistockist : </label>
+                  <div class="col-md-8">
                     <select name="aistockist" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sAistockist)
@@ -282,8 +282,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">agency : </label>
-                  <div class="col-md-10">
+                  <label for="example-text-input" class="col-md-3 col-form-label">agency : </label>
+                  <div class="col-md-8">
                     <select name="agency" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sAgency)
@@ -296,8 +296,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label">สถานะ :</label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >

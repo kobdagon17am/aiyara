@@ -36,8 +36,8 @@
                 {{ csrf_field() }}
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">เลือกประเภท :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">เลือกประเภท :</label>
+                    <div class="col-md-8">
                          <select name="ce_type" class="form-control select2-templating " >
                          <option value="">Select</option>
                             @if(@$dsCe_type)
@@ -51,66 +51,53 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อกิจกรรม :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">ชื่อกิจกรรม :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->ce_name }}" name="ce_name" required>
                     </div>
                 </div>
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">สถานที่จัดงาน :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">สถานที่จัดงาน :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->ce_place }}" name="ce_place" required>
                     </div>
                 </div>           
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">จำนวนบัตรสูงสุด :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">จำนวนบัตรสูงสุด :</label>
+                    <div class="col-md-8">
                         <input class="form-control" type="number" value="{{ @$sRow->ce_max_ticket }}" name="ce_max_ticket" required>
                     </div>
                 </div>   
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">ราคาบัตร (หน่วย: บาทไทย) :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">ราคาบัตร (หน่วย: บาทไทย) :</label>
+                    <div class="col-md-3">
                         <input class="form-control" type="number" value="{{ @$sRow->ce_ticket_price }}" name="ce_ticket_price" required>
                     </div>
                 </div> 
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">วันเริ่มจำหน่าย (mm/dd/yyyy) :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">วันเริ่มจำหน่าย (mm/dd/yyyy) :</label>
+                    <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->ce_sdate }}" name="ce_sdate" required >
                     </div>
                 </div> 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">วันสิ้นสุดการจำหน่าย (mm/dd/yyyy) :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">วันสิ้นสุดการจำหน่าย (mm/dd/yyyy) :</label>
+                    <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->ce_edate }}" name="ce_edate" required >
                     </div>
                 </div> 
 
-             <!--    <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">คุณสมบัติของผู้จอง :</label>
-                    <div class="col-md-9">
-                         <select name="ce_features_booker" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                            @if(@$dsCe_features_booker)
-                                @foreach(@$dsCe_features_booker AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->ce_features_booker)?'selected':'' }} >{{@$r->txt_desc}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div> -->
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">สมาชิก 1 คน  สามารถจองได้ (จำนวนบัตร) :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">สมาชิก 1 คน  สามารถจองได้ (จำนวนบัตร) :</label>
+                    <div class="col-md-8">
                          <select name="ce_can_reserve" class="form-control select2-templating " >
                          <option value="">Select</option>
                             @if(@$dsCe_can_reserve)
@@ -122,8 +109,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">การจำกัดจำนวน :</label>
-                    <div class="col-md-9">
+                    <label for="example-text-input" class="col-md-4 col-form-label">การจำกัดจำนวน :</label>
+                    <div class="col-md-8">
                          <select name="ce_limit" class="form-control select2-templating " >
                          <option value="">Select</option>
                             @if(@$dsCe_limit)
@@ -138,8 +125,8 @@
 
 
               <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
+                  <div class="col-md-8">
                     <select name="minimum_package_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sPackage)
@@ -152,8 +139,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
+                  <div class="col-md-8">
                     <select name="reward_qualify_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sQualification)
@@ -166,8 +153,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
+                  <div class="col-md-8">
                     <select name="keep_personal_quality" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sPersonal_quality)
@@ -181,8 +168,8 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
+                  <div class="col-md-8">
                     <select name="maintain_travel_feature" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sTravel_feature)
@@ -196,8 +183,8 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">aistockist : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">aistockist : </label>
+                  <div class="col-md-8">
                     <select name="aistockist" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sAistockist)
@@ -210,8 +197,8 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label">agency : </label>
-                  <div class="col-md-9">
+                  <label for="example-text-input" class="col-md-4 col-form-label">agency : </label>
+                  <div class="col-md-8">
                     <select name="agency" class="form-control select2-templating "  >
                       <option value="">Select</option>
                         @if(@$sAgency)

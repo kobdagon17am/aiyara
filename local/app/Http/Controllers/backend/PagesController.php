@@ -10,6 +10,7 @@ use File;
 use Session;
 use App\Models\Backend\Page;
 use App\Models\Backend\Ce_regis_add;
+use App\Models\Backend\PromotionCode_add;
 
 class PagesController extends Controller{
 
@@ -423,6 +424,102 @@ class PagesController extends Controller{
 
 
 
+
+      public function uploadPromotionCus(Request $request){
+
+          // dd($request->input('submit'));
+
+        if ($request->input('submit') != null ){
+
+          $file = $request->file('fileXLS');
+
+           // dd($file);
+
+          // File Details 
+          $filename = $file->getClientOriginalName();
+          $extension = $file->getClientOriginalExtension();
+          $tempPath = $file->getRealPath();
+          $fileSize = $file->getSize();
+          $mimeType = $file->getMimeType();
+
+          // Valid File Extensions
+          $valid_extension = array("xlsx");
+
+          // 2MB in Bytes
+          // $maxFileSize = 2097152; 
+          // 5MB in Bytes
+          $maxFileSize = 5242880; 
+
+          // Check file extension
+          if(in_array(strtolower($extension),$valid_extension)){
+
+            // Check file size
+            if($fileSize <= $maxFileSize){
+
+              // File upload location
+
+              $location = 'uploads/';
+              $destinationPath = public_path($location);
+              $file->move($destinationPath, $filename);
+
+              $filepath = public_path("uploads/".$filename);
+
+              $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+              $spreadsheet = $reader->load($filepath);
+
+              $worksheet = $spreadsheet->getActiveSheet();
+              $highestRow = $worksheet->getHighestRow(); // total number of rows
+              $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+              $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+              $lines = $highestRow - 2; 
+              if ($lines <= 0) {
+                       // Exit ('There is no data in the Excel table');
+                  Session::flash('message','There is no data in the Excel table');
+
+              }else{
+
+                  $i = 0;
+
+                  for ($row = 1; $row <= $highestRow; ++$row) {
+
+                       $promotion_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //ce_id_fk
+                       $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
+
+                        // Skip first row (Remove below comment if you want to skip the first row)
+                         if($i == 0){
+                            $i++;
+                            continue; 
+                         }
+
+                       $insertData = array(
+                         "promotion_code"=>@$promotion_code,
+                         "customer_id_fk"=>@$customers_id_fk,
+                         "pro_status"=> '4' ,
+                         "created_at"=>now());
+                       PromotionCode_add::insertData($insertData);
+
+                       $i++;
+
+                  }
+
+                  Session::flash('message','Import Successful.');
+
+              }
+
+            }else{
+              Session::flash('message','File too large. File must be less than 5MB.');
+            }
+
+          }else{
+             Session::flash('message','Invalid File Extension.');
+          }
+
+        }
+
+        // Redirect to index
+        return redirect()->to(url("backend/promotion_cus"));
+      }
 
 
 }

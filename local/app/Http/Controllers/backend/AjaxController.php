@@ -14,6 +14,7 @@ use PDF;
 // use App\Model\MemberAddModel;  
 // use App\Http\Controllers\backend\ActiveMemberController;
 // use App\Http\Controllers\backend\ActiveCourseController;
+use App\Models\Backend\PromotionCode_add;
 
 class AjaxController extends Controller
 {
@@ -36,6 +37,8 @@ class AjaxController extends Controller
     {
         DB::delete(" TRUNCATE `pm_broadcast` ");
     }
+
+
 
     public function ajaxFetchData(Request $request)
     {
@@ -512,6 +515,99 @@ class AjaxController extends Controller
 
 
 
+    }
+
+
+
+   public function ajaxGetProductPromotionCus(Request $request)
+    {
+        // echo $request->product_id_fk;
+
+          $Products = DB::select(" 
+                SELECT products.id as product_id,
+                  products.product_code,
+                  (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                  products_cost.selling_price,
+                  products_cost.pv
+                  FROM
+                  products_details
+                  Left Join products ON products_details.product_id_fk = products.id
+                  LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                  WHERE lang_id=1 AND products.id= ".$request->product_id_fk."
+
+           ");
+
+            $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+            $pv = @$Products[0]->pv;
+            $selling_price = @$Products[0]->selling_price;
+
+
+            $p_unit = DB::select("
+              SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = ".$request->product_id_fk." AND  lang_id=1 ");
+
+            $unit =  @$p_unit[0]->product_unit;
+
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
+
+            $tb = '<textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
+            ';
+
+            return $tb;
+
+
+
+    }
+
+
+    public function ajaxGenPromotionCode(Request $request)
+    {
+
+        // return($request->all());
+
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+         
+        function generate_string($input, $strength = 10) {
+            $input_length = strlen($input);
+            $random_string = '';
+            for($i = 0; $i < $strength; $i++) {
+                $random_character = $input[mt_rand(0, $input_length - 1)];
+                $random_string .= $random_character;
+            }
+            return $random_string;
+        }
+         
+        for ($i=1; $i <= $request->amt_gen ; $i++) { 
+
+            // echo strtoupper(generate_string($permitted_chars, 10));
+
+              $insertData = array(
+                 "promotion_code"=>strtoupper(generate_string($permitted_chars, 10)),
+                 "customer_id_fk"=>'0',
+                 "pro_status"=> '4' ,
+                 "created_at"=>now());
+               PromotionCode_add::insertData($insertData);
+
+
+        }
+
+
+    }
+
+
+    public function ajaxGenPromotionCodePrefixCoupon(Request $request)
+    {
+        DB::update(" UPDATE db_promotion_cus SET promotion_code=concat('".$request->prefix_coupon."',promotion_code) WHERE pro_status=4 ; ");
+    }
+    
+
+
+    public function ajaxClearDataPromotionCode()
+    {
+        DB::delete(" DELETE FROM db_promotion_cus WHERE pro_status=4 ; ");
+        DB::select(" ALTER table db_promotion_cus AUTO_INCREMENT=1; ");
     }
 
 

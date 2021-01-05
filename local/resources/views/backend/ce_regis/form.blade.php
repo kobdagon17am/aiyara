@@ -54,8 +54,8 @@
                       <div class="myBorder">
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">Course/Event : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label">Course/Event : * </label>
+                            <div class="col-md-8">
                               <select name="ce_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$sCourse)
@@ -69,8 +69,8 @@
 
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> ชื่อลูกค้า : * </label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> ชื่อลูกค้า : * </label>
+                            <div class="col-md-8">
                               <select name="customers_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Customer)
@@ -86,23 +86,23 @@
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">วันที่ลงทะเบียน : * </label>
+                            <label for="example-text-input" class="col-md-3 col-form-label">วันที่ลงทะเบียน : * </label>
                             <div class="col-md-3">
                               <input class="form-control" type="date" value="{{ @$sRow->regis_date }}" name="regis_date" required >
                             </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">หมายเหตุ :</label>
-                            <div class="col-md-10">
+                            <label for="example-text-input" class="col-md-3 col-form-label">หมายเหตุ :</label>
+                            <div class="col-md-8">
                               <input class="form-control" type="text" value="{{ @$sRow->ticket_number }}" id='autocomplete' name="ticket_number" >
                             </div>
                           </div>
 
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">ผู้รับเรื่อง (User Login) :</label>
-                                <div class="col-md-10">
+                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้รับเรื่อง (User Login) :</label>
+                                <div class="col-md-8">
 
                                 	@if( empty(@$sRow) )
                                 		<input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -150,7 +150,7 @@
                           </div>
                         </div>
                         <div class="form-group">
-                          <div class="col-md-10 col-md-offset-4">
+                          <div class="col-md-8 col-md-offset-4">
                             <input type='submit' name='submit' class="btn btn-primary btnImCSV " value='Import CSV'>
                           </div>
                         </div>
@@ -171,7 +171,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-md-10 col-md-offset-4">
+						<div class="col-md-8 col-md-offset-4">
 							<input type='button' class="btn btn-success btnExportCSV " value='Export CSV'> &nbsp;&nbsp;
 						</div>
 					</div>
@@ -191,7 +191,7 @@
                           </div>
                         </div>
                         <div class="form-group">
-                          <div class="col-md-10 col-md-offset-4">
+                          <div class="col-md-8 col-md-offset-4">
                             <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import XLSX'>
                           </div>
                         </div>
@@ -212,7 +212,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-10 col-md-offset-4">
+							<div class="col-md-8 col-md-offset-4">
 								<input type='button' class="btn btn-success btnExport " value='Export excel'> &nbsp;&nbsp;
 							</div>
 						</div>

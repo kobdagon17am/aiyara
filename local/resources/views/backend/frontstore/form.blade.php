@@ -438,13 +438,19 @@
 
                 <div class="page-title-box d-flex">
                   <label for="" class="col-2" ><b>รหัสโปรโมชั่น : </b></label>
-                  <input class="col-4 form-control " type="text" name="" value="" > &nbsp; &nbsp;
-                  <button class="btn btn-success " >ตรวจสอบ</button>
+                  <input class="col-4 form-control " type="text" id="txtSearchPro" value="" > &nbsp; &nbsp;
+                  <button class="btn btn-success btnCheckProCode " >ตรวจสอบ</button>
                 </div>
+
+               <form  class="frmFrontstorelist" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                  <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+                  <input name="product_plus" type="hidden" value="1">
+                  {{ csrf_field() }}
 
                 <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
+             </form>
 
               </div>
             </div>
@@ -489,7 +495,7 @@
                   <button class="btn btn-success btnPromotion8 " data-value="8" style="margin-right: 1%;" >Promotion</button>
                 </div>
 
-                <form id="frmFrontstorelist" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <form  class="frmFrontstorelist" id="frmFrontstorelist" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                   <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
                   <input name="product_plus" type="hidden" value="1">
                   {{ csrf_field() }}
@@ -808,12 +814,9 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
         $(document).on('click', '.btnAddFromPromotion', function(event) {
           event.preventDefault();
-
-          $.fn.dataTable.ext.errMode = 'throw';
-
-            $("#spinner_frame").show();
 
             var oTable;
             $(function() {
@@ -828,35 +831,33 @@
                     searching: false,
                     paging: false,
                     ajax: {
-                      url: '{{ route('backend.check_stock.datatable') }}',
+                      url: '{{ route('backend.promotion_cus_products.datatable') }}',
                       data: function ( d ) {
                         d.Where={};
-                        d.Where['branch_id_fk'] = 1 ;
-                        d.Where['product_id_fk'] = 1 ;
+                        // d.Where['branch_id_fk'] = 1 ;
+                        // d.Where['pro_id_fk'] = 99999 ;
+                        d.Where['promotion_code'] = 9999999999999 ;
                         oData = d;
                       },
                       method: 'POST'
                     },
                     columns: [
-                        {data: 'id',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '' ;
+                        {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '<img src='+d+' width="80">';
                         }},
                         {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                        {data: 'id',   title :'<center>PV</center>', className: 'text-center',render: function(d) {
-                           return '' ;
-                        }},
-                        {data: 'id',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
-                           return '' ;
-                        }},
-                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
-                           return '<div class="input-group inline-group"> '
+                        {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
+                        {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
+                        {data: 'id',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
+
+                           return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
                                 +' <div class="input-group-prepend"> '
                                 +'   <button class="btn btn-outline-secondary btn-minus"> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity" value="0" type="number" >'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
                                 +'   <div class="input-group-append"> '
-                                +'   <button class="btn btn-outline-secondary btn-plus"> '
+                                +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
                                 +'     <i class="fa fa-plus"></i> '
                                 +'    </button> '
                                 +'  </div> '
@@ -865,17 +866,20 @@
                     ],
 
                 });
+
+          
               
             });
 
                   $('#modalAddFromPromotion').modal('show');
           
+         });
+
+
+        $("#modalAddFromPromotion").on("hidden.bs.modal", function(){
+            $("#txtSearchPro").val("");
         });
 
-
-            $('#modalAddFromPromotion').on('focus', function () {
-                $("#spinner_frame").hide();
-            });
 
       });
 
@@ -1086,7 +1090,8 @@
              // alert(input.val());
              // frmFrontstorelist
              // $("#frmFrontstorelist").submit();
-           var d =  $("#frmFrontstorelist").serialize();
+           // var d =  $("#frmFrontstorelist").serialize();
+           var d =  $(".frmFrontstorelist").serialize();
            var product_id_fk_this =  $(this).data('product_id_fk');
 
            var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
@@ -1097,7 +1102,7 @@
                type:'POST',
                url: " {{ url('backend/frontstorelist/plus') }} ", 
                // data:{ d:d , _token: '{{csrf_token()}}' },
-               data: $("#frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this,
+               data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this,
                 success: function(response){ // What to do if we succeed
                        console.log(response); 
                         var oTable;
@@ -1201,7 +1206,7 @@
              // alert(input.val());
              // frmFrontstorelist
              // $("#frmFrontstorelist").submit();
-           var d =  $("#frmFrontstorelist").serialize();
+           var d =  $(".frmFrontstorelist").serialize();
            var product_id_fk_this =  $(this).data('product_id_fk');
 
            var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
@@ -1212,7 +1217,7 @@
                type:'POST',
                url: " {{ url('backend/frontstorelist/minus') }} ", 
                // data:{ d:d , _token: '{{csrf_token()}}' },
-               data: $("#frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this,
+               data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this,
                 success: function(response){ // What to do if we succeed
                        console.log(response); 
 
@@ -1441,6 +1446,101 @@
 
 
 
+
+    $(document).ready(function() {
+        $(document).on('click', '.btnCheckProCode', function(event) {
+          event.preventDefault();
+
+          var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+
+          var table = $('#data-table-promotion').DataTable();
+          table.clear().draw();
+
+          var txtSearchPro = $("#txtSearchPro").val();
+          // $("#spinner_frame").show();
+          if(txtSearchPro==''){
+            $("#txtSearchPro").focus();
+            return false;
+          }
+      
+            var oTable;
+            $(function() {
+
+                oTable = $('#data-table-promotion').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ordering: false,
+                    "info":     false,
+                    destroy: true,
+                    searching: false,
+                    paging: false,
+                    ajax: {
+                      url: '{{ route('backend.promotion_cus_products.datatable') }}',
+                      data :{
+                          frontstore_id_fk:frontstore_id_fk,
+                          promotion_code:txtSearchPro,
+                        },
+                      method: 'POST'
+                    },
+                    columns: [
+                        {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '<img src='+d+' width="80">';
+                        }},
+                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                        {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
+                        {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
+                        {data: 'product_id_fk',   title :'<center>จำนวน</center>', className: 'w140 text-center',render: function(d) {
+                           return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button class="btn btn-outline-secondary btn-minus"> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' ;
+                        }},
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+
+                          if (aData['frontstore_products_list'] > 0 ) {
+
+                              $("td:eq(4)", nRow).html(
+                                '<input name="product_id_fk[]" value="'+aData['product_id_fk']+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button class="btn btn-outline-secondary btn-minus"> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button data-product_id_fk="'+aData['product_id_fk']+'" class="btn btn-outline-secondary btn-plus"> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> '
+                                );
+
+                          }
+                        
+                      }
+
+                });
+
+
+              
+            });
+              
+
+        });
+     });
+
+
+
+
 $(document).ready(function() {
 
 
@@ -1625,6 +1725,7 @@ $(document).ready(function() {
                   // $('#modalAddFromPromotion').modal('show');
                   // $('#modalAddFromProductsList').modal('show');
                   // $('.btnAddFromProdutcsList ').trigger('click');
+                  // $('.btnAddFromPromotion ').trigger('click');
 
                    // $('.btnAddList ').trigger('click');
 

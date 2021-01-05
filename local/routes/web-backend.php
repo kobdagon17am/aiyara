@@ -197,9 +197,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
     Route::post('uploadCe_regis', 'PagesController@uploadCe_regis');
     Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
+    Route::post('uploadPromotionCus', 'PagesController@uploadPromotionCus');
 
     Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
+    Route::post('excelExportPromotionCus', 'ExcelController@excelExportPromotionCus');
     Route::post('excelExportCe_regis', 'ExcelController@excelExportCe_regis');
     Route::post('csvExportCe_regis', 'ExcelController@csvExportCe_regis');
 
@@ -208,6 +210,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxSetSession', 'AjaxController@ajaxSetSession');
     
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
+    Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
+    Route::post('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
+    Route::post('ajaxGenPromotionCodePrefixCoupon', 'AjaxController@ajaxGenPromotionCodePrefixCoupon');
 
     Route::post('ajaxGetWarehouse', 'AjaxController@ajaxGetWarehouse');
     Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
@@ -223,6 +228,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetSetToWarehouse', 'AjaxController@ajaxGetSetToWarehouse');
     Route::post('ajaxGetSetToWarehouseBranch', 'AjaxController@ajaxGetSetToWarehouseBranch');
     Route::post('ajaxGetProduct', 'AjaxController@ajaxGetProduct');
+    Route::post('ajaxGetProductPromotionCus', 'AjaxController@ajaxGetProductPromotionCus');
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -292,6 +298,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+
+    Route::resource('promotion_code', 'PromotionCodeController');
+    Route::post('promotion_code/datatable', 'PromotionCodeController@Datatable')->name('promotion_code.datatable');
+
+    Route::resource('promotion_cus', 'Promotion_cusController');
+    Route::post('promotion_cus/datatable', 'Promotion_cusController@Datatable')->name('promotion_cus.datatable');
+    // Route::post('promotion_cus_choose/datatable', 'Promotion_cusController@DatatableChoose')->name('promotion_cus_choose.datatable');
+
+    Route::resource('promotion_cus_products', 'Promotion_cus_productsController');
+    Route::post('promotion_cus_products/datatable', 'Promotion_cus_productsController@Datatable')->name('promotion_cus_products.datatable');
+
 
     Route::resource('productsList', 'ProductsListController');
     Route::post('productsList/datatable', 'ProductsListController@Datatable')->name('productsList.datatable');
