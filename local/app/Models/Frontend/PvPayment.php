@@ -39,6 +39,10 @@ class PvPayment extends Model
 
 				}
 
+				if($type_id == 6){
+					$orderstatus_id = 7;
+				}
+
 				$update_order = DB::table('orders')//update บิล
 				->where('id',$order_id)
 				->update(['id_admin_check' => $admin_id,
@@ -50,16 +54,14 @@ class PvPayment extends Model
 				->orderby('id','desc')
 				->first();
 
-
 				if($last_id){
 					$last_id = $last_id->id +1;
 				}else{
-					$last_id = 0;
+					$last_id = 1;
 				}
 
 
 				$maxId = substr("00000".$last_id, -5);
-
 				$code_order = 'R'.date('Ymd').''.$maxId;
 
 				$check_payment_code = DB::table('order_payment_code')//เจนเลข payment order
@@ -132,8 +134,6 @@ class PvPayment extends Model
 				        ->select('*')
 				        ->where('code','=','pv_mt')
 				        ->first();
-
-
 
 				        $pro_mt = $promotion_mt->pv;
 				        $pv_mt = $data_user->pv_mt;
@@ -332,14 +332,91 @@ class PvPayment extends Model
 						$last_upline_type = $upline_type;
 
 					}elseif($type_id == 5){//Gift Voucher
-
+						//ไม่เข้าสถานะต้อง Approve
 					}elseif($type_id == 6){//couse อบรม
+
+						$order_items = DB::table('order_items')
+						->select('order_items.*','dataset_ce_type.id as type_id','dataset_ce_type.txt_desc')
+						->where('order_id','=',$order_id)
+						->leftjoin('course_event','course_event.id','=','order_items.course_id')
+						->leftjoin('dataset_ce_type','dataset_ce_type.id','=','course_event.ce_type')
+						->get();
+
+						foreach ($order_items as $value) {
+
+							if($value->type_id == '1'){//course
+
+								$last_id = DB::table('course_ticket_number')//เจนเลข payment order
+								->select('id')
+								->orderby('id','desc')
+								->first();
+
+								if($last_id){
+									$last_id = $last_id->id +1;
+								}else{
+									$last_id = 1;
+								}
+
+								$maxId = substr("00000".$last_id, -5);
+								$code_ticket = 'C'.date('Ymd').''.$maxId; 
+
+								$last_ticket_id = DB::table('course_ticket_number')->insertGetId(
+								['ticket_number'=>$code_ticket]);
+
+							}else{//event
+								$last_id = DB::table('event_ticket_number')//เจนเลข payment order
+								->select('id')
+								->orderby('id','desc')
+								->first();
+									if($last_id){
+									$last_id = $last_id->id +1;
+								}else{
+									$last_id = 1;
+								}
+
+								$maxId = substr("00000".$last_id, -5);
+								$code_ticket = 'E'.date('Ymd').''.$maxId;
+
+								$last_ticket_id = DB::table('event_ticket_number')->insertGetId(
+								['ticket_number'=>$code_ticket]);
+							}
+
+
+							$regis = DB::table('course_event_regis')->insert(
+								['ce_id_fk'=>$value->type_id,
+								'customers_id_fk'=>$customer_id,
+								'ticket_id'=>$last_ticket_id,
+								'subject_recipient'=>'1',
+								'regis_date'=>date('Y-m-d'),
+							]);
+
+						}
+
+						$data_user = DB::table('customers')//อัพ Pv ของตัวเอง
+						->select('*')
+						->where('id','=',$customer_id)
+						->first();
+
+						$add_pv = $data_user->pv + $pv;
+						$update_pv = DB::table('customers') 
+						->where('id',$customer_id)
+						->update(['pv' => $add_pv]);
+
+						$update_order_type_6 = DB::table('orders')//update บิล
+						->where('id',$order_id)
+						->update(['banlance' => $add_pv]);
+
+						$upline_type = $data_user->line_type;
+						$upline_id = $data_user->upline_id;
+						$customer_id = $upline_id;
+						$last_upline_type = $upline_type;
 
 					}else{//ไม่เข้าเงื่อนไขได้เลย
 						$resule = ['status'=>'fail','message'=>'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];
 						return $resule;
 					}
-					if($customer_id != 'AA'){
+
+					if($customer_id != 'AA' || $pv <= 0){
 						$j = 2;
 						for ($i=1; $i <= $j ; $i++){ 
 
