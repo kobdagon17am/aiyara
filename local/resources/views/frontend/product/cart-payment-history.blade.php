@@ -36,7 +36,7 @@
                     <tbody>
                         <tr>
                             <th>Date :</th>
-                            <td>@if($order->create_at) {{ date('d/m/Y',strtotime($order->create_at)) }} @endif</td>
+                            <td>@if($order->created_at) {{ date('d/m/Y',strtotime($order->created_at)) }} @endif</td>
                         </tr>
                         <tr>
                             <th>Status :</th>

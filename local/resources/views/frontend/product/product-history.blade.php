@@ -39,6 +39,7 @@
 								<th>คงเหลือ</th>
 								<th>Active</th>
 								<th>จุดประสงค์การสั่งซื้อ</th>
+								<th>ชำระโดย</th>
 								<th>สถานะ</th>
 								<th>#</th>
 							</tr>
@@ -138,6 +139,7 @@
 				{"data": "banlance"},
 				{"data": "date_active"},
 				{"data": "type"},
+				{"data": "pay_type_name"},
 				{"data": "status"},
 				{"data": "action"}
 				// {"data": "interesting"},

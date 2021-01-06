@@ -19,6 +19,7 @@ class ProductController extends Controller
     public function product_list($type){
         if($type == '6'){
          $data = Couse_Event::couse_event($type);
+          return view('frontend/product/product-list-course',compact('data','type'));
 
      }else{
         $data = Product::product_list($type);

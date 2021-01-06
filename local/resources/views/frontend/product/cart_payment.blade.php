@@ -289,14 +289,14 @@
  												<i class="helper"></i><b>บัตรเครดิต</b>
  											</label>
  										</div>
- 										@if($bill['type'] != 6)
+ 									 
  										<div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="3">
  												<i class="helper"></i><b>Ai-Cash</b>
  											</label>
  										</div> 
- 										@endif
+ 										 
 
  										{{-- <div class="radio radio-inline">
  											<label>

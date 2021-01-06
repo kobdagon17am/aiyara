@@ -1,5 +1,4 @@
 @extends('backend.layouts.master')
-
 @section('title') Aiyara Planet @endsection
 
 @section('css')
@@ -101,6 +100,7 @@ $(function() {
             {data: 'pv_total', title :'<center>PV </center>', className: 'text-center'},
             {data: 'type', title :'<center>จุดประสงค์การสั่งซื้อ </center>', className: 'text-center'},
             {data: 'date', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'pay_type_name', title :'<center>ชำระโดย </center>', className: 'text-center'},
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
             {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
                return d!=1?d:'';

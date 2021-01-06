@@ -126,7 +126,6 @@ class CartPaymentController extends Controller
 
 			}else{
 				$resule = Payment::payment_not_uploadfile($request);
-				dd($resule);
 			}
 
 			

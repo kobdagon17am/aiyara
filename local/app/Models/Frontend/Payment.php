@@ -21,8 +21,13 @@ class Payment extends Model
 		->select('id')
 		->orderby('id','desc')
 		->first();
+		if ($id) {
+			$maxId  = $id->id +1;
+		}else{
+			$maxId = 1;
+		}
 		
-		$maxId  = $id->id +1;
+		
 		$maxId = substr("00000".$maxId, -5);
 		$code_order = date('Ymd').''.$maxId;
 
@@ -95,17 +100,17 @@ class Payment extends Model
 
 				}
 				if($rs->type == 5){
-				$price_total = ($rs->price + $rs->shipping);
-				$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
+					$price_total = ($rs->price + $rs->shipping);
+					$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
-				if($rs_log_gift['status'] != 'success'){
-					DB::rollback(); 
-					$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
-					return $resule;
+					if($rs_log_gift['status'] != 'success'){
+						DB::rollback(); 
+						$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
+						return $resule;
+					}
+
 				}
-
-			}
-			
+				
 
 				$file_slip = $rs->file_slip;
 				if(isset($file_slip)){
@@ -253,7 +258,11 @@ public static function payment_not_uploadfile($rs){
 	->orderby('id','desc')
 	->first();
 
-	$maxId  = $id->id +1;
+	if ($id) {
+		$maxId  = $id->id +1;
+	}else{
+		$maxId = 1;
+	}
 	$maxId = substr("00000".$maxId, -5);
 	$code_order = date('Ymd').''.$maxId;
 	try{
@@ -462,7 +471,11 @@ public static function credit_card($rs){
 	->orderby('id','desc')
 	->first();
 
-	$maxId  = $id->id +1;
+	if ($id) {
+		$maxId  = $id->id +1;
+	}else{
+		$maxId = 1;
+	}
 	$maxId = substr("00000".$maxId, -5);
 	$code_order = date('Ymd').''.$maxId;
 	try{
@@ -667,7 +680,11 @@ public static function ai_cash($rs){
 	->orderby('id','desc')
 	->first();
 
-	$maxId  = $id->id +1;
+	if ($id) {
+		$maxId  = $id->id +1;
+	}else{
+		$maxId = 1;
+	}
 	$maxId = substr("00000".$maxId, -5);
 	$code_order = date('Ymd').''.$maxId;
 	try{
@@ -875,7 +892,11 @@ public static function gift_voucher($rs){
 	->orderby('id','desc')
 	->first();
 
-	$maxId  = $id->id +1;
+	if ($id) {
+		$maxId  = $id->id +1;
+	}else{
+		$maxId = 1;
+	}
 	$maxId = substr("00000".$maxId, -5);
 	$code_order = date('Ymd').''.$maxId;
 
