@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 
-class Po_approveController extends Controller
+class Course_approveController extends Controller
 {
 
     public function index(Request $request)
     {
-      return view('backend.po_approve.index');
+      return view('backend.course_approve.index');
     }
 
     public function create()
@@ -26,7 +26,7 @@ class Po_approveController extends Controller
     {
        $sRow = \App\Models\Backend\Orders::find($id);
        $slip = DB::table('payment_slip')->where('order_id','=',$id)->get();
-       return view('backend.po_approve.form')->with([
+       return view('backend.course_approve.form')->with([
           'sRow'=>$sRow,
            'id'=>$id ,
            'slip'=>$slip ,
@@ -69,13 +69,13 @@ class Po_approveController extends Controller
 
           \DB::commit();
 
-          return redirect()->action('backend\Po_approveController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->action('backend\Course_approveController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
           
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\Po_approveController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Course_approveController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

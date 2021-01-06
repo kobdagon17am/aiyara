@@ -81,7 +81,7 @@ $(function() {
           url: '{{ route('backend.promotion_code.datatable') }}',
           data: function ( d ) {
             d.Where={};
-            $('.Where').each(function() {
+            $('.myWhere').each(function() {
               if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
                 d.Where[$(this).attr('name')] = $.trim($(this).val());
               }
@@ -105,16 +105,8 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'promotion_name', title :'<center>ชื่อคูปอง</center>', className: 'text-left'},
-            // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-            // {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
-            //   //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
-            //   if(d==0){
-            //       return '-';
-            //   }else{
-            //       return d;
-            //   }
-            // }},            
-            // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'pro_sdate', title :'<center>วันเริ่มต้นโปร</center>', className: 'text-center'},
+            {data: 'pro_edate', title :'<center>วันสิ้นสุดโปร</center>', className: 'text-center'},
             {data: 'pro_status',   title :'<center>สถานะการใช้งาน</center>', className: 'text-center',render: function(d) {
               if(d==4){
                   return 'Import Excel';
@@ -147,7 +139,9 @@ $(function() {
 
         }
     });
-
+    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+      oTable.draw();
+    });
 });
 
 

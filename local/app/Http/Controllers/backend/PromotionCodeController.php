@@ -19,7 +19,7 @@ class PromotionCodeController extends Controller
     {
 
     }
-    
+
     public function store(Request $request)
     {
 
@@ -44,10 +44,15 @@ class PromotionCodeController extends Controller
     }
 
     public function Datatable(Request $req){
-
       $sTable = \App\Models\Backend\PromotionCode::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('pro_sdate', function($row) {
+        $d = strtotime($row->pro_sdate); return date("d/m/", $d).(date("Y", $d)+543);
+      })
+      ->addColumn('pro_edate', function($row) {
+        $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
+      })      
       ->make(true);
     }
 

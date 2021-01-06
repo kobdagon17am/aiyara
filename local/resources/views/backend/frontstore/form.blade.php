@@ -797,6 +797,10 @@
                          'style': 'multi'
                       },
                     rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
                       $('td:last-child', nRow).html(''
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
@@ -836,18 +840,18 @@
                         d.Where={};
                         // d.Where['branch_id_fk'] = 1 ;
                         // d.Where['pro_id_fk'] = 99999 ;
-                        d.Where['promotion_code'] = 9999999999999 ;
+                        d.Where['promotion_code_id_fk'] = 9999999999999 ;
                         oData = d;
                       },
                       method: 'POST'
                     },
                     columns: [
-                        {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
-                        }},
-                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                        {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
-                        {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
+                        // {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                        //    return '<img src='+d+' width="80">';
+                        // }},
+                        // {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                        // {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
+                        // {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
                         {data: 'id',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
 
                            return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
@@ -1174,6 +1178,10 @@
                                        'style': 'multi'
                                     },
                                   rowCallback: function(nRow, aData, dataIndex){
+
+                                    var info = $(this).DataTable().page.info();
+                                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
                                     $('td:last-child', nRow).html(''
                                       + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                     ).addClass('input');
@@ -1462,7 +1470,31 @@
             $("#txtSearchPro").focus();
             return false;
           }
-      
+
+          // alert(txtSearchPro);
+
+          // ส่ง Ajax ไปหา promotion_code_id_fk จากการกรอกชื่ด coupon มา 
+
+          var promotion_code_id_fk = '';
+
+              $.ajax({
+               type:'POST',
+               url: " {{ url('backend/ajaxGetPromotionCode') }} ", 
+               data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro },
+                success:function(data){
+                     console.log(data); 
+                     // return false;
+                     promotion_code_id_fk = data;
+                   
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    $(".myloading").hide();
+                }
+            });
+
+
             var oTable;
             $(function() {
 
@@ -1479,31 +1511,31 @@
                       url: '{{ route('backend.promotion_cus_products.datatable') }}',
                       data :{
                           frontstore_id_fk:frontstore_id_fk,
-                          promotion_code:txtSearchPro,
+                          promotion_code_id_fk:promotion_code_id_fk,
                         },
                       method: 'POST'
                     },
                     columns: [
-                        {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
-                        }},
+                        // {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                        //    return '<img src='+d+' width="80">';
+                        // }},
                         {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                        {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
-                        {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
-                        {data: 'product_id_fk',   title :'<center>จำนวน</center>', className: 'w140 text-center',render: function(d) {
-                           return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
-                                +' <div class="input-group-prepend"> '
-                                +'   <button class="btn btn-outline-secondary btn-minus"> '
-                                +'     <i class="fa fa-minus"></i> '
-                                +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
-                                +'   <div class="input-group-append"> '
-                                +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
-                                +'     <i class="fa fa-plus"></i> '
-                                +'    </button> '
-                                +'  </div> '
-                                +' </div> ' ;
-                        }},
+                        // {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
+                        // {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
+                        // {data: 'product_id_fk',   title :'<center>จำนวน</center>', className: 'w140 text-center',render: function(d) {
+                        //    return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
+                        //         +' <div class="input-group-prepend"> '
+                        //         +'   <button class="btn btn-outline-secondary btn-minus"> '
+                        //         +'     <i class="fa fa-minus"></i> '
+                        //         +'   </button>'
+                        //         +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                        //         +'   <div class="input-group-append"> '
+                        //         +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
+                        //         +'     <i class="fa fa-plus"></i> '
+                        //         +'    </button> '
+                        //         +'  </div> '
+                        //         +' </div> ' ;
+                        // }},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -1818,6 +1850,10 @@ $(document).ready(function() {
                                                  'style': 'multi'
                                               },
                                             rowCallback: function(nRow, aData, dataIndex){
+                                                
+                                                var info = $(this).DataTable().page.info();
+                                                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
                                               $('td:last-child', nRow).html(''
                                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                               ).addClass('input');

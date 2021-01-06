@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ใบสั่งซื้อรออนุมัติ </h4>
+            <h4 class="mb-0 font-size-18"> คอร์สรออนุมัติ </h4>
         </div>
     </div>
 </div>
@@ -69,7 +69,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.po_approve.datatable') }}',
+          url: '{{ route('backend.course_approve.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -121,7 +121,7 @@ $(function() {
 
             if(aData['id']!=1){
                   $('td:last-child', nRow).html(''
-                  + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                  + '<a href="{{ route('backend.course_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   + ''
                 ).addClass('input');
             }

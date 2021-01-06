@@ -427,6 +427,9 @@ class PagesController extends Controller{
 
       public function uploadPromotionCus(Request $request){
 
+          // dd($request->all());
+          // dd($request->promotion_code_id_fk);
+
           // dd($request->input('submit'));
 
         if ($request->input('submit') != null ){
@@ -455,6 +458,22 @@ class PagesController extends Controller{
 
             // Check file size
             if($fileSize <= $maxFileSize){
+
+
+
+            if( @$request->promotion_code_id_fk ){
+              $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
+            }else{
+              $sRow = new \App\Models\Backend\PromotionCode;
+            }
+
+            $sRow->promotion_name = $request->promotion_name;
+            $sRow->pro_sdate = $request->pro_sdate;
+            $sRow->pro_edate = $request->pro_edate;
+            $sRow->pro_status = 4 ;
+            $sRow->created_at = date('Y-m-d H:i:s');
+            $sRow->save();
+
 
               // File upload location
 
@@ -493,7 +512,8 @@ class PagesController extends Controller{
                          }
 
                        $insertData = array(
-                         "promotion_code"=>@$promotion_code,
+                         "promotion_code_id_fk"=>@$sRow->id,
+                         "promotion_code"=>@$request->prefix_coupon.@$promotion_code,
                          "customer_id_fk"=>@$customers_id_fk,
                          "pro_status"=> '4' ,
                          "created_at"=>now());
@@ -518,7 +538,17 @@ class PagesController extends Controller{
         }
 
         // Redirect to index
-        return redirect()->to(url("backend/promotion_cus"));
+        // return redirect()->to(url("backend/promotion_cus"));
+          // if( @$request->promotion_code_id_fk ){
+          //      return redirect()->to(url("backend/promotion_cus/".@$request->promotion_code_id_fk."/edit"));
+          // }else{
+          //      return redirect()->to(url("backend/promotion_cus"));
+          // }
+
+           return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
+
+        
+
       }
 
 

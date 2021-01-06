@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> คอร์สรออนุมัติ </h4>
+            <h4 class="mb-0 font-size-18"> ใบสั่งซื้อรออนุมัติ </h4>
         </div>
     </div>
 </div>
@@ -34,9 +34,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
-              <form action="{{ route('backend.course_approve.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.po_approve.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.course_approve.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.po_approve.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -66,7 +66,7 @@
                         </div> -->
                         <div class="form-group mb-0 row">
                           <div class="col-md-6">
-                            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/course_approve") }}">
+                            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">
                               <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                             </a>
                           </div>
@@ -119,7 +119,7 @@ $(function() {
         "paging":   false,
         scrollY: ''+($(window).height()-370)+'px',
         ajax: {
-          url: '{{ route('backend.course_approve_set.datatable') }}',
+          url: '{{ route('backend.po_approve_set.datatable') }}',
            data: function ( d ) {
                   d.Where={};
                   d.Where['id'] = orders_id ;

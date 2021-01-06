@@ -39,7 +39,9 @@ class Promotion_cus_productsController extends Controller
     }
 
     public function Datatable(Request $req){
-      if($req->promotion_code!=""){
+
+
+      if($req->promotion_code_id_fk!=""){
           // $sTable = \App\Models\Backend\PromotionCusProducts::where('promotion_code',$req->promotion_code)->search()->orderBy('id', 'asc');
         $sTable = DB::select("
             SELECT
@@ -47,7 +49,7 @@ class Promotion_cus_productsController extends Controller
             (SELECT amt from db_frontstore_products_list WHERE product_id_fk = db_promotion_cus_products.product_id_fk AND frontstore_id_fk=".$req->frontstore_id_fk.") as frontstore_products_list
             FROM
             db_promotion_cus_products
-            WHERE db_promotion_cus_products.promotion_code = '".$req->promotion_code."'
+            WHERE db_promotion_cus_products.promotion_code_id_fk = '".$req->promotion_code_id_fk."' 
         ");
       }else{
           $sTable = \App\Models\Backend\PromotionCusProducts::search()->orderBy('id', 'asc');
@@ -55,18 +57,18 @@ class Promotion_cus_productsController extends Controller
       
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('product_name', function($row) {
-      //     $Products = DB::select("SELECT products.id as product_id,
-      //       products.product_code,
-      //       (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
-      //       FROM
-      //       products_details
-      //       Left Join products ON products_details.product_id_fk = products.id
-      //       WHERE products.id=".$row->product_id_fk." AND lang_id=1");
+      ->addColumn('product_name', function($row) {
+          $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".$row->product_id_fk." AND lang_id=1");
 
-      //   return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+        return @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
-      // })
+      })
       // ->addColumn('lot_expired_date', function($row) {
       //   $d = strtotime($row->lot_expired_date); 
       //   return date("d/m/", $d).(date("Y", $d)+543);

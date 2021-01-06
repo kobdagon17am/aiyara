@@ -229,6 +229,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetSetToWarehouseBranch', 'AjaxController@ajaxGetSetToWarehouseBranch');
     Route::post('ajaxGetProduct', 'AjaxController@ajaxGetProduct');
     Route::post('ajaxGetProductPromotionCus', 'AjaxController@ajaxGetProductPromotionCus');
+    Route::post('ajaxGetPromotionCode', 'AjaxController@ajaxGetPromotionCode');
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -280,6 +281,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
     Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
 
+// คอร์สรออนุมัติ
+    Route::resource('course_approve', 'Course_approveController');
+    Route::post('course_approve/datatable', 'Course_approveController@Datatable')->name('course_approve.datatable');
+    Route::post('course_approve_set/datatable', 'Course_approveController@DatatableSet')->name('course_approve_set.datatable');
+
 // ใบโอน
     Route::get('transfer_warehouses/print_transfer/{id}', 'AjaxController@createPDFTransfer');
     Route::get('transfer_branch/print_transfer/{id}', 'AjaxController@createPDFTransfer_branch');
@@ -304,7 +310,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('promotion_cus', 'Promotion_cusController');
     Route::post('promotion_cus/datatable', 'Promotion_cusController@Datatable')->name('promotion_cus.datatable');
+    Route::post('promotion_cus/plus', 'Promotion_cusController@plus');
     // Route::post('promotion_cus_choose/datatable', 'Promotion_cusController@DatatableChoose')->name('promotion_cus_choose.datatable');
+
+    Route::resource('promotion_code_product', 'Promotion_code_productController');
+    Route::post('promotion_code_product/datatable', 'Promotion_code_productController@Datatable')->name('promotion_code_product.datatable');
+    Route::get('promotion_code_product/create/{id}', 'Promotion_code_productController@create');
 
     Route::resource('promotion_cus_products', 'Promotion_cus_productsController');
     Route::post('promotion_cus_products/datatable', 'Promotion_cus_productsController@Datatable')->name('promotion_cus_products.datatable');

@@ -71,7 +71,7 @@
 
                       <div class="form-group mb-0 row">
                           <div class="col-md-6">
-                              <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.products.index') }}/{{@$sRowNew->id}}/edit" }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.products.index') }}/{{@$sRowNew->id}}/edit" }}">
                                 <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                               </a>
                           </div>

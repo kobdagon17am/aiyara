@@ -9,6 +9,7 @@ use PDO;
 use Session;
 use Storage;
 use PDF;
+use Redirect;
 // use App\Model\CourseModel;
 // use App\Model\MemberModel;
 // use App\Model\MemberAddModel;  
@@ -541,18 +542,9 @@ class AjaxController extends Controller
             $pv = @$Products[0]->pv;
             $selling_price = @$Products[0]->selling_price;
 
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
 
-            $p_unit = DB::select("
-              SELECT product_unit
-              FROM
-              dataset_product_unit
-              WHERE id = ".$request->product_id_fk." AND  lang_id=1 ");
-
-            $unit =  @$p_unit[0]->product_unit;
-
-            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
-
-            $tb = '<textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
+            $tb = '<textarea class="form-control" rows="4" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
             ';
 
             return $tb;
@@ -565,7 +557,29 @@ class AjaxController extends Controller
     public function ajaxGenPromotionCode(Request $request)
     {
 
-        // return($request->all());
+        // return ($request->all());
+        // return ($request->promotion_name);
+        // dd ($request->all());
+        // return $request->amt_gen;
+
+
+        // return $request->promotion_code_id_fk;
+        // return $request->prefix_coupon;
+        // dd();
+
+         if( $request->promotion_code_id_fk ){
+            $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
+          }else{
+            $sRow = new \App\Models\Backend\PromotionCode;
+          }
+
+            $sRow->promotion_name = $request->promotion_name;
+            $sRow->pro_sdate = $request->pro_sdate;
+            $sRow->pro_edate = $request->pro_edate;
+            $sRow->pro_status = 4 ;
+            $sRow->created_at = date('Y-m-d H:i:s');
+            $sRow->save();
+
 
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
          
@@ -584,7 +598,8 @@ class AjaxController extends Controller
             // echo strtoupper(generate_string($permitted_chars, 10));
 
               $insertData = array(
-                 "promotion_code"=>strtoupper(generate_string($permitted_chars, 10)),
+                 "promotion_code_id_fk"=>$sRow->id,
+                 "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, 10)),
                  "customer_id_fk"=>'0',
                  "pro_status"=> '4' ,
                  "created_at"=>now());
@@ -592,6 +607,21 @@ class AjaxController extends Controller
 
 
         }
+
+        return $sRow->id ;
+
+        // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
+
+
+    }
+
+    public function ajaxGetPromotionCode(Request $request)
+    {
+
+        // return $request->txtSearchPro;
+
+        $rs = DB::select(" select * from db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."' ; ");
+        return $rs[0]->promotion_code_id_fk;
 
 
     }
@@ -604,9 +634,9 @@ class AjaxController extends Controller
     
 
 
-    public function ajaxClearDataPromotionCode()
+    public function ajaxClearDataPromotionCode(Request $request)
     {
-        DB::delete(" DELETE FROM db_promotion_cus WHERE pro_status=4 ; ");
+        DB::delete(" DELETE FROM db_promotion_cus WHERE promotion_code_id_fk =".$request->promotion_code_id_fk." and pro_status=4 ; ");
         DB::select(" ALTER table db_promotion_cus AUTO_INCREMENT=1; ");
     }
 

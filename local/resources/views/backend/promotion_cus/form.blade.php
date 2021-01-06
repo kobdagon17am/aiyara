@@ -36,10 +36,18 @@
       }
    ?>
 
-
-
- <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data">
+<?php//echo  @$sRow ?>
+  @if( empty(@$sRow) )
+  <form id="frmGen" action="{{ route('backend.promotion_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+  @else
+  <form id="frmGen" action="{{ route('backend.promotion_code.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <input name="promotion_code_id_fk" type="hidden" value="{{@$sRow->id}}">
+  @endif
     {{ csrf_field() }}
+
+<!-- 
+ <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data" autocomplete="off">
+    {{ csrf_field() }} -->
 
 
       <div class="myBorder" >
@@ -52,7 +60,7 @@
                   <div class="form-group row">
                     <label for="receipt" class="col-md-3 col-form-label">ชื่อคูปอง :</label>
                     <div class="col-md-6">
-                      <input type="text" class="form-control" name="promotion_name"  required >
+                      <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required >
                     </div>
                     <div class="col-md-3">
                     </div>
@@ -61,14 +69,22 @@
                   <div class="form-group row">
                     <label for="receipt" class="col-md-3 col-form-label">วันเริ่ม - วันสิ้นสุด</label>
                     <div class="col-md-6 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม" required />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" required />
+                      <?php 
+                         $sd = explode('-', @$sRow->pro_sdate);
+                         $sd = @$sd[2].'/'.@$sd[1].'/'.@$sd[0];
+                         $sd = !empty(@$sRow->pro_sdate)?$sd:'';
+                         $ed = explode('-', @$sRow->pro_edate);
+                         $ed = @$ed[2].'/'.@$ed[1].'/'.@$ed[0];
+                         $ed = !empty(@$sRow->pro_edate)?$ed:'';
+                      ?>
+                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม" value="{{ @$sd }}" required />
+                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="{{ @$ed }}" required />
            
                       </div>
 
                       <div class="col-md-3">
-                         <input id="pro_sdate" name="pro_sdate" type="hidden" />
-                         <input id="pro_edate" name="pro_edate" type="hidden" />
+                         <input id="pro_sdate" name="pro_sdate" type="hidden" value="{{ @$sRow->pro_sdate }}" />
+                         <input id="pro_edate" name="pro_edate" type="hidden" value="{{ @$sRow->pro_edate }}" />
                       </div>
 
                   </div>
@@ -94,7 +110,7 @@
                       <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
                     </div>
                     <div class="col-md-2" style="text-align: right;" >
-                      <input type='submit' name='submit' class="btn btn-primary btnImXlsx " value='Import'>
+                      <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='Import'>
                     </div>
                     
                   </div>
@@ -141,7 +157,7 @@
                     </div>
                     <div class="col-md-2" style="text-align: right;" >
                       <!-- <input type='button' class="btn btn-primary btnPrefixCoupon " value='เพิ่มรหัส Prefix Coupon' > -->
-                      <input type='submit' name='submit' class="btn btn-primary btnGenCode " value='GEN รหัส'>
+                      <input type='button' class="btn btn-primary btnGenCode " value='GEN รหัส'>
                     </div>
                   </div>
 
@@ -155,40 +171,39 @@
 
  </form>
 
-
+ <div class="myBorder">
       <div class="row">
         <div class="col-12">
           <div class="card">
             <div class="card-body">
               <div class="row">
                 <div class="col-8">
-                  <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : รหัสคูปอง" name="promotion_code">
-                  &nbsp;
-                  &nbsp;
-                  &nbsp;
-                   <input type='button' class="btn btn-warning btnExportElsx " value='Export Excel' >
-                  &nbsp;
-                  &nbsp;
-                  &nbsp;
-                   <input type='button' class="btn btn-danger btnClearData " value='Clear data' >
 
+                  <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : รหัสคูปอง" name="promotion_code">
+                  <input type="hidden" class="form-control float-left text-center w130 myLike" name="promotion_code_id_fk" value="{{@$sRow->id}}">
+
+                 @if( !empty(@$sRowProCus) )
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                     <input type='button' class="btn btn-warning btnExportElsx " value='Export Excel' >
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                     <input type='button' class="btn btn-danger btnClearData " value='Clear data' >
+                  @endif
 
                 </div>
                 <div class="col-4 text-right" >
                <!--    <a class="btn btn-info btn-sm mt-1 font-size-16 " href="{{ route('backend.promotion_cus.create') }}">
                     <i class="bx bx-plus font-size-20 align-middle mr-1"></i>เพิ่ม
                   </a> -->
-
-                  <a class="btn btn-info btn-sm mt-1 font-size-16 btnAddList " href="#" >
-                    <i class="bx bx-plus font-size-20 align-middle mr-1"></i>เพิ่มสินค้าให้กับโปร
-                  </a>
-
-
+   
 
                 </div>
               </div>
               
-              <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-coupon" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
               
 
@@ -209,13 +224,49 @@
           </div>
           </div> <!-- end col -->
           </div> <!-- end row -->
+          </div> <!-- end row -->
+
+
+
+            @if( !empty($sRow) )
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+
+                            @if( count(@$sRowProduct)==0 )
+                                 <a class="btn btn-info btn-sm mt-1 font-size-16 btnAddList " href="#" style="float: right;" >
+                                    <i class="bx bx-plus font-size-20 align-middle mr-1"></i>เพิ่มสินค้าให้กับโปร
+                                  </a>
+                            @endif
+
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าในโปร  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-product" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                           <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotion_code") }}">
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                        </a>
+                        </div>
+                      </div>
+                    </div>
+            @endif
+
 
 
         <div class="modal fade" id="modalAddList" tabindex="-1" role="dialog" aria-labelledby="modalAddListTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 50% !important;">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalAddListTitle"><b><i class="bx bx-play"></i>เพิ่มรายการสินค้าให้กับโปร</b></h5>
+                <h5 class="modal-title" id="modalAddListTitle"><b><i class="bx bx-play"></i>เพิ่มสินค้าให้กับโปร</b></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -224,12 +275,13 @@
               <div class="modal-body">
                 
                 <div class="card-body" >
-                  <form id="frmFrontstoreAddList" action="{{ url('backend/promotion_cus/plus') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                  <form action="{{ route('backend.promotion_code_product.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="promotion_code_id_fk" value="{{@$sRow->id}}">
                     {{ csrf_field() }}
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label"> <b>ค้นหาสินค้า :</b> </label>
                       <div class="col-md-8">
-                        <select name="product_id_fk[]" id="product_id_fk" class="form-control select2-templating "  >
+                        <select name="product_id_fk" id="product_id_fk" class="form-control select2-templating "  >
                           <option value="">-ค้น-</option>
                           @if(@$Products)
                           @foreach(@$Products AS $r)
@@ -245,16 +297,29 @@
                       <label for="" class="col-md-3 col-form-label"> <b>สินค้า :</b> </label>
                       <div class="col-md-8">
                         <div id="show_product">
-                          <textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" ></textarea>
+                          <textarea class="form-control" rows="4" disabled style="text-align: left !important;background: #f2f2f2;" ></textarea>
                         </div>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label"> <b>จำนวน :</b> </label>
-                      <div class="col-md-8">
-                        <input type="number" name="quantity[]" id="amt" class="form-control" value="" required="">
+                      <div class="col-md-2">
+                        <input type="number" name="amt" id="amt" class="form-control" value="" required="">
                       </div>
                     </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-md-3 col-form-label">หน่วย : * </label>
+                          <div class="col-md-3">
+                            <select name="product_unit_id_fk" class="form-control select2-templating " required >
+                              <option value="">Select</option>
+                                @if(@$sProductUnit)
+                                  @foreach(@$sProductUnit AS $r)
+                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_unit_id_fk)?'selected':'' }} >{{$r->product_unit}}</option>
+                                  @endforeach
+                                @endif
+                            </select>
+                          </div>
+                        </div>                   
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label"> </label>
                       <div class="col-md-8 text-right ">
@@ -276,81 +341,151 @@
 @section('script')
 
 <script>
-var sU = "{{@$sU}}"; //alert(sU);
-var sD = "{{@$sD}}"; //alert(sD);
-var oTable;
-$(function() {
-    oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
-        ajax: {
-          url: '{{ route('backend.promotion_cus.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.Where').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
-            // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-            {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
-              //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
-              if(d==0){
-                  return '-';
-              }else{
-                  return d;
-              }
-            }},            
-            // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
-              //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
-              if(d==4){
-                  return 'Import Excel';
-              }else if(d==1){
-                  return 'ใช้งานได้';
-              }else if(d==2){
-                  return 'ถูกใช้แล้ว';
-              }else if(d==3){
-                  return 'หมดอายุแล้ว';
-              }else{
-                  return d;
-              }
-            }},
-        ],
-        rowCallback: function(nRow, aData, dataIndex){
-          
-        }
+
+          $('.myLike').on('change', function(e){
+
+
+          var sU = "{{@$sU}}"; //alert(sU);
+          var sD = "{{@$sD}}"; //alert(sD);
+          var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
+          var oTable2;
+          $(function() {
+              oTable2 = $('#data-table-coupon').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  destroy: true,
+                  ordering: false,
+                  scrollY: ''+($(window).height()-370)+'px',
+                  iDisplayLength: 25,
+                  ajax: {
+                    url: '{{ route('backend.promotion_cus.datatable') }}',
+                    data: function ( d ) {
+                      d.Like={};
+                      $('.myLike').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Like[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      oData = d;
+                    },
+                    method: 'POST'
+                  },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
+                      // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
+                      {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                        //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==0){
+                            return '-';
+                        }else{
+                            return d;
+                        }
+                      }},            
+                      // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
+                      {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                        //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==4){
+                            return 'Import Excel / Gen code';
+                        }else if(d==1){
+                            return 'ใช้งานได้';
+                        }else if(d==2){
+                            return 'ถูกใช้แล้ว';
+                        }else if(d==3){
+                            return 'หมดอายุแล้ว';
+                        }else{
+                            return d;
+                        }
+                      }},
+                  ],
+
+                  fnRowCallback: function (nRow, aData, iDisplayIndex) {
+                       var info = $(this).DataTable().page.info();
+                       $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
+                   },
+
+              });
+
+               oTable2.draw();
+    
+          });
+
+               
+
+          });
+
+    var sU = "{{@$sU}}"; //alert(sU);
+    var sD = "{{@$sD}}"; //alert(sD);
+    var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
+    var oTable1;
+    $(function() {
+        oTable1 = $('#data-table-coupon').DataTable({
+        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+            processing: true,
+            serverSide: true,
+            scroller: true,
+            scrollCollapse: true,
+            scrollX: true,
+            ordering: false,
+            scrollY: ''+($(window).height()-370)+'px',
+            iDisplayLength: 25,
+            ajax: {
+              url: '{{ route('backend.promotion_cus.datatable') }}',
+              data: function ( d ) {
+                   d.Where={};
+                // // $('.Where').each(function() {
+                //   // if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                    if(promotion_code_id_fk!=''){
+                       d.Where['promotion_code_id_fk'] = promotion_code_id_fk ;
+                    }else{
+                       d.Where['promotion_code_id_fk'] = '999999999999999999999' ;
+                    }
+                  // }
+                // });
+                oData = d;
+              },
+              method: 'POST'
+            },
+            columns: [
+                {data: 'id', title :'ID', className: 'text-center w50'},
+                {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
+                // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
+                {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                  //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                  if(d==0){
+                      return '-';
+                  }else{
+                      return d;
+                  }
+                }},            
+                // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
+                {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                  //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                  if(d==4){
+                      return 'Import Excel / Gen code';
+                  }else if(d==1){
+                      return 'ใช้งานได้';
+                  }else if(d==2){
+                      return 'ถูกใช้แล้ว';
+                  }else if(d==3){
+                      return 'หมดอายุแล้ว';
+                  }else{
+                      return d;
+                  }
+                }},
+            ],
+             fnRowCallback: function (nRow, aData, iDisplayIndex) {
+                 var info = $(this).DataTable().page.info();
+                 $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
+             },
+
+        });
+
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
-});
 
 
 $(document).ready(function() {
@@ -359,11 +494,18 @@ $(document).ready(function() {
         /* Act on the event */
         $(".myloading").show();
 
+        var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
+
+      if (!confirm("Are you sure ? ")){
+        $(".myloading").hide();
+          return false;
+      }else{
+
         $.ajax({
 
                type:'POST',
                url: " {{ url('backend/ajaxClearDataPromotionCode') }} ", 
-               data:{ _token: '{{csrf_token()}}' },
+               data:{ _token: '{{csrf_token()}}' ,promotion_code_id_fk:promotion_code_id_fk },
                 success:function(data){
                      console.log(data); 
                      location.reload();
@@ -374,13 +516,39 @@ $(document).ready(function() {
                     $(".myloading").hide();
                 }
             });
+      }
+
+
     });
 
 
    $(".btnImXlsx").click(function(event) {
+
+          var v = $("input[name=promotion_name]").val();
+          if(v=='' || v==0){
+            $("input[name=promotion_name]").focus();
+            return false;
+          }
+
+          var v = $("input[name=pro_sdate]").val();
+          if(v=='' || v==0){
+            $("#startDate").focus();
+            return false;
+          }
+          var v = $("input[name=pro_edate]").val();
+          if(v=='' || v==0){
+            $("#endDate").focus();
+            return false;
+          }          
+
           var v = $("input[name=fileXLS]").val();
           if(v!=''){
             $(".myloading").show();
+            $('#frmGen').attr('action', 'backend/uploadPromotionCus');
+            $('#frmGen').submit();
+          }else{
+            $("input[name=fileXLS]").trigger('click');
+            return false;
           }
 
     });
@@ -412,14 +580,20 @@ $(document).ready(function() {
           }
 
         $(".myloading").show();
+
+        var promotion_code_id_fk = "{{@$sRow->id}}"; 
+
+        var frm = $("#frmGen").serialize();
         
         $.ajax({
            type:'POST',
            url: " {{ url('backend/ajaxGenPromotionCode') }} ", 
-           data:{ _token: '{{csrf_token()}}' , amt_gen:v },
+           data:{ _token: '{{csrf_token()}}' }+frm+"&amt_gen="+v+"&promotion_code_id_fk="+promotion_code_id_fk,
             success:function(data){
                  console.log(data); 
-                 location.reload();
+                 // location.reload();
+                 location.replace('backend/promotion_cus/'+data+'/edit');
+                 // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
               },
             error: function(jqXHR, textStatus, errorThrown) { 
                 console.log(JSON.stringify(jqXHR));
@@ -568,7 +742,7 @@ $(document).ready(function() {
                               success:function(data){
 
                                     $('#show_product').html(data);
-                                    $('#amt').val('1');
+                                    $('#amt').val('2');
                                     $('#amt').focus().select();
 
                                 },
@@ -598,6 +772,61 @@ $(document).ready(function() {
 
 
 
+<script>
+
+            $(function() {
+
+              var promotion_code_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+
+                oTable = $('#data-table-product').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.promotion_code_product.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['promotion_code_id_fk'] = promotion_code_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                 
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        // {data: 'product_img',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
+                        //    return '<img src="'+d+'" width="150">';
+                        // }},
+                        {data: 'product_name', title :'<center>สินค้า</center>', className: 'text-center'},
+                        {data: 'amt', title :'<center>จำนวน</center>', className: 'text-center'},
+                        {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-center'},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        // + '<a href="{{ route('backend.promotion_code_product.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotion_code_product.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+        
+            });
+
+       $(document).on('click', '.cDelete', function(event) {
+              setTimeout(function(){
+                location.reload();
+              }, 1500);  
+        });
+
+
+
+</script>
 
 @endsection
 
