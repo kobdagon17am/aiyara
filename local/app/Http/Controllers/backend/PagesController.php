@@ -429,15 +429,12 @@ class PagesController extends Controller{
 
           // dd($request->all());
           // dd($request->promotion_code_id_fk);
-
           // dd($request->input('submit'));
 
         if ($request->input('submit') != null ){
 
           $file = $request->file('fileXLS');
-
            // dd($file);
-
           // File Details 
           $filename = $file->getClientOriginalName();
           $extension = $file->getClientOriginalExtension();
@@ -470,7 +467,7 @@ class PagesController extends Controller{
             $sRow->promotion_name = $request->promotion_name;
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
-            $sRow->pro_status = 4 ;
+            // $sRow->pro_status = 4 ;
             $sRow->created_at = date('Y-m-d H:i:s');
             $sRow->save();
 

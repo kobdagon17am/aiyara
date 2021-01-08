@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รหัสคูปอง </h4>
+            <h4 class="mb-0 font-size-18"> สร้างรหัสคูปอง </h4>
         </div>
     </div>
 </div>
@@ -58,12 +58,21 @@
               <div class="panel-body">
      
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">ชื่อคูปอง :</label>
+                    <label for="receipt" class="col-md-3 col-form-label">เลือกโปรโมชั่น :</label>
                     <div class="col-md-6">
-                      <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required >
+                      <!-- <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required > -->
+
+                          <select name="promotion_code_id_fk" id="promotion_code_id_fk" class="form-control select2-templating " required >
+                            <option value="">Select</option>
+                              @if(@$sPromotions)
+                                @foreach(@$sPromotions AS $r)
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->promotion_id_fk)?'selected':'' }} >{{$r->name_thai}}</option>
+                                @endforeach
+                              @endif
+                          </select>
+
                     </div>
-                    <div class="col-md-3">
-                    </div>
+
                   </div>
 
                   <div class="form-group row">
@@ -109,8 +118,12 @@
                     <div class="col-md-3">
                       <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
                     </div>
-                    <div class="col-md-2" style="text-align: right;" >
+                    <div class="col-md-3" style="text-align: right;" >
                       <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='Import'>
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                       <input type='button' class="btn btn-danger btnClearImport " value='Clear data Import' >
                     </div>
                     
                   </div>
@@ -146,22 +159,42 @@
                       <input type="number" class="form-control" name="GenAmt" >
                     </div>
                     <div class="col-md-3">
-                      
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">รหัส Prefix Coupon :</label>
-                    <div class="col-md-3" >
-                      <input type="text" class="form-control" id="prefix_coupon"  name="prefix_coupon" >
+                    <label for="receipt" class="col-md-3 col-form-label">Random กี่หลัก :</label>
+                    <div class="col-md-3">
+                      <input type="number" class="form-control" name="amt_random" >
                     </div>
-                    <div class="col-md-2" style="text-align: right;" >
-                      <!-- <input type='button' class="btn btn-primary btnPrefixCoupon " value='เพิ่มรหัส Prefix Coupon' > -->
-                      <input type='button' class="btn btn-primary btnGenCode " value='GEN รหัส'>
+                    <div class="col-md-3">
                     </div>
                   </div>
 
+                  <div class="form-group row">
+                    <label for="receipt" class="col-md-3 col-form-label">รหัส Prefix :</label>
+                    <div class="col-md-3" >
+                      <input type="text" class="form-control" id="prefix_coupon"  name="prefix_coupon" >
+                    </div>
+                    <div class="col-md-3" style="text-align: right;" >
+                    </div>
+                  </div>
 
+                  <div class="form-group row">
+                    <label for="receipt" class="col-md-3 col-form-label">รหัส Suffix :</label>
+                    <div class="col-md-3" >
+                      <input type="text" class="form-control" id="suffix_coupon"  name="suffix_coupon" >
+                    </div>
+                    <div class="col-md-3" style="text-align: right;" >
+                      <!-- <input type='button' class="btn btn-primary btnPrefixCoupon " value='เพิ่มรหัส Prefix Coupon' > -->
+                      <input type='button' class="btn btn-primary btnGenCode " value='GEN รหัส'>
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                       <input type='button' class="btn btn-danger btnClearGen " value='Clear data Gen' >
+
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -187,10 +220,7 @@
                     &nbsp;
                     &nbsp;
                      <input type='button' class="btn btn-warning btnExportElsx " value='Export Excel' >
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                     <input type='button' class="btn btn-danger btnClearData " value='Clear data' >
+               
                   @endif
 
                 </div>
@@ -215,50 +245,12 @@
                     </div>
                 </div>
 
-
             </div>
-
-
-
 
           </div>
           </div> <!-- end col -->
           </div> <!-- end row -->
           </div> <!-- end row -->
-
-
-
-            @if( !empty($sRow) )
-                    <div class="myBorder">
-                      <div style="">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-
-                            @if( count(@$sRowProduct)==0 )
-                                 <a class="btn btn-info btn-sm mt-1 font-size-16 btnAddList " href="#" style="float: right;" >
-                                    <i class="bx bx-plus font-size-20 align-middle mr-1"></i>เพิ่มสินค้าให้กับโปร
-                                  </a>
-                            @endif
-
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าในโปร  </span>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <table id="data-table-product" class="table table-bordered dt-responsive" style="width: 100%;">
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group mb-0 row">
-                        <div class="col-md-6">
-                           <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotion_code") }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
-                        </div>
-                      </div>
-                    </div>
-            @endif
 
 
 
@@ -390,7 +382,9 @@
                       {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                         //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
                         if(d==4){
-                            return 'Import Excel / Gen code';
+                            return 'Import Excel';
+                        }else if(d==5){
+                            return 'Gen code';                            
                         }else if(d==1){
                             return 'ใช้งานได้';
                         }else if(d==2){
@@ -490,7 +484,7 @@
 
 $(document).ready(function() {
 
-    $(".btnClearData").click(function(event) {
+    $(".btnClearImport").click(function(event) {
         /* Act on the event */
         $(".myloading").show();
 
@@ -505,7 +499,7 @@ $(document).ready(function() {
 
                type:'POST',
                url: " {{ url('backend/ajaxClearDataPromotionCode') }} ", 
-               data:{ _token: '{{csrf_token()}}' ,promotion_code_id_fk:promotion_code_id_fk },
+               data:{ _token: '{{csrf_token()}}' ,promotion_code_id_fk:promotion_code_id_fk,param:'Import' },
                 success:function(data){
                      console.log(data); 
                      location.reload();
@@ -521,6 +515,37 @@ $(document).ready(function() {
 
     });
 
+
+    $(".btnClearGen").click(function(event) {
+            /* Act on the event */
+            $(".myloading").show();
+
+            var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
+
+          if (!confirm("Are you sure ? ")){
+            $(".myloading").hide();
+              return false;
+          }else{
+
+            $.ajax({
+
+                   type:'POST',
+                   url: " {{ url('backend/ajaxClearDataPromotionCode') }} ", 
+                   data:{ _token: '{{csrf_token()}}' ,promotion_code_id_fk:promotion_code_id_fk,param:'Gen' },
+                    success:function(data){
+                         console.log(data); 
+                         location.reload();
+                      },
+                    error: function(jqXHR, textStatus, errorThrown) { 
+                        console.log(JSON.stringify(jqXHR));
+                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                        $(".myloading").hide();
+                    }
+                });
+          }
+
+
+        });
 
    $(".btnImXlsx").click(function(event) {
 
@@ -557,6 +582,8 @@ $(document).ready(function() {
       $(".btnGenCode").click(function(event) {
 
           var v = $("input[name=promotion_name]").val();
+          
+
           if(v=='' || v==0){
             $("input[name=promotion_name]").focus();
             return false;
@@ -579,6 +606,12 @@ $(document).ready(function() {
             return false;
           }
 
+          var amt_random = $("input[name=amt_random]").val();
+          if(amt_random=='' || amt_random==0){
+            $("input[name=amt_random]").focus();
+            return false;
+          }
+
         $(".myloading").show();
 
         var promotion_code_id_fk = "{{@$sRow->id}}"; 
@@ -591,8 +624,8 @@ $(document).ready(function() {
            data:{ _token: '{{csrf_token()}}' }+frm+"&amt_gen="+v+"&promotion_code_id_fk="+promotion_code_id_fk,
             success:function(data){
                  console.log(data); 
-                 // location.reload();
-                 location.replace('backend/promotion_cus/'+data+'/edit');
+                 location.reload();
+                 // location.replace('backend/promotion_cus/'+data+'/edit');
                  // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
               },
             error: function(jqXHR, textStatus, errorThrown) { 
@@ -824,7 +857,15 @@ $(document).ready(function() {
               }, 1500);  
         });
 
+        $(document).on('change', '#promotion_code_id_fk', function(event) {
+            event.preventDefault();
+            var id = $(this).val();
+            localStorage.setItem('promotion_code_id_fk', id);
+        });
 
+        if(localStorage.getItem('promotion_code_id_fk')){
+            $('#promotion_code_id_fk').val(localStorage.getItem('promotion_code_id_fk')).select2();
+        }
 
 </script>
 

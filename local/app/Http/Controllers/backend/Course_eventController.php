@@ -138,7 +138,9 @@ class Course_eventController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\Course_eventController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         // return redirect()->action('backend\Course_eventController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/course_event/".$sRow->id."/edit"));
+          
 
       } catch (\Exception $e) {
         echo $e->getMessage();

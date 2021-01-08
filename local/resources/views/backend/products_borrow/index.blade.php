@@ -1192,7 +1192,6 @@ $(document).ready(function() {
           $('#note').val(localStorage.getItem('note'));
         }
 
-
         $(document).on('change', '#branch_id_fk', function(event) {
             event.preventDefault();
             var id = $(this).val();

@@ -22,6 +22,10 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
+
+		<div class="myBorder">
+
               @if( empty($sRow) )
               <form action="{{ route('backend.promotions.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
@@ -324,16 +328,19 @@
 
               </form>
 
+          </div>
+
 
                 @if( !empty($sRow) )
-                      <hr>
+                    
+                    <div class="myBorder">
 
                       <div style="">
                           <div class="form-group row">
                               <div class="col-md-12">
                                   <span style="font-weight: bold;padding-right: 10px;"> รายการสินค้า </span>
-                                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_products.create') }}/{{@$sRow->id}}">
-                                      <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่มรายการสินค้า</span>
+                                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_products.create') }}/{{@$sRow->id}}" style="float: right;" >
+                                      <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                                   </a>
                               </div>
                           </div>
@@ -353,6 +360,35 @@
                               </a>
                           </div>
                       </div>
+
+                  </div>
+
+
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_cost.create') }}/{{@$sRow->id}}" style="float: right;">
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ข้อมูลราคา  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-promotions-cost" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
+                            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          </a>
+                        </div>
+                      </div>
+                    </div>
 
 
                 @endif
@@ -413,6 +449,60 @@
                   oTable.draw();
                 });
             });
+
+
+
+
+            var promotion_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-promotions-cost').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.promotions_cost.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['promotion_id_fk'] = promotion_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-left'},
+                        {data: 'country', title :'<center>ประเทศ</center>', className: 'text-center'},
+                        {data: 'currency', title :'<center>สกุลเงิน</center>', className: 'text-center'},
+                        {data: 'cost_price', title :'<center>ราคาทุน</center>', className: 'text-center'},
+                        {data: 'selling_price', title :'<center>ราคาขาย</center>', className: 'text-center'},
+                        {data: 'member_price', title :'<center>ราคาสมาชิก</center>', className: 'text-center'},
+                        {data: 'pv', title :'<center>PV</center>', className: 'text-center'},
+                        {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                           return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
+                        }},
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.promotions_cost.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+              
+
 
 
             </script>

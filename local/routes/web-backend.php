@@ -118,10 +118,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('promotions_products/datatable', 'Promotions_productsController@Datatable')->name('promotions_products.datatable');
     Route::get('promotions_products/create/{id}', 'Promotions_productsController@create');
 
-    Route::resource('promotions_cost', 'Promotions_costController');
-    Route::post('promotions_cost/datatable', 'Promotions_costController@Datatable')->name('promotions_cost.datatable');
-    // Route::get('promotions_cost/{id}', 'Promotions_costController@index');
-
     Route::resource('currency', 'CurrencyController');
     Route::post('currency/datatable', 'CurrencyController@Datatable')->name('currency.datatable');
 
@@ -132,7 +128,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_images', 'Products_imagesController');
     Route::post('products_images/datatable', 'Products_imagesController@Datatable')->name('products_images.datatable');
     Route::get('products_images/create/{id}', 'Products_imagesController@create');
-
 
 
     Route::resource('faq_topic', 'Faq_topicController');
@@ -147,6 +142,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_cost', 'Products_costController');
     Route::post('products_cost/datatable', 'Products_costController@Datatable')->name('products_cost.datatable');
     Route::get('products_cost/create/{id}', 'Products_costController@create');
+
+
+    Route::resource('promotions_cost', 'Promotions_costController');
+    Route::post('promotions_cost/datatable', 'Promotions_costController@Datatable')->name('promotions_cost.datatable');
+    Route::get('promotions_cost/create/{id}', 'Promotions_costController@create');
+
 
     Route::resource('products_units', 'Products_unitsController');
     Route::post('products_units/datatable', 'Products_unitsController@Datatable')->name('products_units.datatable');
@@ -319,7 +320,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('promotion_cus_products', 'Promotion_cus_productsController');
     Route::post('promotion_cus_products/datatable', 'Promotion_cus_productsController@Datatable')->name('promotion_cus_products.datatable');
-
 
     Route::resource('productsList', 'ProductsListController');
     Route::post('productsList/datatable', 'ProductsListController@Datatable')->name('productsList.datatable');

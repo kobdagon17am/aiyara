@@ -17,15 +17,17 @@ class Promotions_costController extends Controller
 
     }
 
- public function create()
+ public function create($id)
     {
+
+      $sRowNew = \App\Models\Backend\Promotions::find($id);
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sCountry = \App\Models\Backend\Country::get();
       $sCurrency = \App\Models\Backend\Currency::get();
       $sLang = \App\Models\Backend\Promotions_cost::get();
       return View('backend.promotions_cost.form')->with(
         array(
-          'sLang'=>$sLang,'sBusiness_location'=>$sBusiness_location,'sCountry'=>$sCountry,'sCurrency'=>$sCurrency,
+          'sLang'=>$sLang,'sBusiness_location'=>$sBusiness_location,'sCountry'=>$sCountry,'sCurrency'=>$sCurrency,'sRowNew'=>$sRowNew
         ) );
     }
 
@@ -46,13 +48,14 @@ class Promotions_costController extends Controller
 
     public function edit($id)
     {
+      $sRowNew = \App\Models\Backend\Promotions::find($id);
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sCountry = \App\Models\Backend\Country::get();
        $sCurrency = \App\Models\Backend\Currency::get();
        $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Promotions_cost::find($id);
        return View('backend.promotions_cost.form')->with(array(
-        'sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ,'sBusiness_location'=>$sBusiness_location,'sCountry'=>$sCountry,'sCurrency'=>$sCurrency,
+        'sRow'=>$sRow ,'sRowNew'=>$sRowNew , 'id'=>$id, 'sLang'=>$sLang ,'sBusiness_location'=>$sBusiness_location,'sCountry'=>$sCountry,'sCurrency'=>$sCurrency,
       ) );
     }
 
@@ -73,6 +76,7 @@ class Promotions_costController extends Controller
             $sRow = new \App\Models\Backend\Promotions_cost;
           }
 
+          $sRow->promotion_id_fk    = request('promotion_id_fk');
           $sRow->business_location_id    = request('business_location_id');
           $sRow->country_id    = request('country_id');
           $sRow->currency_id    = request('currency_id');
@@ -89,7 +93,8 @@ class Promotions_costController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\Promotions_costController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         // return redirect()->action('backend\Promotions_costController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/promotions/".request('promotion_id_fk')."/edit"));
 
       } catch (\Exception $e) {
         echo $e->getMessage();

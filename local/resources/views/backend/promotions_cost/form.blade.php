@@ -28,6 +28,7 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
               @if( empty($sRow) )
               <form action="{{ route('backend.promotions_cost.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
@@ -35,6 +36,16 @@
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
+
+
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อโปรโมชั่น : </label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{@$sRowNew->name_thai}}" name="" readonly >
+                        <input class="form-control" type="hidden" value="{{@$sRowNew->id}}" name="promotion_id_fk"  >
+                    </div>
+                </div>
+
 
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label">Business Location : * </label>
@@ -123,9 +134,11 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions_cost") }}">
+
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.promotions.index') }}/{{@$sRowNew->id}}/edit" }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
+
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">

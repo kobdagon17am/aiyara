@@ -560,11 +560,11 @@ class AjaxController extends Controller
         // return ($request->all());
         // return ($request->promotion_name);
         // dd ($request->all());
-        // return $request->amt_gen;
-
-
         // return $request->promotion_code_id_fk;
+        // return $request->amt_gen;
+        // return $request->amt_random;
         // return $request->prefix_coupon;
+        // return $request->suffix_coupon;
         // dd();
 
          if( $request->promotion_code_id_fk ){
@@ -576,14 +576,14 @@ class AjaxController extends Controller
             $sRow->promotion_name = $request->promotion_name;
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
-            $sRow->pro_status = 4 ;
+            // $sRow->pro_status = 5 ;
             $sRow->created_at = date('Y-m-d H:i:s');
             $sRow->save();
 
 
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
          
-        function generate_string($input, $strength = 10) {
+        function generate_string($input, $strength = 10 )  {
             $input_length = strlen($input);
             $random_string = '';
             for($i = 0; $i < $strength; $i++) {
@@ -596,20 +596,17 @@ class AjaxController extends Controller
         for ($i=1; $i <= $request->amt_gen ; $i++) { 
 
             // echo strtoupper(generate_string($permitted_chars, 10));
-
               $insertData = array(
                  "promotion_code_id_fk"=>$sRow->id,
-                 "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, 10)),
+                 "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, $request->amt_random)).@$request->suffix_coupon,
                  "customer_id_fk"=>'0',
-                 "pro_status"=> '4' ,
+                 "pro_status"=> '5' ,
                  "created_at"=>now());
                PromotionCode_add::insertData($insertData);
-
 
         }
 
         return $sRow->id ;
-
         // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
 
 
@@ -619,24 +616,27 @@ class AjaxController extends Controller
     {
 
         // return $request->txtSearchPro;
-
         $rs = DB::select(" select * from db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."' ; ");
         return $rs[0]->promotion_code_id_fk;
-
 
     }
 
 
     public function ajaxGenPromotionCodePrefixCoupon(Request $request)
     {
-        DB::update(" UPDATE db_promotion_cus SET promotion_code=concat('".$request->prefix_coupon."',promotion_code) WHERE pro_status=4 ; ");
+        DB::update(" UPDATE db_promotion_cus SET promotion_code=concat('".$request->prefix_coupon."',promotion_code) WHERE pro_status=5 ; ");
     }
     
 
 
     public function ajaxClearDataPromotionCode(Request $request)
     {
-        DB::delete(" DELETE FROM db_promotion_cus WHERE promotion_code_id_fk =".$request->promotion_code_id_fk." and pro_status=4 ; ");
+        if($request->param=="Import"){
+            DB::delete(" DELETE FROM db_promotion_cus WHERE promotion_code_id_fk =".$request->promotion_code_id_fk." and pro_status=4 ; ");
+        }
+        if($request->param=="Gen"){
+            DB::delete(" DELETE FROM db_promotion_cus WHERE promotion_code_id_fk =".$request->promotion_code_id_fk." and pro_status=5 ; ");
+        }        
         DB::select(" ALTER table db_promotion_cus AUTO_INCREMENT=1; ");
     }
 

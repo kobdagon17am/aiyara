@@ -55,6 +55,7 @@ class PromotionsController extends Controller
     public function edit($id)
     {
           $sAgency = \App\Models\Backend\Agency::get();
+          $sQualification = \App\Models\Backend\Qualification::get();
           $sAistockist = \App\Models\Backend\Aistockist::get();
           $sTravel_feature = \App\Models\Backend\Travel_feature::get();
           $sPersonal_quality = \App\Models\Backend\Personal_quality::get();
@@ -69,6 +70,7 @@ class PromotionsController extends Controller
         array(
           'sAgency'=>$sAgency,
           'sAistockist'=>$sAistockist,
+          'sQualification'=>$sQualification,
           'sTravel_feature'=>$sTravel_feature,
           'sPersonal_quality'=>$sPersonal_quality,
           'sPackage'=>$sPackage,
@@ -137,7 +139,8 @@ class PromotionsController extends Controller
 
           \DB::commit();
 
-         return redirect()->action('backend\PromotionsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+          return redirect()->to(url("backend/promotions/".$sRow->id."/edit"));
+         // return redirect()->action('backend\PromotionsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();

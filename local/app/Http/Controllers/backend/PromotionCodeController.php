@@ -47,6 +47,11 @@ class PromotionCodeController extends Controller
       $sTable = \App\Models\Backend\PromotionCode::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('promotion_name', function($row) {
+        $d = \App\Models\Backend\Promotions::find($row->promotion_id_fk);
+        return $d->name_thai;
+
+      })
       ->addColumn('pro_sdate', function($row) {
         $d = strtotime($row->pro_sdate); return date("d/m/", $d).(date("Y", $d)+543);
       })

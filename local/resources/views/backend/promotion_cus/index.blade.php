@@ -107,19 +107,19 @@ $(function() {
             {data: 'promotion_name', title :'<center>ชื่อคูปอง</center>', className: 'text-left'},
             {data: 'pro_sdate', title :'<center>วันเริ่มต้นโปร</center>', className: 'text-center'},
             {data: 'pro_edate', title :'<center>วันสิ้นสุดโปร</center>', className: 'text-center'},
-            {data: 'pro_status',   title :'<center>สถานะการใช้งาน</center>', className: 'text-center',render: function(d) {
-              if(d==4){
-                  return 'Import Excel';
-              }else if(d==1){
-                  return 'ใช้งานได้';
-              }else if(d==2){
-                  return 'ถูกใช้แล้ว';
-              }else if(d==3){
-                  return 'หมดอายุแล้ว';
-              }else{
-                  return d;
-              }
-            }},
+            // {data: 'pro_status',   title :'<center>สถานะการใช้งาน</center>', className: 'text-center',render: function(d) {
+            //   if(d==4){
+            //       return 'Import Excel';
+            //   }else if(d==1){
+            //       return 'ใช้งานได้';
+            //   }else if(d==2){
+            //       return 'ถูกใช้แล้ว';
+            //   }else if(d==3){
+            //       return 'หมดอายุแล้ว';
+            //   }else{
+            //       return d;
+            //   }
+            // }},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},    
