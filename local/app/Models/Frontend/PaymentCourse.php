@@ -9,6 +9,8 @@ use Cart;
 class PaymentCourse extends Model
 {
 	public static function payment_uploadfile($rs){
+		$business_location_id = '1';
+
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$id = DB::table('orders')
@@ -22,8 +24,8 @@ class PaymentCourse extends Model
 			$maxId  = $id->id +1; 
 		}
 
-		$maxId = substr("00000".$maxId, -5);
-		$code_order = date('Ymd').''.$maxId;
+		$maxId = substr("0000000".$maxId, -7);
+		$code_order = date('ymd').''.$maxId;
 
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
@@ -42,6 +44,7 @@ class PaymentCourse extends Model
 					'pv_total'  => $rs->pv_total,
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
+					'business_location_id' => $business_location_id,
 					'orderstatus_id' => '2'
 				] 
 			);
@@ -71,7 +74,7 @@ class PaymentCourse extends Model
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
@@ -86,6 +89,7 @@ class PaymentCourse extends Model
 	}
 
 	public static function payment_not_uploadfile($rs){
+		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
@@ -100,8 +104,8 @@ class PaymentCourse extends Model
 			$maxId  = $id->id +1; 
 		}
 
-		$maxId = substr("00000".$maxId, -5);
-		$code_order = date('Ymd').''.$maxId;
+		$maxId = substr("0000000".$maxId, -7);
+		$code_order = date('ymd').''.$maxId;
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -119,6 +123,7 @@ class PaymentCourse extends Model
 					'pv_total'  => $rs->pv_total,
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
+					'business_location_id' => $business_location_id,
 					'orderstatus_id' => '1'
 				] 
 			);
@@ -136,7 +141,7 @@ class PaymentCourse extends Model
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 				//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
@@ -150,6 +155,8 @@ class PaymentCourse extends Model
 	}
 
 	public static function credit_card($rs){
+		$business_location_id = '1';
+
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
@@ -164,8 +171,8 @@ class PaymentCourse extends Model
 			$maxId  = $id->id +1; 
 		}
 
-		$maxId = substr("00000".$maxId, -5);
-		$code_order = date('Ymd').''.$maxId;
+		$maxId = substr("0000000".$maxId, -7);
+		$code_order = date('ymd').''.$maxId;
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -183,6 +190,7 @@ class PaymentCourse extends Model
 					'pv_total'  => $rs->pv_total,
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
+					'business_location_id' => $business_location_id,
 					'orderstatus_id' => '7'
 				] 
 			);
@@ -200,12 +208,29 @@ class PaymentCourse extends Model
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 				//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
-			DB::commit();
-			return $resule;
+			if($resule['status'] = 'success'){
+				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+				$resuleRegisCourse = Couse_Event::couse_register($id,'99');
+
+				if($resulePv['status'] == 'success' and $resuleRegisCourse['status'] == 'success'){
+
+					DB::commit();
+					return $resulePv;
+
+				}else{
+					DB::rollback();
+					return redirect('product-history')->withError($resulePv);
+				}
+				
+			}else{
+				DB::rollback();
+				return redirect('product-history')->withError('Payment submit Fail');
+
+			}
 		}catch(Exception $e){
 			DB::rollback();
 			return redirect('product-history')->withError('Payment submit Fail');
@@ -213,7 +238,9 @@ class PaymentCourse extends Model
 		}
 	}
 
-public static function ai_cash($rs){
+	public static function ai_cash($rs){
+		$business_location_id = '1'; 
+
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
@@ -228,8 +255,8 @@ public static function ai_cash($rs){
 			$maxId  = $id->id +1; 
 		}
 
-		$maxId = substr("00000".$maxId, -5);
-		$code_order = date('Ymd').''.$maxId;
+		$maxId = substr("0000000".$maxId, -7);
+		$code_order = date('ymd').''.$maxId;
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -247,6 +274,7 @@ public static function ai_cash($rs){
 					'pv_total'  => $rs->pv_total,
 					'type_id'  => $rs->type,
 					'pay_type_id'  => $rs->pay_type,
+					'business_location_id' => $business_location_id,
 					'orderstatus_id' => '7'
 				] 
 			);
@@ -264,12 +292,29 @@ public static function ai_cash($rs){
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 				//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
-			DB::commit();
-			return $resule;
+			if($resule['status'] = 'success'){
+				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+				$resuleRegisCourse = Couse_Event::couse_register($id,'99');
+
+				if($resulePv['status'] == 'success' and $resuleRegisCourse['status'] == 'success'){
+
+					DB::commit();
+					return $resulePv;
+
+				}else{
+					DB::rollback();
+					return redirect('product-history')->withError($resulePv);
+				}
+				
+			}else{
+				DB::rollback();
+				return redirect('product-history')->withError('Payment submit Fail');
+
+			}
 		}catch(Exception $e){
 			DB::rollback();
 			return redirect('product-history')->withError('Payment submit Fail');

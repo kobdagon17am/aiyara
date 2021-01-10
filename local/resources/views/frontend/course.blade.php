@@ -1,63 +1,112 @@
- @extends('frontend.layouts.customer.customer_app')
- @section('css')
- 
+@extends('frontend.layouts.customer.customer_app')
+@section('css')
+<!-- Data Table Css -->
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
+
 @endsection
 @section('conten')
-
-
-<!-- Start Contact Info area-->
-<div class="contact-info-area mg-t-30">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="contact-form sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                    <h3>การฝึกอบรม ของ <strong>24extra</strong></h3>
-                    <select style="width: 200px; font-size: 18px;">
-                        <?php 
-                        for($i=2563;$i>=2555;$i--) { ?>
-                            <option><?php echo $i; ?></option>
-                        <?php } ?>
-                    </select>
-
-
-
-                    <button class="btn btn-gray gray-icon-notika waves-effect" style=" background-color: #00c454; color: white;">ตรวจสอบ</button>
-                    <br/>
-
-                    <div class="table-responsive">
-                        <table class="table table-striped table-responsive" >
-                            <thead>
-                                <tr class="info" >
-                                    <th style="font-size: 12px; text-align:center;">#</th>
-                                    <th style="font-size: 12px; text-align:center;">วันที่อบรม</th>
-                                    <th style="font-size: 12px; text-align:left;">หัวข้อ</th>
-                                    <th style="font-size: 12px; text-align:left;">สถานที่</th>
-                                    <th style="font-size: 12px; text-align:center;">สถานะ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php for($x=1;$x<=8;$x++) { ?>
-                                    <tr style="text-align:center;">
-                                        <td style="font-size: 12px; text-align:center;">{{ $x }}</td>
-                                        <td style="font-size: 12px; text-align:center;">01/08/2563</td>
-                                        <td style="font-size: 12px; text-align:left;">FIT ME season</td>
-                                        <td style="font-size: 12px;  text-align:left;" >อาคารไอยเรศวร</td>
-                                        <td style="font-size: 12px; text-align:center;">ผ่านการอบรม</td>
-                                    </tr>
-                                <?php } ?>
-
-                            </tbody>
-                        </table>
-
-
-                        <br/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+         {{--    <div class="card-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-control" id="order_type" >
+                            <option value="">ทั้งหมด</option>
+                            @foreach($data as $value)
+                            <option value="{{ $value->group_id }}">{{ $value->orders_type }}</option>
+                            @endforeach
+                        </select>
                     </div>
+                
+
+                </div>
+            </div> --}}
+            <div class="card-block">
+                <div class="table-responsive dt-responsive">
+
+                    <table id="history" class="table table-striped table-bordered nowrap">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>วันที่อบรม</th>
+                                <th>CODE</th>
+                                <th>หัวข้อ</th>
+                                <th>รายละเอียด</th>
+                                <th>สถานะ</th>
+                                <th>QRCODE</th>
+                            </tr>
+                        </thead>
+
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <!-- End Contact Info area-->
-    @endsection
-    @section('js') 
-    @endsection
+</div>
+@endsection
+@section('js')
+<!-- data-table js -->
+
+<script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+<!-- Custom js -->
+<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        fetch_data();
+
+    });
+
+
+    function fetch_data(order_type = '') {
+
+        $('#history').DataTable({
+                // scrollX: true,
+                // scrollCollapsed: true,
+                processing: true,
+                serverSide: true,
+                searching: true,
+                ajax: {
+                    url: "{{ route('dt_course') }}",
+                    dataType: "json",
+                    type: "POST",
+                    data: {_token:'{{ csrf_token() }}',order_type:order_type}
+                },
+ 
+                columns:[
+                {"data": "id"},
+                {"data": "date"},
+                {"data": "code"},
+                {"data": "title"},
+                {"data": "address"},
+                {"data": "status"},
+                {"data": "qrcode"},
+               
+                ],
+                //order: [[ "0", "desc" ]],
+            });
+    }
+
+    $('#order_type').on('change',function(){
+        var order_type = $(this).val();
+        $('#history').DataTable().destroy();
+        fetch_data(order_type);
+    });
+
+</script>
+@endsection
+
+

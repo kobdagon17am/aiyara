@@ -41,45 +41,82 @@ class PvPayment extends Model
 
 				if($type_id == 6){
 					$orderstatus_id = 7;
-				}
+					$opc_type_order = 'course_event';
 
-				$update_order = DB::table('orders')//update บิล
-				->where('id',$order_id)
-				->update(['id_admin_check' => $admin_id,
-					'orderstatus_id'=> $orderstatus_id,
-					'date_payment'=> date('Y-m-d H:i:s')]);
-
-				$last_id = DB::table('order_payment_code')//เจนเลข payment order
-				->select('id')
+				$last_code = DB::table('order_payment_code')//เจนเลข payment order
+				->where('business_location_id','=',$order_data->business_location_id)
+				->where('type_order','=','course_event')
 				->orderby('id','desc')
 				->first();
 
-				if($last_id){
-					$last_id = $last_id->id +1;
+
+				if($last_code){
+					$last_code = $last_code->order_payment_code;
+					$code = substr($last_code,-7);
+					$last_code = $code + 1;
+
+					$num_code = substr("0000000".$last_code, -7);
+					$code_order = 'C'.date('ymd').''.$num_code;
+
 				}else{
-					$last_id = 1;
+					$last_code = 1;
+					$maxId = substr("0000000".$last_code, -7);
+					$code_order = 'C'.date('ymd').''.$maxId;
 				}
 
 
-				$maxId = substr("00000".$last_id, -5);
-				$code_order = 'R'.date('Ymd').''.$maxId;
+			}else{
+				$opc_type_order = 'product';
+				$last_code = DB::table('order_payment_code')//เจนเลข payment order
+				->where('business_location_id','=',$order_data->business_location_id)
+				->where('type_order','=','product') 
+				->orderby('id','desc')
+				->first();
+
+				if($last_code){
+					$last_code = $last_code->order_payment_code;
+					$code = substr($last_code,-7);
+					$last_code = $code + 1;
+					$num_code = substr("0000000".$last_code, -7);
+					$code_order = 'R'.date('ymd').''.$num_code;
+
+
+				}else{
+					$last_code = 1;
+					$maxId = substr("0000000".$last_code, -7);
+					$code_order = 'R'.date('ymd').''.$maxId;
+				}
+
+			}
+
+
+			$update_order = DB::table('orders')//update บิล
+			->where('id',$order_id)
+			->update(['id_admin_check' => $admin_id, 
+				'orderstatus_id'=> $orderstatus_id,
+				'date_payment'=> date('Y-m-d H:i:s')]);
+
 
 				$check_payment_code = DB::table('order_payment_code')//เจนเลข payment order
 				->where('order_id','=',$order_id)
 				->first(); 
-				if($check_payment_code){
 
+				if($check_payment_code){
 					$update_order_payment_code = DB::table('order_payment_code') 
 					->where('order_id',$order_id)
-					->update(['order_payment_status' => 'Success']);//ลงข้อมูลบิลชำระเงิน
+
+					->update(['order_payment_status' => 'Success',
+						'order_payment_code'=>$code_order,
+						'business_location_id'=>$order_data->business_location_id,
+					'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}else{
-
 					$inseart_order_payment_code = DB::table('order_payment_code')->insert([
 						'order_id'=>$order_id,
 						'order_payment_code'=>$code_order,
-						'order_payment_status'=>'Success'
-				]);//ลงข้อมูลบิลชำระเงิน
+						'order_payment_status'=>'Success',
+						'business_location_id'=>$order_data->business_location_id,
+						'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}
 
@@ -361,14 +398,14 @@ class PvPayment extends Model
 								$code_ticket = 'C'.date('Ymd').''.$maxId; 
 
 								$last_ticket_id = DB::table('course_ticket_number')->insertGetId(
-								['ticket_number'=>$code_ticket]);
+									['ticket_number'=>$code_ticket]);
 
 							}else{//event
 								$last_id = DB::table('event_ticket_number')//เจนเลข payment order
 								->select('id')
 								->orderby('id','desc')
 								->first();
-									if($last_id){
+								if($last_id){
 									$last_id = $last_id->id +1;
 								}else{
 									$last_id = 1;
@@ -378,7 +415,7 @@ class PvPayment extends Model
 								$code_ticket = 'E'.date('Ymd').''.$maxId;
 
 								$last_ticket_id = DB::table('event_ticket_number')->insertGetId(
-								['ticket_number'=>$code_ticket]);
+									['ticket_number'=>$code_ticket]);
 							}
 
 
@@ -514,9 +551,25 @@ class PvPayment extends Model
 
 
 					if($resule['status'] == 'success'){
-						DB::commit();
-						//DB::rollback();
-						return $resule;
+						if( == '6'){
+							$resuleRegisCourse = Couse_Event::couse_register($id,$admin_id);
+							if($resuleRegisCourse['status'] == 'success'){
+								DB::commit();
+								//DB::rollback();
+								return $resuleRegisCourse;
+
+							}else{
+								DB::rollback();
+								return $resuleRegisCourse; 
+
+							}
+
+						}else{
+							DB::commit();
+							//DB::rollback();
+							return $resule;
+						}
+						
 					}else{
 						DB::rollback();
 						return $resule;

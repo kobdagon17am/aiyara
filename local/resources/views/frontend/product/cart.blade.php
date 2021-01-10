@@ -25,7 +25,7 @@
                         @elseif($type == 3)
                         <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h4>
                         @elseif($type == 4)
-                        <h4>รายการสั่</h4>
+                        <h4>รายการสั่งซื้อเพื่อเติม Ai-Stockist</h4>
                         @elseif($type == 5)
                         <h4>Gift Voucher</h4>
                         @elseif($type == 6)

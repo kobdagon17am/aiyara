@@ -11,7 +11,6 @@ class Runpv extends Model
 		if(!empty($type) || !empty($pv) || !empty($username) ){
 			try {
 				DB::BeginTransaction();
-
 				$id = Auth::guard('c_user')->user()->id;
 
 				$user = DB::table('customers')

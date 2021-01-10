@@ -204,7 +204,7 @@
                       <div class="card-block">
                         <div class="row"> 
                           <div class="col-md-5">
-                            <h5 class="m-b-20" style="color: #000">Ai Pocket</h5>
+                            <h5 class="m-b-20" style="color: #000">Ai-Stockist</h5>
 
 
                           </div>

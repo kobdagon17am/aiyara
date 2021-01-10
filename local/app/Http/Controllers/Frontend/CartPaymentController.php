@@ -143,7 +143,8 @@ class CartPaymentController extends Controller
 			}else{
 				$resule = Payment::credit_card($request);
 			}
-			
+
+			 
 			if($resule['status'] == 'success'){
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {

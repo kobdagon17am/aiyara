@@ -7,9 +7,11 @@ use DB;
 use Auth;
 use Cart;
 use App\Models\Frontend\GiftVoucher;
+use App\Models\Frontend\Pvpayment;
 class Payment extends Model
 {
 	public static function payment_uploadfile($rs){
+		$business_location_id = '1'; 
 
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
@@ -28,8 +30,8 @@ class Payment extends Model
 		}
 		
 		
-		$maxId = substr("00000".$maxId, -5);
-		$code_order = date('Ymd').''.$maxId;
+		$maxId = substr("0000000".$maxId, -7);
+		$code_order = date('ymd').''.$maxId;
 
 		try{
 			if($rs->receive == 'sent_address'){
@@ -85,6 +87,8 @@ class Payment extends Model
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
 					'email' => $rs->email,
+					'business_location_id' => $business_location_id,
+					 
 				]
 			);
 				if($rs->type == 4){//เติม Ai-Stockist
@@ -135,7 +139,7 @@ class Payment extends Model
 
 					Cart::session($rs->type)->remove($value['id']);
 				}
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 			}elseif($rs->receive == 'receive_office') {
@@ -182,6 +186,7 @@ class Payment extends Model
 					'tel' => $rs->tel_mobile,
 					'name' => $rs->name,
 					'email' => $rs->email,
+					'business_location_id' => $business_location_id,
 				]
 			);
 
@@ -232,7 +237,7 @@ class Payment extends Model
 				]);
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 		}else{
@@ -240,9 +245,15 @@ class Payment extends Model
 
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
 		}
-		DB::commit();
 
-		return $resule;
+		if($resule['status'] = 'success'){
+			DB::commit();
+			return $resule;
+
+		}else{
+			DB::rollback();
+			return redirect('product-history')->withError($resule);
+		}
 	}catch(Exception $e) { 
 		DB::rollback();
 		return redirect('product-history')->withError('Payment submit Fail');
@@ -251,6 +262,7 @@ class Payment extends Model
 }
 
 public static function payment_not_uploadfile($rs){
+	$business_location_id = '1';
 	DB::BeginTransaction();
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
@@ -263,8 +275,8 @@ public static function payment_not_uploadfile($rs){
 	}else{
 		$maxId = 1;
 	}
-	$maxId = substr("00000".$maxId, -5);
-	$code_order = date('Ymd').''.$maxId;
+	$maxId = substr("0000000".$maxId, -7);
+	$code_order = date('ymd').''.$maxId;
 	try{
 
 		if($rs->receive == 'sent_address'){
@@ -320,6 +332,7 @@ public static function payment_not_uploadfile($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 
@@ -333,7 +346,6 @@ public static function payment_not_uploadfile($rs){
 					'status' => 'panding',
 					'detail' => 'Payment Add Ai-Stockist',
 				]);
-
 			}
 
 			if($rs->type == 5){
@@ -361,7 +373,7 @@ public static function payment_not_uploadfile($rs){
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
@@ -408,6 +420,7 @@ public static function payment_not_uploadfile($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -446,7 +459,7 @@ public static function payment_not_uploadfile($rs){
 				]);
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 		}else{
@@ -454,16 +467,26 @@ public static function payment_not_uploadfile($rs){
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
 		}
-		DB::commit();
-		return $resule;
+
+		if($resule['status'] = 'success'){
+			DB::commit();
+			return $resule;
+
+		}else{
+			DB::rollback();
+			return redirect('product-history')->withError($resule);
+		}
+
+		
 	}catch(Exception $e) {
 		DB::rollback();
-		return redirect('product-history')->withError('Payment submit Fail');
+		return redirect('product-history')->withError($e);
 
 	}
 }
 
 public static function credit_card($rs){
+	$business_location_id = '1';
 	DB::BeginTransaction();
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
@@ -476,8 +499,8 @@ public static function credit_card($rs){
 	}else{
 		$maxId = 1;
 	}
-	$maxId = substr("00000".$maxId, -5);
-	$code_order = date('Ymd').''.$maxId;
+	$maxId = substr("0000000".$maxId, -7);
+	$code_order = date('ymd').''.$maxId;
 	try{
 		if($rs->receive == 'sent_address'){
 
@@ -532,6 +555,7 @@ public static function credit_card($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -571,7 +595,7 @@ public static function credit_card($rs){
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
@@ -618,6 +642,7 @@ public static function credit_card($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -663,8 +688,22 @@ public static function credit_card($rs){
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
 		}
-		DB::commit();
-		return $resule;
+		if($resule['status'] = 'success'){
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			if($resulePv['status'] = 'success'){
+				DB::commit();
+				return $resulePv;
+
+			}else{
+				DB::rollback();
+				return redirect('product-history')->withError($resulePv);
+			}
+			
+		}else{
+			DB::rollback();
+			return redirect('product-history')->withError('Payment submit Fail');
+
+		}
 	}catch(Exception $e) {
 		DB::rollback();
 		return redirect('product-history')->withError('Payment submit Fail');
@@ -673,6 +712,7 @@ public static function credit_card($rs){
 }
 
 public static function ai_cash($rs){
+	$business_location_id = '1';
 	DB::BeginTransaction();
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
@@ -685,8 +725,8 @@ public static function ai_cash($rs){
 	}else{
 		$maxId = 1;
 	}
-	$maxId = substr("00000".$maxId, -5);
-	$code_order = date('Ymd').''.$maxId;
+	$maxId = substr("0000000".$maxId, -7);
+	$code_order = date('ymd').''.$maxId;
 	try{
 		if($rs->receive == 'sent_address'){
 
@@ -741,6 +781,7 @@ public static function ai_cash($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -828,6 +869,7 @@ public static function ai_cash($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -874,8 +916,22 @@ public static function ai_cash($rs){
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
 		}
-		DB::commit();
-		return $resule;
+		if($resule['status'] = 'success'){
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			if($resulePv['status'] = 'success'){
+				DB::commit();
+				return $resulePv;
+
+			}else{
+				DB::rollback();
+				return redirect('product-history')->withError($resulePv);
+			}
+			
+		}else{
+			DB::rollback();
+			return redirect('product-history')->withError('Payment submit Fail');
+
+		}
 
 	}catch(Exception $e) {
 		DB::rollback();
@@ -885,6 +941,7 @@ public static function ai_cash($rs){
 }
 
 public static function gift_voucher($rs){
+	$business_location_id = '1';
 	DB::BeginTransaction();
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$id = DB::table('orders')
@@ -897,8 +954,8 @@ public static function gift_voucher($rs){
 	}else{
 		$maxId = 1;
 	}
-	$maxId = substr("00000".$maxId, -5);
-	$code_order = date('Ymd').''.$maxId;
+	$maxId = substr("0000000".$maxId, -7);
+	$code_order = date('ymd').''.$maxId;
 
 	$data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
 	$gv_customer = $data_gv->sum_gv;
@@ -949,6 +1006,7 @@ public static function gift_voucher($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 
@@ -975,7 +1033,7 @@ public static function gift_voucher($rs){
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
@@ -1016,6 +1074,7 @@ public static function gift_voucher($rs){
 				'tel' => $rs->tel_mobile,
 				'name' => $rs->name,
 				'email' => $rs->email,
+				'business_location_id' => $business_location_id,
 			]
 		);
 
@@ -1040,7 +1099,7 @@ public static function gift_voucher($rs){
 				]);
 				Cart::session($rs->type)->remove($value['id']);
 			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 		}else{
@@ -1048,8 +1107,22 @@ public static function gift_voucher($rs){
 					//return $resule;
 				//return redirect('cart_payment')->withError('Payment submit Fail ( Address )');
 		}
-		DB::commit();
-		return $resule;
+		if($resule['status'] = 'success'){
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			if($resulePv['status'] = 'success'){
+				DB::commit();
+				return $resulePv;
+
+			}else{
+				DB::rollback();
+				return redirect('product-history')->withError($resulePv);
+			}
+			
+		}else{
+			DB::rollback();
+			return redirect('product-history')->withError('Payment submit Fail');
+
+		}
 
 	}catch(Exception $e) {
 		DB::rollback();

@@ -386,7 +386,7 @@
 			</ul>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('product-history') || request()->is('cart-payment-history/*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('product-history') || request()->is('cart-payment-history/*') || request()->is('course') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="ti-receipt"></i><b>ประวัติการสั่งซื้อ</b></span>
 				<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>
@@ -402,13 +402,14 @@
 					</a>
 				</li>
 
-			{{-- 	<li class="{{ (request()->is('gift_order_history')) ? 'active' : '' }}">
-					<a href="{{route('gift_order_history')}}">
+				<li class="{{ (request()->is('course')) ? 'active' : '' }}">
+					<a href="{{route('course')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 						<span class="pcoded-mtext">Course/Event</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>	 --}} 
+				</li>
+
 			</ul>
 		</li>
 

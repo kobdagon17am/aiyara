@@ -53,6 +53,7 @@ Route::get('logout', function () {
 
 Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
 Route::get('add_gif','Frontend\CartController@add_gif')->name('add_gif');
+Route::get('course_register','Frontend\CartController@course_register')->name('course_register');
 
 
 Route::get('check_user','Frontend\RegisterController@check_user')->name('check_user');
@@ -153,6 +154,12 @@ Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
 Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
 
+
+Route::get('course','Frontend\CourseEventController@index')->name('course');
+Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
+ 
+
+
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
 })->name('product-status');
@@ -192,9 +199,10 @@ Route::get('/cart-payment', function () {
 Route::get('/comission', function () {
   return view('frontend/comission');
 })->name('comission');
-Route::get('/course', function () {
-  return view('frontend/course');
-})->name('course');
+
+
+
+
 Route::get('/travel', function () {
   return view('frontend/travel');
 })->name('travel');

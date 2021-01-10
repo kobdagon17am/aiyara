@@ -228,24 +228,18 @@ public function use_aipocket(Request $request){
 
   }else{
     if($type == 1){
-
       $resule = Runpv::run_pv($type,$pv,$username);
       //dd($resule);
       if($resule['status'] == 'success'){
-
-
-
         return redirect('ai-pocket')->withSuccess('Sent Ai-Pocket Success');
-
       }else{
        return redirect('ai-pocket')->withError('Sent Ai-Pocket Fail');
-
      }
 
    }elseif($type == 2){
     dd($type);
 
-  }elseif ($type == 3) {
+  }elseif ($type == 3){
     dd($type);
   }else{
     return redirect('ai-pocket')->withError('ไม่มีคุณสมบัติที่เลือก');
