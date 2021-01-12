@@ -4,7 +4,7 @@
  @section('conten')
  <?php //dd($customer); ?>
  
- <div class="row">
+ <div class="row"> 
  	<div class="col-md-8 col-sm-12">
  		<form action="{{route('payment_submit')}}" method="POST" enctype="multipart/form-data">
  			@csrf

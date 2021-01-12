@@ -19,7 +19,7 @@ class PaymentCourse extends Model
 		->first();
 
 		if(empty($id)){
-			$maxId  = 0; 
+			$maxId  = 1; 
 		}else{
 			$maxId  = $id->id +1; 
 		}
@@ -62,14 +62,17 @@ class PaymentCourse extends Model
 			}
 
 			foreach ($data as $value) {
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'course_id'=>$value['id'],
-					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-				]);
+				$j = $value['quantity'];
+				for ($i=1; $i <= $j ; $i++){
+					DB::table('order_items')->insert([
+						'order_id'=>$id,
+						'course_id'=>$value['id'],
+						'product_name'=>$value['name'],
+						'quantity'=>'1',
+						'list_price'=>$value['price'],
+						'pv'=>$value['attributes']['pv'],
+					]);
+				}
 				
 				Cart::session($rs->type)->remove($value['id']);
 			}
@@ -83,8 +86,8 @@ class PaymentCourse extends Model
 			return $resule;
 		}catch(Exception $e) { 
 			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
+			$resule = ['status'=>'fail','message'=>$e];
+			return $resule; 
 		}
 	}
 
@@ -99,7 +102,7 @@ class PaymentCourse extends Model
 		->first();
 
 		if(empty($id)){
-			$maxId  = 0; 
+			$maxId  = 1; 
 		}else{
 			$maxId  = $id->id +1; 
 		}
@@ -129,14 +132,17 @@ class PaymentCourse extends Model
 			);
 
 			foreach ($data as $value) {
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'course_id'=>$value['id'],
-					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-				]);
+				$j = $value['quantity'];
+				for ($i=1; $i <= $j ; $i++){
+					DB::table('order_items')->insert([
+						'order_id'=>$id,
+						'course_id'=>$value['id'],
+						'product_name'=>$value['name'],
+						'quantity'=>'1',
+						'list_price'=>$value['price'],
+						'pv'=>$value['attributes']['pv'],
+					]);
+				}
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
@@ -149,12 +155,14 @@ class PaymentCourse extends Model
 			return $resule;
 		}catch(Exception $e){
 			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
+			$resule = ['status'=>'fail','message'=>$e];
+			return $resule;
 
 		}
 	}
 
 	public static function credit_card($rs){
+
 		$business_location_id = '1';
 
 		DB::BeginTransaction();
@@ -166,7 +174,7 @@ class PaymentCourse extends Model
 		->first();
 
 		if(empty($id)){
-			$maxId  = 0; 
+			$maxId  = 1; 
 		}else{
 			$maxId  = $id->id +1; 
 		}
@@ -196,45 +204,42 @@ class PaymentCourse extends Model
 			);
 
 			foreach ($data as $value) {
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'course_id'=>$value['id'],
-					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-				]);
+				$j = $value['quantity'];
+				for ($i=1; $i <= $j ; $i++){
+					DB::table('order_items')->insert([
+						'order_id'=>$id,
+						'course_id'=>$value['id'],
+						'product_name'=>$value['name'],
+						'quantity'=>'1',
+						'list_price'=>$value['price'],
+						'pv'=>$value['attributes']['pv'],
+					]);
+				}
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
 			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-				//return $resule;
-				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
-			if($resule['status'] = 'success'){
+
+			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
-				$resuleRegisCourse = Couse_Event::couse_register($id,'99');
+				if($resulePv['status'] == 'fail'){
 
-				if($resulePv['status'] == 'success' and $resuleRegisCourse['status'] == 'success'){
-
-					DB::commit();
-					return $resulePv;
-
-				}else{
 					DB::rollback();
-					return redirect('product-history')->withError($resulePv);
+					return $resulePv;
+				}else{
+					DB::commit();
+					return $resule;
 				}
-				
 			}else{
 				DB::rollback();
-				return redirect('product-history')->withError('Payment submit Fail');
-
+				return $resule;
 			}
 		}catch(Exception $e){
 			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
+			$resule = ['status'=>'fail','message'=>$e];
+			return $resule;
 		}
 	}
 
@@ -250,7 +255,7 @@ class PaymentCourse extends Model
 		->first();
 
 		if(empty($id)){
-			$maxId  = 0; 
+			$maxId  = 1; 
 		}else{
 			$maxId  = $id->id +1; 
 		}
@@ -280,45 +285,42 @@ class PaymentCourse extends Model
 			);
 
 			foreach ($data as $value) {
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'course_id'=>$value['id'],
-					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-				]);
-
+				$j = $value['quantity'];
+				for ($i=1; $i <= $j ; $i++){
+					DB::table('order_items')->insert([
+						'order_id'=>$id,
+						'course_id'=>$value['id'],
+						'product_name'=>$value['name'],
+						'quantity'=>'1',
+						'list_price'=>$value['price'],
+						'pv'=>$value['attributes']['pv'],
+					]);
+				}
+				
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
 			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-				//return $resule;
-				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
-			if($resule['status'] = 'success'){
+
+			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
-				$resuleRegisCourse = Couse_Event::couse_register($id,'99');
+				if($resulePv['status'] == 'fail'){
 
-				if($resulePv['status'] == 'success' and $resuleRegisCourse['status'] == 'success'){
-
-					DB::commit();
-					return $resulePv;
-
-				}else{
 					DB::rollback();
-					return redirect('product-history')->withError($resulePv);
+					return $resulePv;
+				}else{
+					DB::commit();
+					return $resule;
 				}
-				
 			}else{
 				DB::rollback();
-				return redirect('product-history')->withError('Payment submit Fail');
-
+				return $resule;
 			}
 		}catch(Exception $e){
 			DB::rollback();
-			return redirect('product-history')->withError('Payment submit Fail');
-
+			$resule = ['status'=>'fail','message'=>$e];
+			return $resule;
 		}
 	}
 

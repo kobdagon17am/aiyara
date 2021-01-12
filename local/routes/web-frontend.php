@@ -159,7 +159,6 @@ Route::get('course','Frontend\CourseEventController@index')->name('course');
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
  
 
-
 Route::get('/product-status', function () {
   return view('frontend/product/product-status');
 })->name('product-status');

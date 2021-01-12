@@ -30,21 +30,23 @@
                     <table id="history" class="table table-striped table-bordered nowrap">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>วันที่อบรม</th>
-                                <th>CODE</th>
-                                <th>หัวข้อ</th>
-                                <th>รายละเอียด</th>
-                                <th>สถานะ</th>
-                                <th>QRCODE</th>
-                            </tr>
-                        </thead>
+                             <th>#</th>
+                             <th>Start Date</th>
+                             <th>End Date</th>
+                             <th>หัวข้อ</th>
+                             <th>C/E</th>
+                             <th>ราคา</th>
+                             <th>PV</th>
+                             <th>สถานะ</th>
+                             <th>QRCODE</th>
+                         </tr>
+                     </thead>
 
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+                 </table>
+             </div>
+         </div>
+     </div>
+ </div>
 </div>
 @endsection
 @section('js')
@@ -85,16 +87,17 @@
                     type: "POST",
                     data: {_token:'{{ csrf_token() }}',order_type:order_type}
                 },
- 
+
                 columns:[
                 {"data": "id"},
-                {"data": "date"},
-                {"data": "code"},
+                {"data": "sdate"},
+                {"data": "edate"},
                 {"data": "title"},
-                {"data": "address"},
+                {"data": "type"},
+                {"data": "price"},
+                {"data": "pv"},
                 {"data": "status"},
                 {"data": "qrcode"},
-               
                 ],
                 //order: [[ "0", "desc" ]],
             });

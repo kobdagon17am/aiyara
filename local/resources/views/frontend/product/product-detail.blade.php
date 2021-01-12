@@ -67,10 +67,22 @@
                 </div> -->
                 <div class="col-lg-12">
                   @if($type=='6')
-                  <h4 class="pro-desc">{{$couse_event->ce_name}}</h4>
+                  <?php 
+                  if($couse_event->ce_type == 1){
+                    $type_name = 'COURSE';  
+                  }elseif($couse_event->ce_type == 2){
+                    $type_name = 'EVENT';
+                  }else{
+                    $type_name = '';
+                  }
+                  ?>
+                  <h4 class="pro-desc">{{$couse_event->ce_name}} <span class="label label-success" style="font-size: 15px"><i class="fa fa-users"></i> 15/{{$couse_event->ce_max_ticket}} </span></h4>
                   @else
-                  <h4 class="pro-desc">{{$product->product_name}}</h4>
+                  
+
+                  <h4 class="pro-desc">{{$product->product_name}} </h4>
                   @endif
+                  
                   
                 </div>
            {{--      <div class="col-lg-12">

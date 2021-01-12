@@ -10,7 +10,6 @@ class PvPayment extends Model
 
 
 	public static function PvPayment_type_confirme($order_id,$admin_id){//1 ทำคุณสมบัติ //2 รักษาคุณสมบัตรรายเดือน
-
 		$order_data = DB::table('orders')
 		->where('id','=',$order_id)
 		->first();
@@ -304,11 +303,7 @@ class PvPayment extends Model
 
 						 }else{
 						 	$start_month = date("Y-m");
-
 						 }
-
-
-
 						 if($pv_tv_all >= $pro_tv){
 
 				          //หักลบค่อยอัพเดท
@@ -372,63 +367,12 @@ class PvPayment extends Model
 						//ไม่เข้าสถานะต้อง Approve
 					}elseif($type_id == 6){//couse อบรม
 
-						$order_items = DB::table('order_items')
-						->select('order_items.*','dataset_ce_type.id as type_id','dataset_ce_type.txt_desc')
-						->where('order_id','=',$order_id)
-						->leftjoin('course_event','course_event.id','=','order_items.course_id')
-						->leftjoin('dataset_ce_type','dataset_ce_type.id','=','course_event.ce_type')
-						->get();
-
-						foreach ($order_items as $value) {
-
-							if($value->type_id == '1'){//course
-
-								$last_id = DB::table('course_ticket_number')//เจนเลข payment order
-								->select('id')
-								->orderby('id','desc')
-								->first();
-
-								if($last_id){
-									$last_id = $last_id->id +1;
-								}else{
-									$last_id = 1;
-								}
-
-								$maxId = substr("00000".$last_id, -5);
-								$code_ticket = 'C'.date('Ymd').''.$maxId; 
-
-								$last_ticket_id = DB::table('course_ticket_number')->insertGetId(
-									['ticket_number'=>$code_ticket]);
-
-							}else{//event
-								$last_id = DB::table('event_ticket_number')//เจนเลข payment order
-								->select('id')
-								->orderby('id','desc')
-								->first();
-								if($last_id){
-									$last_id = $last_id->id +1;
-								}else{
-									$last_id = 1;
-								}
-
-								$maxId = substr("00000".$last_id, -5);
-								$code_ticket = 'E'.date('Ymd').''.$maxId;
-
-								$last_ticket_id = DB::table('event_ticket_number')->insertGetId(
-									['ticket_number'=>$code_ticket]);
-							}
-
-
-							$regis = DB::table('course_event_regis')->insert(
-								['ce_id_fk'=>$value->type_id,
-								'customers_id_fk'=>$customer_id,
-								'ticket_id'=>$last_ticket_id,
-								'subject_recipient'=>'1',
-								'regis_date'=>date('Y-m-d'),
-							]);
-
-						}
-
+						$resuleRegisCourse = Couse_Event::couse_register($order_id,$admin_id); 
+						if($resuleRegisCourse['status'] != 'success'){
+							DB::rollback();
+							return $resuleRegisCourse;
+						} 
+						
 						$data_user = DB::table('customers')//อัพ Pv ของตัวเอง
 						->select('*')
 						->where('id','=',$customer_id)
@@ -551,25 +495,10 @@ class PvPayment extends Model
 
 
 					if($resule['status'] == 'success'){
-						if( == '6'){
-							$resuleRegisCourse = Couse_Event::couse_register($id,$admin_id);
-							if($resuleRegisCourse['status'] == 'success'){
-								DB::commit();
-								//DB::rollback();
-								return $resuleRegisCourse;
 
-							}else{
-								DB::rollback();
-								return $resuleRegisCourse; 
-
-							}
-
-						}else{
-							DB::commit();
-							//DB::rollback();
-							return $resule;
-						}
-						
+						DB::commit();
+						//DB::rollback();
+						return $resule;
 					}else{
 						DB::rollback();
 						return $resule;

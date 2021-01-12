@@ -137,15 +137,17 @@ class CartPaymentController extends Controller
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			} 
 		}elseif($request->submit == 'credit_card'){
-			if($request->type == '6'){
-				$resule = PaymentCourse::credit_card($request);
 
+			if($request->type == '6'){ 
+				$resule = PaymentCourse::credit_card($request);
+				
 			}else{
 				$resule = Payment::credit_card($request);
 			}
 
+			
 			 
-			if($resule['status'] == 'success'){
+			if($resule['status'] == 'success'){ 
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {
 				return redirect('cart_payment/'.$request->type)->withError($resule['message']);

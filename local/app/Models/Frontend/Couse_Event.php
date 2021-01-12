@@ -12,7 +12,6 @@ class Couse_Event extends Model
         ->select('course_event.*','course_event_images.img_url','course_event_images.img_name')
         ->leftjoin('course_event_images', 'course_event_images.course_event_id_fk', '=','course_event.id') 
         ->where('course_event_images.img_default', '=', 1) 
-        // ->where('products_cost.business_location_id','=', 1)
         ->orderby('course_event.ce_edate')
         ->get();
 
@@ -36,26 +35,28 @@ class Couse_Event extends Model
         ->first();
 
         if($order_data->type_id != '6'){
-           $resule = ['status'=>'fail','message'=>'Type ID not course or event'];
-           return $resule;
-       }
+         $resule = ['status'=>'fail','message'=>'Type ID not course or event'];
+         return $resule;
+     }
+ 
+     $order_items = DB::table('order_items')
+     ->select('order_items.*','dataset_ce_type.txt_desc','dataset_ce_type.id as type_ce_id')
+     ->leftjoin('course_event', 'course_event.id', '=','order_items.course_id') 
+     ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
+     ->where('order_items.order_id','=',$order_id)
+     ->where('order_items.status','=',null)
+     ->orwhere('order_items.status','=','order')
+     ->get();
 
-       $order_items = DB::table('order_items')
-       ->where('order_id','=',$order_id)
-       ->where('status','=',null)
-       ->orwhere('status','=','order')
-       ->get();
-
-       if(count($order_items) <= 0){ 
-        $resule = ['status'=>'fail','message'=>'Items not course or event '];
+     if(count($order_items) < 0){ 
+        $resule = ['status'=>'fail','message'=>'Items not course or event || Items Empty'];
         return $resule;
     }
+    try {
+       DB::BeginTransaction();
+       foreach ($order_items as $value) {
 
-    foreach ($order_items as $value) {
-       try {
-
-         DB::BeginTransaction();
-        if($value->course_id == 1) {//course
+        if($value->type_ce_id == 1) {//course
 
             $last_code = DB::table('course_ticket_number')
             ->where('business_location_id','=',$order_data->business_location_id)
@@ -84,8 +85,8 @@ class Couse_Event extends Model
             ]);
 
 
-        }elseif ($value->course_id == 2) {//event
-            $last_code = DB::table('event_ticket_number')
+        }elseif ($value->type_ce_id == 2) {//event
+            $last_code = DB::table('course_ticket_number')
             ->where('business_location_id','=',$order_data->business_location_id)
             ->where('ce_id_fk','=',$value->course_id)
             ->orderby('id','desc')
@@ -97,12 +98,12 @@ class Couse_Event extends Model
                 $last_code = $code + 1;
 
                 $num_code = substr("000".$last_code, -3);
-                $code_order = 'C'.$value->course_id.''.date('ymd').''.$num_code;
+                $code_order = 'E'.$value->course_id.''.date('ymd').''.$num_code;
 
             }else{
                 $last_code = 1;
                 $maxId = substr("000".$last_code, -3);
-                $code_order = 'C'.$value->course_id.''.date('ymd').''.$maxId;
+                $code_order = 'E'.$value->course_id.''.date('ymd').''.$maxId;
             }
 
             $course_ticket_id = DB::table('course_ticket_number')->insertGetId([
@@ -130,28 +131,25 @@ class Couse_Event extends Model
             'order_item_id'=>$value->course_id,
             'regis_date'=>date('Y-m-d'),
         ]);
-
         
         $resule = ['status'=>'success','message'=>'Register Course Success'];
-        
+    } 
 
-    } catch (Exception $e) {
+    if($resule['status'] == 'success'){
+        DB::commit();
+        return $resule;
+
+    }else{
         DB::rollback();
-        $resule = ['status'=>'fail','message'=>$e];
         return $resule;
 
     }
-} 
 
-if($resule['status'] == 'success'){
-    DB::commit();
-    return $resule;
-
-}else{
-    DB::rollback();
-    return $resule;
-
+} catch (Exception $e) {
+ $resule = ['status'=>'fail','message'=> $e];
+ return $resule;
 }
+
 
 }
 
