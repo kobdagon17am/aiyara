@@ -135,6 +135,7 @@ Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
+Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive_product')->name('modal_qr_recive_product');
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
@@ -156,6 +157,7 @@ Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_a
 
 
 Route::get('course','Frontend\CourseEventController@index')->name('course');
+Route::get('modal_qr_ce','Frontend\CourseEventController@modal_qr_ce')->name('modal_qr_ce');
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
  
 

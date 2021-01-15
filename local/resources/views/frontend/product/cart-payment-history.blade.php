@@ -47,9 +47,9 @@
                         <tr>
                             <th>Type :</th>
                             <td>
-                             @if($order->type) <span>{{ $order->type }}</span> @endif
-                         </td>
-                     </tr>
+                               @if($order->type) <span>{{ $order->type }}</span> @endif
+                           </td>
+                       </tr>
                  {{--     <tr>
                         <th>Paid by :</th>
                         <td>
@@ -105,6 +105,7 @@
                     <thead>
                         <tr class="thead-default">
                             <th>Description</th>
+                            @if($order->type_id == 6)<th>Ticket Number</th>@endif
                             <th>Quantity</th>
                             <th>Amount</th>
                             <th>PV</th>
@@ -118,6 +119,9 @@
                                 <h6>{{ $value->product_name }}</h6>
                                 {{-- <p>lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt </p> --}}
                             </td>
+                            @if($order->type_id == 6)
+                            <td ><b class="text-primary">{{ $value->ticket_number }}</b></td>
+                            @endif
                             <td>{{ $value->quantity }}</td>
                             <td>{{ $value->list_price }}</td>
                             <td class="text-success"><b>{{ $value->pv }}</b></td>
@@ -134,7 +138,7 @@
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-responsive invoice-table invoice-total">
-               <tbody>
+             <tbody>
                 <tr>
                     <th>มูลค่าสินค้า : </th>
                     <td> {{ number_format($order->price,2) }}</td>
@@ -147,7 +151,7 @@
                     <th>รวม : </th>
                     <td> {{ number_format($order->price,2) }}</td>
                 </tr>
-                 @if($order->type_id != 6)
+                @if($order->type_id != 6)
                 <tr>
                     <th>ค่าจัดส่ง : </th>
                     <td> {{ number_format($order->shipping,2) }} </td>
@@ -175,12 +179,12 @@
                 <tr>
                     <td><strong>ยอดที่ต้องชำระเพิ่ม : </strong></td>
                     <td align="right"><strong> {{  number_format($order->price_remove_gv,2) }}</strong>
-                        
+
                     </td>
                 </tr>
 
                 @elseif($order->type_id == 6)
-                  <tr>
+                <tr>
                     <td><strong>ยอดชำระ</strong></td>
                     <td align="right"><strong > {{ number_format($order->price,2) }}</strong>
                     </td>

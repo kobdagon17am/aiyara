@@ -20,7 +20,7 @@
 							@endforeach
 						</select>
 					</div>
-				
+
 
 				</div>
 			</div>
@@ -47,6 +47,7 @@
 
 					</table>
 				</div>
+				<div id="modal_qr_recive"></div>
 
 
 				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" >
@@ -113,6 +114,44 @@
 
 	});
 
+	function qrcode(id){
+		$.ajax({
+			url: '{{ route('modal_qr_recive_product')}}',
+			type: 'GET',
+			data: {id:id},
+		})
+		.done(function(data) {
+			console.log("success");
+			$('#modal_qr_recive').html(data);
+			$('#show_qr').modal('show');
+
+			// var fiveMinutes = 60 * 30,
+			// display = document.querySelector('#time');
+			// startTimer(fiveMinutes, display);
+			
+		})
+		.fail(function() {
+			console.log("error");
+		})
+
+	}
+
+	// function startTimer(duration, display) {
+	// 	var timer = duration, minutes, seconds;
+	// 	setInterval(function () {
+	// 		minutes = parseInt(timer / 60, 10);
+	// 		seconds = parseInt(timer % 60, 10);
+
+	// 		minutes = minutes < 10 ? "0" + minutes : minutes;
+	// 		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	// 		display.textContent = minutes + ":" + seconds;
+
+	// 		if (--timer < 0) {
+	// 			timer = duration;
+	// 		}
+	// 	}, 1000);
+	// }
 
 	function fetch_data(order_type = '') {
 		
@@ -173,6 +212,7 @@
 		} 
 	});
 </script>
+
 @endsection
 
 

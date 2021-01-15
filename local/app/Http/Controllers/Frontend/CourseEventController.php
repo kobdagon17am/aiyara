@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
 use App\Models\Frontend\Product;
+use App\Models\Frontend\Random_code;
 use Auth;
 
 class CourseEventController extends Controller
@@ -24,149 +25,187 @@ class CourseEventController extends Controller
     // ->orderby('order')
     // ->get();
 
+
     return view('frontend/course');
   }
 
-  public function dt_course(Request $request){
+  public function modal_qr_ce(Request $request){
+    $course_event_regis_id = $request->id;
 
-    $columns = array(
-      0 => 'id',
-      1 => 'sdate',
-      2 => 'edate',
-      3 => 'type',
-      4 => 'title',
-      5 => 'price',
-      6 => 'pv',
-      7 => 'status',
-      8 => 'qrcode',
-    );
+    $data_course_event_regis = DB::table('course_event_regis') 
+    ->where('id',$course_event_regis_id)
+    ->first();
 
-    if(empty($request->input('search.value')) ){
+    if($data_course_event_regis->qr_code){
+      $qr_endate = strtotime($data_course_event_regis->qr_endate);
+      if( $qr_endate < strtotime(now()) ){
 
-      $totalData =  DB::table('course_event_regis')
-      ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk') 
-      ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id') 
-      ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
-      ->count();
-      $totalFiltered = $totalData;
+       $random = Random_code::random_code('8');
+       $qr = $course_event_regis_id.''.$random;
 
-      $limit = $request->input('length');
-      $start = $request->input('start');
-        //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir');
+       $endata = date('Y-m-d H:i:s',strtotime("+1 day"));
+       $updated_qrcode = DB::table('course_event_regis') 
+       ->where('id',$course_event_regis_id)
+       ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
 
-      $course_event_regis = DB::table('course_event_regis')
-      ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc') 
-      ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
-      ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id') 
-      ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
-      ->orderby('course_event_regis.updated_at','DESC') 
-      ->get(); 
-// dd($request->input('order_type'));
+     }
 
-    }else{
+   }else{
 
-     $search=$request->input('search.value');
-     $order_type=$request->input('order_type');
-         //DB::enableQueryLog();
-         //dd($search.':'.$order_type);
-     $totalData =  DB::table('orders')
-     ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-     ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-     ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
-     ->where('dataset_order_status.lang_id','=','1')
-     ->where('dataset_orders_type.lang_id','=','1')
-     ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
-     ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
-     ->whereRaw( "(orders.code_order LIKE '%{$search}%' or orders.tracking_number LIKE '%{$search}%')" )
-     ->count(); 
+    $random = Random_code::random_code('8');
+    $qr = $course_event_regis_id.''.$random;
 
-     $totalFiltered = $totalData;
-     $limit = $request->input('length');
-     $start = $request->input('start');
-
-        //dd($query);
-        //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir');
-
-     $orders =  DB::table('orders')
-     ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
-     ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-     ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-     ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
-     ->where('dataset_order_status.lang_id','=','1')
-     ->where('dataset_orders_type.lang_id','=','1')
-     ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
-     ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
-     ->whereRaw( "(orders.code_order LIKE '%{$search}%' or orders.tracking_number LIKE '%{$search}%')" )
-     ->offset($start) 
-     ->limit($limit)
-     ->orderby('orders.updated_at','DESC') 
-     ->get(); 
-   }
-
-   $data = array();
-   $i=0;
-   foreach($course_event_regis as $value){
-
-    $i++;
-    $nestedData['id'] = $i;
-
-
-    // <label class="label label-inverse-danger"><b>31-12-2020 14:49:50</b></label>
-    // <label class="label label-inverse-primary"><b>31-12-2020 14:49:50</b></label>
-    if(strtotime($value->ce_sdate) > strtotime(now()) ){
-      $date_css = 'primary';
-    }else{
-      $date_css = 'danger';
-    }
-
-    if(strtotime($value->ce_edate) > strtotime(now()) ){
-      $date_css = 'primary';
-    }else{
-      $date_css = 'danger';
-    }
-
-    $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
-    .date('d/m/Y',strtotime($value->ce_sdate)).'</b></label>';
-
-
-    $nestedData['edate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
-    .date('d/m/Y',strtotime($value->ce_edate)).'</b></label>';
-
-    $nestedData['title'] = '<b>'.$value->ce_name.'</b>';
-
-
-    
-    if($value->txt_desc == 'Course'){
-      $nestedData['type'] = '<label class="label label-inverse-primary"><b style="color:#000">'.$value->txt_desc.'</b></label>';
-
-    }else{
-      $nestedData['type'] = '<label class="label label-inverse-warning"><b style="color:#000">'.$value->txt_desc.'</b></label>';
-
-    }
-
-
-    $nestedData['price'] = '<b class="text-primary">'.number_format($value->ce_ticket_price).'</b>';
-    $nestedData['pv'] =  '<b class="text-success">'.number_format($value->pv).'</b>';
-
-  // $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>'; 
-    $nestedData['status'] = ''; 
-    $nestedData['qrcode'] = '';
-
-
-    $data[] = $nestedData;
+    $edata = date('Y-m-d H:i:s',strtotime("+1 day"));
+    $updated_qrcode = DB::table('course_event_regis') 
+    ->where('id',$course_event_regis_id)
+    ->update(['qr_code' => $qr,'qr_endate' => $edata ]);
   }
 
-  $json_data = array(
-    "draw" => intval($request->input('draw')),
-    "recordsTotal" => intval($totalData),
-    "recordsFiltered" => intval($totalFiltered),
-    "data" => $data,
+  $data =  DB::table('course_event_regis')
+  ->select('course_event_regis.*','course_ticket_number.ticket_number')
+  ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=','course_event_regis.ticket_id') 
+  ->where('course_event_regis.id','=',$course_event_regis_id)
+  ->first();
+
+  return view('frontend/modal/modal_qr_ce',compact('data')); 
+}
+
+public function dt_course(Request $request){
+
+  $columns = array(
+    0 => 'id',
+    1 => 'sdate',
+    2 => 'edate',
+    3 => 'type',
+    4 => 'title',
+    5 => 'price',
+    6 => 'pv',
+    7 => 'status',
+    8 => 'qrcode',
   );
 
-  return json_encode($json_data);
+  if(empty($request->input('search.value')) ){
+
+    $totalData =  DB::table('course_event_regis')
+    ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk') 
+    ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id') 
+    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
+    ->count();
+    $totalFiltered = $totalData;
+    $limit = $request->input('length');
+    $start = $request->input('start');
+        //$order = $columns[$request->input('order.0.column')];
+        //$dir = $request->input('order.0.dir');
+
+    $course_event_regis = DB::table('course_event_regis')
+    ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc') 
+    ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
+    ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id') 
+    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
+    ->offset($start) 
+    ->limit($limit)
+    ->orderby('course_event_regis.updated_at','DESC') 
+    ->get(); 
+
+// dd($request->input('order_type'));
+
+  }else{
+
+   $search=$request->input('search.value');
+   $order_type=$request->input('order_type');
+
+   $totalData =  DB::table('course_event_regis')
+   ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk') 
+   ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id') 
+   ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
+   ->count();
+   $totalFiltered = $totalData;
+   $limit = $request->input('length');
+   $start = $request->input('start');
+      //$order = $columns[$request->input('order.0.column')];
+      //$dir = $request->input('order.0.dir');
+
+   $course_event_regis = DB::table('course_event_regis')
+   ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc') 
+   ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
+   ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id') 
+   ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
+   ->offset($start) 
+   ->limit($limit)
+   ->orderby('course_event_regis.updated_at','DESC') 
+   ->get(); 
+ }
+
+ $data = array();
+ $i=0;
+ foreach($course_event_regis as $value){
+
+  $i++;
+  $nestedData['id'] = $i;
+
+  if(strtotime($value->ce_sdate) > strtotime(now()) ){
+    $date_css = 'primary';
+  }else{
+    $date_css = 'danger';
+  }
+
+  if(strtotime($value->ce_edate) > strtotime(now()) ){
+    $date_css = 'primary';
+  }else{
+    $date_css = 'danger';
+  }
+
+  $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
+  .date('d/m/Y',strtotime($value->ce_sdate)).'</b></span>';
+
+
+  $nestedData['edate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
+  .date('d/m/Y',strtotime($value->ce_edate)).'</b></span>';
+
+  $nestedData['title'] = '<b>'.$value->ce_name.'</b>';
+
+
+
+  if($value->txt_desc == 'Course'){
+    $nestedData['type'] = '<label class="label label-inverse-primary"><b style="color:#000">'.$value->txt_desc.'</b></label>';
+
+  }else{
+    $nestedData['type'] = '<label class="label label-inverse-warning"><b style="color:#000">'.$value->txt_desc.'</b></label>';
+
+  }
+
+
+  $nestedData['price'] = '<b class="text-primary">'.number_format($value->ce_ticket_price).'</b>';
+  $nestedData['pv'] =  '<b class="text-success">'.number_format($value->pv).'</b>';
+
+  // $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>'; 
+  if($value->status_ce == 'Y' ){
+
+   $status = '<button class="btn btn-sm btn-success btn-outline-success"><b style="color: #000">ผ่านกิจกรรม</b></button>';
+
+ }else{
+  $status = '<button class="btn btn-sm btn-warning btn-outline-warning"><b style="color: #000">ยังไม่ผ่านกิจกรรม</b></button>';
+} 
+
+$nestedData['status'] = $status;  
+
+$nestedData['qrcode'] = '<button class="btn btn-sm btn-primary" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> QR </button>';
+
+$data[] = $nestedData;
 }
+
+$json_data = array(
+  "draw" => intval($request->input('draw')),
+  "recordsTotal" => intval($totalData),
+  "recordsFiltered" => intval($totalFiltered),
+  "data" => $data,
+);
+
+return json_encode($json_data);
+}
+
+
+
 
 
 }

@@ -9,8 +9,9 @@
 @section('conten')
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-         {{--    <div class="card-header">
+        <div class="card"> 
+            
+         {{--<div class="card-header">
                 <div class="row">
                     <div class="col-md-4">
                         <select class="form-control" id="order_type" >
@@ -20,8 +21,6 @@
                             @endforeach
                         </select>
                     </div>
-                
-
                 </div>
             </div> --}}
             <div class="card-block">
@@ -30,23 +29,25 @@
                     <table id="history" class="table table-striped table-bordered nowrap">
                         <thead>
                             <tr>
-                             <th>#</th>
-                             <th>Start Date</th>
-                             <th>End Date</th>
-                             <th>หัวข้อ</th>
-                             <th>C/E</th>
-                             <th>ราคา</th>
-                             <th>PV</th>
-                             <th>สถานะ</th>
-                             <th>QRCODE</th>
-                         </tr>
-                     </thead>
+                               <th>#</th>
+                               <th>Start Date</th>
+                               <th>End Date</th>
+                               <th>หัวข้อ</th>
+                               <th>C/E</th>
+                               <th>ราคา</th>
+                               <th>PV</th>
+                               <th>สถานะ</th>
+                               <th>QRCODE</th>
+                           </tr>
+                       </thead>
 
-                 </table>
-             </div>
-         </div>
-     </div>
- </div>
+                   </table>
+               </div>
+               <div id="modal_qr"></div>
+
+           </div>
+       </div>
+   </div>
 </div>
 @endsection
 @section('js')
@@ -72,10 +73,27 @@
 
     });
 
+    function qrcode(id){
+      $.ajax({
+        url: '{{ route('modal_qr_ce')}}',
+        type: 'GET',
+        data: {id:id},
+    })
+      .done(function(data) {
+        console.log("success");
+        $('#modal_qr').html(data);
+        $('#show_qr').modal('show');
+    })
+      .fail(function() {
+        console.log("error");
+    })
+ 
+      
+  }
 
-    function fetch_data(order_type = '') {
+  function fetch_data(order_type = '') {
 
-        $('#history').DataTable({
+    $('#history').DataTable({
                 // scrollX: true,
                 // scrollCollapsed: true,
                 processing: true,
@@ -101,13 +119,13 @@
                 ],
                 //order: [[ "0", "desc" ]],
             });
-    }
+}
 
-    $('#order_type').on('change',function(){
-        var order_type = $(this).val();
-        $('#history').DataTable().destroy();
-        fetch_data(order_type);
-    });
+$('#order_type').on('change',function(){
+    var order_type = $(this).val();
+    $('#history').DataTable().destroy();
+    fetch_data(order_type);
+});
 
 </script>
 @endsection

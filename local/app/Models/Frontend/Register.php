@@ -17,7 +17,7 @@ class Register extends Model
 
         $username ="A".$new_id;
 
-        $alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
+        $alphabet = 'abcdefghjkmnopqrstuvwxyz23456789';
         $pass = array(); //remember to declare $pass as an array
 
     $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache

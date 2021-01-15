@@ -8,7 +8,6 @@ use Auth;
 class PvPayment extends Model
 {
 
-
 	public static function PvPayment_type_confirme($order_id,$admin_id){//1 ทำคุณสมบัติ //2 รักษาคุณสมบัตรรายเดือน
 		$order_data = DB::table('orders')
 		->where('id','=',$order_id)
@@ -372,13 +371,14 @@ class PvPayment extends Model
 							DB::rollback();
 							return $resuleRegisCourse;
 						} 
-						
+
 						$data_user = DB::table('customers')//อัพ Pv ของตัวเอง
 						->select('*')
 						->where('id','=',$customer_id)
 						->first();
 
 						$add_pv = $data_user->pv + $pv;
+
 						$update_pv = DB::table('customers') 
 						->where('id',$customer_id)
 						->update(['pv' => $add_pv]);
@@ -390,6 +390,7 @@ class PvPayment extends Model
 						$upline_type = $data_user->line_type;
 						$upline_id = $data_user->upline_id;
 						$customer_id = $upline_id;
+
 						$last_upline_type = $upline_type;
 
 					}else{//ไม่เข้าเงื่อนไขได้เลย
@@ -397,7 +398,8 @@ class PvPayment extends Model
 						return $resule;
 					}
 
-					if($customer_id != 'AA' || $pv <= 0){
+
+					if($customer_id != 'AA' and $pv > 0 ){
 						$j = 2;
 						for ($i=1; $i <= $j ; $i++){ 
 

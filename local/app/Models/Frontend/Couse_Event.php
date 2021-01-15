@@ -44,11 +44,12 @@ class Couse_Event extends Model
      ->leftjoin('course_event', 'course_event.id', '=','order_items.course_id') 
      ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
      ->where('order_items.order_id','=',$order_id)
-     ->where('order_items.status','=',null)
-     ->orwhere('order_items.status','=','order')
+     // ->where('order_items.status','=',null)
+     // ->orwhere('order_items.status','=','order')
      ->get();
 
-     if(count($order_items) < 0){ 
+
+     if(count($order_items) <= 0){ 
         $resule = ['status'=>'fail','message'=>'Items not course or event || Items Empty'];
         return $resule;
     }
@@ -113,6 +114,7 @@ class Couse_Event extends Model
             ]);
 
         }else{
+             
             DB::rollback();
             $resule = ['status'=>'fail','message'=>'Items not course or event'];
             return $resule;
@@ -128,7 +130,7 @@ class Couse_Event extends Model
             'customers_id_fk'=>$order_data->customer_id,
             'ticket_id'=>$course_ticket_id,
             'subject_recipient'=>1,
-            'order_item_id'=>$value->course_id,
+            'order_item_id'=>$value->id,
             'regis_date'=>date('Y-m-d'),
         ]);
         
