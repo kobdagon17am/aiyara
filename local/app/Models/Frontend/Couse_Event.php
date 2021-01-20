@@ -12,6 +12,7 @@ class Couse_Event extends Model
         ->select('course_event.*','course_event_images.img_url','course_event_images.img_name')
         ->leftjoin('course_event_images', 'course_event_images.course_event_id_fk', '=','course_event.id') 
         ->where('course_event_images.img_default', '=', 1) 
+        ->whereDate('course_event.ce_edate', '>=',date('Y-m-d')) 
         ->orderby('course_event.ce_edate')
         ->get();
 

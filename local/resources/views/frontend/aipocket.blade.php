@@ -10,9 +10,11 @@
             <div class="card-block">
                 <h5 class="m-b-20">Ai-Stockist</h5>
                 <h3 class="text-right"><i class="ti-wallet f-left"></i><span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h3>
-                <p class="m-b-0">จำนวนคะแนนที่เหลือ{{-- <span class="f-right">$542</span> --}}</p>
+                <p class="m-b-0">จำนวนคะแนนคงเหลือ{{-- <span class="f-right">$542</span> --}}</p>
             </div>
         </div>
+
+        
     </div>
 
     <div class="col-md-9 col-xl-9">

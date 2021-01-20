@@ -124,17 +124,7 @@ class AipocketController extends Controller
 
     foreach ($ai_pocket as $value){
       $i++;
-      $columns = array(
-        0 => 'order',
-        1 => 'create_at',
-        2 => 'customer_id',
-        3 => 'to_customer_id',
-        4 => 'type',
-        5 => 'pv',
-        6 => 'banlance',
-        7 => 'detail',
-      );
-
+ 
       $nestedData['order'] = $i;
       if(Auth::guard('c_user')->user()->id == $value->customer_id){
        $nestedData['customer_id'] = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';

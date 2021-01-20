@@ -462,9 +462,17 @@
 			</a>
 		</li>
 
+		<li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
+			<a href="{{route('ai-cash')}}">
+				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
+				<span class="pcoded-mtext">Ai-Cash</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
 		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
 			<a href="{{route('ai-pocket')}}">
-				<span class="pcoded-micon"><i class="ti-mobile text-success"></i><b>Ai-Stockist</b></span>
+				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
 				<span class="pcoded-mtext">Ai-Stockist</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
@@ -486,21 +494,7 @@
 				</a>
 			</li>
 
-		{{-- 	<li class="{{ (request()->is('benefits')) ? 'active' : '' }}">
-				<a href="{{route('benefits')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">ข้อมูลสิทธิประโยชน์</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li> --}}
-
-			<li class="{{ (request()->is('course')) ? 'active' : '' }}">
-				<a href="{{route('course')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">คอร์สฝึกอบรม</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
+	 
 
 			<li class="{{ (request()->is('travel')) ? 'active' : '' }}">
 				<a href="{{route('travel')}}">
@@ -513,7 +507,7 @@
 		</ul>
 	</li>
 
-	<li class="pcoded-hasmenu {{ (request()->is('24extra/promote') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+{{-- 	<li class="pcoded-hasmenu {{ (request()->is('24extra/promote') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 		<a href="javascript:void(0)">
 			<span class="pcoded-micon"><i class="fa fa-laptop text-success"></i><b>Sale Page</b></span>
 			<span class="pcoded-mtext">Sale Page</span>
@@ -555,7 +549,7 @@
 
 
 		</ul>
-	</li>
+	</li> --}}
 
 </ul>
 

@@ -151,9 +151,11 @@ Route::get('dt_gift_order_history','Frontend\GiftVoucherController@dt_gift_order
 
 Route::get('ai-pocket','Frontend\AipocketController@index')->name('ai-pocket');
 Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');
-
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
 Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
+
+Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
+Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');
 
 
 Route::get('course','Frontend\CourseEventController@index')->name('course');
