@@ -22,6 +22,9 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
+ <div class="myBorder">
+               
               @if( empty($sRow) )
               <form action="{{ route('backend.products_giveaway.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
@@ -34,7 +37,14 @@
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-3 col-form-label">สถานที่ตั้งธุรกิจ : * </label>
                     <div class="col-md-9">
-                        <input class="form-control" type="text" value="" name="txt_desc" required>
+                    <select name="business_location_id" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                        @if(@$sBusiness_location)
+                          @foreach(@$sBusiness_location AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
                     </div>
                 </div>
 
@@ -169,7 +179,29 @@
                       </div>
                     </div>
                 </div>
+</div>
 
+          <div class="myBorder">
+
+                      <div style="">
+                          <div class="form-group row">
+                              <div class="col-md-12">
+                                  <span style="font-weight: bold;padding-right: 10px;"> รายการสินค้า </span>
+                                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_products.create') }}/{{@$sRow->id}}" style="float: right;" >
+                                      <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                                  </a>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <div class="col-md-12">
+                                  <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+
+
+</div>
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products_giveaway") }}">

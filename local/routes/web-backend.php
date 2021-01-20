@@ -254,6 +254,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
 
 
+    Route::resource('frontstore_list', 'Frontstore_listController');
+    Route::post('frontstore_list/datatable', 'Frontstore_listController@Datatable')->name('frontstore_list.datatable');
+
+
+
+
     Route::resource('taxdata', 'TaxdataController');
     Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
     Route::get('taxdata/taxtvi/{id}', 'TaxdataController@createPDFTaxtvi');
@@ -265,6 +271,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
+    Route::get('frontstore/print_receipt_02/{id}', 'AjaxController@createPDFReceiptFrontstore02');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');

@@ -330,7 +330,7 @@ Amount </td>
       order_items.list_price,
       order_items.pv,
       order_items.discount,
-      order_items.create_at,
+      order_items.created_at,
       order_items.update_at,
       orders.shipping,
       db_delivery_packing.id as packing_id,

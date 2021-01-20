@@ -25,12 +25,15 @@ class Products_giveawayController extends Controller
       $sGiveaway_time = DB::select(" select * from dataset_giveaway_time where status=1 ");
       $sGiveaway_obtion = DB::select(" select * from dataset_giveaway_obtion where status=1 ");
 
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+
       return View('backend.products_giveaway.form')->with(array(
         'sLang'=>$sLang,
         'sPurchase_type'=>$sPurchase_type,
         'sGiveaway_type'=>$sGiveaway_type,
         'sGiveaway_time'=>$sGiveaway_time,
         'sGiveaway_obtion'=>$sGiveaway_obtion,
+        'sBusiness_location'=>$sBusiness_location,
       ) );
     }
 
@@ -43,7 +46,9 @@ class Products_giveawayController extends Controller
     {
        $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Products_giveaway::find($id);
-       return View('backend.products_giveaway.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ) );
+      $sGiveaway_obtion = DB::select(" select * from dataset_giveaway_obtion where status=1 ");
+
+       return View('backend.products_giveaway.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ,'sBusiness_location'=>$sBusiness_location, ) );
     }
 
     public function update(Request $request, $id)

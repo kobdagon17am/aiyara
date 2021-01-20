@@ -403,19 +403,21 @@ $(function() {
             {data: 'id',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">INV000'+d+'</span>';
             }},
-            {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
-              if(d==1){
-                  return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
-              }else if(d==2){
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
-              }else if(d==3){
-                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
-              }
+            {data: 'approve_status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              // if(d==1){
+              //     return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+              // }else if(d==2){
+              //     return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+              // }else if(d==3){
+              //     return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+              // }else{
+              //     return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+              // }
+              return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รอจัดส่ง</span>';
             }},
-            {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
-                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+            {data: 'id',   title :'ใบเสร็จ', className: 'text-center w100 ',render: function(d) {
+                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>'
+                + '<a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
@@ -433,8 +435,8 @@ $(function() {
 
         rowCallback: function(nRow, aData, dataIndex){
 
-        	$("td:eq(9)", nRow).prop('disabled',true); 
-        	$("td:eq(10)", nRow).prop('disabled',true); 
+        	$("td:eq(8)", nRow).prop('disabled',true); 
+          $("td:eq(9)", nRow).prop('disabled',true); 
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');

@@ -1,3 +1,6 @@
+@php
+@include(app_path() . '\Models\MyFunction.php');
+@endphp
 <style>
 @font-face{
  font-family:  'THSarabunNew';
@@ -275,12 +278,12 @@ $value = DB::select("
             <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
           </th>
           <th style="text-align: right;">
-            (<?php echo sprintf("%04d",$data[0]).'-'; ?>)<br>
-2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-TEL : +66 (0) 2026 3555 
-FAX : +66 (0) 2514 3944 
-E-MAIL : info@aiyara.co.th
+            (<?php echo sprintf("%04d",$data[0]); ?>)<br>
+              2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
+              แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
+              TEL : +66 (0) 2026 3555 
+              FAX : +66 (0) 2514 3944 
+              E-MAIL : info@aiyara.co.th
           </th>
         </tr>
       
@@ -307,32 +310,177 @@ E-MAIL : info@aiyara.co.th
 
          <?php
 
-                echo "<b>ที่อยู่ลูกค้า</b>"."<br>";
-                echo "<b>".$value[0]->prefix_name.$value[0]->first_name.' '.$value[0]->last_name."</b><br>";
+                 $sRow = \App\Models\Backend\Frontstore::find($data[0]);
+                 $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
+                 $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
-                $addr = $value[0]->house_no?$value[0]->house_no.", ":'';
-                $addr .= $value[0]->house_name;
-                $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
-                $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
-                $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
-                $addr .= $value[0]->district?", อ.".$value[0]->district:'';
-                $addr .= $value[0]->province?", จ.".$value[0]->province:'';
+                echo "<b>ที่อยู่จัดส่ง</b>"."<br>";
+                echo "<b>".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</b><br>";
 
-                if($addr!=''){
-                    $addr = $addr;
-                }else{
-                    $addr = "-ไม่พบข้อมูลที่อยู่-";
-                }
 
-                echo $addr;
+                      if(@$sRow->delivery_location==0){
+                        echo " รับสินค้าด้วยตัวเอง </span> ";
+                      }else{
 
-      ?>
+                        foreach(@$Delivery_location AS $r){
+                          if(@$r->id==@$sRow->delivery_location){
+                            echo "( ".$r->txt_desc." ) </span> ";
+                          }
+                        }
 
+                        if(@$sRow->delivery_location==1){
+
+                          $addr = DB::select(" SELECT
+                                      customers_address_card.id,
+                                      customers_address_card.customer_id,
+                                      customers_address_card.card_house_no,
+                                      customers_address_card.card_house_name,
+                                      customers_address_card.card_moo,
+                                      customers_address_card.card_zipcode,
+                                      customers_address_card.card_soi,
+                                      customers_address_card.card_district,
+                                      customers_address_card.card_district_sub,
+                                      customers_address_card.card_road,
+                                      customers_address_card.card_province,
+                                      customers_address_card.created_at,
+                                      customers_address_card.update_at,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name
+                                      FROM
+                                      customers_address_card
+                                      Left Join dataset_provinces ON customers_address_card.card_province = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_address_card.card_district = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_address_card.card_district_sub = dataset_districts.id
+                                      Left Join customers ON customers_address_card.customer_id = customers.id
+                                      where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                                     ");
+                          // print_r($addr);
+
+                          if(@$addr[0]->provname!=''){
+
+                              @$address = "";
+                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no."<br> "; 
+                              @$address .=  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ต. ". @$addr[0]->tamname; 
+                              @$address .=  "อ. ". @$addr[0]->ampname;
+                              @$address .=  "จ. ". @$addr[0]->provname; 
+                              @$address .=  "รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+
+                              echo @$address;
+
+                          }else{
+                                
+                                $addr = DB::select(" SELECT
+                                    customers_address_card.id,
+                                    customers_address_card.customer_id,
+                                    customers_address_card.card_house_no,
+                                    customers_address_card.card_house_name,
+                                    customers_address_card.card_moo,
+                                    customers_address_card.card_zipcode,
+                                    customers_address_card.card_soi,
+                                    customers_address_card.card_district,
+                                    customers_address_card.card_district_sub,
+                                    customers_address_card.card_road,
+                                    customers_address_card.card_province,
+                                    customers_address_card.created_at,
+                                    customers_address_card.update_at,
+                                    customers.prefix_name,
+                                    customers.first_name,
+                                    customers.last_name
+                                    FROM
+                                    customers_address_card
+                                    Left Join customers ON customers_address_card.customer_id = customers.id
+                                    Where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                                     ");
+
+                              if($addr){
+                                  @$address = "";
+                                  @$address .=  " > ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
+                                  @$address .=  " หมู่ ". @$addr[0]->card_moo; 
+                                  @$address .=  " ซอย ". @$addr[0]->card_soi; 
+                                  @$address .=  " ถนน ". @$addr[0]->card_road; 
+                                  @$address .=  " ต. ". @$addr[0]->card_district_sub; 
+                                  @$address .=  " อ. ". @$addr[0]->card_district;
+                                  @$address .=  " จ. ". @$addr[0]->card_province; 
+                                  @$address .=  " <br> รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+
+                                  echo @$address;
+                              }else{
+                                @$address = "";
+                              }
+
+
+                        }
+
+                      }
+
+                         if(@$sRow->delivery_location==2){
+
+                                @$addr = DB::select("SELECT
+                                      customers_detail.customer_id,
+                                      customers_detail.house_no,
+                                      customers_detail.house_name,
+                                      customers_detail.moo,
+                                      customers_detail.zipcode,
+                                      customers_detail.soi,
+                                      customers_detail.district,
+                                      customers_detail.district_sub,
+                                      customers_detail.road,
+                                      customers_detail.province,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name
+                                      FROM
+                                      customers_detail
+                                      Left Join customers ON customers_detail.customer_id = customers.id
+                                      WHERE customers_detail.customer_id = 
+                                       ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
+                                // print_r(@$addr);
+                                @$address = " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. " ";
+                                @$address .= " <br> ต. ". @$addr[0]->district_sub; 
+                                @$address .= " อ. ". @$addr[0]->district; 
+                                @$address .= " จ. ". @$addr[0]->province; 
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
+
+                                echo @$address;
+
+                        }
+
+
+
+                        if(@$sRow->delivery_location==3){
+
+                                @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                                      from customers_addr_frontstore
+                                      Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                      where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
+                                // print_r(@$addr);
+                                @$address = "<span style='z-index: 0'> > ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
+                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no. "<br> ";
+                                @$address .= " ต. ". @$addr[0]->tamname; 
+                                @$address .= " อ. ". @$addr[0]->ampname; 
+                                @$address .= " จ. ". @$addr[0]->provname; 
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zip_code. " </span> ";
+
+                                echo @$address;
+
+                        }
+
+                      }
+
+                     ?>
       </td>
       <td style="width:10%;vertical-align: top;font-weight: bold;" > 
-        เลขที่ / No. <br>
-        วันที่ / Date
+        เลขที่ / No. P2102100001 <br>
+        วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
       </td>
       <td style="width:10%;vertical-align: top;" > 
           <br>
@@ -344,7 +492,7 @@ E-MAIL : info@aiyara.co.th
   <br>
 
 
-  <div style="border-radius: 5px; height: 170mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 80mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr style="background-color: #e6e6e6;">
         <td style="width:8%;border-bottom: 1px solid #ccc;text-align: center;" > ลำดับที่ <br> Item
@@ -423,7 +571,7 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"> <?=$product_name?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->selling_price?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->pv?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->total_pv?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
@@ -435,11 +583,9 @@ Amount </td>
 
   } 
 
-  $n = 5 - $i; 
+  $n = 4 - $i; 
 
   ?>
-
-
 
 <!-- รายการสินค้า -->
 <?php 
@@ -449,12 +595,6 @@ Amount </td>
      ");
 
     $i= $i ;
-
-     $Total = 0;
-     $shipping = 0;
-
-     // echo count($P);
-     // exit;
 
      $pn = '';
 
@@ -506,23 +646,19 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"> <?=$pn?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->amt?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->selling_price?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->pv?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->total_pv?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
 <?php  
 
     $i++; 
-    // $Total += $v->amt*$v->selling_price;  
-    // $shipping += $v->shipping ;  
 
-  } 
+    } 
 
-  $n = 5 - $i; 
+    $n = 3 - $i; 
 
-  ?>
-
-
+?>
 
 <?php for ($i=0; $i < $n ; $i++) {  ?>
       <tr>
@@ -540,6 +676,19 @@ Amount </td>
 
 <br>
 
+      <?php 
+
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=1 GROUP BY frontstore_id_fk ");
+        $sFrontstoreData = DB::select(" select * from db_frontstore_products_list ");
+
+        $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+
+        $shipping_cost = 100;
+
+       ?>
+
+
+
   <div style="border-radius: 5px; border: 1px solid grey;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
 
@@ -551,69 +700,43 @@ Amount </td>
 <br>
 <br>
 <br>
-      <!-- <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center> -->
+      <center> ตัวอักษร (<?=ThaiBahtConversion(@$sFrontstoreDataTotal[0]->total+@$shipping_cost)?>) </center>
       </td>
 
-      <?php 
-
-            $net_price = str_replace(',', '', $Total);
-
-            // echo $net_price;
-            // exit;
-            // ภาษีมูลค่าเพิ่ม ( VAT 7% )  
-            $vat = intval($net_price) - (intval($net_price)/1.07) ;
-
-            // echo $net_price;
-            // echo $shipping;
-            // exit;
-            // รวมเงิน
-            $total_price = $net_price + $shipping;
-            $total_price = number_format($total_price,2) ;
-            // echo $total_price;
-            // exit;
-            $net_price =  number_format($net_price,2) ;
-            $vat =  number_format($vat,2) ;
-            $shipping =  number_format($shipping,2) ;
-
-         ?>
 
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> รวมเงิน <br>
 TOTAL </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$net_price?> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;">{{number_format(@$sFrontstoreDataTotal[0]->total,2)}} </td>
 
       </tr>
-
 
       <tr>
       
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ภาษีมูลค่าเพิ่ม  <br>
 ( VAT 7% ) </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$vat?> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> {{number_format(@$vat,2)}} </td>
 
       </tr>
           <tr>
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ค่าจัดส่ง  </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$shipping?> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> {{@$shipping_cost}} </td>
 
       </tr>
       <tr>
   
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ยอดเงินสุทธิ  <br>
 NET AMOUNT </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$total_price?> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> {{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}} </td>
 
       </tr>
 
     </table>
   </div>
 
-<br>
-<br>
-<br>
-
+   <br>
   <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
-      
+   
       <tr>
 
         <td  style="border-left: 1px solid #ccc;"> ผู้รับเงิน
@@ -621,21 +744,16 @@ NET AMOUNT </td>
         <br>
         <img src="" width="100" > (ลายเซ็น)
         <br>
-        <br>
            วันที่ .........................................
          </td>
-
-
         <td style="border-left: 1px solid #ccc;"> ในนาม บริษัท ไอยรา แพลนเน็ต จำกัด
         <br>
         <img src="" width="100" > (ลายเซ็น)
-        <br>
         <br>
       ผู้มีอำนาจลงนาม
         </td>
 
       </tr>
-
 
     </table>
   </div>
