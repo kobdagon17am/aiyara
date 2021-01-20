@@ -63,20 +63,6 @@ class Course_history_listController extends Controller
             $sRow = new \App\Models\Backend\Course_event;
           }
 
-          // $sRow->ce_type    = request('ce_type');
-          // $sRow->ce_name    = request('ce_name');
-          // $sRow->ce_place    = request('ce_place');
-          // $sRow->ce_max_ticket    = request('ce_max_ticket');
-          // $sRow->ce_ticket_price    = request('ce_ticket_price');
-          // $sRow->ce_sdate    = request('ce_sdate');
-          // $sRow->ce_edate    = request('ce_edate');
-          // $sRow->ce_features_booker    = request('ce_features_booker');
-          // $sRow->ce_can_reserve    = request('ce_can_reserve');
-          // $sRow->ce_limit    = request('ce_limit');
-                    
-          // $sRow->created_at = date('Y-m-d H:i:s');
-          // $sRow->save();
-
           \DB::commit();
 
          return redirect()->action('backend\Course_history_listController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);

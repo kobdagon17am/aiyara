@@ -169,11 +169,73 @@ tr.border_bottom td {
 
 </style>
 
+<style type="text/css">
+  /* DivTable.com */
+  .divTable{
+    display: table;
+    width: 100%;
+    
+  }
+  .divTableRow {
+    display: table-row;
+  }
+  .divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+  }
+  .divTableCell, .divTableHead {
+    border: 1px solid white;
+    display: table-cell;
+    padding: 3px 10px;
+  }
+  .divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+    font-weight: bold;
+  }
+  .divTableFoot {
+    background-color: #EEE;
+    display: table-footer-group;
+    font-weight: bold;
+  }
+  .divTableBody {
+    display: table-row-group;
+  }
+  .divTH {text-align: right;}
+
+
+  .inline-group {
+    max-width: 5rem;
+    padding: .5rem;
+  }
+
+  .inline-group .form-control {
+    text-align: right;
+  }
+
+  .form-control[type="number"]::-webkit-inner-spin-button,
+  .form-control[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .quantity {width: 50px;text-align: right;color: blue;font-weight: bold;font-size: 16px;}
+
+  .btn-minus,.btn-plus,.btn-minus-pro,.btn-plus-pro,.btn-plus-product-pro,.btn-minus-product-pro {background-color: bisque !important;}
+
+  input[type="text"]:disabled {
+    background: #f2f2f2;
+  }
+
+
+
+
+</style>
 <?php 
 
 $value = DB::select(" 
                     SELECT
-                    db_delivery.*,
+                    db_frontstore_products_list.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -187,16 +249,17 @@ $value = DB::select("
                     customers_detail.road,
                     customers_detail.province,
                     customers.id as cus_id,
-                    orders.id as order_id,
-                    orders.shipping
+                    orders_frontstore.id as order_id,
+                    orders_frontstore.shipping
 
                     FROM
-                    db_delivery
-                    Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
+                    db_frontstore_products_list
+                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders ON db_delivery.receipt = orders.code_order
+                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
                     WHERE
-                    db_delivery.id = 
+                    db_frontstore_products_list.frontstore_id_fk = 
                     ".$data[0]."
 
      ");
@@ -212,7 +275,7 @@ $value = DB::select("
             <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
           </th>
           <th style="text-align: right;">
-            (<?php echo sprintf("%04d",$data[0]).'-'.$value[0]->receipt; ?>)<br>
+            (<?php echo sprintf("%04d",$data[0]).'-'; ?>)<br>
 2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
 แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
 TEL : +66 (0) 2026 3555 
@@ -237,7 +300,7 @@ E-MAIL : info@aiyara.co.th
 
 <div class="NameAndAddress" >
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
         <td style="width:30%;" > 
@@ -272,8 +335,7 @@ E-MAIL : info@aiyara.co.th
         วันที่ / Date
       </td>
       <td style="width:10%;vertical-align: top;" > 
-         <?=$value[0]->receipt?> <br>
-         <?php $d = strtotime($value[0]->delivery_date); echo date("d/m/", $d).(date("Y", $d)+543); ?>
+          <br>
       </td>
         
       </tr>
@@ -282,7 +344,7 @@ E-MAIL : info@aiyara.co.th
   <br>
 
 
-  <div style="border-radius: 5px; height: 70mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 170mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr style="background-color: #e6e6e6;">
         <td style="width:8%;border-bottom: 1px solid #ccc;text-align: center;" > ลำดับที่ <br> Item
@@ -290,13 +352,12 @@ E-MAIL : info@aiyara.co.th
  </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">รายการ<br>
 Description </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวน <br>
-Quantity </td>
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวน <br>
+amt </td>
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
 Unit Price </td>
         <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV   
-        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;">  ค่าจัดส่ง
-        <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
+        <td style="border-left: 1px solid #ccc;width:10%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
 Amount </td>
 
       </tr>
@@ -305,22 +366,33 @@ Amount </td>
 <?php 
 
      $P = DB::select(" 
-        SELECT
-        order_items.id,
-        order_items.order_id,
-        order_items.product_id,
-        order_items.product_name,
-        order_items.quantity,
-        order_items.list_price,
-        order_items.pv,
-        order_items.discount,
-        order_items.create_at,
-        order_items.update_at,
-        orders.shipping
-        FROM order_items 
-        Left Join orders ON order_items.order_id = orders.id
-        WHERE
-        order_items.order_id = ".$value[0]->order_id."
+                    SELECT
+                    db_frontstore_products_list.*,
+                    customers.prefix_name,
+                    customers.first_name,
+                    customers.last_name,
+                    customers_detail.house_no,
+                    customers_detail.house_name,
+                    customers_detail.moo,
+                    customers_detail.zipcode,
+                    customers_detail.soi,
+                    customers_detail.district,
+                    customers_detail.district_sub,
+                    customers_detail.road,
+                    customers_detail.province,
+                    customers.id as cus_id,
+                    orders_frontstore.id as order_id,
+                    orders_frontstore.shipping
+
+                    FROM
+                    db_frontstore_products_list
+                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
+                    Left Join customers ON customers_detail.customer_id = customers.id
+                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
+                    WHERE
+                    db_frontstore_products_list.frontstore_id_fk = 
+                    ".$data[0]."  AND add_from=1
 
      ");
 
@@ -334,21 +406,31 @@ Amount </td>
 
     foreach ($P as $key => $v) {
 
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".$v->product_id_fk." AND lang_id=1");
+
+            $product_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
      ?>
 
           <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->product_name?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->quantity?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->list_price?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"> <?=$product_name?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->selling_price?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->pv?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->shipping?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->quantity*$v->list_price,2)?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
-    <?php  
+<?php  
+
     $i++; 
-    $Total += $v->quantity*$v->list_price;  
+    $Total += $v->amt*$v->selling_price;  
     $shipping += $v->shipping ;  
 
   } 
@@ -357,13 +439,97 @@ Amount </td>
 
   ?>
 
+
+
+<!-- รายการสินค้า -->
+<?php 
+
+     $P = DB::select(" 
+         SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$data[0]." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+     ");
+
+    $i= $i ;
+
+     $Total = 0;
+     $shipping = 0;
+
+     // echo count($P);
+     // exit;
+
+     $pn = '';
+
+    foreach ($P as $key => $v) {
+
+            if($v->promotion_id_fk!='' && $v->promotion_code!=''){
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$v->promotion_id_fk."' ");
+                $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name . " > รหัสคูปอง : ".($v->promotion_code)."</br>";
+            }else{
+                $promotions = DB::select(" SELECT pcode,name_thai as pro_name FROM promotions WHERE id='".$v->promotion_id_fk."' ");
+                $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name . " > รหัสโปร : ".(@$promotions[0]->pcode)."</br>";
+            }
+
+
+            $Products = DB::select("
+              SELECT
+              (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1) as product_code,
+              (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1) as product_name,
+              (SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = promotions_products.product_unit AND  lang_id=1 ) as product_unit,
+              promotions_products.product_amt
+              FROM
+              promotions_products
+              WHERE
+              promotions_products.promotion_id_fk='".$v->promotion_id_fk."'  
+            ");
+
+            $pn .= '<div class="divTable"><div class="divTableBody">';
+
+            foreach ($Products as $key => $value) {
+             $pn .=     
+                  '<div class="divTableRow">
+                  <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
+                  <div class="divTableCell"><center>'.$value->product_amt.' x '.$v->amt.'= '.($value->product_amt*$v->amt).'</div>
+                  <div class="divTableCell">'.$value->product_unit.'</div>
+                  </div>
+                  ';
+             }
+
+              $pn .= '</div></div>';  
+
+
+     ?>
+
+          <tr>
+            <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;" > <?=$i?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"> <?=$pn?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->amt?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->selling_price?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=$v->pv?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
+          </tr>
+
+<?php  
+
+    $i++; 
+    // $Total += $v->amt*$v->selling_price;  
+    // $shipping += $v->shipping ;  
+
+  } 
+
+  $n = 5 - $i; 
+
+  ?>
+
+
+
 <?php for ($i=0; $i < $n ; $i++) {  ?>
       <tr>
         <td style="border-bottom: 1px solid #ccc;text-align: center;" > &nbsp;  </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
       </tr>

@@ -41,6 +41,7 @@ class Promotions_productsController extends Controller
        $sRow = \App\Models\Backend\Promotions_products::find($id);
        $sRowNew = \App\Models\Backend\Promotions::find($sRow->promotion_id_fk);
        $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
+       // dd($sProduct);
        $sProductUnit = \App\Models\Backend\Product_unit::get();
        return View('backend.promotions_products.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sRowNew'=>$sRowNew ,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit ) );
     }
@@ -96,8 +97,26 @@ class Promotions_productsController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-          $sProduct = \App\Models\Backend\Products_details::where('id', $row->product_id_fk)->where('lang_id', 1)->get();
-          return @$sProduct[0]->product_name;
+                  // return $row->product_unit_id_fk;
+        if(!empty($row->product_id_fk)){
+
+          $Products = DB::select(" 
+                SELECT products.id as product_id,
+                  products.product_code,
+                  (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                  products_cost.selling_price,
+                  products_cost.pv
+                  FROM
+                  products_details
+                  Left Join products ON products_details.product_id_fk = products.id
+                  LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                  WHERE lang_id=1 AND products.id= ".$row->product_id_fk."
+
+           ");
+
+           return  @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+         }
       })
       ->addColumn('product_unit_desc', function($row) {
           $sP = \App\Models\Backend\Product_unit::find($row->product_unit);

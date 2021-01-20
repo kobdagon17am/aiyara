@@ -49,7 +49,6 @@
  <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data" autocomplete="off">
     {{ csrf_field() }} -->
 
-
       <div class="myBorder" >
         <div class="container">
           
@@ -61,7 +60,6 @@
                     <label for="receipt" class="col-md-3 col-form-label">เลือกโปรโมชั่น :</label>
                     <div class="col-md-6">
                       <!-- <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required > -->
-
                           <select name="promotion_code_id_fk" id="promotion_code_id_fk" class="form-control select2-templating " required >
                             <option value="">Select</option>
                               @if(@$sPromotions)
@@ -225,9 +223,9 @@
 
                 </div>
                 <div class="col-4 text-right" >
-               <!--    <a class="btn btn-info btn-sm mt-1 font-size-16 " href="{{ route('backend.promotion_cus.create') }}">
-                    <i class="bx bx-plus font-size-20 align-middle mr-1"></i>เพิ่ม
-                  </a> -->
+                  <a class="btn btn-info btn-sm mt-1 font-size-16 btnApprove " href='' >
+                    อนุมัติใช้งานได้ทั้งหมด
+                  </a>
    
 
                 </div>
@@ -459,17 +457,19 @@
                 // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
                 {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                   //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
-                  if(d==4){
-                      return 'Import Excel / Gen code';
-                  }else if(d==1){
-                      return 'ใช้งานได้';
-                  }else if(d==2){
-                      return 'ถูกใช้แล้ว';
-                  }else if(d==3){
-                      return 'หมดอายุแล้ว';
-                  }else{
-                      return d;
-                  }
+                        if(d==4){
+                            return 'Import Excel';
+                        }else if(d==5){
+                            return 'Gen code';                            
+                        }else if(d==1){
+                            return 'ใช้งานได้';
+                        }else if(d==2){
+                            return 'ถูกใช้แล้ว';
+                        }else if(d==3){
+                            return 'หมดอายุแล้ว';
+                        }else{
+                            return d;
+                        }
                 }},
             ],
              fnRowCallback: function (nRow, aData, iDisplayIndex) {
@@ -624,6 +624,12 @@ $(document).ready(function() {
            data:{ _token: '{{csrf_token()}}' }+frm+"&amt_gen="+v+"&promotion_code_id_fk="+promotion_code_id_fk,
             success:function(data){
                  console.log(data); 
+                 if(data=='x'){
+                  alert("! จำนวนหลักไม่พอ");
+                  location.reload();
+                  return false;
+                 }
+                 $(".myloading").hide();
                  location.reload();
                  // location.replace('backend/promotion_cus/'+data+'/edit');
                  // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
@@ -866,6 +872,11 @@ $(document).ready(function() {
         if(localStorage.getItem('promotion_code_id_fk')){
             $('#promotion_code_id_fk').val(localStorage.getItem('promotion_code_id_fk')).select2();
         }
+
+        $(document).on('click', '.btnApprove', function(event) {
+             event.preventDefault();
+        });
+
 
 </script>
 

@@ -66,7 +66,10 @@ class FrontstoreController extends Controller
     {
       // dd($id);
       $sRow = \App\Models\Backend\Frontstore::find($id);
+      $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
       $sUser = \App\Models\Backend\Permission\Admin::get();
+
+      $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
@@ -82,6 +85,13 @@ class FrontstoreController extends Controller
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
+      $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
+
+      $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
+
+      $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
+
+
       return View('backend.frontstore.form')->with(
         array(
            'sRow'=>$sRow,
@@ -91,6 +101,11 @@ class FrontstoreController extends Controller
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
            'Products'=>$Products,
+           'sProvince'=>$sProvince,
+           'sAmphures'=>$sAmphures,
+           'sTambons'=>$sTambons,
+           'Delivery_location'=>$Delivery_location,
+           'CusAddrFrontstore'=>$CusAddrFrontstore,
         ) );
     }
 
@@ -158,10 +173,6 @@ class FrontstoreController extends Controller
         $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
         return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
       })
-      // ->addColumn('ce_name', function($row) {
-      //   $Course_event = \App\Models\Backend\Course_event::find($row->ce_id_fk);
-      //   return $Course_event->ce_name;
-      // })
       ->addColumn('purchase_type', function($row) {
           $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$row->purchase_type_id_fk." ");
           return $purchase_type[0]->txt_desc;

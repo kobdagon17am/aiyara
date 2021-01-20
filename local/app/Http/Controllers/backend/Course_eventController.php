@@ -122,6 +122,8 @@ class Course_eventController extends Controller
           // $sRow->ce_features_booker    = request('ce_features_booker');
           $sRow->ce_can_reserve    = request('ce_can_reserve');
           $sRow->ce_limit    = request('ce_limit');
+          $sRow->title    = request('title');
+          $sRow->detail    = request('detail');
           
           $sRow->minimum_package_purchased    = request('minimum_package_purchased');
           $sRow->reward_qualify_purchased    = request('reward_qualify_purchased');

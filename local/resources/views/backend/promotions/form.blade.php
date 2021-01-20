@@ -203,15 +203,6 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-md-3 col-form-label"></label>
-                    <div class="col-md-8 mt-2">
-                      <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="promotion_coupon_status" name="promotion_coupon_status" value="1" {{ ( @$sRow->promotion_coupon_status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="promotion_coupon_status"><b>promotion coupon status</b></label>
-                      </div>
-                    </div>
-                </div>
 
               <div class="form-group row">
                   <label for="example-text-input" class="col-md-3 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
@@ -312,7 +303,18 @@
                       </div>
                     </div>
                 </div>
-                
+
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label"></label>
+                    <div class="col-md-8 mt-2">
+                      <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="promotion_coupon_status" name="promotion_coupon_status" value="1" {{ ( @$sRow->promotion_coupon_status=='1')?'checked':'' }}>
+                          <label class="custom-control-label" for="promotion_coupon_status"><b>promotion coupon status</b></label>
+                      </div>
+                    </div>
+                </div>
+                                
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
@@ -391,6 +393,37 @@
                     </div>
 
 
+
+                    <div class="myBorder">
+                      <div style="">
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_images.create') }}/{{@$sRow->id}}" style="float: right;" >
+                              <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                            </a>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รูปสินค้าโปรโมชั่น  </span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-md-12">
+                            <table id="data-table-promotion-images" class="table table-bordered dt-responsive" style="width: 100%;">
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-0 row">
+                        <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
+                            <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
                 @endif
 
 
@@ -433,10 +466,10 @@
                  
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
-                        {data: 'product_name', title :'ชื่อสินค้า', className: 'text-center'},
+                        {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
                         {data: 'product_amt', title :'จำนวน', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -502,6 +535,58 @@
                 });
             });
               
+
+
+            var promotion_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-promotion-images').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.promotions_images.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['promotion_id_fk'] = promotion_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                 
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'img_path',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
+                           return '<img src="'+d+'" width="150">';
+                        }},
+                        // {data: 'product_img',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
+                        //    return '<img src="{{ url("local/public/products") }}/'+d+'" width="150">';
+                        // }},
+                        // {data: 'image_default', title :'กำหนดเป็นรูปหลัก', className: 'text-center'},
+                        {data: 'image_default',   title :'<center>รูปหลัก</center>', className: 'text-center',render: function(d) {
+                             return d==1?'Yes':'';
+                        }},
+
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.promotions_images.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_images.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
 
 
 
