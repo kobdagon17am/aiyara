@@ -9,6 +9,7 @@ use Cart;
 use App\Models\Frontend\Pvpayment;
 use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Couse_Event;
+use App\Models\Frontend\CourseCheckRegis; 
 use Auth;
 
 class CartController extends Controller
@@ -39,6 +40,7 @@ class CartController extends Controller
 			'status'=>'success',
 			
 		);
+		 
 		return view('frontend/product/cart',compact('bill','type'));
 	}
 
@@ -51,7 +53,12 @@ class CartController extends Controller
 
 	public function edit_item(Request $request){
 		$type = $request->type;
-//dd($request->all());
+		if($type == 6){
+			$chek_course = CourseCheckRegis::cart_check_register($request->item_id,$request->qty);
+		}else{
+			$chek_course = '';
+		}
+
 		if($request->item_id){
 			Cart::session($type)->update($request->item_id,array(
 				'quantity' => array (
@@ -77,10 +84,12 @@ class CartController extends Controller
 			$price_total = number_format($price,2);
 
 			$bill = array('price_total'=>$price_total,
+				'action_id'=>$request->item_id,
 				'pv_total'=>$pv_total,
 				'count_item'=>$pv_total,
 				'data'=>$data,
 				'quantity'=>$quantity,
+				'chek_course'=>$chek_course,
 				'status'=>'success'
 			);
 

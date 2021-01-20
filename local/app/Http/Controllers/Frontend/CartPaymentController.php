@@ -10,18 +10,26 @@ use Auth;
 use App\Models\Frontend\Location;
 use App\Models\Frontend\Payment;
 use App\Models\Frontend\PaymentCourse;
+use App\Models\Frontend\CourseCheckRegis; 
 
 class CartPaymentController extends Controller
 {
 	public function index($type){
 		$location = Location::location(1,1);
+
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
 		$quantity = Cart::session($type)->getTotalQuantity();
-		
+ 
 		if($data){
 			foreach ($data as $value) {
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
+				if($type == '6'){
+					$chek_course = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
+					if($chek_course['status'] == 'fail'){
+					return redirect('cart/'.$type)->withError($chek_course['message']);
+					}
+				}
 			}
 			$pv_total = array_sum($pv);
 

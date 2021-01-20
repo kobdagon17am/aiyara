@@ -75,8 +75,10 @@
                   }else{
                     $type_name = '';
                   }
+
+                  $count_ce = \App\Helpers\Frontend::get_ce_register($couse_event->id);
                   ?>
-                  <h4 class="pro-desc">{{$couse_event->ce_name}} <span class="label label-success" style="font-size: 15px"><i class="fa fa-users"></i> 15/{{$couse_event->ce_max_ticket}} </span></h4>
+                  <h4 class="pro-desc">{{$couse_event->ce_name}} <span class="label label-success" style="font-size: 15px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$couse_event->ce_max_ticket}} </span></h4>
                   @else
                   
 
@@ -139,9 +141,19 @@
                 </div>
                 @if($type == 6)
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
-                  <button type="button" onclick="addcart({{$couse_event->id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
+                  <?php 
+                  $ce_check = \App\Models\Frontend\CourseCheckRegis::check_register($couse_event->id); 
+                  ?>
+                  @if($ce_check['status'] == 'success')
+                    <button type="button" onclick="addcart({{$couse_event->id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                     <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                   </button>
+                  @else
+                  <button type="button" class="btn btn-inverse waves-effect waves-light btn-block" data-type="success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ $ce_check['message'] }}" data-from="top" data-align="right" style="margin-top: -2px">
+                    <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
+                  </button>
+                  @endif
+                
 
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Cart;
 use App\Models\Frontend\Product;
 use App\Models\Frontend\Random_code;
+use App\Models\Frontend\CourseCheckRegis;
 use Auth;
 
 class CourseEventController extends Controller
@@ -19,11 +20,13 @@ class CourseEventController extends Controller
   }
 
   public function index(){
+ 
+   
     // $data = DB::table('dataset_orders_type')
     // ->where('status','=','1')
     // ->where('lang_id','=','1')
     // ->orderby('order')
-    // ->get();
+    // ->get(); 
 
 
     return view('frontend/course');

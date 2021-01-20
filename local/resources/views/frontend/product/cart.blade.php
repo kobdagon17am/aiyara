@@ -1,3 +1,6 @@
+ <?php
+ use App\Models\Frontend\CourseCheckRegis; 
+ ?>
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
 {{--  <style type="text/css" media="screen">
@@ -57,13 +60,18 @@
                                 </thead> 
                                 <tbody>
                                     @foreach($bill['data'] as $value)
+                                    <?php $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']); 
+                                    ?>
 
                                     <tr id="items">
                                         <td class="text-center"><a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                            {{--  <span>{{ $value['attributes']['title'] }}</span> --}}
+                                            @if($check['status'] == 'fail')
+                                             <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
+                                             @endif
+
                                         </td>
                                         <td>
                                             <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
@@ -195,6 +203,15 @@
         data: {'_token':'{{ csrf_token() }}',item_id:item_id,'qty':qty,'type':type},
     })
     .done(function(data) {
+        if(data['chek_course']['status'] == 'fail'){
+            var eror_id = 'eror_'+data['action_id'];
+             $('#'+eror_id).html(data['chek_course']['message']);
+             
+        }else {
+              var eror_id = 'eror_'+data['action_id'];
+             $('#'+eror_id).html('');
+        }
+
         $('#price').html(data['price_total']);
         $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
         $('#price_total').html(data['price_total']);
