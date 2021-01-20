@@ -65,6 +65,20 @@
                     </div>
                 </div>           
 
+                <div class="form-group row">
+                  <label for="title" class="col-md-4 col-form-label">Title :</label>
+                  <div class="col-md-8">
+                    <textarea name="title" class="form-control title  "  >{{@$sRow->title}}</textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="detail" class="col-md-4 col-form-label">Details :</label>
+                  <div class="col-md-8">
+                    <textarea name="detail" class="form-control detail "  >{{@$sRow->detail}}</textarea>
+                  </div>
+                </div>
+
 
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-4 col-form-label">จำนวนบัตรสูงสุด :</label>
@@ -319,16 +333,23 @@
 
 </script>
 
-<script type="text/javascript">
-	/*
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
+        <script type="text/javascript">
 
+
+            $( document ).ready( function() {
+
+                  $( '.title' ).each( function() {
+                      CKEDITOR.replace( this );
+                  } );
+
+                  $( '.detail' ).each( function() {
+                      CKEDITOR.replace( this );
+                  } );
+
+
+              } );
+
+
+        </script>
 
 @endsection

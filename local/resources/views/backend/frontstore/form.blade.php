@@ -56,11 +56,13 @@
 
   .quantity {width: 50px;text-align: right;color: blue;font-weight: bold;font-size: 16px;}
 
-  .btn-minus,.btn-plus {background-color: bisque !important;}
+  .btn-minus,.btn-plus,.btn-minus-pro,.btn-plus-pro,.btn-plus-product-pro,.btn-minus-product-pro {background-color: bisque !important;}
 
   input[type="text"]:disabled {
     background: #f2f2f2;
   }
+
+
 
 
 </style>
@@ -116,17 +118,18 @@
       $sD = '';
       $sA = '';
     }else{
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',@$menu_id)->first();
       $sC = @$menu_permit->c==1?'':'display:none;';
       $sA = @$menu_permit->can_answer==1?'':'display:none;';
     }
 
-      //   echo $sPermission;
+      // echo $sPermission;
       // echo $role_group_id;
       // echo $menu_id;  
 
    ?>
-<div class="row">
+
+<div class="row" style="margin-bottom: -4.1%;" >
     <div class="col-10">
         <div class="card">
             <div class="card-body">
@@ -214,37 +217,39 @@
                             </div>
                           </div>
 
-                          <div class="form-group row">
-                            <label for="tracking_type" class="col-md-3 col-form-label"> Tracking Type : </label>
-                            <div class="col-md-9">
-                              <!-- <select id="tracking_type"  name="tracking_type" class="form-control select2-templating " disabled="" >
-                                <option value=""></option>
-                              </select> -->
+                          <div class="form-group  row ">
+
+                            <label for="tracking_type" class="col-md-3 col-form-label">  Tracking Type :  </label>
+                            <div class="col-md-3 d-flex ">
                               <input type="text" class="form-control" id="tracking_type" name="tracking_type" value="{{ @$sRow->tracking_type }}" disabled="" >
                             </div>
+
+                             <div class="col-md-6 d-flex ">
+                              <label for="tracking_type " class="col-md-3 col-form-label"> Tracking No. : </label>
+                              <div class="col-md-9">
+                               <input type="text" class="form-control" id="tracking_no" name="tracking_no" value="{{ @$sRow->tracking_no }}" disabled="" >
+                               </div>
+                             </div>
+
                           </div>
 
-                           <div class="form-group row">
-                            <label for="tracking_no" class="col-md-3 col-form-label">Tracking No. :</label>
-                            <div class="col-md-9">
-                              <input type="text" class="form-control" id="tracking_no" name="tracking_no" value="{{ @$sRow->tracking_no }}" disabled="" >
+
+
+                          <div class="form-group  row ">
+                            
+                            <label for="tracking_type" class="col-md-3 col-form-label">  การแจ้งชำระ :  </label>
+                            <div class="col-md-3 d-flex ">
+                               <input type="text" class="form-control" value="รอชำระเงิน" disabled="" >
                             </div>
-                          </div>
 
-                          <div class="form-group row">
-                            <label for="" class="col-md-3 col-form-label">การแจ้งชำระ :</label>
-                            <div class="col-md-9">
-                              <input type="text" class="form-control" value="รอชำระเงิน" disabled="" >
-                            </div>
-                          </div>
+                             <div class="col-md-6 d-flex ">
+                              <label for="tracking_type " class="col-md-3 col-form-label"> Currency : </label>
+                              <div class="col-md-9">
+                               <input type="text" class="form-control" value="THB" disabled="" >
+                               </div>
+                             </div>
 
-                          <div class="form-group row">
-                            <label for="" class="col-md-3 col-form-label">Currency :</label>
-                            <div class="col-md-9">
-                              <input type="text" class="form-control" value="THB" disabled="" >
-                            </div>
                           </div>
-
 
 
                 <div class="form-group mb-0 row">
@@ -278,7 +283,7 @@
       $dis = '';
   }
  ?>
-<div class="row" style="{{@$dis}}">
+<div class="row" style="{{@$dis}}" >
   <div class="col-12">
     <div class="card">
       <div class="card-body">
@@ -288,7 +293,7 @@
           <div class="page-title-box d-flex justify-content-between ">
             <h4 class=" col-6 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย </h4>
 
-            <a class="btn btn-info btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/1" target=_blank >
+            <a class="btn btn-info btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank >
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> พิมพ์ใบเสร็จ</span>
             </a>
 
@@ -306,7 +311,7 @@
 
           </div>
 
-          <div class="form-group row">
+          <div class="form-group row ">
             <div class="col-md-12">
               <table id="data-table-list" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
@@ -314,83 +319,226 @@
           </div>
 
 
+ <form action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+      <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+      <input name="receipt_save_list" type="hidden" value="1">
 
-   
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="divTable">
-          <div class="divTableBody">
+      {{ csrf_field() }}
 
-              <div class="divTableRow">
-                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
-                <div class="divTH">
-                  <label for="" >รวม : </label>
-                </div>
-                <div class="divTableCell">
-                  <input  class="form-control" autocomplete="off" />
-                </div>
-                <div class="divTableCell">
-                </div>
-              </div>
+      <?php 
 
-             <div class="divTableRow">
-                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
-                <div class="divTH">
-                  <label for="" >ภาษี 7.00 % : </label>
-                </div>
-                <div class="divTableCell">
-                  <input class="form-control" autocomplete="off" />
-                </div>
-                <div class="divTableCell">
-                </div>
-              </div>
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=1 GROUP BY frontstore_id_fk ");
+        $sFrontstoreData = DB::select(" select * from db_frontstore_products_list ");
 
-             <div class="divTableRow">
-                <div class="divTableCell" style="width: 60% !important ;">&nbsp; </div>
-                <div class="divTH">
-                  <label for="" >รวมค่าสินค้า : </label>
-                </div>
-                <div class="divTableCell">
-                  <input class="form-control" autocomplete="off" />
-                </div>
-                <div class="divTableCell">
-                </div>
-              </div>
+        $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
 
-             <div class="divTableRow">
-                <div class="divTableCell" style="width: 60% !important ;">
-                สถานที่จัดส่ง : <span style="color: red;">รับสินค้าด้วยตัวเอง / สาขา ศูนย์การขายสินค้า </span> </div>
-                <div class="divTH">
-                  <label for="" >ค่าจัดส่ง : </label>
-                </div>
-                <div class="divTableCell">
-                  <input class="form-control" autocomplete="off" />
-                </div>
-                <div class="divTableCell">
-                  <button type="button" class="btn btn-success btn-sm waves-effect font-size-14 btnDelivery ">
-                    <i class="bx bx-edit font-size-16 align-middle mr-1"></i> การจัดส่ง
-                    </button>
-                </div>
-              </div>
+        $shipping_cost = 100;
 
+       ?>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="divTable">
+              <div class="divTableBody">
+
+                  <div class="divTableRow">
+                    <div class="divTableCell" style="width: 50% !important ;">&nbsp; </div>
+                    <div class="divTH">
+                      <label for="" >รวม : </label>
+                    </div>
+                    <div class="divTableCell">
+                      <input  class="form-control" value="{{number_format(@$sFrontstoreDataTotal[0]->total,2)}}" readonly="" />
+                    </div>
+                    <div class="divTableCell">
+                    </div>
+                  </div>
+
+                 <div class="divTableRow">
+                    <div class="divTableCell" style="width: 50% !important ;">&nbsp; </div>
+                    <div class="divTH">
+                      <label for="" >ภาษี 7.00 % : </label>
+                    </div>
+                    <div class="divTableCell">
+                      <input  class="form-control" value="{{number_format(@$vat,2)}}" readonly="" />
+                    </div>
+                    <div class="divTableCell">
+                    </div>
+                  </div>
+
+                 <div class="divTableRow">
+                    <div class="divTableCell" style="width: 50% !important ;">&nbsp; </div>
+                    <div class="divTH">
+                      <label for="" >รวมค่าสินค้า : </label>
+                    </div>
+                    <div class="divTableCell">
+                      <input  class="form-control" value="{{number_format(@$sFrontstoreDataTotal[0]->total,2)}}" readonly="" />
+                    </div>
+                    <div class="divTableCell">
+                    </div>
+                  </div>
 
 
-             <div class="divTableRow"> 
-                <div class="divTableCell" style="width: 60% !important ;">
-                การชำระ : </div>
-                <div class="divTH">
-                  <label for="" >รวมทั้งสิ้น : </label>
-                </div>
-                <div class="divTableCell">
-                  <input class="form-control" autocomplete="off" />
-                </div>
-                <div class="divTableCell">
-              
-                </div>
-              </div>
+                 <div class="divTableRow">
+                    <div class="divTableCell" style="width: 50% !important ;z-index: 0">
+                    <span style="color: red;">
 
+                     </div>
+                    <div class="divTH" style='z-index: 1' >
+                      <label for="" >ค่าจัดส่ง : </label>
+                    </div>
+                    <div class="divTableCell" style='z-index: 1' >
+                      <input class="form-control" value="{{@$shipping_cost}}" readonly="" />
+                    </div>
+
+                  </div>
+
+
+                 <div class="divTableRow"> 
+
+                   <div class="divTableCell" style="width: 50% !important ;z-index: 0">
+                    สถานที่จัดส่ง : <span style="color: red;">
+
+                    <?php 
+
+                      if(@$sRow->delivery_location==0){
+                        echo " รับสินค้าด้วยตัวเอง / สาขา ศูนย์การขายสินค้า </span> ";
+                      }else{
+
+                        foreach(@$Delivery_location AS $r){
+                          if(@$r->id==@$sRow->delivery_location){
+                            echo "( ".$r->txt_desc." ) </span> ";
+                          }
+                        }
+
+                        if(@$sRow->delivery_location==1){
+
+                          $addr = DB::select(" SELECT
+                                      customers_address_card.id,
+                                      customers_address_card.customer_id,
+                                      customers_address_card.card_house_no,
+                                      customers_address_card.card_house_name,
+                                      customers_address_card.card_moo,
+                                      customers_address_card.card_zipcode,
+                                      customers_address_card.card_soi,
+                                      customers_address_card.card_district,
+                                      customers_address_card.card_district_sub,
+                                      customers_address_card.card_road,
+                                      customers_address_card.card_province,
+                                      customers_address_card.create_at,
+                                      customers_address_card.update_at,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name
+                                      FROM
+                                      customers_address_card
+                                      Left Join dataset_provinces ON customers_address_card.card_province = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_address_card.card_district = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_address_card.card_district_sub = dataset_districts.id
+                                      Left Join customers ON customers_address_card.customer_id = customers.id
+                                      where customers_address_card.customer_id = 8
+
+                                     ");
+                          // print_r($addr);
+                          $address = "<br>";
+                          $address .=  "<span style='z-index: 0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; > ชื่อผู้รับ : ". $addr[0]->prefix_name.$addr[0]->first_name." ".$addr[0]->last_name;
+                          $address .=  "ที่อยู่ : ". $addr[0]->card_house_no."<br> "; 
+                          $address .=  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ต. ". $addr[0]->tamname; 
+                          $address .=  "อ. ". $addr[0]->ampname;
+                          $address .=  "จ. ". $addr[0]->provname; 
+                          $address .=  "รหัส ปณ. ". $addr[0]->card_zipcode." </span> ";
+
+                          echo $address;
+
+                        }
+
+
+                        if(@$sRow->delivery_location==3){
+
+                          $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                                dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                                from customers_addr_frontstore
+                                Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                                Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
+                          // print_r($addr);
+                          $address = "<br>";
+                          $address .= "<span style='z-index: 0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; > ชื่อผู้รับ : ". $addr[0]->recipient_name; 
+                          $address .= "ที่อยู่ : ". $addr[0]->addr_no. "<br> ";
+                          $address .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ต. ". $addr[0]->tamname; 
+                          $address .= "อ. ". $addr[0]->ampname; 
+                          $address .= "จ. ". $addr[0]->provname; 
+                          $address .= "รหัส ปณ. ". $addr[0]->zip_code. " </span> ";
+
+                          echo $address;
+
+                        }
+
+                      }
+
+                     ?>
+                   
+
+                     </div>
+
+                    <div class="divTH">
+                      <label for="" >รวมทั้งสิ้น : </label>
+                    </div>
+                    <div class="divTableCell">
+                      <input  class="form-control" value="{{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}}" readonly="" />
+                    </div>
+
+                  </div>
+         
+                 <div class="divTableRow" style='z-index: 1' >
+                    <div class="divTableCell" style="width: 50% !important ;">&nbsp; </div>
+                    <div class="divTH">
+                      <label for="" >เลือกสถานที่การจัดส่ง : </label>
+                    </div>
+                    <div class="divTableCell">
+
+                        <select id="delivery_location" name="delivery_location" class="form-control select2-templating " >
+                              <option value="0">รับสินค้าด้วยตัวเอง</option>
+                            <!-- <option value="1">ที่อยู่ตามบัตร ปชช. </option> -->
+                             <!-- customers_address_card -->
+                            <!-- <option value="2">ที่อยู่ตามที่ลงทะเบียนในระบบ</option> -->
+                             <!-- customers_detail -->
+                            <!-- <option value="3">ที่อยู่กำหนดเอง</option>  -->
+                            <!-- customers_addr_frontstore -->
+                                 @if(@$Delivery_location)
+                                    @foreach(@$Delivery_location AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->delivery_location)?'selected':'' }} >
+                                        {{$r->txt_desc}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                        </select>
+
+                    </div>
+                    <div class="divTableCell">
+                    </div>
+                  </div>
+
+
+                 <div class="divTableRow"> 
+                    <div class="divTableCell" >
+                    </div>
+                    <div class="divTH">
+                    </div>
+                    <div class="divTableCell">
+                      <button type="submit" class="btn btn-success btn-sm waves-effect font-size-14 ">
+                        <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                        </button>
+                    </div>
+
+                  </div>
+
+    </form>
 
               <br>
               <br>
@@ -430,6 +578,14 @@
       </div>
 
      
+   <form  id="frmAddPro" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+      <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+      <input name="product_plus_pro" type="hidden" value="1">
+      <input id="promotion_id_fk" name="promotion_id_fk" type="hidden" >
+      <input id="limited_amt_person" name="limited_amt_person" type="hidden" placeholder="จำนวนจำกัดต่อคน" >
+    
+      {{ csrf_field() }}
+
       <div class="modal-body">
         <div class="row">
           <div class="col-12">
@@ -437,32 +593,56 @@
               <div class="card-body" >
 
                 <div class="page-title-box d-flex">
-                  <label for="" class="col-2" ><b>รหัสโปรโมชั่น : </b></label>
-                  <input class="col-4 form-control " type="text" id="txtSearchPro" value="" > &nbsp; &nbsp;
+                  <label for="" class="col-2" ><b>รหัสคูปอง : </b></label> 
+                  <input class="col-4 form-control " type="text" name="txtSearchPro" id="txtSearchPro" > &nbsp; &nbsp;
                   <button class="btn btn-success btnCheckProCode " >ตรวจสอบ</button>
                 </div>
 
-               <form  class="frmFrontstorelist" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                  <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
-                  <input name="product_plus" type="hidden" value="1">
-                  {{ csrf_field() }}
+                <div class="modal-title">
+                <input id="pro_name" type="text" readonly="" style="border: 0px solid transparent;width: 100%;font-weight: bold;font-size: 18px;display: none;">
+                </div>
 
                 <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
-             </form>
+                <table id="data-table-promotions-cost" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
+                <br>
+
+                    <div class="form-group row show_add_coupon " style="display: none;" >
+                      <label for="tracking_type" class="col-md-5 col-form-label"> จำนวน (ชุด) : </label>
+                      <div class="col-md-7">
+                        <div class="input-group inline-group">
+                        <div class="input-group-prepend" >
+                          <button type="button" class="btn btn-outline-secondary btn-minus-pro ">
+                          <i class="fa fa-minus"></i>
+                          </button>
+                          <input class="quantity plus-pro " min="1" name="quantity" value="1" type="number" readonly >
+                          <div class="input-group-append">
+                            <button type="button" data-product_id_fk="" class="btn btn-outline-secondary btn-plus-pro ">
+                            <i class="fa fa-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
 
               </div>
+
             </div>
           </div>
         </div>
 
-
       </div>
            
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btnSavePro " style="display: none;"><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
+
+ </form>
 
     </div>
   </div>
@@ -486,7 +666,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body" >
-
+<!-- xxxxxxxxxxxx -->
                 <div class=" d-flex " >
                   <button class="btn btn-success btnProductAll1 " data-value="1" style="margin-right: 1%;" >ทั้งหมด</button>
                   <button class="btn btn-success btnAihealth2 " data-value="2" style="margin-right: 1%;" >AiHealth</button>
@@ -502,6 +682,17 @@
                   <table id="data-table-products-list" class="table table-bordered dt-responsive" style="width: 100%;">
                   </table>
                 </form>
+
+                 <form  class="frmFrontstorelistPro" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                  <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+                  {{ csrf_field() }}
+                          <div class="form-group row div-data-table-list-pro " style="display: none;">
+                            <div class="col-md-12"> 
+                              <table id="data-table-list-pro" class="table table-bordered " style="width: 100%;">
+                              </table>
+                            </div>
+                          </div>
+                  </form>
 
               </div>
             </div>
@@ -525,10 +716,10 @@
 
 
 <div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered " role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ข้อมูลการจัดส่งสินค้า</b></h5>
+        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -536,99 +727,132 @@
      
       <div class="modal-body">
 
+
+     @if( empty(@$CusAddrFrontstore) )
+     
+        <form  id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <input name="add_delivery_custom" type="hidden" value="1">
+
+     @else
+
+        <form  id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <input name="update_delivery_custom" type="hidden" value="1">
+          <input name="customers_addr_frontstore_id" type="hidden" value="{{@$CusAddrFrontstore[0]->id}}">
+
+     @endif
+
+
+          <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+          
+          <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
+          
+          {{ csrf_field() }}
+
           <div class="col-12">
-            <div class="card">
-              <div class="card-body" >
-
 
                  <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ประเภทการรับสินค้า : </label>
+                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล (ผู้รับ) : </label>
                   <div class="col-md-7">
-                    <select name="" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                    </select>
-                  </div>
-                </div>
-
-
-                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ตัวเลือกที่อยู่จัดส่ง : </label>
-                  <div class="col-md-7">
-                    <select name="" class="form-control select2-templating "  >
-                      <option value="">Select</option>
-                    </select>
-                  </div>
-                </div>
-
-
-                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล : </label>
-                  <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
+                    <input type="text" name="delivery_cusname" class="form-control" value="{{@$CusAddrFrontstore[0]->recipient_name}}" required >
                   </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ที่อยู่การจัดส่ง : </label>
+                  <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
                   <div class="col-md-7">
-                    <textarea name="" class="form-control" rows="3"></textarea>
+                    <textarea name="delivery_addr" class="form-control" rows="3"  required >{{@$CusAddrFrontstore[0]->addr_no}}</textarea>
+                  </div>
+                </div>
+ 
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " >
+                       <option value="">Select</option>
+                       @if(@$sProvince)
+                        @foreach(@$sProvince AS $r)
+                        <option value="{{$r->id}}" {{ (@$r->id==@$CusAddrFrontstore[0]->province_code)?'selected':'' }} >
+                          {{$r->province_name}}
+                        </option>
+                        @endforeach
+                        @endif
+                    </select>
+
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->amphur_code)
+                           <option value="">Select</option>
+                           @if(@$sAmphures)
+                            @foreach(@$sAmphures AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$CusAddrFrontstore[0]->amphur_code)?'selected':'' }} >
+                              {{$r->amphur_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกจังหวัดก่อน</option>
+                      @endif
+                    </select>
                   </div>
                 </div>
 
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
                   <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
+                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->tambon_code)
+                           <option value="">Select</option>
+                           @if(@$sTambons)
+                            @foreach(@$sTambons AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$CusAddrFrontstore[0]->tambon_code)?'selected':'' }} >
+                              {{$r->tambon_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกอำเภอก่อน</option>
+                      @endif
+                    </select>
                   </div>
                 </div>
 
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
-                  <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
-                  <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
-                  </div>
-                </div>
 
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
                   <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
+                    <input type="text" id="delivery_zipcode" name="delivery_zipcode" class="form-control" value="{{@$CusAddrFrontstore[0]->zip_code}}" required >
                   </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> โทร : </label>
+                  <label for="" class="col-md-4 col-form-label"> เบอร์โทร : </label>
                   <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
+                    <input type="text" name="delivery_tel" class="form-control" value="{{@$CusAddrFrontstore[0]->tel}}"  required >
                   </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
+                  <label for="" class="col-md-4 col-form-label"> </label>
                   <div class="col-md-7">
-                    <input type="text" name="" class="form-control" value="" placeholder="">
+                    <button type="submit" class="btn btn-primary float-right "><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
+                    <!-- <button type="button" class="btn btn-secondary float-right " data-dismiss="modal">Close</button> -->
                   </div>
                 </div>
 
-
-              </div>
-            </div>
           </div>
 
 
+        </form>
+
+
       </div>
-           
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary"><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+
 
     </div>
   </div>
@@ -758,8 +982,187 @@
                         {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-                        {data: 'product_id_fk',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
+                        {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
+                          return d;
+                        }},
+                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+                        
+                        {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-center'},
+
+                        {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'selling_price',   title :'<center>ราคาขาย</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'total_pv',   title :'<center>รวม PV</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+    
+                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                    ],
+                     'columnDefs': [
+                     {
+                            'targets': 0,
+                            'checkboxes': {
+                               'selectRow': true
+                            }
+                         }
+                      ],
+                      'select': {
+                         'style': 'multi'
+                      },
+                    rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                      if(aData['add_from']==2){
+                        $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                        $("td:eq(4)", nRow).html("ชุด");
+                      }
+
+                      $('td:last-child', nRow).html(''
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+
+            });
+              
+
+</script>
+
+
+
+
+<script type="text/javascript">
+
+// xxxxxxxxxxxx
+            $.fn.dataTable.ext.errMode = 'throw';
+  
+            var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+
+            $(function() {
+              $('#data-table-list-pro').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        data :{
+                              frontstore_id_fk:frontstore_id_fk,
+                            },
+                          method: 'POST',
+                        },
+                    columns: [
+                        {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '<img src='+d+' width="80">';
+                        }},
+                        {data: 'product_name',   title :'<center>รายการโปร</center>', className: 'text-left',render: function(d) {
+                          return d;
+                        }},
+                        {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'selling_price',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'select_amt',   title :'<center>จำนวน</center>', className: 'w120 ',render: function(d) {
+
+                          if(d){
+                          var v = d.split(':');
+
+                           return '<input name="promotion_id_fk_pro[]" value="'+v[0]+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' ;
+                              }
+                        }},
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+
+                          if (aData['frontstore_promotions_list'] > 0 ) {
+
+                              $("td:eq(4)", nRow).html(
+                                '<input name="promotion_id_fk_pro[]" value="'+aData['frontstore_promotions_list']+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' 
+                                );
+
+                          }
+
+
+                        
+                      }                    
+          
+                });
+
+            });
+              
+
+</script>
+
+
+
+<script type="text/javascript">
+
+
+            $.fn.dataTable.ext.errMode = 'throw';
+  
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table-list-promotion').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    "info":     false,
+                    "paging":   false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                      url: '{{ route('backend.promotion_cus_products.datatable') }}',
+                      data :{
+                          txtSearchPro:1,
+                        },
+                      method: 'POST'
+                    },
+                    columns: [
+                        {data: 'id',   title :'<center>#</center>', className: 'text-center w50 ',render: function(d) {
                            return d ;
+                        }},
+                        {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
+                           return d;
                         }},
                         {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                            return d;
@@ -801,6 +1204,11 @@
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
+                      if(aData['add_from']==2){
+                        $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                        $("td:eq(4)", nRow).html("ชุด");
+                      }
+
                       $('td:last-child', nRow).html(''
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
@@ -822,68 +1230,9 @@
         $(document).on('click', '.btnAddFromPromotion', function(event) {
           event.preventDefault();
 
-            var oTable;
-            $(function() {
-
-                oTable = $('#data-table-promotion').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    processing: true,
-                    serverSide: true,
-                    ordering: false,
-                    "info":     false,
-                    destroy: true,
-                    searching: false,
-                    paging: false,
-                    ajax: {
-                      url: '{{ route('backend.promotion_cus_products.datatable') }}',
-                      data: function ( d ) {
-                        d.Where={};
-                        // d.Where['branch_id_fk'] = 1 ;
-                        // d.Where['pro_id_fk'] = 99999 ;
-                        d.Where['promotion_code_id_fk'] = 9999999999999 ;
-                        oData = d;
-                      },
-                      method: 'POST'
-                    },
-                    columns: [
-                        // {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                        //    return '<img src='+d+' width="80">';
-                        // }},
-                        // {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                        // {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
-                        // {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
-                        {data: 'id',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
-
-                           return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
-                                +' <div class="input-group-prepend"> '
-                                +'   <button class="btn btn-outline-secondary btn-minus"> '
-                                +'     <i class="fa fa-minus"></i> '
-                                +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
-                                +'   <div class="input-group-append"> '
-                                +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
-                                +'     <i class="fa fa-plus"></i> '
-                                +'    </button> '
-                                +'  </div> '
-                                +' </div> ' ;
-                        }},
-                    ],
-
-                });
-
-          
-              
-            });
-
                   $('#modalAddFromPromotion').modal('show');
           
          });
-
-
-        $("#modalAddFromPromotion").on("hidden.bs.modal", function(){
-            $("#txtSearchPro").val("");
-        });
-
 
       });
 
@@ -909,7 +1258,7 @@
                     processing: true,
                     serverSide: true,
                     ordering: false,
-                    "info":  false,
+                    "info":  true,
                     destroy: true,
                     searching: false,
                     paging: true,
@@ -1000,11 +1349,54 @@
                 $('#txtSearch').focus();
             })  
 
+            $('#modalAddFromProductsList').on('shown.bs.modal', function () {
+                $('.btnProductAll1').trigger('click');
+            })  
+
+            // $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
+            //     $("#spinner_frame").show();
+            //     window.location.reload(true);
+            // })
+
+            $(document).on('change', '#delivery_location', function(event) {
+              var v = $(this).val();
+              // alert(amp);
+              if(v==3){
+                $('#modalDelivery').modal('show');
+              }
+       
+            });
+
+
 
       });
 
 
     $(document).ready(function() {
+
+
+        $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
+          event.preventDefault();
+
+          var limited_amt_person = $(this).attr('limited_amt_person');
+          $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
+
+          const isNegative = $(e.target).closest('.btn-minus-product-pro').is('.btn-minus-product-pro');
+          const input = $(e.target).closest('.input-group').find('input');
+          if (input.is('input')) {
+            input[0][isNegative ? 'stepDown' : 'stepUp']()
+          }
+        })
+
+
+        $(document).on('click', '.btn-plus-pro, .btn-minus-pro', function(e) {
+        event.preventDefault();
+          const isNegative = $(e.target).closest('.btn-minus-pro').is('.btn-minus-pro');
+          const input = $(e.target).closest('.input-group').find('input');
+          if (input.is('input')) {
+            input[0][isNegative ? 'stepDown' : 'stepUp']()
+          }
+        })
 
 
         $(document).on('click', '.btn-plus, .btn-minus', function(e) {
@@ -1102,6 +1494,8 @@
 
            // alert(product_id_fk_this);
 
+           // return false;
+
             $.ajax({
                type:'POST',
                url: " {{ url('backend/frontstorelist/plus') }} ", 
@@ -1109,6 +1503,8 @@
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this,
                 success: function(response){ // What to do if we succeed
                        console.log(response); 
+                       // console.log(frontstore_id_fk); 
+                       // return false;
                         var oTable;
 
                           $(function() {
@@ -1138,9 +1534,6 @@
                                       }},
                                       {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                          return d;
-                                      }},
-                                      {data: 'product_id_fk',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
-                                         return d ;
                                       }},
                                       {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                          return d;
@@ -1181,6 +1574,11 @@
 
                                     var info = $(this).DataTable().page.info();
                                     $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                    if(aData['add_from']==2){
+                                      $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                      $("td:eq(4)", nRow).html("ชุด");
+                                    }
 
                                     $('td:last-child', nRow).html(''
                                       + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -1259,8 +1657,135 @@
                                         {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                            return d;
                                         }},
-                                        {data: 'product_id_fk',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
+                                 
+                                        {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'product_unit',   title :'<center>หน่วย</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'selling_price',   title :'<center>ราคาขาย</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'total_pv',   title :'<center>รวม PV</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                    
+                                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                    ],
+                                     'columnDefs': [
+                                     {
+                                            'targets': 0,
+                                            'checkboxes': {
+                                               'selectRow': true
+                                            }
+                                         }
+                                      ],
+                                      'select': {
+                                         'style': 'multi'
+                                      },
+                                      rowCallback: function(nRow, aData, dataIndex){
+
+                                        var info = $(this).DataTable().page.info();
+                                        $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                        if(aData['add_from']==2){
+                                          $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                          $("td:eq(4)", nRow).html("ชุด");
+                                        }
+
+                                        $('td:last-child', nRow).html(''
+                                          + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                        ).addClass('input');
+                                      }
+                                });
+                                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                                  oTable.draw();
+                                });
+
+                            });
+                              
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+          }
+        });
+
+
+
+          $(document).on('click', '.btn-plus-product-pro', function(e) {
+            // event.preventDefault();
+            $.fn.dataTable.ext.errMode = 'throw';
+
+            const input = $(e.target).closest('.input-group').find('input');
+            if (input.is('input')) {
+               // alert(input.val());
+               // frmFrontstorelist
+               // $("#frmFrontstorelist").submit();
+             // var d =  $("#frmFrontstorelist").serialize();
+             var d =  $(".frmFrontstorelistPro").serialize();
+             var promotion_id_fk_this =  $(this).attr('promotion_id_fk');
+
+             var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+
+             // alert(product_id_fk_this);
+
+             // return false;
+
+              $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/frontstorelist/plusPromotion') }} ", 
+                 // data:{ d:d , _token: '{{csrf_token()}}' },
+                 data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this,
+                  success: function(response){ // What to do if we succeed
+                         console.log(response); 
+                         // console.log(frontstore_id_fk); 
+                         // return false;
+
+                          var oTable;
+
+                            $(function() {
+                                oTable = $('#data-table-list').DataTable({
+                                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                    processing: true,
+                                    serverSide: true,
+                                    scroller: true,
+                                    scrollCollapse: true,
+                                    scrollX: true,
+                                    ordering: false,
+                                    "info":     false,
+                                    "paging":   false,
+                                    destroy: true,
+                                    scrollY: ''+($(window).height()-370)+'px',
+                                    iDisplayLength: 5,
+                                    ajax: {
+                                        url: '{{ route('backend.frontstorelist.datatable') }}',
+                                        data :{
+                                              frontstore_id_fk:frontstore_id_fk,
+                                            },
+                                          method: 'POST',
+                                        },
+                                    columns: [
+                                        {data: 'id',   title :'<center>#</center>', className: 'text-center w50 ',render: function(d) {
                                            return d ;
+                                        }},
+                                        {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
+                                           return d;
                                         }},
                                         {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                            return d;
@@ -1298,6 +1823,15 @@
                                          'style': 'multi'
                                       },
                                     rowCallback: function(nRow, aData, dataIndex){
+
+                                      var info = $(this).DataTable().page.info();
+                                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                      if(aData['add_from']==2){
+                                        $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                        $("td:eq(4)", nRow).html("ชุด");
+                                      }
+
                                       $('td:last-child', nRow).html(''
                                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                       ).addClass('input');
@@ -1310,39 +1844,150 @@
                             });
                               
 
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+                      console.log(JSON.stringify(jqXHR));
+                      console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                  }
+              });
 
-                },
-                error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                    console.log(JSON.stringify(jqXHR));
-                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                }
-            });
-
-          }
-        });
+            }
+          })
 
 
+
+
+
+
+          $(document).on('click', '.btn-minus-product-pro', function(e) {
+            // event.preventDefault();
+            $.fn.dataTable.ext.errMode = 'throw';
+
+            const input = $(e.target).closest('.input-group').find('input');
+            if (input.is('input')) {
+               // alert(input.val());
+               // frmFrontstorelist
+               // $("#frmFrontstorelist").submit();
+             // var d =  $("#frmFrontstorelist").serialize();
+             var d =  $(".frmFrontstorelistPro").serialize();
+             var promotion_id_fk_this =  $(this).attr('promotion_id_fk');
+
+             var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+
+             // alert(product_id_fk_this);
+
+             // return false;
+
+              $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/frontstorelist/minusPromotion') }} ", 
+                 // data:{ d:d , _token: '{{csrf_token()}}' },
+                 data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this,
+                  success: function(response){ // What to do if we succeed
+                         console.log(response); 
+                         // console.log(frontstore_id_fk); 
+                         // return false;
+
+                          var oTable;
+
+                            $(function() {
+                                oTable = $('#data-table-list').DataTable({
+                                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                    processing: true,
+                                    serverSide: true,
+                                    scroller: true,
+                                    scrollCollapse: true,
+                                    scrollX: true,
+                                    ordering: false,
+                                    "info":     false,
+                                    "paging":   false,
+                                    destroy: true,
+                                    scrollY: ''+($(window).height()-370)+'px',
+                                    iDisplayLength: 5,
+                                    ajax: {
+                                        url: '{{ route('backend.frontstorelist.datatable') }}',
+                                        data :{
+                                              frontstore_id_fk:frontstore_id_fk,
+                                            },
+                                          method: 'POST',
+                                        },
+                                    columns: [
+                                        {data: 'id',   title :'<center>#</center>', className: 'text-center w50 ',render: function(d) {
+                                           return d ;
+                                        }},
+                                        {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'product_unit',   title :'<center>หน่วย</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'selling_price',   title :'<center>ราคาขาย</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'total_pv',   title :'<center>รวม PV</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                                        {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
+                                           return d;
+                                        }},
+                    
+                                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                    ],
+                                     'columnDefs': [
+                                     {
+                                            'targets': 0,
+                                            'checkboxes': {
+                                               'selectRow': true
+                                            }
+                                         }
+                                      ],
+                                      'select': {
+                                         'style': 'multi'
+                                      },
+                                    rowCallback: function(nRow, aData, dataIndex){
+
+                                      var info = $(this).DataTable().page.info();
+                                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                      if(aData['add_from']==2){
+                                        $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                        $("td:eq(4)", nRow).html("ชุด");
+                                      }
+
+                                      $('td:last-child', nRow).html(''
+                                        + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                      ).addClass('input');
+                                    }
+                                });
+                                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                                  oTable.draw();
+                                });
+
+                            });
+                              
+
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+                      console.log(JSON.stringify(jqXHR));
+                      console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                  }
+              });
+
+            }
+          })
 
 
 
     });
-
-
-// $(function() {
-
-//   $(document).on('click', 'input[type=number]', function(e) {
-//     e.preventDefault();
-//     alert("xxxx");
-//     /* Act on the event */
-//     $(e.target).closest('.input-group').find('input').focus();
-//     // $(this).next(".btn-plus").click();
-//   });
-
-// $('input[type="text"], input[type=number], input[type=date], input[type="tel"], input[type=password], input[type="email"], input[type="url"], textarea, select').live("click", function(event) {
-//         event.stopPropagation();
-//     });
-
-// });
 
 
 
@@ -1350,6 +1995,9 @@
     $(document).ready(function() {
         $(document).on('click', '.btnProductAll1,.btnAihealth2,.btnAilada3,.btnAibody4,.btnPromotion8', function(event) {
           event.preventDefault();
+
+          $('#frmFrontstorelist').show();
+          $('.div-data-table-list-pro').hide();
 
           var table = $('#data-table-products-list').DataTable();
           table.clear().draw();
@@ -1371,7 +2019,7 @@
                     processing: true,
                     serverSide: true,
                     ordering: false,
-                    "info":  false,
+                    "info":  true,
                     destroy: true,
                     searching: false,
                     paging: true,
@@ -1396,7 +2044,7 @@
                         {data: 'price',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
                            return d + "&#3647";
                         }},
-                        {data: 'id',   title :'<center>จำนวน</center>', className: 'w140 ',render: function(d) {
+                        {data: 'id',   title :'<center>จำนวน</center>', className: 'text-center w140 ',render: function(d) {
 
                            return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
                                 +' <div class="input-group-prepend"> '
@@ -1456,13 +2104,103 @@
 
 
     $(document).ready(function() {
+        $(document).on('click', '.btnPromotion8', function(event) {
+          event.preventDefault();
+
+          $('#frmFrontstorelist').hide();
+          $('.div-data-table-list-pro').show();
+
+          $("#spinner_frame").show();
+
+           $.fn.dataTable.ext.errMode = 'throw';
+  
+            var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+
+            $(function() {
+              $('#data-table-list-pro').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    destroy:true,
+                    ajax: {
+                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        data :{
+                              frontstore_id_fk:frontstore_id_fk,
+                            },
+                          method: 'POST',
+                        },
+                    columns: [
+                        {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
+                           return '<img src='+d+' width="80">';
+                        }},
+                        {data: 'product_name',   title :'<center>รายการโปร</center>', className: 'text-left',render: function(d) {
+                          return d;
+                        }},
+                        {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'selling_price',   title :'<center>ราคา</center>', className: 'text-center',render: function(d) {
+                           return d;
+                        }},
+                        {data: 'select_amt',   title :'<center>จำนวน</center>', className: 'w120 ',render: function(d) {
+
+                          if(d){
+                          var v = d.split(':');
+
+                           return '<input name="promotion_id_fk_pro[]" value="'+v[0]+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' ;
+                              }
+                        }},
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+
+                          if (aData['frontstore_promotions_list'] > 0 ) {
+
+                              $("td:eq(4)", nRow).html(
+                                '<input name="promotion_id_fk_pro[]" value="'+aData['frontstore_promotions_list']+'" type="hidden" ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> ' 
+                                );
+
+                          }
+
+
+                        
+                      }                    
+          
+                });
+
+            });
+
+        });
+     });
+
+
+
+    $(document).ready(function() {
         $(document).on('click', '.btnCheckProCode', function(event) {
           event.preventDefault();
 
           var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
-
-          var table = $('#data-table-promotion').DataTable();
-          table.clear().draw();
 
           var txtSearchPro = $("#txtSearchPro").val();
           // $("#spinner_frame").show();
@@ -1471,101 +2209,155 @@
             return false;
           }
 
-          // alert(txtSearchPro);
-
-          // ส่ง Ajax ไปหา promotion_code_id_fk จากการกรอกชื่ด coupon มา 
-
-          var promotion_code_id_fk = '';
-
-              $.ajax({
+          // ตรวจสอบดูก่อนว่า ในตาราง `db_frontstore_products_list` เคยใช้รหัสนี้หรือไม่ และ มีสถานะ =  1=ใช้งานได้ หรือไม่
+          // pro_status => 1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code
+           $.ajax({
                type:'POST',
-               url: " {{ url('backend/ajaxGetPromotionCode') }} ", 
-               data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro },
-                success:function(data){
-                     console.log(data); 
+               url: " {{ url('backend/ajaxCheckCouponUsed') }} ", 
+               data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
+                success:function(msg){
+                     console.log(msg);
+
                      // return false;
-                     promotion_code_id_fk = data;
-                   
+
+                     if(msg=="InActive"){
+                        alert('! คูปอง รหัสนี้ ไม่อยู่ในสถานะที่ใช้งานได้ ');
+                        $("#pro_name").hide();
+                        $('.btnSavePro').hide();
+                        $('.show_add_coupon').hide();
+                        $('#data-table-promotion').hide();
+                        $('#data-table-promotions-cost').hide();
+                        return false;
+                     }
+
+                     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                           $.ajax({
+                             type:'POST',
+                             url: " {{ url('backend/ajaxGetPromotionCode') }} ", 
+                             data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
+                              success:function(data){
+                                   console.log(data);
+
+                                    $("#promotion_id_fk").val(data);
+
+                                            var oTable2;
+
+                                            $(function() {
+                                                oTable2 = $('#data-table-promotions-cost').DataTable({
+                                                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                                    processing: true,
+                                                    serverSide: true,
+                                                    scroller: true,
+                                                    scrollCollapse: true,
+                                                    destroy: true,
+                                                    scrollX: true,
+                                                    ordering: false,
+                                                    "bLengthChange": false ,
+                                                    "searching": false,
+                                                    "paging":   false,
+                                                    "scrollX": false,
+                                                    "info":     false,
+                                                    "lengthChange": false,
+                                                    scrollY: ''+($(window).height()-370)+'px',
+                                                    iDisplayLength: 5,
+                                                    ajax: {
+                                                        url: '{{ route('backend.promotions_cost.datatable') }}',
+                                                        data :{
+                                                              promotion_id_fk_pro:data,
+                                                            },
+                                                          method: 'POST',
+                                                        },
+                                                    columns: [
+                                                        {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-left'},
+                                                        // {data: 'country', title :'<center>ประเทศ</center>', className: 'text-center'},
+                                                        {data: 'currency', title :'<center>สกุลเงิน</center>', className: 'text-center'},
+                                                        {data: 'cost_price', title :'<center>ราคาทุน</center>', className: 'text-center'},
+                                                        {data: 'selling_price', title :'<center>ราคาขาย</center>', className: 'text-center'},
+                                                        {data: 'member_price', title :'<center>ราคาสมาชิก</center>', className: 'text-center'},
+                                                        {data: 'pv', title :'<center>PV</center>', className: 'text-center'},
+                                                    ],
+                                            
+                                                });
+                                      
+                                            });
+
+                                },
+                              error: function(jqXHR, textStatus, errorThrown) { 
+                                  console.log(JSON.stringify(jqXHR));
+                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              }
+                          });
+
+
+                          $.ajax({
+                             type:'POST',
+                             url: " {{ url('backend/ajaxGetPromotionName') }} ", 
+                             data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
+                              success:function(data){
+                                   console.log(data);
+                                     $.each(data,function(key,value){
+                                      $("#pro_name").val("ชื่อโปร : "+value.pro_name);
+                                      $("#limited_amt_person").val(value.limited_amt_person);
+                                      $(".plus-pro").attr('max',value.limited_amt_person);
+                                     });
+                                    
+                                    $("#pro_name").show();
+                                    if(data==''){
+                                      $("#pro_name").hide();
+                                      $('.btnSavePro').hide();
+                                      $('.show_add_coupon').hide();
+                                    }
+                                   
+                                },
+                              error: function(jqXHR, textStatus, errorThrown) { 
+                                  console.log(JSON.stringify(jqXHR));
+                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  $("#pro_name").hide();
+                              }
+                          });
+
+                          $('#data-table-promotion').show();
+                          $('.btnSavePro').show();
+                          $('.show_add_coupon').show();
+                          var oTable;
+                          $(function() {
+
+                              oTable = $('#data-table-promotion').DataTable({
+                              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                  processing: true,
+                                  serverSide: true,
+                                  ordering: false,
+                                  "info":     false,
+                                  destroy: true,
+                                  searching: false,
+                                  paging: false,
+                                  ajax: {
+                                    url: '{{ route('backend.promotion_cus_products.datatable') }}',
+                                    data :{
+                                        txtSearchPro:txtSearchPro,
+                                      },
+                                    method: 'POST'
+                                  },
+                                  columns: [
+                                      // {data: 'id', title :'ID', className: 'text-center w10'},
+                                      {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                                      {data: 'product_amt', title :'<center>จำนวน</center>', className: 'text-center'},
+                                      {data: 'product_unit', title :'<center>หน่วย</center>', className: 'text-center'},
+                                  ],
+                                  rowCallback: function(nRow, aData, dataIndex){
+
+                                    }
+
+                              });
+              
+                       });
+
+       // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
-                    console.log(JSON.stringify(jqXHR));
-                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                    $(".myloading").hide();
-                }
             });
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-
-            var oTable;
-            $(function() {
-
-                oTable = $('#data-table-promotion').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    processing: true,
-                    serverSide: true,
-                    ordering: false,
-                    "info":     false,
-                    destroy: true,
-                    searching: false,
-                    paging: false,
-                    ajax: {
-                      url: '{{ route('backend.promotion_cus_products.datatable') }}',
-                      data :{
-                          frontstore_id_fk:frontstore_id_fk,
-                          promotion_code_id_fk:promotion_code_id_fk,
-                        },
-                      method: 'POST'
-                    },
-                    columns: [
-                        // {data: 'product_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                        //    return '<img src='+d+' width="80">';
-                        // }},
-                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                        // {data: 'pv', title :'<center>PV</center>', className: 'text-left'},
-                        // {data: 'sell_price', title :'<center>ราคา</center>', className: 'text-left'},
-                        // {data: 'product_id_fk',   title :'<center>จำนวน</center>', className: 'w140 text-center',render: function(d) {
-                        //    return '<input name="product_id_fk[]" value="'+d+'" type="hidden" ><div class="input-group inline-group"> '
-                        //         +' <div class="input-group-prepend"> '
-                        //         +'   <button class="btn btn-outline-secondary btn-minus"> '
-                        //         +'     <i class="fa fa-minus"></i> '
-                        //         +'   </button>'
-                        //         +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
-                        //         +'   <div class="input-group-append"> '
-                        //         +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
-                        //         +'     <i class="fa fa-plus"></i> '
-                        //         +'    </button> '
-                        //         +'  </div> '
-                        //         +' </div> ' ;
-                        // }},
-                    ],
-                    rowCallback: function(nRow, aData, dataIndex){
-
-                          if (aData['frontstore_products_list'] > 0 ) {
-
-                              $("td:eq(4)", nRow).html(
-                                '<input name="product_id_fk[]" value="'+aData['product_id_fk']+'" type="hidden" ><div class="input-group inline-group"> '
-                                +' <div class="input-group-prepend"> '
-                                +'   <button class="btn btn-outline-secondary btn-minus"> '
-                                +'     <i class="fa fa-minus"></i> '
-                                +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number" readonly >'
-                                +'   <div class="input-group-append"> '
-                                +'   <button data-product_id_fk="'+aData['product_id_fk']+'" class="btn btn-outline-secondary btn-plus"> '
-                                +'     <i class="fa fa-plus"></i> '
-                                +'    </button> '
-                                +'  </div> '
-                                +' </div> '
-                                );
-
-                          }
-                        
-                      }
-
-                });
-
-
-              
-            });
-              
 
         });
      });
@@ -1614,6 +2406,11 @@ $(document).ready(function() {
             $("#product_id_fk").select2('destroy').val("").select2();
         });
 
+        $("#modalAddFromPromotion").on("hidden.bs.modal", function(){
+            $("#frmAddPro").find("input[type=text]").val("");
+            $('#data-table-promotion').hide();
+            $('.show_add_coupon').hide();
+        });
 
 
         $(document).on('change', '#amt', function(event) {
@@ -1692,9 +2489,7 @@ $(document).ready(function() {
                                                 {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                                    return d;
                                                 }},
-                                                {data: 'product_id_fk',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
-                                                   return d ;
-                                                }},
+                                    
                                                 {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                                    return d;
                                                 }},
@@ -1730,11 +2525,20 @@ $(document).ready(function() {
                                               'select': {
                                                  'style': 'multi'
                                               },
-                                            rowCallback: function(nRow, aData, dataIndex){
-                                              $('td:last-child', nRow).html(''
-                                                + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                                              ).addClass('input');
-                                            }
+                                              rowCallback: function(nRow, aData, dataIndex){
+
+                                                var info = $(this).DataTable().page.info();
+                                                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                                if(aData['add_from']==2){
+                                                  $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                                  $("td:eq(4)", nRow).html("ชุด");
+                                                }
+
+                                                $('td:last-child', nRow).html(''
+                                                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                ).addClass('input');
+                                              }
                                         });
                                     });
                                       
@@ -1751,21 +2555,10 @@ $(document).ready(function() {
 
           <script type="text/javascript">
             $(document).ready(function() {
-                
-                  // $('.btnDelivery').trigger('click');
-                  // $('.btnAddFromPromotion').trigger('click');
-                  // $('#modalAddFromPromotion').modal('show');
-                  // $('#modalAddFromProductsList').modal('show');
-                  // $('.btnAddFromProdutcsList ').trigger('click');
-                  // $('.btnAddFromPromotion ').trigger('click');
-
-                   // $('.btnAddList ').trigger('click');
-
 
                    $(document).on('click', '.cDelete', function(event) {
                        event.preventDefault();
-                       // alert("xxxxx");
-
+                    
                         var table = $('#data-table-list').DataTable();
                         table.clear().draw();
 
@@ -1775,9 +2568,9 @@ $(document).ready(function() {
 
                         $.fn.dataTable.ext.errMode = 'throw';
 
-
                         setTimeout(function(){
                           $("#spinner_frame").hide();
+                          // $(this).closest("tr").hide();
                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                           var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
                           var oTable;
@@ -1811,9 +2604,6 @@ $(document).ready(function() {
                                                 {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                                    return d;
                                                 }},
-                                                {data: 'product_id_fk',   title :'<center>รหัสสินค้า</center>', className: 'text-center',render: function(d) {
-                                                   return d ;
-                                                }},
                                                 {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                                    return d;
                                                 }},
@@ -1849,18 +2639,24 @@ $(document).ready(function() {
                                               'select': {
                                                  'style': 'multi'
                                               },
-                                            rowCallback: function(nRow, aData, dataIndex){
-                                                
+                                              rowCallback: function(nRow, aData, dataIndex){
+
                                                 var info = $(this).DataTable().page.info();
                                                 $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                              $('td:last-child', nRow).html(''
-                                                + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                                              ).addClass('input');
-                                            }
+                                                if(aData['add_from']==2){
+                                                  $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
+                                                  $("td:eq(4)", nRow).html("ชุด");
+                                                }
+
+                                                $('td:last-child', nRow).html(''
+                                                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                ).addClass('input');
+                                              }
                                         });
                                     });
                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                         
                         }, 1500);
 
                    });
@@ -1871,6 +2667,118 @@ $(document).ready(function() {
 
 
             }); 
+
+
+             $('#delivery_province').change(function(){
+
+                var province_id = this.value;
+                // alert(province_id);
+
+                 if(province_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetAmphur') }} ", 
+                        method: "post",
+                        data: {
+                          province_id:province_id,
+                          "_token": "{{ csrf_token() }}", 
+                        },
+                        success:function(data)
+                        { 
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลอำเภอ !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกอำเภอ -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.amphur_name+'</option>';
+                             });
+                             $('#delivery_amphur').html(layout);
+                             $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
+                         }
+                        }
+                      })
+                 }
+       
+            });
+
+
+             $('#delivery_amphur').change(function(){
+
+                var amphur_id = this.value;
+                // alert(amphur_id);
+
+                 if(amphur_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetTambon') }} ", 
+                        method: "post",
+                        data: {
+                          amphur_id:amphur_id,
+                          "_token": "{{ csrf_token() }}", 
+                        },
+                        success:function(data)
+                        { 
+
+                         $('#delivery_zipcode').val('');
+                         
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลตำบล !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกตำบล -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.tambon_name+'</option>';
+                             });
+                             $('#delivery_tambon').html(layout);
+                         }
+                        }
+                      })
+                 }
+       
+            });
+
+
+             $('#delivery_tambon').change(function(){
+
+                var tambon_id = this.value;
+                // alert(tambon_id);
+
+                 if(tambon_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetZipcode') }} ", 
+                        method: "post",
+                        data: {
+                          tambon_id:tambon_id,
+                          "_token": "{{ csrf_token() }}", 
+                        },
+                        success:function(data)
+                        { 
+                          console.log(data);
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลรหัส ปณ. !!.');
+                         }else{
+                             $.each(data,function(key,value){
+                                $('#delivery_zipcode').val(value.zip_code);
+                             });
+                             
+                         }
+                        }
+                      })
+                 }
+       
+            });
+
+
+            $(document).ready(function() {
+                  // $('.btnDelivery').trigger('click');
+                  // $('.btnAddFromPromotion').trigger('click');
+                  // $('#modalAddFromPromotion').modal('show');
+                  // $('#modalAddFromProductsList').modal('show');
+                  // $('.btnAddFromProdutcsList ').trigger('click');
+                  // $('.btnPromotion8').trigger('click');
+                  // $('.btnAddFromPromotion ').trigger('click');
+                   // $('.btnAddList ').trigger('click');
+                   // $('#modalDelivery').modal('show');
+                   // $('#modalDelivery').modal('show');
+            });
+
           </script>
 
 @endsection

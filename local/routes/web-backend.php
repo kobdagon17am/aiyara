@@ -129,6 +129,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('products_images/datatable', 'Products_imagesController@Datatable')->name('products_images.datatable');
     Route::get('products_images/create/{id}', 'Products_imagesController@create');
 
+    Route::resource('promotions_images', 'Promotions_imagesController');
+    Route::post('promotions_images/datatable', 'Promotions_imagesController@Datatable')->name('promotions_images.datatable');
+    Route::get('promotions_images/create/{id}', 'Promotions_imagesController@create');
+
 
     Route::resource('faq_topic', 'Faq_topicController');
     Route::post('faq_topic/datatable', 'Faq_topicController@Datatable')->name('faq_topic.datatable');
@@ -219,6 +223,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
     Route::post('ajaxGetShelf', 'AjaxController@ajaxGetShelf');
 
+    Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
+    Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
+    Route::post('ajaxGetZipcode', 'AjaxController@ajaxGetZipcode');
+
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
     Route::post('ajaxSelectAddr', 'AjaxController@ajaxSelectAddr');
@@ -231,6 +239,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetProduct', 'AjaxController@ajaxGetProduct');
     Route::post('ajaxGetProductPromotionCus', 'AjaxController@ajaxGetProductPromotionCus');
     Route::post('ajaxGetPromotionCode', 'AjaxController@ajaxGetPromotionCode');
+    Route::post('ajaxGetPromotionName', 'AjaxController@ajaxGetPromotionName');
+    Route::post('ajaxCheckCouponUsed', 'AjaxController@ajaxCheckCouponUsed');
+
+
+    Route::resource('delivery', 'DeliveryController');
+    Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -238,6 +252,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
+
+
+    Route::resource('taxdata', 'TaxdataController');
+    Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
+    Route::get('taxdata/taxtvi/{id}', 'TaxdataController@createPDFTaxtvi');
+
 
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
@@ -252,9 +272,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('product_out_cause', 'Product_out_causeController');
     Route::post('product_out_cause/datatable', 'Product_out_causeController@Datatable')->name('product_out_cause.datatable');
-
-    Route::resource('delivery', 'DeliveryController');
-    Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
 
 
     Route::resource('delivery_packing', 'DeliveryPackingController');
@@ -326,7 +343,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('frontstorelist', 'FrontstorelistController');
     Route::post('frontstorelist/datatable', 'FrontstorelistController@Datatable')->name('frontstorelist.datatable');
+    Route::post('frontstorelist/datatablePro', 'FrontstorelistController@DatatablePro')->name('frontstorelist-pro.datatable');
     Route::post('frontstorelist/plus', 'FrontstorelistController@plus');
+    Route::post('frontstorelist/plusPromotion', 'FrontstorelistController@plusPromotion');
+    Route::post('frontstorelist/minusPromotion', 'FrontstorelistController@minusPromotion');
     Route::post('frontstorelist/minus', 'FrontstorelistController@minus');
 
     Route::resource('transfer_choose', 'Transfer_chooseController');

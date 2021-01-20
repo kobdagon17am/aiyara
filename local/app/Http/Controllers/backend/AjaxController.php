@@ -36,14 +36,14 @@ class AjaxController extends Controller
 
     public function ajaxClearDataPm_broadcast()
     {
-        DB::delete(" TRUNCATE `pm_broadcast` ");
+        DB::delete(" TRUNCATE pm_broadcast ");
     }
 
 
 
     public function ajaxFetchData(Request $request)
     {
-        // DB::delete(" TRUNCATE `course_event_regis` ");
+        // DB::delete(" TRUNCATE course_event_regis ");
 
         // return($request->search);
 
@@ -387,6 +387,36 @@ class AjaxController extends Controller
     }    
 
 
+    public function ajaxGetAmphur(Request $request)
+    {
+        if($request->ajax()){
+
+          $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
+
+          return response()->json($query);      
+        }
+    } 
+
+    public function ajaxGetTambon(Request $request)
+    {
+        if($request->ajax()){
+
+          $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
+
+          return response()->json($query);      
+        }
+    } 
+
+
+    public function ajaxGetZipcode(Request $request)
+    {
+        if($request->ajax()){
+
+          $query = DB::select(" select * from dataset_districts where id='".$request->tambon_id."'  ");
+
+          return response()->json($query);      
+        }
+    } 
 
     public function ajaxGetSetToWarehouse(Request $request)
     {
@@ -553,18 +583,25 @@ class AjaxController extends Controller
 
     }
 
+         
+    public function generate_string($input, $strength = 6 )  {
+        $input_length = strlen($input);
+        $random_string = '';
+        for($i = 0; $i < $strength; $i++) {
+            $random_character = $input[mt_rand(0, $input_length - 1)];
+            $random_string .= $random_character;
+        }
+        return $random_string;
+    }
+
 
     public function ajaxGenPromotionCode(Request $request)
     {
 
-        // return ($request->all());
+        // dd ($request->all());
         // return ($request->promotion_name);
         // dd ($request->all());
-        // return $request->promotion_code_id_fk;
-        // return $request->amt_gen;
-        // return $request->amt_random;
-        // return $request->prefix_coupon;
-        // return $request->suffix_coupon;
+        // return $request->promotion_code_id_fk.":".$request->amt_gen.":".$request->amt_random.":".$request->prefix_coupon.":".$request->suffix_coupon;
         // dd();
 
          if( $request->promotion_code_id_fk ){
@@ -581,46 +618,150 @@ class AjaxController extends Controller
             $sRow->save();
 
 
-        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-         
-        function generate_string($input, $strength = 10 )  {
-            $input_length = strlen($input);
-            $random_string = '';
-            for($i = 0; $i < $strength; $i++) {
-                $random_character = $input[mt_rand(0, $input_length - 1)];
-                $random_string .= $random_character;
-            }
-            return $random_string;
-        }
-         
-        for ($i=1; $i <= $request->amt_gen ; $i++) { 
+         try {
+             $obtion = array(PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8',);
+             $conn = new PDO('mysql:host=localhost;dbname=aiyara_db', 'root', '',$obtion);
+             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch(Exception $e) {
+              exit('Unable to connect to database.');
+         }
 
-            // echo strtoupper(generate_string($permitted_chars, 10));
+        $conn->prepare(" TRUNCATE rand_code ; ")->execute();
+        $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+
+        $str_digit = $request->amt_random ; 
+        $amt = $request->amt_gen; 
+        $percent = $amt * (20/100); 
+
+        // return $amt.":".$str_digit.":".$percent;
+        // dd();
+
+
+        $arr = [];
+        for ($i=1; $i <= ($amt + $percent) ; $i++) { 
+            array_push($arr,$this->generate_string($permitted_chars, $str_digit));
+        }
+
+        // return $arr;
+        // dd();
+
+        $unique = array_unique($arr);
+        $duplicates = array_diff_assoc($arr, $unique);
+        $result = array_unique($arr);
+        $ch1 = (intval($amt)-intval(sizeof($result)));
+        if($ch1>0){
+            for ($i=1; $i <= $ch1 ; $i++) { 
+                array_push($result,$this->generate_string($permitted_chars, $str_digit));
+            }
+
+            $unique = array_unique($result);
+            $duplicates = array_diff_assoc($result, $unique);
+
+        }
+
+        $r = array_slice($unique, 0, $amt);
+
+            foreach ($r as $key => $value) {
+                 $conn->prepare(" INSERT IGNORE INTO rand_code (rand_code) VALUES ('".$value."')  ")->execute();
+            }
+
+        $sql = " SELECT * FROM rand_code "; 
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $num_rows = $stmt->rowCount();
+
+        $sql = " SELECT * FROM rand_code "; 
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $num_rows = $stmt->rowCount();
+        // echo " ข้อมูลที่ต้องการ = ".$amt." ข้อมูลในตาราง = ".$num_rows;
+
+        if($num_rows < $amt){
+            // echo " จำนวนหลักไม่พอ"; 
+            return 'x';
+            exit;
+        }
+
+        $rows = DB::select(" SELECT * from rand_code ");
+
+        foreach ($rows as $key => $value) {
               $insertData = array(
                  "promotion_code_id_fk"=>$sRow->id,
-                 "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, $request->amt_random)).@$request->suffix_coupon,
+                 "promotion_code"=>@$request->prefix_coupon.($value->rand_code).@$request->suffix_coupon,
                  "customer_id_fk"=>'0',
                  "pro_status"=> '5' ,
                  "created_at"=>now());
                PromotionCode_add::insertData($insertData);
-
         }
+         
+        // for ($i=1; $i <= $amt ; $i++) { 
 
-        return $sRow->id ;
-        // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
+        //       $insertData = array(
+        //          "promotion_code_id_fk"=>$sRow->id,
+        //          "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, $str_digit)).@$request->suffix_coupon,
+        //          "customer_id_fk"=>'0',
+        //          "pro_status"=> '5' ,
+        //          "created_at"=>now());
+        //        PromotionCode_add::insertData($insertData);
+        // }
 
+        // return $sRow->id ;
+
+
+    }
+
+    public function ajaxCheckCouponUsed(Request $request)
+    {
+        // return $request->txtSearchPro;
+        $promotion_cus = DB::select(" 
+            select * from db_promotion_cus 
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 ; ");
+        // return $promotion_cus[0]->promotion_code_id_fk;
+
+        $promotion_code = DB::select("
+            select * from db_promotion_code
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE db_promotion_code.promotion_id_fk='".@$promotion_cus[0]->promotion_code_id_fk."' AND promotions.status=1 AND promotions.promotion_coupon_status=1;
+            ; ");
+
+        // return($promotion_code[0]->approve_status);
+
+        $rs = DB::select(" select count(*) as cnt from db_frontstore_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
+        // return $rs[0]->cnt;
+        if($rs[0]->cnt > 0){
+            return "InActive";
+        }else if(@$promotion_code[0]->approve_status==0){
+            return "InActive";
+        }else{
+            return true;
+        }
+        
 
     }
 
     public function ajaxGetPromotionCode(Request $request)
     {
-
         // return $request->txtSearchPro;
-        $rs = DB::select(" select * from db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."' ; ");
+        $rs = DB::select(" 
+            select * from db_promotion_cus 
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 ;
+          ");
         return $rs[0]->promotion_code_id_fk;
-
     }
 
+    public function ajaxGetPromotionName(Request $request)
+    {
+        // return $request->txtSearchPro;
+        $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')  ");
+
+        return response()->json($rs);      
+
+
+    }
 
     public function ajaxGenPromotionCodePrefixCoupon(Request $request)
     {

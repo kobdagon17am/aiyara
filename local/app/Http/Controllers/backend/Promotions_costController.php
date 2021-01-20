@@ -112,8 +112,14 @@ class Promotions_costController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Promotions_cost::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+
+      if(isset($req->promotion_id_fk_pro)){
+        $sTable = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$req->promotion_id_fk_pro)->get();
+      }else{
+        $sTable = \App\Models\Backend\Promotions_cost::search()->orderBy('id', 'asc');
+      }
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('business_location', function($row) {

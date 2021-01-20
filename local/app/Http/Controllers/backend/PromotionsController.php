@@ -115,14 +115,14 @@ class PromotionsController extends Controller
           $sRow->detail_laos    = request('detail_laos');
           $sRow->detail_burma    = request('detail_burma');
           $sRow->detail_cambodia    = request('detail_cambodia');
-          $sRow->pv    = request('pv');
+          // $sRow->pv    = request('pv');
           $sRow->main_unit    = request('main_unit');
           $sRow->show_startdate    = request('show_startdate');
           $sRow->show_enddate    = request('show_enddate');
           $sRow->all_available_purchase    = request('all_available_purchase');
           $sRow->limited_amt_type    = request('limited_amt_type');
           $sRow->limited_amt_person    = request('limited_amt_person');
-          $sRow->promotion_coupon_status    = request('promotion_coupon_status');
+          $sRow->promotion_coupon_status    = request('promotion_coupon_status')?request('promotion_coupon_status'):0;
           $sRow->minimum_package_purchased    = request('minimum_package_purchased');
           $sRow->reward_qualify_purchased    = request('reward_qualify_purchased');
           $sRow->keep_personal_quality    = request('keep_personal_quality');

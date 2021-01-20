@@ -18,6 +18,112 @@ class FrontstorelistController extends Controller
     {
     }
 
+
+    public function plusPromotion(Request $request)
+    {
+      // return($request->all());
+      // dd();
+      if(isset($request->promotion_id_fk_pro)){
+        
+        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+
+           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
+
+         if(@$sRow[0]->promotion_id_fk == @$request->promotion_id_fk_pro[$i]){
+
+                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+
+                  \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
+                        [
+                          'amt' => @$request->quantity[$i] ,
+                          'selling_price' => @$Promotions_cost[0]->selling_price ,
+                          'pv' => @$Promotions_cost[0]->pv ,
+                          'total_pv' => @$Promotions_cost[0]->pv * @$request->quantity[$i] ,
+                          'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
+                        ]
+                    ); 
+
+
+          }else{
+
+
+            if(@$request->promotion_id_fk_pro[$i]!=0 && @$request->quantity[$i]!=0){
+
+                $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+
+                $sRow = new \App\Models\Backend\Frontstorelist;
+                $sRow->frontstore_id_fk    = @$request->frontstore_id ;
+                $sRow->amt    =  @$request->quantity[$i];
+                $sRow->add_from    = '2';
+                $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
+
+                $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
+                $sRow->pv    = @$Promotions_cost[0]->pv;
+                $sRow->total_pv    =  @$Promotions_cost[0]->pv * @$request->quantity[$i];
+                $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity[$i];
+
+                $sRow->action_date    =  date('Y-m-d H:i:s');
+                $sRow->created_at = date('Y-m-d H:i:s');
+                $sRow->save();
+
+              }
+
+          }
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        }
+
+      }
+
+    }
+
+
+
+    public function minusPromotion(Request $request)
+    {
+      // return($request->all());
+      // dd();
+      if(isset($request->promotion_id_fk_pro)){
+        
+        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+
+           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
+
+         if(@$sRow[0]->promotion_id_fk == @$request->promotion_id_fk_pro[$i]){
+
+                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+
+                  \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
+                        [
+                          'amt' => @$request->quantity[$i] ,
+                          'selling_price' => @$Promotions_cost[0]->selling_price ,
+                          'pv' => @$Promotions_cost[0]->pv ,
+                          'total_pv' => @$Promotions_cost[0]->pv * @$request->quantity[$i] ,
+                          'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
+                        ]
+                    ); 
+
+
+          }
+
+           DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
+           
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        }
+
+      }
+
+    }
+
+
+
     public function plus(Request $request)
     {
       // return($request->all());
@@ -117,6 +223,101 @@ class FrontstorelistController extends Controller
 
     }
 
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        // dd($request->frontstore_id);
+
+       if(isset($request->add_delivery_custom)){
+
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_code, amphur_code, tambon_code, zip_code, tel, created_at) 
+              VALUES 
+              ('".$request->frontstore_id."',
+               '".$request->customers_id_fk."',
+               '".$request->delivery_cusname."',
+                '".$request->delivery_addr."',
+                 '".$request->delivery_province."',
+                 '".$request->delivery_amphur."',
+                 '".$request->delivery_tambon."',
+                 '".$request->delivery_zipcode."',
+                 '".$request->delivery_tel."',
+                       now() 
+              )
+            ");       
+
+              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+              $sRow->delivery_location    = '3';
+              $sRow->action_date = date('Y-m-d H:i:s');
+              $sRow->updated_at = date('Y-m-d H:i:s');
+              $sRow->save();    
+
+        }
+       if(isset($request->update_delivery_custom)){
+
+            DB::insert(" UPDATE customers_addr_frontstore 
+              SET recipient_name = '".$request->delivery_cusname."', 
+              addr_no = '".$request->delivery_addr."', 
+              province_code  = '".$request->delivery_province."', 
+              amphur_code = '".$request->delivery_amphur."',  
+              tambon_code = '".$request->delivery_tambon."', 
+              zip_code = '".$request->delivery_zipcode."', 
+              tel = '".$request->delivery_tel."', 
+              updated_at = now() where id=".$request->customers_addr_frontstore_id."
+            ");       
+
+              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+              $sRow->delivery_location    = '3';
+              $sRow->action_date = date('Y-m-d H:i:s');
+              $sRow->updated_at = date('Y-m-d H:i:s');
+              $sRow->save(); 
+        }
+
+        if(isset($request->receipt_save_list)){
+
+              // array:4 [▼
+              //   "frontstore_id" => "1"
+              //   "receipt_save_list" => "1"
+              //   "_token" => "FE2DzqzCXMpIpZrEIeByk52YcfNpn6qKarBbreNe"
+              //   "delivery_location" => "1"
+              // ]
+
+              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+              $sRow->delivery_location    = request('delivery_location');
+              $sRow->action_date = date('Y-m-d H:i:s');
+              $sRow->updated_at = date('Y-m-d H:i:s');
+              $sRow->save();          
+
+        }
+
+        if(isset($request->product_plus_pro)){
+          // dd($request->product_plus_pro);
+                $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
+
+        //     return @$Promotions_cost[0]->pv;
+                $sRow = new \App\Models\Backend\Frontstorelist;
+                $sRow->frontstore_id_fk    = @$request->frontstore_id ;
+                $sRow->amt    = @$request->quantity;
+                $sRow->add_from    = '2';
+                $sRow->promotion_id_fk    = @$request->promotion_id_fk;
+                $sRow->promotion_code    = @$request->txtSearchPro;
+
+                $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
+                $sRow->pv    = @$Promotions_cost[0]->pv;
+                $sRow->total_pv    =  @$Promotions_cost[0]->pv * @$request->quantity;
+                $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity;
+
+                $sRow->action_date    =  date('Y-m-d H:i:s');
+                $sRow->created_at = date('Y-m-d H:i:s');
+                $sRow->save();
+        }
+
+       return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
+
+    }
+
+
+
      public function minus(Request $request)
         {
           // return($request->all());
@@ -182,25 +383,6 @@ class FrontstorelistController extends Controller
                      DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
 
               }
-              // else{
-
-              //       $sRow = new \App\Models\Backend\Frontstorelist;
-              //       $sRow->frontstore_id_fk    = request('frontstore_id') ;
-              //       $sRow->product_id_fk    = @$request->product_id_fk[$i];
-              //       $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
-              //       $sRow->selling_price    = @$sProducts[0]->selling_price;
-              //       $sRow->pv    = @$sProducts[0]->pv;
-              //       $sRow->amt    =  @$request->quantity[$i];
-              //       $sRow->total_pv    =  @$sProducts[0]->pv * @$request->quantity[$i];
-              //       $sRow->total_price    =  @$sProducts[0]->selling_price * @$request->quantity[$i];
-              //       $sRow->created_at = date('Y-m-d H:i:s');
-              //       if(!empty(request('quantity')[$i])){
-              //         if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
-              //             $sRow->save();
-              //         }
-              //       }
-
-              // }
 
                
 
@@ -212,12 +394,6 @@ class FrontstorelistController extends Controller
         }
 
 
-    public function store(Request $request)
-    {
-      // dd($request->all());
-      // return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
-
-    }
 
     public function edit($id)
     {
@@ -246,8 +422,13 @@ class FrontstorelistController extends Controller
 
       if(@$req->frontstore_id_fk){
          $sTable = DB::select("
-            SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk."
-        ");
+            SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=1 UNION
+            SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+            ORDER BY add_from,id 
+        ");        
+        //  $sTable = DB::select("
+        //     SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." 
+        // ");
       }else{
          $sTable = DB::select("
             SELECT * from db_frontstore_products_list 
@@ -257,7 +438,8 @@ class FrontstorelistController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        if(!empty($row->product_id_fk)){
+        
+        if(!empty($row->product_id_fk) && $row->add_from==1){
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
@@ -268,34 +450,200 @@ class FrontstorelistController extends Controller
 
             return @$Products[0]->product_code." : ".@$Products[0]->product_name;
         }else{
-            return '';
+
+          // return $row->promotion_id_fk;
+
+          // if(!empty($row->product_id_fk) && $row->add_from==2 && $row->promotion_code!=''){
+          //   // SELECT * from db_frontstore_products_list WHERE promotion_code='B1D3JVM59'
+
+            $Products = DB::select("
+              SELECT
+              (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1) as product_code,
+              (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1) as product_name,
+              (SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = promotions_products.product_unit AND  lang_id=1 ) as product_unit,
+              promotions_products.product_amt
+              FROM
+              promotions_products
+              WHERE
+              promotions_products.promotion_id_fk='".$row->promotion_id_fk."'  
+            ");
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+
+            foreach ($Products as $key => $value) {
+             $pn .=     
+                  '<div class="divTableRow">
+                  <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
+                  <div class="divTableCell"><center>'.$value->product_amt.' x '.$row->amt.' = </div>
+                  <div class="divTableCell"><center>'.($value->product_amt*$row->amt).'</div>
+                  <div class="divTableCell">'.$value->product_unit.'</div>
+                  </div>
+                  ';
+             }
+
+              $pn .= '</div></div>';  
+
+            $sD = '';
+
+            if($row->promotion_id_fk!='' && $row->promotion_code!=''){
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
+                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " > รหัสคูปอง : ".($row->promotion_code)."</br>";
+            }else{
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
+                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . "</br>";
+            }
+
+            
+            $sD .=  $pn;
+            return $sD;
+
         }
       })
+      ->escapeColumns('product_name')
       ->addColumn('product_unit', function($row) {
-        // return $row->product_unit_id_fk;
         if(!empty($row->product_unit_id_fk)){
-
           $p_unit = DB::select("
               SELECT product_unit
               FROM
               dataset_product_unit
               WHERE id = ".$row->product_unit_id_fk." AND  lang_id=1 ");
-
               return $p_unit[0]->product_unit;
-
           }else{
               return '';
           }
-
-          // return $row->product_unit_id_fk;
-
       })
       ->addColumn('purchase_type', function($row) {
-          $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$row->purchase_type_id_fk." ");
+          $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
+          $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$Frontstore->purchase_type_id_fk." ");
           return $purchase_type[0]->txt_desc;
-      })      
+      }) 
+      ->addColumn('pv', function($row) {
+        // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
+        //    // ต้องดึงจากตารางโปรโมชั่น promotions_cost
+        //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
+        //     return @$Promotions_cost[0]->pv;
+        // }else{
+          // ดึงจาก db_frontstore_products_list
+            return @$row->pv;
+        // }
+      })     
+      ->addColumn('selling_price', function($row) {
+        // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
+        //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
+        //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
+        //     return @$Promotions_cost[0]->selling_price;
+        // }else{
+          // ดึงจาก db_frontstore_products_list
+           return @$row->selling_price;
+        // }
+      })  
+      ->addColumn('total_pv', function($row) {
+        // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
+        //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
+        //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
+        //     return @$Promotions_cost[0]->pv;
+        // }else{
+          // ดึงจาก db_frontstore_products_list
+           return @$row->total_pv;
+        // }
+      })    
+      ->addColumn('total_price', function($row) {
+        // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
+        //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
+        //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
+        //     return @$Promotions_cost[0]->selling_price;
+        // }else{
+          // ดึงจาก db_frontstore_products_list
+           return @$row->total_price;
+        // }
+      })                    
       ->make(true);
     }
+
+
+
+
+    public function DatatablePro(Request $req){
+
+       $sTable = DB::select("
+          SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
+          (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list
+          from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
+      ");
+ 
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+  ->addColumn('product_name', function($row) {
+
+    if(!empty($row->id)){
+
+            $Products = DB::select("
+              SELECT
+              (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1) as product_code,
+              (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1) as product_name,
+              (SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = promotions_products.product_unit AND  lang_id=1 ) as product_unit,
+              promotions_products.product_amt
+              FROM
+              promotions_products
+              WHERE
+              promotions_products.promotion_id_fk='".$row->id."' 
+            ");
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+
+            foreach ($Products as $key => $value) {
+             $pn .=     
+                  '<div class="divTableRow">
+                  <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
+                  <div class="divTableCell"><center>'.$value->product_amt.'</div>
+                  <div class="divTableCell">'.$value->product_unit.'</div>
+                  </div>
+                  ';
+             }
+
+              $pn .= '</div></div>';  
+
+            $sD = '';
+
+            if($row->id!=''){
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->id."' ");
+                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " <br> รหัสโปร : ".$row->pcode."</br>";
+            }
+
+            
+            $sD .=  $pn;
+            return $sD;
+          }
+
+      })
+      ->escapeColumns('product_name')      
+      ->addColumn('pv', function($row) {
+          $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->id)->get();
+          return @$Promotions_cost[0]->pv;
+      })     
+      ->addColumn('selling_price', function($row) {
+          $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->id)->get();
+          return @$Promotions_cost[0]->selling_price;        
+      }) 
+      ->addColumn('select_amt', function($row) {
+          return $row->id.":".$row->limited_amt_person;        
+      })   
+      ->addColumn('p_img', function($row) {
+        if($row->p_img!=""){
+          return $row->p_img;        
+        }else{
+          return 'local/public/images/example_img.png';
+        }
+      }) 
+      ->make(true);
+    }
+
 
 
 }
