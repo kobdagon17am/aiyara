@@ -405,8 +405,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
 
 
-    Route::resource('products_giveaway', 'Products_giveawayController');
-    Route::post('products_giveaway/datatable', 'Products_giveawayController@Datatable')->name('products_giveaway.datatable');
+    Route::resource('giveaway', 'GiveawayController');
+    Route::post('giveaway/datatable', 'GiveawayController@Datatable')->name('giveaway.datatable');
+    Route::get('giveaway/create/{id}', 'GiveawayController@create');
+
+    Route::resource('giveaway_products', 'Giveaway_productsController');
+    Route::post('giveaway_products/datatable', 'Giveaway_productsController@Datatable')->name('giveaway_products.datatable');
+    Route::get('giveaway_products/create/{id}', 'Giveaway_productsController@create');
 
 
     Route::get('qrcode', function () {
