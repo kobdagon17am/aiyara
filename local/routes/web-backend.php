@@ -192,6 +192,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('crm_answer/create/{id}', 'Crm_answerController@create');
 
 
+    Route::resource('shipping_cost', 'Shipping_costController');
+    Route::post('shipping_cost/datatable', 'Shipping_costController@Datatable')->name('shipping_cost.datatable');
+
+    Route::resource('shipping_vicinity', 'Shipping_vicinityController');
+    Route::post('shipping_vicinity/datatable', 'Shipping_vicinityController@Datatable')->name('shipping_vicinity.datatable');
+    Route::get('shipping_vicinity/create/{id}', 'Shipping_vicinityController@create');
+    
+
     Route::resource('pm', 'PmController');
     Route::post('pm/datatable', 'PmController@Datatable')->name('pm.datatable');
 
