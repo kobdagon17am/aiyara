@@ -44,7 +44,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_giveaway.create') }}">
+                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.giveaway.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -80,7 +80,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.products_giveaway.datatable') }}',
+          url: '{{ route('backend.giveaway.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -107,8 +107,8 @@ $(function() {
      
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'business_location_id_fk', title :'<center>Business Location </center>', className: 'text-left'},
-            {data: 'products_id_fk', title :'<center>Name </center>', className: 'text-center'},
+            {data: 'business_location', title :'<center>Business Location </center>', className: 'text-left'},
+            {data: 'giveaway_name', title :'<center>ชื่อการแถม </center>', className: 'text-center'},
             {data: 'start_date', title :'<center>วันเริ่มต้น </center>', className: 'text-center'},
             {data: 'end_date', title :'<center>วันสิ้นสุด </center>', className: 'text-center'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
@@ -123,8 +123,8 @@ $(function() {
           }else{ 
 
           $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.products_giveaway.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.products_giveaway.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            + '<a href="{{ route('backend.giveaway.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            + '<a href="javascript: void(0);" data-url="{{ route('backend.giveaway.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           ).addClass('input');
 
         }

@@ -138,7 +138,7 @@ public function DatatableSet(){
     return @$D[0]->orders_type;
   })
   ->addColumn('date', function($row) {
-    return  date('d/m/Y H:i:s',strtotime($row->create_at));
+    return  date('d/m/Y H:i:s',strtotime($row->created_at));
   })
   ->make(true);
 }

@@ -31,7 +31,7 @@ class DeliveryController extends Controller
           INSERT IGNORE INTO db_delivery 
           ( receipt, customer_id, province_name, delivery_date, billing_employee, created_at)
           SELECT
-          orders.code_order,orders.customer_id,orders.province,orders.create_at,orders.id_admin_check,now()
+          orders.code_order,orders.customer_id,orders.province,orders.created_at,orders.id_admin_check,now()
           FROM orders
           WHERE
           orders.orderstatus_id in (4,5); ");

@@ -10,7 +10,7 @@
 
 <!-- start page title -->
 <div class="row">
-    <div class="col-7">
+    <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Role  </h4>
             <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/role") }}">
@@ -22,7 +22,7 @@
 <!-- end page title -->
 
 <div class="row">
-    <div class="col-7">
+    <div class="col-12">
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
@@ -54,10 +54,10 @@
                       <div class="row" style="{{$hide}}">
                         <div class="col-sm-12">
                           <div class="card">
-                            <div class="card-header">
+                            <div class="card-header d-flex ">
                               <h5>กำหนดสิทธิ์การเข้าถึงเมนู</h5>
-                                  <label class="checkbox-inline" style="float: right;margin-right: 4.1%;margin-top: -4%;font-weight: bold;font-size: 14px;">
-                                    <input type="checkbox" class="checkAll"> Check All 
+                                  <label class="checkbox-inline" style="font-weight: bold;font-size: 14px;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="checkAll"> Check All 
                                   </label> 
                             </div>
                             <div class="card-block">

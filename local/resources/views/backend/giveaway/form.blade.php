@@ -22,55 +22,97 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
+
+ <div class="myBorder">
+      
+      <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> เพิ่มรายการแถม </span>
+
               @if( empty($sRow) )
-              <form action="{{ route('backend.products_giveaway.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.giveaway.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.products_giveaway.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.giveaway.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">สถานที่ตั้งธุรกิจ : * </label>
+                    <label for="" class="col-md-3 col-form-label">สถานที่ตั้งธุรกิจ : * </label>
                     <div class="col-md-9">
-                        <input class="form-control" type="text" value="" name="txt_desc" required>
+                    <select name="business_location_id_fk" class="form-control select2-templating " required >
+                      <option value="">-Business Location-</option>
+                        @if(@$sBusiness_location)
+                          @foreach(@$sBusiness_location AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
                     </div>
                 </div>
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-3 col-form-label">ชื่อการแถม : * </label>
+                    <label for="" class="col-md-3 col-form-label">ชื่อการแถม : * </label>
                     <div class="col-md-9">
-                        <input class="form-control" type="text" value="" name="txt_desc" required>
+                        <input class="form-control" type="text" value="{{@$sRow->giveaway_name}}" name="giveaway_name" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="start_date" class="col-md-3 col-form-label">วันเริ่มต้น : * </label>
                     <div class="col-md-3">
-                        <input class="form-control start_date"  autocomplete="off" placeholder="" required=""  />
-                        <input type="hidden" id="start_date" name="start_date"   />
+
+ 					@if( empty($sRow) )
+                        <input class="form-control start_date" autocomplete="off" placeholder="" required  />
+                        <input type="hidden" id="start_date" name="start_date" required />
+ 					@else
+ 					<?php if(!empty(@$sRow->start_date)){
+ 						$ds = explode('-', @$sRow->start_date);
+ 						$ds_d = $ds[2];
+ 						$ds_m = $ds[1];
+ 						$ds_y = $ds[0];
+ 						$ds = $ds_d.'/'.$ds_m.'/'.$ds_y;
+ 					}else{$ds='';} ?> 					
+                         <input class="form-control start_date" autocomplete="off" value="{{$ds}}"   />
+                        <input type="hidden" id="start_date" name="start_date" value="{{@$sRow->start_date}}"  />
+ 					@endif
+
+
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="end_date" class="col-md-3 col-form-label">วันสิ้นสุด : * </label>
                     <div class="col-md-3">
-                        <input class="form-control end_date"  autocomplete="off" placeholder="" required=""  />
-                        <input type="hidden" id="end_date" name="end_date"   />
+
+ 					@if( empty($sRow) )
+                        <input class="form-control end_date"  autocomplete="off" placeholder="" required />
+                        <input type="hidden" id="end_date" name="end_date" required />
+ 					@else
+ 					<?php if(!empty(@$sRow->end_date)){
+ 						$de = explode('-', @$sRow->end_date);
+ 						$de_d = $de[2];
+ 						$de_m = $de[1];
+ 						$de_y = $de[0];
+ 						$de = $de_d.'/'.$de_m.'/'.$de_y;
+ 					}else{$de='';} ?>
+                        <input class="form-control end_date"  autocomplete="off" value="{{$de}}"   />
+                        <input type="hidden" id="end_date" name="end_date" value="{{@$sRow->end_date}}" />
+ 					@endif  
+
+
                     </div>
                 </div>
 
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">ประเภทการซื้อ : * </label>
                     <div class="col-md-9">
-                      <select name="" class="form-control select2-templating " >
+                      <select name="purchase_type_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
                             @if(@$sPurchase_type)
                               @foreach(@$sPurchase_type AS $r)
-                                <option value="{{$r->id}}"  >
-                                  {{$r->txt_desc}} 
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
+                                	{{$r->txt_desc}}
                                 </option>
                               @endforeach
                             @endif                        
@@ -82,12 +124,12 @@
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">แถมสมาชิกแบบ : * </label>
                     <div class="col-md-9">
-                      <select name="" class="form-control select2-templating " >
+                      <select name="giveaway_member_type_id_fk" class="form-control select2-templating "  required >
                         <option value="">Select</option>
                             @if(@$sGiveaway_type)
                               @foreach(@$sGiveaway_type AS $r)
-                                <option value="{{$r->id}}"  >
-                                  {{$r->txt_desc}} 
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->giveaway_member_type_id_fk)?'selected':'' }} >
+                                	{{$r->txt_desc}}
                                 </option>
                               @endforeach
                             @endif                         
@@ -98,12 +140,12 @@
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">จำนวนการแถมในบิลนั้น : * </label>
                     <div class="col-md-9">
-                      <select name="" class="form-control select2-templating " >
+                      <select name="giveaway_in_bill_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
                             @if(@$sGiveaway_time)
                               @foreach(@$sGiveaway_time AS $r)
-                                <option value="{{$r->id}}"  >
-                                  {{$r->txt_desc}} 
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->giveaway_in_bill_id_fk)?'selected':'' }} >
+                                	{{$r->txt_desc}}
                                 </option>
                               @endforeach
                             @endif   
@@ -114,19 +156,19 @@
                 <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">PV การซื้อขั้นต่ำ : * </label>
                     <div class="col-md-3">
-                        <input class="form-control "  autocomplete="off" placeholder="" required=""  />
+                        <input class="form-control " type="number" name="pv_minimum_purchase"  value="{{@$sRow->pv_minimum_purchase}}"  required  />
                     </div>
                 </div>
 
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">ตัวเลือกการแถม : * </label>
                     <div class="col-md-9">
-                      <select name="" class="form-control select2-templating " >
+                      <select name="giveaway_option_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
                             @if(@$sGiveaway_obtion)
                               @foreach(@$sGiveaway_obtion AS $r)
-                                <option value="{{$r->id}}"  >
-                                  {{$r->txt_desc}} 
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->giveaway_option_id_fk)?'selected':'' }} >
+                                	{{$r->txt_desc}}
                                 </option>
                               @endforeach
                             @endif                           
@@ -137,24 +179,10 @@
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">Voucher ที่แถม :  </label>
                     <div class="col-md-3">
-                        <input class="form-control "  autocomplete="off" placeholder=""  />
+                        <input class="form-control " type="number" name="giveaway_voucher"  value="{{@$sRow->giveaway_voucher}}" />
                     </div>
                 </div>
 
-
-<!--                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-3 col-form-label"> :</label>
-                  <div class="col-md-9">
-                    <select name="lang_id" class="form-control select2-templating " >
-                      <option value="0">Select</option>
-                      @if(@$sLang)
-                        @foreach(@$sLang AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->lang_id)?'selected':'' }} >{{$r->txt_desc}}</option>
-                        @endforeach
-                      @endif
-                    </select>
-                  </div>
-                </div> -->
 
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label">สถานะ :</label>
@@ -164,20 +192,22 @@
                       		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
                       	@else
                       		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-						            @endif
+						@endif
                           <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
                       </div>
                     </div>
                 </div>
 
+
+  
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products_giveaway") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/giveaway") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>
                     </div>
@@ -185,8 +215,44 @@
 
               </form>
             </div>
+
+
+ @if( !empty($sRow) )
+
+			<div class="myBorder">
+				<div style="">
+					<div class="form-group row">
+						<div class="col-md-12">
+							<span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าแถม </span>
+							<a class="btn btn-info btn-sm mt-1" href="{{ route('backend.giveaway_products.create') }}/{{@$sRow->id}}" style="float: right;" >
+								<i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+							</a>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-12">
+							<table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+							</table>
+						</div>
+					</div>
+				</div>
+
+        <div class="form-group mb-0 row">
+            <div class="col-md-6">
+                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/giveaway") }}">
+                  <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                </a>
+            </div>
+        </div>
+
+			</div>
+
+@endif
+
+
         </div>
     </div> <!-- end col -->
+</div>
 </div>
 <!-- end row -->
 
@@ -222,7 +288,6 @@
       $('.start_date').datetimepicker({
           value: '',
           rtl: false,
-          // format: 'd/m/Y H:i',
           format: 'd/m/Y',
           formatTime: 'H:i',
           formatDate: 'd/m/Y',
@@ -288,9 +353,57 @@
       });
 
 
+
 </script>
 
 
+  <script>
+
+            var giveaway_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.giveaway_products.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['giveaway_id_fk'] = giveaway_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                 
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
+                        {data: 'product_amt', title :'จำนวน', className: 'text-center'},
+                        {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
+                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.giveaway_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.giveaway_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+
+
+            </script>
 
 
 @endsection

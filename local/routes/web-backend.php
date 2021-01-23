@@ -192,6 +192,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('crm_answer/create/{id}', 'Crm_answerController@create');
 
 
+    Route::resource('shipping_cost', 'Shipping_costController');
+    Route::post('shipping_cost/datatable', 'Shipping_costController@Datatable')->name('shipping_cost.datatable');
+
+    Route::resource('shipping_vicinity', 'Shipping_vicinityController');
+    Route::post('shipping_vicinity/datatable', 'Shipping_vicinityController@Datatable')->name('shipping_vicinity.datatable');
+    Route::get('shipping_vicinity/create/{id}', 'Shipping_vicinityController@create');
+    
+
     Route::resource('pm', 'PmController');
     Route::post('pm/datatable', 'PmController@Datatable')->name('pm.datatable');
 
@@ -254,6 +262,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
 
 
+    Route::resource('frontstore_list', 'Frontstore_listController');
+    Route::post('frontstore_list/datatable', 'Frontstore_listController@Datatable')->name('frontstore_list.datatable');
+
+
+
+
     Route::resource('taxdata', 'TaxdataController');
     Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
     Route::get('taxdata/taxtvi/{id}', 'TaxdataController@createPDFTaxtvi');
@@ -265,6 +279,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
+    Route::get('frontstore/print_receipt_02/{id}', 'AjaxController@createPDFReceiptFrontstore02');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');
@@ -398,8 +413,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
 
 
-    Route::resource('products_giveaway', 'Products_giveawayController');
-    Route::post('products_giveaway/datatable', 'Products_giveawayController@Datatable')->name('products_giveaway.datatable');
+    Route::resource('giveaway', 'GiveawayController');
+    Route::post('giveaway/datatable', 'GiveawayController@Datatable')->name('giveaway.datatable');
+    Route::get('giveaway/create/{id}', 'GiveawayController@create');
+
+    Route::resource('giveaway_products', 'Giveaway_productsController');
+    Route::post('giveaway_products/datatable', 'Giveaway_productsController@Datatable')->name('giveaway_products.datatable');
+    Route::get('giveaway_products/create/{id}', 'Giveaway_productsController@create');
 
 
     Route::get('qrcode', function () {
