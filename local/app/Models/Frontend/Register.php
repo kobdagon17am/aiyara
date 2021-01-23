@@ -4,9 +4,19 @@ namespace App\Models\Frontend;
 use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
+use App\Models\Frontend\LineModel;
 class Register extends Model
 {
 	public static function register($req,$introduce_id=''){
+
+        $type_introduce = LineModel::check_type_introduce($introduce_id,$req->upline_id);
+      
+        if( $type_introduce['status'] == 'success'){
+            $introduce_type = $type_introduce['data']->line_type;
+        }else{
+            $introduce_type = '';
+        }
+        
 
         $id =DB::table('Customers')
         ->select('id')
@@ -29,6 +39,8 @@ class Register extends Model
     $pass = implode($pass); //turn the array into a string
     $pass_db =md5($pass);
 
+    
+
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
     $last_name= (trim($req->input('name_last')) == '') ? null : $req->input('name_last');
@@ -49,25 +61,9 @@ class Register extends Model
     $soi= (trim($req->input('soi')) == '') ? null : $req->input('soi');
     $road= (trim($req->input('road')) == '') ? null : $req->input('road');
     
-
-    $provinces = DB::table('dataset_provinces')
-    ->select('*')
-    ->where('id','=',$req->province)
-    ->first();
-    $province= ($req->province == '') ? null : $provinces->name_th;
-
-    $district = DB::table('dataset_amphures')
-    ->select('*')
-    ->where('id','=',$req->district)
-    ->first();
-
-    $district= ( $req->district == '') ? null : $district->name_th;
-
-    $district_sub = DB::table('dataset_districts')
-    ->select('*')
-    ->where('id','=',$req->district_sub)
-    ->first();
-    $district_sub= ($req->district_sub == '') ? null : $district_sub->name_th;
+    $province= ($req->province == '') ? null : $req->province;
+    $district= ( $req->district == '') ? null : $req->district;
+    $district_sub= ($req->district_sub == '') ? null : $req->district_sub;
     $zipcode= (trim($req->input('zipcode')) == '') ? null : $req->input('zipcode');
 
     $card_house_no= (trim($req->input('card_house_no')) == '') ? null : $req->input('card_house_no');
@@ -75,25 +71,11 @@ class Register extends Model
     $card_moo= (trim($req->input('card_moo')) == '') ? null : $req->input('card_moo');
     $card_soi= (trim($req->input('card_soi')) == '') ? null : $req->input('card_soi');
 
-    $c_provinces = DB::table('dataset_provinces')
-    ->select('*')
-    ->where('id','=',$req->card_province)
-    ->first();
-    $card_province= ($req->card_province == '') ? null : $c_provinces->name_th;
+   
+    $card_province= ($req->card_province == '') ? null : $req->card_province;
+    $card_district= ( $req->card_district == '') ? null : $req->card_district;
 
-    $c_district = DB::table('dataset_amphures')
-    ->select('*')
-    ->where('id','=',$req->card_district)
-    ->first();
-
-    $card_district= ( $req->card_district == '') ? null : $c_district->name_th;
-
-    $c_district_sub = DB::table('dataset_districts')
-    ->select('*')
-    ->where('id','=',$req->card_district_sub)
-    ->first();
-
-    $card_district_sub= ($req->card_district_sub == '') ? null : $c_district_sub->name_th;
+    $card_district_sub= ($req->card_district_sub == '') ? null : $req->card_district_sub;
 
     $card_road= (trim($req->input('card_road')) == '') ? null : $req->input('card_road');
     $card_zipcode= (trim($req->input('card_zipcode')) == '') ? null : $req->input('card_zipcode');
@@ -109,7 +91,7 @@ class Register extends Model
     $bank_name= (trim($req->input('bank_name')) == '') ? null : $req->input('bank_name');
     $tel_home= (trim($req->input('tel_home')) == '') ? null : $req->input('tel_home');
     $tel_mobile= (trim($req->input('tel_mobile')) == '') ? null : $req->input('tel_mobile');
-    $head_line_id= (trim($req->input('head_line_id')) == '') ? null : $req->input('head_line_id');
+     
 
     $count_user = DB::table('customers')
     ->select('*')
@@ -170,11 +152,11 @@ class Register extends Model
              'family_status'=>$family_status,
              'id_card'=>$id_card,
              'email'=>$email,
-             'line_type'=>$line_type, 
+             'line_type'=>$line_type,
+             'introduce_type'=>$introduce_type, 
              'upline_id'=>$upline_id,
              'birth_day'=>$birth_day,
              'introduce_id'=>$introduce_id,
-             'head_line_id'=>$head_line_id,
              'pv_mt_active'=>$two_month];
              $id = DB::table('customers')->insertGetId($data_customer);
 

@@ -106,7 +106,7 @@
                         <tr class="thead-default">
                             <th>Description</th>
                             @if($order->type_id == 6)<th>Ticket Number</th>@endif
-                            <th>Quantity</th>
+                            @if($order->type_id == 7)@else <th>Quantity</th> @endif
                             <th>Amount</th>
                             <th>PV</th>
                             <th>Total</th>
@@ -122,10 +122,18 @@
                             @if($order->type_id == 6)
                             <td ><b class="text-primary">{{ $value->ticket_number }}</b></td>
                             @endif
+                            @if($order->type_id == 7)
+                            @else
                             <td>{{ $value->quantity }}</td>
+                            @endif
                             <td>{{ $value->list_price }}</td>
                             <td class="text-success"><b>{{ $value->pv }}</b></td>
+                             @if($order->type_id == 7)
+                             <td>{{ number_format($value->list_price,2) }}</td>
+                            @else
                             <td>{{ number_format($value->quantity * $value->list_price,2) }}</td>
+                            @endif
+                            
                         </tr>
                         @endforeach
                         
@@ -151,7 +159,8 @@
                     <th>รวม : </th>
                     <td> {{ number_format($order->price,2) }}</td>
                 </tr>
-                @if($order->type_id != 6)
+                @if($order->type_id != 6 and $order->type_id != 7)
+                 
                 <tr>
                     <th>ค่าจัดส่ง : </th>
                     <td> {{ number_format($order->shipping,2) }} </td>
@@ -183,7 +192,7 @@
                     </td>
                 </tr>
 
-                @elseif($order->type_id == 6)
+                @elseif($order->type_id == 6 || $order->type_id == 7)
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>
                     <td align="right"><strong > {{ number_format($order->price,2) }}</strong>

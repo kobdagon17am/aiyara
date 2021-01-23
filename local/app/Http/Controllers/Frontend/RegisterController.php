@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Frontend\Register;
+use App\Models\Frontend\LineModel;
 
 class RegisterController extends Controller
 {
@@ -90,9 +91,11 @@ class RegisterController extends Controller
   }
   
   public function check_user(Request $request){
-    $data =DB::table('customers')
-    ->where('user_name','=',$request->user_name)
-    ->first();
+    // $data =DB::table('customers')
+    // ->where('user_name','=',$request->user_name)
+    // ->first();
+
+    $data = LineModel::check_line_aipocket($request->user_name);
 
     if($data){
       $resule = ['status'=>'success','data'=>$data];

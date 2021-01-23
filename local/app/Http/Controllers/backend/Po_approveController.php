@@ -101,10 +101,16 @@ public function Datatable(){
  ->where('orders.type_id','!=','6')
  ->where('orders.orderstatus_id','=','2')
  ->orderby('id','DESC');
+
  $sQuery = \DataTables::of($sTable);
  return $sQuery
  ->addColumn('price', function($row) {
-  return number_format($row->price + $row->shipping,2);
+  if($row->type_id == 7){
+    return number_format($row->price,2);
+  }else{
+    return number_format($row->price + $row->shipping,2);
+  }
+  
 })
  ->addColumn('date', function($row) {
   return  date('d/m/Y H:i:s',strtotime($row->created_at));
@@ -121,7 +127,11 @@ public function DatatableSet(){
   $sQuery = \DataTables::of($sTable);
   return $sQuery
   ->addColumn('price', function($row) {
-    return number_format($row->price + $row->shipping,2);
+    if($row->type_id == 7){
+      return number_format($row->price,2);
+    }else{
+      return number_format($row->price + $row->shipping,2);
+    }
   })
   ->addColumn('type', function($row) {
     $D = DB::table('dataset_orders_type')->where('group_id','=',$row->type_id)->get();

@@ -30,6 +30,16 @@ class AiCashController extends Controller
     return view('frontend/aicash',compact('type'));
   }
 
+  public function cart_payment_aicash(Request $request){
+    if($request->price == ''){
+      return redirect('ai-cash');
+    }else{
+      $data = ['type'=>7,'price'=>$request->price];
+      return view('frontend/product/cart_payment_aicash',compact('data'));
+    }
+  }
+
+
   public function dt_aicash(Request $request){ 
 
     $columns = array(

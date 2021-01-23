@@ -1,4 +1,10 @@
  @extends('frontend.layouts.customer.customer_app')
+ @section('css')
+ <link rel="stylesheet" href="{{asset('frontend/bower_components/select2/css/select2.min.css')}}" />
+ <!-- Multi Select css -->
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css')}}">
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/multiselect/css/multi-select.css')}}">
+ @endsection
  @section('conten')
  <div class="card">
  	<div class="card-header">
@@ -14,7 +20,7 @@
  			</div> --}}
 
  			<div class="form-group row">
- 				<div class="col-sm-3">
+ 				<div class="col-sm-2">
  					<label>บ้านเลขที่ <b class="text-danger">*</b></label>
  					<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
  				</div>
@@ -24,45 +30,66 @@
  					<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
  				</div>
 
- 				<div class="col-sm-3">
+ 				<div class="col-sm-2">
  					<label>หมู่ที่ <b class="text-danger">*</b></label>
  					<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
  				</div>
 
- 				<div class="col-sm-3">
+ 				<div class="col-sm-2">
  					<label>ตรอก/ซอย </label>
  					<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
  				</div>
- 			</div>
 
- 			<div class="form-group row">
- 				<div class="col-sm-3">
- 					<label>เขต/อำเภอ <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
- 				</div>
- 				<div class="col-sm-3">
- 					<label>แขวง/ตำบล <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
- 				</div>
+
  				<div class="col-sm-3">
  					<label>ถนน</label>
  					<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
  				</div>
-
- 				<div class="col-sm-3">
- 					<label>จังหวัด <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
- 				</div>
  			</div>
 
  			<div class="form-group row">
-
  				<div class="col-sm-3">
- 					<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
- 					<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
+ 					<label>จังหวัด <font class="text-danger">*</font></label>
+ 					<select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
+ 						<option value="" >{{ $customer->province }}</option> 
+ 						@foreach($provinces as $value_provinces)
+ 						<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
+ 						@endforeach
+ 					</select>
+ 				</div>
+ 				<div class="col-sm-3">
+ 					<label>เขต/อำเภอ <font class="text-danger">*</font></label>
+ 					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
+ 						<option value="">{{ $customer->district }}</option>
+ 					</select>
+ 					{{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
  				</div>
 
+ 				<div class="col-sm-3">
+ 					<label>แขวง/ตำบล <font class="text-danger">*</font></label>
+ 					<select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required=""> 
+ 						<option value="">{{ $customer->district_sub }}</option>
+ 						{{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
+ 					</select>
+ 				</div>
+
+ 			{{-- 	<div class="col-sm-3">
+ 					<label>จังหวัด <b class="text-danger">*</b></label>
+ 					<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
+ 				</div> --}}
+
+
+ 				<div class="col-sm-3">
+ 					<label>รหัสไปษณีย์</label>
+ 					<input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ $customer->zipcode }}">
+ 				</div>
+
+
+
+
  			</div>
+
+ 			
 
  			<div class="form-group row text-right">
  				<label class="col-sm-2"></label>
@@ -109,5 +136,61 @@
  	
  </div>
 </div>
+@endsection
+@section('js')
+<!-- Select 2 js -->
+<script  src="{{asset('frontend/bower_components/select2/js/select2.full.min.js')}}"></script>
+<!-- Multiselect js -->
+<script  src="{{asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js')}}">
+</script>
+<script  src="{{asset('frontend/bower_components/multiselect/js/jquery.multi-select.js')}}"></script>
+<script  src="{{asset('frontend/assets/js/jquery.quicksearch.js')}}"></script>
+<!-- Custom js -->
+<script  src="{{asset('frontend/assets/pages/advance-elements/select2-custom.js')}}"></script>
+<script type="text/javascript">
+  $('#province').change(function() {
+    var id_province = $(this).val();
+    var ckeck_address = document.getElementById("copy_card_address");
+    $.ajax({
+     async : false,
+     type: "get",
+     url: "{{ route('location') }}",
+     data: {id:id_province,function:'provinces'},
+     success: function(data){
+      $('#district').html(data); 
+      $('#district_sub').val('');  
+        // $('#zipcode').val(''); 
+      }
+    });
+
+  });
+
+  $('#district').change(function() {
+    var id_district = $(this).val();
+    var ckeck_address = document.getElementById("copy_card_address");
+    $.ajax({
+      async : false,
+      type: "get",
+      url: "{{ route('location') }}",
+      data: {id:id_district,function:'district'},
+      success: function(data){
+        $('#district_sub').html(data);  
+      }
+    });
+  });
+
+  $('#district_sub').change(function() {
+    var id_district_sub = $(this).val();
+    $.ajax({
+      type: "get",
+      url: "{{ route('location') }}",
+      data: {id:id_district_sub,function:'district_sub'},
+      success: function(data){
+        $('#zipcode').val(data);
+      }
+    });
+
+  });
+</script>
 @endsection
 

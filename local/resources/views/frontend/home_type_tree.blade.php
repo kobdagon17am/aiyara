@@ -1,5 +1,6 @@
+
 @extends('frontend.layouts.customer.customer_app')
-@section('conten')
+@section('conten') 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jstree/css/style.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/treeview/treeview.css')}}">

@@ -25,14 +25,14 @@
         {{--  <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
 
         <input type="hidden"  name="upline_id" value="{{$data['data']->id}}">
-        <input type="hidden" name="head_line_id" value="{{$data['data']->head_line_id}}">
+
       </div>
 
       <div class="col-sm-3">
         <label><b>สายงาน</b></label>
         <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{$data['line_type_back']}} </font></span>
 
-       {{--  <input type="text" class="form-control"   placeholder="สายงาน" value="{{$data['line_type_back']}}" disabled=""> --}}
+        {{--  <input type="text" class="form-control"   placeholder="สายงาน" value="{{$data['line_type_back']}}" disabled=""> --}}
         <input type="hidden" name="line_type_back" value="{{$data['line_type_back']}}">        
 
       </div>
@@ -41,7 +41,7 @@
         <label><b>รหัสผู้แนะนำ</b></label>
 
         <div class="input-group input-group-button">
-          <input type="text" class="form-control" name="introduce" id="introduce" placeholder="รหัสผู้แนะนำ" value="{{ Auth::guard('c_user')->user()->user_name }}" >
+          <input type="text" class="form-control" name="introduce" id="introduce" placeholder="รหัสผู้แนะนำ" value="{{ Auth::guard('c_user')->user()->user_name }}">
           <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="check_user()">
             <span class=""><i class="icofont icofont-check-circled"></i> Check</span>
           </span>
@@ -216,7 +216,7 @@
 <div class="form-group row">
   <div class="col-sm-3">
     <label>จังหวัด <font class="text-danger">*</font></label>
-     <select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
+    <select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
       <option value="" >Select</option>
       @foreach($data['provinces'] as $value_provinces)
       <option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
@@ -228,7 +228,7 @@
 
   <div class="col-sm-3">
     <label>เขต/อำเภอ <font class="text-danger">*</font></label>
-     <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
+    <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
       <option value="">Select</option>
     </select>
     {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
@@ -236,10 +236,10 @@
 
   <div class="col-sm-3">
     <label>แขวง/ตำบล <font class="text-danger">*</font></label>
-     <select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required="">
+    <select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required="">
       <option value="">Select</option>
-    {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
-  </select>
+      {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
+    </select>
   </div>
 
   <div class="col-sm-3">
@@ -389,6 +389,8 @@
 <script  src="{{asset('frontend/assets/pages/advance-elements/select2-custom.js')}}"></script>
 
 <script type="text/javascript">
+
+
   function copy_address() {
     var ckeck_address = document.getElementById("copy_card_address");
 
@@ -449,18 +451,18 @@
       })
       .done(function(data) {
 
-        if(data['status'] == 'fail'){
+        if(data['data']['status'] == 'fail'){
 
           Swal.fire({
             icon: 'error',
-            title: 'UserName is Null',
-          })
+            title: data['data']['message'],
+          }) 
 
         }else {
-
           Swal.fire({
             icon: 'success',
-            title: data['data']['business_name']+' ('+data['data']['user_name']+')',
+            title: data['data']['data']['business_name']+' ('+data['data']['data']['user_name']+')',
+            text: data['data']['message'],
           })
 
         }
@@ -547,17 +549,17 @@
     var id_province = $(this).val();
     var ckeck_address = document.getElementById("copy_card_address");
     $.ajax({
-       async : false,
-      type: "get",
-      url: "{{ route('location') }}",
-      data: {id:id_province,function:'provinces'},
-      success: function(data){
-        $('#district').html(data); 
-        $('#district_sub').val('');  
+     async : false,
+     type: "get",
+     url: "{{ route('location') }}",
+     data: {id:id_province,function:'provinces'},
+     success: function(data){
+      $('#district').html(data); 
+      $('#district_sub').val('');  
         // $('#zipcode').val(''); 
       }
     });
-     if (ckeck_address.checked == true){
+    if (ckeck_address.checked == true){
       var card_district = $('#card_district').val();
       $('#district').val(card_district).change();
     }

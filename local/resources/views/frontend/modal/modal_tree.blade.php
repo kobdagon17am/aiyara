@@ -64,19 +64,19 @@
 </div>
 <div class="col-6">
   <strong>คะแนนวันนี้</strong><br>
-  [ A ]<font class="font-red"> 9,230</font> -[ B ]<font class="font-red"> 0</font> -[ C ]<font class="font-red"> 7,400</font>
+  [ A ]<font class="font-red"> 9,230</font> [ B ]<font class="font-red"> 0</font> [ C ]<font class="font-red"> 7,400</font>
 </div>
 </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
-              {{-- <button type="button"  onclick="event.preventDefault();
-              document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-              <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
-                <input type="hidden" name="id" value="{{$data->id}}">
-                @csrf
-              </form> --}}
-            </div>
-          </div>
-        </div>
-      </div>
+  <button type="button"  onclick="event.preventDefault();
+  document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
+  <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
+    <input type="hidden" name="id" value="{{$data->id}}">
+    @csrf
+  </form>
+</div> 
+</div>
+</div>
+</div>

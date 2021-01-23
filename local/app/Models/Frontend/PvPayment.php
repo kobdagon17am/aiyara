@@ -54,12 +54,12 @@ class PvPayment extends Model
 					$last_code = $code + 1;
 
 					$num_code = substr("0000000".$last_code, -7);
-					$code_order = 'C'.date('ymd').''.$num_code;
+					$code_order = 'E'.date('ymd').''.$num_code;
 
 				}else{
 					$last_code = 1;
 					$maxId = substr("0000000".$last_code, -7);
-					$code_order = 'C'.date('ymd').''.$maxId;
+					$code_order = 'E'.date('ymd').''.$maxId;
 				}
 
 

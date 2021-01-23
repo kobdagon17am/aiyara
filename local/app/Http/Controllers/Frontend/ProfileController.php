@@ -32,7 +32,8 @@ class ProfileController extends Controller
 
     public function edit_profile()
     {
-        return view('frontend/edit_profile');
+        
+        return view('frontend/edit_profile',compact('provinces'));
     }
 
     public function profile_address()
@@ -40,7 +41,11 @@ class ProfileController extends Controller
         $customer = DB::table('customers_detail')
         ->where('customer_id','=',Auth::guard('c_user')->user()->id)
         ->first();
-        return view('frontend/profile_address',compact('customer'));
+
+        $provinces = DB::table('dataset_provinces')
+       ->select('*')
+       ->get();
+        return view('frontend/profile_address',compact('customer','provinces'));
     }
 
     public function edit_address(Request $request)

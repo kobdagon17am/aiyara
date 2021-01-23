@@ -10,6 +10,7 @@ use Auth;
 use App\Models\Frontend\Location;
 use App\Models\Frontend\Payment;
 use App\Models\Frontend\PaymentCourse;
+use App\Models\Frontend\PaymentAiCash; 
 use App\Models\Frontend\CourseCheckRegis; 
 
 class CartPaymentController extends Controller
@@ -20,14 +21,14 @@ class CartPaymentController extends Controller
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
 		$quantity = Cart::session($type)->getTotalQuantity();
- 
+
 		if($data){
 			foreach ($data as $value) {
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 				if($type == '6'){
 					$chek_course = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
 					if($chek_course['status'] == 'fail'){
-					return redirect('cart/'.$type)->withError($chek_course['message']);
+						return redirect('cart/'.$type)->withError($chek_course['message']);
 					}
 				}
 			}
@@ -110,12 +111,14 @@ class CartPaymentController extends Controller
 	}
 	
 	public function payment_submit(Request $request){
-		//dd($request->all());
+
 
 		if($request->submit == 'upload'){
 			if($request->type == '6'){
 				$resule = PaymentCourse::payment_uploadfile($request);
-
+			}elseif($request->type == '7') {
+				$resule = PaymentAiCash::payment_uploadfile($request);
+				
 			}else{
 				$resule = Payment::payment_uploadfile($request);
 			}
@@ -131,7 +134,8 @@ class CartPaymentController extends Controller
 
 			if($request->type == '6'){
 				$resule = PaymentCourse::payment_not_uploadfile($request);
-
+			}elseif($request->type == '7') {
+				$resule = PaymentAiCash::payment_not_uploadfile($request);
 			}else{
 				$resule = Payment::payment_not_uploadfile($request);
 			}
@@ -149,12 +153,14 @@ class CartPaymentController extends Controller
 			if($request->type == '6'){ 
 				$resule = PaymentCourse::credit_card($request);
 				
+			}elseif($request->type == '7') {
+				dd('type 7');
 			}else{
 				$resule = Payment::credit_card($request);
 			}
 
 			
-			 
+
 			if($resule['status'] == 'success'){ 
 				return redirect('product-history')->withSuccess($resule['message']);
 			}elseif($resule['status'] == 'fail') {

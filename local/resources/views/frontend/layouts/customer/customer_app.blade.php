@@ -63,7 +63,7 @@
 				<div class="navbar-wrapper">
 					<div class="navbar-logo">
 						<a class="mobile-menu" id="mobile-collapse" href="#!">
-							<i class="ti-menu text-success"></i>
+							<i class="ti-menu"></i>
 						</a>
 
 						<a href="{{route('home')}}">
@@ -185,16 +185,15 @@
 										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> แก้ไขข้อมูลส่วนตัว </a>
 
 									</li>
+									
 									<li>
 										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i> สถานะเอกสารการสมัคร </a>
 
 									</li>
+									<li>
+										<a href="{{route('chage_password')}}"><i class="fa fa-key text-success"></i> แก้ไขรหัสผ่าน </a>
 
-                       {{--    <li>
-                                        <a href="email-inbox.html">
-                                            <i class="ti-email text-success"></i> My Messages
-                                        </a>
-                                    </li> --}}
+									</li>
 
                                     <li>
                                     	<a href="{{route('logout')}}">
@@ -454,26 +453,27 @@
 			</a>
 		</li>
 
-		<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
+	{{-- 	<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
 			<a href="{{route('walletindex')}}">
 				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
 				<span class="pcoded-mtext">Ai-Cash</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
-		</li>
+		</li> --}}
 
-		<li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
-			<a href="{{route('ai-cash')}}">
-				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
-				<span class="pcoded-mtext">Ai-Cash</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
 
 		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
 			<a href="{{route('ai-pocket')}}">
 				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
 				<span class="pcoded-mtext">Ai-Stockist</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+		
+		<li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
+			<a href="{{route('ai-cash')}}">
+				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
+				<span class="pcoded-mtext">Ai-Cash</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>

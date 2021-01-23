@@ -91,11 +91,11 @@ Route::post('edit_address','Frontend\ProfileController@edit_address')->name('edi
 Route::get('docs','Frontend\DocsController@index')->name('docs');
 Route::post('docs_upload','Frontend\DocsController@docs_upload')->name('docs_upload');
 
+Route::get('chage_password','Frontend\EditPasswordController@index')->name('chage_password');
+
+Route::post('edit_password_submit','Frontend\EditPasswordController@edit_password_submit')->name('edit_password_submit');
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
-
-
-
 
 //------------------------------end-------------------------------//
 
@@ -156,6 +156,7 @@ Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_a
 
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');
+Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash')->name('cart_payment_aicash');
 
 
 Route::get('course','Frontend\CourseEventController@index')->name('course');

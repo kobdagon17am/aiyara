@@ -29,14 +29,14 @@
 
             <div class="form-group row">
                 <div class="col-md-6 m-t-5">
-                    <form action="aicash_submit" method="post">
-
-                    <div class="input-group input-group-button">
-                        <input type="text" id="username" class="form-control autonumber" data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
-                        <span class="input-group-addon btn btn-primary" >
-                            <span class="">ทำรายการ</span>
-                        </span>
-                    </div>
+                    <form action="{{ route('cart_payment_aicash') }}" id="cart_payment_aicash" method="post">
+                        @csrf 
+                        <div class="input-group input-group-button">
+                            <input type="text" id="price" name="price" class="form-control autonumber" data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
+                            <span class="input-group-addon btn btn-primary" onclick="add_aicash()">
+                                <span class="">ทำรายการ</span>
+                            </span>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -131,7 +131,22 @@
         }
     });
 
+    function add_aicash(){
+        var price = $('#price').val();
+        if(price == ''){
+            Swal.fire({
+              icon: 'error',
+              title: 'กรุณาใส่จำนวนเงินที่ต้องการ',
+              // text: 'Something went wrong!', 
+              // footer: '<a href>Why do I have this issue?</a>'
+          })
 
+        }else{
+            document.getElementById("cart_payment_aicash").submit();
+            
+        }
+        
+    }
 </script>
 
 @endsection

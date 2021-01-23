@@ -180,6 +180,9 @@ public function dt_history(Request $request){
 }elseif($value->type_id == 6){
  $nestedData['price'] = number_format($value->price,2);
 
+}elseif($value->type_id == 7){
+  $nestedData['price'] = $value->price;
+
 }else{
   $nestedData['price'] = number_format($value->price + $value->shipping,2);
 
