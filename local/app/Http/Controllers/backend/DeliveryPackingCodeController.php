@@ -59,41 +59,53 @@ class DeliveryPackingCodeController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('receipt', function($row) {
-          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
-          $array = array();
-          foreach ($DP as $key => $value) {
-            $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-            array_push($array, @$rs[0]->receipt);
+        if($row->id!==""){
+            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
+            $array = array();
+            if(@$DP){
+              foreach ($DP as $key => $value) {
+                $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+                array_push($array, @$rs[0]->receipt);
+              }
+              $arr = implode(',', $array);
+              return $arr;
+            }
           }
-          $arr = implode(',', $array);
-          return $arr;
       })
       ->addColumn('customer_name', function($row) {
+
+        if($row->id!==""){
+
           $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
           $array = array();
-          foreach ($DP as $key => $value) {
-            $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-            $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
-            array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+          if(@$DP){
+            foreach ($DP as $key => $value) {
+              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+              array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+            }
+            $arr = implode(',', $array);
+            return $arr;
           }
-          $arr = implode(',', $array);
-          return $arr;
+
+          }
       })
       ->addColumn('packing_code_desc', function($row) {
         return sprintf("%05d",$row->id);
       })
-      ->addColumn('addr_to_send', function($row) {
-        if($row->addr_id){
-            $rs = DB::table('customers_detail')->where('id',$row->addr_id)->get();
-            $addr = $rs[0]->house_no?$rs[0]->house_no.", ":'';
-            $addr .= $rs[0]->house_name;
-            $addr .= $rs[0]->moo?", หมู่ ".$rs[0]->moo:'';
-            $addr .= $rs[0]->soi?", ซอย".$rs[0]->soi:'';
-            $addr .= $rs[0]->road?", ถนน".$rs[0]->road:'';
-            $addr .= $rs[0]->district_sub?", ต.".$rs[0]->district_sub:'';
-            $addr .= $rs[0]->district?", อ.".$rs[0]->district:'';
-            $addr .= $rs[0]->province?", จ.".$rs[0]->province:'';
-            $addr .= $rs[0]->zipcode?", ".$rs[0]->zipcode:'';
+      ->addColumn('addr_to_send', function($row) { 
+        if(@$row->addr_id!=""){
+            // $rs = DB::table('customers_detail')->where('id',$row->addr_id)->get();
+            $rs = DB::table('customers_addr_sent')->where('id',$row->addr_id)->where('id_choose',1)->get();
+            $addr = @$rs[0]->house_no?@$rs[0]->house_no.", ":'';
+            $addr .= @$rs[0]->house_name;
+            $addr .= @$rs[0]->moo?", หมู่ ".@$rs[0]->moo:'';
+            $addr .= @$rs[0]->soi?", ซอย".@$rs[0]->soi:'';
+            $addr .= @$rs[0]->road?", ถนน".@$rs[0]->road:'';
+            $addr .= @$rs[0]->district_sub?", ต.".@$rs[0]->district_sub:'';
+            $addr .= @$rs[0]->district?", อ.".@$rs[0]->district:'';
+            $addr .= @$rs[0]->province?", จ.".@$rs[0]->province:'';
+            $addr .= @$rs[0]->zipcode?", ".@$rs[0]->zipcode:'';
             return $addr;
         }else{
             return '-ไม่ระบุ-';

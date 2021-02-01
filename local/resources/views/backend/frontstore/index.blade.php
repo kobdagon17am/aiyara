@@ -375,8 +375,8 @@ $(function() {
         scrollX: true,
         ordering: true,
         paging:   true,
-        searching: true,
-        bLengthChange: true ,
+        searching: false,
+        bLengthChange: false ,
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
@@ -386,64 +386,50 @@ $(function() {
         },
 
         columns: [
-            {data: 'id', title :'ID', className: 'text-center w10'},
+            {data: 'id', title :'ID', className: 'text-center w15'},
             {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
-            {data: 'updated_at', title :'<center>วันแก้ไข </center>', className: 'text-center'},
-            // {data: 'purchase_type', title :'<center>ประเภทการสั่งซื้อ </center>', className: 'text-center'},
+            // {data: 'updated_at', title :'<center>วันแก้ไข </center>', className: 'text-center'},
             {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
                 return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},
-            // {data: 'id',   title :'<center>รหัส</center>', className: 'text-center ',render: function(d) {
-            //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-            // }},
-            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-center'},
-            {data: 'total_price',   title :'<center>รวมทั้งสิ้น</center>', className: 'text-center ',render: function(d) {
+            {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
+            {data: 'id',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
                 return d ;
             }},
-            {data: 'id',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                return '<span class="badge badge-pill badge-soft-primary font-size-16">INV000'+d+'</span>';
+            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
             }},
             {data: 'approve_status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              // if(d==1){
-              //     return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
-              // }else if(d==2){
-              //     return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
-              // }else if(d==3){
-              //     return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
-              // }else{
-              //     return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
-              // }
               return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รอจัดส่ง</span>';
             }},
-            {data: 'id',   title :'ใบเสร็จ', className: 'text-center w100 ',render: function(d) {
-                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>'
-                + '<a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>';
+            {data: 'id',   title :'ใบเสร็จ[1]', className: 'text-center w100 ',render: function(d) {
+                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
+            }},
+            {data: 'id',   title :'ใบเสร็จ[2]', className: 'text-center w100 ',render: function(d) {
+                return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
-        'columnDefs': [
-          {
-                  'targets': 0,
-                  'checkboxes': {
-                     'selectRow': true
-                  }
-               }
-            ],
-            'select': {
-               'style': 'multi'
-            },
-
+           "order": [ [ 1, 'desc' ] ],
+           "columnDefs": [ {
+            // { targets: 'no-sort', orderable: false }
+              "targets": [0,2,6,7,8,9] ,
+              "orderable": false
+          } ],
         rowCallback: function(nRow, aData, dataIndex){
 
-        	$("td:eq(8)", nRow).prop('disabled',true); 
-          $("td:eq(9)", nRow).prop('disabled',true); 
+			$("td:eq(3)", nRow).html(aData['customer_name']);
+			$("td:eq(4)", nRow).html(aData['total_price']);
+			$("td:eq(8)", nRow).prop('disabled',true); 
+			$("td:eq(9)", nRow).prop('disabled',true); 
 
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+	          if(sU!=''&&sD!=''){
+	              $('td:last-child', nRow).html('-');
+	          }else{ 
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                 
               ).addClass('input');
 

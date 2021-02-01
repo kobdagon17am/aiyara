@@ -78,8 +78,8 @@ class Shipping_vicinityController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Shipping_vicinity::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+      $sTable = \App\Models\Backend\Shipping_vicinity::where('shipping_cost_id_fk',$req->shipping_cost_id_fk)->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       // ->addColumn('Crm_topic', function($row) {

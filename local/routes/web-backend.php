@@ -88,7 +88,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('business_location', 'Business_locationController');
     Route::post('business_location/datatable', 'Business_locationController@Datatable')->name('business_location.datatable');
 
-
     Route::resource('language', 'LanguageController');
     Route::post('language/datatable', 'LanguageController@Datatable')->name('language.datatable');
 
@@ -249,6 +248,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetPromotionCode', 'AjaxController@ajaxGetPromotionCode');
     Route::post('ajaxGetPromotionName', 'AjaxController@ajaxGetPromotionName');
     Route::post('ajaxCheckCouponUsed', 'AjaxController@ajaxCheckCouponUsed');
+    Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
+    Route::post('ajaxFeeCal', 'AjaxController@ajaxFeeCal');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -257,21 +258,16 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
     Route::get('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
+    Route::post('frontstore/print_receipt022/{id}', 'AjaxController@createPDFReceipt022');
+    Route::get('frontstore/print_receipt022/{id}', 'AjaxController@createPDFReceipt022');
+    Route::get('frontstore/print_receipt_packing/{id}', 'AjaxController@createPDFReceiptPacking');
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
 
-
-    Route::resource('frontstore_list', 'Frontstore_listController');
-    Route::post('frontstore_list/datatable', 'Frontstore_listController@Datatable')->name('frontstore_list.datatable');
-
-
-
-
     Route::resource('taxdata', 'TaxdataController');
     Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
     Route::get('taxdata/taxtvi/{id}', 'TaxdataController@createPDFTaxtvi');
-
 
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
@@ -329,6 +325,26 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('check_orders_list', 'Check_orders_listController');
     Route::post('check_orders_list/datatable', 'Check_orders_listController@Datatable')->name('check_orders_list.datatable');
 
+    Route::resource('commission_transfer', 'Commission_transferController');
+    Route::post('commission_transfer/datatable', 'Commission_transferController@Datatable')->name('commission_transfer.datatable');
+
+    Route::resource('commission_aistockist', 'Commission_aistockistController');
+    Route::post('commission_aistockist/datatable', 'Commission_aistockistController@Datatable')->name('commission_aistockist.datatable');
+
+    Route::resource('commission_transfer_af', 'Commission_transfer_afController');
+    Route::post('commission_transfer_af/datatable', 'Commission_transfer_afController@Datatable')->name('commission_transfer_af.datatable');
+
+    Route::resource('total_thai_cambodia', 'Total_thai_cambodiaController');
+    Route::post('total_thai_cambodia/datatable', 'Total_thai_cambodiaController@Datatable')->name('total_thai_cambodia.datatable');
+
+    Route::resource('cambodia_account', 'Cambodia_accountController');
+    Route::post('cambodia_account/datatable', 'Cambodia_accountController@Datatable')->name('cambodia_account.datatable');
+
+
+    Route::resource('transfer_corporate_members', 'Transfer_corporate_membersController');
+    Route::post('transfer_corporate_members/datatable', 'Transfer_corporate_membersController@Datatable')->name('transfer_corporate_members.datatable');
+
+
     Route::resource('po_in', 'Po_inController');
     Route::post('po_in/datatable', 'Po_inController@Datatable')->name('po_in.datatable');
 
@@ -337,6 +353,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+    
+    Route::resource('check_stock_account', 'Check_stock_accountController');
+    Route::post('check_stock_account/datatable', 'Check_stock_accountController@Datatable')->name('check_stock_account.datatable');
+
+    Route::resource('check_money_daily', 'Check_money_dailyController');
+    Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
+
 
     Route::resource('promotion_code', 'PromotionCodeController');
     Route::post('promotion_code/datatable', 'PromotionCodeController@Datatable')->name('promotion_code.datatable');
@@ -421,6 +444,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('giveaway_products/datatable', 'Giveaway_productsController@Datatable')->name('giveaway_products.datatable');
     Route::get('giveaway_products/create/{id}', 'Giveaway_productsController@create');
 
+
+    Route::resource('scan_qrcode', 'Scan_qrcodeController');
+    Route::post('scan_qrcode/datatable', 'Scan_qrcodeController@Datatable')->name('scan_qrcode.datatable');
+
+	
+	#=======================================================================================================================================================
 
     Route::get('qrcode', function () {
         return view('backend.delivery.qr_code');

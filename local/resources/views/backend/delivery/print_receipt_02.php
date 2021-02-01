@@ -213,11 +213,11 @@ $value = DB::select("
           </th>
           <th style="text-align: right;">
             (<?php echo sprintf("%04d",$data[0]).'-'.$value[0]->receipt; ?>)<br>
-2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-TEL : +66 (0) 2026 3555 
-FAX : +66 (0) 2514 3944 
-E-MAIL : info@aiyara.co.th
+                2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
+                แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
+                TEL : +66 (0) 2026 3555 
+                FAX : +66 (0) 2514 3944 
+                E-MAIL : info@aiyara.co.th
           </th>
         </tr>
       
@@ -237,7 +237,7 @@ E-MAIL : info@aiyara.co.th
 
 <div class="NameAndAddress" >
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
         <td style="width:30%;" > 
@@ -295,7 +295,6 @@ Quantity </td>
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
 Unit Price </td>
         <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV   
-        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;">  ค่าจัดส่ง
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
 Amount </td>
 
@@ -305,22 +304,20 @@ Amount </td>
 <?php 
 
      $P = DB::select(" 
-        SELECT
-        order_items.id,
-        order_items.order_id,
-        order_items.product_id,
-        order_items.product_name,
-        order_items.quantity,
-        order_items.list_price,
-        order_items.pv,
-        order_items.discount,
-        order_items.created_at,
-        order_items.update_at,
-        orders.shipping
-        FROM order_items 
-        Left Join orders ON order_items.order_id = orders.id
-        WHERE
-        order_items.order_id = ".$value[0]->order_id."
+
+          SELECT
+          db_frontstore_products_list.id,
+          db_frontstore_products_list.frontstore_id_fk,
+          db_frontstore_products_list.product_id_fk,
+          db_frontstore_products_list.amt,
+          db_frontstore_products_list.selling_price,
+          db_frontstore_products_list.pv,
+          db_frontstore_products_list.created_at,
+          db_frontstore_products_list.updated_at,
+          db_frontstore.invoice_code
+          FROM db_frontstore_products_list 
+          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+          WHERE db_frontstore_products_list.add_from = 1 and invoice_code='".$value[0]->receipt."'
 
      ");
 
@@ -328,28 +325,24 @@ Amount </td>
 
      $Total = 0;
      $shipping = 0;
-
      // echo count($P);
      // exit;
-
     foreach ($P as $key => $v) {
 
      ?>
-
           <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->product_name?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->quantity?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->list_price?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=@$v->product_name?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->selling_price?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->pv?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->shipping?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->quantity*$v->list_price,2)?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
     <?php  
     $i++; 
-    $Total += $v->quantity*$v->list_price;  
-    $shipping += $v->shipping ;  
+    $Total += $v->amt*$v->selling_price;  
+    // $shipping += $v->shipping ;  
 
   } 
 
@@ -363,7 +356,6 @@ Amount </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">   </td>
       </tr>
@@ -445,7 +437,7 @@ NET AMOUNT </td>
 <br>
 <br>
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
       
       <tr>

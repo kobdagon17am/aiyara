@@ -20,8 +20,8 @@ class BranchsController extends Controller
 
     public function create()
     {
-      $sLocale  = \App\Models\Locale::all();
-      return view('backend.branchs.form');
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      return View('backend.branchs.form')->with(array('sBusiness_location'=>$sBusiness_location,) );
     }
 
     public function store(Request $request)
@@ -32,8 +32,9 @@ class BranchsController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Branchs::find($id);
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->b_maker." ");
-       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name) );
+       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name,'sBusiness_location'=>$sBusiness_location,) );
     }
 
     public function update(Request $request, $id)
@@ -53,6 +54,7 @@ class BranchsController extends Controller
             $sRow = new \App\Models\Backend\Branchs;
           }
 
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->b_code    = request('b_code');
           $sRow->b_name    = request('b_name');
           $sRow->b_location    = request('b_location');
@@ -93,7 +95,15 @@ class BranchsController extends Controller
         }else{
            return '';
         }
-      })      
+      })  
+       ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      })   
       ->addColumn('created_at', function($row) {
         if(!is_null($row->created_at)){
             $d = strtotime($row->created_at); return date("d/m/", $d).(date("Y", $d)+543).' '.date("H:i:s", $d);

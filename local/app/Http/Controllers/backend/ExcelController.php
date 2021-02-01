@@ -61,7 +61,6 @@
 				$spreadsheet = new Spreadsheet();
 				$sheet = $spreadsheet->getActiveSheet();
 				$sheet->setTitle("Sheet1");
-
 				$sRow = \App\Models\Backend\Pm_broadcast::get();
 
 				$sheet->setCellValue('A1', 'CustomerId');

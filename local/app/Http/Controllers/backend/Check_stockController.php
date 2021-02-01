@@ -23,9 +23,15 @@ class Check_stockController extends Controller
 
       $Check_stock = \App\Models\Backend\Check_stock::get();
 
+      $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBranchs = \App\Models\Backend\Branchs::get();
+      $Warehouse = \App\Models\Backend\Warehouse::get();
+      $Zone = \App\Models\Backend\Zone::get();
+      $Shelf = \App\Models\Backend\Shelf::get();
+
       return View('backend.check_stock.index')->with(
         array(
-           'Products'=>$Products,'Check_stock'=>$Check_stock,
+           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
         ) );
 
     }

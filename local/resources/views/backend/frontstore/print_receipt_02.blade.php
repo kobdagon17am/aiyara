@@ -105,6 +105,7 @@
                 customers_detail.road,
                 customers_detail.province,
                 customers.id as cus_id,
+                customers.user_name as cus_code,
                 orders_frontstore.id as order_id,
                 orders_frontstore.shipping
 
@@ -135,20 +136,17 @@
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
                  echo "<br>";
-                 echo "<br>";
-                 echo "<br>";
-
-                 echo "A111111 <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."<br>";
+                 echo @$value[0]->cus_code." <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."<br>";
 
                       if(@$sRow->delivery_location==0){
                         echo " รับสินค้าด้วยตัวเอง ";
                       }else{
 
-                        foreach(@$Delivery_location AS $r){
-                          if(@$r->id==@$sRow->delivery_location){
-                            echo "( ".$r->txt_desc." )  ";
-                          }
-                        }
+                        // foreach(@$Delivery_location AS $r){
+                        //   if(@$r->id==@$sRow->delivery_location){
+                        //     echo "( ".$r->txt_desc." )  ";
+                        //   }
+                        // }
 
                         if(@$sRow->delivery_location==1){
 
@@ -186,11 +184,11 @@
                           if(@$addr[0]->provname!=''){
 
                               @$address = "";
-                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no."<br> "; 
-                              @$address .=  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ต. ". @$addr[0]->tamname; 
-                              @$address .=  "อ. ". @$addr[0]->ampname;
-                              @$address .=  "จ. ". @$addr[0]->provname; 
-                              @$address .=  "รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ; 
+                              @$address .=  " ต. ". @$addr[0]->tamname; 
+                              @$address .=  " อ. ". @$addr[0]->ampname;
+                              @$address .=  " จ. ". @$addr[0]->provname; 
+                              @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
 
                               echo @$address;
 
@@ -221,8 +219,7 @@
                                      ");
 
                               if($addr){
-                                  @$address = "";
-                                  @$address .=  " > ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
+                                  @$address =  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
                                   @$address .=  " หมู่ ". @$addr[0]->card_moo; 
                                   @$address .=  " ซอย ". @$addr[0]->card_soi; 
                                   @$address .=  " ถนน ". @$addr[0]->card_road; 
@@ -256,17 +253,23 @@
                                       customers_detail.province,
                                       customers.prefix_name,
                                       customers.first_name,
-                                      customers.last_name
+                                      customers.last_name,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname
                                       FROM
                                       customers_detail
                                       Left Join customers ON customers_detail.customer_id = customers.id
+                                      Left Join dataset_provinces ON customers_detail.province = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.district = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_sub = dataset_districts.id
                                       WHERE customers_detail.customer_id = 
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
                                 // print_r(@$addr);
                                 @$address = " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. " ";
-                                @$address .= " <br> ต. ". @$addr[0]->district_sub; 
-                                @$address .= " อ. ". @$addr[0]->district; 
-                                @$address .= " จ. ". @$addr[0]->province; 
+                                @$address .= " ต. ". @$addr[0]->tamname; 
+                                @$address .= " อ. ". @$addr[0]->ampname; 
+                                @$address .= " จ. ". @$addr[0]->provname; 
                                 @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
 
                                 echo @$address;
@@ -285,7 +288,7 @@
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
                                 // print_r(@$addr);
-                                @$address = " > ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
+                                @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
                                 @$address .= "ที่อยู่ : ". @$addr[0]->addr_no. "<br> ";
                                 @$address .= " ต. ". @$addr[0]->tamname; 
                                 @$address .= " อ. ". @$addr[0]->ampname; 

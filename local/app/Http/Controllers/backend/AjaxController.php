@@ -40,60 +40,19 @@ class AjaxController extends Controller
     }
 
 
-
-    public function ajaxFetchData(Request $request)
-    {
-        // DB::delete(" TRUNCATE course_event_regis ");
-
-        // return($request->search);
-
-        // if(isset($request->search)){
-
-			    // $result = DB::select("SELECT * FROM course_event_regis WHERE ticket_number like'%".$request->search."%'");
-			    // $response = [];
-			    // while($result){
-			    //     $response[] = array("value"=>$result[0]->id,"label"=>$result[0]->ticket_number);
-			    // }
-			    // return(@$result[0]->ticket_number);
-			    // return compact($result);
-			// }
-
-    	// if(isset($request->search)){
-    	// if($request->has('term')){
-            // return Product::where('name','like','%'.$request->input('term').'%')->get();
-    	// return DB::select("SELECT * FROM course_event_regis WHERE ticket_number like'%".$request->search."%'");
-        // }
-
-
-    }
-
     public function ajaxSelectAddr(Request $request)
     {
 
+          
           $data = DB::select(" 
                 SELECT
-                db_delivery_packing.id,
-                db_delivery.customer_id,customers.prefix_name,
-                customers.first_name,
-                customers.last_name,
-                customers_detail.house_no,
-                customers_detail.house_name,
-                customers_detail.moo,
-                customers_detail.zipcode,
-                customers_detail.soi,
-                customers_detail.district,
-                customers_detail.district_sub,
-                customers_detail.road,
-                customers_detail.province,
-                customers_detail.id as addr_id
+                *
                 FROM
-                db_delivery_packing
-                Left Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                Left Join customers ON db_delivery.customer_id = customers.id
-                Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-                WHERE db_delivery_packing.packing_code=".$request->v."
+                customers_addr_sent
+                WHERE receipt_no=".$request->v."
 
            ");
+
 
             $tb = "<table class='minimalistBlack'>
                         <thead>
@@ -115,11 +74,11 @@ class AjaxController extends Controller
                             $addr .= $value->province?", จ.".$value->province:'';
                             $addr .= $value->zipcode?", ".$value->zipcode:'';
 
-                            if($value->addr_id!=''){
+                            if($value->id!=''){
                                 if($i==1){
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->addr_id."' checked >";
+                                    $addr_id = "<input type='radio' name='addr' value='".$value->id."' checked >";
                                 }else{
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->addr_id."'>";
+                                    $addr_id = "<input type='radio' name='addr' value='".$value->id."'>";
                                 }
                                 
                             }else{
@@ -129,9 +88,7 @@ class AjaxController extends Controller
                             $tb .= "
                                    <tr>
                                       <td>
-                                      ".$value->prefix_name."
-                                      ".$value->first_name." 
-                                      ".$value->last_name."
+                                      ".$value->recipient_name."
                                       </td> 
                                       <td>
                                       ".($addr?$addr:'-ไม่พบข้อมูลที่อยู่-')."
@@ -153,32 +110,18 @@ class AjaxController extends Controller
 
     public function ajaxSelectAddrEdit(Request $request)
     {
-
-
+          $receipt_no = explode(",",$request->receipt_no);
+          $arr = [];
+          for ($i=0; $i < sizeof($receipt_no); $i++) { 
+              array_push($arr, "'".$receipt_no[$i]."'");
+          }
+          $arr = implode(",",$arr);
           $data = DB::select(" 
                 SELECT
-                db_delivery_packing.id,
-                db_delivery.customer_id,customers.prefix_name,
-                customers.first_name,
-                customers.last_name,
-                customers_detail.house_no,
-                customers_detail.house_name,
-                customers_detail.moo,
-                customers_detail.zipcode,
-                customers_detail.soi,
-                customers_detail.district,
-                customers_detail.district_sub,
-                customers_detail.road,
-                customers_detail.province,
-                customers_detail.id as addr_id,
-                db_delivery_packing_code.addr_id AS addr_id2
+                *
                 FROM
-                db_delivery_packing
-                Left Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                Left Join customers ON db_delivery.customer_id = customers.id
-                Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-                Left Join db_delivery_packing_code ON db_delivery_packing.packing_code = db_delivery_packing_code.id
-                WHERE db_delivery_packing.packing_code=".$request->v."
+                customers_addr_sent
+                WHERE receipt_no in ($arr) 
 
            ");
 
@@ -202,11 +145,11 @@ class AjaxController extends Controller
                             $addr .= $value->province?", จ.".$value->province:'';
                             $addr .= $value->zipcode?", ".$value->zipcode:'';
 
-                            if($value->addr_id!=''){
-                                if($value->addr_id==$value->addr_id2){
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->addr_id."' checked >";
+                           if($value->id!=''){
+                                if($value->id_choose==1){
+                                    $addr_id = "<input type='radio' name='receipt_no' value='".$value->receipt_no."' checked >";
                                 }else{
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->addr_id."'>";
+                                    $addr_id = "<input type='radio' name='receipt_no' value='".$value->receipt_no."'>";
                                 }
                                 
                             }else{
@@ -216,9 +159,7 @@ class AjaxController extends Controller
                             $tb .= "
                                    <tr>
                                       <td>
-                                      ".$value->prefix_name."
-                                      ".$value->first_name." 
-                                      ".$value->last_name."
+                                      ".$value->recipient_name."
                                       </td> 
                                       <td>
                                       ".($addr?$addr:'-ไม่พบข้อมูลที่อยู่-')."
@@ -230,7 +171,7 @@ class AjaxController extends Controller
 
                             $i++;
                       }
-            $tb .= "</tbody></table> <input type='hidden' name='id' value='".$request->v."'> ";
+            $tb .= "</tbody></table> ";
 
             return $tb;
 
@@ -260,6 +201,26 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFReceipt022($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.frontstore.print_receipt_02',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFReceiptPacking($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.frontstore.print_receipt_packing',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+    
 
     public function createPDFCoverSheet02($id)
      {
@@ -557,6 +518,75 @@ class AjaxController extends Controller
 
     }
 
+   public function ajaxGetFeeValue(Request $request)
+    {
+        // echo $request->product_id_fk;
+      if(!empty($request->fee_id)){
+
+          $fee = DB::select(" 
+                SELECT * from dataset_fee where id = ".$request->fee_id."
+          ");
+            return $fee[0]->txt_value;
+          }else{
+            return null;
+          }
+    }
+
+
+   public function ajaxFeeCal(Request $request)
+    {
+        // echo $request->product_id_fk;
+        // return $request;
+        // dd();
+        // ถ้าส่งมาเป็น 0 ทั้งสองรายการเลย
+
+      $sum_price = str_replace(',','',$request->sum_price);
+      $fee_value = $request->fee_value?str_replace(',','',$request->fee_value):0;
+      $transfer_price = str_replace(',','',$request->transfer_price);
+      $cash_price = str_replace(',','',$request->cash_price);
+      $shipping_price = str_replace(',','',$request->shipping_price);
+      $pay_type_id_fk = $request->pay_type_id_fk;
+
+      if($request->this_id=="transfer_price"){
+
+            $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+
+            if($transfer_price==0){
+                $fee_amt    = 0;
+                DB::select(" UPDATE db_frontstore SET cash_price=$sum_price,transfer_price=0,fee_amt=0,sum_price=($sum_price+$shipping_price+$fee_amt) WHERE id='".$request->frontstore_id_fk."' ");
+            }else{
+                $cash_price = $sum_price - $transfer_price ;
+                if($pay_type_id_fk!=2){
+                  $fee_amt    = 0 ;
+                }else{
+                  $fee_amt    = $transfer_price * (@$fee_value/100) ;
+                }
+                DB::select(" UPDATE db_frontstore SET cash_price=$cash_price,transfer_price=$transfer_price,fee_amt=$fee_amt,sum_price=($sum_price+$shipping_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
+            }
+
+      }else{
+
+            $cash_price = $cash_price>$sum_price?$sum_price:$cash_price;
+
+            if($cash_price==0){
+                $fee_amt    = $sum_price * (@$fee_value/100) ;
+                DB::select(" UPDATE db_frontstore SET cash_price=0,transfer_price=$sum_price,fee_amt=$fee_amt,sum_price=($sum_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
+            }else{
+                $cash_price = $sum_price - $transfer_price ;
+                $fee_amt    = $transfer_price * (@$fee_value/100) ;
+                DB::select(" UPDATE db_frontstore SET cash_price=$cash_price,transfer_price=$transfer_price,fee_amt=$fee_amt,sum_price=($sum_price+$shipping_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
+
+            }
+
+      }
+
+
+
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
+
+        return response()->json($rs);   
+
+    }
 
 
    public function ajaxGetProductPromotionCus(Request $request)
@@ -606,12 +636,6 @@ class AjaxController extends Controller
 
     public function ajaxGenPromotionCode(Request $request)
     {
-
-        // dd ($request->all());
-        // return ($request->promotion_name);
-        // dd ($request->all());
-        // return $request->promotion_code_id_fk.":".$request->amt_gen.":".$request->amt_random.":".$request->prefix_coupon.":".$request->suffix_coupon;
-        // dd();
 
          if( $request->promotion_code_id_fk ){
             $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );

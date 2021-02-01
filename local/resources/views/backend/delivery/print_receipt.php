@@ -237,7 +237,7 @@ E-MAIL : info@aiyara.co.th
 
 <div class="NameAndAddress" >
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
         <td style="width:30%;" > 
@@ -314,7 +314,7 @@ Amount </td>
         order_items.list_price,
         order_items.pv,
         order_items.discount,
-        order_items.created_at,
+        order_items.create_at,
         order_items.update_at,
         orders.shipping
         FROM order_items 
@@ -445,7 +445,7 @@ NET AMOUNT </td>
 <br>
 <br>
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
       
       <tr>

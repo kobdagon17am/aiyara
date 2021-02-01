@@ -236,6 +236,7 @@ tr.border_bottom td {
 </style>
 <?php 
 
+
 $value = DB::select(" 
                     SELECT
                     db_frontstore_products_list.*,
@@ -266,6 +267,8 @@ $value = DB::select("
                     ".$data[0]."
 
      ");
+
+// print_r($value);
 
         // if($i>1){echo'<div class="page-break"></div>';}
 
@@ -322,11 +325,11 @@ $value = DB::select("
                         echo " รับสินค้าด้วยตัวเอง </span> ";
                       }else{
 
-                        foreach(@$Delivery_location AS $r){
-                          if(@$r->id==@$sRow->delivery_location){
-                            echo "( ".$r->txt_desc." ) </span> ";
-                          }
-                        }
+                        // foreach(@$Delivery_location AS $r){
+                        //   if(@$r->id==@$sRow->delivery_location){
+                        //     echo "( ".$r->txt_desc." ) </span> ";
+                        //   }
+                        // }
 
                         if(@$sRow->delivery_location==1){
 
@@ -364,11 +367,12 @@ $value = DB::select("
                           if(@$addr[0]->provname!=''){
 
                               @$address = "";
-                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no."<br> "; 
-                              @$address .=  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ต. ". @$addr[0]->tamname; 
-                              @$address .=  "อ. ". @$addr[0]->ampname;
-                              @$address .=  "จ. ". @$addr[0]->provname; 
-                              @$address .=  "รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ; 
+                              @$address .=  " ต. ". @$addr[0]->tamname; 
+                              @$address .=  " อ. ". @$addr[0]->ampname;
+                              @$address .=  " จ. ". @$addr[0]->provname; 
+                              @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
+
 
                               echo @$address;
 
@@ -400,7 +404,7 @@ $value = DB::select("
 
                               if($addr){
                                   @$address = "";
-                                  @$address .=  " > ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
+                                  @$address .=  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
                                   @$address .=  " หมู่ ". @$addr[0]->card_moo; 
                                   @$address .=  " ซอย ". @$addr[0]->card_soi; 
                                   @$address .=  " ถนน ". @$addr[0]->card_road; 
@@ -421,7 +425,7 @@ $value = DB::select("
 
                          if(@$sRow->delivery_location==2){
 
-                                @$addr = DB::select("SELECT
+                               @$addr = DB::select("SELECT
                                       customers_detail.customer_id,
                                       customers_detail.house_no,
                                       customers_detail.house_name,
@@ -434,17 +438,23 @@ $value = DB::select("
                                       customers_detail.province,
                                       customers.prefix_name,
                                       customers.first_name,
-                                      customers.last_name
+                                      customers.last_name,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname
                                       FROM
                                       customers_detail
                                       Left Join customers ON customers_detail.customer_id = customers.id
+                                      Left Join dataset_provinces ON customers_detail.province = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.district = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_sub = dataset_districts.id
                                       WHERE customers_detail.customer_id = 
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
                                 // print_r(@$addr);
                                 @$address = " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. " ";
-                                @$address .= " <br> ต. ". @$addr[0]->district_sub; 
-                                @$address .= " อ. ". @$addr[0]->district; 
-                                @$address .= " จ. ". @$addr[0]->province; 
+                                @$address .= " ต. ". @$addr[0]->tamname; 
+                                @$address .= " อ. ". @$addr[0]->ampname; 
+                                @$address .= " จ. ". @$addr[0]->provname; 
                                 @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
 
                                 echo @$address;
@@ -463,12 +473,12 @@ $value = DB::select("
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
                                 // print_r(@$addr);
-                                @$address = "<span style='z-index: 0'> > ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
-                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no. "<br> ";
+                                @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
+                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no ;
                                 @$address .= " ต. ". @$addr[0]->tamname; 
                                 @$address .= " อ. ". @$addr[0]->ampname; 
                                 @$address .= " จ. ". @$addr[0]->provname; 
-                                @$address .= " รหัส ปณ. ". @$addr[0]->zip_code. " </span> ";
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zip_code ;
 
                                 echo @$address;
 
@@ -479,7 +489,7 @@ $value = DB::select("
                      ?>
       </td>
       <td style="width:10%;vertical-align: top;font-weight: bold;" > 
-        เลขที่ / No. P2102100001 <br>
+        เลขที่ / No. <?=@$value->invoice_code?><br>
         วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
       </td>
       <td style="width:10%;vertical-align: top;" > 

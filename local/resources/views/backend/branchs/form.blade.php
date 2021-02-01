@@ -34,6 +34,21 @@
               @endif
                 {{ csrf_field() }}
 
+                
+                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">รหัสสาขา :</label>
+                    <div class="col-md-10">
+                          <select name="business_location_id_fk" class="form-control select2-templating " required >
+                            <option value="">-Business Location-</option>
+                            @if(@$sBusiness_location)
+                            @foreach(@$sBusiness_location AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                            @endforeach
+                            @endif
+                          </select>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">รหัสสาขา :</label>
                     <div class="col-md-10">
