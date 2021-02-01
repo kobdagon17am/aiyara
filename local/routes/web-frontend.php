@@ -162,19 +162,11 @@ Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash'
 Route::get('course','Frontend\CourseEventController@index')->name('course');
 Route::get('modal_qr_ce','Frontend\CourseEventController@modal_qr_ce')->name('modal_qr_ce');
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
+
+Route::get('direct-sponsor','Frontend\DirectSponsorController@index')->name('direct-sponsor');
+Route::post('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
  
-
-Route::get('/product-status', function () {
-  return view('frontend/product/product-status');
-})->name('product-status');
-
-Route::get('/allmember', function () {
-  return view('frontend/allmember');
-})->name('allmember');
-
-Route::get('/benefits', function () {
-  return view('frontend/benefits');
-})->name('benefits');
+ 
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');
 })->name('reward-history');
@@ -182,31 +174,12 @@ Route::get('/regis-member', function () {
   return view('frontend/regis-member');
 });
 
-Route::get('/cademy/usersetting', function () {
-  return view('frontend/cademy/aismart/usersetting');
-});
-
-Route::get('/cademy/membersetting', function () {
-  return view('frontend/cademy/aismart/member_team_setting');
-});
-
-
-Route::get('/walletindex', function () {
-  return view('frontend/walletindex');
-})->name('walletindex');
-
-Route::get('/cart-payment', function () {
-  return view('frontend/product/cart-payment');
-})->name('cart-payment');
-
 
 Route::get('/comission', function () {
   return view('frontend/comission');
 })->name('comission');
 
-
-
-
+ 
 Route::get('/travel', function () {
   return view('frontend/travel');
 })->name('travel');
@@ -214,26 +187,6 @@ Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });
 
-/*  Member Web Promotion Theme */
-Route::get('/24extra/promote', function () {
-  return view('frontend/webpromote/theme02/index');
-});
-Route::get('/24extra/promote2', function () {
-  return view('frontend/webpromote/theme02/news');
-});
-Route::get('/24extra/promote3', function () {
-  return view('frontend/webpromote/theme02/product');
-});
-
-Route::get('/24extra/detail', function () {
-  return view('frontend/webpromote/theme02/detail');
-});
-Route::get('/24extra/detail-Gallery', function () {
-  return view('frontend/webpromote/theme02/detail-Gallery');
-});
-Route::get('/24extra/detail-product', function () {
-  return view('frontend/webpromote/theme02/detail-product');
-});
  
 
 

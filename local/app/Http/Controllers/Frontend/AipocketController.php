@@ -119,7 +119,7 @@ class AipocketController extends Controller
     }
 
 
-    $i = 0;
+    $i= $start;
     $data = array();
 
     foreach ($ai_pocket as $value){

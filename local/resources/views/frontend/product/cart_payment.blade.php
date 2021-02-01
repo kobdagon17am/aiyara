@@ -1,5 +1,9 @@
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
+ <link rel="stylesheet" href="{{asset('frontend/bower_components/select2/css/select2.min.css')}}" />
+ <!-- Multi Select css -->
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css')}}">
+ <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/multiselect/css/multi-select.css')}}">
  @endsection
  @section('conten')
  <?php //dd($customer); ?>
@@ -69,234 +73,404 @@
 
  					@if($bill['type'] == 6)
  					<div class="tab-pane" id="address" role="tabpanel">
- 					@else
- 					<div class="tab-pane active" id="address" role="tabpanel">
- 					@endif
- 					
- 						<div class="card-block p-b-0" style="padding:10px">
-
- 							<div class="form-radio">
- 								<div class="row">
- 									<div class="radio radio-inline">
- 										<label>
- 											<input type="radio" onchange="sent_address()" name="receive" value="sent_address" checked="checked">
- 											<i class="helper"></i><b>จัดส่ง</b> 
- 										</label>
- 									</div>
- 									<div class="radio radio-inline">
- 										<label>
- 											<input type="radio" onchange="receive_office()" name="receive" value="receive_office">
- 											<i class="helper"></i><b>รับที่สาขา</b>
- 										</label>
- 									</div>
-
- 								</div>
- 							</div>
- 							
- 							<div id="sent">
- 								<div class="row m-t-5">
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" required="">
- 									</div>
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $customer->tel_mobile }}" required="">
- 									</div>
- 								</div>
- 								<div class="row m-t-5">
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>Email <b class="text-danger">*</b></label>
- 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}" {{-- required="" --}}>
- 									</div>
-
- 								</div>
-
- 								<div class="row m-t-5">
- 									<div class="col-md-3 col-sm-4 col-4">
- 										<label>บ้านเลขที่ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
- 									</div>
- 									<div class="col-md-5 col-sm-8 col-8">
- 										<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
- 									</div>
- 									<div class="col-md-3 col-sm-12 col-12">
- 										<label>หมู่ที่ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
- 									</div>
-
- 								</div>
- 								<div class="row m-t-5">
- 									<div class="col-sm-4">
- 										<label>ตรอก/ซอย </label>
- 										<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
- 									</div>
-
- 									<div class="col-sm-4">
- 										<label>เขต/อำเภอ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $customer->district }}" required="">
- 									</div>
- 									<div class="col-sm-4">
- 										<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
- 										<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub" value="{{ $customer->district_sub }}" required="">
- 									</div>
- 								</div>
- 								<div class="row m-t-5">
- 									<div class="col-sm-4">
- 										<label>ถนน</label>
- 										<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
- 									</div>
-
- 									<div class="col-sm-4">
- 										<label>จังหวัด <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
- 									</div>
-
- 									<div class="col-sm-4">
- 										<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
- 										<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $customer->zipcode }}" required="">
- 									</div>
- 								</div>
- 							</div>
-
- 							<div id="receive" style="display: none;">
- 								<div class="row m-t-5">
- 									<div class="col-sm-12">
- 										<select name="receive_location" class="form-control" required="">
- 											@foreach($location as $value)
- 											<option value="{{$value->id}}">{{$value->name}}</option>
- 											@endforeach
- 										</select>
- 									</div>
-
- 								</div>
- 								<div class="row m-t-5">
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="receive_name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" required="">
- 									</div>
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
- 										<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="receive_tel_mobile" value="{{ $customer->tel_mobile }}" required="">
- 									</div>
- 								</div>
-
- 								<div class="row m-t-5">
- 									<div class="col-md-6 col-sm-6 col-6">
- 										<label>Email <b class="text-danger">*</b></label>
- 										<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
- 									</div>
-
- 								</div>
- 							</div>
-
- 							<div class="row m-t-5">
- 								<div class="col-sm-12 text-right">
- 									<button type="button" onclick="next()" class="btn btn-primary waves-effect waves-light m-t-20">ถัดไป</button>
- 								</div>
- 							</div>
- 						</div>
- 					</div>
-
- 					@if($bill['type'] == 6)
- 					<div class="tab-pane active" id="credit-card" role="tabpanel">
- 					@else
- 					<div class="tab-pane" id="credit-card" role="tabpanel">
- 					@endif
-
- 					
- 						@if($bill['price_total_type5'] == 0 and $bill['type'] == 5) 
- 						<div class="row">
- 							<div class="col-md-12 col-xl-12">
- 								<div class="card bg-c-pink order-card m-b-0">
- 									<div class="card-block">
- 										<div class="row">
- 											<div class="col-md-8 col-sx-8 col-8">
- 												<h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
-
- 											</div>
- 											<div class="col-md-4 col-sx-4 col-4">
- 												<?php  
- 												$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
- 												?>
- 												<h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
- 											</div>
- 										</div>
-
- 										{{-- <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p> --}}
- 										<hr>
-
- 										<div class="row">
- 											<div class="col-md-8 col-sx-8 col-8">
- 												<h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
-
- 											</div>
- 											<div class="col-md-4 col-sx-4 col-4">
-
- 												<h3 class="text-right"> <span> {{ $bill['price_total'] }} </span></h3>
- 											</div>
- 										</div>
-
- 										<hr>
- 										<div class="row">
- 											<div class="col-md-8 col-sx-8 col-8">
- 												<h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
-
- 											</div>
- 											<div class="col-md-4 col-sx-4 col-4">
-
- 												<h3 class="text-right"> <span> {{ $bill['gv_total'] }} </span></h3>
- 											</div>
- 										</div>
- 									</div>
-
- 								</div>
-
- 								<div class="row m-t-5">
- 									<div class="col-sm-6">
- 									</div>
- 									<div class="col-sm-6 text-right">
- 										<button class="btn btn-success btn-block" type="submit" name="submit" value="gift_voucher">ชำระเงิน</button>
- 									</div>
- 								</div>
-
- 								
-
- 							</div>
- 							
- 						</div>
- 						
- 						
- 						
  						@else
+ 						<div class="tab-pane active" id="address" role="tabpanel">
+ 							@endif
 
- 						<div class="demo-container card-block">
+ 							<div class="card-block p-b-0" style="padding:10px">
 
- 							<div class="row">
- 								<div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
-
- 									<div class="form-radio">
+ 								<div class="form-radio">
+ 									<div class="row">
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" id="bank" onchange="open_input(1)" name="pay_type" value="1" checked="checked">
- 												<i class="helper"></i><b>โอนชำระ</b>
+ 												<input type="radio" onchange="sent_address('sent_address')" name="receive" value="sent_address" checked="checked">
+ 												<i class="helper"></i><b>จัดส่ง</b> 
  											</label>
  										</div>
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" onchange="open_input(2)" id="credit_cart" name="pay_type" value="2">
- 												<i class="helper"></i><b>บัตรเครดิต</b>
+ 												<input type="radio" onchange="sent_address('sent_address_card')" name="receive" value="sent_address_card" > 
+ 												<i class="helper"></i><b>ตามบัตรประชาชน</b> 
  											</label>
  										</div>
- 									 
+
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="3">
- 												<i class="helper"></i><b>Ai-Cash</b>
+ 												<input type="radio" onchange="sent_address('sent_office')" name="receive" value="sent_office">
+ 												<i class="helper"></i><b>รับที่สาขา</b>
  											</label>
- 										</div> 
- 										 
+ 										</div>
+
+ 										<div class="radio radio-inline">
+ 											<label>
+ 												<input type="radio" onchange="sent_address('sent_other')" id="sent_other" name="receive" value="sent_other" >
+ 												<i class="helper"></i><b>อื่นๆ</b> 
+ 											</label>
+ 										</div>
+
+
+ 									</div>
+ 								</div>
+
+ 								<div id="sent_address">
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" readonly="">
+
+
+ 										</div>
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $address->tel_mobile }}" readonly="">
+ 										</div>
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>Email </label>
+ 											<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}" readonly="">
+ 										</div>
+
+ 									</div>
+
+ 									<div class="row m-t-5">
+ 										<div class="col-md-3 col-sm-4 col-4">
+ 											<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$address->house_no}}" readonly="">
+ 										</div>
+ 										<div class="col-md-5 col-sm-8 col-8">
+ 											<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $address->house_name }}" readonly="">
+ 										</div>
+ 										<div class="col-md-3 col-sm-12 col-12">
+ 											<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $address->moo }}" readonly="">
+ 										</div>
+
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-sm-4">
+ 											<label>ถนน</label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ถนน" name="road" value="{{ $address->road }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>ตรอก/ซอย </label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ตรอก/ซอย" name="soi" value="{{ $address->soi }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>จังหวัด <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province"  value="{{ $address->provinces_name }}" readonly=""> 
+ 											{{-- <input type="hidden" name="province" value="{{ $address->provinces_id }}"> --}}
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>เขต/อำเภอ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="district" value="{{ $address->amphures_name }}" readonly="">
+ 											{{-- <input type="hidden" name="district" value="{{ $address->amphures_id }}"> --}}
+ 										</div>
+ 										<div class="col-sm-4">
+ 											<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="district_sub"  value="{{ $address->district_name }}" readonly="">
+ 											{{-- <input type="hidden" name="district_sub" value="{{ $address->district_id }}"> --}}
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 											<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $address->zipcode }}" readonly="">
+ 										</div>
+ 									</div>
+
+ 								</div>
+
+ 								<div id="sent_address_card" style="display: none;">
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="card_name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" readonly="">
+ 										</div>
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $address->tel_mobile }}" readonly="">
+ 										</div>
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>Email</label>
+ 											<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}" readonly="">
+ 										</div>
+
+ 									</div>
+
+ 									<div class="row m-t-5">
+ 										<div class="col-md-3 col-sm-4 col-4">
+ 											<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="card_house_no" value="{{$address_card->card_house_no}}" readonly="">
+ 										</div>
+ 										<div class="col-md-5 col-sm-8 col-8">
+ 											<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="card_house_name" value="{{ $address_card->card_house_name }}" readonly="">
+ 										</div>
+ 										<div class="col-md-3 col-sm-12 col-12">
+ 											<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="card_moo" value="{{ $address_card->card_moo }}" readonly="">
+ 										</div>
+
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-sm-4">
+ 											<label>ถนน</label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ถนน" name="card_road" value="{{ $address_card->card_road }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>ตรอก/ซอย </label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ตรอก/ซอย" name="card_soi" value="{{ $address_card->card_soi }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>จังหวัด <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="card_province" value="{{ $address_card->card_provinces_name }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>เขต/อำเภอ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" name="card_district" value="{{ $address_card->card_amphures_name }}" readonly="">
+ 										{{-- 	<input type="hidden" name="card_district" value="{{ $address->amphures_id }}"> --}}
+ 										</div>
+ 										<div class="col-sm-4">
+ 											<label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" name="card_district_sub" value="{{ $address_card->card_district_name }}" readonly="">
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 											<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="card_zipcode" value="{{ $address_card->card_zipcode }}" readonly="">
+ 										</div>
+ 									</div>
+
+ 								</div>
+
+ 								<div id="sent_office" style="display: none;">
+ 									<div class="row m-t-5">
+ 										<div class="col-sm-12">
+ 											<select name="receive_location" class="form-control" readonly="">
+ 												@foreach($location as $value)
+ 												<option value="{{$value->id}}">{{$value->name}}</option>
+ 												@endforeach
+ 											</select>
+ 										</div>
+
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="receive_name" value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}" readonly="">
+ 										</div>
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="receive_tel_mobile" value="{{ $address->tel_mobile }}" readonly="">
+ 										</div>
+ 									</div>
+
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>Email </label>
+ 											<input type="email" class="form-control form-control-bold" placeholder="Email" name="email" value="{{$customer->email}}">
+ 										</div>
+
+ 									</div>
+ 								</div>
+
+ 								<div id="sent_address_other" style="display: none;">
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold sent_address_other" placeholder="บ้านเลขที่" name="other_name" id="other_name" >
+
+ 										</div>
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold sent_address_other" placeholder="เบอร์โทรศัพท์" name="other_tel_mobile" id="other_tel_mobile">
+ 										</div>
+ 									</div>
+ 									<div class="row m-t-5">
+ 										<div class="col-md-6 col-sm-6 col-6">
+ 											<label>Email </label>
+ 											<input type="email" class="form-control form-control-bold" placeholder="Email" name="other_email" id="other_email">
+ 										</div>
+
+ 									</div>
+
+ 									<div class="row m-t-5">
+ 										<div class="col-md-3 col-sm-4 col-4">
+ 											<label>บ้านเลขที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold sent_address_other" placeholder="บ้านเลขที่" name="other_house_no" id="other_house_no">
+ 										</div>
+ 										<div class="col-md-5 col-sm-8 col-8">
+ 											<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold sent_address_other" placeholder="หมู่บ้าน/อาคาร" name="other_house_name" id="other_house_no">
+ 										</div>
+ 										<div class="col-md-3 col-sm-12 col-12">
+ 											<label>หมู่ที่ <b class="text-danger">*</b></label>
+ 											<input type="text" class="form-control form-control-bold sent_address_other" placeholder="หมู่ที่" name="other_moo" id="other_moo">
+ 										</div>
+ 									</div>
+
+ 									<div class="row m-t-5">
+ 										<div class="col-sm-4">
+ 											<label>ถนน</label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ถนน" name="other_road" >
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>ตรอก/ซอย </label>
+ 											<input type="text" class="form-control form-control-bold" placeholder="ตรอก/ซอย" name="other_soi">
+ 										</div>
+ 										<div class="col-sm-4">
+ 											<label>จังหวัด <font class="text-danger">*</font></label>
+ 											<select class="js-example-basic-single col-sm-12 sent_address_other" id="province" name="other_province">
+ 												<option value=""> Select </option> 
+ 												@foreach($provinces as $value_provinces)
+ 												<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
+ 												@endforeach
+ 											</select>
+ 										</div>
+
+
+ 									</div>
+
+ 									<div class="form-group row m-t-5">
+ 										
+ 										<div class="col-sm-4">
+ 											<label>เขต/อำเภอ <font class="text-danger">*</font></label>
+ 											<select class="js-example-basic-single col-sm-12 sent_address_other" name="other_district" id="district">
+ 												<option value=""> Select </option>
+ 											</select>
+ 										</div>
+
+ 										<div class="col-sm-4">
+ 											<label>แขวง/ตำบล <font class="text-danger">*</font></label>
+ 											<select class="js-example-basic-single col-sm-12 sent_address_other" name="other_district_sub" id="district_sub"> 
+ 												<option value=""> Select </option>
+
+ 											</select>
+ 										</div>
+ 										<div class="col-sm-4">
+ 											<label>รหัสไปษณีย์</label>
+ 											<input type="text" class="form-control sent_address_other" placeholder="รหัสไปษณีย์" id="other_zipcode" name="other_zipcode" value="">
+ 										</div>
+
+ 									</div>
+
+ 								</div>
+
+ 								<div class="row m-t-5">
+ 									<div class="col-sm-12 text-right">
+ 										<button type="button" onclick="next()" class="btn btn-primary waves-effect waves-light m-t-20">ถัดไป</button>
+ 									</div>
+ 								</div>
+ 							</div>
+ 						</div>
+
+ 						@if($bill['type'] == 6)
+ 						<div class="tab-pane active" id="credit-card" role="tabpanel">
+ 							@else
+ 							<div class="tab-pane" id="credit-card" role="tabpanel">
+ 								@endif
+
+
+ 								@if($bill['price_total_type5'] == 0 and $bill['type'] == 5) 
+ 								<div class="row">
+ 									<div class="col-md-12 col-xl-12">
+ 										<div class="card bg-c-pink order-card m-b-0">
+ 											<div class="card-block">
+ 												<div class="row">
+ 													<div class="col-md-8 col-sx-8 col-8">
+ 														<h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+ 													</div>
+ 													<div class="col-md-4 col-sx-4 col-4">
+ 														<?php  
+ 														$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+ 														?>
+ 														<h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
+ 													</div>
+ 												</div>
+
+ 												{{-- <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p> --}}
+ 												<hr>
+
+ 												<div class="row">
+ 													<div class="col-md-8 col-sx-8 col-8">
+ 														<h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
+
+ 													</div>
+ 													<div class="col-md-4 col-sx-4 col-4">
+
+ 														<h3 class="text-right"> <span> {{ $bill['price_total'] }} </span></h3>
+ 													</div>
+ 												</div>
+
+ 												<hr>
+ 												<div class="row">
+ 													<div class="col-md-8 col-sx-8 col-8">
+ 														<h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
+
+ 													</div>
+ 													<div class="col-md-4 col-sx-4 col-4">
+
+ 														<h3 class="text-right"> <span> {{ $bill['gv_total'] }} </span></h3>
+ 													</div>
+ 												</div>
+ 											</div>
+
+ 										</div>
+
+ 										<div class="row m-t-5">
+ 											<div class="col-sm-6">
+ 											</div>
+ 											<div class="col-sm-6 text-right">
+ 												<button class="btn btn-success btn-block" type="submit" name="submit" value="gift_voucher">ชำระเงิน</button>
+ 											</div>
+ 										</div>
+
+
+
+ 									</div>
+
+ 								</div>
+
+
+
+ 								@else
+
+ 								<div class="demo-container card-block">
+
+ 									<div class="row">
+ 										<div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
+
+ 											<div class="form-radio">
+ 												<div class="radio radio-inline">
+ 													<label>
+ 														<input type="radio" id="bank" onchange="open_input(1)" name="pay_type" value="1" checked="checked">
+ 														<i class="helper"></i><b>โอนชำระ</b>
+ 													</label>
+ 												</div>
+ 												<div class="radio radio-inline">
+ 													<label>
+ 														<input type="radio" onchange="open_input(2)" id="credit_cart" name="pay_type" value="2">
+ 														<i class="helper"></i><b>บัตรเครดิต</b>
+ 													</label>
+ 												</div>
+
+ 												<div class="radio radio-inline">
+ 													<label>
+ 														<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="3">
+ 														<i class="helper"></i><b>Ai-Cash</b>
+ 													</label>
+ 												</div> 
+
 
  										{{-- <div class="radio radio-inline">
  											<label>
@@ -324,8 +498,9 @@
  										<div class="col-xs-6 p-1">
  											<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
  										</div>
+
  										<div class="col-xs-6 p-1">
- 											<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
+ 											<button class="btn btn-primary btn-block" type="submit" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
  										</div>
  										
  										
@@ -354,7 +529,6 @@
  			<div class="col-md-12">
  				<table class="table table-responsive" >
  					<tr>
-
  						<td><strong id="quantity_bill">มูลค่าสินค้า ({{ $bill['quantity'] }}) ชิ้น</strong></td>
  						<td align="right"><strong id="price"> {{ $bill['price_vat'] }} </strong></td>
  					</tr>
@@ -438,6 +612,15 @@
 
 @endsection
 @section('js')
+<!-- Select 2 js -->
+<script  src="{{asset('frontend/bower_components/select2/js/select2.full.min.js')}}"></script>
+<!-- Multiselect js -->
+<script  src="{{asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js')}}">
+</script>
+<script  src="{{asset('frontend/bower_components/multiselect/js/jquery.multi-select.js')}}"></script>
+<script  src="{{asset('frontend/assets/js/jquery.quicksearch.js')}}"></script>
+<!-- Custom js -->
+<script  src="{{asset('frontend/assets/pages/advance-elements/select2-custom.js')}}"></script>
 <script>
 
 	document.getElementById("submit_upload").disabled = true;
@@ -455,21 +638,140 @@
 
 	
 	function next(){
-		document.getElementById("address").classList.remove('active');
-		document.getElementById("nav_address").classList.remove('active');
+		var check_sent_other = document.getElementById("sent_other").checked;
+		
+		if(check_sent_other == true){
+			var other_name = $('#other_name').val();
+			var other_tel_mobile = $('#other_tel_mobile').val();
+			var other_house_no = $('#other_house_no').val();
+			var other_house_name = $('#other_house_name').val();
+			var other_moo = $('#other_moo').val();
+			var other_province = $('#other_province').val();
+			var other_district = $('#other_district').val();
+			var other_district_sub = $('#other_district_sub').val();
+			var other_zipcode = $('#other_zipcode').val();
 
-		document.getElementById("credit-card").classList.add('active');
-		document.getElementById("nav_card").classList.add('active');
-	}
-	function sent_address(){
-		document.getElementById("sent").style.display = 'block';
-		document.getElementById("receive").style.display = 'none'; 
+
+			if(other_name == ''){
+
+				Swal.fire({
+					icon: 'error',
+					title: 'Name is Null',
+				})
+
+			}else if(other_tel_mobile == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'Mobile is Null',
+				})
+
+			}else if(other_house_no == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'House No. is Null',
+				})
+
+			}else if(other_house_name == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล หมู่บ้าน/อาคาร',
+				})
+
+			}else if(other_moo == ''){
+
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล หมู่ที่',
+				})
+
+			}else if(province == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล จังหวัด',
+				})
+
+			}else if(district == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล เขต/อำเภอ *',
+				})
+
+			}else if(district_sub == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล แขวง/ตำบล',
+				})
+
+			}else if(other_zipcode == ''){
+				Swal.fire({
+					icon: 'error',
+					title: 'กรุณาใส่ข้อมูล รหัสไปษณีย์',
+				})
+
+			}else {
+				document.getElementById("address").classList.remove('active');
+				document.getElementById("nav_address").classList.remove('active');
+				document.getElementById("credit-card").classList.add('active');
+				document.getElementById("nav_card").classList.add('active');
+
+				
+			}
+		}else {
+			document.getElementById("address").classList.remove('active');
+			document.getElementById("nav_address").classList.remove('active');
+			document.getElementById("credit-card").classList.add('active');
+			document.getElementById("nav_card").classList.add('active');
+
+			
+		}
+
+
 	}
 
-	function receive_office(){
-		document.getElementById("sent").style.display = 'none';
-		document.getElementById("receive").style.display = 'block'; 
+
+	function sent_address(type_sent){
+
+		if(type_sent == 'sent_address'){
+			document.getElementById("sent_address").style.display = 'block';
+			document.getElementById("sent_address_card").style.display = 'none'; 
+			document.getElementById("sent_address_other").style.display = 'none'; 
+			document.getElementById("sent_office").style.display = 'none';
+			$('.sent_address_other').prop('required',false);  
+
+		}else if(type_sent == 'sent_address_card'){
+			document.getElementById("sent_address").style.display = 'none';
+			document.getElementById("sent_address_card").style.display = 'block'; 
+			document.getElementById("sent_address_other").style.display = 'none'; 
+			document.getElementById("sent_office").style.display = 'none';
+			$('.sent_address_other').prop('required',false);  
+
+		}else if(type_sent == 'sent_office' ){
+			document.getElementById("sent_address").style.display = 'none';
+			document.getElementById("sent_address_card").style.display = 'none'; 
+			document.getElementById("sent_address_other").style.display = 'none'; 
+			document.getElementById("sent_office").style.display = 'block'; 
+			$('.sent_address_other').prop('required',false); 
+		}else if(type_sent == 'sent_other'){
+			document.getElementById("sent_address").style.display = 'none';
+			document.getElementById("sent_address_card").style.display = 'none'; 
+			document.getElementById("sent_address_other").style.display = 'block'; 
+			document.getElementById("sent_office").style.display = 'none';
+
+			$('.sent_address_other').prop('required',true); 
+
+		}else{
+
+			Swal.fire({
+				icon: 'error',
+				title: 'เลือกที่อยู่ไม่ถูกต้อง',
+			})
+
+			alert('เลือกที่อยู่ไม่ถูกต้อง');
+		}
+
+		
 	}
+
 
 	function open_input(data){
 		var conten_1 = '<div class="form-group row">'+
@@ -570,6 +872,68 @@
 			document.getElementById("cart_pament").innerHTML=(conten_1);
 		}
 	}
+</script>
+
+<script type="text/javascript">
+	$('#province').change(function() {
+		var id_province = $(this).val();
+
+		$.ajax({
+			async : false,
+			type: "get",
+			url: "{{ route('location') }}",
+			data: {id:id_province,function:'provinces'},
+			success: function(data){
+				$('#district').html(data); 
+				$('#district_sub').val('');  
+        // $('#zipcode').val(''); 
+    }
+});
+
+	});
+
+
+	$('#district').change(function() {
+		var id_district = $(this).val();
+		$('#province').change(function() {
+			var id_province = $(this).val();
+
+			$.ajax({
+				async : false,
+				type: "get",
+				url: "{{ route('location') }}",
+				data: {id:id_province,function:'provinces'},
+				success: function(data){
+					$('#district').html(data); 
+					$('#district_sub').val('');  
+        // $('#zipcode').val(''); 
+    }
+});
+
+		});
+		$.ajax({
+			async : false,
+			type: "get",
+			url: "{{ route('location') }}",
+			data: {id:id_district,function:'district'},
+			success: function(data){
+				$('#district_sub').html(data);  
+			}
+		});
+	});
+
+	$('#district_sub').change(function() {
+		var id_district_sub = $(this).val();
+		$.ajax({
+			type: "get",
+			url: "{{ route('location') }}",
+			data: {id:id_district_sub,function:'district_sub'},
+			success: function(data){
+				$('#other_zipcode').val(data);
+			}
+		});
+
+	});
 </script>
 
 <script src="{{asset('frontend/assets/pages/payment-card/card.js')}}"></script>

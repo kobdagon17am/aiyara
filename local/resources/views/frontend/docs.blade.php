@@ -30,7 +30,7 @@
                             }elseif($value->type == 2){
                                 $type = "หน้าบัญชีธนาคาร";
                             }elseif($value->type == 3) {
-                                $type = "ลายเซ็น";
+                                $type = "เอกสารการสมัคร";
                             }else{
                                 $type = "อื่นๆ";
                             }
@@ -84,7 +84,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6"> 
-                                <label>ลายเซ็น</label>
+                                <label>เอกสารการสมัคร</label>
                                 <input type="file" id="file_3" name="file_3" class="form-control">
                             </div>
                         </div>

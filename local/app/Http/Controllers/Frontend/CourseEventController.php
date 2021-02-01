@@ -136,11 +136,11 @@ public function dt_course(Request $request){
    ->offset($start) 
    ->limit($limit)
    ->orderby('course_event_regis.updated_at','DESC') 
-   ->get(); 
+   ->get();  
  }
 
  $data = array();
- $i=0;
+ $i= $start;
  foreach($course_event_regis as $value){
 
   $i++;

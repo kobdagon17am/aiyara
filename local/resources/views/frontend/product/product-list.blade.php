@@ -135,8 +135,11 @@
                                 <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv) }} PV</span></h3>
                               </div>
                             </div>
+                            <?php
+                            $customer_data = \App\Helpers\Frontend::get_customer(Auth::guard('c_user')->user()->id);
 
-                            <p class="m-b-0" style="font-size: 16px"><b class="f-right"><i class="fa fa-star p-2 m-b-0"></i>  BRONZE STAR AWARD ( BSA )</b></p>
+                             ?>
+                            <p class="m-b-0" style="font-size: 16px"><b class="f-right"><i class="fa fa-star p-2 m-b-0"></i> {{ $customer_data->qualification_name }}</b></p>
                           </div>
                         </div>
                         @elseif($type==2)

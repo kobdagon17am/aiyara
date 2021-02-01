@@ -6229,14 +6229,13 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .bg-default {
-    background-color: #d6d6d6 !important;
+    background-color: #696969 !important;
     color: #fff
 }
 
 .bg-danger {
     background-color: #FF5370 !important;
     color: #fff;
-    border-radius: 11px;
 }
 
 .bg-success {

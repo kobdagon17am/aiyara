@@ -110,7 +110,7 @@ class AiCashController extends Controller
     }
 
 
-    $i = 0;
+    $i= $start;
     $data = array();
 
     foreach ($ai_cash as $value){

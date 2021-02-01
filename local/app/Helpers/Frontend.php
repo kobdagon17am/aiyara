@@ -13,6 +13,27 @@ class Frontend{
 
 	}
 
+	public static function get_customer($id){
+		$customer =  DB::table('customers')
+		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name') 
+		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id') 
+		->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+		->where('customers.id','=',$id)
+		->first(); 
+		return $customer;
+	}
+
+	// public static function get_customer_all_detail($id){
+	// 	$customer = DB::table('customers_detail')
+	// 	->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
+	// 	->where('customer_id','=',$id)
+	// 	->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province') 
+	// 	->leftjoin('dataset_amphures','dataset_amphures.province_id','=','dataset_provinces.id') 
+	// 	->leftjoin('dataset_districts','dataset_districts.amphure_id','=','dataset_amphures.id') 
+	// 	->first(); 
+	// 	return $customer;
+	// }
+
 	public static function get_ce_register($ce_id){
 
 		$orders = DB::table('order_items')
@@ -41,7 +62,7 @@ class Frontend{
 		->whereDate('order_items.create_at','=',$date_now)
 		->where('status','=','order')
 		->count();
-		 
+
 		$course_event_regis = DB::table('course_event_regis') 
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)
@@ -61,7 +82,7 @@ class Frontend{
 		->where('orders.customer_id','=',$customer_id)
 		->where('status','=','order')
 		->count();
-		 
+
 		$course_event_regis = DB::table('course_event_regis') 
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)
@@ -83,8 +104,13 @@ class Frontend{
 
 		}else{
 			if(empty($data->pv_mt_active) || (strtotime($data->pv_mt_active) < strtotime(date('Ymd')))){
+
+				if(empty($data->pv_mt_active)){
+					$date_mt_active= 'Not Active';
+				}else{
+					$date_mt_active= date('d/m/Y',strtotime($data->pv_mt_active));
+				}
 				
-				$date_mt_active= date('d/m/Y',strtotime($data->pv_mt_active));
 				$resule = ['status'=>'success','type'=>'N','message'=>'Not Active','date'=>$date_mt_active];
 
 				return $resule;
@@ -123,6 +149,60 @@ class Frontend{
 			}
 
 		}
+
+	}
+
+	public static function check_customer_directsponsor($customer_id){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C 
+
+		$a =  DB::table('customers')
+		->where('customers.introduce_id','=',$customer_id) 
+		->where('introduce_type','=','A')
+		->whereDate('pv_mt_active','>=',now())
+		->where('package_id','!=','')
+		->where('package_id','!=',null)
+		->count();
+
+		$b =  DB::table('customers')
+		->where('customers.introduce_id','=',$customer_id) 
+		->where('introduce_type','=','B')
+		->whereDate('pv_mt_active','>=',now())
+		->where('package_id','!=','')
+		->where('package_id','!=',null)
+		->count(); 
+
+		$c =  DB::table('customers')
+		->where('customers.introduce_id','=',$customer_id) 
+		->where('introduce_type','=','C')
+		->whereDate('pv_mt_active','>=',now())
+		->where('package_id','!=','')
+		->where('package_id','!=',null)
+		->count();
+
+		if($a>=5 and $b>=5 ){
+			$reward_bonus =	'Five Star';
+		}elseif($a>=5 and $c>=5 ){
+			$reward_bonus =	'Five Star';
+		}elseif($b>=5 and $c>=5 ){
+			$reward_bonus =	'Five Star';
+		}if($a>=3 and $b>=3 ){
+			$reward_bonus =	'Triple Star';
+		}elseif($a>=3 and $c>=3 ){
+			$reward_bonus =	'Triple Star';
+		}elseif($b>=3 and $c>=3 ){
+			$reward_bonus =	'Triple Star';
+		}if($a>=1 and $b>=1 ){
+			$reward_bonus =	'Star';
+		}elseif($a>=1 and $c>=1 ){
+			$reward_bonus =	'Star';
+		}elseif($b>=1 and $c>=1 ){
+			$reward_bonus =	'Star';
+		}else{
+			$reward_bonus = ' - ';
+		}
+
+		//dd($c);
+		$data = ['A'=>$a,'B'=>$b,'C'=>$c,'reward_bonus'=>$reward_bonus];
+		return $data;  
 
 	} 
 

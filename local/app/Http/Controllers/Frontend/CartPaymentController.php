@@ -101,18 +101,41 @@ class CartPaymentController extends Controller
 
 
 		$customer = DB::table('customers')
-		->leftjoin('customers_detail','customers.id','=','customers_detail.customer_id')
+		->where('id','=',Auth::guard('c_user')->user()->id)
+		->first();
+
+		$address = DB::table('customers_detail')
+		 ->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
+		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province') 
+		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.district') 
+		->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_sub')
 		->where('customer_id','=',Auth::guard('c_user')->user()->id)
 		->first();
-		//dd($customer);
 
-		return view('frontend/product/cart_payment',compact('customer','location','bill'));
+		 
+
+		$address_card = DB::table('customers_address_card')
+		 ->select('customers_address_card.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as card_provinces_name','dataset_amphures.name_th as card_amphures_name','dataset_amphures.id as card_amphures_id','dataset_districts.id as card_district_id','dataset_districts.name_th as card_district_name')
+		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_address_card.card_province') 
+		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_address_card.card_district') 
+		->leftjoin('dataset_districts','dataset_districts.id','=','customers_address_card.card_district_sub')
+		->where('customer_id','=',Auth::guard('c_user')->user()->id)
+		->first();
+
+		 
+
+		$provinces = DB::table('dataset_provinces')
+       ->select('*')
+       ->get();
+
+	
+		return view('frontend/product/cart_payment',compact('customer','address','address_card','location','provinces','bill'));
 
 	}
 	
 	public function payment_submit(Request $request){
-
-
+		 
+		 
 		if($request->submit == 'upload'){
 			if($request->type == '6'){
 				$resule = PaymentCourse::payment_uploadfile($request);

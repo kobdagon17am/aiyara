@@ -51,7 +51,7 @@
  				<div class="col-sm-3">
  					<label>จังหวัด <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
- 						<option value="" >{{ $customer->province }}</option> 
+ 						<option value="{{ $customer->provinces_id }}" >{{ $customer->provinces_name }}</option> 
  						@foreach($provinces as $value_provinces)
  						<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
  						@endforeach
@@ -60,7 +60,7 @@
  				<div class="col-sm-3">
  					<label>เขต/อำเภอ <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
- 						<option value="">{{ $customer->district }}</option>
+ 						<option value="{{ $customer->amphures_id }}">{{ $customer->amphures_name }}</option>
  					</select>
  					{{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
  				</div>
@@ -68,7 +68,7 @@
  				<div class="col-sm-3">
  					<label>แขวง/ตำบล <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required=""> 
- 						<option value="">{{ $customer->district_sub }}</option>
+ 						<option value="{{ $customer->district_name }}">{{ $customer->district_name }}</option>
  						{{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
  					</select>
  				</div>
@@ -83,10 +83,6 @@
  					<label>รหัสไปษณีย์</label>
  					<input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ $customer->zipcode }}">
  				</div>
-
-
-
-
  			</div>
 
  			
@@ -150,7 +146,7 @@
 <script type="text/javascript">
   $('#province').change(function() {
     var id_province = $(this).val();
-    var ckeck_address = document.getElementById("copy_card_address");
+     
     $.ajax({
      async : false,
      type: "get",
@@ -167,7 +163,7 @@
 
   $('#district').change(function() {
     var id_district = $(this).val();
-    var ckeck_address = document.getElementById("copy_card_address");
+    
     $.ajax({
       async : false,
       type: "get",

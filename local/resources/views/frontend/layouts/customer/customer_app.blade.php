@@ -275,8 +275,8 @@
 			</a>
 		</li> --}}
 
-		<li class="{{ (request()->is('allmember')) ? 'active' : '' }}">
-			<a href="{{route('allmember')}}">
+		<li class="{{ (request()->is('direct-sponsor')) ? 'active' : '' }}">
+			<a href="{{route('direct-sponsor')}}">
 				<span class="pcoded-micon"><i class="fa fa-group text-success"></i><b>Direct Sponsor</b></span>
 				<span class="pcoded-mtext">Direct Sponsor</span>
 				<span class="pcoded-mcaret"></span>

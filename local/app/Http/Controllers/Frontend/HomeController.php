@@ -40,10 +40,12 @@ class HomeController extends Controller
   public function modal_tree(Request $request){
     $id = $request->id;
 
-    $data = DB::table('Customers')
-    ->select('*')
-    ->where('id','=',$id)
-    ->limit(1)
+    $data = DB::table('customers')
+    ->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','q_max.code_name as max_code_name','q_max.business_qualifications as max_q_name') 
+    ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id') 
+    ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+    ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=','customers.qualification_max_id')
+    ->where('customers.id','=',$id)
     ->first();
     return view('frontend/modal/modal_tree',['data'=>$data]);
   }

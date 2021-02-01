@@ -161,7 +161,7 @@ public function dt_history(Request $request){
  }
 
  $data = array();
- $i=0;
+ $i= $start;
  foreach ($orders as $value){
   $i++;
   $nestedData['id'] = $i;
@@ -192,7 +192,7 @@ $nestedData['pv_total'] = '<b class="text-success">'.number_format($value->pv_to
 $nestedData['date'] = '<span class="label label-inverse-info-border">'.date('d/m/Y H:i:s',strtotime($value->created_at)).'</span>';
 $nestedData['type'] = $value->type;
 
-if(!empty($value->type_address)){
+if( $value->type_address == 'sent_office' and $value->order_type == 4){
   $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$value->detail.'</b></button>'; 
 }else{
   $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" > <b style="color: #000">'.$value->detail.'</b></button>';

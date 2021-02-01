@@ -91,7 +91,7 @@ class GiftVoucherController extends Controller
     }
 
     $data = array();
-    $i=0;
+    $i= $start;
     foreach ($gift_voucher as $value){
         $i++;
         $nestedData['id'] = $i;

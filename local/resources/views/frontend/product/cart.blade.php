@@ -22,7 +22,7 @@
 
                     <div class="col-md-8 col-sx-8">
                         @if($type == 1)
-                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัตร</h4>
+                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h4>
                         @elseif($type == 2)
                         <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติรายเดือน</h4>
                         @elseif($type == 3)
@@ -32,6 +32,7 @@
                         @elseif($type == 5)
                         <h4>Gift Voucher</h4>
                         @elseif($type == 6)
+                        <h4>Course</h4>
                         @else
                         <h4 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h4>
                         @endif
@@ -60,7 +61,12 @@
                                 </thead> 
                                 <tbody>
                                     @foreach($bill['data'] as $value)
-                                    <?php $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']); 
+                                    <?php 
+
+                                    if($type == 6){
+                                        $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
+                                    } 
+                                     
                                     ?>
 
                                     <tr id="items">
@@ -68,9 +74,11 @@
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                            @if($check['status'] == 'fail')
-                                             <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
-                                             @endif
+                                            @if($type == 6){
+                                                @if($check['status'] == 'fail')
+                                                 <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
+                                                 @endif
+                                            @endif
 
                                         </td>
                                         <td>

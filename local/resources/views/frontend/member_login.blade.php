@@ -69,7 +69,7 @@
 									<span class="md-line"></span>
 								</div>
 								<div class="input-group">
-									<input type="password" class="form-control" placeholder="Password" name="password" value="0001" required="">
+									<input type="password" class="form-control" placeholder="Password" name="password" value="123456" required="">
 									<span class="md-line"></span>
 								</div>
 								<div class="row m-t-25 text-left">
