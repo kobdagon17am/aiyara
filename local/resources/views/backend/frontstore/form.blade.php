@@ -597,7 +597,7 @@
                                       customers_address_card.card_road,
                                       customers_address_card.card_province,
                                       customers_address_card.created_at,
-                                      customers_address_card.update_at,
+                                      customers_address_card.updated_at,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,
                                       dataset_districts.name_th AS tamname,

@@ -331,7 +331,7 @@ Amount </td>
       order_items.pv,
       order_items.discount,
       order_items.create_at,
-      order_items.update_at,
+      order_items.updated_at,
       orders.shipping,
       db_delivery_packing.id as packing_id,
       orders.code_order as receipt

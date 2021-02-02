@@ -315,7 +315,7 @@ Amount </td>
         order_items.pv,
         order_items.discount,
         order_items.create_at,
-        order_items.update_at,
+        order_items.updated_at,
         orders.shipping
         FROM order_items 
         Left Join orders ON order_items.order_id = orders.id
