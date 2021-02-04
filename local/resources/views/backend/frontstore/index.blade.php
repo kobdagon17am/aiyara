@@ -388,7 +388,6 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
             {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
-            // {data: 'updated_at', title :'<center>วันแก้ไข </center>', className: 'text-center'},
             {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
                 return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},

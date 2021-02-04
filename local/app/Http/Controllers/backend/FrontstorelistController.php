@@ -232,7 +232,7 @@ class FrontstorelistController extends Controller
 
        if(isset($request->add_delivery_custom)){
 
-            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_code, amphur_code, tambon_code, zip_code, tel, created_at) 
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
               VALUES 
               ('".$request->frontstore_id."',
                '".$request->customers_id_fk."',
@@ -258,16 +258,40 @@ class FrontstorelistController extends Controller
 
        if(isset($request->update_delivery_custom)){
 
-            DB::insert(" UPDATE customers_addr_frontstore 
-              SET recipient_name = '".$request->delivery_cusname."', 
-              addr_no = '".$request->delivery_addr."', 
-              province_code  = '".$request->delivery_province."', 
-              amphur_code = '".$request->delivery_amphur."',  
-              tambon_code = '".$request->delivery_tambon."', 
-              zip_code = '".$request->delivery_zipcode."', 
-              tel = '".$request->delivery_tel."', 
-              updated_at = now() where id=".$request->customers_addr_frontstore_id."
-            ");       
+       	    $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$request->customers_addr_frontstore_id." ");
+       	    // dd(count($ch));
+
+       	    if(count($ch)==0){
+
+       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
+		              VALUES 
+		              ('".$request->customers_addr_frontstore_id."',
+		               '".$request->customers_id_fk."',
+		               '".$request->delivery_cusname."',
+		                '".$request->delivery_addr."',
+		                 '".$request->delivery_province."',
+		                 '".$request->delivery_amphur."',
+		                 '".$request->delivery_tambon."',
+		                 '".$request->delivery_zipcode."',
+		                 '".$request->delivery_tel."',
+		                 now() 
+		              )
+		            ");
+
+       	    }else{
+
+       	    	 DB::insert(" UPDATE customers_addr_frontstore 
+	              SET recipient_name = '".$request->delivery_cusname."', 
+	              addr_no = '".$request->delivery_addr."', 
+	              province_id_fk  = '".$request->delivery_province."', 
+	              amphur_code = '".$request->delivery_amphur."',  
+	              tambon_code = '".$request->delivery_tambon."', 
+	              zip_code = '".$request->delivery_zipcode."', 
+	              tel = '".$request->delivery_tel."', 
+	              updated_at = now() where frontstore_id_fk=".$request->customers_addr_frontstore_id."
+	            ");    
+
+            }   
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
@@ -280,7 +304,7 @@ class FrontstorelistController extends Controller
                 $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                       dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
                       from customers_addr_frontstore
-                      Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                      Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                       where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
@@ -356,7 +380,7 @@ class FrontstorelistController extends Controller
                         $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                               dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
                               from customers_addr_frontstore
-                              Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                              Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                               Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                               Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                               where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
@@ -597,8 +621,8 @@ class FrontstorelistController extends Controller
       })
       ->addColumn('purchase_type', function($row) {
           $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
-          $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$Frontstore->purchase_type_id_fk." ");
-          return $purchase_type[0]->txt_desc;
+          $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
+          return $purchase_type[0]->orders_type;
       }) 
       ->addColumn('pv', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){

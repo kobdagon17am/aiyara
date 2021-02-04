@@ -19,7 +19,7 @@ class GiveawayController extends Controller
 
  public function create()
     {
-      $sPurchase_type = DB::select(" select * from dataset_purchase_type where status=1 ");
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       $sGiveaway_type = DB::select(" select * from dataset_giveaway_type where status=1 ");
       $sGiveaway_time = DB::select(" select * from dataset_giveaway_time where status=1 ");
       $sGiveaway_obtion = DB::select(" select * from dataset_giveaway_obtion where status=1 ");
@@ -44,7 +44,7 @@ class GiveawayController extends Controller
     {
       
       $sRow = \App\Models\Backend\Giveaway::find($id);
-      $sPurchase_type = DB::select(" select * from dataset_purchase_type where status=1 ");
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       $sGiveaway_type = DB::select(" select * from dataset_giveaway_type where status=1 ");
       $sGiveaway_time = DB::select(" select * from dataset_giveaway_time where status=1 ");
       $sGiveaway_obtion = DB::select(" select * from dataset_giveaway_obtion where status=1 ");

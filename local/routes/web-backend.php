@@ -233,6 +233,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
     Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
     Route::post('ajaxGetZipcode', 'AjaxController@ajaxGetZipcode');
+    
+    Route::post('ajaxGetPayType', 'AjaxController@ajaxGetPayType');
 
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
@@ -249,11 +251,16 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetPromotionName', 'AjaxController@ajaxGetPromotionName');
     Route::post('ajaxCheckCouponUsed', 'AjaxController@ajaxCheckCouponUsed');
     Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
-    Route::post('ajaxFeeCal', 'AjaxController@ajaxFeeCal');
+    Route::post('ajaxFeeCalculate', 'AjaxController@ajaxFeeCalculate');
+    Route::post('ajaxShippingCalculate', 'AjaxController@ajaxShippingCalculate');
 
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+
+    Route::resource('pick_warehouse', 'Pick_warehouseController');
+    Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
+
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -290,6 +297,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('delivery_packing_code', 'DeliveryPackingCodeController');
     Route::post('delivery_packing_code/datatable', 'DeliveryPackingCodeController@Datatable')->name('delivery_packing_code.datatable');
+
+    Route::resource('pick_warehouse_packing_code', 'Pick_warehousePackingCodeController');
+    Route::post('pick_warehouse_packing_code/datatable', 'Pick_warehousePackingCodeController@Datatable')->name('pick_warehouse_packing_code.datatable');
+
 
     Route::resource('delivery_approve', 'Delivery_approveController');
     Route::post('delivery_approve/datatable', 'Delivery_approveController@Datatable')->name('delivery_approve.datatable');

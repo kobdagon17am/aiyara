@@ -312,7 +312,6 @@ class DeliveryController extends Controller
             $sRow = new \App\Models\Backend\Delivery;
           }
 
-          $sRow->delivery_slip    = request('delivery_slip');
           $sRow->receipt    = request('receipt');
           $sRow->customer_id    = request('customer_id');
           $sRow->tel    = request('tel');

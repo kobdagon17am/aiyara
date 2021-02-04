@@ -49,7 +49,7 @@ class AjaxController extends Controller
                 *
                 FROM
                 customers_addr_sent
-                WHERE receipt_no=".$request->v."
+                WHERE id=".$request->v."
 
            ");
 
@@ -533,7 +533,18 @@ class AjaxController extends Controller
     }
 
 
-   public function ajaxFeeCal(Request $request)
+   public function ajaxShippingCalculate(Request $request)
+    {
+// branch_id_fk: "2"
+// delivery_location: "3"
+// sentto_branch_id: "2"
+        return  $request;
+        dd();
+   
+    }
+
+
+   public function ajaxFeeCalculate(Request $request)
     {
         // echo $request->product_id_fk;
         // return $request;
@@ -814,6 +825,34 @@ class AjaxController extends Controller
         DB::select(" ALTER table db_promotion_cus AUTO_INCREMENT=1; ");
     }
 
+
+    public function ajaxGetPayType(Request $request)
+    {
+        if($request->ajax()){
+       /* dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+        */
+        /* dataset_pay_type
+        1   โอนชำระ
+        2   บัตรเครดิต
+        3   Ai-Cash
+        4   Gift Voucher
+        5   เงินสด
+        */
+            if($request->order_type==5){
+                $query = DB::select(" select * from dataset_pay_type where id=4 and status=1  ");
+            }else{
+                $query = DB::select(" select * from dataset_pay_type where id in(1,2,3,4) and status=1  ");
+            }
+
+          return response()->json($query);      
+
+        }
+    } 
 
 
 }

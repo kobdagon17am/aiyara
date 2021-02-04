@@ -157,8 +157,8 @@ $(function() {
             },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'province_code', title :'<center>รหัสจังหวัด </center>', className: 'text-center'},
-            {data: 'province_name_th', title :'<center>ชื่อจังหวัด </center>', className: 'text-center'},
+            // {data: 'province_code', title :'<center>รหัสจังหวัด </center>', className: 'text-center'},
+            {data: 'province_name', title :'<center>ชื่อจังหวัด </center>', className: 'text-center'},
             // {data: 'province_name_en', title :'<center>ค่าขนส่ง (บาท) </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],

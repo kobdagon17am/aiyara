@@ -42,9 +42,11 @@ class FrontstoreController extends Controller
       WHERE lang_id=1");
 
       $Customer = DB::select(" select * from customers ");
-      $sPurchase_type = DB::select(" select * from dataset_purchase_type where status=1 ");
-      $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,4) and status=1 ");
-      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(3,5) and status=1 ");
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
+
+      $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,3,4) and status=1 ");
+      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(1,3,5) and status=1 ORDER BY detail ");
+
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
@@ -86,7 +88,13 @@ class FrontstoreController extends Controller
     {
       // dd($id);
       $sRow = \App\Models\Backend\Frontstore::find($id);
-      // dd($sRow);
+      // dd($sRow->customers_id_fk);
+      $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
+      $CusName = ($sCustomer[0]->user_name." : ".$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".$sCustomer[0]->last_name);
+
+      $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
+      $BranchName = $sBranchs[0]->b_name;
+
       $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
       $sUser = \App\Models\Backend\Permission\Admin::get();
 
@@ -101,9 +109,28 @@ class FrontstoreController extends Controller
       WHERE lang_id=1");
 
       $Customer = DB::select(" select * from customers ");
-      $sPurchase_type = DB::select(" select * from dataset_purchase_type where status=1 ");
-      $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,4) and status=1 ");
-      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(3,5) and status=1 ");
+        /* dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+        */
+      if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
+        $sPurchase_type = DB::select(" select * from dataset_orders_type where id<>5 and status=1 and lang_id=1 order by id limit 4");
+        $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,3,4) and status=1 ");
+      }else{
+        $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
+        $sPay_type01 = DB::select(" select * from dataset_pay_type where id=4 and status=1 ");
+      }
+		/* dataset_pay_type
+		1	โอนชำระ
+		2	บัตรเครดิต
+		3	Ai-Cash
+		4	Gift Voucher
+		5	เงินสด
+		*/
+      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(1,3,5) and status=1 ORDER BY detail ");
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
@@ -144,6 +171,8 @@ class FrontstoreController extends Controller
            'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
            'aistockist'=>$aistockist,
            'agency'=>$agency,           
+           'CusName'=>$CusName,           
+           'BranchName'=>$BranchName,           
         ) );
     }
 
@@ -236,8 +265,8 @@ class FrontstoreController extends Controller
         return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
       })
       ->addColumn('purchase_type', function($row) {
-          $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$row->purchase_type_id_fk." ");
-          return $purchase_type[0]->txt_desc;
+          $purchase_type = DB::select(" select * from dataset_orders_type where id=".$row->purchase_type_id_fk." ");
+          return $purchase_type[0]->orders_type;
       }) 
       ->addColumn('total_price', function($row) {
           $total_price = DB::select(" select sum(total_price) as tt from db_frontstore_products_list where frontstore_id_fk=".$row->id." ");

@@ -37,14 +37,14 @@
                 {{ csrf_field() }}
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Product Code :</label>
+                    <label for="" class="col-md-2 col-form-label">Product Code :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->product_code }}" name="product_code" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Category :</label>
+                    <label for="" class="col-md-2 col-form-label">Category :</label>
                     <div class="col-md-10">
                          <select name="category_id" class="form-control select2-templating "  required >
                          <option value="">Select</option>
@@ -59,7 +59,7 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Orders Type :</label>
+                    <label for="" class="col-md-2 col-form-label">Orders Type :</label>
                     <div class="col-md-10">
                        @php
                         $v_orders_type_id = explode(",",@$sRow->orders_type_id);
@@ -87,28 +87,28 @@
                 @if( !empty($sRow) )
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาทุน :</label>
+                    <label for="" class="col-md-2 col-form-label">ราคาทุน :</label>
                     <div class="col-md-2">
                         <input class="form-control" type="text" value="{{@$dsProducts_cost->cost_price?@$dsProducts_cost->cost_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาขาย :</label>
+                    <label for="" class="col-md-2 col-form-label">ราคาขาย :</label>
                     <div class="col-md-2">
                         <input class="form-control" type="text" value="{{@$dsProducts_cost->selling_price?@$dsProducts_cost->selling_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ราคาสมาชิก :</label>
+                    <label for="" class="col-md-2 col-form-label">ราคาสมาชิก :</label>
                     <div class="col-md-2">
                         <input class="form-control" type="text" value="{{@$dsProducts_cost->member_price?@$dsProducts_cost->member_price:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">PV :</label>
+                    <label for="" class="col-md-2 col-form-label">PV :</label>
                     <div class="col-md-2">
                         <input class="form-control" type="text" value="{{@$dsProducts_cost->pv?@$dsProducts_cost->pv:'-ยังไม่กำหนด-'}}" readonly style="border: 0px solid white;background-color: #f2f2f2;color:black;" >
                     </div>

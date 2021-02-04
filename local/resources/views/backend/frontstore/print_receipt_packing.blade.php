@@ -492,7 +492,7 @@ $value = DB::select("
                                 @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                                       dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
                                       from customers_addr_frontstore
-                                      Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                                      Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");

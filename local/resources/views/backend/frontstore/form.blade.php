@@ -149,24 +149,19 @@
                                 <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label">สาขาที่ตั้งธุรกิจ : * </label>
                                   <div class="col-md-6">
-                                      <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required="" >
-                                       
 
-                                         @if(@$sBranchs)
+                                       @if(!empty(@$sRow->branch_id_fk))
 
-                                           @if(!empty(@$sRow->branch_id_fk))
+	                                       <input type="hidden" name="branch_id_fk" value="{{$sRow->branch_id_fk}}"  >
+	                                       <input type="text" class="form-control" value="{{@$BranchName}}"  disabled="" >
 
-                                           <option value="{{@$sBranchs[0]->id}}" {{ (@$sBranchs[0]->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                              {{@$sBranchs[0]->b_name}}
-                                            </option>
+                                       @else
 
-                                           @else
-
+	                                       @if(@$sBranchs)
+	                                       <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
                                              <option value="">Select</option>
-
                                               @foreach(@$sBranchs AS $r)
-                                              
-                                              @if(@$r->id==$User_branch_id)
+                                               @if(@$r->id==$User_branch_id)
                                               <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
                                                 {{$r->b_name}}
                                               </option>
@@ -175,10 +170,8 @@
                                                 {{$r->b_name}}
                                               </option>
                                               @endif
-
                                               @endforeach
-
-                                          @endif
+                                            @endif
 
                                         @endif
 
@@ -191,33 +184,26 @@
                                 <div class="form-group row">
                                   <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า : * </label>
                                   <div class="col-md-7">
-                                    <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
-                                      
-                                      @if(@$Customer)
 
                                        @if(!empty(@$sRow->customers_id_fk))
 
-                                           <option value="{{@$Customer[0]->id}}" 
-                                            {{ (@$Customer[0]->id==@$sRow->customers_id_fk)?'selected':'' }} >
-                                              {{@$Customer[0]->user_name}} : {{@$Customer[0]->prefix_name}}{{@$Customer[0]->first_name}}
-                                              {{@$Customer[0]->last_name}}
-                                            </option>
+	                                       <input type="hidden" name="customers_id_fk" value="{{$sRow->customers_id_fk}}"  >
+	                                       <input type="text" class="form-control" value="{{@$CusName}}"  disabled="" >
 
-                                           @else
+                                       @else
 
-                                           <option value="">Select</option>
-
+	                                       @if(@$Customer)
+	                                       <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
+                                             <option value="">Select</option>
                                               @foreach(@$Customer AS $r)
                                               <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customers_id_fk)?'selected':'' }} >
                                                 {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}}
                                                 {{$r->last_name}}
                                               </option>
                                               @endforeach
-                                              
                                             @endif
 
-                                         @endif
-
+                                        @endif
 
                                     </select>
                                   </div>
@@ -235,7 +221,7 @@
                                       <option value="">Select</option>
                                           @if(@$sDistribution_channel)
                                             @foreach(@$sDistribution_channel AS $r)
-                                              @if(empty(@$sRow->purchase_type_id_fk))
+                                              @if(empty(@$sRow->distribution_channel_id_fk))
                                                     <option value="{{$r->id}}" {{ (@$r->id==1)?'selected':'' }} >
                                                       {{$r->txt_desc}} 
                                                     </option>
@@ -260,7 +246,7 @@
                                         @if(@$sPurchase_type)
                                           @foreach(@$sPurchase_type AS $r)
                                             <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                                              {{$r->txt_desc}} 
+                                              {{$r->orders_type}} 
                                             </option>
                                           @endforeach
                                         @endif
@@ -276,12 +262,8 @@
                                   <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
                                   <div class="col-md-6">
 
-                                    @if( empty(@$sRow) )
-                                        <input class="form-control" type="text" value="*กดปุ่มบันทึกข้อมูลก่อน" readonly="">
-                                    @else
-
                                         <select id="aistockist" name="aistockist" class="form-control select2-templating "  >
-                                        <option value="">Select</option>
+                                        <option value="">-</option>
                                         @if(@$aistockist)
                                           @foreach(@$aistockist AS $r)
                                             <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
@@ -290,9 +272,6 @@
                                           @endforeach
                                         @endif
                                       </select>   
-
-                                   @endif
-
 
                                   </div>
                                 </div>
@@ -316,11 +295,8 @@
                                   <label for="customers_id_fk" class="col-md-4 col-form-label"> Agency : </label>
                                   <div class="col-md-6" >
 
-                                    @if( empty(@$sRow) )
-                                        <input class="form-control" type="text" value="*กดปุ่มบันทึกข้อมูลก่อน" readonly="">
-                                    @else
                                         <select id="agency" name="agency" class="form-control select2-templating "   >
-                                        <option value="">Select</option>
+                                        <option value="">-</option>
                                         @if(@$agency)
                                           @foreach(@$agency AS $r)
                                             <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
@@ -329,8 +305,6 @@
                                           @endforeach
                                         @endif
                                       </select> 
-
-                                      @endif 
 
                                   </div>
                                 </div>
@@ -440,17 +414,39 @@
                   </div>
                 </div>
 
+<!--         dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+
+		dataset_pay_type
+		1	โอนชำระ
+		2	บัตรเครดิต
+		3	Ai-Cash
+		4	Gift Voucher
+		5	เงินสด -->
 
                 <div class="form-group row">
+
                             <label for="pay_type_id_fk" class="col-md-6 col-form-label"> รูปแบบการชำระอื่นๆ : * </label>
                             <div class="col-md-5">
                               <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                     @if(@$sPay_type01)
                                       @foreach(@$sPay_type01 AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-                                          {{$r->detail}} 
-                                        </option>
+                                      	
+                                      	@if(@$sRow->purchase_type_id_fk==5)
+	                                        <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }}  >
+	                                          {{$r->detail}} 
+	                                        </option>
+                                       	@else
+                                       		<option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
+	                                          {{$r->detail}} 
+	                                        </option>
+                                      	@endif
+
                                       @endforeach
                                     @endif                                
                               </select>
@@ -478,7 +474,7 @@
                           </div>
 
                           <div class="form-group row ">
-                            <label for="pay_type_id_fk_2" class="col-md-6 col-form-label"> รูปแบบการชำระประเภทเงินสด: </label>
+                            <label for="pay_type_id_fk_2" class="col-md-6 col-form-label"> รูปแบบการชำระประเภทเงินสดหรือเงินโอน : </label>
                             <div class="col-md-5">
                               <select id="pay_type_id_fk_2" name="pay_type_id_fk_2" class="form-control select2-templating " >
                                 <option value="0">Select</option>
@@ -556,10 +552,9 @@
 
                       <tr>
                         <th scope="row" class="d-flex">
-                          <input type="radio" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                          <input type="radio" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
                             <div class="col-md-6">
-                             <select id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating "  >
-                              <option value="">-</option>
+                             <select id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$r->id==@$sRow->branch_id_fk)
@@ -629,7 +624,7 @@
 
                       <tr>
                         <th scope="row">
-                          <input type="radio" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -681,7 +676,8 @@
 
                       <tr>
                         <th scope="row">
-                          <input type="radio" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
+                          <input type="radio" province_id="<?=@$addr[0]->province?>"
+                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -690,7 +686,7 @@
                          @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                                 dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
                                 from customers_addr_frontstore
-                                Left Join dataset_provinces ON customers_addr_frontstore.province_code = dataset_provinces.id
+                                Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                                 Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                                 Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                 where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
@@ -713,7 +709,7 @@
 
                       <tr>
                         <th scope="row">
-                          <input type="radio" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -1066,7 +1062,7 @@
 
         <form  id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
           <input name="update_delivery_custom" type="hidden" value="1">
-          <input name="customers_addr_frontstore_id" type="hidden" value="{{@$CusAddrFrontstore[0]->id}}">
+          <input name="customers_addr_frontstore_id" type="hidden" value="{{@$sRow->id}}">
           <input name="invoice_code" type="hidden" value="{{@$sRow->invoice_code}}">
 
      @endif
@@ -1101,7 +1097,7 @@
                        <option value="">Select</option>
                        @if(@$sProvince)
                         @foreach(@$sProvince AS $r)
-                        <option value="{{$r->id}}" {{ (@$r->id==@$CusAddrFrontstore[0]->province_code)?'selected':'' }} >
+                        <option value="{{$r->id}}" {{ (@$r->id==@$CusAddrFrontstore[0]->province_id_fk)?'selected':'' }} >
                           {{$r->province_name}}
                         </option>
                         @endforeach
@@ -1575,7 +1571,8 @@
           $.fn.dataTable.ext.errMode = 'throw';
 
           var frontstore_id_fk = "{{@$sRow->id}}"; 
-          // alert(frontstore_id_fk);
+          var order_type = $("#purchase_type_id_fk").val(); 
+          // alert(order_type);
 
             $("#spinner_frame").show();
 
@@ -1597,6 +1594,7 @@
                       url: '{{ route('backend.productsList.datatable') }}',
                       data :{
                               frontstore_id_fk:frontstore_id_fk,
+                              order_type:order_type,
                             },
                           method: 'POST',
                         },
@@ -1713,6 +1711,22 @@
             $('#fee').attr('required', true);
         }
 
+        /*
+          1 ทำคุณสมบัติ
+          2 รักษาคุณสมบัติรายเดือน
+          3 รักษาคุณสมบัติท่องเที่ยว
+          4 เติม Ai-Stockist
+          5 แลก Gift Voucher
+        */
+            var order_type = $("#purchase_type_id_fk").val();
+            // alert(order_type);
+            if(order_type==5){
+              $(".btnAddFromPromotion").addClass('disabled');
+            }else{
+              $(".btnAddFromPromotion").removeClass('disabled');
+            }
+
+
 
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
           event.preventDefault();
@@ -1784,6 +1798,76 @@
             event.preventDefault();
             var id = $(this).val();
             localStorage.setItem('purchase_type_id_fk', id);
+
+               /*
+                  1 ทำคุณสมบัติ
+                  2 รักษาคุณสมบัติรายเดือน
+                  3 รักษาคุณสมบัติท่องเที่ยว
+                  4 เติม Ai-Stockist
+                  5 แลก Gift Voucher
+                */
+                var order_type = this.value;
+                if(order_type==5){
+                  $(".btnAddFromPromotion").addClass('disabled');
+                }else{
+                  $(".btnAddFromPromotion").removeClass('disabled');
+                }
+
+
+		    if(order_type){
+
+		    	$.ajax({
+	                url: " {{ url('backend/ajaxGetPayType') }} ", 
+	                method: "post",
+	                data: {
+	                  order_type:order_type,
+	                  "_token": "{{ csrf_token() }}", 
+	                },
+	                success:function(data)
+	                { 
+	                 if(data == ''){
+	                     alert('ไม่พบข้อมูล !!.');
+	                 }else{
+
+             	       /* dataset_orders_type
+				        1 ทำคุณสมบัติ
+				        2 รักษาคุณสมบัติรายเดือน
+				        3 รักษาคุณสมบัติท่องเที่ยว
+				        4 เติม Ai-Stockist
+				        5 แลก Gift Voucher
+				        */
+						/* dataset_pay_type
+						1	โอนชำระ
+						2	บัตรเครดิต
+						3	Ai-Cash
+						4	Gift Voucher
+						5	เงินสด
+						*/
+
+	                 	if(order_type==5){
+	                 		$.each(data,function(key,value){
+		                     	if(value.id==4){
+		                     		layout += '<option value='+value.id+' selected >'+value.detail+'</option>';
+		                     	}
+	                     	});
+	                 	}else{
+	                 		var layout = '<option value="" selected>Select</option>';
+		                     $.each(data,function(key,value){
+		                     		layout += '<option value='+value.id+'>'+value.detail+'</option>';
+		                     });
+		                     
+	                 	}
+
+	                     $('#pay_type_id_fk').html(layout);
+
+	                 }
+	                }
+	              })
+
+		    }
+
+
+
         });
 
         if(localStorage.getItem('purchase_type_id_fk')){
@@ -1794,6 +1878,7 @@
             event.preventDefault();
             var id = $(this).val();
             // alert(id+":"+id2);
+
             localStorage.setItem('pay_type_id_fk', id);
             if(id==2){
               $('.div_fee').show();
@@ -1803,6 +1888,8 @@
                 $('#fee').removeAttr('required');
                 $('#fee').val("").select2();
             }
+
+
         });
 
 
@@ -1843,7 +1930,54 @@
             localStorage.setItem('pay_type_id_fk_2', id);
         });
 
-                                
+        $(document).on('change', '#sentto_branch_id', function(event) {
+              $("#addr_00").prop("checked", true);
+        });
+
+         $('.ShippingCalculate').on('click change', function(e) {
+
+                $(".myloading").show();
+
+                var delivery_location = $("input[name='delivery_location']:checked").val();
+                // สาขาตัวเอง 
+                var branch_id_fk = $("input[name=branch_id_fk]").val();
+                // สาขาที่ ระบุที่อยู่ในการจัดส่ง
+                var sentto_branch_id = $("#sentto_branch_id").val();
+
+                if(delivery_location==0){ //รับสินค้าด้วยตัวเอง ระบุสาขาอะไร 
+                }else{ // รับตามที่อยู่ที่ลงบันทึกไว้
+                }
+
+                console.log(delivery_location);
+                console.log(branch_id_fk);
+                console.log(sentto_branch_id);
+
+                $.ajax({
+                 type:'POST',
+                 dataType:'JSON',
+                 url: " {{ url('backend/ajaxShippingCalculate') }} ", 
+                 data:{ _token: '{{csrf_token()}}',
+                   delivery_location:delivery_location,
+                   branch_id_fk:branch_id_fk,
+                   sentto_branch_id:sentto_branch_id },
+                  success:function(data){
+                       console.log(data); 
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) { 
+                      console.log(JSON.stringify(jqXHR));
+                      console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                      $(".myloading").hide();
+                  }
+                });
+
+                localStorage.setItem('shipping_price', 200 );
+
+         });
+
+        if(localStorage.getItem('shipping_price')){
+            $('#shipping_price').val(localStorage.getItem('shipping_price'));
+        }
+
         $(document).on('change', '.FeeCal', function(event) {
 
 
@@ -1863,7 +1997,7 @@
                 $.ajax({
                  type:'POST',
                  dataType:'JSON',
-                 url: " {{ url('backend/ajaxFeeCal') }} ", 
+                 url: " {{ url('backend/ajaxFeeCalculate') }} ", 
                  data:{ _token: '{{csrf_token()}}',cash_price:cash_price,transfer_price:transfer_price,fee_value:fee_value,pay_type_id_fk:pay_type_id_fk,pay_type_id_fk_2:pay_type_id_fk_2,sum_price:sum_price,frontstore_id_fk:frontstore_id_fk,this_id:this_id },
                   success:function(data){
                        console.log(data); 
@@ -1876,22 +2010,6 @@
                         $("#fee_amt").val(value.fee_amt);
                         $("#total_price").val(value.sum_price);
                        });
-
-                       // alert($('#pay_type_id_fk').val()+":"+$('#pay_type_id_fk_2').val());
-                       // alert($("#transfer_price").val());
-
-                       // if( ($('#pay_type_id_fk').val()==2 || $('#pay_type_id_fk_2').val()==2) && $("#transfer_price").val()=="0.00" ){
-                       //  alert("!!! โปรดตรวจสอบ ข้อมูลบางอย่างไม่ถูกต้อง เช่น รูปแบบการชำระ ไม่สอดคล้องกับ ยอดเงินโอน ");
-                       //  $("button[type=submit]").prop("disabled",true);
-                       // }else{
-                       //    if($("#transfer_price").val()>0&&$('#fee_value').val()==0){
-                       //      alert("!!! โปรดตรวจสอบ ข้อมูลบางอย่างไม่ถูกต้อง เช่น รูปแบบการชำระ ไม่สอดคล้องกับ ยอดเงินโอน ");
-                       //      $("button[type=submit]").prop("disabled",true);
-                       //     }else{
-                       //      $("button[type=submit]").prop("disabled",false);
-                       //     }
-                       // }
-                      
 
                     },
                   error: function(jqXHR, textStatus, errorThrown) { 
@@ -2468,7 +2586,21 @@
           $.fn.dataTable.ext.errMode = 'throw';
 
           var frontstore_id_fk = "{{@$sRow->id}}"; 
+          var order_type = $("#purchase_type_id_fk").val(); 
           // alert(frontstore_id_fk);
+
+            /*
+              1 ทำคุณสมบัติ
+              2 รักษาคุณสมบัติรายเดือน
+              3 รักษาคุณสมบัติท่องเที่ยว
+              4 เติม Ai-Stockist
+              5 แลก Gift Voucher
+            */
+            if(order_type==5){
+              $(".btnPromotion8").hide();
+            }else{
+              $(".btnPromotion8").show();
+            }
 
             var oTable;
             $(function() {
@@ -2491,6 +2623,7 @@
                       data :{
                               frontstore_id_fk:frontstore_id_fk,
                               category_id: category_id ,
+                              order_type:order_type,
                             },
                           method: 'POST',
                         },
@@ -3209,18 +3342,17 @@ $(document).ready(function() {
        
             });
 
-
             $(document).ready(function() {
-                  // $('.btnDelivery').trigger('click');
-                  // $('.btnAddFromPromotion').trigger('click');
-                  // $('#modalAddFromPromotion').modal('show');
-                  // $('#modalAddFromProductsList').modal('show');
-                  // $('.btnAddFromProdutcsList ').trigger('click');
-                  // $('.btnPromotion8').trigger('click');
-                  // $('.btnAddFromPromotion ').trigger('click');
-                   // $('.btnAddList ').trigger('click');
-                   // $('#modalDelivery').modal('show');
-                   // $('#modalDelivery').modal('show');
+				// $('.btnDelivery').trigger('click');
+				// $('.btnAddFromPromotion').trigger('click');
+				// $('#modalAddFromPromotion').modal('show');
+				// $('#modalAddFromProductsList').modal('show');
+				// $('.btnAddFromProdutcsList ').trigger('click');
+				// $('.btnPromotion8').trigger('click');
+				// $('.btnAddFromPromotion ').trigger('click');
+				// $('.btnAddList ').trigger('click');
+				// $('#modalDelivery').modal('show');
+				// $('#modalDelivery').modal('show');
             });
 
           </script>

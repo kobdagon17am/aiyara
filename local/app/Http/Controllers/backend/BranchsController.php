@@ -21,7 +21,8 @@ class BranchsController extends Controller
     public function create()
     {
       $sBusiness_location = \App\Models\Backend\Business_location::get();
-      return View('backend.branchs.form')->with(array('sBusiness_location'=>$sBusiness_location,) );
+      $Province = DB::select(" select * from dataset_provinces ");
+      return View('backend.branchs.form')->with(array('sBusiness_location'=>$sBusiness_location,'Province'=>$Province,) );
     }
 
     public function store(Request $request)
@@ -34,7 +35,8 @@ class BranchsController extends Controller
        $sRow = \App\Models\Backend\Branchs::find($id);
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->b_maker." ");
-       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name,'sBusiness_location'=>$sBusiness_location,) );
+       $Province = DB::select(" select * from dataset_provinces ");
+       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name,'sBusiness_location'=>$sBusiness_location,'Province'=>$Province,) );
     }
 
     public function update(Request $request, $id)
@@ -57,7 +59,7 @@ class BranchsController extends Controller
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->b_code    = request('b_code');
           $sRow->b_name    = request('b_name');
-          $sRow->b_location    = request('b_location');
+          $sRow->province_id_fk    = request('province_id_fk');
           $sRow->b_details    = request('b_details');
           $sRow->b_maker    = request('b_maker');
 
