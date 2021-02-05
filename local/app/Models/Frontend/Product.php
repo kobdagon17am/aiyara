@@ -119,7 +119,7 @@ class Product extends Model
 
         $data = array();
         foreach ($promotions as $value){
-            all_available_purchase($promotions->id)
+            all_available_purchase($promotions->id);
 
         }
 
