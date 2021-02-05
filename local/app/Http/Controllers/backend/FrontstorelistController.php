@@ -230,6 +230,9 @@ class FrontstorelistController extends Controller
         // dd($request->frontstore_id);
       // 
 
+
+
+
        if(isset($request->add_delivery_custom)){
 
             DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
@@ -243,7 +246,7 @@ class FrontstorelistController extends Controller
                  '".$request->delivery_tambon."',
                  '".$request->delivery_zipcode."',
                  '".$request->delivery_tel."',
-                       now() 
+                 now() 
               )
             ");       
 
@@ -257,6 +260,8 @@ class FrontstorelistController extends Controller
         }
 
        if(isset($request->update_delivery_custom)){
+
+        // dd($request->all());
 
        	    $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$request->customers_addr_frontstore_id." ");
        	    // dd(count($ch));
@@ -292,6 +297,36 @@ class FrontstorelistController extends Controller
 	            ");    
 
             }   
+
+            // ค่าขนส่ง
+
+             $frontstore = DB::select("SELECT * FROM db_frontstore WHERE id=".$request->frontstore_id." ");
+             $branchs = DB::select("SELECT * FROM branchs WHERE id=".$frontstore[0]->branch_id_fk." ");
+             // dd($frontstore[0]->branch_id_fk);
+             // dd($branchs[0]->province_id_fk);
+             // dd($request->delivery_province);
+                if($request->delivery_province==$branchs[0]->province_id_fk){
+                    DB::select("UPDATE db_frontstore SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+                }else{
+                     // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
+                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+
+                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->delivery_province." ");
+                    if(count($shipping_vicinity)>0){
+
+                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        // return $shipping_cost[0]->shipping_cost;
+                    }else{
+                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+
+                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        // return $shipping_cost[0]->shipping_cost;
+
+                    }
+
+                }
+
+
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
@@ -336,6 +371,7 @@ class FrontstorelistController extends Controller
               $sRow->delivery_location    = request('delivery_location');
               $sRow->cash_price    = str_replace(',','',request('cash_price'));
               $sRow->transfer_price    = str_replace(',','',request('transfer_price'));
+              $sRow->shipping_price    = str_replace(',','',request('shipping_price'));
               $sRow->fee_amt    =  $fee_amt ;
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
@@ -509,6 +545,7 @@ class FrontstorelistController extends Controller
 
    public function form($id=NULL)
     {
+
     }
 
     public function destroy($id)

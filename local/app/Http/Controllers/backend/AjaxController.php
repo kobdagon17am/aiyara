@@ -535,11 +535,57 @@ class AjaxController extends Controller
 
    public function ajaxShippingCalculate(Request $request)
     {
-// branch_id_fk: "2"
-// delivery_location: "3"
-// sentto_branch_id: "2"
-        return  $request;
-        dd();
+        // return $request;
+        // dd();
+
+        if($request->delivery_location==0){ //รับสินค้าด้วยตัวเอง
+            //สาขา ?
+            // สาขาตัวเอง
+            if($request->sentto_branch_id==$request->branch_id_fk){
+                // return 'ส่งที่สาขาตัวเอง ไม่ต้องมีค่าขนส่ง ';
+                return 0 ;
+
+            }else{
+                // รับต่างสาขา หาต่อว่าอยู่ใน business_location ?
+                $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->sentto_branch_id."");
+
+                $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+
+                return $shipping_cost[0]->shipping_cost;
+
+            }
+            
+        }else{ 
+
+            // รับสินค้าตามที่อยู่ ที่ลงไว้ ที่อยู่ ตาม บัตร ปชช. หรือ ปณ. หรือ กำหนดเอง เอา รหัส จ. มาเช็ค
+            // ดูว่าเป็น จ. เดียวกันกับ จ. สาขาที่รับมั๊ย
+            // ต้อง Lock Business Lo ไว้ก่อนเลย
+                $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
+
+                if($request->province_id==$branchs[0]->province_id_fk){
+                    return 0;
+                }else{
+                     // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
+
+                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+
+                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->province_id." ");
+                    // return $shipping_cost[0]->id;
+                    // return count($shipping_vicinity);
+                    if(count($shipping_vicinity)>0){
+                        return $shipping_cost[0]->shipping_cost;
+                    }else{
+
+                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+                        return $shipping_cost[0]->shipping_cost;
+
+                    }
+
+                }
+
+
+        }
+        
    
     }
 

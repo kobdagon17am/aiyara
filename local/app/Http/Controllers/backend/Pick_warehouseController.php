@@ -97,7 +97,7 @@ class Pick_warehouseController extends Controller
 
           $sRow->receipt    = request('receipt');
           $sRow->customer_id    = request('customer_id');
-          $sRow->province_code    = request('province_code');
+          $sRow->province_id_fk    = request('province_id_fk');
           $sRow->pick_warehouse_date    = request('pick_warehouse_date');
                     
           $sRow->created_at = date('Y-m-d H:i:s');
@@ -197,8 +197,8 @@ class Pick_warehouseController extends Controller
         }
       })
       ->addColumn('province_name', function($row) {
-        if(@$row->province_code!=''){
-           $P = DB::select(" select * from dataset_provinces where code=".@$row->province_code." ");
+        if(@$row->province_id_fk!=''){
+           $P = DB::select(" select * from dataset_provinces where code=".@$row->province_id_fk." ");
            return @$P[0]->name_th;
         }else{
              return @$row->province_name;

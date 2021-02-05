@@ -144,7 +144,7 @@ class DeliveryController extends Controller
 
               $district = DB::select(" SELECT * from dataset_amphures where id=".@$value->amphur_code." ");
               $district_sub = DB::select(" SELECT * from dataset_districts where id=".@$value->tambon_code." ");
-              $province = DB::select(" SELECT * from dataset_provinces where id=".@$value->province_code." ");
+              $province = DB::select(" SELECT * from dataset_provinces where id=".@$value->province_id_fk." ");
 
               $d = array(
                  "customer_id"=>@$value->customers_id_fk,
@@ -154,7 +154,7 @@ class DeliveryController extends Controller
                  "district"=>@$district[0]->name_th,
                  "district_sub_id"=>@$value->tambon_code,
                  "district_sub"=>@$district_sub[0]->name_th,
-                 "province_id"=>@$value->province_code,
+                 "province_id"=>@$value->province_id_fk,
                  "province"=>@$province[0]->name_th,
                  "zipcode"=>@$value->zip_code,
                  "tel"=>@$value->tel,
@@ -315,7 +315,7 @@ class DeliveryController extends Controller
           $sRow->receipt    = request('receipt');
           $sRow->customer_id    = request('customer_id');
           $sRow->tel    = request('tel');
-          $sRow->province_code    = request('province_code');
+          $sRow->province_id_fk    = request('province_id_fk');
           $sRow->delivery_date    = request('delivery_date');
                     
           $sRow->created_at = date('Y-m-d H:i:s');

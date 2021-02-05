@@ -94,11 +94,11 @@
                           <div class="form-group row">
                             <label for="example-text-input" class="col-md-2 col-form-label"> จังหวัด : * </label>
                             <div class="col-md-10">
-                              <select name="province_code" class="form-control select2-templating " required >
+                              <select name="province_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Province)
                                     @foreach(@$Province AS $r)
-                                      <option value="{{$r->code}}" {{ (@$r->code==@$sRow->province_code)?'selected':'' }} >
+                                      <option value="{{$r->code}}" {{ (@$r->code==@$sRow->province_id_fk)?'selected':'' }} >
                                         {{$r->name_th}}
                                       </option>
                                     @endforeach

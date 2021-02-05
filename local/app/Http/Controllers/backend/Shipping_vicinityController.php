@@ -18,7 +18,16 @@ class Shipping_vicinityController extends Controller
    public function create($id)
     {
       $sRowNew = \App\Models\Backend\Shipping_cost::find($id);
-      $Province = DB::select(" select * from dataset_provinces ");
+      // dd($sRowNew);
+      $Shipping_vicinity = DB::select(" select * from dataset_shipping_vicinity where shipping_cost_id_fk=".$sRowNew->id."  ");
+      // dd($Shipping_vicinity);
+      $arr=[];
+      foreach ($Shipping_vicinity as $key => $value) {
+           array_push($arr,$value->province_id_fk);
+      }
+      $pv = implode(',', $arr);
+
+      $Province = DB::select(" select * from dataset_provinces where id not in($pv) ");
       return View('backend.shipping_vicinity.form')->with(array('sRowNew'=>$sRowNew,'Province'=>$Province) );
     }
 

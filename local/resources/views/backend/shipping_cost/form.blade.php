@@ -157,7 +157,7 @@ $(function() {
             },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'province_code', title :'<center>รหัสจังหวัด </center>', className: 'text-center'},
+            // {data: 'province_id_fk', title :'<center>รหัสจังหวัด </center>', className: 'text-center'},
             {data: 'province_name', title :'<center>ชื่อจังหวัด </center>', className: 'text-center'},
             // {data: 'province_name_en', title :'<center>ค่าขนส่ง (บาท) </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -168,10 +168,10 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.shipping_vicinity.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+             
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.shipping_vicinity.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
-
+//    + '<a href="{{ route('backend.shipping_vicinity.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
           }
         }
     });

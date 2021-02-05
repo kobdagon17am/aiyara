@@ -65,7 +65,7 @@ class Delivery_approveController extends Controller
           $sRow->receipt    = request('receipt');
           $sRow->customer_id    = request('customer_id');
           $sRow->tel    = request('tel');
-          $sRow->province_code    = request('province_code');
+          $sRow->province_id_fk    = request('province_id_fk');
           $sRow->delivery_date    = request('delivery_date');
                     
           $sRow->created_at = date('Y-m-d H:i:s');
@@ -106,7 +106,7 @@ class Delivery_approveController extends Controller
         
       })
       ->addColumn('province_name', function($row) {
-        $P = DB::select(" select * from dataset_provinces where code=".$row->province_code." ");
+        $P = DB::select(" select * from dataset_provinces where code=".$row->province_id_fk." ");
         return $P[0]->name_th;
       })
       ->addColumn('updated_at', function($row) {

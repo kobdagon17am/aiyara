@@ -95,6 +95,9 @@ class FrontstoreController extends Controller
       $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
       $BranchName = $sBranchs[0]->b_name;
 
+      $Purchase_type = DB::select(" select * from dataset_orders_type where id=".$sRow->purchase_type_id_fk." ");
+      $PurchaseName = $Purchase_type[0]->orders_type;
+
       $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
       $sUser = \App\Models\Backend\Permission\Admin::get();
 
@@ -143,7 +146,7 @@ class FrontstoreController extends Controller
 
       $User_branch_id = \Auth::user()->branch_id_fk;
       // dd($User_branch_id);
-      $sBranchs = \App\Models\Backend\Branchs::get();
+      $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
       // dd($sBranchs);
 
       $ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
@@ -173,6 +176,7 @@ class FrontstoreController extends Controller
            'agency'=>$agency,           
            'CusName'=>$CusName,           
            'BranchName'=>$BranchName,           
+           'PurchaseName'=>$PurchaseName,           
         ) );
     }
 
@@ -184,6 +188,9 @@ class FrontstoreController extends Controller
 
    public function form($id=NULL)
     {
+
+      // dd($request->all());
+
       \DB::beginTransaction();
       try {
           if( $id ){

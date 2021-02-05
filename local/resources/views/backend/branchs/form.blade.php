@@ -66,8 +66,8 @@
                 <div class="form-group row">
                     <label for="" class="col-md-2 col-form-label"> ที่ตั้งอยู่ในจังหวัด : * </label>
                     <div class="col-md-10">
-                      <select name="province_id_fk" class="form-control select2-templating " required >
-                        <option value="">Select</option>
+                      <select name="province_id_fk" class="form-control select2-templating " >
+                        <option value="0">Select</option>
                           @if(@$Province)
                             @foreach(@$Province AS $r)
                               <option value="{{$r->id}}" {{ (@$r->id==@$sRow->province_id_fk)?'selected':'' }} >
