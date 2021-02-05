@@ -30,6 +30,7 @@ class PromotionsController extends Controller
           $sBusiness_location = \App\Models\Backend\Business_location::get();
           $sProduct_group = \App\Models\Backend\Product_group::get();
           $sLang = \App\Models\Backend\Language::get();
+          $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
       return View('backend.promotions.form')->with(
         array(
           'sAgency'=>$sAgency,
@@ -42,7 +43,8 @@ class PromotionsController extends Controller
           'sProduct_unit'=>$sProduct_unit,
           'sBusiness_location'=>$sBusiness_location,
           'sProduct_group'=>$sProduct_group,
-          'sLang'=>$sLang
+          'sLang'=>$sLang,
+          'dsOrders_type'=>$dsOrders_type,
         ) 
       );
     }
@@ -66,6 +68,7 @@ class PromotionsController extends Controller
           $sProduct_group = \App\Models\Backend\Product_group::get();
           $sLang = \App\Models\Backend\Language::get();
           $sRow = \App\Models\Backend\Promotions::find($id);
+          $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
        return View('backend.promotions.form')->with(
         array(
           'sAgency'=>$sAgency,
@@ -81,6 +84,7 @@ class PromotionsController extends Controller
           'sRow'=>$sRow ,
           'id'=>$id, 
           'sLang'=>$sLang,
+          'dsOrders_type'=>$dsOrders_type,
          )
          );
     }
@@ -100,6 +104,12 @@ class PromotionsController extends Controller
             $sRow = \App\Models\Backend\Promotions::find($id);
           }else{
             $sRow = new \App\Models\Backend\Promotions;
+          }
+
+          if(!empty(request('orders_type'))){
+            $Orders_type = implode(',', request('orders_type'));
+          }else{
+            $Orders_type = '';
           }
 
           $sRow->business_location    = request('business_location');
@@ -129,6 +139,8 @@ class PromotionsController extends Controller
           $sRow->maintain_travel_feature    = request('maintain_travel_feature');
           $sRow->aistockist    = request('aistockist');
           $sRow->agency    = request('agency');
+
+          $sRow->orders_type_id    = $Orders_type ;
 
           $sRow->lang_id    = request('lang_id');
           $sRow->status    = request('status')?request('status'):0;

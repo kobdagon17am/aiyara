@@ -11,7 +11,7 @@ class Page extends Model {
 
       // $value=DB::table('users')->where('username', $data['username'])->get();
       // $value=DB::table('pm_broadcast')->where('customers_id_fk', $data['customers_id_fk'])->get();
-      $value=DB::table('pm_broadcast')->get();
+      // $value=DB::table('pm_broadcast')->get();
       // if($value->count() == 0){
          // DB::table('users')->insert($data);
          DB::table('pm_broadcast')->insert($data);

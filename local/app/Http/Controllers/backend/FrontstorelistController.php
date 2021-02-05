@@ -228,10 +228,14 @@ class FrontstorelistController extends Controller
     {
         // dd($request->all());
         // dd($request->frontstore_id);
+      // 
+
+
+
 
        if(isset($request->add_delivery_custom)){
 
-            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_code, amphur_code, tambon_code, zip_code, tel, created_at) 
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
               VALUES 
               ('".$request->frontstore_id."',
                '".$request->customers_id_fk."',
@@ -242,51 +246,187 @@ class FrontstorelistController extends Controller
                  '".$request->delivery_tambon."',
                  '".$request->delivery_zipcode."',
                  '".$request->delivery_tel."',
-                       now() 
+                 now() 
               )
             ");       
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
+              
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
               $sRow->save();    
 
         }
+
        if(isset($request->update_delivery_custom)){
 
-            DB::insert(" UPDATE customers_addr_frontstore 
-              SET recipient_name = '".$request->delivery_cusname."', 
-              addr_no = '".$request->delivery_addr."', 
-              province_code  = '".$request->delivery_province."', 
-              amphur_code = '".$request->delivery_amphur."',  
-              tambon_code = '".$request->delivery_tambon."', 
-              zip_code = '".$request->delivery_zipcode."', 
-              tel = '".$request->delivery_tel."', 
-              updated_at = now() where id=".$request->customers_addr_frontstore_id."
-            ");       
+        // dd($request->all());
+
+       	    $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$request->customers_addr_frontstore_id." ");
+       	    // dd(count($ch));
+
+       	    if(count($ch)==0){
+
+       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
+		              VALUES 
+		              ('".$request->customers_addr_frontstore_id."',
+		               '".$request->customers_id_fk."',
+		               '".$request->delivery_cusname."',
+		                '".$request->delivery_addr."',
+		                 '".$request->delivery_province."',
+		                 '".$request->delivery_amphur."',
+		                 '".$request->delivery_tambon."',
+		                 '".$request->delivery_zipcode."',
+		                 '".$request->delivery_tel."',
+		                 now() 
+		              )
+		            ");
+
+       	    }else{
+
+       	    	 DB::insert(" UPDATE customers_addr_frontstore 
+	              SET recipient_name = '".$request->delivery_cusname."', 
+	              addr_no = '".$request->delivery_addr."', 
+	              province_id_fk  = '".$request->delivery_province."', 
+	              amphur_code = '".$request->delivery_amphur."',  
+	              tambon_code = '".$request->delivery_tambon."', 
+	              zip_code = '".$request->delivery_zipcode."', 
+	              tel = '".$request->delivery_tel."', 
+	              updated_at = now() where frontstore_id_fk=".$request->customers_addr_frontstore_id."
+	            ");    
+
+            }   
+
+            // ค่าขนส่ง
+
+             $frontstore = DB::select("SELECT * FROM db_frontstore WHERE id=".$request->frontstore_id." ");
+             $branchs = DB::select("SELECT * FROM branchs WHERE id=".$frontstore[0]->branch_id_fk." ");
+             // dd($frontstore[0]->branch_id_fk);
+             // dd($branchs[0]->province_id_fk);
+             // dd($request->delivery_province);
+                if($request->delivery_province==$branchs[0]->province_id_fk){
+                    DB::select("UPDATE db_frontstore SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+                }else{
+                     // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
+                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+
+                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->delivery_province." ");
+                    if(count($shipping_vicinity)>0){
+
+                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        // return $shipping_cost[0]->shipping_cost;
+                    }else{
+                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+
+                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        // return $shipping_cost[0]->shipping_cost;
+
+                    }
+
+                }
+
+
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
               $sRow->save(); 
+
+                DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+
+                $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                      from customers_addr_frontstore
+                      Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                      Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                      Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                      where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
+
+                DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `first_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+
+
         }
 
         if(isset($request->receipt_save_list)){
 
-              // array:4 [▼
-              //   "frontstore_id" => "1"
-              //   "receipt_save_list" => "1"
-              //   "_token" => "FE2DzqzCXMpIpZrEIeByk52YcfNpn6qKarBbreNe"
-              //   "delivery_location" => "1"
-              // ]
+          // dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+              $sFee = \App\Models\Backend\Fee::find($sRow->fee);
+
+              if( $sRow->pay_type_id_fk==2 || $sRow->pay_type_id_fk_2 ==2 ){ 
+
+                $fee_amt    = (str_replace(',','',request('sum_price')) - str_replace(',','',request('cash_price')))*(@$sFee->txt_value/100);
+
+              }else{
+                $fee_amt    = 0 ;
+              }
+
+               if(request('delivery_location') ==0 ){
+                  $sRow->sentto_branch_id    = request('sentto_branch_id');
+               }
+
               $sRow->delivery_location    = request('delivery_location');
+              $sRow->cash_price    = str_replace(',','',request('cash_price'));
+              $sRow->transfer_price    = str_replace(',','',request('transfer_price'));
+              $sRow->shipping_price    = str_replace(',','',request('shipping_price'));
+              $sRow->fee_amt    =  $fee_amt ;
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
-              $sRow->save();          
+              $sRow->save();    
+
+
+              if(@$request->delivery_location==2){
+
+                          DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+
+                          $addr = DB::select("SELECT
+                                customers_detail.customer_id,
+                                customers_detail.house_no,
+                                customers_detail.house_name,
+                                customers_detail.moo,
+                                customers_detail.zipcode,
+                                customers_detail.soi,
+                                customers_detail.district,
+                                customers_detail.district_sub,
+                                customers_detail.road,
+                                customers_detail.province,
+                                customers.prefix_name,
+                                customers.first_name,
+                                customers.last_name
+                                FROM
+                                customers_detail
+                                Left Join customers ON customers_detail.customer_id = customers.id
+                                WHERE customers_detail.customer_id = 
+                                 ".@$request->customers_id_fk." ");
+
+
+                            DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `first_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->house_no."','".@$addr[0]->zipcode."', '".@$addr[0]->district."', '".@$addr[0]->district_sub."', '".@$addr[0]->province."', 'customers_detail', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+
+
+              }
+
+
+              if(@$request->delivery_location==3){
+
+                   DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+
+                        $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                              dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                              from customers_addr_frontstore
+                              Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                              Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                              Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                              where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
+
+                        DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `recipient_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+
+
+             }
+
+
 
         }
 
@@ -405,6 +545,7 @@ class FrontstorelistController extends Controller
 
    public function form($id=NULL)
     {
+
     }
 
     public function destroy($id)
@@ -517,8 +658,8 @@ class FrontstorelistController extends Controller
       })
       ->addColumn('purchase_type', function($row) {
           $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
-          $purchase_type = DB::select(" select * from dataset_purchase_type where id=".$Frontstore->purchase_type_id_fk." ");
-          return $purchase_type[0]->txt_desc;
+          $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
+          return $purchase_type[0]->orders_type;
       }) 
       ->addColumn('pv', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
@@ -559,11 +700,13 @@ class FrontstorelistController extends Controller
           // ดึงจาก db_frontstore_products_list
            return @$row->total_price;
         // }
-      })                    
+      })  
+      ->addColumn('sum_price_desc', function($row) {
+          $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".$row->frontstore_id_fk." GROUP BY frontstore_id_fk ");
+          return @$total_price[0]->total;
+      })                   
       ->make(true);
     }
-
-
 
 
     public function DatatablePro(Request $req){

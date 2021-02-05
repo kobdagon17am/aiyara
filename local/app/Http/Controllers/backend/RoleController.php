@@ -119,6 +119,24 @@ class RoleController extends Controller
                 }
               }
 
+              if(!empty(request('can_packing_list'))){
+                $can_packing_list = request('can_packing_list');
+                if(!empty($can_packing_list)){
+                    foreach ($can_packing_list AS $row) {
+                         DB::update(" UPDATE role_permit SET can_packing_list=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
+              if(!empty(request('can_payproduct'))){
+                $can_payproduct = request('can_payproduct');
+                if(!empty($can_payproduct)){
+                    foreach ($can_payproduct AS $row) {
+                         DB::update(" UPDATE role_permit SET can_payproduct=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+                            
               
           }
 

@@ -112,7 +112,7 @@
                             @if(@$sPurchase_type)
                               @foreach(@$sPurchase_type AS $r)
                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                                	{{$r->txt_desc}}
+                                	{{$r->orders_type}}
                                 </option>
                               @endforeach
                             @endif                        

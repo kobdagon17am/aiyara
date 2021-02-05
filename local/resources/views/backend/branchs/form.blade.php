@@ -34,30 +34,54 @@
               @endif
                 {{ csrf_field() }}
 
+                
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รหัสสาขา :</label>
+                    <label for="" class="col-md-2 col-form-label">รหัสสาขา :</label>
+                    <div class="col-md-10">
+                          <select name="business_location_id_fk" class="form-control select2-templating " required >
+                            <option value="">-Business Location-</option>
+                            @if(@$sBusiness_location)
+                            @foreach(@$sBusiness_location AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                            @endforeach
+                            @endif
+                          </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="" class="col-md-2 col-form-label">รหัสสาขา :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->b_code }}" name="b_code" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อสาขา :</label>
+                    <label for="" class="col-md-2 col-form-label">ชื่อสาขา :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->b_name }}" name="b_name" required>
                     </div>
                 </div>
-
+                
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">สถานที่ :</label>
+                    <label for="" class="col-md-2 col-form-label"> ที่ตั้งอยู่ในจังหวัด : * </label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->b_location }}" name="b_location" required>
+                      <select name="province_id_fk" class="form-control select2-templating " >
+                        <option value="0">Select</option>
+                          @if(@$Province)
+                            @foreach(@$Province AS $r)
+                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->province_id_fk)?'selected':'' }} >
+                                {{$r->name_th}}
+                              </option>
+                            @endforeach
+                          @endif
+                      </select>
                     </div>
-                </div>
+                  </div>
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายละเอียด :</label>
+                    <label for="" class="col-md-2 col-form-label">รายละเอียด :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->b_details }}" name="b_details" required>
                     </div>

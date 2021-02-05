@@ -45,33 +45,16 @@ body{
     <?php
 
               $value = DB::select(" 
-                    SELECT
-                    db_delivery_packing_code.id,
-                    db_delivery_packing_code.addr_id,
-                    customers.prefix_name,
-                    customers.first_name,
-                    customers.last_name,
-                    customers_detail.house_no,
-                    customers_detail.house_name,
-                    customers_detail.moo,
-                    customers_detail.zipcode,
-                    customers_detail.soi,
-                    customers_detail.district,
-                    customers_detail.district_sub,
-                    customers_detail.road,
-                    customers_detail.province,
-                    customers.id as cus_id
-                    FROM
-                    db_delivery_packing_code
-                    Left Join customers_detail ON db_delivery_packing_code.addr_id = customers_detail.id
-                    Left Join customers ON customers_detail.customer_id = customers.id
-                    WHERE
-                    db_delivery_packing_code.id = 
-                    ".$data[0]."
+                                    SELECT
+                *
+                FROM
+                customers_addr_sent
+                WHERE packing_code = 
+                    ".$data[0]." AND id_choose=1
 
                ");
 
-                echo "<b>".$value[0]->prefix_name.$value[0]->first_name.' '.$value[0]->last_name."</b><br>";
+                echo "<b>".$value[0]->recipient_name."</b><br>";
 
                 $addr = $value[0]->house_no?$value[0]->house_no.", ":'';
                 $addr .= $value[0]->house_name;
@@ -82,7 +65,7 @@ body{
                 $addr .= $value[0]->district?", อ.".$value[0]->district:'';
                 $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
-                if($value[0]->addr_id!=''){
+                if($value[0]->id!=''){
                     $addr = $addr;
                 }else{
                     $addr = "-ไม่พบข้อมูลที่อยู่-";
@@ -91,9 +74,3 @@ body{
       ?>
       {{$addr}}<br>{{$value[0]->zipcode?$value[0]->zipcode:''}}
 
-     <?php 
-
-        $qrcode = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate($value[0]->cus_id));
-
-      ?>
-     <img src="data:image/png;base64, {!! $qrcode !!}" style="float: right;">

@@ -94,11 +94,11 @@
                           <div class="form-group row">
                             <label for="example-text-input" class="col-md-2 col-form-label"> จังหวัด : * </label>
                             <div class="col-md-10">
-                              <select name="province_code" class="form-control select2-templating " required >
+                              <select name="province_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Province)
                                     @foreach(@$Province AS $r)
-                                      <option value="{{$r->code}}" {{ (@$r->code==@$sRow->province_code)?'selected':'' }} >
+                                      <option value="{{$r->code}}" {{ (@$r->code==@$sRow->province_id_fk)?'selected':'' }} >
                                         {{$r->name_th}}
                                       </option>
                                     @endforeach
@@ -117,6 +117,26 @@
 
 
 
+                          <div class="form-group row">
+                            <label for="receipt" class="col-md-2 col-form-label">ตรวจสอบแล้ว :</label>
+                            <div class="col-md-8 mt-2">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_slip" value="true" {{ ( @$sRow->status_slip=='true')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch"> อนุมัติ </label>
+                            </div>
+                          </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="receipt" class="col-md-2 col-form-label">ตรวจสอบแล้ว :</label>
+                            <div class="col-md-8 mt-2">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_slip" value="true" {{ ( @$sRow->status_slip=='true')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch"> Accepted </label>
+                            </div>
+                          </div>
+                          </div>
+                   
                           
 
                 <div class="form-group mb-0 row">

@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> การจัดส่งสินค้า </h4>
+            <h4 class="mb-0 font-size-18"> การจัดเบิกสินค้า </h4>
         </div>
     </div>
 </div>
@@ -43,9 +43,9 @@
         <div class="card">
             <div class="card-body">
               @if( empty(@$sRow) )
-              <form action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.pick_warehouse.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.delivery.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.pick_warehouse.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
@@ -71,57 +71,44 @@
                           </div>
 
                           <div class="form-group row">
-                            <label for="delivery_slip" class="col-md-2 col-form-label">ใบจัดส่ง :</label>
+                            <label for="pick_warehouse_slip" class="col-md-2 col-form-label">รหัสใบเบิก :</label>
                             <div class="col-md-10">
-                              <input class="form-control" type="text" value="{{ @$sRow->delivery_slip }}" name="delivery_slip" >
+                              <input class="form-control" type="text" value="{{ @$sRow->pick_warehouse_slip }}" name="pick_warehouse_slip" >
                             </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="receipt" class="col-md-2 col-form-label">ใบเสร็จ :</label>
+                            <label for="receipt" class="col-md-2 col-form-label">เลขที่ใบเสร็จ :</label>
                             <div class="col-md-10">
                               <input class="form-control" type="text" value="{{ @$sRow->receipt }}" name="receipt" >
                             </div>
                           </div>
 
+
                           <div class="form-group row">
-                            <label for="tel" class="col-md-2 col-form-label">เบอร์โทร :</label>
-                            <div class="col-md-10">
-                              <input class="form-control" type="text" value="{{ @$sRow->tel }}" name="tel" >
+                            <label for="receipt" class="col-md-2 col-form-label">ตรวจสอบแล้ว :</label>
+                            <div class="col-md-8 mt-2">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_slip" value="true" {{ ( @$sRow->status_slip=='true')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch"> อนุมัติ </label>
                             </div>
+                          </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label"> จังหวัด : * </label>
-                            <div class="col-md-10">
-                              <select name="province_code" class="form-control select2-templating " required >
-                                <option value="">Select</option>
-                                  @if(@$Province)
-                                    @foreach(@$Province AS $r)
-                                      <option value="{{$r->code}}" {{ (@$r->code==@$sRow->province_code)?'selected':'' }} >
-                                        {{$r->name_th}}
-                                      </option>
-                                    @endforeach
-                                  @endif
-                              </select>
+                            <label for="receipt" class="col-md-2 col-form-label">ตรวจสอบแล้ว :</label>
+                            <div class="col-md-8 mt-2">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_slip" value="true" {{ ( @$sRow->status_slip=='true')?'checked':'' }}>
+                              <label class="custom-control-label" for="customSwitch"> Accepted </label>
                             </div>
                           </div>
-
-
-                          <div class="form-group row">
-                            <label for="delivery_date" class="col-md-2 col-form-label">วันที่จัดส่ง : * </label>
-                            <div class="col-md-3">
-                              <input class="form-control" type="date" value="{{ @$sRow->delivery_date }}" name="delivery_date" required >
-                            </div>
                           </div>
-
-
-
-                          
+                   
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
-                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/delivery") }}">
+                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/pick_warehouse") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                     </a>
                   </div>

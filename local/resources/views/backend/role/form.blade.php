@@ -142,6 +142,22 @@
 	                        </label>
 	                        @ENDIF
 
+                          @IF(@$row->isPacking=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_packing_list}}">
+                            <input class="checks" type="checkbox" name="can_packing_list[]" {!! (@$menu_admin->can_packing_list == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ Packing List
+                          </label>
+                          @ENDIF
+
+                          @IF(@$row->isPayproduct=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_payproduct}}">
+                            <input class="checks" type="checkbox" name="can_payproduct[]" {!! (@$menu_admin->can_payproduct == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ จ่ายสินค้าตามใบเสร็จ
+                          </label>
+                          @ENDIF
+
             				@ELSE
 
                         <label class="checkbox-inline" style="display: none;">
@@ -162,6 +178,7 @@
 
 					      @ENDIF
                                           
+
                                       
 		  								    </div>
 
@@ -172,6 +189,14 @@
 
                                       @endforeach
 
+                       <div class="col-md-6">
+
+                       <center>
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                            </button>
+                        </div>
+                        
                                     </div>
                                 </div>
                               </section>
@@ -180,7 +205,7 @@
                         </div>
                       </div>
               <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-                  <hr>
+                
                    <div class="form-group row" style="display: none;">
                         <label class="col-md-2 col-form-label">สถานะ :</label>
                         <div class="col-md-10 mt-2">
@@ -202,11 +227,7 @@
                               <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                             </a>
                         </div>
-                        <div class="col-md-6 text-right">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                            </button>
-                        </div>
+                     
                     </div>
 
               </form>

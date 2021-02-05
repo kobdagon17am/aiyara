@@ -107,7 +107,7 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'b_code', title :'<center>รหัสสาขา</center>', className: 'text-center'},
             {data: 'b_name', title :'<center>ชื่อสาขา</center>', className: 'text-center'},
-            {data: 'b_location', title :'<center>สถานที่</center>', className: 'text-center'},
+            {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
             {data: 'b_details', title :'<center>รายละเอียด</center>', className: 'text-center'},
             {data: 'b_maker', title :'<center>ผู้ทำรายการ</center>', className: 'text-center'},
             {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},

@@ -64,6 +64,9 @@
 	  background-color: #cfc ;
 	  z-index: 1 ;
 	}
+
+  .dt-checkboxes-select-all{display: none;}
+
 </style>
 @endsection
 
@@ -87,6 +90,7 @@
         $sU = '';
         $sD = '';
         $role_group_id = '%';
+        $can_approve = 1;
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
@@ -95,10 +99,12 @@
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
         $sD = @$menu_permit->d==1?'':'display:none;';
+        $can_approve = @$menu_permit->can_approve==1?1:0;
       }
       // echo $sPermission;
       // echo $role_group_id;
       // echo $menu_id;     
+      // print_r($menu_permit);
    ?>
 <div class="row">
     <div class="col-12">
@@ -132,21 +138,37 @@
                     </form>
                   </div>
 
-                  <div class="myBorder">
-                    <div style="">
-                      <div class="form-group row">
-                        <div class="col-md-12">
-                          <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอเบิกจากคลัง  </span>
-                        </div>
+                <div class="myBorder">
+                  <div style="">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรอเบิกจากคลัง  </span>
                       </div>
-                      <div class="form-group row">
-                        <div class="col-md-12">
-                          <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
-                          </table>
-                        </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
+                        </table>
                       </div>
                     </div>
                   </div>
+                </div>
+
+
+                <div class="myBorder">
+                  <div class="form-group row ">
+                    <div class="col-md-10 d-flex  ">
+                      <label class="col-5" ><i class="bx bx-play"></i> ค้นสินค้า > ค้นด้วย : QR-CODE : </label>
+                      <div class="col-md-5">
+                        <input type="text" class="form-control" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus >
+                      </div>
+                      <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%" >
+                        <i class="bx bx-search align-middle "></i> &nbsp;&nbsp;&nbsp;SEARCH&nbsp;&nbsp;&nbsp;
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
 
             </div>
         </div>
@@ -165,6 +187,7 @@ var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
+var can_approve = "{{@$can_approve}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -205,15 +228,27 @@ $(function() {
                 method: 'POST'
               },
               columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center'},
-             
-                  {data: 'receipt', title :'ใบเสร็จ', className: 'text-center'},
-                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                  {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-      
-                  {data: 'billing_employee', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
-                  {data: 'status_pack',   title :'<center>Type</center>', className: 'text-center ',render: function(d) {
+                  {data: 'id', title :'ID', className: 'text-center '},
+                  {data: 'id', title :'เลือก', className: 'text-center'},
+                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                  // {data: 'receipt', title :'ใบเสร็จ', className: 'text-center'},
+                  {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
+                  {data: 'customer_name',   title :'ชื่อลูกค้า', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
+                  {data: 'province_name', title :'สาขา', className: 'text-center'},
+                  {data: 'billing_employee', title :'พนักงานที่ออกบิล', className: 'text-center'},
+                  {data: 'status_pack',   title :'Type', className: 'text-center ',render: function(d) {
                   		if(d==1){
                   			return '<span class="badge badge-pill badge-soft-warning font-size-16"><i class="fab fa-medium-p"><span class="tooltip_packing" >P</span></i></span>';
                   		}else{
@@ -223,12 +258,10 @@ $(function() {
                   }},
              
               ],
-                    'columnDefs': [
+              'columnDefs': [
                {
                   'targets': 0,
-                  'checkboxes': {
-                     'selectRow': true
-                  }
+                  'checkboxes': {'selectRow': true },
                }
             ],
             'select': {
@@ -237,23 +270,11 @@ $(function() {
 
               rowCallback: function(nRow, aData, dataIndex){
 
-                    // if(sU!=''&&sD!=''){
-                    //     $('td:last-child', nRow).html('-');
-                    // }else{ 
-
-                    // 		$('td:last-child', nRow).html(''
-	                   //        + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                       
-	                   //      ).addClass('input');
-
-                    // }
+                    $("td:eq(1)", nRow).hide();
 
               }
-          });
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable.draw();
-              });
-
+            });
+      
           });
 
 
@@ -353,8 +374,22 @@ $(function() {
                   columns: [
                       {data: 'id', title :'ID', className: 'text-center w50 '},
                       {data: 'delivery_date', title :'วันเวลาที่ออกบิล', className: 'text-center'},
-                      {data: 'receipt', title :'ใบเสร็จ', className: 'text-center'},
-                      {data: 'customer_name', title :'ชื่อลูกค้า', className: 'text-center'},
+                      // {data: 'receipt', title :'ใบเสร็จ', className: 'text-center w250 '},
+                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
+                      // {data: 'customer_name', title :'ชื่อลูกค้า', className: 'text-center'},
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
                       {data: 'billing_employee', title :'พนักงานที่ออกบิล', className: 'text-center'},
                       // {data: 'id',   title :'พิมพ์ใบเบิก', className: 'text-center ',render: function(d) {
                       //     return '<a href="{{ URL::to('backend/pickup_goods/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
@@ -368,12 +403,12 @@ $(function() {
                               return '<a href="{{ URL::to('backend/pickup_goods/print_receipt_pack') }}/'+str[1]+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
                            }
                       }},
-                      {data: 'approved',   title :'อนุมัติ', className: 'text-center ',render: function(d) {
+                      {data: 'approved',   title :'อนุมัติเบิก', className: 'text-center ',render: function(d) {
                           var v = d.split(":");
                           if(v[0]==1){
-                              return '<input type="checkbox" class="approved" checked value="'+v[1]+'" style="transform: scale(2);margin:12%;">';
+                              return '<input type="checkbox" class="approved" checked value="'+v[1]+'" style="transform: scale(2);">';
                            }else{
-                              return '<input type="checkbox" class="approved" value="'+v[1]+'" style="transform: scale(2);margin:12%;">';
+                              return '<input type="checkbox" class="approved" value="'+v[1]+'" style="transform: scale(2);">';
                            }
 
                           
@@ -381,7 +416,12 @@ $(function() {
                       }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
+             
                   rowCallback: function(nRow, aData, dataIndex){
+
+                      if(can_approve!=1){
+                          $("td:eq(6)", nRow).html('-');
+                      }
 
                       if(aData['approver']==0){
 
@@ -397,7 +437,21 @@ $(function() {
                         }
 
                       }else{
+
+
                         $('td:last-child', nRow).html('');
+
+                        $('td', nRow).css('background-color', '#ffd9b3');
+                        // $("td:eq(4)", nRow).html('');
+                        // $("td:eq(5)", nRow).html('');
+                        $("td:eq(6)", nRow).html('<i class="bx bx-check-square" style="font-size:30px;color:blue;"></i>');
+                        var i;
+                        for (i = 0; i < 10 ; i++) {
+                           $("td:eq("+i+")", nRow).prop('disabled',true); 
+                        } 
+
+
+
                       }
 
 
@@ -440,7 +494,7 @@ $(function() {
 
                     var id = $(this).val();
 
-                      if (!confirm("ยืนยัน ? ")){
+                      if (!confirm("ยืนยัน อนุมัติเบิก ? ")){
                           return false;
                       }else{
 

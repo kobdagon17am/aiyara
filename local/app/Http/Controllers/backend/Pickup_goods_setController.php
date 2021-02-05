@@ -134,7 +134,7 @@ class Pickup_goods_setController extends Controller
           $sRow->receipt    = request('receipt');
           $sRow->customer_id    = request('customer_id');
           $sRow->tel    = request('tel');
-          $sRow->province_code    = request('province_code');
+          $sRow->province_id_fk    = request('province_id_fk');
           $sRow->delivery_date    = request('delivery_date');
                     
           $sRow->created_at = date('Y-m-d H:i:s');
@@ -171,20 +171,20 @@ class Pickup_goods_setController extends Controller
          ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('receipt', function($row) {
-        if($row->packing_code!=0){
-            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->packing_code)->get();
-            $array = array();
-            foreach ($DP as $key => $value) {
-              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-              array_push($array, @$rs[0]->receipt);
-            }
-            $arr = implode(',', $array);
-            return $arr;
-        }else{
-          return $row->receipt;
-        }
-      })
+      // ->addColumn('receipt', function($row) {
+      //   if($row->packing_code!=0){
+      //       $DP = DB::table('db_delivery_packing')->where('packing_code',$row->packing_code)->get();
+      //       $array = array();
+      //       foreach ($DP as $key => $value) {
+      //         $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+      //         array_push($array, @$rs[0]->receipt);
+      //       }
+      //       $arr = implode(',', $array);
+      //       return $arr;
+      //   }else{
+      //     return $row->receipt;
+      //   }
+      // })
       ->addColumn('delivery_date', function($row) {
           $d = strtotime($row->delivery_date);
           return date("d/m/", $d).(date("Y", $d)+543);
@@ -200,14 +200,18 @@ class Pickup_goods_setController extends Controller
       ->addColumn('billing_employee', function($row) {
         if(@$row->billing_employee!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->billing_employee." ");
-           return @$sD[0]->name;
+          if(@$sD[0]->name){
+            return @$sD[0]->name;
+          }else{
+            return '-ไม่พบข้อมูล-';
+          }
         }else{
-          return '';
+           return '-ไม่พบข้อมูล-';
         }
       })
       ->addColumn('province_name', function($row) {
-        if(@$row->province_code!=''){
-           $P = DB::select(" select * from dataset_provinces where code=".@$row->province_code." ");
+        if(@$row->province_id_fk!=''){
+           $P = DB::select(" select * from dataset_provinces where code=".@$row->province_id_fk." ");
              return @$P[0]->name_th;
         }else{
              return @$row->province_name;

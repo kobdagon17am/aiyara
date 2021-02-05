@@ -90,9 +90,3 @@ body{
       ?>
       {{$addr}}<br>{{$value[0]->zipcode?$value[0]->zipcode:''}}
 
-     <?php 
-
-        $qrcode = base64_encode(QrCode::format('svg')->size(70)->errorCorrection('H')->generate($value[0]->cus_id));
-
-      ?>
-     <img src="data:image/png;base64, {!! $qrcode !!}" style="float: right;">
