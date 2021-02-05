@@ -33,7 +33,7 @@ class HistoryController extends Controller
 
     $id = $request->id;
 
-    $data_order =  DB::table('orders')
+    $data_order =  DB::table('db_orders')
     ->where('id','=',$id)
     ->first();
 
@@ -45,7 +45,7 @@ class HistoryController extends Controller
        $qr = $id.''.$random;
 
        $endata = date('Y-m-d H:i:s',strtotime("+30 minutes"));
-       $updated_qrcode = DB::table('orders') 
+       $updated_qrcode = DB::table('db_orders') 
        ->where('id',$id)
        ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
 
@@ -57,14 +57,14 @@ class HistoryController extends Controller
     $qr = $id.''.$random;
 
     $endata = date('Y-m-d H:i:s',strtotime("+30 minutes"));
-    $updated_qrcode = DB::table('orders') 
+    $updated_qrcode = DB::table('db_orders') 
     ->where('id',$id)
     ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
   }
 
-   $data =  DB::table('orders')
-    ->where('id','=',$id)
-    ->first();
+  $data =  DB::table('orders')
+  ->where('id','=',$id)
+  ->first();
 
   return view('frontend/modal/modal_qr_recive_product',compact('data'));
 }
@@ -88,35 +88,36 @@ public function dt_history(Request $request){
 
   if(empty($request->input('search.value')) and  empty($request->input('order_type')) ){
 
-   $totalData =  DB::table('orders')
-   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id')
+   $totalData =  DB::table('db_orders')
+   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
    ->where('dataset_orders_type.lang_id','=','1')
    ->where('dataset_order_status.lang_id','=','1')
-
-   ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
+   ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->count();
+
    $totalFiltered = $totalData;
 
    $limit = $request->input('length');
    $start = $request->input('start');
         //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir');
+        //$dir = $request->input('order.0.dir'); 
 
-   $orders =  DB::table('orders')
-   ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
-   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
+   $orders =  DB::table('db_orders')
+   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
    ->where('dataset_order_status.lang_id','=','1')
    ->where('dataset_orders_type.lang_id','=','1')
-   ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
+   ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->offset($start)
    ->limit($limit)
-   ->orderby('orders.updated_at','DESC') 
+   ->orderby('db_orders.updated_at','DESC') 
    ->get(); 
-// dd($request->input('order_type'));
+
+   
 
  }else{
 
@@ -124,16 +125,18 @@ public function dt_history(Request $request){
    $order_type=$request->input('order_type');
          //DB::enableQueryLog();
          //dd($search.':'.$order_type);
-   $totalData =  DB::table('orders')
-   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
+   $totalData =  DB::table('db_orders')
+   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
    ->where('dataset_order_status.lang_id','=','1')
    ->where('dataset_orders_type.lang_id','=','1')
-   ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
+   ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
-   ->whereRaw( "(orders.code_order LIKE '%{$search}%' or orders.tracking_number LIKE '%{$search}%')" )
+   ->whereRaw( "(db_orders.code_order LIKE '%{$search}%' or db_orders.tracking_no LIKE '%{$search}%')" )
    ->count(); 
+
+
 
    $totalFiltered = $totalData;
    $limit = $request->input('length');
@@ -143,19 +146,19 @@ public function dt_history(Request $request){
         //$order = $columns[$request->input('order.0.column')];
         //$dir = $request->input('order.0.dir');
 
-   $orders =  DB::table('orders')
-   ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
-   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id')
-   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
+   $orders =  DB::table('db_orders')
+   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+   ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
    ->where('dataset_order_status.lang_id','=','1')
    ->where('dataset_orders_type.lang_id','=','1')
-   ->where('orders.customer_id','=',Auth::guard('c_user')->user()->id)
+   ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
-   ->whereRaw( "(orders.code_order LIKE '%{$search}%' or orders.tracking_number LIKE '%{$search}%')" )
+   ->whereRaw( "(db_orders.code_order LIKE '%{$search}%' or db_orders.tracking_no LIKE '%{$search}%')" )
    ->offset($start) 
    ->limit($limit)
-   ->orderby('orders.updated_at','DESC') 
+   ->orderby('db_orders.updated_at','DESC') 
    ->get(); 
 
  }
@@ -167,24 +170,24 @@ public function dt_history(Request $request){
   $nestedData['id'] = $i;
 
   $nestedData['code_order'] = $value->code_order;
-  if($value->tracking_number){
-   $nestedData['tracking'] = '<label class="label label-inverse-info"><b style="color:#000">'.$value->tracking_number.'</b></label>';
+  if($value->tracking_no){
+   $nestedData['tracking'] = '<label class="label label-inverse-info"><b style="color:#000">'.$value->tracking_no.'</b></label>';
 
  }else{
    $nestedData['tracking'] = '';
  }
 
- if($value->type_id == 5){
+ if($value->type == 5){
   $nestedData['price'] = number_format($value->price_remove_gv,2);
 
-}elseif($value->type_id == 6){
- $nestedData['price'] = number_format($value->price,2);
+}elseif($value->type == 6){
+ $nestedData['price'] = number_format($value->sum_price,2);
 
-}elseif($value->type_id == 7){
-  $nestedData['price'] = $value->price;
+}elseif($value->type == 7){
+  $nestedData['price'] = number_format($value->sum_price,2);
 
 }else{
-  $nestedData['price'] = number_format($value->price + $value->shipping,2);
+  $nestedData['price'] = number_format($value->sum_price + $value->shipping_price,2);
 
 }
 
@@ -192,7 +195,7 @@ $nestedData['pv_total'] = '<b class="text-success">'.number_format($value->pv_to
 $nestedData['date'] = '<span class="label label-inverse-info-border">'.date('d/m/Y H:i:s',strtotime($value->created_at)).'</span>';
 $nestedData['type'] = $value->type;
 
-if( $value->type_address == 'sent_office' and $value->order_type == 4){
+if( $value->delivery_location_status == 'sent_office' and $value->type == 4){
   $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$value->detail.'</b></button>'; 
 }else{
   $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" > <b style="color: #000">'.$value->detail.'</b></button>';
@@ -200,7 +203,7 @@ if( $value->type_address == 'sent_office' and $value->order_type == 4){
 }
 
 
-if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
+if($value->order_status_id_fk == 1 || $value->order_status_id_fk == 3){
   $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$value->id.')"><i class="fa fa-file-text-o"></i> Upload </button>';
 }else{
   $upload = '';
@@ -208,8 +211,8 @@ if($value->orderstatus_id == 1 || $value->orderstatus_id == 3){
 
 
 $nestedData['action'] = '<a class="btn btn-sm btn-primary" href="'.route('cart-payment-history',['code_order'=>$value->code_order]).'" ><i class="fa fa-file-text-o"></i> View </a> '.$upload;
-if($value->banlance){
-  $banlance= number_format($value->banlance);
+if($value->pv_banlance){
+  $banlance= number_format($value->pv_banlance);
 }else{
   $banlance = '';
 }
@@ -250,21 +253,18 @@ public function upload_slip(Request $request){
         DB::table('payment_slip')
         ->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'url'=>$url,'file'=>$f_name,'order_id'=>$request->order_id]);
 
-        DB::table('orders')
+        DB::table('db_orders')
         ->where('id',$request->order_id)
-        ->update(['orderstatus_id' => '2']);
+        ->update(['order_status_id_fk' => '2']);
 
         DB::commit();
         return redirect('product-history')->withSuccess('Upload Slip Success');
       } catch (Exception $e) {
         DB::rollback();
         return redirect('product-history')->withError('Upload Slip fail');
-
       }
 
-
     }else{
-
 
       return redirect('product-history')->withError('Upload Slip fail');
 
@@ -274,8 +274,9 @@ public function upload_slip(Request $request){
 
 public function cart_payment_history($code_order){
 
-  $order =  DB::table('orders')
-  ->select('orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type',
+  
+  $order =  DB::table('db_orders')
+  ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type',
     'dataset_business_major.name as office_name',
     'dataset_business_major.house_no as office_house_no',
     'dataset_business_major.name as office_house_name',
@@ -288,33 +289,32 @@ public function cart_payment_history($code_order){
     'dataset_business_major.zipcode as office_zipcode',
     'dataset_business_major.tel as office_tel',
     'dataset_business_major.email as office_email',
-    'order_payment_code.order_payment_code',
+    'db_invoice_code.order_payment_code',
     'dataset_pay_type.detail as pay_type_name') 
-  ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
-  ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
-  ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','orders.type_address') 
-  ->leftjoin('order_payment_code','order_payment_code.order_id','=','orders.id')
-  ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id')
+  ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+  ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk') 
+  ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','db_orders.sentto_branch_id') 
+  ->leftjoin('db_invoice_code','db_invoice_code.order_id','=','db_orders.id')
+  ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
 
   ->where('dataset_order_status.lang_id','=','1')
   ->where('dataset_orders_type.lang_id','=','1')
-  ->where('orders.code_order','=',$code_order)
+  ->where('db_orders.code_order','=',$code_order)
   ->first();
 
-  if($order->type_id == 6){
-    $order_items =  DB::table('order_items')
-    ->select('order_items.*','course_ticket_number.ticket_number')
-    ->where('order_id','=',$order->id)
-    ->leftjoin('course_event_regis','course_event_regis.order_item_id','=','order_items.id')
+  if($order->orders_type_id_fk == 6){
+    $order_items =  DB::table('db_order_products_list')
+    ->select('db_order_products_list.*','course_ticket_number.ticket_number')
+    ->where('order_id_fk','=',$order->id)
+    ->leftjoin('course_event_regis','course_event_regis.order_item_id','=','db_order_products_list.id')
     ->leftjoin('course_ticket_number','course_ticket_number.id','=','course_event_regis.ticket_id')
     ->get();
   }else{
-    $order_items =  DB::table('order_items')
-    ->where('order_id','=',$order->id)
+    $order_items =  DB::table('db_order_products_list')
+    ->where('order_id_fk','=',$order->id)
     ->get();
-
+ 
   }
-  
 
         //dd($order_items);
 

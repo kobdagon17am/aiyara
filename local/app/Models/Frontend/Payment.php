@@ -19,8 +19,8 @@ class Payment extends Model
 		// เลขใบเสร็จ
 		// ปีเดือน[รันเลข]
 		// 2020110 00001
- 
-		$id = DB::table('orders')
+
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -60,20 +60,20 @@ class Payment extends Model
 			}
 
 			$orderstatus_id = 2;
-			$rs_update_order_and_address = PaymentSentAddressOrder::update_order_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
-			if($rs_update_order_and_address['status'] == 'fail'){
+			if($rs_update_rontstore_and_address['status'] == 'fail'){
 				DB::rollback(); 
-				return $rs_update_order_and_address;
+				return $rs_update_rontstore_and_address;
 			}else{
-				$id= $rs_update_order_and_address['id'];
+				$id= $rs_update_rontstore_and_address['id'];
 			}
 
 				if($rs->type == 4){//เติม Ai-Stockist
-					$ai_pocket = DB::table('ai_pocket')->insert(
+					$ai_pocket = DB::table('ai_stockist')->insert(
 						['customer_id'=>$customer_id,
 						'to_customer_id'=>$customer_id,
-						'order_id'=>$rs_update_order_and_address['id'],
+						'order_id_fk'=>$rs_update_rontstore_and_address['id'],
 						'pv'=>$rs->pv_total,
 						'type_id'  => $rs->type,
 						'status' => 'panding',
@@ -106,13 +106,20 @@ class Payment extends Model
 				}
 
 				foreach ($data as $value) {
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'product_id'=>$value['id'],
+					$total_pv = $value['attributes']['pv'] * $value['quantity'];
+					$total_price = $value['price'] * $value['quantity'];
+
+					DB::table('db_order_products_list')->insert([
+						'order_id_fk'=>$id,
+						'customers_id_fk'=>$customer_id,
+						'product_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
-						'quantity'=>$value['quantity'],
-						'list_price'=>$value['price'],
+						'amt'=>$value['quantity'],
+						'selling_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
+						'total_pv'=>$total_pv,
+						'total_price'=>$total_price,
+						'add_from'=>1,
 					]);
 
 					Cart::session($rs->type)->remove($value['id']);
@@ -140,7 +147,7 @@ class Payment extends Model
 			$business_location_id = '1';
 			DB::BeginTransaction();
 			$customer_id = Auth::guard('c_user')->user()->id;
-			$id = DB::table('orders')
+			$id = DB::table('db_orders')
 			->select('id')
 			->orderby('id','desc')
 			->first();
@@ -179,21 +186,21 @@ class Payment extends Model
 				}
 
 				$orderstatus_id = 1;
-				$rs_update_order_and_address = PaymentSentAddressOrder::update_order_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+				$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
-				if($rs_update_order_and_address['status'] == 'fail'){
+				if($rs_update_rontstore_and_address['status'] == 'fail'){
 					DB::rollback(); 
-					return $rs_update_order_and_address;
+					return $rs_update_rontstore_and_address;
 				}else{
-					$id= $rs_update_order_and_address['id'];
+					$id= $rs_update_rontstore_and_address['id'];
 				}
 
 
 			if($rs->type == 4){//เติม Ai-Stockist
-				$ai_pocket = DB::table('ai_pocket')->insert(
+				$ai_pocket = DB::table('ai_stockist')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
-					'order_id'=>$id,
+					'order_id_fk'=>$id,
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
@@ -215,13 +222,20 @@ class Payment extends Model
 
 			foreach ($data as $value) {
 
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'product_id'=>$value['id'],
+				$total_pv = $value['attributes']['pv'] * $value['quantity'];
+				$total_price = $value['price'] * $value['quantity'];
+
+				DB::table('db_order_products_list')->insert([
+					'order_id_fk'=>$id,
+					'customers_id_fk'=>$customer_id,
+					'product_id_fk'=>$value['id'],
 					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
+					'amt'=>$value['quantity'],
+					'selling_price'=>$value['price'],
 					'pv'=>$value['attributes']['pv'],
+					'total_pv'=>$total_pv,
+					'total_price'=>$total_price,
+					'add_from'=>1,
 				]);
 
 				Cart::session($rs->type)->remove($value['id']);
@@ -244,10 +258,11 @@ class Payment extends Model
 	}
 
 	public static function credit_card($rs){
+
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('orders')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -286,20 +301,21 @@ class Payment extends Model
 			}
 
 			$orderstatus_id = 5;
-			$rs_update_order_and_address = PaymentSentAddressOrder::update_order_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+			
 
-			if($rs_update_order_and_address['status'] == 'fail'){
+			if($rs_update_rontstore_and_address['status'] == 'fail'){
 				DB::rollback(); 
-				return $rs_update_order_and_address;
+				return $rs_update_rontstore_and_address;
 			}else{
-				$id= $rs_update_order_and_address['id'];
+				$id= $rs_update_rontstore_and_address['id'];
 			}
 
 			if($rs->type == 4){//เติม Ai-Stockist
-				$ai_pocket = DB::table('ai_pocket')->insert(
+				$ai_pocket = DB::table('ai_stockist')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
-					'order_id'=>$id,
+					'order_id_fk'=>$id,
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
@@ -321,13 +337,20 @@ class Payment extends Model
 
 			foreach ($data as $value) {
 
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'product_id'=>$value['id'],
+				$total_pv = $value['attributes']['pv'] * $value['quantity'];
+				$total_price = $value['price'] * $value['quantity'];
+
+				DB::table('db_order_products_list')->insert([
+					'order_id_fk'=>$id,
+					'customers_id_fk'=>$customer_id,
+					'product_id_fk'=>$value['id'],
 					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
+					'amt'=>$value['quantity'],
+					'selling_price'=>$value['price'],
 					'pv'=>$value['attributes']['pv'],
+					'total_pv'=>$total_pv,
+					'total_price'=>$total_price,
+					'add_from'=>1,
 				]);
 
 				Cart::session($rs->type)->remove($value['id']);
@@ -362,7 +385,7 @@ class Payment extends Model
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('orders')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -402,20 +425,20 @@ class Payment extends Model
 			}
 
 			$orderstatus_id = 5;
-			$rs_update_order_and_address = PaymentSentAddressOrder::update_order_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
-			if($rs_update_order_and_address['status'] == 'fail'){
+			if($rs_update_rontstore_and_address['status'] == 'fail'){
 				DB::rollback(); 
-				return $rs_update_order_and_address;
+				return $rs_update_rontstore_and_address;
 			}else{
-				$id= $rs_update_order_and_address['id'];
+				$id= $rs_update_rontstore_and_address['id'];
 			}
 
 			if($rs->type == 4){//เติม Ai-Stockist
-				$ai_pocket = DB::table('ai_pocket')->insert(
+				$ai_pocket = DB::table('ai_stockist')->insert(
 					['customer_id'=>$customer_id,
 					'to_customer_id'=>$customer_id,
-					'order_id'=>$id,
+					'order_id_fk'=>$id,
 					'pv'=>$rs->pv_total,
 					'type_id'  => $rs->type,
 					'status' => 'panding',
@@ -438,14 +461,22 @@ class Payment extends Model
 
 			foreach ($data as $value) {
 
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'product_id'=>$value['id'],
+				$total_pv = $value['attributes']['pv'] * $value['quantity'];
+				$total_price = $value['price'] * $value['quantity'];
+
+				DB::table('db_order_products_list')->insert([
+					'order_id_fk'=>$id,
+					'customers_id_fk'=>$customer_id,
+					'product_id_fk'=>$value['id'],
 					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
+					'amt'=>$value['quantity'],
+					'selling_price'=>$value['price'],
 					'pv'=>$value['attributes']['pv'],
+					'total_pv'=>$total_pv,
+					'total_price'=>$total_price,
+					'add_from'=>1,
 				]);
+
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
@@ -479,7 +510,7 @@ class Payment extends Model
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('orders')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -513,13 +544,13 @@ class Payment extends Model
 			}
 			
 			$orderstatus_id = 2;
-			$rs_update_order_and_address = PaymentSentAddressOrder::update_order_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
-			if($rs_update_order_and_address['status'] == 'fail'){
+			if($rs_update_rontstore_and_address['status'] == 'fail'){
 				DB::rollback(); 
-				return $rs_update_order_and_address;
+				return $rs_update_rontstore_and_address;
 			}else{
-				$id= $rs_update_order_and_address['id'];
+				$id= $rs_update_rontstore_and_address['id'];
 			}
 
 			$price_total = ($rs->price + $rs->shipping);
@@ -534,13 +565,20 @@ class Payment extends Model
 
 			foreach ($data as $value) {
 
-				DB::table('order_items')->insert([
-					'order_id'=>$id,
-					'product_id'=>$value['id'],
+				$total_pv = $value['attributes']['pv'] * $value['quantity'];
+				$total_price = $value['price'] * $value['quantity'];
+
+				DB::table('db_order_products_list')->insert([
+					'order_id_fk'=>$id,
+					'customers_id_fk'=>$customer_id,
+					'product_id_fk'=>$value['id'],
 					'product_name'=>$value['name'],
-					'quantity'=>$value['quantity'],
-					'list_price'=>$value['price'],
+					'amt'=>$value['quantity'],
+					'selling_price'=>$value['price'],
 					'pv'=>$value['attributes']['pv'],
+					'total_pv'=>$total_pv,
+					'total_price'=>$total_price,
+					'add_from'=>1,
 				]);
 
 				Cart::session($rs->type)->remove($value['id']);

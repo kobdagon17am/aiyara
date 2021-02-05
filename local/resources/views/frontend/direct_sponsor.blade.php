@@ -1,5 +1,7 @@
 <?php
-use App\Helpers\Frontend; 
+use App\Helpers\Frontend;
+use App\Models\Frontend\DirectSponsor;
+
 ?>
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
@@ -22,7 +24,7 @@ use App\Helpers\Frontend;
         <div class="card-block">
 
             <div class="dt-responsive table-responsive">
-                <table id="simpletable" class="table table-striped table-bordered nowrap">
+                <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
 
                     <thead>
                       <tr class="info" style='text-align:center;'>
@@ -53,7 +55,7 @@ use App\Helpers\Frontend;
                     <?php $i=0; ?>
                     @foreach($customers as $value)
 
-                <?php
+                    <?php
                     $data_customer = Frontend::get_customer($value->upline_id);
                     if(empty($data_customer)){
                       $upline = '-';
@@ -65,57 +67,57 @@ use App\Helpers\Frontend;
                   if($check_active_mt['status'] == 'success'){
                     if($check_active_mt['type'] == 'Y'){
                         $active_mt = "<span class='label label-inverse-success'><b>"
-                      .$check_active_mt['date']."</b></span>";
+                        .$check_active_mt['date']."</b></span>";
                     }else{
                         $active_mt = "<span class='label label-inverse-info-border'><b>"
-                      .$check_active_mt['date']."</b></span>";
+                        .$check_active_mt['date']."</b></span>";
 
                     }
                     
-                  }else{
+                }else{
                     $active_mt = "<span class='label label-inverse-info-border'><b> Not Active </b></span>";
-                  }
+                }
 
-                   $count_directsponsor = Frontend::check_customer_directsponsor($value->id);
-                   
-                  
-                  ?>
- 
-                      <tr>
-                        <th style="font-size: 14px;">{{ $i }}</th>
-                        <th style="font-size: 14px;"><b>{{ $value->introduce_type }}</b></th>
-                        <th style="font-size: 14px;">{{ $value->user_name }}</th>
-                        <th style="font-size: 14px;">{{ $value->business_name }}</th>
-                        <th style="font-size: 14px;">
-                         @if(empty($value->dt_package))
-                            -
-                            @else
-                            {{ $value->dt_package }}
-                            @endif
-                        </th>
-                        <th style="font-size: 14px;">{{ $upline }}</th>
-                        <th style="font-size: 14px;">{!! $active_mt !!}</th>
-                        <th style="font-size: 14px;">{{ $count_directsponsor['A'] }}</th>
-                        <th style="font-size: 14px;">{{ $count_directsponsor['B'] }}</th>
-                        <th style="font-size: 14px;">{{ $count_directsponsor['C'] }}</th>
-                        <th style="font-size: 14px;">{{ $count_directsponsor['reward_bonus'] }}</th>
-                        <th style="font-size: 14px;">
-                            @if(empty($value->reward_max_id))
-                            -
-                            @else
-                            {{ $value->reward_max_id }}
-                            @endif
-                        </th>
-                        <th style="font-size: 14px;">{{ $value->code_name }}</th>
-                        <th style="font-size: 14px;">{{ $value->max_code_name }}</th>
-                        <?php $i++; ?>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                $count_directsponsor = Frontend::check_customer_directsponsor($value->id);
 
-    </div>
+
+                ?>
+
+                <tr>
+                    <th style="font-size: 14px;">{{ $i }}</th>
+                    <th style="font-size: 14px;"><b>{{ $value->introduce_type }}</b></th>
+                    <th style="font-size: 14px;">{{ $value->user_name }}</th>
+                    <th style="font-size: 14px;">{{ $value->business_name }}</th>
+                    <th style="font-size: 14px;">
+                     @if(empty($value->dt_package))
+                     -
+                     @else
+                     {{ $value->dt_package }}
+                     @endif
+                 </th>
+                 <th style="font-size: 14px;">{{ $upline }}</th>
+                 <th style="font-size: 14px;">{!! $active_mt !!}</th>
+                 <th style="font-size: 14px;">{{ $count_directsponsor['A'] }}</th>
+                 <th style="font-size: 14px;">{{ $count_directsponsor['B'] }}</th>
+                 <th style="font-size: 14px;">{{ $count_directsponsor['C'] }}</th>
+                 <th style="font-size: 14px;">{{ $count_directsponsor['reward_bonus'] }}</th>
+                 <th style="font-size: 14px;">
+                    @if(empty($value->reward_max_id))
+                    -
+                    @else
+                    {{ $value->reward_max_id }}
+                    @endif
+                </th>
+                <th style="font-size: 14px;">{{ $value->code_name }}</th>
+                <th style="font-size: 14px;">{{ $value->max_code_name }}</th>
+                <?php $i++; ?>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+</div>
 </div> 
 </div>
 </div>
@@ -126,69 +128,102 @@ use App\Helpers\Frontend;
 
            <div class="card-header">
             <h4 class="m-b-10">ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker) 
-            ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน 3 คน</h4>
+                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน 3 คน</h4>
 
-        </div> 
-        <div class="card-block">
+            </div> 
+            <div class="card-block">
 
-            <div class="dt-responsive table-responsive">
-                <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
+                <div class="dt-responsive table-responsive">
+                    <table id="setting-default" class="table table-striped table-bordered nowrap">
 
-                    <thead>
-                      <tr class="info" style='text-align:center;'>
-                        <th class="text-center" >#</th>
-                        <th class="text-center" >Line</th>
-                        <th class="text-center" >ID</th>
-                        <th class="text-center" >Buniness/Name</th>
-                        <th class="text-center" >OwnPV</th>
-                        <th class="text-center" >Package</th>
-                        <th class="text-center" >First Date</th>
-                        <th class="text-center" >Remie(Day)</th>
-                    </tr>
-            
-                </thead>
-                <tbody>
-                    <?php $i=0;
+                        <thead>
+                          <tr class="info" style='text-align:center;'>
+                            <th class="text-center" >#</th>
+                            <th class="text-center" >Line</th>
+                            <th class="text-center" >ID</th>
+                            <th class="text-center" >Buniness/Name</th>
+                            <th class="text-center" >OwnPV</th>
+                            <th class="text-center" >Package</th>
+                            <th class="text-center" >First Date</th>
+                            <th class="text-center" >Remie(Day)</th>
+                        </tr>
 
-
-                    ?>
-                    @foreach($customers_sponser as $value_sponser)
-                    <?php $i++;
-                    $end_date = strtotime($value_sponser->end_date);
-                    $start_date = strtotime(date('Y-m-d'));
+                    </thead>
+                    <tbody>
+                        <?php $i=0; ?>
+                        @foreach($customers_sponser as $value_sponser)
+                        <?php $i++;
+                        $end_date = strtotime($value_sponser->end_date);
+                        $start_date = strtotime(date('Y-m-d'));
 
                     $date_remine = ($end_date - $start_date)/  ( 60 * 60 * 24 );  // 1 day = 60*60*24
-                    $remine = ceil($date_remine)
+                    $remine = ceil($date_remine);
+
+                    $directsponsor = DirectSponsor::sponsor_get_directsponsor($value_sponser->id);
+                    $count_directsponsor = count($directsponsor);
+                    if($count_directsponsor > 0){
+                        $num_row = $count_directsponsor+1;
+                        $rowspan_index = 'rowspan="'.$num_row.'"';
+
+                    }else{
+                        $rowspan_index='';
+
+                    }
+
 
                     ?>
 
-                      <tr>
-                        <th style="font-size: 13px;">{{ $i }}</th>
-                        <th style="font-size: 13px;">{{ $value_sponser->introduce_type }}</th>
-                        <th style="font-size: 13px;">{{ $value_sponser->user_name }}</th>
-                        <th style="font-size: 13px;">{{ $value_sponser->business_name.' / '.$value_sponser->prefix_name.' '.$value_sponser->first_name.' '.$value_sponser->last_name }}</th>
+                    <tr>
 
-                   
-                        <th style="font-size: 13px;">{{ number_format($value_sponser->pv) }}</th>
-                            <th style="font-size: 14px;">
+                        <td {{ $rowspan_index }} style="font-size: 13px;">{{ $i }}</td>
+                        <td style="font-size: 13px;">{{ $value_sponser->introduce_type }}</td>
+                        <td style="font-size: 15px;"><label class="label label-inverse-primary">{{ $value_sponser->user_name }}</label></td>
+                        <td style="font-size: 13px;">{{ $value_sponser->business_name.' / '.$value_sponser->prefix_name.' '.$value_sponser->first_name.' '.$value_sponser->last_name }}</td>
+
+
+                        <td style="font-size: 13px;">{{ number_format($value_sponser->pv) }}</td>
+                        <td style="font-size: 14px;">
                          @if(empty($value_sponser->dt_package))
-                            -
-                            @else
-                            {{ $value_sponser->dt_package }}
-                            @endif
-                        </th>
-                        <th style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($value_sponser->created_at)) }}</b></span></th>
-                        
-                        <th style="font-size: 13px;">{{  $remine  }}</th>
-  
-                        
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                         -
+                         @else
+                         {{ $value_sponser->dt_package }}
+                         @endif 
+                     </td>
+                     <td style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($value_sponser->created_at)) }}</b></span></td>
 
-    </div>
+                     <td style="font-size: 13px;">{{  $remine  }}</td>
+
+                 </tr>
+
+
+                 @if($count_directsponsor > 0 )
+                 @foreach($directsponsor as $directsponsor_value)
+                 <tr>
+                    <td></td>
+                    <td style="font-size: 13px;">{{ $directsponsor_value->introduce_type }}</td>
+                    <td style="font-size: 15px;">{{ $directsponsor_value->user_name }}</td>
+                    <td style="font-size: 13px;">{{ $directsponsor_value->business_name.' / '.$directsponsor_value->prefix_name.' '.$directsponsor_value->first_name.' '.$directsponsor_value->last_name }}</td>
+                    <td style="font-size: 13px;">{{ number_format($directsponsor_value->pv) }}</td>
+                    <td style="font-size: 14px;">
+                     @if(empty($directsponsor_value->dt_package))
+                     -
+                     @else
+                     {{ $directsponsor_value->dt_package }}
+                     @endif
+                 </td>
+                 <td style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($directsponsor_value->created_at)) }}</b></span></td>
+
+                 <td>-</td>
+             </tr>
+             @endforeach
+             @endif
+
+             @endforeach
+         </tbody>
+     </table>
+ </div>
+
+</div>
 </div> 
 </div>
 </div>
@@ -197,20 +232,23 @@ use App\Helpers\Frontend;
 @section('js')
 <!-- data-table js -->
 
-<script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-<!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
 
-@endsection
+  <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+  <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+  <!-- Custom js -->
+  <script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+
+
+
+  @endsection
 
 
 

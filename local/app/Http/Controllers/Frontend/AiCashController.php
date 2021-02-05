@@ -27,7 +27,14 @@ class AiCashController extends Controller
     ->orderby('order')
     ->get();
 
-    return view('frontend/aicash',compact('type'));
+    $ai_cash = DB::table('ai_cash')
+    ->select('ai_cash.*','dataset_pay_type.detail as pay_type','dataset_order_status.detail as order_status') 
+    ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','ai_cash.pay_type_id_fk')
+    ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','ai_cash.order_status_id_fk')
+    ->orderby('ai_cash.created_at','desc')
+    ->get();
+
+    return view('frontend/aicash',compact('type','ai_cash'));
   }
 
   public function cart_payment_aicash(Request $request){
@@ -38,131 +45,6 @@ class AiCashController extends Controller
       return view('frontend/product/cart_payment_aicash',compact('data'));
     }
   }
-
-
-  public function dt_aicash(Request $request){ 
-
-    $columns = array(
-      0 => 'order',
-      1 => 'create_at',
-      2 => 'type',
-      3 => 'order_type',
-      4 => 'price',
-      5 => 'banlance',
-      6 => 'detail',
-    );
-
-
-
-    if(empty($request->input('search.value'))){
-
-      $totalData =  DB::table('ai_cash')
-      
-      //->leftjoin('dataset_orders_type','ai_pocket.type_id','=','dataset_orders_type.group_id')
-      //->where('dataset_orders_type.lang_id','=','1')
-
-      ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-      ->count();
-
-
-      $totalFiltered = $totalData;
-      $limit = $request->input('length');
-      $start = $request->input('start');
-      //$order = $columns[$request->input('order.0.column')];
-      ////$dir = $request->input('order.0.dir');
-
-      $ai_cash =  DB::table('ai_cash')
-      ->select('ai_cash.*') 
-      ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-      ->offset($start)
-      ->limit($limit)
-      ->orderby('update_at','DESC')
-      ->get(); 
-
-    }else{
-
-      $search = trim($request->input('search.value'));
-
-      $totalData =  DB::table('ai_cash')
-      
-      //->leftjoin('dataset_orders_type','ai_pocket.type_id','=','dataset_orders_type.group_id')
-      //->where('dataset_orders_type.lang_id','=','1')
-
-      ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-      ->count();
-
-
-      $totalFiltered = $totalData;
-      $limit = $request->input('length');
-      $start = $request->input('start');
-      //$order = $columns[$request->input('order.0.column')];
-      ////$dir = $request->input('order.0.dir');
-
-      $ai_cash =  DB::table('ai_cash')
-      ->select('ai_cash.*') 
-      ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-      ->offset($start)
-      ->limit($limit)
-      ->orderby('update_at','DESC')
-      ->get(); 
-
-        //dd($ai_cash);
-    }
-
-
-    $i= $start;
-    $data = array();
-
-    foreach ($ai_cash as $value){
-      $i++;
-      $nestedData['order'] = $i;
-
-      $nestedData['create_at'] = '<span class="label label-inverse-info-border">'.date('d/m/Y H:i:s',strtotime($value->create_at)).'</span>' ;
-
-      $nestedData['type'] = 'เครดิตการ์ด';
-      $nestedData['order_type'] = 'เติมเงิน';
-
-      $nestedData['price'] = $value->ai_cash;
-
-
-      if( $value->status == 'success'){
-        if(empty($value->banlance)){
-          $banlance = '';
-        }else{
-          $banlance = number_format($value->banlance);
-        }
-
-      }elseif ($value->status == 'panding'){
-       $class_css = 'warning';
-       $banlance ='<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
-     }else{
-       $class_css = 'danger'; 
-     }
-
-   // $nestedData['status'] =  '<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
-
-     $nestedData['banlance'] = $banlance;
-
-     
-
-     $nestedData['detail'] = $value->detail;
-
-     $data[] = $nestedData;
-   }
-
-   $json_data = array(
-    "draw" => intval($request->input('draw')),
-    "recordsTotal" => intval($totalData),
-    "recordsFiltered" => intval($totalFiltered),
-    "data" => $data,
-  );
-
-   return json_encode($json_data);
- }
-
-
-
-
 }
 
 

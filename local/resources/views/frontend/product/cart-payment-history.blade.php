@@ -10,8 +10,8 @@
         <div class="row invoive-info">
             <div class="col-md-4 col-xs-12 invoice-client-info">
                 <h6>Information :</h6>
-                
-                @if($order->type_address != 0)
+               
+                @if($order->delivery_location_status == 'sent_office')
                 <h6 class="m-0">{{ $order->office_name }}</h6> 
                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->office_tel }} @endif</p>
                 <p class="m-0">@if($order->office_email) Email. {{ $order->office_email }} @endif</p>
@@ -99,14 +99,15 @@
         </div>
     </div>
     <div class="row">
+
         <div class="col-sm-12">
             <div class="table-responsive">
                 <table class="table  invoice-detail-table">
                     <thead>
                         <tr class="thead-default">
                             <th>Description</th>
-                            @if($order->type_id == 6)<th>Ticket Number</th>@endif
-                            @if($order->type_id == 7)@else <th>Quantity</th> @endif
+                            @if($order->orders_type_id_fk == 6)<th>Ticket Number</th>@endif
+                            @if($order->orders_type_id_fk == 7)@else <th>Quantity</th> @endif
                             <th>Amount</th>
                             <th>PV</th>
                             <th>Total</th>
@@ -119,19 +120,19 @@
                                 <h6>{{ $value->product_name }}</h6>
                                 {{-- <p>lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt </p> --}}
                             </td>
-                            @if($order->type_id == 6)
+                            @if($order->orders_type_id_fk == 6)
                             <td ><b class="text-primary">{{ $value->ticket_number }}</b></td>
                             @endif
-                            @if($order->type_id == 7)
+                            @if($order->orders_type_id_fk == 7)
                             @else
-                            <td>{{ $value->quantity }}</td>
+                            <td>{{ $value->amt }}</td>
                             @endif
-                            <td>{{ $value->list_price }}</td>
+                            <td>{{ $value->selling_price }}</td>
                             <td class="text-success"><b>{{ $value->pv }}</b></td>
-                             @if($order->type_id == 7)
-                             <td>{{ number_format($value->list_price,2) }}</td>
+                             @if($order->orders_type_id_fk == 7)
+                             <td>{{ number_format($value->selling_price,2) }}</td>
                             @else
-                            <td>{{ number_format($value->quantity * $value->list_price,2) }}</td>
+                            <td>{{ number_format($value->amt * $value->selling_price,2) }}</td>
                             @endif
                             
                         </tr>
@@ -149,21 +150,27 @@
              <tbody>
                 <tr>
                     <th>มูลค่าสินค้า : </th>
-                    <td> {{ number_format($order->price,2) }}</td>
+
+                    <?php 
+
+                    $price_vat =  $order->sum_price * ($order->vat/100); 
+                    $price_vat_sum  = $order->sum_price - $price_vat;
+                    ?>
+                    <td> {{ number_format($price_vat_sum,2) }}</td>
                 </tr>
                 <tr>
                     <th>VAT({{ $order->vat }}%) : </th>
-                    <td> {{ $order->p_vat }}</td>
+                    <td> {{ number_format($price_vat,2) }}</td> 
                 </tr>
                 <tr>
                     <th>รวม : </th>
-                    <td> {{ number_format($order->price,2) }}</td>
+                    <td> {{ number_format($order->sum_price,2) }}</td>
                 </tr>
-                @if($order->type_id != 6 and $order->type_id != 7)
+                @if($order->orders_type_id_fk != 6 and $order->orders_type_id_fk != 7)
                  
                 <tr>
                     <th>ค่าจัดส่ง : </th>
-                    <td> {{ number_format($order->shipping,2) }} </td>
+                    <td> {{ number_format($order->shipping_price,2) }} </td>
                 </tr>
                 @endif
                 <tr>
@@ -172,16 +179,16 @@
                 </tr>
 
                 
-                @if($order->type_id == 5)
+                @if($order->orders_type_id_fk == 5)
                 
                 <tr>
                     <td><strong>ยอดรวม : </strong></td>
-                    <td align="right"><strong> {{ number_format($order->price+$order->shipping,2) }}</strong>
+                    <td align="right"><strong> {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
                     </td>
                 </tr>
                 <tr>
                     <td><strong class="text-primary">Gift Voucher : </strong></td>
-                    <td align="right"><strong class="text-primary"> {{  number_format($order->gv,2) }}</strong>
+                    <td align="right"><strong class="text-primary"> {{  number_format($order->gift_voucher,2) }}</strong>
                     </td>
                 </tr>
 
@@ -192,16 +199,16 @@
                     </td>
                 </tr>
 
-                @elseif($order->type_id == 6 || $order->type_id == 7)
+                @elseif($order->orders_type_id_fk == 6 || $order->orders_type_id_fk == 7)
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>
-                    <td align="right"><strong > {{ number_format($order->price,2) }}</strong>
+                    <td align="right"><strong > {{ number_format($order->sum_price,2) }}</strong>
                     </td>
                 </tr>
                 @else
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>
-                    <td align="right"><strong > {{ number_format($order->price+$order->shipping,2) }}</strong>
+                    <td align="right"><strong > {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
                     </td>
                 </tr>
                 @endif

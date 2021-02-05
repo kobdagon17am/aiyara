@@ -14,7 +14,7 @@ class PaymentAiCash extends Model
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('orders')
+		$id = DB::table('ai_cash')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -26,24 +26,23 @@ class PaymentAiCash extends Model
 		}
 
 		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = 'C'.date('ymd').''.$maxId;
 
 		try{
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('ai_cash')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
-					'price' => $price,
-					'price_vat' => $price,
-					'pv_total'  => 0,
-					'p_vat' =>0,
-					'vat' =>0,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '2'
+					'customer_id_fk' => $customer_id,
+					'ai_cash' => $price,
+					'order_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => 2,
+					'status' => 'panding',
+					'detail' => 'Add Ai-Cash', 
 				] 
 			);
+
 
 			$file_slip = $rs->file_slip;
 			if(isset($file_slip)){
@@ -52,19 +51,11 @@ class PaymentAiCash extends Model
 				$f_name = date('YmdHis').'_'.$customer_id.'.'.$file_slip->getClientOriginalExtension();
 				if($file_slip->move($url,$f_name)){
 					DB::table('payment_slip')
-					->insert(['customer_id'=>$customer_id,'url'=>$url,'file'=>$f_name,'order_id'=>$id]);
+					->insert(['customer_id'=>$customer_id,'url'=>$url,'file'=>$f_name,'order_id'=>$id,'type'=>'ai-cash']);
 				}
 			}
 
-			DB::table('order_items')->insert([
-				'order_id'=>$id,
-				'product_name'=>'Add Ai-Cash',
-				'quantity'=>'1',
-				'list_price'=>$price,
-				'pv'=>0,
-			]);
-
-			$resule = ['status'=>'success','message'=>'Add Ai-Cash Success','order_id'=>$id];
+			$resule = ['status'=>'success','message'=>'Add Ai-Cash Success'];
 			DB::commit();
 			return $resule;
 		}catch(Exception $e){ 
@@ -75,12 +66,11 @@ class PaymentAiCash extends Model
 	}
 
 	public static function payment_not_uploadfile($rs){
-		$price = str_replace(',','',$rs->price);
+		 	$price = str_replace(',','',$rs->price);
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-
-		$id = DB::table('orders')
+		$id = DB::table('ai_cash')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -92,55 +82,52 @@ class PaymentAiCash extends Model
 		}
 
 		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = 'C'.date('ymd').''.$maxId;
+
 		try{
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('ai_cash')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
-					'price' => $price,
-					'price_vat' => $price,
-					'pv_total'=>0,
-					'p_vat' =>0,
-					'vat' =>0,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '1'
+					'customer_id_fk' => $customer_id,
+					'ai_cash' => $price,
+					'order_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => 1,
+					'status' => 'panding',
+					'detail' => 'Add Ai-Cash', 
 				] 
 			);
 
 
-			DB::table('order_items')->insert([
-				'order_id'=>$id,
-				'product_name'=>'Add Ai-Cash',
-				'quantity'=>'1',
-				'list_price'=>$price,
-				'pv'=>0,
-			]);
+			$file_slip = $rs->file_slip;
+			if(isset($file_slip)){
+				$url='local/public/files_slip/'.date('Ym');
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-				//return $resule;
-				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
+				$f_name = date('YmdHis').'_'.$customer_id.'.'.$file_slip->getClientOriginalExtension();
+				if($file_slip->move($url,$f_name)){
+					DB::table('payment_slip')
+					->insert(['customer_id'=>$customer_id,'url'=>$url,'file'=>$f_name,'order_id'=>$id,'type'=>'ai-cash']);
+				}
+			}
 
+			$resule = ['status'=>'success','message'=>'Add Ai-Cash Success'];
 			DB::commit();
 			return $resule;
-		}catch(Exception $e){
+		}catch(Exception $e){ 
 			DB::rollback();
 			$resule = ['status'=>'fail','message'=>$e];
-			return $resule;
-
+			return $resule; 
 		}
 	}
 
 	public static function credit_card($rs){
 
+		 	$price = str_replace(',','',$rs->price);
 		$business_location_id = '1';
-
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-
-		$id = DB::table('orders')
+		$id = DB::table('ai_cash')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -152,69 +139,45 @@ class PaymentAiCash extends Model
 		}
 
 		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = 'C'.date('ymd').''.$maxId;
+
 		try{
-			$cartCollection = Cart::session($rs->type)->getContent();
-			$data=$cartCollection->toArray();
 
-			$total = Cart::session($rs->type)->getTotal();
+			$customer_data = DB::table('customers')
+							->select('ai_cash')
+							->where('id','=',$customer_id,)
+							->first();
+			$banlance = $customer_data->ai_cash + $price;
 
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('ai_cash')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
-					'vat'  => $rs->vat,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '7'
+					'customer_id_fk' => $customer_id,
+					'ai_cash' => $price,
+					'banlance' => $banlance,
+					'order_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => 7,
+					'status' => 'success',
+					'detail' => 'Add Ai-Cash', 
 				] 
 			);
 
-			foreach ($data as $value) {
-				$j = $value['quantity'];
-				for ($i=1; $i <= $j ; $i++){
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'course_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>'1',
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-				}
+			 $customers_update = DB::table('customers')
+			->where('id',$customer_id)
+			->update(['ai_cash' => $banlance]);
 
-				Cart::session($rs->type)->remove($value['id']);
-			}
-
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-
-
-			if($resule['status'] == 'success'){
-				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
-				if($resulePv['status'] == 'fail'){
-
-					DB::rollback();
-					return $resulePv;
-				}else{
-					DB::commit();
-					return $resule;
-				}
-			}else{
-				DB::rollback();
-				return $resule;
-			}
-		}catch(Exception $e){
+			$resule = ['status'=>'success','message'=>'Add Ai-Cash Success'];
+			DB::commit();
+			return $resule;
+		}catch(Exception $e){ 
 			DB::rollback();
 			$resule = ['status'=>'fail','message'=>$e];
-			return $resule;
+			return $resule; 
 		}
 	}
- 
+
 
 
 }

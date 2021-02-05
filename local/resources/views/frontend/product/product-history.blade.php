@@ -20,8 +20,6 @@
 							@endforeach
 						</select>
 					</div>
-
-
 				</div>
 			</div>
 			<div class="card-block">

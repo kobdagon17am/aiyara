@@ -13,7 +13,7 @@ class PaymentCourse extends Model
 
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('orders')
+		$id = DB::table('db_frontstore')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -33,7 +33,7 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('db_frontstore')->insertGetId(
 				[
 					'code_order' => $code_order,
 					'customer_id' => $customer_id,
@@ -96,7 +96,7 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('orders')
+		$id = DB::table('db_frontstore')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -115,7 +115,7 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('db_frontstore')->insertGetId(
 				[
 					'code_order' => $code_order,
 					'customer_id' => $customer_id,
@@ -168,7 +168,7 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('orders')
+		$id = DB::table('db_frontstore')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -187,7 +187,7 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('db_frontstore')->insertGetId(
 				[
 					'code_order' => $code_order,
 					'customer_id' => $customer_id,
@@ -249,7 +249,7 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('orders')
+		$id = DB::table('db_frontstore')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -268,7 +268,7 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('orders')->insertGetId(
+			$id = DB::table('db_frontstore')->insertGetId(
 				[
 					'code_order' => $code_order,
 					'customer_id' => $customer_id,

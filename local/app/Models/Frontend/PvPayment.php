@@ -9,7 +9,7 @@ class PvPayment extends Model
 {
 
 	public static function PvPayment_type_confirme($order_id,$admin_id){//1 ทำคุณสมบัติ //2 รักษาคุณสมบัตรรายเดือน
-		$order_data = DB::table('orders')
+		$order_data = DB::table('db_orders')
 		->where('id','=',$order_id)
 		->first();
 
@@ -19,8 +19,8 @@ class PvPayment extends Model
 		}
 
 		$pv = $order_data->pv_total;
-		$customer_id = $order_data->customer_id;
-		$type_id = $order_data->type_id;
+		$customer_id = $order_data->customers_id_fk;
+		$type_id = $order_data->orders_type_id_fk;
 
 		if(empty($order_id) || empty($admin_id)){
 			$resule = ['status'=>'fail','message'=>'Data is Null'];
@@ -28,8 +28,9 @@ class PvPayment extends Model
 		}else{
 
 			try {
-				DB::BeginTransaction();
-				if($order_data->type_address == 0){
+				DB::BeginTransaction(); 
+
+				if($order_data->delivery_location_status == 'sent_office'){
 					$orderstatus_id = 5;
 					# code...
 				}else{
@@ -41,8 +42,8 @@ class PvPayment extends Model
 					$orderstatus_id = 7;
 					$opc_type_order = 'course_event';
 
-				$last_code = DB::table('order_payment_code')//เจนเลข payment order
-				->where('business_location_id','=',$order_data->business_location_id)
+				$last_code = DB::table('db_invoice_code')//เจนเลข payment order
+				->where('business_location_id','=',$order_data->business_location_id_fk)
 				->where('type_order','=','course_event')
 				->orderby('id','desc')
 				->first();
@@ -64,9 +65,9 @@ class PvPayment extends Model
 
 
 			}else{
-				$opc_type_order = 'product';
-				$last_code = DB::table('order_payment_code')//เจนเลข payment order
-				->where('business_location_id','=',$order_data->business_location_id)
+				$opc_type_order = 'db_invoice_code';
+				$last_code = DB::table('db_invoice_code')//เจนเลข payment order
+				->where('business_location_id','=',$order_data->business_location_id_fk)
 				->where('type_order','=','product') 
 				->orderby('id','desc')
 				->first();
@@ -88,32 +89,32 @@ class PvPayment extends Model
 			}
 
 
-			$update_order = DB::table('orders')//update บิล
+			$update_order = DB::table('db_orders')//update บิล
 			->where('id',$order_id)
-			->update(['id_admin_check' => $admin_id, 
-				'orderstatus_id'=> $orderstatus_id,
-				'date_payment'=> date('Y-m-d H:i:s')]);
+			->update(['approver' => $admin_id, 
+				'order_status_id_fk'=> $orderstatus_id,
+				'approve_date'=> date('Y-m-d H:i:s')]);
 
 
-				$check_payment_code = DB::table('order_payment_code')//เจนเลข payment order
+				$check_payment_code = DB::table('db_invoice_code')//เจนเลข payment order
 				->where('order_id','=',$order_id)
 				->first(); 
 
 				if($check_payment_code){
-					$update_order_payment_code = DB::table('order_payment_code') 
+					$update_order_payment_code = DB::table('db_invoice_code') 
 					->where('order_id',$order_id)
 
 					->update(['order_payment_status' => 'Success',
 						'order_payment_code'=>$code_order,
-						'business_location_id'=>$order_data->business_location_id,
+						'business_location_id'=>$order_data->business_location_id_fk,
 					'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}else{
-					$inseart_order_payment_code = DB::table('order_payment_code')->insert([
+					$inseart_order_payment_code = DB::table('db_invoice_code')->insert([
 						'order_id'=>$order_id,
 						'order_payment_code'=>$code_order,
 						'order_payment_status'=>'Success',
-						'business_location_id'=>$order_data->business_location_id,
+						'business_location_id'=>$order_data->business_location_id_fk,
 						'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}
@@ -123,16 +124,16 @@ class PvPayment extends Model
 						->select('*')
 						->where('id','=',$customer_id)
 						->first();
-				//dd($data_user);
 
 						$add_pv = $data_user->pv + $pv;
+
 						$update_pv = DB::table('customers') 
 						->where('id',$customer_id)
 						->update(['pv' => $add_pv]);
 
-						$update_order_type_1 = DB::table('orders')//update บิล
+						$update_order_type_1 = DB::table('db_orders')//update บิล
 						->where('id',$order_id)
-						->update(['banlance' => $add_pv]);
+						->update(['pv_banlance' => $add_pv,'date_action_pv'=>date('Y-m-d H:i:s')]);
 
 				//ทำคุณสมบัติตัวเอง
 						$upline_type = $data_user->line_type;
@@ -189,9 +190,9 @@ class PvPayment extends Model
 					          ->update(['pv_mt' => $pv_mt_total,'pv_mt_active' => $mt_active,
 					          	'status_pv_mt'=>'not','date_mt_first'=>date('Y-m-d h:i:s')]);
 
-					            $update_order_type_2 = DB::table('orders')//update บิล
+					            $update_order_type_2 = DB::table('db_orders')//update บิล
 					            ->where('id',$order_id)
-					            ->update(['banlance' => $pv_mt_total,'active_mt_tv_date'=> date('Y-m-t',strtotime($mt_active))]);
+					            ->update(['pv_banlance' => $pv_mt_total,'active_mt_tv_date'=> date('Y-m-t',strtotime($mt_active))]);
 
 
 					        }else{
@@ -202,9 +203,9 @@ class PvPayment extends Model
 					        		'pv_mt_active' => date('Y-m-t',strtotime($start_month)),
 					        		'status_pv_mt'=>'not','date_mt_first'=>date('Y-m-d h:i:s')]);
 
-					      	   $update_order_type_2 = DB::table('orders')//update บิล
+					      	   $update_order_type_2 = DB::table('db_orders')//update บิล
 					      	   ->where('id',$order_id)
-					      	   ->update(['banlance' => $pv_mt_all,'active_mt_tv_date'=> date('Y-m-t',strtotime($start_month))]);
+					      	   ->update(['pv_banlance' => $pv_mt_all,'active_mt_tv_date'=> date('Y-m-t',strtotime($start_month))]);
 					      	}
 
 
@@ -253,9 +254,9 @@ class PvPayment extends Model
 				          ->update(['pv_mt' => $pv_mt_total,'pv_mt_active' => $mt_active]);
 				          //dd($mt_active);
 
-				              $update_order_type_2 = DB::table('orders')//update บิล
+				              $update_order_type_2 = DB::table('db_orders')//update บิล
 				              ->where('id',$order_id)
-				              ->update(['banlance' => $pv_mt_total,'active_mt_tv_date'=>$mt_active]);
+				              ->update(['pv_banlance' => $pv_mt_total,'active_mt_tv_date'=>$mt_active]);
 
 				          }else{
 				      	//dd('อัพเดท');
@@ -263,9 +264,9 @@ class PvPayment extends Model
 				          	->where('id',$customer_id)
 				          	->update(['pv_mt' => $pv_mt_all]);
 
-				          	  $update_order_type_2 = DB::table('orders')//update บิล
+				          	  $update_order_type_2 = DB::table('db_orders')//update บิล
 				          	  ->where('id',$order_id)
-				          	  ->update(['banlance' => $pv_mt_all,'active_mt_tv_date'=>$data_user->pv_mt_active]);
+				          	  ->update(['pv_banlance' => $pv_mt_all,'active_mt_tv_date'=>$data_user->pv_mt_active]);
 				          	}
 
 				          	$upline_type = $data_user->line_type;
@@ -320,9 +321,9 @@ class PvPayment extends Model
 				          ->update(['pv_tv' => $pv_tv_total,'pv_tv_active' => $tv_active]);
 				          //dd($tv_active);
 
-				          $update_order_type_3 = DB::table('orders')//update บิล
+				          $update_order_type_3 = DB::table('db_orders')//update บิล
 				          ->where('id',$order_id)
-				          ->update(['banlance' => $pv_tv_total,'active_mt_tv_date'=>$tv_active ]);
+				          ->update(['pv_banlance' => $pv_tv_total,'active_mt_tv_date'=>$tv_active ]);
 
 				      }else{
 				      	//dd('อัพเดท');
@@ -330,9 +331,9 @@ class PvPayment extends Model
 				      	->where('id',$customer_id)
 				      	->update(['pv_tv' => $pv_tv_all]);
 
-				      	$update_order_type_3 = DB::table('orders')//update บิล
+				      	$update_order_type_3 = DB::table('db_orders')//update บิล
 				      	->where('id',$order_id)
-				      	->update(['banlance' => $pv_tv_all,'active_mt_tv_date'=>$data_user->pv_tv_active ]);
+				      	->update(['pv_banlance' => $pv_tv_all,'active_mt_tv_date'=>$data_user->pv_tv_active ]);
 				      }
 				      $upline_type = $data_user->line_type;
 				      $upline_id = $data_user->upline_id;
@@ -363,6 +364,16 @@ class PvPayment extends Model
 						$last_upline_type = $upline_type;
 
 					}elseif($type_id == 5){//Gift Voucher
+
+						$pv_banlance = DB::table('customers')
+						->select('pv')
+						->where('id',$customer_id)
+						->first();
+
+						 $update_order_type_5 = DB::table('db_orders')//update บิล
+				      	->where('id',$order_id)
+				      	->update(['pv_banlance' => $pv_banlance->pv ]);
+				      
 						//ไม่เข้าสถานะต้อง Approve
 					}elseif($type_id == 6){//couse อบรม
 
@@ -383,9 +394,9 @@ class PvPayment extends Model
 						->where('id',$customer_id)
 						->update(['pv' => $add_pv]);
 
-						$update_order_type_6 = DB::table('orders')//update บิล
+						$update_order_type_6 = DB::table('db_orders')//update บิล
 						->where('id',$order_id)
-						->update(['banlance' => $add_pv]);
+						->update(['pv_banlance' => $add_pv,'date_action_pv'=>date('Y-m-d H:i:s')]);
 
 						$upline_type = $data_user->line_type;
 						$upline_id = $data_user->upline_id;
