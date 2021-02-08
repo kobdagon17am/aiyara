@@ -72,11 +72,11 @@ use App\Models\Frontend\DirectSponsor;
                         <td>1000</td>
                         <td>1000</td>
                         <td>1000</td> 
-                        <td><a href="{{ route('commission_faststart') }}" class="text-primary">1000</a></td>
+                        <td><a href="{{ route('commission_faststart') }}"><b class="text-primary">1000</b></a> </td>
                         <td>1000</td>
                         <td>1000</td>
                         <td>1000</td>
-                        <td>1000</td>
+                        <td> <a href="{{ route('commission_matching') }}"><b class="text-primary">1000</b></a> </td>
                         <td>1000</td>
                         <td>1000</td>
                         <td>1000</td>

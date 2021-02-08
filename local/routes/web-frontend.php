@@ -169,7 +169,9 @@ Route::post('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('d
 Route::get('commission-per-day','Frontend\CommissionController@commission_per_day')->name('commission-per-day');
 Route::get('commission_faststart','Frontend\CommissionController@commission_faststart')->name('commission_faststart');
 Route::get('commission_bonus_report','Frontend\CommissionController@commission_bonus_report')->name('commission_bonus_report');
- 
+
+Route::get('commission_matching','Frontend\CommissionController@commission_matching')->name('commission_matching');
+
  
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');

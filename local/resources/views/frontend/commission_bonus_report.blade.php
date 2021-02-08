@@ -43,7 +43,9 @@
                         <td> 30 </td>
                         <td> 0.00 </td> 
                         <td> โอนผ่านธนาคาร </td>
-                        <td> <button class="btn btn-success  btn-sm btn-icon" data-toggle="modal" data-target="#large-Modal"><i class="icofont icofont-eye-alt"></i></button> </td>
+                        <td> <button class="btn btn-success btn-outline-success" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-search"></i></button>
+
+                         </td>
                     </tr>
                     @endfor
 

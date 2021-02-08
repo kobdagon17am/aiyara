@@ -35,6 +35,14 @@ public function commission_bonus_report(){
 
 }
 
+public function commission_matching(){ 
+
+    return view('frontend/commission_matching'); 
+
+}
+
+
+
 
 
 }

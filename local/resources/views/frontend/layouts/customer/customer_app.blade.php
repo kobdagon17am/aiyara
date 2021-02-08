@@ -195,64 +195,64 @@
 
 									</li>
 
-                                    <li>
-                                    	<a href="{{route('logout')}}">
-                                    		<i class="ti-layout-sidebar-left text-success"></i> Logout
-                                    	</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+									<li>
+										<a href="{{route('logout')}}">
+											<i class="ti-layout-sidebar-left text-success"></i> Logout
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
 
-            <!-- Sidebar inner chat start-->
-            <div class="showChat_inner">
-            	<div class="media chat-inner-header">
-            		<a class="back_chatBox">
-            			<i class="fa fa-chevron-left text-success"></i> Josephin Doe
-            		</a>
-            	</div>
-            	<div class="media chat-messages">
-            		<a class="media-left photo-table" href="#!">
-            			<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
-            		</a>
-            		<div class="media-body chat-menu-content">
-            			<div class="">
-            				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-            				<p class="chat-time">8:20 a.m.</p>
-            			</div>
-            		</div>
-            	</div>
-            	<div class="media chat-messages">
-            		<div class="media-body chat-menu-reply">
-            			<div class="">
-            				<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-            				<p class="chat-time">8:20 a.m.</p>
-            			</div>
-            		</div>
-            		<div class="media-right photo-table">
-            			<a href="#!">
-            				<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-4.jpg')}}" alt="Generic placeholder image">
-            			</a>
-            		</div>
-            	</div>
-            	<div class="chat-reply-box p-b-20">
-            		<div class="right-icon-control">
-            			<input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-            			<div class="form-icon">
-            				<i class="fa fa-paper-plane text-success"></i>
-            			</div>
-            		</div>
-            	</div>
-            </div>
-            <!-- Sidebar inner chat end-->
-            <div class="pcoded-main-container">
-            	<div class="pcoded-wrapper">
-            		<nav class="pcoded-navbar">
-            			<div class="sidebar_toggle"><a href="#"><i class="icon-close icons text-success"></i></a></div>
-            			<div class="pcoded-inner-navbar main-menu">
+			<!-- Sidebar inner chat start-->
+			<div class="showChat_inner">
+				<div class="media chat-inner-header">
+					<a class="back_chatBox">
+						<i class="fa fa-chevron-left text-success"></i> Josephin Doe
+					</a>
+				</div>
+				<div class="media chat-messages">
+					<a class="media-left photo-table" href="#!">
+						<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
+					</a>
+					<div class="media-body chat-menu-content">
+						<div class="">
+							<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+							<p class="chat-time">8:20 a.m.</p>
+						</div>
+					</div>
+				</div>
+				<div class="media chat-messages">
+					<div class="media-body chat-menu-reply">
+						<div class="">
+							<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+							<p class="chat-time">8:20 a.m.</p>
+						</div>
+					</div>
+					<div class="media-right photo-table">
+						<a href="#!">
+							<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-4.jpg')}}" alt="Generic placeholder image">
+						</a>
+					</div>
+				</div>
+				<div class="chat-reply-box p-b-20">
+					<div class="right-icon-control">
+						<input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
+						<div class="form-icon">
+							<i class="fa fa-paper-plane text-success"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Sidebar inner chat end-->
+			<div class="pcoded-main-container">
+				<div class="pcoded-wrapper">
+					<nav class="pcoded-navbar">
+						<div class="sidebar_toggle"><a href="#"><i class="icon-close icons text-success"></i></a></div>
+						<div class="pcoded-inner-navbar main-menu">
 <!-- 
 	<div class="pcoded-navigation-label">สมาชิก</div> -->
 
@@ -453,41 +453,49 @@
 			</a>
 		</li> --}}
 
-		<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
-			<a href="{{route('commission_bonus_report')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานการจ่ายโบนัส</b></span>
-				<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
+		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_report') || request()->is('commission-per-day') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+			<a href="javascript:void(0)">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
+				<span class="pcoded-mtext">Commission</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
-		</li>
 
-		<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
-			<a href="{{route('commission-per-day')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่นรายวัน</b></span>
-				<span class="pcoded-mtext">รายงานคอมมิชชั่นรายวัน</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
+			<ul class="pcoded-submenu">
+				<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
+					<a href="{{route('commission_bonus_report')}}"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
 
-		<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
-			<a href="{{route('commission_faststart')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>FastStart Bonus</b></span>
-				<span class="pcoded-mtext"> FastStart Bonus</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
+				<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
+					<a href="{{route('commission-per-day')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">รายงานคอมมิชชั่นรายวัน</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
 
+				<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
+					<a href="{{route('commission_faststart')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">FastStart Bonus</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('commission_matching')) ? 'active' : '' }}">
+					<a href="{{route('commission_matching')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Matching</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>	 
+			</ul>
+		</li>
+ 
 		
-
-	{{-- 	<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
-			<a href="{{route('walletindex')}}">
-				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
-				<span class="pcoded-mtext">Ai-Cash</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li> --}}
-
-
 		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
 			<a href="{{route('ai-pocket')}}">
 				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
@@ -520,7 +528,7 @@
 				</a>
 			</li>
 
-	 
+
 
 			<li class="{{ (request()->is('travel')) ? 'active' : '' }}">
 				<a href="{{route('travel')}}">
