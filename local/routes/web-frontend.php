@@ -165,6 +165,10 @@ Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_co
 
 Route::get('direct-sponsor','Frontend\DirectSponsorController@index')->name('direct-sponsor');
 Route::post('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
+
+Route::get('commission-per-day','Frontend\CommissionController@commission_per_day')->name('commission-per-day');
+Route::get('commission_faststart','Frontend\CommissionController@commission_faststart')->name('commission_faststart');
+Route::get('commission_bonus_report','Frontend\CommissionController@commission_bonus_report')->name('commission_bonus_report');
  
  
 Route::get('/reward-history', function () {

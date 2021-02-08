@@ -445,13 +445,39 @@
 			</ul>
 		</li>
 
-		<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
+	{{-- 	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
 			<a href="{{route('comission')}}">
 				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่น</b></span>
 				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
+		</li> --}}
+
+		<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
+			<a href="{{route('commission_bonus_report')}}">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานการจ่ายโบนัส</b></span>
+				<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
 		</li>
+
+		<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
+			<a href="{{route('commission-per-day')}}">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่นรายวัน</b></span>
+				<span class="pcoded-mtext">รายงานคอมมิชชั่นรายวัน</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+		<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
+			<a href="{{route('commission_faststart')}}">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>FastStart Bonus</b></span>
+				<span class="pcoded-mtext"> FastStart Bonus</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+		
 
 	{{-- 	<li class="{{ (request()->is('walletindex')) ? 'active' : '' }}">
 			<a href="{{route('walletindex')}}">

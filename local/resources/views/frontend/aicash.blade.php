@@ -87,8 +87,6 @@
                  $status ='<span class="label label-inverse-warning"><b style="color: #000">'.$value->order_status.'</b></span>';
                }else{
                   $status ='<span class="label label-inverse-warning"><b style="color: #000">'.$value->order_status.'</b></span>';
-                   dd($status);
- 
                }
 
 

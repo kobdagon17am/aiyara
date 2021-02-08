@@ -14,12 +14,16 @@ class Frontend{
 	}
 
 	public static function get_customer($id){
+
+
 		$customer =  DB::table('customers')
 		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name') 
 		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id') 
 		->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 		->where('customers.id','=',$id)
 		->first(); 
+
+
 		return $customer;
 	}
 
@@ -36,9 +40,9 @@ class Frontend{
 
 	public static function get_ce_register($ce_id){
 
-		$orders = DB::table('order_items')
-		->where('course_id','=',$ce_id)
-		->where('status','=','order')
+		$orders = DB::table('db_order_products_list')
+		->where('course_id_fk','=',$ce_id)
+		->where('approve_status','=',0)
 		->count();
 
 		$course_event_regis = DB::table('course_event_regis') 
@@ -55,12 +59,13 @@ class Frontend{
 		$date_now = date('Y-m-d');
 		//$date_now = '2021-01-13';
 
-		$orders = DB::table('order_items')
-		->leftjoin('orders','orders.id','=','order_items.order_id') 
-		->where('order_items.course_id','=',$ce_id)
-		->where('orders.customer_id','=',$customer_id)
-		->whereDate('order_items.create_at','=',$date_now)
-		->where('status','=','order')
+
+		$orders = DB::table('db_order_products_list') 
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk') 
+		->where('db_order_products_list.course_id_fk','=',$ce_id)
+		->where('db_orders.customers_id_fk','=',$customer_id)
+		->whereDate('db_orders.created_at','=',$date_now)
+		->where('db_orders.approve_status','=',0) 
 		->count();
 
 		$course_event_regis = DB::table('course_event_regis') 
@@ -76,19 +81,21 @@ class Frontend{
 
 	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อวัน
 
-		$orders = DB::table('order_items')
-		->leftjoin('orders','orders.id','=','order_items.order_id') 
-		->where('order_items.course_id','=',$ce_id)
-		->where('orders.customer_id','=',$customer_id)
-		->where('status','=','order')
+		$orders = DB::table('db_order_products_list')
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk') 
+		->where('db_order_products_list.course_id_fk','=',$ce_id)
+		->where('db_orders.customers_id_fk','=',$customer_id)
+		->where('db_orders.approve_status','=',0) 
 		->count();
 
+	
 		$course_event_regis = DB::table('course_event_regis') 
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)
 		->count();
 
 		$sum = $orders + $course_event_regis;
+
 		return $sum;
 
 	}

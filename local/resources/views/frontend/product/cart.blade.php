@@ -70,11 +70,13 @@
                                     ?>
 
                                     <tr id="items">
-                                        <td class="text-center"><a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
+                                        <td class="text-center">
+                                            <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
                                             <h6>{{ $value['name'] }}</h6>
-                                            @if($type == 6){
+
+                                            @if($type == 6)
                                                 @if($check['status'] == 'fail')
                                                  <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
                                                  @endif

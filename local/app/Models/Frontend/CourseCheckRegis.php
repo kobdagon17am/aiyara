@@ -18,11 +18,12 @@ class CourseCheckRegis extends Model
         $customer_id = Auth::guard('c_user')->user()->id;
         $package_id = Auth::guard('c_user')->user()->package_id;
         $qualification_id = Auth::guard('c_user')->user()->qualification_id;
-        $aistockist_id = Auth::guard('c_user')->user()->aistockist_id;
-        //dd($data_ce);
+        $aistockist_status = Auth::guard('c_user')->user()->aistockist_status;
+       
 
         //1 เช็คบัตรก่อนว่าเต็มไหม
         $count_ce = \App\Helpers\Frontend::get_ce_register($course_id);//[บัตรทั้งหมด]
+ 
         $ce_register_per_customer_perday = \App\Helpers\Frontend::get_ce_register_per_customer_perday($course_id,$customer_id);//จำนวนที่จองคอสนี้ ต่อวัน
         $ce_register_per_customer_course = \App\Helpers\Frontend::get_ce_register_per_customer_percourse($course_id,$customer_id);//จำนวนที่จองคอสนี้ต่อ Course
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
@@ -70,20 +71,20 @@ class CourseCheckRegis extends Model
         return $resule;exit();
 
     }elseif($data_ce->maintain_travel_feature == 2 and !empty($data_ce->maintain_travel_feature) and $tv_active['status'] == 'fail'){
-                            ///ไม่ต้องรักษาคุณสมบัตรรายเดือน
-        $resule = ['status'=>'fail','message'=>$mt_active['message'],'code'=>'e010'];
+                            ///ไม่ต้องรักษาคุณสมบัตรรายเดือน 
+        $resule = ['status'=>'fail','message'=>$tv_active['message'],'code'=>'e010'];
         return $resule;exit();
 
     }elseif($data_ce->maintain_travel_feature == 2 and !empty($data_ce->maintain_travel_feature) and $tv_active['type']=='Y'){
         $resule = ['status'=>'fail','message'=>'ต้องไม่รักษาคุณสมบัติท่องเที่ยว','code'=>'e011'];
         return $resule;exit();
 
-    }elseif($data_ce->aistockist == 1 and !empty($data_ce->aistockist) and ($aistockist_id == 2 || $aistockist_id == null)){//เป็น aistockist
+    }elseif($data_ce->aistockist == 1 and !empty($data_ce->aistockist) and ($aistockist_status == 0 || $aistockist_status == null)){//เป็น aistockist
 
         $resule = ['status'=>'fail','message'=>'ต้องเป็น  Ai-Stockist','code'=>'e012'];
         return $resule;exit();
 
-    }elseif($data_ce->aistockist == 2 and !empty($data_ce->aistockist) and $aistockist_id == 1){//ต้องไม่เป็น aistockist  
+    }elseif($data_ce->aistockist == 2 and !empty($data_ce->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist  
 
         $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist','code'=>'e013'];
         return $resule;exit();

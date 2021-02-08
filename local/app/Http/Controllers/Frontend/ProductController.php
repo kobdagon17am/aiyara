@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cart;
 use App\Models\Frontend\Product;
+use App\Models\Frontend\ProductList;
 use App\Models\Frontend\Couse_Event;
 
 class ProductController extends Controller
@@ -36,53 +37,19 @@ public function product_list_select(Request $request){
         $c_id = $request->category_id;
 
         if($c_id == 8 ){
-            $data = Product::product_list_select_promotion($c_id,$type);
-
+            $html = Product::product_list_select_promotion($c_id,$type);
+            return $html;
         }else{
            $data = Product::product_list_select($c_id,$type);
 
        }
    }
 
-   
    $html='';
    if($data['product']){
     foreach ($data['product'] as $value){
-        $html .= '<div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
-        <input type="hidden" id="item_id" value="'.$value->products_id.'">
-        <div class="card prod-view">
-        <div class="prod-item text-center">
-        <div class="prod-img">
-        <div class="option-hover">
-        <a href="'.route("product-detail",['type'=>$type,'id'=>$value->products_id]).'" type="button" 
-        class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
-        <a href="'.route("product-detail",['type'=>$type,'id'=>$value->products_id]).'"
-        class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
-        <i class="icofont icofont-eye-alt f-20"></i>
-        </a>
-        <!-- <button type="button" class="btn btn-danger btn-icon waves-effect waves-light hvr-bounce-in option-icon">
-        <i class="icofont icofont-heart-alt f-20"></i>
-        </button> -->
-        </div>
-        <a href="#!" class="hvr-shrink">
-        <img src="'.asset($value->img_url.''.$value->product_img).'" class="img-fluid o-hidden" alt="">
-        </a>
-        <!-- <div class="p-new"><a href=""> New </a></div> -->
-        </div>
-        <div class="prod-info">
-        <a href="'.route('product-detail',['type'=>$type,'id'=>$value->products_id]).'" class="txt-muted">
-        <h5 style="font-size: 15px">'.$value->product_name.'</h5>
-        <p class="text-left p-2 m-b-0" style="font-size: 12px">'.$value->title.'</p>
-        </a>
-        <!--<div class="m-b-10">
-        <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
-        </div> -->
-        <span class="prod-price" style="font-size: 20px">'.$value->icon.' '.number_format($value->member_price,2).'<b
-        style="color:#00c454">['.$value->pv.' PV]</b></span>
-        </div>
-        </div>
-        </div>
-        </div>';
+
+        $html .= ProductList::product_list_html($value->products_id,$type,$value->img_url,$value->product_img,$value->product_name,$value->title,$value->icon,$value->member_price,$value->pv);
     }
 
 }else{

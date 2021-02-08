@@ -13,7 +13,7 @@ class PaymentCourse extends Model
 
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('db_frontstore')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -33,19 +33,18 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('db_frontstore')->insertGetId(
+			$id = DB::table('db_orders')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
+					'customers_id_fk' => $customer_id,
 					'vat'  => $rs->vat,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
+					'sum_price' => $rs->price,
+
 					'pv_total'  => $rs->pv_total,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '2'
+					'orders_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => '2'
 				] 
 			);
 
@@ -64,13 +63,16 @@ class PaymentCourse extends Model
 			foreach ($data as $value) {
 				$j = $value['quantity'];
 				for ($i=1; $i <= $j ; $i++){
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'course_id'=>$value['id'],
+
+					DB::table('db_order_products_list')->insert([
+						'order_id_fk'=>$id,
+						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
-						'quantity'=>'1',
-						'list_price'=>$value['price'],
+						'amt'=>'1',
+						'selling_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
+						'total_pv'=>$value['attributes']['pv'],
+						'total_price'=>$value['price'],
 					]);
 				}
 				
@@ -82,9 +84,9 @@ class PaymentCourse extends Model
 				//return redirect('product-history')->withSuccess('สั่งซื้อสินค้าเรียบร้อย');
 
 			DB::commit();
-
 			return $resule;
-		}catch(Exception $e) { 
+
+		}catch(Exception $e){ 
 			DB::rollback();
 			$resule = ['status'=>'fail','message'=>$e];
 			return $resule; 
@@ -96,7 +98,7 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('db_frontstore')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -115,34 +117,36 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('db_frontstore')->insertGetId(
+			$id = DB::table('db_orders')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
+					'customers_id_fk' => $customer_id,
 					'vat'  => $rs->vat,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
+					'sum_price' => $rs->price,
+					
 					'pv_total'  => $rs->pv_total,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '1'
+					'orders_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => '2'
 				] 
 			);
 
 			foreach ($data as $value) {
 				$j = $value['quantity'];
 				for ($i=1; $i <= $j ; $i++){
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'course_id'=>$value['id'],
+					DB::table('db_order_products_list')->insert([
+						'order_id_fk'=>$id,
+						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
-						'quantity'=>'1',
-						'list_price'=>$value['price'],
+						'amt'=>'1',
+						'selling_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
+						'total_pv'=>$value['attributes']['pv'],
+						'total_price'=>$value['price'],
 					]);
 				}
+
 
 				Cart::session($rs->type)->remove($value['id']);
 			}
@@ -168,7 +172,7 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('db_frontstore')
+		$id = DB::table('db_orders')
 		->select('id')
 		->orderby('id','desc')
 		->first();
@@ -187,142 +191,149 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
-			$id = DB::table('db_frontstore')->insertGetId(
+			$id = DB::table('db_orders')->insertGetId(
 				[
 					'code_order' => $code_order,
-					'customer_id' => $customer_id,
+					'customers_id_fk' => $customer_id,
 					'vat'  => $rs->vat,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
+					'sum_price' => $rs->price,
+
 					'pv_total'  => $rs->pv_total,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '7'
-				] 
+					'orders_type_id_fk'  => $rs->type,
+					'pay_type_id_fk'  => $rs->pay_type,
+					'business_location_id_fk' => $business_location_id,
+					'order_status_id_fk' => '2'
+				]  
 			);
 
 			foreach ($data as $value) {
 				$j = $value['quantity'];
 				for ($i=1; $i <= $j ; $i++){
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'course_id'=>$value['id'],
+					DB::table('db_order_products_list')->insert([
+						'order_id_fk'=>$id,
+						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
-						'quantity'=>'1',
-						'list_price'=>$value['price'],
+						'amt'=>'1',
+						'selling_price'=>$value['price'],
 						'pv'=>$value['attributes']['pv'],
+						'total_pv'=>$value['attributes']['pv'],
+						'total_price'=>$value['price'],
 					]);
-				}
 
-				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
+			Cart::session($rs->type)->remove($value['id']);
+		}
+
+		$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 
 
-			if($resule['status'] == 'success'){
-				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
-				if($resulePv['status'] == 'fail'){
 
-					DB::rollback();
-					return $resulePv;
-				}else{
-					DB::commit();
-					return $resule;
-				}
-			}else{
+		if($resule['status'] == 'success'){
+
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+
+			if($resulePv['status'] == 'fail'){
+
 				DB::rollback();
+				return $resulePv;
+			}else{
+				DB::commit();
 				return $resule;
 			}
-		}catch(Exception $e){
+		}else{
 			DB::rollback();
-			$resule = ['status'=>'fail','message'=>$e];
 			return $resule;
 		}
+	}catch(Exception $e){
+		DB::rollback();
+		$resule = ['status'=>'fail','message'=>$e];
+		return $resule;
+	}
+}
+
+public static function ai_cash($rs){
+	$business_location_id = '1'; 
+
+	DB::BeginTransaction();
+	$customer_id = Auth::guard('c_user')->user()->id;
+
+	$id = DB::table('db_orders')
+	->select('id')
+	->orderby('id','desc')
+	->first();
+
+	if(empty($id)){
+		$maxId  = 1; 
+	}else{
+		$maxId  = $id->id +1; 
 	}
 
-	public static function ai_cash($rs){
-		$business_location_id = '1'; 
+	$maxId = substr("0000000".$maxId, -7);
+	$code_order = date('ymd').''.$maxId;
+	try{
+		$cartCollection = Cart::session($rs->type)->getContent();
+		$data=$cartCollection->toArray();
 
-		DB::BeginTransaction();
-		$customer_id = Auth::guard('c_user')->user()->id;
+		$total = Cart::session($rs->type)->getTotal();
 
-		$id = DB::table('db_frontstore')
-		->select('id')
-		->orderby('id','desc')
-		->first();
+		$id = DB::table('db_orders')->insertGetId(
+			[
+				'code_order' => $code_order,
+				'customers_id_fk' => $customer_id,
+				'vat'  => $rs->vat,
+				'sum_price' => $rs->price,
 
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
+				'pv_total'  => $rs->pv_total,
+				'orders_type_id_fk'  => $rs->type,
+				'pay_type_id_fk'  => $rs->pay_type,
+				'business_location_id_fk' => $business_location_id,
+				'order_status_id_fk' => '2'
+			] 
+		);
 
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
-		try{
-			$cartCollection = Cart::session($rs->type)->getContent();
-			$data=$cartCollection->toArray();
-
-			$total = Cart::session($rs->type)->getTotal();
-
-			$id = DB::table('db_frontstore')->insertGetId(
-				[
-					'code_order' => $code_order,
-					'customer_id' => $customer_id,
-					'vat'  => $rs->vat,
-					'price' => $rs->price,
-					'price_vat' => $rs->price_vat,
-					'p_vat'  => $rs->p_vat,
-					'pv_total'  => $rs->pv_total,
-					'type_id'  => $rs->type,
-					'pay_type_id'  => $rs->pay_type,
-					'business_location_id' => $business_location_id,
-					'orderstatus_id' => '7'
-				] 
-			);
-
-			foreach ($data as $value) {
-				$j = $value['quantity'];
-				for ($i=1; $i <= $j ; $i++){
-					DB::table('order_items')->insert([
-						'order_id'=>$id,
-						'course_id'=>$value['id'],
-						'product_name'=>$value['name'],
-						'quantity'=>'1',
-						'list_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-					]);
-				}
+		foreach ($data as $value) {
+			$j = $value['quantity'];
+			for ($i=1; $i <= $j ; $i++){
+				DB::table('db_order_products_list')->insert([
+					'order_id_fk'=>$id,
+					'course_id_fk'=>$value['id'],
+					'product_name'=>$value['name'],
+					'amt'=>'1',
+					'selling_price'=>$value['price'],
+					'pv'=>$value['attributes']['pv'],
+					'total_pv'=>$value['attributes']['pv'],
+					'total_price'=>$value['price'],
+				]);
 				
-				Cart::session($rs->type)->remove($value['id']);
 			}
 
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
+			Cart::session($rs->type)->remove($value['id']);
+		}
+
+		$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 
 
-			if($resule['status'] == 'success'){
-				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
-				if($resulePv['status'] == 'fail'){
+		if($resule['status'] == 'success'){
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			if($resulePv['status'] == 'fail'){
 
-					DB::rollback();
-					return $resulePv;
-				}else{
-					DB::commit();
-					return $resule;
-				}
-			}else{
 				DB::rollback();
+				return $resulePv;
+			}else{
+				DB::commit();
 				return $resule;
 			}
-		}catch(Exception $e){
+		}else{
 			DB::rollback();
-			$resule = ['status'=>'fail','message'=>$e];
 			return $resule;
 		}
+	}catch(Exception $e){
+		DB::rollback();
+		$resule = ['status'=>'fail','message'=>$e];
+		return $resule;
 	}
+}
 
 
 }

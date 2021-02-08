@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use Auth;
+use App\Models\Frontend\Promotion;
+use App\Models\Frontend\ProductList;
+
 class Product extends Model
 {
 	public static function product_list($type){ 
@@ -98,125 +101,131 @@ class Product extends Model
 
     }
 
-    public static function product_list_select_promotion(){
+    public static function product_list_select_promotion($category_id,$type){//$promotion_id,$types
 
-         $promotions = DB::table('promotions')
-        ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img')
-        ->leftjoin('promotions_images','promotions_images.id','=','promotions.id')
-        ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
-        ->where('promotions_images.image_default','=',1)
-        ->where('promotions.business_location','=',Auth::guard('c_user')->user()->business_location_id)
-        ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
-        ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
-        ->where('promotions.status','=',1)
-        ->orderby('id','DESC')
-        ->get();
+       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+
+       $promotions = DB::table('promotions')
+       ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img','promotions_cost.selling_price','promotions_cost.pv')
+       ->leftjoin('promotions_images','promotions_images.id','=','promotions.id')
+       ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
+       ->where('promotions_images.image_default','=',1) 
+       ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
+       ->where('promotions.business_location','=',$business_location_id)
+       ->where('promotions_cost.business_location_id','=',$business_location_id)
+       ->where('promotions_cost.status','=',1)
+       ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
+       ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
+       ->where('promotions.status','=',1)
+       ->orderby('id','DESC')
+       ->get();
+
+       if(count($promotions) <= 0 ){
+           $resule = ['status'=>'fail','message'=>'NUll Product'];
+       }else{
 
         $customer_id = Auth::guard('c_user')->user()->id;
         $package_id = Auth::guard('c_user')->user()->package_id;
         $qualification_id = Auth::guard('c_user')->user()->qualification_id;
-        $aistockist_id = Auth::guard('c_user')->user()->aistockist_id;
+        $aistockist_status = Auth::guard('c_user')->user()->aistockist_status;
+        $agency_status = Auth::guard('c_user')->user()->agency_status;
 
-        $data = array();
+        $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
+        $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
+
+        $html=''; 
+
         foreach ($promotions as $value){
-            all_available_purchase($promotions->id);
 
-        }
-
-        //dd($data_ce);
-        //1 เช็คบัตรก่อนว่าเต็มไหม
-        //$check_all_available_purchase = \App\Helpers\Frontend::check_all_available_purchase($id);//[โปรโมชั่นนี้ทั้งหมด]
-         
-        // $ce_register_per_customer_perday = \App\Helpers\Frontend::get_ce_register_per_customer_perday($course_id,$customer_id);//จำนวนที่จองคอสนี้ ต่อวัน
-        // $ce_register_per_customer_course = \App\Helpers\Frontend::get_ce_register_per_customer_percourse($course_id,$customer_id);//จำนวนที่จองคอสนี้ต่อ Course
-        // $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
-        // $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
+            $check_all_available_purchase = Promotion::all_available_purchase($value->id);
+            $count_per_promotion = Promotion::count_per_promotion($value->id);
+            $count_per_promotion_day = Promotion::count_per_promotion_day($value->id);
 
 
- 
-        if($package_id < $data_ce->minimum_package_purchased and !empty($data_ce->minimum_package_purchased)){//Package ขั้นต่ำที่ซื้อได้ :(DB:dataset_package) package_id 
-            $resule = ['status'=>'fail','message'=>'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้','code'=>'e002'];
-            return $resule;exit();
-        }elseif($qualification_id < $data_ce->reward_qualify_purchased and !empty($data_ce->reward_qualify_purchased)){
-            $resule = ['status'=>'fail','message'=>'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้','code'=>'e003'];
-            return $resule;exit();
+             //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
+            if($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase']){
+                $resule = ['status'=>'fail','message'=>'การสั่งซื้อครบแล้ว'];
+            }elseif($package_id < $value->minimum_package_purchased and !empty($data_ce->minimum_package_purchased)) {
+                $resule = ['status'=>'fail','message'=>'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้'];
 
-        }elseif($data_ce->keep_personal_quality == 1 and !empty($data_ce->keep_personal_quality) and $mt_active['status'] == 'fail'){
-            ///ต้องรักษาคุณสมบัตรรายเดือน
-         $resule = ['status'=>'fail','message'=>$mt_active['message'],'code'=>'e004'];
-         return $resule;exit();
+            }elseif($qualification_id < $value->reward_qualify_purchased and !empty($data_ce->reward_qualify_purchased)) {
 
-     }elseif($data_ce->keep_personal_quality == 1 and !empty($data_ce->keep_personal_quality) and $mt_active['type']=='N'){
+                $resule = ['status'=>'fail','message'=>'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้','code'=>'e003'];
 
-        $resule = ['status'=>'fail','message'=>'ต้องรักษาคุณสมบัติรายเดือน','code'=>'e005'];
-        return $resule;
+            }elseif($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail'){///ต้องรักษาคุณสมบัตรรายเดือน
+                $resule = ['status'=>'fail','message'=>$mt_active['message']];
+            }elseif($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'N'){//ต้องรักษาคุณสมบัติรายเดือน
+                $resule = ['status'=>'fail','message'=>'ต้องมีการรักษาคุณสมบัติรายเดือน'];
 
-    }elseif($data_ce->keep_personal_quality == 2 and !empty($data_ce->keep_personal_quality) and $mt_active['status'] == 'fail'){
-                ///ไม่ต้องรักษาคุณสมบัตรรายเดือน
-        $resule = ['status'=>'fail','message'=>$mt_active['message'],'code'=>'e006'];
-        return $resule;exit();
-        
-    }elseif($data_ce->keep_personal_quality == 2 and !empty($data_ce->keep_personal_quality) and $mt_active['type']=='Y'){
-        $resule = ['status'=>'fail','message'=>'ต้องไม่รักษาคุณสมบัติรายเดือน','code'=>'e007'];
-        return $resule;exit();
-        
+            }elseif ($value->keep_personal_quality == 0 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') {//ไม่่ต้องรักษาคุณสมบัติรายเดือน
+                $resule = ['status'=>'fail','message'=>$mt_active['message']];
 
-    }elseif($data_ce->maintain_travel_feature == 1 and !empty($data_ce->maintain_travel_feature) and $mt_active['status'] == 'fail'){
-                ///ต้องรักษาคุณสมบัตรรายเดือน
-        $resule = ['status'=>'fail','message'=>$tv_active['message'],'code'=>'e008'];
-        return $resule;exit();
+            }elseif ($value->keep_personal_quality == 0 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'Y') {//ไม่่ต้องรักษาคุณสมบัติรายเดือน
+                $resule = ['status'=>'fail','message'=>'ต้องไม่มีการรักษาคุณสมบัติรายเดือน'];
 
-    }elseif($data_ce->maintain_travel_feature == 1 and !empty($data_ce->maintain_travel_feature) and $tv_active['type']=='N'){
+            }elseif($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $mt_active['status'] == 'fail'){
+                ///ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+             $resule = ['status'=>'fail','message'=>$tv_active['message']];
 
-        $resule = ['status'=>'fail','message'=>'ต้องรักษาคุณสมบัติท่องเที่ยว','code'=>'e009'];
-        return $resule;exit();
 
-    }elseif($data_ce->maintain_travel_feature == 2 and !empty($data_ce->maintain_travel_feature) and $tv_active['status'] == 'fail'){
-                            ///ไม่ต้องรักษาคุณสมบัตรรายเดือน
-        $resule = ['status'=>'fail','message'=>$mt_active['message'],'code'=>'e010'];
-        return $resule;exit();
+         }elseif($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $tv_active['type']=='N'){
 
-    }elseif($data_ce->maintain_travel_feature == 2 and !empty($data_ce->maintain_travel_feature) and $tv_active['type']=='Y'){
-        $resule = ['status'=>'fail','message'=>'ต้องไม่รักษาคุณสมบัติท่องเที่ยว','code'=>'e011'];
-        return $resule;exit();
+            $resule = ['status'=>'fail','message'=>'ต้องมีการรักษาคุณสมบัติท่องเที่ยว','code'=>'e009'];
 
-    }elseif($data_ce->aistockist == 1 and !empty($data_ce->aistockist) and ($aistockist_id == 2 || $aistockist_id == null)){//เป็น aistockist
 
-        $resule = ['status'=>'fail','message'=>'ต้องเป็น  Ai-Stockist','code'=>'e012'];
-        return $resule;exit();
+        }elseif($value->maintain_travel_feature == 0 and !empty($value->maintain_travel_feature) and $tv_active['status'] == 'fail'){
+                            ///ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+         $resule = ['status'=>'fail','message'=>$tv_active['message']];
 
-    }elseif($data_ce->aistockist == 2 and !empty($data_ce->aistockist) and $aistockist_id == 1){//ต้องไม่เป็น aistockist  
+     }elseif($value->maintain_travel_feature == 0 and !empty($value->maintain_travel_feature) and $tv_active['type']=='Y'){
+        $resule = ['status'=>'fail','message'=>'ต้องไม่มีการรักษาคุณสมบัติท่องเที่ยว','code'=>'e011'];
 
-        $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist','code'=>'e013'];
-        return $resule;exit();
+            }elseif($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0 ){//เป็น aistockist
+                $resule = ['status'=>'fail','message'=>'ต้องเป็น Ai-Stockist '];
 
-    }elseif(!empty($data_ce->ce_can_reserve) and $data_ce->ce_can_reserve != 6 ){
+            }elseif($value->aistockist == 0 and !empty($value->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist  
 
-        //จำนวนคนที่สามารถจองได้ต่อกิจกรรม (1)ต่อวัน (2)ต่อกิจกรรม (null)ไม่จำกัด
-            if($data_ce->ce_limit == '1' and $ce_register_per_customer_perday >= $data_ce->ce_can_reserve){//ต่อวัน
-                $resule = ['status'=>'fail','message'=>'การสมัครต่อวันครบแล้ว','code'=>'e01'];
-                return $resule;exit();
-            }elseif($data_ce->ce_limit == '2' and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
-                $resule = ['status'=>'fail','message'=>'การสมัครต่อกิจกรรมครบแล้ว','code'=>'e02'];
-                return $resule;exit();
+                $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist'];
 
-            }elseif($data_ce->ce_limit == Null and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
-                $resule = ['status'=>'fail','message'=>'คุณใช้สิทธิ์การจองครบแล้ว','code'=>'e03'];
-                return $resule;exit();
+            }elseif($value->agency == 1 and !empty($value->agency) and $agency_status == 0 ){//เป็น aistockist
+                $resule = ['status'=>'fail','message'=>'ต้องเป็น Agency'];
+
+            }elseif($value->agency == 0 and !empty($value->agency) and $agency_status == 1){//ต้องไม่เป็น aistockist  
+                $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Agency'];
+
+            }elseif($value->limited_amt_type == 1 ){
+        //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
+                if($value->limited_amt_person <= $count_per_promotion['count']){
+                    $resule = ['status'=>'fail','message'=>'การซื้อเฉพาะต่อรอบโปรโมชั่นครบแล้ว'];
+                }else{ 
+                    $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
+
+                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv);
+                }
+
+            }elseif($value->limited_amt_type == 2 ){
+                //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
+
+                if($value->limited_amt_person <= $count_per_promotion_day['count']){
+                    $resule = ['status'=>'fail','message'=>'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
+                }else{
+                    $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
+                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv);
+                     
+                    
+                }
+
             }else{
-
-                $resule = ['status'=>'success','message'=>'Register open','code'=>'0'];
-                return $resule;exit();
+                $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
+                $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv);
+                 
             }
 
-        }else{
 
+        } 
 
-            $resule = ['status'=>'success','message'=>'Register open','code'=>'0'];
-            return $resule;exit();
-        }
-        
-
+        return $html;
     }
-
 }
+
+} 

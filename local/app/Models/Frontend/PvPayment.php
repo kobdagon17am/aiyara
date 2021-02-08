@@ -39,6 +39,7 @@ class PvPayment extends Model
 				}
 
 				if($type_id == 6){
+
 					$orderstatus_id = 7;
 					$opc_type_order = 'course_event';
 
@@ -65,6 +66,7 @@ class PvPayment extends Model
 
 
 			}else{
+
 				$opc_type_order = 'db_invoice_code';
 				$last_code = DB::table('db_invoice_code')//เจนเลข payment order
 				->where('business_location_id','=',$order_data->business_location_id_fk)
@@ -110,6 +112,7 @@ class PvPayment extends Model
 					'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}else{
+
 					$inseart_order_payment_code = DB::table('db_invoice_code')->insert([
 						'order_id'=>$order_id,
 						'order_payment_code'=>$code_order,
@@ -378,6 +381,7 @@ class PvPayment extends Model
 					}elseif($type_id == 6){//couse อบรม
 
 						$resuleRegisCourse = Couse_Event::couse_register($order_id,$admin_id); 
+						 
 						if($resuleRegisCourse['status'] != 'success'){
 							DB::rollback();
 							return $resuleRegisCourse;
