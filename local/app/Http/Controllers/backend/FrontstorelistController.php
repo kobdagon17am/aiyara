@@ -311,7 +311,7 @@ class FrontstorelistController extends Controller
                      // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
                     $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
 
-                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->delivery_province." ");
+                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".($request->delivery_province?$request->delivery_province:0)." ");
                     if(count($shipping_vicinity)>0){
 
                         DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
@@ -334,7 +334,7 @@ class FrontstorelistController extends Controller
               $sRow->updated_at = date('Y-m-d H:i:s');
               $sRow->save(); 
 
-                DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");  
 
                 $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                       dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
@@ -344,7 +344,7 @@ class FrontstorelistController extends Controller
                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                       where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
 
-                DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `first_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+                DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
 
         }
@@ -353,7 +353,33 @@ class FrontstorelistController extends Controller
 
           // dd($request->all());
 
-              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+            $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+
+/*
+P2102100001
+P=Product
+2102=year-month
+1=business location
+00001=running no.*/
+
+              $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+              // dd($branchs[0]->business_location_id_fk);
+
+              $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,2,2)as y,SUBSTR(invoice_code,4,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from db_frontstore 
+                WHERE SUBSTR(invoice_code,2,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,4,2)=DATE_FORMAT(now(), '%m')
+                order by invoice_code desc limit 1 ");
+              if($inv){
+                  $invoice_code = 'P'.date("ym").$branchs[0]->business_location_id_fk.sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+              }else{
+                  $invoice_code = 'P'.date("ym").$branchs[0]->business_location_id_fk.sprintf("%05d",1);
+              }
+              // dd($invoice_code);
+
+              if($sRow->invoice_code==''){
+                $sRow->invoice_code = $invoice_code;
+              }
+
+              
               $sFee = \App\Models\Backend\Fee::find($sRow->fee);
 
               if( $sRow->pay_type_id_fk==2 || $sRow->pay_type_id_fk_2 ==2 ){ 
@@ -380,7 +406,7 @@ class FrontstorelistController extends Controller
 
               if(@$request->delivery_location==2){
 
-                          DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+                          DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");  
 
                           $addr = DB::select("SELECT
                                 customers_detail.customer_id,
@@ -403,7 +429,7 @@ class FrontstorelistController extends Controller
                                  ".@$request->customers_id_fk." ");
 
 
-                            DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `first_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->house_no."','".@$addr[0]->zipcode."', '".@$addr[0]->district."', '".@$addr[0]->district_sub."', '".@$addr[0]->province."', 'customers_detail', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+                            DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->house_no."','".@$addr[0]->zipcode."', '".@$addr[0]->district."', '".@$addr[0]->district_sub."', '".@$addr[0]->province."', 'customers_detail', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
 
               }
@@ -411,7 +437,7 @@ class FrontstorelistController extends Controller
 
               if(@$request->delivery_location==3){
 
-                   DB::select(" DELETE FROM `customers_addr_sent` WHERE receipt_no='".@$request->invoice_code."' ");  
+                   DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");  
 
                         $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                               dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
@@ -421,7 +447,7 @@ class FrontstorelistController extends Controller
                               Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                               where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
 
-                        DB::select(" INSERT IGNORE INTO `customers_addr_sent` (`customer_id`, `recipient_name`, `house_no`, `zipcode`, `district`, `district_sub`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+                        DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, recipient_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
 
              }
@@ -715,6 +741,14 @@ class FrontstorelistController extends Controller
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
           (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list
           from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
+           AND 
+            (
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+            )
       ");
  
       $sQuery = \DataTables::of($sTable);

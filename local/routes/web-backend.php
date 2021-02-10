@@ -210,6 +210,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('uploadCe_regis', 'PagesController@uploadCe_regis');
     Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
     Route::post('uploadPromotionCus', 'PagesController@uploadPromotionCus');
+    Route::get('uploadPromotionCus', 'PagesController@uploadPromotionCus');
 
     Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
@@ -224,6 +225,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
     Route::post('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
+    Route::get('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
     Route::post('ajaxGenPromotionCodePrefixCoupon', 'AjaxController@ajaxGenPromotionCodePrefixCoupon');
 
     Route::post('ajaxGetWarehouse', 'AjaxController@ajaxGetWarehouse');
@@ -253,6 +255,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
     Route::post('ajaxFeeCalculate', 'AjaxController@ajaxFeeCalculate');
     Route::post('ajaxShippingCalculate', 'AjaxController@ajaxShippingCalculate');
+    Route::post('ajaxApproveCouponCode', 'AjaxController@ajaxApproveCouponCode');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -261,6 +264,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
 
+    Route::resource('pay_product_receipt', 'Pay_product_receiptController');
+    Route::post('pay_product_receipt/datatable', 'Pay_product_receiptController@Datatable')->name('pay_product_receipt.datatable');
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');

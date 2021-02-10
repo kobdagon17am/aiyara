@@ -46,6 +46,24 @@
 
     .select2-selection {height: 34px !important;margin-left: 3px;}
     .border-left-0 {height: 67%;}
+
+      .tooltip_packing {
+    position: relative ;
+  }
+  .tooltip_packing:hover::after {
+    content: "Packing List" ;
+    position: absolute ;
+    /*top: 0.5em ;*/
+    left: -4em ;
+    min-width: 80px ;
+    border: 1px #808080 solid ;
+    padding: 1px ;
+    color: black ;
+    background-color: #cfc ;
+    z-index: 9999 ;
+  } 
+
+
 </style>
 @endsection
 
@@ -55,7 +73,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รายการรอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18"> จ่ายสินค้าตามใบเสร็จ  </h4>
         </div>
     </div>
 </div>
@@ -105,111 +123,33 @@
 
             {{ csrf_field() }}
          
+                <div class="myBorder">
+                  <div class="form-group row ">
+                    <div class="col-md-10 d-flex  ">
+                      <label class="col-5" ><i class="bx bx-play"></i> ค้นสินค้า > ค้นด้วย : QR-CODE : </label>
+                      <div class="col-md-5">
+                        <input type="text" class="form-control" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus >
+                      </div>
+                      <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%" >
+                        <i class="bx bx-search align-middle "></i> &nbsp;&nbsp;&nbsp;SEARCH&nbsp;&nbsp;&nbsp;
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+
                 <div class="row">
                   <div class="col-8">
 
+
                   	<div class="form-group row">
                           <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดส่ง (รายบิล) </span>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจ่ายสินค้าให้กับลูกค้า </span>
                           </div>
                         </div>
                   </div>
 
                 </div>
-
-
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-     				           <div class="col-md-2">
-                          <div class="form-group row">
-                            <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
-                              <option value="">Business Location</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                <option value="{{$r->id}}" >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @endforeach
-                              @endif
-                            </select>
-                          </div>
-                        </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="receipt_no" name="receipt_no" class="form-control select2-templating " >
-                            <option value="">ใบเสร็จ</option>
-                            @if(@$sDelivery)
-                            @foreach(@$sDelivery AS $r)
-                            <option value="{{$r->id}}" >
-                              {{$r->receipt}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="packing_no" name="packing_no" class="form-control select2-templating " >
-                            <option value="">รหัสแพ็คกิ้ง</option>
-                            @if(@$sPacking)
-                              @foreach(@$sPacking AS $r)
-                              <option value="{{@$r->id}}" > {{"P".sprintf("%05d",@$r->id)}}
-                              </option>
-                              @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>   
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " >
-                            <option value="">รหัส:ชื่อลูกค้า</option>
-                            @if(@$Customer)
-                            @foreach(@$Customer AS $r)
-                            <option value="{{$r->id}}"  >
-                             	{{$r->user_name}} : {{$r->first_name}}{{$r->last_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-             
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="status_search" name="status_search" class="form-control select2-templating " >
-                            <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
 
               <?php if($can_packing_list=='1'){ ?>
@@ -238,7 +178,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดส่ง (Packing List) </span>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลที่จ่ายสินค้าแล้ว </span>
                           </div>
                         </div>
                         <div class="form-group row">
@@ -284,7 +224,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดเบิก</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -314,7 +254,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดเบิก</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -345,16 +285,12 @@
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
-
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
-  
-  $.fn.dataTable.ext.errMode = 'throw';
-
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -367,7 +303,7 @@ $(function() {
         iDisplayLength: 10,
         stateSave: true,
         ajax: {
-          url: '{{ route('backend.delivery.datatable') }}',
+          url: '{{ route('backend.pick_warehouse.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -399,7 +335,7 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
+                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องเบิก', className: 'text-center ',render: function(d) {
                   //     return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   // }},
 
@@ -407,14 +343,14 @@ $(function() {
                   // {data: 'list_type', title :'list_type', className: 'text-center '},
                   // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
 
-                  {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                  {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
                   	if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+                        return '<span style="color:red">อยู่ระหว่างการจ่ายสินค้า</span>';
                   	}else{
-                  		  return '-รอจัดส่ง-';
+                  		  return '-รอจ่ายสินค้า-';
                   	}
                   }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               'columnDefs': [
                {
@@ -434,7 +370,10 @@ $(function() {
                   //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   //     ).addClass('input');
 
-                
+                if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                      $('td:eq(3)', nRow).html(
+                        '<span class="tooltip_packing badge badge-danger font-size-14">P</span> '+aData['packing_code']);
+                 }
 
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
@@ -473,10 +412,10 @@ $(function() {
 
                 	if (aData['status_delivery'] != "1") {
 
-	                    // $('td:last-child', nRow).html(''
-	                    //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	                    $('td:last-child', nRow).html(''
+	                      + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                      
-	                    // ).addClass('input');
+	                    ).addClass('input');
 
                     }
 
@@ -493,7 +432,6 @@ $(function() {
 
 var oTableNopacking;
 $(function() {
-  $.fn.dataTable.ext.errMode = 'throw';
     oTableNopacking = $('#data-table-no-packing').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -547,20 +485,20 @@ $(function() {
                   // {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
                   //     return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
                   // }},
-                  {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
+                  {data: 'id',   title :'ใบจ่าหน้า<br>กล่องเบิก', className: 'text-center ',render: function(d) {
                       return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   }},
-                  {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
+                  {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                       return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   }},
-                  {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                  {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
                     if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+                        return '<span style="color:red">อยู่ระหว่างการจ่ายสินค้า</span>';
                     }else{
-                        return '-รอจัดส่ง-';
+                        return '-รอจ่ายสินค้า-';
                     }
                   }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               rowCallback: function(nRow, aData, dataIndex){
                   $("td:eq(1)", nRow).hide();
@@ -634,7 +572,6 @@ $(function() {
 
           var oTable2;
           $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
               oTable2 = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
@@ -645,7 +582,7 @@ $(function() {
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
                   iDisplayLength: 10,
-                  // stateSave: true,
+                  stateSave: true,
                   ajax: {
                     url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     data: function ( d ) {
@@ -672,7 +609,7 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
+                      {data: 'id', title :'<center>no. </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -687,26 +624,26 @@ $(function() {
                             return '-';
                           }
                       }},
-                      // {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center w250 '},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
+                      // {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดเบิก </center>', className: 'text-center w250 '},
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดเบิก</center>', className: 'text-center w250 ',render: function(d) {
 	                  	if(d=='0'){
 	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
 	                  	}else{
-	                  		return d ;
+	                  	  	return '90/16 ถ.ศรีอยุธยา บ.ออเร้นจ์ เทคโนโลยี โซลูชั่น จำกัด แขวงวชิรพยาบาล, เขตดุสิต, กทม. 10300' ;
 	                  	}
 	                  }},
-                      // {data: 'id', title :'<center>เปลี่ยนที่อยู่ส่ง', className: 'text-center'}, 
-                      // {data: 'id',   title :'ใบจ่าหน้ากล่องส่ง', className: 'text-center ',render: function(d) {
-                      //     return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      // }},
+                      // {data: 'id', title :'<center>เปลี่ยนที่อยู่เบิก', className: 'text-center'}, 
+                      {data: 'id',   title :'ใบจ่าหน้ากล่องเบิก', className: 'text-center ',render: function(d) {
+                          return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                      }},
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                      {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
-	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+	                        return '<span style="color:red">อยู่ระหว่างการจ่ายสินค้า</span>';
 	                  	}else{
-	                  		return '-รอจัดส่ง-';
+	                  		return 'อนุมัติ/จ่ายสินค้าแล้ว';
 	                  	}
 	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -753,7 +690,6 @@ $(function() {
 
           var oTableNoPayproduct;
           $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
               oTableNoPayproduct = $('#data-table-no-payproduct').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
@@ -792,9 +728,9 @@ $(function() {
                   },
                   columns: [
                       // {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
+                      {data: 'packing_code_desc', title :'<center>รหัสนำเบิก </center>', className: 'text-center'},
                       
-                      // {data: 'packing_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
+                      // {data: 'packing_code',   title :'<center>รหัสเบิก</center>', className: 'text-center ',render: function(d) {
                       //     return ;
                       // }},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
@@ -811,7 +747,7 @@ $(function() {
                             return '-';
                           }
                       }},
-                      {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
+                      {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดเบิก </center>', className: 'text-center'},
                     
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
@@ -936,7 +872,7 @@ $(function() {
 
     <script type="text/javascript">
 
-    	/*
+    	
     	var v = "<?=@$_REQUEST['select_addr']?>";
     	if(v){
 
@@ -960,7 +896,6 @@ $(function() {
 	            });
 
     	}
-      */
     	
         
 	</script>

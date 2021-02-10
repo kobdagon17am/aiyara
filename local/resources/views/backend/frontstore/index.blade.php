@@ -392,11 +392,15 @@ $(function() {
                 return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},
             {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
-            {data: 'id',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
+            {data: 'sum_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
                 return d ;
             }},
             {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+               if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+               }else{
+                return '';
+               }
             }},
             {data: 'approve_status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
               return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รอจัดส่ง</span>';
@@ -407,6 +411,7 @@ $(function() {
             {data: 'id',   title :'ใบเสร็จ[2]', className: 'text-center w100 ',render: function(d) {
                 return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>';
             }},
+            {data: 'shipping_price', title :'<center>ค่าขนส่ง</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
            "order": [ [ 1, 'desc' ] ],
@@ -418,9 +423,6 @@ $(function() {
         rowCallback: function(nRow, aData, dataIndex){
 
 			$("td:eq(3)", nRow).html(aData['customer_name']);
-			$("td:eq(4)", nRow).html(aData['total_price']);
-			$("td:eq(8)", nRow).prop('disabled',true); 
-			$("td:eq(9)", nRow).prop('disabled',true); 
 
 	          if(sU!=''&&sD!=''){
 	              $('td:last-child', nRow).html('-');

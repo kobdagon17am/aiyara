@@ -14,31 +14,15 @@ class DeliveryController extends Controller
 
     public function index(Request $request)
     {
-
+      // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น 
       $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
-      // dd($sDelivery);
-
-      $arr = [];
-      foreach ($sDelivery as $key => $value) {
-        array_push($arr,$value->id);
-      }
-      $sDeliveryPacking = \App\Models\Backend\DeliveryPacking::where('approver','NULL');
-
-      // ขาย Frontend ของน้องกอล์ฟ
-      DB::select(" 
-          INSERT IGNORE INTO db_delivery 
-          ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type)
-          SELECT
-          orders.code_order,orders.customer_id,orders.business_location_id,orders.created_at,orders.id_admin_check,now(),1
-          FROM orders
-          WHERE
-          orders.orderstatus_id in (4,5); ");
+      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
       // ขายหน้าร้าน (หลังบ้าน)
       DB::select(" 
           INSERT IGNORE INTO db_delivery 
           ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type)
-          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2 FROM db_frontstore ; ");
+          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2 FROM db_frontstore where invoice_code<>'' AND delivery_location<>0 AND sum_price>0  ; ");
 
       // นำเข้าที่อยู่ในการจัดส่ง
       // `addr_type` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ>0=รัยสินค้าที่สาขาด้วยตนเอง,
@@ -167,8 +151,36 @@ class DeliveryController extends Controller
         }
 
      // DB::select(" UPDATE db_delivery SET billing_employee='1' WHERE  billing_employee is null ; ");
+        $User_branch_id = \Auth::user()->branch_id_fk;
+        $sBranchs = \App\Models\Backend\Branchs::get();
+        $Warehouse = \App\Models\Backend\Warehouse::get();
+        $Zone = \App\Models\Backend\Zone::get();
+        $Shelf = \App\Models\Backend\Shelf::get();
 
-      return view('backend.delivery.index');
+        $sBusiness_location = \App\Models\Backend\Business_location::get();
+
+        $Customer = DB::select(" SELECT
+          db_delivery.customer_id as id,
+          customers.prefix_name,
+          customers.first_name,
+          customers.last_name,
+          customers.user_name
+          FROM
+          db_delivery
+          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
+           ");
+
+      return View('backend.delivery.index')->with(
+        array(
+           'sDelivery'=>$sDelivery,
+           'sBranchs'=>$sBranchs,
+           'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
+           'User_branch_id'=>$User_branch_id,
+           'Customer'=>$Customer,
+           'sBusiness_location'=>$sBusiness_location,
+           'sPacking'=>$sPacking,
+        ) );
+
       
     }
 
@@ -243,16 +255,38 @@ class DeliveryController extends Controller
 
       }elseif(isset($request->save_select_addr)){
 
-      		$DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find($request->id);
-      		$DeliveryPackingCode->addr_id = $request->addr;
-      		$DeliveryPackingCode->save();
+      		// $DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find($request->id);
+      		// $DeliveryPackingCode->addr_id = $request->addr;
+      		// $DeliveryPackingCode->save();
 
           // DB::select(" INSERT INTO `customers_addr_sent` (`customer_id`, `prefix_name`, `first_name`, `last_name`, `house_no`, `house_name`, `moo`, `zipcode`, `soi`, `district`, `district_sub`, `road`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1') ");
 
-          $rs = DB::select(" SELECT packing_code FROM customers_addr_sent WHERE id=".$request->id." ");
+          // $rs = DB::select(" SELECT packing_code FROM customers_addr_sent WHERE id=".$request->id." ");
 
-          if(@$request->addr!="" &&  @$rs[0]->packing_code!=""){
-            DB::select(" UPDATE customers_addr_sent SET addr_id2=".$request->addr." WHERE (packing_code='".@$rs[0]->packing_code."'); ");
+          // if(@$request->addr!="" &&  @$rs[0]->packing_code!=""){
+          //   DB::select(" UPDATE customers_addr_sent SET addr_id2=".$request->addr." WHERE (packing_code='".@$rs[0]->packing_code."'); ");
+          // }
+
+          $receipt_no = explode(",",$request->receipt_no);
+          $arr = [];
+          for ($i=0; $i < sizeof($receipt_no); $i++) { 
+              array_push($arr, "'".$receipt_no[$i]."'");
+          }
+          $arr = implode(",",$arr);
+
+          $rs = DB::select(" SELECT * FROM customers_addr_sent WHERE id='".$request->id."' ");
+          // dd($rs);
+
+          // $DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find(@$rs[0]->packing_code);
+          // $DeliveryPackingCode->addr_id = @$rs[0]->id;
+          // $DeliveryPackingCode->save();
+
+          // Clear ก่อน
+          DB::select(" UPDATE customers_addr_sent SET id_choose=0 WHERE receipt_no in ($arr)  ");
+
+
+          if(@$request->id!="" ){
+            DB::select(" UPDATE customers_addr_sent SET id_choose=1 WHERE id='".$request->id."' ");
           }
 
       		return redirect()->to(url("backend/delivery"));
@@ -261,19 +295,27 @@ class DeliveryController extends Controller
 
           // dd($request->all());
           // dd($request->id);
-          $rs = DB::select(" SELECT * FROM customers_addr_sent WHERE receipt_no='".$request->receipt_no."' ");
+
+          $receipt_no = explode(",",$request->receipt_no);
+          $arr = [];
+          for ($i=0; $i < sizeof($receipt_no); $i++) { 
+              array_push($arr, "'".$receipt_no[$i]."'");
+          }
+          $arr = implode(",",$arr);
+
+          $rs = DB::select(" SELECT * FROM customers_addr_sent WHERE id='".$request->id."' ");
           // dd($rs);
 
-      		$DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find(@$rs[0]->packing_code);
-      		$DeliveryPackingCode->addr_id = @$rs[0]->id;
-      		$DeliveryPackingCode->save();
+      		// $DeliveryPackingCode = \App\Models\Backend\DeliveryPackingCode::find(@$rs[0]->packing_code);
+      		// $DeliveryPackingCode->addr_id = @$rs[0]->id;
+      		// $DeliveryPackingCode->save();
 
           // Clear ก่อน
-          DB::select(" UPDATE customers_addr_sent SET id_choose=0 WHERE (packing_code='".@$rs[0]->packing_code."'); ");
+          DB::select(" UPDATE customers_addr_sent SET id_choose=0 WHERE receipt_no in ($arr)  ");
 
 
-          if(@$request->receipt_no!="" ){
-            DB::select(" UPDATE customers_addr_sent SET id_choose=1 WHERE receipt_no='".$request->receipt_no."' ");
+          if(@$request->id!="" ){
+            DB::select(" UPDATE customers_addr_sent SET id_choose=1 WHERE id='".$request->id."' ");
           }
 
       		return redirect()->to(url("backend/delivery"));      			

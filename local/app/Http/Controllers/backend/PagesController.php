@@ -464,7 +464,7 @@ class PagesController extends Controller{
               $sRow = new \App\Models\Backend\PromotionCode;
             }
 
-            $sRow->promotion_name = $request->promotion_name;
+            $sRow->promotion_id_fk = $request->promotion_id_fk;
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
             // $sRow->pro_status = 4 ;

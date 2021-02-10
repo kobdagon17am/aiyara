@@ -8,7 +8,7 @@ use DB;
 use File;
 use PDF;
 
-class Pick_warehouseController extends Controller
+class Pay_product_receiptController extends Controller
 {
 
     public function index(Request $request)
@@ -27,7 +27,7 @@ class Pick_warehouseController extends Controller
           Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
            ");
 
-      return View('backend.pick_warehouse.index')->with(
+      return View('backend.pay_product_receipt.index')->with(
         array(
            'sDelivery'=>$sDelivery,
            'Customer'=>$Customer,
@@ -45,7 +45,7 @@ class Pick_warehouseController extends Controller
       $Province = DB::select(" select * from dataset_provinces ");
 
       $Customer = DB::select(" select * from customers ");
-      return View('backend.pick_warehouse.form')->with(
+      return View('backend.pay_product_receipt.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
         ) );
@@ -90,11 +90,11 @@ class Pick_warehouseController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Pick_warehouse::find($id);
+       $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
-      return View('backend.pick_warehouse.form')->with(
+      return View('backend.pay_product_receipt.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
         ) );
@@ -112,9 +112,9 @@ class Pick_warehouseController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Pick_warehouse::find($id);
+            $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Pick_warehouse;
+            $sRow = new \App\Models\Backend\Pay_product_receipt;
           }
 
           $sRow->receipt    = request('receipt');
@@ -135,7 +135,7 @@ class Pick_warehouseController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\Pick_warehouseController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->action('backend\Pay_product_receiptController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
@@ -165,7 +165,7 @@ class Pick_warehouseController extends Controller
     }
 
     public function Datatable(){
-      // $sTable = \App\Models\Backend\Pick_warehouse::search()->where('status_pick_warehouse','0')->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\Pay_product_receipt::search()->where('status_pick_warehouse','0')->orderBy('id', 'asc');
       $sTable = DB::select(" 
       	select * from db_delivery WHERE status_pack=0 and status_delivery=0 
     		UNION

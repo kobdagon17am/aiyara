@@ -60,7 +60,7 @@
                     <label for="receipt" class="col-md-3 col-form-label">เลือกโปรโมชั่น :</label>
                     <div class="col-md-6">
                       <!-- <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required > -->
-                          <select name="promotion_code_id_fk" id="promotion_code_id_fk" class="form-control select2-templating " required >
+                          <select name="promotion_id_fk" id="promotion_id_fk" class="form-control select2-templating " required >
                             <option value="">Select</option>
                               @if(@$sPromotions)
                                 @foreach(@$sPromotions AS $r)
@@ -549,9 +549,9 @@ $(document).ready(function() {
 
    $(".btnImXlsx").click(function(event) {
 
-          var v = $("input[name=promotion_name]").val();
+          var v = $("#promotion_id_fk").val();
           if(v=='' || v==0){
-            $("input[name=promotion_name]").focus();
+            $("#promotion_id_fk").select2('open');
             return false;
           }
 
@@ -621,9 +621,12 @@ $(document).ready(function() {
         $.ajax({
            type:'POST',
            url: " {{ url('backend/ajaxGenPromotionCode') }} ", 
-           data:{ _token: '{{csrf_token()}}' }+frm+"&amt_gen="+v+"&promotion_code_id_fk="+promotion_code_id_fk,
+           // data:{ _token: '{{csrf_token()}}',amt_gen:v,promotion_code_id_fk:promotion_code_id_fk },
+           data: frm ,
             success:function(data){
                  console.log(data); 
+                 // return false;
+
                  if(data=='x'){
                   alert("! จำนวนหลักไม่พอ");
                   location.reload();
@@ -875,6 +878,27 @@ $(document).ready(function() {
 
         $(document).on('click', '.btnApprove', function(event) {
              event.preventDefault();
+             $(".myloading").show();
+             var promotion_code_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+             // console.log(promotion_code_id_fk);
+
+                          $.ajax({
+                             type:'POST',
+                             url: " {{ url('backend/ajaxApproveCouponCode') }} ", 
+                             data:{ _token: '{{csrf_token()}}',promotion_code_id_fk:promotion_code_id_fk },
+                              success:function(data){
+
+                                  location.reload();
+
+                                },
+                              error: function(jqXHR, textStatus, errorThrown) { 
+                                  console.log(JSON.stringify(jqXHR));
+                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  $(".myloading").hide();
+                              }
+                          });
+
+
         });
 
 
