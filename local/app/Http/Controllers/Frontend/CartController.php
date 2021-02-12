@@ -18,10 +18,10 @@ class CartController extends Controller
 
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
-
+		 
 		$quantity = Cart::session($type)->getTotalQuantity();
 		if($data){
-			foreach ($data as $value) {
+			foreach ($data as $value){
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 			}
 			$pv_total = array_sum($pv);
@@ -52,6 +52,7 @@ class CartController extends Controller
 	}
 
 	public function edit_item(Request $request){
+
 		$type = $request->type;
 		if($type == 6){
 			$chek_course = CourseCheckRegis::cart_check_register($request->item_id,$request->qty);

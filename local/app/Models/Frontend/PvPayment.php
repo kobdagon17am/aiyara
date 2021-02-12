@@ -31,10 +31,10 @@ class PvPayment extends Model
 				DB::BeginTransaction(); 
 
 				if($order_data->delivery_location_status == 'sent_office'){
-					$orderstatus_id = 5;
+					$orderstatus_id = 4;
 					# code...
 				}else{
-					$orderstatus_id = 4;
+					$orderstatus_id = 5;
 
 				}
 

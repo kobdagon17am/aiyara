@@ -10,7 +10,7 @@
         <div class="row invoive-info">
             <div class="col-md-4 col-xs-12 invoice-client-info">
                 <h6>Information :</h6>
-               
+
                 @if($order->delivery_location_status == 'sent_office')
                 <h6 class="m-0">{{ $order->office_name }}</h6> 
                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->office_tel }} @endif</p>
@@ -47,9 +47,9 @@
                         <tr>
                             <th>Type :</th>
                             <td>
-                               @if($order->type) <span>{{ $order->type }}</span> @endif
-                           </td>
-                       </tr>
+                             @if($order->type) <span>{{ $order->type }}</span> @endif
+                         </td>
+                     </tr>
                  {{--     <tr>
                         <th>Paid by :</th>
                         <td>
@@ -115,10 +115,26 @@
                     </thead>
                     <tbody>
                         @foreach($order_items as $value)
+                         
                         <tr>
                             <td>
                                 <h6>{{ $value->product_name }}</h6>
-                                {{-- <p>lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt </p> --}}
+
+                                @if($value->type_product == 'promotion')
+
+                                <ul>
+                                   <?php 
+                                   $location_id = Auth::guard('c_user')->user()->business_location_id;
+                                   $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk,$location_id);
+                                    ?>
+                                    @foreach($get_promotion_detail as $promotion_product)
+                                    <li style="font-size: 12px">
+                                        <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }} 
+                                    </li>
+                                    @endforeach
+                                </ul>
+
+                                @endif
                             </td>
                             @if($order->orders_type_id_fk == 6)
                             <td ><b class="text-primary">{{ $value->ticket_number }}</b></td>
@@ -129,8 +145,8 @@
                             @endif
                             <td>{{ $value->selling_price }}</td>
                             <td class="text-success"><b>{{ $value->pv }}</b></td>
-                             @if($order->orders_type_id_fk == 7)
-                             <td>{{ number_format($value->selling_price,2) }}</td>
+                            @if($order->orders_type_id_fk == 7)
+                            <td>{{ number_format($value->selling_price,2) }}</td>
                             @else
                             <td>{{ number_format($value->amt * $value->selling_price,2) }}</td>
                             @endif
@@ -147,7 +163,7 @@
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-responsive invoice-table invoice-total">
-             <tbody>
+               <tbody>
                 <tr>
                     <th>มูลค่าสินค้า : </th>
 
@@ -167,7 +183,7 @@
                     <td> {{ number_format($order->sum_price,2) }}</td>
                 </tr>
                 @if($order->orders_type_id_fk != 6 and $order->orders_type_id_fk != 7)
-                 
+
                 <tr>
                     <th>ค่าจัดส่ง : </th>
                     <td> {{ number_format($order->shipping_price,2) }} </td>

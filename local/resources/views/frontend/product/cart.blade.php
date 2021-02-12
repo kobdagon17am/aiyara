@@ -66,7 +66,7 @@
                                     if($type == 6){
                                         $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
                                     } 
-                                     
+
                                     ?>
 
                                     <tr id="items">
@@ -74,23 +74,33 @@
                                             <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
                                         </td>
                                         <td>
-                                            <h6>{{ $value['name'] }}</h6>
+                                            <h6> <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}">{{ $value['name'] }}</a></h6>
+                                           
+                                            @if($value['attributes']['promotion_detail'])
+                                            <ul>
+                                                @foreach($value['attributes']['promotion_detail'] as $promotion_product)
+                                                <li style="font-size: 12px">
+                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }} 
+                                                </li>
+                                                
+                                                @endforeach
+                                            </ul>
 
-                                            @if($type == 6)
-                                                @if($check['status'] == 'fail')
-                                                 <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
-                                                 @endif
                                             @endif
-
+                                            @if($type == 6)
+                                            @if($check['status'] == 'fail')
+                                            <span id="eror_{{ $value['id'] }}" class="text-danger">{{ $check['message'] }}</span>
+                                            @endif
+                                            @endif
                                         </td>
                                         <td>
-                                            <input type="number" min="1" onchange="quantity_change({{ $value['id'] }})" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
+                                            <input type="number" min="1" onchange="quantity_change('{{ $value['id'] }}')" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
                                         </td>
-                                        <td><b>{{ $value['price'] }}</b></td>
+                                        <td><b>{{ number_format($value['price'],2) }}</b></td>
 
                                         <td><b>{{$value['attributes']['pv']}}</b></td>
                                         <td class="text-center">
-                                            <button class="btn btn-warning btn-outline-warning btn-icon btn-sm"  onclick="cart_delete({{ $value['id'] }})"><i class="icofont icofont-delete-alt"></i></button>
+                                            <button class="btn btn-warning btn-outline-warning btn-icon btn-sm"  onclick="cart_delete('{{ $value['id'] }}')"><i class="icofont icofont-delete-alt"></i></button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -111,17 +121,17 @@
             </div>
             <div class="card-block">
                 <div class="col-md-12">
-                 <?php  
-                 $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
-                 ?>
-                 <table class="table table-responsive" >
+                   <?php  
+                   $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                   ?>
+                   <table class="table table-responsive" >
                     @if($type == 5)
-                       <tr>
+                    <tr>
                         <td><strong class="text-primary">Gift Voucher </td>
                             <td align="right"><strong class="text-primary" id="gv"> {{ number_format($gv->sum_gv) }} </strong></td>
                         </tr>
-                    @endif
-                    
+                        @endif
+
                         <tr>
                             <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $bill['quantity'] }}) ชิ้น</strong></td>
                             <td align="right"><strong id="price"> {{ $bill['price_total'] }} </strong></td>
@@ -204,6 +214,7 @@
   }
 
   function quantity_change(item_id){ 
+
     var qty = $('#quantity_'+item_id).val();
     var type = {{ $type }}; 
 
@@ -215,20 +226,20 @@
     .done(function(data) {
         if(data['chek_course']['status'] == 'fail'){
             var eror_id = 'eror_'+data['action_id'];
-             $('#'+eror_id).html(data['chek_course']['message']);
-             
-        }else {
-              var eror_id = 'eror_'+data['action_id'];
-             $('#'+eror_id).html('');
-        }
+            $('#'+eror_id).html(data['chek_course']['message']);
 
-        $('#price').html(data['price_total']);
-        $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
-        $('#price_total').html(data['price_total']);
-        $('#pv').html(data['pv_total']+' PV');
-        console.log(data); 
-        console.log("success");
-    })
+        }else {
+          var eror_id = 'eror_'+data['action_id'];
+          $('#'+eror_id).html('');
+      }
+
+      $('#price').html(data['price_total']);
+      $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
+      $('#price_total').html(data['price_total']);
+      $('#pv').html(data['pv_total']+' PV');
+      console.log(data); 
+      console.log("success");
+  })
     .fail(function() {
         console.log("error");
     })

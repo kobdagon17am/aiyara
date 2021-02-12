@@ -121,7 +121,7 @@ Route::get('product_list_select','Frontend\ProductController@product_list_select
 
 Route::get('product-list/{type}','Frontend\ProductController@product_list')->name('product-list');
 
-Route::get('product-detail/{type}/{id?}','Frontend\ProductController@product_detail')->name('product-detail');
+Route::get('product-detail/{type}/{id?}/{category_id?}','Frontend\ProductController@product_detail')->name('product-detail');
 
 Route::get('cart/{type}','Frontend\CartController@cart')->name('cart');
  
@@ -172,6 +172,9 @@ Route::get('commission_bonus_report','Frontend\CommissionController@commission_b
 
 Route::get('commission_matching','Frontend\CommissionController@commission_matching')->name('commission_matching');
 
+Route::get('coupon','Frontend\CouponCodeController@coupon')->name('coupon');
+Route::get('dt_coupon_code','Frontend\CouponCodeController@dt_coupon_code')->name('dt_coupon_code');
+ 
  
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');

@@ -408,7 +408,7 @@
  													</div>
  													<div class="col-md-4 col-sx-4 col-4">
 
- 														<h3 class="text-right"> <span> {{ $bill['price_total'] }} </span></h3>
+ 														<h3 class="text-right"> <span> {{ number_format($bill['price_total']) }} </span></h3>
  													</div>
  												</div>
 
@@ -420,7 +420,7 @@
  													</div>
  													<div class="col-md-4 col-sx-4 col-4">
 
- 														<h3 class="text-right"> <span> {{ $bill['gv_total'] }} </span></h3>
+ 														<h3 class="text-right"> <span> {{ number_format($bill['gv_total'],2) }} </span></h3>
  													</div>
  												</div>
  											</div>
@@ -442,7 +442,7 @@
  								</div>
 
 
-
+ 
  								@else
 
  								<div class="demo-container card-block">
@@ -530,11 +530,11 @@
  				<table class="table table-responsive" >
  					<tr>
  						<td><strong id="quantity_bill">มูลค่าสินค้า ({{ $bill['quantity'] }}) ชิ้น</strong></td>
- 						<td align="right"><strong id="price"> {{ $bill['price_vat'] }} </strong></td>
+ 						<td align="right"><strong id="price"> {{ number_format($bill['price_vat'],2) }} </strong></td>
  					</tr>
  					<tr>
  						<td><strong>Vat({{ $bill['vat'] }}%)</strong></td>
- 						<td align="right"><strong > {{ $bill['p_vat'] }}</strong></td>
+ 						<td align="right"><strong > {{ number_format($bill['p_vat'],2) }}</strong></td>
  					</tr>
  					<tr>
  						<td><strong>มูลค่าสินค้า + Vat</strong></td>
@@ -578,14 +578,14 @@
  					@elseif($bill['type'] == 6)
  					<tr>
  						<td><strong>ยอดที่ต้องชำระ</strong></td>
- 						<td align="right"><strong > {{ $bill['price'] }}</strong>
+ 						<td align="right"><strong > {{ number_format($bill['price'],2) }}</strong>
  						</td>
  					</tr>
 
  					@else
  					<tr>
  						<td><strong>ยอดที่ต้องชำระ</strong></td>
- 						<td align="right"><strong > {{ $bill['price_total'] }}</strong>
+ 						<td align="right"><strong > {{ number_format($bill['price_total'],2) }}</strong>
  						</td>
  					</tr>
  					@endif

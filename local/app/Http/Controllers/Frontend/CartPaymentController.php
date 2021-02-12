@@ -16,8 +16,8 @@ use App\Models\Frontend\CourseCheckRegis;
 class CartPaymentController extends Controller
 {
 	public function index($type){
-		$location = Location::location(1,1);
 
+		$location = Location::location(1,1);
 		$cartCollection = Cart::session($type)->getContent();
 		$data=$cartCollection->toArray();
 		$quantity = Cart::session($type)->getTotalQuantity();
@@ -51,13 +51,15 @@ class CartPaymentController extends Controller
 
 		$vat = $vat->txt_value;
 		$shipping = $shipping->price_shipping;
+
+
 		
         //ราคาสินค้า
 		$price = Cart::session($type)->getTotal();
-
+ 
 		//vatใน 7% 
-		$p_vat = number_format($price*($vat/(100+$vat)),2);
-
+		$p_vat = $price*($vat/(100+$vat));
+ 
 		 //มูลค่าสินค้า
 		$price_vat =  $price - $p_vat;
 

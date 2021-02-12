@@ -54,6 +54,27 @@ class Frontend{
 
 	}
 
+	public static function get_promotion_detail($promotion_id,$location_id){
+
+		$promotion_detail = DB::table('promotions_products')
+		->select('promotions_products.promotion_id_fk','promotions_products.product_id_fk','promotions_products.product_amt','products_details.product_name','products_cost.member_price'
+			,'dataset_product_unit.group_id as unit_id','dataset_product_unit.product_unit as unit_name')
+		->leftjoin('products','products.id','=','promotions_products.product_id_fk') 
+		->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
+		->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
+
+		->leftjoin('dataset_product_unit', 'dataset_product_unit.group_id', '=', 'promotions_products.product_unit')
+		->where('promotions_products.promotion_id_fk','=',$promotion_id)
+		->where('products_details.lang_id', '=',1)
+		->where('dataset_product_unit.lang_id', '=',1)
+		->where('products_cost.business_location_id','=',$location_id)
+		->get();
+		//dd($promotion_detail); 
+
+		return $promotion_detail;
+
+	}
+
 	public static function get_ce_register_per_customer_perday($ce_id,$customer_id){//ต่อวัน
 
 		$date_now = date('Y-m-d');

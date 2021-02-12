@@ -123,7 +123,7 @@ class PaymentAiCash extends Model
 
 	public static function credit_card($rs){
 
-		 	$price = str_replace(',','',$rs->price);
+		$price = str_replace(',','',$rs->price);
 		$business_location_id = '1';
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;

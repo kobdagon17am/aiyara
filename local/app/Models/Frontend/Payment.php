@@ -9,6 +9,8 @@ use Cart;
 use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Pvpayment;
 use App\Models\Frontend\PaymentSentAddressOrder;
+use App\Models\Frontend\PaymentAddProduct;
+
 class Payment extends Model
 {
 	public static function payment_uploadfile($rs){
@@ -79,7 +81,6 @@ class Payment extends Model
 						'status' => 'panding',
 						'detail' => 'Payment Add Ai-Stockist',
 					]);
-
 				}
 
 				if($rs->type == 5){
@@ -105,28 +106,7 @@ class Payment extends Model
 					}
 				}
 
-				foreach ($data as $value) {
-					$total_pv = $value['attributes']['pv'] * $value['quantity'];
-					$total_price = $value['price'] * $value['quantity'];
-
-					DB::table('db_order_products_list')->insert([
-						'order_id_fk'=>$id,
-						'customers_id_fk'=>$customer_id,
-						'product_id_fk'=>$value['id'],
-						'product_name'=>$value['name'],
-						'amt'=>$value['quantity'],
-						'selling_price'=>$value['price'],
-						'pv'=>$value['attributes']['pv'],
-						'total_pv'=>$total_pv,
-						'total_price'=>$total_price,
-						'add_from'=>1,
-					]);
-
-					Cart::session($rs->type)->remove($value['id']);
-				}
-
-				$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-
+				$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
 
 				if($resule['status'] == 'success'){
 					DB::commit();
@@ -144,6 +124,7 @@ class Payment extends Model
 		}
 
 		public static function payment_not_uploadfile($rs){
+			
 			$business_location_id = '1';
 			DB::BeginTransaction();
 			$customer_id = Auth::guard('c_user')->user()->id;
@@ -220,27 +201,9 @@ class Payment extends Model
 
 			}
 
-			foreach ($data as $value) {
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
 
-				$total_pv = $value['attributes']['pv'] * $value['quantity'];
-				$total_price = $value['price'] * $value['quantity'];
-
-				DB::table('db_order_products_list')->insert([
-					'order_id_fk'=>$id,
-					'customers_id_fk'=>$customer_id,
-					'product_id_fk'=>$value['id'],
-					'product_name'=>$value['name'],
-					'amt'=>$value['quantity'],
-					'selling_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-					'total_pv'=>$total_pv,
-					'total_price'=>$total_price,
-					'add_from'=>1,
-				]);
-
-				Cart::session($rs->type)->remove($value['id']);
-			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
+			//$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
 			if($resule['status'] == 'success'){
 				DB::commit();
@@ -335,29 +298,8 @@ class Payment extends Model
 
 			}
 
-			foreach ($data as $value) {
-
-				$total_pv = $value['attributes']['pv'] * $value['quantity'];
-				$total_price = $value['price'] * $value['quantity'];
-
-				DB::table('db_order_products_list')->insert([
-					'order_id_fk'=>$id,
-					'customers_id_fk'=>$customer_id,
-					'product_id_fk'=>$value['id'],
-					'product_name'=>$value['name'],
-					'amt'=>$value['quantity'],
-					'selling_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-					'total_pv'=>$total_pv,
-					'total_price'=>$total_price,
-					'add_from'=>1,
-				]);
-
-				Cart::session($rs->type)->remove($value['id']);
-			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
-					//return $resule;
-
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
+					 
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
 				if($resulePv['status'] == 'success'){
@@ -459,28 +401,7 @@ class Payment extends Model
 
 			}
 
-			foreach ($data as $value) {
-
-				$total_pv = $value['attributes']['pv'] * $value['quantity'];
-				$total_price = $value['price'] * $value['quantity'];
-
-				DB::table('db_order_products_list')->insert([
-					'order_id_fk'=>$id,
-					'customers_id_fk'=>$customer_id,
-					'product_id_fk'=>$value['id'],
-					'product_name'=>$value['name'],
-					'amt'=>$value['quantity'],
-					'selling_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-					'total_pv'=>$total_pv,
-					'total_price'=>$total_price,
-					'add_from'=>1,
-				]);
-
-
-				Cart::session($rs->type)->remove($value['id']);
-			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย'];
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
 
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
@@ -563,27 +484,7 @@ class Payment extends Model
 			}
 
 
-			foreach ($data as $value) {
-
-				$total_pv = $value['attributes']['pv'] * $value['quantity'];
-				$total_price = $value['price'] * $value['quantity'];
-
-				DB::table('db_order_products_list')->insert([
-					'order_id_fk'=>$id,
-					'customers_id_fk'=>$customer_id,
-					'product_id_fk'=>$value['id'],
-					'product_name'=>$value['name'],
-					'amt'=>$value['quantity'],
-					'selling_price'=>$value['price'],
-					'pv'=>$value['attributes']['pv'],
-					'total_pv'=>$total_pv,
-					'total_price'=>$total_price,
-					'add_from'=>1,
-				]);
-
-				Cart::session($rs->type)->remove($value['id']);
-			}
-			$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
 
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');

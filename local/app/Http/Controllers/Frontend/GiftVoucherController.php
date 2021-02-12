@@ -142,7 +142,7 @@ public function dt_gift_order_history(Request $request){
     if( empty($request->input('search.value')) and empty($request->input('status')) ){
 
        $totalData =  DB::table('log_gift_voucher') 
-       ->leftjoin('orders', 'orders.id', '=', 'log_gift_voucher.order_id')
+       ->leftjoin('db_orders', 'db_orders.id', '=', 'log_gift_voucher.order_id')
        ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
        ->count();
        $totalFiltered = $totalData;
@@ -152,8 +152,8 @@ public function dt_gift_order_history(Request $request){
             //$dir = $request->input('order.0.dir');
 
        $gift_voucher =  DB::table('log_gift_voucher')
-       ->select('log_gift_voucher.*','orders.code_order') 
-       ->leftjoin('orders','orders.id','=', 'log_gift_voucher.order_id')
+       ->select('log_gift_voucher.*','db_orders.code_order') 
+       ->leftjoin('db_orders','db_orders.id','=', 'log_gift_voucher.order_id')
        ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
        ->offset($start)
        ->limit($limit)
@@ -169,11 +169,11 @@ public function dt_gift_order_history(Request $request){
         //$status=$request->input('status');
 
     $totalData =  DB::table('log_gift_voucher')
-    ->leftjoin('orders', 'orders.id', '=', 'log_gift_voucher.order_id')
+    ->leftjoin('db_orders', 'db_orders.id', '=', 'log_gift_voucher.order_id')
     ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
     ->whereRaw(("case WHEN '{$status}' = 'success' THEN log_gift_voucher.status = 'success' || log_gift_voucher.status = 'order'  WHEN '{$status}' = 'cancel' THEN log_gift_voucher.status = 'cancel'
         else 1 END"))
-    ->whereRaw("(orders.code_order LIKE '%{$search}%')" )
+    ->whereRaw("(db_orders.code_order LIKE '%{$search}%')" )
     ->count(); 
 
     $totalFiltered = $totalData;
@@ -185,12 +185,12 @@ public function dt_gift_order_history(Request $request){
         //$dir = $request->input('order.0.dir');
 
     $gift_voucher =  DB::table('log_gift_voucher') 
-    ->select('log_gift_voucher.*','orders.code_order') 
-    ->leftjoin('orders', 'orders.id', '=', 'log_gift_voucher.order_id')
+    ->select('log_gift_voucher.*','db_orders.code_order') 
+    ->leftjoin('db_orders', 'db_orders.id', '=', 'log_gift_voucher.order_id')
     ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
     ->whereRaw(("case WHEN '{$status}' = 'success' THEN log_gift_voucher.status = 'success' || log_gift_voucher.status = 'order'  WHEN '{$status}' = 'cancel' THEN log_gift_voucher.status = 'cancel'
         else 1 END"))
-    ->whereRaw("(orders.code_order LIKE '%{$search}%')" )
+    ->whereRaw("(db_orders.code_order LIKE '%{$search}%')" )
     ->limit($limit)
     ->orderby('id','DESC')
     ->get(); 

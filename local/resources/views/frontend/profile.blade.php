@@ -144,8 +144,113 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
 <!-- Panel card end -->
 </div>
 </div>
+
+
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="card">
+
+      <div class="card-header">
+       <h4>Coupon Code</h4>
+        <div class="row">
+          <div class="col-md-4">
+           <select class="form-control" id="status" >
+              <option value="">ทั้งหมด</option>
+              <option value="1">ใช้งานได้</option>
+              <option value="2">ถูกใช้แล้ว</option>
+              <option value="expiry_date">หมดอายุ</option>
+            </select>  
+          </div>
+   
+        </div>
+      </div>
+      <div class="card-block">
+        <div class="table-responsive dt-responsive">
+
+          <table id="dt_coupon_code" class="table table-striped table-bordered nowrap">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Start</th>
+                <th>Expiry</th>
+                <th>CODE</th>
+                <th>Detail</th>
+                <th>Status</th>
+                
+              </tr>
+            </thead>
+
+          </table>
+        </div>
+
+ <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist</span>
+      </div>
+
+
+    </div>
+  </div>
+</div>
 @endsection
 @section('js')
+<!-- data-table js -->
+
+<script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
+<script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+<!-- Custom js -->
+<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    fetch_data();
+
+  });
+
+  function fetch_data(status = '') {
+    
+    $('#dt_coupon_code').DataTable({
+        // scrollX: true,
+        // scrollCollapsed: true,
+        processing: true,
+        serverSide: true,
+        searching: true,
+        ajax: {
+          url: "{{ route('dt_coupon_code') }}",
+          dataType: "json",
+          type: "get",
+          data: {status:status}
+        },
+
+        columns:[
+        {"data": "id"},
+        {"data": "date"},
+        {"data": "expiry_date"},
+        {"data": "code"},
+        {"data": "detail"},
+        {"data": "status"},
+ 
+        ],
+        //order: [[ "0", "desc" ]],
+      });
+  }
+ 
+  $('#status').on('change',function(){
+    var status = $(this).val();
+    $('#dt_coupon_code').DataTable().destroy(); 
+    fetch_data(status);
+  });
+
+
+</script>
 @endsection
 
 

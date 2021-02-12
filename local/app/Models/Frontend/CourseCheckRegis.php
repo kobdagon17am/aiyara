@@ -8,7 +8,6 @@ use Auth;
 class CourseCheckRegis extends Model
 {
     public static function check_register($course_id){
-
         $data_ce = DB::table('course_event') 
         ->where('id',$course_id)
         ->first();
