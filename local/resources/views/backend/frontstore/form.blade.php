@@ -152,13 +152,13 @@
 
                                        @if(!empty(@$sRow->branch_id_fk))
 
-	                                       <input type="hidden" name="branch_id_fk" value="{{$sRow->branch_id_fk}}"  >
-	                                       <input type="text" class="form-control" value="{{@$BranchName}}"  disabled="" >
+                                         <input type="hidden" name="branch_id_fk" value="{{$sRow->branch_id_fk}}"  >
+                                         <input type="text" class="form-control" value="{{@$BranchName}}"  disabled="" >
 
                                        @else
 
-	                                       @if(@$sBranchs)
-	                                       <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
+                                         @if(@$sBranchs)
+                                         <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
                                              <option value="">Select</option>
                                               @foreach(@$sBranchs AS $r)
                                                @if(@$r->id==$User_branch_id)
@@ -187,13 +187,13 @@
 
                                        @if(!empty(@$sRow->customers_id_fk))
 
-	                                       <input type="hidden" name="customers_id_fk" value="{{$sRow->customers_id_fk}}"  >
-	                                       <input type="text" class="form-control" value="{{@$CusName}}"  disabled="" >
+                                         <input type="hidden" name="customers_id_fk" value="{{$sRow->customers_id_fk}}"  >
+                                         <input type="text" class="form-control" value="{{@$CusName}}"  disabled="" >
 
                                        @else
 
-	                                       @if(@$Customer)
-	                                       <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
+                                         @if(@$Customer)
+                                         <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
                                              <option value="">Select</option>
                                               @foreach(@$Customer AS $r)
                                               <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customers_id_fk)?'selected':'' }} >
@@ -244,7 +244,7 @@
 
                                       @if(!empty(@$sRow->purchase_type_id_fk))
 
-                                         <input type="hidden" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
+                                         <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                          <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
 
                                       @else
@@ -374,7 +374,7 @@
 
           
           <div class="page-title-box d-flex justify-content-between ">
-            <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย [{{@$sRow->invoice_code}}] </h4>
+            <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
 
             <a class="btn btn-success btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank >
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
@@ -384,15 +384,9 @@
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
             </a>
             <!-- แลก Gift Voucher -->
-            @if(@$sRow->purchase_type_id_fk==5)
-                <a class="btn btn-success btn-sm mt-1 disabled " href="#"  >
-                  <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
-                </a>
-            @else
                  <a class="btn btn-success btn-sm mt-1 btnAddFromPromotion " href="#" >
                   <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
                 </a>
-            @endif
 
             <a class="btn btn-success btn-sm mt-1 btnAddFromProdutcsList " href="#" >
               <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มแบบ List</span>
@@ -440,12 +434,12 @@
         4 เติม Ai-Stockist
         5 แลก Gift Voucher
 
-		dataset_pay_type
-		1	โอนชำระ
-		2	บัตรเครดิต
-		3	Ai-Cash
-		4	Gift Voucher
-		5	เงินสด -->
+    dataset_pay_type
+    1 โอนชำระ
+    2 บัตรเครดิต
+    3 Ai-Cash
+    4 Gift Voucher
+    5 เงินสด -->
 
                 <div class="form-group row">
 
@@ -460,16 +454,16 @@
                                 
                                     @if(@$sPay_type01)
                                       @foreach(@$sPay_type01 AS $r)
-                                      	
-                                      	@if(@$sRow->purchase_type_id_fk==5)
-	                                        <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }}  >
-	                                          {{$r->detail}} 
-	                                        </option>
-                                       	@else
-                                       		<option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-	                                          {{$r->detail}} 
-	                                        </option>
-                                      	@endif
+                                        
+                                        @if(@$sRow->purchase_type_id_fk==5)
+                                          <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }}  >
+                                            {{$r->detail}} 
+                                          </option>
+                                        @else
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
+                                            {{$r->detail}} 
+                                          </option>
+                                        @endif
 
                                       @endforeach
                                     @endif                                
@@ -555,6 +549,7 @@
       <input name="receipt_save_list" type="hidden" value="1">
       <input name="invoice_code" type="hidden" value="{{@$sRow->invoice_code}}">
       <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
+      <input name="this_branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
 
       {{ csrf_field() }}
 
@@ -566,6 +561,12 @@
                 
                 <div class="table-responsive">
                   <table class="table table-striped mb-0">
+
+                    <?php $bg_00 = @$sRow->delivery_location==0?'background-color: #99ff99;':''; ?>
+                    <?php $bg_01 = @$sRow->delivery_location==1?'background-color: #99ff99;':''; ?>
+                    <?php $bg_02 = @$sRow->delivery_location==2?'background-color: #99ff99;':''; ?>
+                    <?php $bg_03 = @$sRow->delivery_location==3?'background-color: #99ff99;':''; ?>
+                    <?php $bg_04 = @$sRow->delivery_location==4?'background-color: #99ff99;':''; ?>
                     
                     <thead>
                       <tr style="background-color: #f2f2f2;">
@@ -574,8 +575,15 @@
                     </thead>
                     <tbody>
 
+                       <tr>
+                        <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
+                          <input type="radio" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                        </th>
+                      </tr>
+
+
                       <tr>
-                        <th scope="row" class="d-flex">
+                        <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           <input type="radio" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
                             <div class="col-md-6">
                              <select id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " >
@@ -647,7 +655,7 @@
                   ?>
 
                       <tr>
-                        <th scope="row">
+                        <th scope="row" class="bg_addr" style="<?=$bg_01?>">
                           <input type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
@@ -699,7 +707,7 @@
                      ?>
 
                       <tr>
-                        <th scope="row">
+                        <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input type="radio" province_id="<?=@$addr[0]->province?>"
                            class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
@@ -732,7 +740,7 @@
                      ?>
 
                       <tr>
-                        <th scope="row">
+                        <th scope="row" class="bg_addr" style="<?=$bg_03?>">
                           <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
@@ -797,7 +805,7 @@
                           <label for="" >ค่าจัดส่ง : </label>
                         </div>
                         <div class="divTableCell" style='z-index: 1' >
-                          <input class="form-control" id="shipping_price" name="shipping_price"  value="{{@$shipping_price}}" readonly="" />
+                          <input class="form-control" id="shipping_price" name="shipping_price"  value="{{(@$shipping_price>0)?@$shipping_price:''}}" required="" />
                         </div>
                          <div class="divTableCell" >
                         </div>
@@ -811,7 +819,7 @@
                       </div>
                       <div class="divTableCell">
                          <!-- // 5=เงินสด,2=บัตรเครดิต -->
-                          <input  class="form-control FeeCal NumberOnly " id="transfer_price" name="transfer_price" value="{{(@$sRow->transfer_price>0)?number_format(@$sRow->transfer_price):''}}" style="color: red;font-weight: bold;" required="" />
+                          <input  class="form-control FeeCal NumberOnly " id="transfer_price" name="transfer_price" value="{{(@$sRow->transfer_price>0)?@$sRow->transfer_price:''}}" style="color: red;font-weight: bold;" required="" />
                       </div>
                    
                     </div>
@@ -822,7 +830,7 @@
                         <label for="" > ค่าธรรมเนียมตัดบัตรเครดิต :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input  class="form-control" id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt)}}" readonly style="color: red;font-weight: bold;" />
+                          <input  class="form-control" id="fee_amt" name="fee_amt" value="{{@$sRow->fee_amt}}" readonly style="color: red;font-weight: bold;" />
                       </div>
                   
                     </div>
@@ -867,7 +875,7 @@
                         <div class="divTableCell" >
                         </div>
                         <div class="divTH">
-                          <label class="test_cal" > TEST CAL </label>
+                          <label class="" > </label>
                         </div>
                         <div class="divTableCell">
                             <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14  " style="float: right;" >
@@ -1021,14 +1029,7 @@
                   <button class="btn btn-success btnAihealth2 " data-value="2" style="margin-right: 1%;" >AiHealth</button>
                   <button class="btn btn-success btnAilada3 " data-value="3" style="margin-right: 1%;" >AiLADA</button>
                   <button class="btn btn-success btnAibody4 " data-value="4" style="margin-right: 1%;" >AiBODY</button>
-
-                  <!-- แลก Gift Voucher -->
-                 @if(@$sRow->purchase_type_id_fk==5)
-                 @else
-                      <button class="btn btn-success btnPromotion8 " data-value="8" style="margin-right: 1%;" >Promotion</button>
-                 @endif
-
-                  
+                  <button class="btn btn-success btnPromotion8 " data-value="8" style="margin-right: 1%;" >Promotion</button>
                 </div>
 
                 <form  class="frmFrontstorelist" id="frmFrontstorelist" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -1406,6 +1407,7 @@
             $.fn.dataTable.ext.errMode = 'throw';
   
             var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+            var order_type = $("input[name=purchase_type_id_fk]").val(); 
 
             $(function() {
               $('#data-table-list-pro').DataTable({
@@ -1416,6 +1418,7 @@
                         url: '{{ route('backend.frontstorelist-pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
+                              order_type:order_type,
                             },
                           method: 'POST',
                         },
@@ -1602,7 +1605,7 @@
           $.fn.dataTable.ext.errMode = 'throw';
 
           var frontstore_id_fk = "{{@$sRow->id}}"; 
-          var order_type = $("#purchase_type_id_fk").val(); 
+          var order_type = $("input[name=purchase_type_id_fk]").val(); 
           // alert(order_type);
 
             $("#spinner_frame").show();
@@ -1749,13 +1752,13 @@
           4 เติม Ai-Stockist
           5 แลก Gift Voucher
         */
-            var order_type = $("#purchase_type_id_fk").val();
+            // var order_type = $("input[name=purchase_type_id_fk]").val(); 
             // alert(order_type);
-            if(order_type==5){
-              $(".btnAddFromPromotion").addClass('disabled');
-            }else{
-              $(".btnAddFromPromotion").removeClass('disabled');
-            }
+            // if(order_type==5){
+            //   $(".btnAddFromPromotion").addClass('disabled');
+            // }else{
+            //   $(".btnAddFromPromotion").removeClass('disabled');
+            // }
 
 
 
@@ -1825,85 +1828,6 @@
             $('#distribution_channel_id_fk').val(localStorage.getItem('distribution_channel_id_fk')).select2();
         }
 
-        $(document).on('change', '#purchase_type_id_fk', function(event) {
-            event.preventDefault();
-            var id = $(this).val();
-            localStorage.setItem('purchase_type_id_fk', id);
-
-               /*
-                  1 ทำคุณสมบัติ
-                  2 รักษาคุณสมบัติรายเดือน
-                  3 รักษาคุณสมบัติท่องเที่ยว
-                  4 เติม Ai-Stockist
-                  5 แลก Gift Voucher
-                */
-                var order_type = this.value;
-                if(order_type==5){
-                  $(".btnAddFromPromotion").addClass('disabled');
-                }else{
-                  $(".btnAddFromPromotion").removeClass('disabled');
-                }
-
-
-		    if(order_type){
-
-		    	$.ajax({
-	                url: " {{ url('backend/ajaxGetPayType') }} ", 
-	                method: "post",
-	                data: {
-	                  order_type:order_type,
-	                  "_token": "{{ csrf_token() }}", 
-	                },
-	                success:function(data)
-	                { 
-	                 if(data == ''){
-	                     alert('ไม่พบข้อมูล !!.');
-	                 }else{
-
-             	       /* dataset_orders_type
-				        1 ทำคุณสมบัติ
-				        2 รักษาคุณสมบัติรายเดือน
-				        3 รักษาคุณสมบัติท่องเที่ยว
-				        4 เติม Ai-Stockist
-				        5 แลก Gift Voucher
-				        */
-						/* dataset_pay_type
-						1	โอนชำระ
-						2	บัตรเครดิต
-						3	Ai-Cash
-						4	Gift Voucher
-						5	เงินสด
-						*/
-
-	                 	if(order_type==5){
-	                 		$.each(data,function(key,value){
-		                     	if(value.id==4){
-		                     		layout += '<option value='+value.id+' selected >'+value.detail+'</option>';
-		                     	}
-	                     	});
-	                 	}else{
-	                 		var layout = '<option value="" selected>Select</option>';
-		                     $.each(data,function(key,value){
-		                     		layout += '<option value='+value.id+'>'+value.detail+'</option>';
-		                     });
-		                     
-	                 	}
-
-	                     $('#pay_type_id_fk').html(layout);
-
-	                 }
-	                }
-	              })
-
-		    }
-
-
-
-        });
-
-        if(localStorage.getItem('purchase_type_id_fk')){
-            $('#purchase_type_id_fk').val(localStorage.getItem('purchase_type_id_fk')).select2();
-        }
 
         $(document).on('change', '#pay_type_id_fk', function(event) {
             event.preventDefault();
@@ -1919,7 +1843,6 @@
                 $('#fee').removeAttr('required');
                 $('#fee').val("").select2();
             }
-
 
         });
 
@@ -1969,6 +1892,16 @@
 
                 $(".myloading").show();
 
+                $(".bg_addr").css("background-color", ""); 
+                $(this).closest('.bg_addr').css("background-color", "#99ff99"); 
+
+
+                var frontstore_id_fk = "{{@$sRow->id}}";
+                var sum_price = $("#sum_price").val();
+
+                // console.log(sum_price);
+                // return false;
+
                 var delivery_location = $("input[name='delivery_location']:checked").val();
                 // สาขาตัวเอง 
                 var branch_id_fk = $("input[name=branch_id_fk]").val();
@@ -1977,7 +1910,7 @@
 
                 var province_id = $(this).attr('province_id');
 
-                if(delivery_location>0){
+                if(delivery_location>0 && delivery_location<4){
                   var province_id = $(this).attr('province_id');
                 }else{
                   var province_id = 0 ;
@@ -1992,15 +1925,29 @@
                  dataType:'JSON',
                  url: " {{ url('backend/ajaxShippingCalculate') }} ", 
                  data:{ _token: '{{csrf_token()}}',
-                   delivery_location:delivery_location,
-                   branch_id_fk:branch_id_fk,
-                   sentto_branch_id:sentto_branch_id,
-                   province_id:province_id,
+                     delivery_location:delivery_location,
+                     branch_id_fk:branch_id_fk,
+                     sentto_branch_id:sentto_branch_id,
+                     province_id:province_id,
+                     frontstore_id_fk:frontstore_id_fk,
+                     sum_price:sum_price,
                     },
                   success:function(data){
                        console.log(data); 
                         $('#shipping_price').val(data);
                        // localStorage.setItem('shipping_price', data );
+                       var shipping_price = parseFloat($("#shipping_price").val());
+                       var transfer_price = parseFloat($("#transfer_price").val());
+                       if(delivery_location==4){
+                          var fee_amt = 0 ;
+                          $("#shipping_price").val(0);
+                          shipping_price = 0;
+                       }else{
+                          var fee_amt = parseFloat($("#fee_amt").val());
+                       }
+                       
+                       var cash_price = parseFloat($("#cash_price").val());
+                       $('#total_price').val(+(shipping_price+transfer_price+fee_amt+cash_price).toFixed(2));
                        $(".myloading").hide();
                     },
                   error: function(jqXHR, textStatus, errorThrown) { 
@@ -2028,22 +1975,24 @@
                 var fee_value = $('#fee_value').val()?$('#fee_value').val():0;
                 var pay_type_id_fk = $('#pay_type_id_fk').val()?$('#pay_type_id_fk').val():0;
                 var pay_type_id_fk_2 = $('#pay_type_id_fk_2').val()?$('#pay_type_id_fk_2').val():0;
-                var sum_price = $('#sum_price_desc').val()?$('#sum_price_desc').val():0;
+                var sum_price = $('#sum_price').val()?$('#sum_price').val():0;
                 var frontstore_id_fk = "{{@$sRow->id}}";
                 var shipping_price = $('#shipping_price').val()?$('#shipping_price').val():0;
                 // alert(cash_price+":"+transfer_price+":"+fee_value);
+                // console.log(sum_price);
                 // return false;
                 $.ajax({
                  type:'POST',
                  dataType:'JSON',
                  url: " {{ url('backend/ajaxFeeCalculate') }} ", 
-                 data:{ _token: '{{csrf_token()}}',cash_price:cash_price,transfer_price:transfer_price,fee_value:fee_value,pay_type_id_fk:pay_type_id_fk,pay_type_id_fk_2:pay_type_id_fk_2,sum_price:sum_price,frontstore_id_fk:frontstore_id_fk,this_id:this_id },
+                 data:{ _token: '{{csrf_token()}}',cash_price:cash_price,transfer_price:transfer_price,fee_value:fee_value,pay_type_id_fk:pay_type_id_fk,pay_type_id_fk_2:pay_type_id_fk_2,sum_price:sum_price,frontstore_id_fk:frontstore_id_fk,this_id:this_id,shipping_price:shipping_price },
                   success:function(data){
                        console.log(data); 
                        // return false;
                        // location.reload();
                        $.each(data,function(key,value){
                         console.log(value.sum_price);
+                        $("#shipping_price").val(value.shipping_price);
                         $("#cash_price").val(value.cash_price);
                         $("#transfer_price").val(value.transfer_price);
                         $("#fee_amt").val(value.fee_amt);
@@ -2084,7 +2033,7 @@
 
         $(document).on('click', '.btn-plus', function(e) {
           // event.preventDefault();
-          $.fn.dataTable.ext.errMode = 'throw';
+          
 
           const input = $(e.target).closest('.input-group').find('input');
           if (input.is('input')) {
@@ -2113,6 +2062,7 @@
                         var oTable;
 
                           $(function() {
+                            $.fn.dataTable.ext.errMode = 'throw';
                               oTable = $('#data-table-list').DataTable({
                               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                                   processing: true,
@@ -2619,14 +2569,15 @@
           table.clear().draw();
 
           var category_id = $(this).data('value');
+          // alert(category_id);
 
           $("#spinner_frame").show();
 
           $.fn.dataTable.ext.errMode = 'throw';
 
           var frontstore_id_fk = "{{@$sRow->id}}"; 
-          var order_type = $("#purchase_type_id_fk").val(); 
-          // alert(frontstore_id_fk);
+          var order_type = $("input[name=purchase_type_id_fk]").val(); 
+          // alert(order_type);
 
             /*
               1 ทำคุณสมบัติ
@@ -2635,11 +2586,11 @@
               4 เติม Ai-Stockist
               5 แลก Gift Voucher
             */
-            if(order_type==5){
-              $(".btnPromotion8").hide();
-            }else{
-              $(".btnPromotion8").show();
-            }
+            // if(order_type==5){
+            //   $(".btnPromotion8").hide();
+            // }else{
+            //   $(".btnPromotion8").show();
+            // }
 
             var oTable;
             $(function() {
@@ -2746,6 +2697,8 @@
            $.fn.dataTable.ext.errMode = 'throw';
   
             var frontstore_id_fk = "{{@$sRow->id}}"; //alert(frontstore_id_fk);
+            var order_type = $("input[name=purchase_type_id_fk]").val(); 
+            // alert(order_type);
 
             $(function() {
               $('#data-table-list-pro').DataTable({
@@ -2757,6 +2710,7 @@
                         url: '{{ route('backend.frontstorelist-pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
+                              order_type:order_type,
                             },
                           method: 'POST',
                         },
@@ -2848,7 +2802,6 @@
                data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                 success:function(msg){
                      console.log(msg);
-
                      // return false;
 
                      if(msg=="InActive"){
@@ -2948,6 +2901,8 @@
                           });
 
                           $('#data-table-promotion').show();
+                          $('#data-table-promotions-cost').show();
+                          $('#data-table-promotions-cost_wrapper').show();
                           $('.btnSavePro').show();
                           $('.show_add_coupon').show();
                           var oTable;
@@ -3039,6 +2994,8 @@ $(document).ready(function() {
         $("#modalAddFromPromotion").on("hidden.bs.modal", function(){
             $("#frmAddPro").find("input[type=text]").val("");
             $('#data-table-promotion').hide();
+            $('#data-table-promotions-cost').hide();
+            $('#data-table-promotions-cost_wrapper').hide();
             $('.show_add_coupon').hide();
         });
 
@@ -3382,28 +3339,16 @@ $(document).ready(function() {
             });
 
             $(document).ready(function() {
-				// $('.btnDelivery').trigger('click');
-				// $('.btnAddFromPromotion').trigger('click');
-				// $('#modalAddFromPromotion').modal('show');
-				// $('#modalAddFromProductsList').modal('show');
-				// $('.btnAddFromProdutcsList ').trigger('click');
-				// $('.btnPromotion8').trigger('click');
-				// $('.btnAddFromPromotion ').trigger('click');
-				// $('.btnAddList ').trigger('click');
-				// $('#modalDelivery').modal('show');
-				// $('#modalDelivery').modal('show');
-
-              $(document).on('click','.test_cal', function(e){
-
-                  var shipping_price = $("#shipping_price").val();
-                  console.log(shipping_price);
-
-                      var first=parseFloat($("#first").val());
-                      var second=parseFloat($("#second").val());
-                      $("#result").val(+(first+second).toFixed(2));
-                      
-
-              });
+        // $('.btnDelivery').trigger('click');
+        // $('.btnAddFromPromotion').trigger('click');
+        // $('#modalAddFromPromotion').modal('show');
+        // $('#modalAddFromProductsList').modal('show');
+        // $('.btnAddFromProdutcsList ').trigger('click');
+        // $('.btnPromotion8').trigger('click');
+        // $('.btnAddFromPromotion ').trigger('click');
+        // $('.btnAddList ').trigger('click');
+        // $('#modalDelivery').modal('show');
+        // $('#modalDelivery').modal('show');
 
 
             });

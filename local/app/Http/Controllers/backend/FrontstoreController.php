@@ -103,13 +103,27 @@ class FrontstoreController extends Controller
 
       $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
 
-      $Products = DB::select("SELECT products.id as product_id,
-      products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
-      FROM
-      products_details
-      Left Join products ON products_details.product_id_fk = products.id
-      WHERE lang_id=1");
+      // dd($sRow->purchase_type_id_fk);
+
+      $Products = DB::select("
+
+        SELECT products.id as product_id,
+        products.product_code,
+        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+        FROM
+        products_details
+        Left Join products ON products_details.product_id_fk = products.id
+        WHERE lang_id=1
+        AND 
+            (
+              ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
+              ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
+              ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
+              ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
+              ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+            )        
+
+      ");
 
       $Customer = DB::select(" select * from customers ");
         /* dataset_orders_type
@@ -206,8 +220,8 @@ class FrontstoreController extends Controller
             00001=running no.
             P2102100001
             */
-            $inv = DB::select(" select invoice_code from db_frontstore order by invoice_code desc limit 1 ");
-            $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+            // $inv = DB::select(" select invoice_code from db_frontstore order by invoice_code desc limit 1 ");
+            // $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
 
           }
           // 5=เงินสด,2=บัตรเครดิต
@@ -217,12 +231,12 @@ class FrontstoreController extends Controller
             $fee = request('fee');
           }
 
-
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
-          $sRow->invoice_code    = $invoice_code ;
+          // $sRow->invoice_code    = $invoice_code ;
           $sRow->cash_price    = 0 ;
           $sRow->transfer_price    = 0 ;
           $sRow->fee_amt    = 0 ;
+          $sRow->shipping_price    = 0 ;
           $sRow->branch_id_fk    = request('branch_id_fk');
           $Branchs = \App\Models\Backend\Branchs::find($sRow->branch_id_fk);
           $sRow->business_location_id_fk    = $Branchs->business_location_id_fk;
@@ -267,6 +281,10 @@ class FrontstoreController extends Controller
       $sTable = \App\Models\Backend\Frontstore::search();
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('action_date', function($row) {
+        $d = strtotime($row->action_date); 
+        return date("d/m/", $d).(date("Y", $d)+543);
+      })
       ->addColumn('customer_name', function($row) {
         $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
         return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;

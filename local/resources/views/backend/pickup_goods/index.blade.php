@@ -190,6 +190,7 @@ var sD = "{{@$sD}}"; //alert(sD);
 var can_approve = "{{@$can_approve}}"; //alert(sD);
 var oTable;
 $(function() {
+  $.fn.dataTable.ext.errMode = 'throw';
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -335,6 +336,7 @@ $(function() {
 
           var oTable3;
           $(function() {
+            $.fn.dataTable.ext.errMode = 'throw';
               oTable3 = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,

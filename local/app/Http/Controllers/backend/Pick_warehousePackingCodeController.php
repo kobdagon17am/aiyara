@@ -17,12 +17,39 @@ class Pick_warehousePackingCodeController extends Controller
       
     }
 
- public function create()
+    public function create()
     {
 
     }
     public function store(Request $request)
     {
+      dd($request->all());
+
+        if(isset($request->save_to_packing)){
+
+            $arr = implode(',', $request->row_id);
+
+            $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+
+              $DeliveryPackingCode = new \App\Models\Backend\Pick_warehousePackingCode;
+              if( $DeliveryPackingCode ){
+                $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
+                $DeliveryPackingCode->save();
+              }
+
+           foreach ($rsDelivery as $key => $value) {
+              $DeliveryPacking = new \App\Models\Backend\Pick_warehousePacking;
+              $DeliveryPacking->packing_code = $DeliveryPackingCode->id;
+              $DeliveryPacking->pick_warehouse_id_fk = @$value->id;
+              $DeliveryPacking->created_at = date('Y-m-d H:i:s');
+              $DeliveryPacking->save();
+           }              
+
+        }
+
+        return redirect()->to(url("backend/pick_warehouse"));
+
+
     }
 
     public function edit($id)

@@ -60,7 +60,7 @@ class DeliveryPackingCodeController extends Controller
       return $sQuery
       ->addColumn('receipt', function($row) {
         if($row->id!==""){
-            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
+            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
             $array = array();
             if(@$DP){
               foreach ($DP as $key => $value) {
@@ -73,10 +73,10 @@ class DeliveryPackingCodeController extends Controller
           }
       })
       ->addColumn('customer_name', function($row) {
+        // return $row->id;
+        // if($row->id!==""){
 
-        if($row->id!==""){
-
-          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->get();
+          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {
@@ -88,27 +88,46 @@ class DeliveryPackingCodeController extends Controller
             return $arr;
           }
 
-          }
+        //   }
       })
       ->addColumn('packing_code_desc', function($row) {
-        return sprintf("%05d",$row->id);
+        return "P".sprintf("%05d",$row->id);
       })
       ->addColumn('addr_to_send', function($row) { 
-        if(@$row->addr_id!=""){
-            // $rs = DB::table('customers_detail')->where('id',$row->addr_id)->get();
-            $rs = DB::table('customers_addr_sent')->where('id',$row->addr_id)->where('id_choose',1)->get();
-            $addr = @$rs[0]->house_no?@$rs[0]->house_no.", ":'';
-            $addr .= @$rs[0]->house_name;
-            $addr .= @$rs[0]->moo?", หมู่ ".@$rs[0]->moo:'';
-            $addr .= @$rs[0]->soi?", ซอย".@$rs[0]->soi:'';
-            $addr .= @$rs[0]->road?", ถนน".@$rs[0]->road:'';
-            $addr .= @$rs[0]->district_sub?", ต.".@$rs[0]->district_sub:'';
-            $addr .= @$rs[0]->district?", อ.".@$rs[0]->district:'';
-            $addr .= @$rs[0]->province?", จ.".@$rs[0]->province:'';
-            $addr .= @$rs[0]->zipcode?", ".@$rs[0]->zipcode:'';
-            return $addr;
+        if(@$row->id!=""){
+            $rs1 = DB::select("select * from db_delivery_packing where packing_code=".$row->id." ");
+            $arr1 = [];
+            foreach ($rs1 as $key => $value) {
+              array_push($arr1,$value->delivery_id_fk);
+            }
+            $id = implode(',', $arr1);
+            $rs2 = DB::select("select * from db_delivery where id in ($id) ");
+            $arr2 = [];
+            foreach ($rs2 as $key => $value) {
+              array_push($arr2,"'".$value->receipt."'");
+            }
+            $receipt = implode(',', $arr2);
+
+            if($receipt){
+                $rs = DB::select("select * from customers_addr_sent where receipt_no in($receipt) AND id_choose=1 ");
+
+                $addr = @$rs[0]->house_no?@$rs[0]->house_no.", ":'';
+                $addr .= @$rs[0]->house_name;
+                $addr .= @$rs[0]->moo?", หมู่ ".@$rs[0]->moo:'';
+                $addr .= @$rs[0]->soi?", ซอย".@$rs[0]->soi:'';
+                $addr .= @$rs[0]->road?", ถนน".@$rs[0]->road:'';
+                $addr .= @$rs[0]->district_sub?", ต.".@$rs[0]->district_sub:'';
+                $addr .= @$rs[0]->district?", อ.".@$rs[0]->district:'';
+                $addr .= @$rs[0]->province?", จ.".@$rs[0]->province:'';
+                $addr .= @$rs[0]->zipcode?", ".@$rs[0]->zipcode:'';
+                return $addr;
+
+            }else{
+                return '0';
+            }
+            
         }else{
-            return '-ไม่ระบุ-';
+            return '0';
         }
 
       })

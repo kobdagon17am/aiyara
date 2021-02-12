@@ -43,16 +43,23 @@ class AjaxController extends Controller
     public function ajaxSelectAddr(Request $request)
     {
 
-          
-          $data = DB::select(" 
-                SELECT
-                *
-                FROM
-                customers_addr_sent
-                WHERE id=".$request->v."
+            $rs1 = DB::select("select * from db_delivery_packing where packing_code=".$request->v." ");
+            $arr1 = [];
+            foreach ($rs1 as $key => $value) {
+              array_push($arr1,$value->delivery_id_fk);
+            }
+            $id = implode(',', $arr1);
+            $rs2 = DB::select("select * from db_delivery where id in ($id) ");
+            $arr2 = [];
+            $arr22 = [];
+            foreach ($rs2 as $key => $value) {
+              array_push($arr2,"'".$value->receipt."'");
+              array_push($arr22,$value->receipt);
+            }
+            $receipt = implode(',', $arr2);
+            $receipt2 = implode(',', $arr22);
 
-           ");
-
+            $data = DB::select("select * from customers_addr_sent where receipt_no in($receipt) ");
 
             $tb = "<table class='minimalistBlack'>
                         <thead>
@@ -76,9 +83,9 @@ class AjaxController extends Controller
 
                             if($value->id!=''){
                                 if($i==1){
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->id."' checked >";
+                                    $addr_id = "<input type='hidden' name='receipt_no' value='".$receipt2."'><input type='radio' name='id' value='".$value->id."' checked >";
                                 }else{
-                                    $addr_id = "<input type='radio' name='addr' value='".$value->id."'>";
+                                    $addr_id = "<input type='hidden' name='receipt_no' value='".$receipt2."'><input type='radio' name='id' value='".$value->id."'>";
                                 }
                                 
                             }else{
@@ -100,7 +107,7 @@ class AjaxController extends Controller
 
                             $i++;
                       }
-            $tb .= "</tbody></table> <input type='hidden' name='id' value='".$request->v."'> ";
+            $tb .= "</tbody></table> ";
 
             return $tb;
 
@@ -112,10 +119,13 @@ class AjaxController extends Controller
     {
           $receipt_no = explode(",",$request->receipt_no);
           $arr = [];
+          $arr2 = [];
           for ($i=0; $i < sizeof($receipt_no); $i++) { 
               array_push($arr, "'".$receipt_no[$i]."'");
+              array_push($arr2, $receipt_no[$i]);
           }
           $arr = implode(",",$arr);
+          $arr2 = implode(",",$arr2);
           $data = DB::select(" 
                 SELECT
                 *
@@ -147,9 +157,9 @@ class AjaxController extends Controller
 
                            if($value->id!=''){
                                 if($value->id_choose==1){
-                                    $addr_id = "<input type='radio' name='receipt_no' value='".$value->receipt_no."' checked >";
+                                    $addr_id = "<input type='hidden' name='receipt_no' value='".$arr2."'><input type='radio' name='id' value='".$value->id."' checked >";
                                 }else{
-                                    $addr_id = "<input type='radio' name='receipt_no' value='".$value->receipt_no."'>";
+                                    $addr_id = "<input type='hidden' name='receipt_no' value='".$arr2."'><input type='radio' name='id' value='".$value->id."'>";
                                 }
                                 
                             }else{
@@ -538,53 +548,74 @@ class AjaxController extends Controller
         // return $request;
         // dd();
 
-        if($request->delivery_location==0){ //รับสินค้าด้วยตัวเอง
-            //สาขา ?
-            // สาขาตัวเอง
-            if($request->sentto_branch_id==$request->branch_id_fk){
-                // return 'ส่งที่สาขาตัวเอง ไม่ต้องมีค่าขนส่ง ';
-                return 0 ;
+        $sum_price = str_replace(',','',$request->sum_price);
 
-            }else{
-                // รับต่างสาขา หาต่อว่าอยู่ใน business_location ?
-                $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->sentto_branch_id."");
+        $frontstor = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
+        $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstor[0]->business_location_id_fk."' ");
 
-                $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+        if($sum_price>=$shipping[0]->purchase_amt){
+            DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+            return 0 ;
+        }else{
 
-                return $shipping_cost[0]->shipping_cost;
 
-            }
-            
-        }else{ 
+            if($request->delivery_location==0){ //รับสินค้าด้วยตัวเอง
+                //สาขา ?
+                // สาขาตัวเอง
+                if($request->sentto_branch_id==$request->branch_id_fk){
+                    // return 'ส่งที่สาขาตัวเอง ไม่ต้องมีค่าขนส่ง ';
+                    DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+                    return 0 ;
 
-            // รับสินค้าตามที่อยู่ ที่ลงไว้ ที่อยู่ ตาม บัตร ปชช. หรือ ปณ. หรือ กำหนดเอง เอา รหัส จ. มาเช็ค
-            // ดูว่าเป็น จ. เดียวกันกับ จ. สาขาที่รับมั๊ย
-            // ต้อง Lock Business Lo ไว้ก่อนเลย
-                $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
-
-                if($request->province_id==$branchs[0]->province_id_fk){
-                    return 0;
                 }else{
-                     // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
 
-                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+                    // รับต่างสาขา หาต่อว่าอยู่ใน business_location ?
+                    $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->sentto_branch_id."");
 
-                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->province_id." ");
-                    // return $shipping_cost[0]->id;
-                    // return count($shipping_vicinity);
-                    if(count($shipping_vicinity)>0){
-                        return $shipping_cost[0]->shipping_cost;
+                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+
+                    DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+
+                    return $shipping_cost[0]->shipping_cost;
+
+                }
+                
+            }else{ 
+
+                // รับสินค้าตามที่อยู่ ที่ลงไว้ ที่อยู่ ตาม บัตร ปชช. หรือ ปณ. หรือ กำหนดเอง เอา รหัส จ. มาเช็ค
+                // ดูว่าเป็น จ. เดียวกันกับ จ. สาขาที่รับมั๊ย
+                // ต้อง Lock Business Lo ไว้ก่อนเลย
+                    $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
+
+                    if($request->province_id==$branchs[0]->province_id_fk){
+                        DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+                        return 0;
                     }else{
+                         // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
 
-                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
-                        return $shipping_cost[0]->shipping_cost;
+                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+
+                        $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->province_id." ");
+                        // return $shipping_cost[0]->id;
+                        // return count($shipping_vicinity);
+                        if(count($shipping_vicinity)>0){
+                            DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+                            return $shipping_cost[0]->shipping_cost;
+                        }else{
+
+                            $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
+                            DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+                            return $shipping_cost[0]->shipping_cost;
+
+                        }
 
                     }
 
-                }
 
-
+            }
         }
+
+
         
    
     }
@@ -603,6 +634,7 @@ class AjaxController extends Controller
       $cash_price = str_replace(',','',$request->cash_price);
       $shipping_price = str_replace(',','',$request->shipping_price);
       $pay_type_id_fk = $request->pay_type_id_fk;
+
 
       if($request->this_id=="transfer_price"){
 
@@ -637,9 +669,14 @@ class AjaxController extends Controller
 
       }
 
+        // if($sum_price >= $shipping[0]->purchase_amt){
+        //     DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+        // }
 
 
         $rs = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
+
+        // return  $rs[0]->shipping_price;
 
         return response()->json($rs);   
 
@@ -694,13 +731,17 @@ class AjaxController extends Controller
     public function ajaxGenPromotionCode(Request $request)
     {
 
-         if( $request->promotion_code_id_fk ){
-            $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
+           // return($request->all());
+           // dd();
+
+         if($request->promotion_id_fk){
+            $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_id_fk);
           }else{
             $sRow = new \App\Models\Backend\PromotionCode;
           }
-
-            $sRow->promotion_name = $request->promotion_name;
+           // return($request->promotion_id_fk);
+           // dd();
+            $sRow->promotion_id_fk = $request->promotion_id_fk;
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
             // $sRow->pro_status = 5 ;
@@ -712,16 +753,16 @@ class AjaxController extends Controller
              $obtion = array(PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8',);
              $conn = new PDO('mysql:host=localhost;dbname=aiyara_db', 'root', '',$obtion);
              $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch(Exception $e) {
+         } catch(Exception $e) {
               exit('Unable to connect to database.');
          }
 
-        $conn->prepare(" TRUNCATE rand_code ; ")->execute();
-        $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+                $conn->prepare(" TRUNCATE rand_code ; ")->execute();
+                $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
 
-        $str_digit = $request->amt_random ; 
-        $amt = $request->amt_gen; 
-        $percent = $amt * (20/100); 
+                $str_digit = $request->amt_random ; 
+                $amt = $request->GenAmt; 
+                $percent = $amt * (20/100); 
 
         // return $amt.":".$str_digit.":".$percent;
         // dd();
@@ -802,34 +843,68 @@ class AjaxController extends Controller
 
     public function ajaxCheckCouponUsed(Request $request)
     {
+
+        // return($request);
+        // dd();
         // return $request->txtSearchPro;
         $promotion_cus = DB::select(" 
             select * from db_promotion_cus 
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 ; ");
+            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_cus.pro_status=1 ; ");
         // return $promotion_cus[0]->promotion_code_id_fk;
 
-        $promotion_code = DB::select("
-            select * from db_promotion_code
-            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE db_promotion_code.promotion_id_fk='".@$promotion_cus[0]->promotion_code_id_fk."' AND promotions.status=1 AND promotions.promotion_coupon_status=1;
-            ; ");
+        // // return $promotion_cus;
+        // return count($promotion_cus);
+        // dd();
 
-        // return($promotion_code[0]->approve_status);
-
-        $rs = DB::select(" select count(*) as cnt from db_frontstore_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
-        // return $rs[0]->cnt;
-        if($rs[0]->cnt > 0){
-            return "InActive";
-        }else if(@$promotion_code[0]->approve_status==0){
+        if( count($promotion_cus) == 0){
             return "InActive";
         }else{
-            return true;
+
+            // return @$promotion_cus[0]->promotion_code_id_fk;
+            // dd();
+
+                $promotion_code = DB::select("
+                    select * from db_promotion_code
+                    Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+                    WHERE db_promotion_code.promotion_id_fk='".@$promotion_cus[0]->promotion_code_id_fk."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_code.approve_status=1
+                    ; ");
+
+                // return count($promotion_code) ;
+                // dd();
+
+            if( count($promotion_code) == 0){
+                return "InActive";
+            }else{
+
+                    $rs = DB::select(" select count(*) as cnt from db_frontstore_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
+                    // return $rs[0]->cnt;
+                    // dd();
+
+                    if($rs[0]->cnt > 0){
+                        return "InActive";
+                    }else if(@$promotion_code[0]->approve_status==0){
+                        return "InActive";
+                    }else{
+                        return true;
+                    }
+
+            }
         }
         
 
     }
+
+    public function ajaxApproveCouponCode(Request $request)
+    {
+        DB::select(" 
+            UPDATE db_promotion_cus  SET pro_status=1
+            WHERE promotion_code_id_fk = '".$request->promotion_code_id_fk."' AND pro_status = 5 ;
+          ");
+
+    }
+
 
     public function ajaxGetPromotionCode(Request $request)
     {

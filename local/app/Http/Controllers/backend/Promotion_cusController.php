@@ -18,6 +18,8 @@ class Promotion_cusController extends Controller
     public function create(Request $request)
     {
 
+      $sPromotions = \App\Models\Backend\Promotions::get();
+      // dd($sPromotions);
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
@@ -36,6 +38,7 @@ class Promotion_cusController extends Controller
         array(
            'Products'=>$Products,
            'sProductUnit'=>$sProductUnit,
+           'sPromotions'=>$sPromotions,
         ) ); 
       
     }
@@ -104,10 +107,10 @@ class Promotion_cusController extends Controller
 
     public function plus(Request $request)
         {
-          return($request->all());
+          // return($request->all());
           // return(count($request->product_id_fk));
           // return($request->quantity[0]);
-          dd();
+          // dd();
 
           if(isset($request->product_plus)){
             for ($i=0; $i < count($request->product_id_fk) ; $i++) { 

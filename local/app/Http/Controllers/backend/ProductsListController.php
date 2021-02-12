@@ -48,19 +48,19 @@ class ProductsListController extends Controller
         4 เติม Ai-Stockist
         5 แลก Gift Voucher
         */
-      if(!empty($req->order_type)){
-        $order_type = $req->order_type;
-        $wh_order_type = " AND 
-            (
-              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
-              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
-              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
-              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
-              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
-            ) ";
-        }else{
-            $wh_order_type = '';
-        }
+       // if($req->order_type){
+       //  $order_type = $req->order_type;
+       //  $wh_order_type = " AND 
+       //      (
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+       //      ) ";
+       //  }else{
+       //      $wh_order_type = ' ' ;
+       //  }
 
       switch ($req->category_id) {
          case '1':
@@ -111,7 +111,14 @@ class ProductsListController extends Controller
             LEFT JOIN categories on products.category_id=categories.id
             LEFT JOIN products_cost on products.id = products_cost.product_id_fk
             WHERE products_cost.business_location_id = 1  
-            ".$wh_order_type."
+             AND 
+            (
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+            )
             ".$category_id."
             ORDER BY pn
         ");
