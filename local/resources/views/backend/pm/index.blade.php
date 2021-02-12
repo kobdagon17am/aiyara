@@ -94,12 +94,13 @@ $(function() {
           url: '{{ route('backend.pm.datatable') }}',
           data: function ( d ) {
             d.Where={};
-            // $('.myWhere').each(function() {
-            //   if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-            //     d.Where[$(this).attr('name')] = $.trim($(this).val());
-            //   }
-            // });
-            d.Where['role_group_id_fk'] = role_group_id ;
+            $('.myWhere').each(function() {
+              // if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //   d.Where[$(this).attr('name')] = $.trim($(this).val());
+                d.Where['role_group_id_fk'] = role_group_id ;
+                
+              // }
+            });
             
             d.Like={};
             $('.myLike').each(function() {

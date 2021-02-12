@@ -399,14 +399,10 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
-                  //     return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  // }},
-
                   {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
-                  // {data: 'list_type', title :'list_type', className: 'text-center '},
-                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
-
+                  {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
+                        return d>0?d:'';
+                  }},
                   {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
                   	if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -590,6 +586,7 @@ $(function() {
 
            // Handle form submission event 
            $('#frm-example').on('submit', function(e){
+            // e.preventDefault();
               var form = this;
 
               console.log(form);
@@ -687,18 +684,13 @@ $(function() {
                             return '-';
                           }
                       }},
-                      // {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center w250 '},
                       {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
-	                  	if(d=='0'){
-	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-	                  	}else{
-	                  		return d ;
-	                  	}
-	                  }},
-                      // {data: 'id', title :'<center>เปลี่ยนที่อยู่ส่ง', className: 'text-center'}, 
-                      // {data: 'id',   title :'ใบจ่าหน้ากล่องส่ง', className: 'text-center ',render: function(d) {
-                      //     return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      // }},
+      	                  	if(d==''||d=='0'){
+      	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
+      	                  	}else{
+      	                  		return d ;
+      	                  	}
+	                    }},
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
@@ -811,7 +803,13 @@ $(function() {
                             return '-';
                           }
                       }},
-                      {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดส่ง </center>', className: 'text-center'},
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
+                            if(d==''||d=='0'){
+                                return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
+                            }else{
+                              return d ;
+                            }
+                      }},
                     
                   ],
                   rowCallback: function(nRow, aData, dataIndex){

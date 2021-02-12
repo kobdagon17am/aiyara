@@ -11,6 +11,7 @@ use Session;
 use App\Models\Backend\Page;
 use App\Models\Backend\Ce_regis_add;
 use App\Models\Backend\PromotionCode_add;
+use App\Models\Backend\Consignments_import;
 
 class PagesController extends Controller{
 
@@ -547,6 +548,142 @@ class PagesController extends Controller{
         
 
       }
+
+
+
+        public function uploadFileXLSConsignments(Request $request){
+
+            // dd($request->input('submit'));
+
+          if ($request->input('submit') != null ){
+
+            $file = $request->file('fileXLS');
+
+             // dd($file);
+
+            // File Details 
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $tempPath = $file->getRealPath();
+            $fileSize = $file->getSize();
+            $mimeType = $file->getMimeType();
+
+            // Valid File Extensions
+            $valid_extension = array("xlsx");
+
+            // 2MB in Bytes
+            // $maxFileSize = 2097152; 
+            // 5MB in Bytes
+            $maxFileSize = 5242880; 
+
+            // Check file extension
+            if(in_array(strtolower($extension),$valid_extension)){
+
+              // Check file size
+              if($fileSize <= $maxFileSize){
+
+                // File upload location
+
+                $location = 'uploads/';
+                $destinationPath = public_path($location);
+                $file->move($destinationPath, $filename);
+
+                $filepath = public_path("uploads/".$filename);
+
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $spreadsheet = $reader->load($filepath);
+
+                $worksheet = $spreadsheet->getActiveSheet();
+                $highestRow = $worksheet->getHighestRow(); // total number of rows
+                $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+                $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+                $lines = $highestRow - 2; 
+                if ($lines <= 0) {
+                         // Exit ('There is no data in the Excel table');
+                    Session::flash('message','There is no data in the Excel table');
+
+                }else{
+
+                    $i = 0;
+
+                    for ($row = 1; $row <= $highestRow; ++$row) {
+
+                         $consignment_no = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); 
+                         $customer_ref_no = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); 
+                         $sender_code = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); 
+                         $recipient_code = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); 
+                         $recipient_name = $worksheet->getCellByColumnAndRow(5, $row)->getValue(); 
+                         $address = $worksheet->getCellByColumnAndRow(6, $row)->getValue(); 
+                         $postcode = $worksheet->getCellByColumnAndRow(7, $row)->getValue(); 
+                         $mobile = $worksheet->getCellByColumnAndRow(8, $row)->getValue(); 
+                         $contact_person = $worksheet->getCellByColumnAndRow(9, $row)->getValue(); 
+                         $phone_no = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
+                         $email = $worksheet->getCellByColumnAndRow(11, $row)->getValue(); 
+                         $declare_value = $worksheet->getCellByColumnAndRow(12, $row)->getValue(); 
+                         $cod_amount = $worksheet->getCellByColumnAndRow(13, $row)->getValue(); 
+                         $remark = $worksheet->getCellByColumnAndRow(14, $row)->getValue(); 
+                         $total_box = $worksheet->getCellByColumnAndRow(15, $row)->getValue(); 
+                         $sat_del = $worksheet->getCellByColumnAndRow(16, $row)->getValue(); 
+                         $hrc = $worksheet->getCellByColumnAndRow(17, $row)->getValue(); 
+                         $invr = $worksheet->getCellByColumnAndRow(18, $row)->getValue(); 
+                         $service_code = $worksheet->getCellByColumnAndRow(19, $row)->getValue(); 
+
+                          // Skip first row (Remove below comment if you want to skip the first row)
+                           if($i == 0){
+                              $i++;
+                              continue; 
+                           }
+
+                         $insertData = array(
+                           "consignment_no"=>@$consignment_no,
+                           "customer_ref_no"=>@$customer_ref_no,
+                           "sender_code"=>@$sender_code,
+                           "recipient_code"=>@$recipient_code,
+                           "recipient_name"=>@$recipient_name,
+                           "address"=>@$address,
+                           "postcode"=>@$postcode,
+                           "mobile"=>@$mobile,
+                           "contact_person"=>@$contact_person,
+                           "phone_no"=>@$phone_no,
+                           "email"=>@$email,
+                           "declare_value"=>@$declare_value,
+                           "cod_amount"=>@$cod_amount,
+                           "remark"=>@$remark,
+                           "total_box"=>@$total_box,
+                           "sat_del"=>@$sat_del,
+                           "hrc"=>@$hrc,
+                           "invr"=>@$invr,
+                           "service_code"=>@$service_code,
+                           "created_at"=>now());
+                         Consignments_import::insertData($insertData);
+
+                         $i++;
+
+                    }
+
+                    Session::flash('message','Import Successful.');
+
+                }
+
+              }else{
+                Session::flash('message','File too large. File must be less than 5MB.');
+              }
+
+            }else{
+               Session::flash('message','Invalid File Extension.');
+            }
+
+          }
+
+          // Redirect to index
+          // return redirect()->action('PagesController@index');
+          return redirect()->to(url("backend/pick_warehouse"));
+
+        }
+
+
+
 
 
 }

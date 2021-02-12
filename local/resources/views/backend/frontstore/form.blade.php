@@ -138,11 +138,21 @@
               @else
               <form action="{{ route('backend.frontstore.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+
+                      <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
+                      <input name="receipt_save_list" type="hidden" value="1">
+                      <input name="invoice_code" type="hidden" value="{{@$sRow->invoice_code}}">
+                      <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
+                      <input name="this_branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
+
+
+
               @endif
                 {{ csrf_field() }}
 
 
                       <div class="myBorder">
+
 
                             <div class="row">
                               <div class="col-md-6">
@@ -327,7 +337,40 @@
                               </div>
                             </div>
 
-              
+            @if( empty(@$sRow) )   
+
+                      <div class="row">
+
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label for="" class="col-md-4 col-form-label"> </label>
+                            <div class="col-md-6">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="col-md-12 form-group row" style="position: absolute;">
+                            <label for="" class="col-form-label"> </label>
+                            <div class="col-md-10">
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                        </div>
+                        <div class="col-md-5 text-right">
+                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                          </button>
+                        </div>
+                      </div>
+             </form>
+
+             @endif
+
 
                           <div class="form-group  row " style="display: none;">
 
@@ -405,20 +448,23 @@
             </div>
           </div>
 
+
       <?php 
 
         $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$sRow->id." GROUP BY frontstore_id_fk ");
-        $sFrontstoreData = DB::select(" select * from db_frontstore_products_list WHERE frontstore_id_fk=".@$sRow->id." ");
+        
 
-        $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+        if($sFrontstoreDataTotal){
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=".@$sRow->id." ");
+        }else{
+          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=".@$sRow->id." ");
+        }
 
-        // echo @$sRow->shipping_price."xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-
-        $shipping_price = @$sRow->shipping_price?$sRow->shipping_price:0;
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$sRow->id." GROUP BY frontstore_id_fk ");
 
        ?>
-
-         
 
                 <div class="form-group row">
                   <label for="pay_type_id_fk" class="col-md-9 col-form-label"> Total : * </label>
@@ -426,132 +472,6 @@
                     <input  class="form-control" id="sum_price_desc" name="sum_price_desc" value="{{@$sFrontstoreDataTotal[0]->total}}" readonly="" style="text-align: center;font-size: 16px;color: red;font-weight: bold;" />
                   </div>
                 </div>
-
-<!--         dataset_orders_type
-        1 ทำคุณสมบัติ
-        2 รักษาคุณสมบัติรายเดือน
-        3 รักษาคุณสมบัติท่องเที่ยว
-        4 เติม Ai-Stockist
-        5 แลก Gift Voucher
-
-    dataset_pay_type
-    1 โอนชำระ
-    2 บัตรเครดิต
-    3 Ai-Cash
-    4 Gift Voucher
-    5 เงินสด -->
-
-                <div class="form-group row">
-
-                            <label for="pay_type_id_fk" class="col-md-6 col-form-label"> รูปแบบการชำระอื่นๆ : * </label>
-                            <div class="col-md-5">
-                              <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required >
-
-                                @if(@$sRow->purchase_type_id_fk==5)
-                                @else
-                                <option value="">Select</option>
-                                @endif
-                                
-                                    @if(@$sPay_type01)
-                                      @foreach(@$sPay_type01 AS $r)
-                                        
-                                        @if(@$sRow->purchase_type_id_fk==5)
-                                          <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }}  >
-                                            {{$r->detail}} 
-                                          </option>
-                                        @else
-                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-                                            {{$r->detail}} 
-                                          </option>
-                                        @endif
-
-                                      @endforeach
-                                    @endif                                
-                              </select>
-                            </div>
-                          </div>
-
-                          <?php $div_fee = @$sRow->pay_type_id_fk!=2?"display: none;":''; ?>
-
-                          <div class="form-group row div_fee " style="" >
-                            <label for="pay_type_id_fk" class="col-md-6 col-form-label"> ค่าธรรมเนียมกรณีชำระด้วยบัตรเครดิต : </label>
-                            <div class="col-md-5">
-                              <select id="fee" name="fee" class="form-control select2-templating " >
-                                <option value="">Select</option>
-                                @if(@$sFee)
-                                @foreach(@$sFee AS $r)
-                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->fee)?'selected':'' }}  >
-                                  {{$r->txt_desc}}
-                                  [{{$r->txt_value}}]
-                                </option>
-                                @endforeach
-                                @endif
-                              </select>
-                              <input type="hidden" id="fee_value">
-                            </div>
-                          </div>
-
-                          <div class="form-group row ">
-                            <label for="pay_type_id_fk_2" class="col-md-6 col-form-label"> รูปแบบการชำระประเภทเงินสดหรือเงินโอน : </label>
-                            <div class="col-md-5">
-                              <select id="pay_type_id_fk_2" name="pay_type_id_fk_2" class="form-control select2-templating " >
-                                <option value="0">Select</option>
-                                    @if(@$sPay_type02)
-                                      @foreach(@$sPay_type02 AS $r)
-
-                                      @if(empty(@$sRow->pay_type_id_fk_2))
-                                         <option value="{{$r->id}}" {{ (@$r->id==5)?'selected':'' }}  >
-                                            {{$r->detail}} 
-                                          </option>
-                                      @else
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk_2)?'selected':'' }}  >
-                                          {{$r->detail}} 
-                                        </option>
-                                      @endif
-
-                                      @endforeach
-                                    @endif                                
-                              </select>
-                            </div>
-                          </div>
-
-
-                <div class="row">
-                  <div class="col-md-6">
-         
-                  </div>
-                  <div class="col-md-5 text-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                    </button>
-                  </div>
-                </div>
-   </form>
-
-<?php }else{ ?>
-
-
-                <div style="text-align: right;margin-right: 3.5%">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                    </button>
-                </div>
-   </form>
-
-<?php } ?>
-
-<?php 
-  if(!empty(@$sRow)){
- ?>
-
- <form action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-      <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
-      <input name="receipt_save_list" type="hidden" value="1">
-      <input name="invoice_code" type="hidden" value="{{@$sRow->invoice_code}}">
-      <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
-      <input name="this_branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
-
-      {{ csrf_field() }}
 
 
         <div class="row">
@@ -758,6 +678,91 @@
         <div class="card">
           <div class="card-body">
             
+
+
+<!--         dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+
+    dataset_pay_type
+    1 โอนชำระ
+    2 บัตรเครดิต
+    3 Ai-Cash
+    4 Gift Voucher
+    5 เงินสด -->
+
+                <div class="form-group row">
+
+                            <label for="pay_type_id_fk" class="col-md-6 col-form-label"> รูปแบบการชำระอื่นๆ : </label>
+                            <div class="col-md-5 ">
+                              <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating "  >
+
+                                @if(@$sRow->purchase_type_id_fk==5)
+                                @else
+                                <option value="">Select</option>
+                                @endif
+                                
+                                    @if(@$sPay_type01)
+                                      @foreach(@$sPay_type01 AS $r)
+                                        
+                                        @if(@$sRow->purchase_type_id_fk==5)
+                                          <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }}  >
+                                            {{$r->detail}} 
+                                          </option>
+                                        @else
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
+                                            {{$r->detail}} 
+                                          </option>
+                                        @endif
+
+                                      @endforeach
+                                    @endif                                
+                              </select>
+                            </div>
+                          </div>
+
+                          <?php $div_fee = @$sRow->pay_type_id_fk!=2?"display: none;":''; ?>
+
+                          <div class="form-group row div_fee " style="" >
+                            <label for="fee" class="col-md-6 col-form-label"> ค่าธรรมเนียมกรณีชำระด้วยบัตรเครดิต : </label>
+                            <div class="col-md-5">
+                              <select id="fee" name="fee" class="form-control select2-templating " >
+                                <option value="">Select</option>
+                                @if(@$sFee)
+                                @foreach(@$sFee AS $r)
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->fee)?'selected':'' }}  >
+                                  {{$r->txt_desc}}
+                                  [{{$r->txt_value}}]
+                                </option>
+                                @endforeach
+                                @endif
+                              </select>
+                              <input type="hidden" id="fee_value">
+                            </div>
+                          </div>
+
+                        <div class="form-group row ">
+                            <label for="pay_type_id_fk_2" class="col-md-6 col-form-label"> รูปแบบการชำระประเภทเงินสดหรือเงินโอน : </label>
+                            <div class="col-md-5">
+                              <select id="pay_type_id_fk_2" name="pay_type_id_fk_2" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                    @if(@$sPay_type02)
+                                      @foreach(@$sPay_type02 AS $r)
+                             
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk_2)?'selected':'' }}  >
+                                          {{$r->detail}} 
+                                        </option>
+
+                                      @endforeach
+                                    @endif                                
+                              </select>
+                            </div>
+                          </div>
+
+
             <div class="row">
               <div class="col-11">
                 <div class="divTable">
@@ -768,7 +773,9 @@
                         <label for="" >มูลค่าสินค้า : </label>
                       </div>
                       <div class="divTableCell">
-                        <input  class="form-control" value="{{number_format(@$sFrontstoreDataTotal[0]->total-@$vat,2)}}" readonly="" />
+                        <input id="product_value" name="product_value" class="form-control" 
+                        value="{{@$sRow->product_value>0?@$sRow->product_value:''}}" 
+                        readonly="" />
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -779,7 +786,7 @@
                         <label for="" >ภาษี 7.00 % : </label>
                       </div>
                       <div class="divTableCell">
-                        <input  class="form-control" value="{{number_format(@$vat,2)}}" readonly="" />
+                        <input id="tax" name="tax" class="form-control" value="{{@$sRow->tax>0?@$sRow->tax:''}}" readonly="" />
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -790,8 +797,8 @@
                         <label for="" >รวมค่าสินค้า : </label>
                       </div>
                       <div class="divTableCell">
-                    <!--     <input  class="form-control" id="sum_price" name="sum_price" value="{{number_format(@$sFrontstoreDataTotal[0]->total,2)}}" readonly="" /> -->
-                        <input  class="form-control" id="sum_price" name="sum_price" value="{{@$sFrontstoreDataTotal[0]->total}}" readonly="" />
+
+                        <input class="form-control" id="sum_price" name="sum_price" value="{{@$sRow->sum_price>0?@$sRow->sum_price:''}}" readonly="" />
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -805,13 +812,12 @@
                           <label for="" >ค่าจัดส่ง : </label>
                         </div>
                         <div class="divTableCell" style='z-index: 1' >
-                          <input class="form-control" id="shipping_price" name="shipping_price"  value="{{(@$shipping_price>0)?@$shipping_price:''}}" required="" />
+                          <input class="form-control" id="shipping_price" name="shipping_price"  value="{{@$sRow->shipping_price>0?@$sRow->shipping_price:'0'}}" readonly />
                         </div>
                          <div class="divTableCell" >
                         </div>
                       </div>
 
-                    
                     <div class="divTableRow" style="background-color: #eff2f7;" >
                       <div class="divTableCell" style="border: aliceblue;" > </div>
                       <div class="divTH">
@@ -819,7 +825,7 @@
                       </div>
                       <div class="divTableCell">
                          <!-- // 5=เงินสด,2=บัตรเครดิต -->
-                          <input  class="form-control FeeCal NumberOnly " id="transfer_price" name="transfer_price" value="{{(@$sRow->transfer_price>0)?@$sRow->transfer_price:''}}" style="color: red;font-weight: bold;" required="" />
+                          <input class="form-control FeeCal NumberOnly " id="transfer_price" name="transfer_price" value="{{@$sRow->transfer_price}}" style="color: red;font-weight: bold;" required="" />
                       </div>
                    
                     </div>
@@ -830,11 +836,10 @@
                         <label for="" > ค่าธรรมเนียมตัดบัตรเครดิต :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input  class="form-control" id="fee_amt" name="fee_amt" value="{{@$sRow->fee_amt}}" readonly style="color: red;font-weight: bold;" />
+                          <input class="form-control" id="fee_amt" name="fee_amt" value="{{@$sRow->fee_amt}}" readonly style="color: red;font-weight: bold;" />
                       </div>
                   
                     </div>
-
 
                     <div class="divTableRow" style="background-color: #eff2f7;">
                       <div class="divTableCell" style="border: aliceblue;" ></div>
@@ -842,11 +847,10 @@
                         <label for="" > ยอดเงินสด :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input  class="form-control " id="cash_price" name="cash_price" value="{{@$sRow->cash_price}}" style="color: blue;font-weight: bold;" readonly="" >
+                          <input class="form-control FeeCal NumberOnly " id="cash_price" name="cash_price" value="{{@$sRow->cash_price}}" style="color: blue;font-weight: bold;" >
                       </div>
                     
                     </div>
-
 
                       <div class="divTableRow">
                         <div class="divTableCell" >
@@ -855,7 +859,7 @@
                           <label for="" >ยอดชำระ : </label>
                         </div>
                         <div class="divTableCell">
-                          <input  class="form-control" id="total_price" name="total_price" value="{{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_price+@$sRow->fee_amt,2)}}" readonly="" style="font-size:18px;color: red;font-weight: bold;" />
+                          <input class="form-control" id="total_price" name="total_price" value="{{@$sRow->total_price>0?@$sRow->total_price:''}}" readonly="" style="font-size:18px;color: red;font-weight: bold;" />
                         </div>
                          <div class="divTableCell" >
                         </div>
@@ -878,7 +882,7 @@
                           <label class="" > </label>
                         </div>
                         <div class="divTableCell">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14  " style="float: right;" >
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14" style="float: right;">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                             </button>
                         </div>
@@ -1752,14 +1756,21 @@
           4 เติม Ai-Stockist
           5 แลก Gift Voucher
         */
-            // var order_type = $("input[name=purchase_type_id_fk]").val(); 
-            // alert(order_type);
-            // if(order_type==5){
-            //   $(".btnAddFromPromotion").addClass('disabled');
-            // }else{
-            //   $(".btnAddFromPromotion").removeClass('disabled');
-            // }
 
+        $(document).on('click', '.btn-plus, .btn-minus,.btn-plus-pro, .btn-minus-pro, .btn-plus-product-pro, .btn-minus-product-pro', function(e) {
+            event.preventDefault();
+            $('#product_value').val("");
+            $('#tax').val("");
+            $('#sum_price').val("");
+            $('#shipping_price').val("");
+            $('#transfer_price').val("");
+            $('#fee_amt').val("");
+            $('#cash_price').val("");
+            $('#total_price').val("");
+            $("#pay_type_id_fk").select2('destroy').val("").select2();
+            $("#pay_type_id_fk_2").select2('destroy').val("").select2();
+
+        })
 
 
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
@@ -1832,9 +1843,35 @@
         $(document).on('change', '#pay_type_id_fk', function(event) {
             event.preventDefault();
             var id = $(this).val();
-            // alert(id+":"+id2);
+            // alert(id);
 
-            localStorage.setItem('pay_type_id_fk', id);
+            var id2 = $("#pay_type_id_fk_2").val();
+            // alert(id);
+
+            if(id=='1'){
+              $("#transfer_price").attr('required', true);
+            }else{
+               if(id2!='1'){
+                $("#transfer_price").removeAttr('required');
+              }
+            }
+
+            if(id=='3'||id=='4'){
+              $("#cash_price").attr('required', true);
+            }else{
+               if(id2!='3' && id2!='5'){
+                $("#cash_price").removeAttr('required');
+              }
+            }
+
+
+            if(id!=''){
+              $('#pay_type_id_fk_2').removeAttr('required');
+            }else{
+              $('#pay_type_id_fk_2').attr('required', true);
+            }
+
+            // localStorage.setItem('pay_type_id_fk', id);
             if(id==2){
               $('.div_fee').show();
               $('#fee').attr('required', true);
@@ -1843,6 +1880,75 @@
                 $('#fee').removeAttr('required');
                 $('#fee').val("").select2();
             }
+
+        });
+
+
+        $(document).on('change', '#pay_type_id_fk_2', function(event) {
+            event.preventDefault();
+            var id = $(this).val();
+            var id2 = $("#pay_type_id_fk").val();
+            // alert(id);
+
+            if(id=='1'){
+              $("#transfer_price").attr('required', true);
+            }else{
+               if(id2!='1'){
+                $("#transfer_price").removeAttr('required');
+              }
+            }
+
+            if(id=='3'||id=='5'){
+              $("#cash_price").attr('required', true);
+            }else{
+               if(id2!='3' && id2!='4'){
+                $("#cash_price").removeAttr('required');
+              }
+            }
+
+
+        });
+
+        $(document).on('change', '#pay_type_id_fk,#pay_type_id_fk_2', function(event) {
+
+            var sum_price_desc = $("#sum_price_desc").val();
+
+            var frontstore_id_fk = "{{@$sRow->id}}";
+
+            if(sum_price_desc==''){
+              alert("! ยังไม่มีรายการสินค้า ");
+              $(this).select2('destroy').val("").select2();
+              return false;
+            }
+
+             $(".myloading").show();
+           
+            $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/ajaxProductValueCal') }} ", 
+                 data:{ _token: '{{csrf_token()}}',sum_price:sum_price_desc,frontstore_id_fk:frontstore_id_fk },
+                  success:function(data){
+                      console.log(data);
+                       $.each(data,function(key,value){
+                          $("#product_value").val(value.product_value);
+                          $("#tax").val(value.tax);
+                          $("#sum_price").val(value.sum_price);
+                          $("#shipping_price").val(0);
+                       });
+                       $(".myloading").hide();
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) { 
+                      console.log(JSON.stringify(jqXHR));
+                      console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                      $(".myloading").hide();
+                  }
+              });
+
+            $("#transfer_price").val('');
+            $("#fee_amt").val('');
+            $("#cash_price").val('');  
+            $("#total_price").val('');  
+
 
         });
 
@@ -1873,16 +1979,6 @@
             $('#fee_value').val(localStorage.getItem('fee_value'));
         }
 
-
-        if(localStorage.getItem('pay_type_id_fk')){
-            $('#pay_type_id_fk').val(localStorage.getItem('pay_type_id_fk')).select2();
-        }
-                                
-        $(document).on('change', '#pay_type_id_fk_2', function(event) {
-            event.preventDefault();
-            var id = $(this).val();
-            localStorage.setItem('pay_type_id_fk_2', id);
-        });
 
         $(document).on('change', '#sentto_branch_id', function(event) {
               $("#addr_00").prop("checked", true);
@@ -1947,7 +2043,7 @@
                        }
                        
                        var cash_price = parseFloat($("#cash_price").val());
-                       $('#total_price').val(+(shipping_price+transfer_price+fee_amt+cash_price).toFixed(2));
+                       // $('#total_price').val(+(shipping_price+transfer_price+fee_amt+cash_price).toFixed(2));
                        $(".myloading").hide();
                     },
                   error: function(jqXHR, textStatus, errorThrown) { 
@@ -1960,9 +2056,6 @@
 
          });
 
-        // if(localStorage.getItem('shipping_price')){
-        //     $('#shipping_price').val(localStorage.getItem('shipping_price'));
-        // }
 
         $(document).on('change', '.FeeCal', function(event) {
 
@@ -2010,10 +2103,6 @@
           });
 
 
-
-        if(localStorage.getItem('pay_type_id_fk_2')){
-            $('#pay_type_id_fk_2').val(localStorage.getItem('pay_type_id_fk_2')).select2();
-        }
 
         $('#note').change(function() {
             localStorage.setItem('note', this.value);
@@ -2136,8 +2225,12 @@
                                       $("td:eq(4)", nRow).html("ชุด");
                                     }
 
-                                    $("#sum_price_desc").val(aData['sum_price_desc']);
-
+                                      $("#sum_price_desc").val(aData['sum_price_desc']);
+                                      $("#product_value").val('');
+                                      $("#tax").val('');
+                                      $("#sum_price").val('');
+                                      $("#shipping_price").val('');
+                                      $("#total_price").val('');
 
                                     $('td:last-child', nRow).html(''
                                       + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -2264,6 +2357,11 @@
                                         }
 
                                         $("#sum_price_desc").val(aData['sum_price_desc']);
+                                        $("#product_value").val('');
+                                        $("#tax").val('');
+                                        $("#sum_price").val('');
+                                        $("#shipping_price").val('');
+                                        $("#total_price").val('');                                       
 
                                         $('td:last-child', nRow).html(''
                                           + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -2275,8 +2373,7 @@
                                 });
 
                             });
-                              
-
+                   
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -2286,6 +2383,32 @@
             });
 
           }
+
+                      setTimeout(function(){
+
+                          var frontstore_id_fk = "{{@$sRow->id}}";
+
+                          $.ajax({
+                                url: " {{ url('backend/ajaxCheckDBfrontstore') }} ", 
+                                method: "post",
+                                data: {
+                                  frontstore_id_fk:frontstore_id_fk,
+                                  "_token": "{{ csrf_token() }}", 
+                                },
+                                success:function(data)
+                                { 
+                                 // alert(data);
+                                 if(data == 0 ){
+                                    var table = $('#data-table-products-list').DataTable();
+                                    table.clear().draw();
+                                   $("#sum_price_desc").val('');
+                                 }
+                                }
+                              });
+
+                        }, 1500);
+
+
         });
 
 
@@ -2395,6 +2518,11 @@
                                       }
 
                                       $("#sum_price_desc").val(aData['sum_price_desc']);
+                                      $("#product_value").val('');
+                                      $("#tax").val('');
+                                      $("#sum_price").val('');
+                                      $("#shipping_price").val('');
+                                      $("#total_price").val('');
 
                                       $('td:last-child', nRow).html(''
                                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -2528,6 +2656,11 @@
                                       }
 
                                       $("#sum_price_desc").val(aData['sum_price_desc']);
+                                      $("#product_value").val('');
+                                      $("#tax").val('');
+                                      $("#sum_price").val('');
+                                      $("#shipping_price").val('');
+                                      $("#total_price").val('');                                     
 
                                       $('td:last-child', nRow).html(''
                                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -3105,6 +3238,11 @@ $(document).ready(function() {
                                                 }
 
                                                 $("#sum_price_desc").val(aData['sum_price_desc']);
+                                                $("#product_value").val('');
+                                                $("#tax").val('');
+                                                $("#sum_price").val('');
+                                                $("#shipping_price").val('');
+                                                $("#total_price").val('');
 
                                                 $('td:last-child', nRow).html(''
                                                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -3220,7 +3358,14 @@ $(document).ready(function() {
                                                   $("td:eq(4)", nRow).html("ชุด");
                                                 }
 
+                                                // alert(aData['total_price']);
+
                                                 $("#sum_price_desc").val(aData['sum_price_desc']);
+                                                $("#product_value").val('');
+                                                $("#tax").val('');
+                                                $("#sum_price").val('');
+                                                $("#shipping_price").val('');
+                                                $("#total_price").val('');                                             
 
                                                 $('td:last-child', nRow).html(''
                                                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -3231,6 +3376,30 @@ $(document).ready(function() {
                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                          
                         }, 1500);
+
+
+                        setTimeout(function(){
+
+                          var frontstore_id_fk = "{{@$sRow->id}}";
+
+                          $.ajax({
+                                url: " {{ url('backend/ajaxCheckDBfrontstore') }} ", 
+                                method: "post",
+                                data: {
+                                  frontstore_id_fk:frontstore_id_fk,
+                                  "_token": "{{ csrf_token() }}", 
+                                },
+                                success:function(data)
+                                { 
+                                 // alert(data);
+                                 if(data == 0 ){
+                                   $("#sum_price_desc").val('');
+                                 }
+                                }
+                              });
+
+                        }, 1000);
+
 
                    });
 

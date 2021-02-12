@@ -21,8 +21,10 @@ class DeliveryController extends Controller
       // ขายหน้าร้าน (หลังบ้าน)
       DB::select(" 
           INSERT IGNORE INTO db_delivery 
-          ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type)
-          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2 FROM db_frontstore where invoice_code<>'' AND delivery_location<>0 AND sum_price>0  ; ");
+          ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
+          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_frontstore where invoice_code<>'' AND sum_price>0  ; ");
+
+      // AND delivery_location<>0
 
       // นำเข้าที่อยู่ในการจัดส่ง
       // `addr_type` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ>0=รัยสินค้าที่สาขาด้วยตนเอง,
@@ -211,17 +213,17 @@ class DeliveryController extends Controller
         $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
 
         $rsDeliveryAddr = DB::select(" 
-        	SELECT
-    			customers_detail.id as addr
-    			FROM
-    			db_delivery
-    			Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
-    			WHERE db_delivery.id in ($arr) 
-    			ORDER BY customers_detail.id limit 1  ");
+
+          SELECT
+          db_frontstore.address_sent_id_fk as addr
+          FROM
+          db_delivery
+          Inner Join db_frontstore ON db_delivery.receipt = db_frontstore.invoice_code
+          WHERE db_delivery.id in ($arr) limit 1  ");
 
   	      $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
   	      if( $DeliveryPackingCode ){
-  	      	$DeliveryPackingCode->addr_id = $rsDeliveryAddr[0]->addr;
+  	      	$DeliveryPackingCode->address_sent_id_fk = $rsDeliveryAddr[0]->addr;
   	      	$DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
   	        $DeliveryPackingCode->save();
   	      }

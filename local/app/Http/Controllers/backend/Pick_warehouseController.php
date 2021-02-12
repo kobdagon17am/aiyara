@@ -54,37 +54,8 @@ class Pick_warehouseController extends Controller
 
     public function store(Request $request)
     {
-      // dd($request->all());
-      
-      if(isset($request->save_to_set)){
-
-      	$arr = implode(',', $request->row_id);
-
-        DB::update(" UPDATE db_pick_warehouse SET status_pick_warehouse='1',updated_at=now() WHERE id in ($arr)  ");
-
-        $rs = DB::select(" select * from db_pick_warehouse WHERE id in ($arr)  ");
-
-        foreach ($rs as $key => $value) {
-        	DB::update(" UPDATE db_pick_warehouse_packing_code SET status_pick_warehouse='1',updated_at=now() WHERE id = ".$value->packing_code."  ");
-        }
-
-        DB::update(" 
-	        UPDATE
-			db_pick_warehouse_packing_code
-			Inner Join db_pick_warehouse ON db_pick_warehouse_packing_code.id = db_pick_warehouse.packing_code
-			SET
-			db_pick_warehouse.status_pick_warehouse=db_pick_warehouse_packing_code.status_pick_warehouse
-			WHERE
-			db_pick_warehouse_packing_code.status_pick_warehouse=1
-		 ");
-
-
-        return redirect()->to(url("backend/pick_warehouse"));
-
-      }else{
         // dd($request->all());
         return $this->form();
-      }
       
     }
 
@@ -165,29 +136,14 @@ class Pick_warehouseController extends Controller
     }
 
     public function Datatable(){
-      // $sTable = \App\Models\Backend\Pick_warehouse::search()->where('status_pick_warehouse','0')->orderBy('id', 'asc');
       $sTable = DB::select(" 
-      	select * from db_delivery WHERE status_pack=0 and status_delivery=0 
+      	select * from db_delivery WHERE status_pack=0 and status_pack_pick=0 
     		UNION
-    		select * from db_delivery WHERE status_pack=1 and status_delivery=0 GROUP BY packing_code
+    		select * from db_delivery WHERE status_pack=1 and status_pack_pick=0 GROUP BY packing_code
     		ORDER BY delivery_date DESC
 		 ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('receipt', function($row) {
-      // 	if($row->packing_code!=0){
-	     //      $DP = DB::table('db_pick_warehouse_packing')->where('packing_code',$row->packing_code)->get();
-	     //      $array = array();
-	     //      foreach ($DP as $key => $value) {
-	     //        $rs = DB::table('db_pick_warehouse')->where('id',$value->pick_warehouse_id_fk)->get();
-	     //        array_push($array, @$rs[0]->receipt);
-	     //      }
-	     //      $arr = implode(',', $array);
-	     //      return $arr;
-      // 	}else{
-      // 		return $row->receipt;
-      // 	}
-      // })
       ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
@@ -215,6 +171,11 @@ class Pick_warehouseController extends Controller
       ->addColumn('packing_code', function($row) {
         if(@$row->packing_code!=''){
              return "P".sprintf("%05d",@$row->packing_code);
+        }
+      })
+      ->addColumn('packing_id', function($row) {
+        if(@$row->packing_code!=''){
+             return @$row->packing_code;
         }
       })
       ->addColumn('updated_at', function($row) {

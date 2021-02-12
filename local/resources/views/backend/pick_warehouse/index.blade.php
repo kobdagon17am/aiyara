@@ -69,6 +69,8 @@
 
 @section('content')
 
+<div class="myloading"></div>
+
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -115,10 +117,9 @@
             <div class="card-body">
 
 
-
         <div class="myBorder">
 
-          <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <form id="frm-example" action="{{ route('backend.pick_warehouse_packing_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
@@ -263,6 +264,10 @@
                         <div class="form-group row">
                           <div class="col-md-12">
 
+          <form id="frm-example-02" action="{{ route('backend.pick_warehouse_packing_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" name="save_to_pick" value="1" >
+
+            {{ csrf_field() }}
 
               <?php if($can_payproduct=='1'){ ?>
 
@@ -274,43 +279,54 @@
               
               <?php }?>
 
+                  <div class="col-md-6 text-right " >
+                
+                  </div>
 
-                           
+                <div id="last_form_02"></div>
+             
+             </form>    
 
                           </div>
                         </div>
                       </div>
                    
-                    </div>
-
    <div class="myBorder" style="background-color: #ccffff;" >
         <div class="container">
           
-          <div class="col-12">
-            <div class="panel panel-default">
-              <div class="panel-body">
-      
+
+            <div class="col-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+
+
                   <div class="form-group row">
-                    
-                    <label for="receipt" class="col-md-3 col-form-label">ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY :</label>
+                    <label for="receipt" class="col-md-3 col-form-label">พิมพ์รายการใบเบิกที่เลือก:</label>
                     <div class="col-md-3">
-                      <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
+                          <button type="submit" class="btn btn-primary  ">
+                    <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์ใบเบิก
+                    </button>
                     </div>
+                    <label for="receipt" class="col-md-3 col-form-label">ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY :</label>
                     <div class="col-md-3" style="" >
-                      <input type='submit' name="submit" class="btn btn-success btnExportElsx " value='EXPORT'>
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
+                      <input type='button' name="submit" class="btn btn-success btnExportElsx " value='&nbsp;&nbsp;&nbsp;EXPORT EXCEL&nbsp;&nbsp;&nbsp;'>
                     </div>
-                    
                   </div>
 
-               
+
+                </div>
               </div>
             </div>
-          </div>
+
+
+
         </div>
       </div>
+
+
+
+                    </div>
+
 
 
    <div class="myBorder" style="background-color: #ffffcc;" >
@@ -320,6 +336,9 @@
             <div class="panel panel-default">
               <div class="panel-body">
       
+          <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
+          {{ csrf_field() }}
+
                   <div class="form-group row">
                     
                     <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) จาก KERRY :</label>
@@ -344,10 +363,13 @@
                     </div>
                   </div>
                   @endif
+          
+          </form>
 
                   <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
 
-               
+                <center><input type='button' class="btn btn-primary " value='Map Consignment Code' > 
+
               </div>
             </div>
           </div>
@@ -435,12 +457,16 @@
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
+
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
+
+     $.fn.dataTable.ext.errMode = 'throw';
+
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -485,14 +511,7 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  // {data: 'id',   title :'ใบจ่าหน้า<br>กล่องเบิก', className: 'text-center ',render: function(d) {
-                  //     return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  // }},
-
                   {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
-                  // {data: 'list_type', title :'list_type', className: 'text-center '},
-                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
-
                   {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
                   	if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -534,9 +553,17 @@ $(function() {
                       ).addClass('input');
                  }
                  else{ //2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(7)', nRow).html(''
+
+                      if(aData['status_pack']==1){
+                          $('td:eq(7)', nRow).html(''
+                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                      ).addClass('input');
+                      }else{
+                          $('td:eq(7)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');
+                      }
+                      
                  }
 
               	 if (aData['status_delivery'] == "1") {
@@ -678,6 +705,7 @@ $(function() {
 
            // Handle form submission event 
            $('#frm-example').on('submit', function(e){
+            // e.preventDefault();
               var form = this;
 
               console.log(form);
@@ -734,7 +762,7 @@ $(function() {
                   iDisplayLength: 10,
                   stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.delivery_packing_code.datatable') }}',
+                    url: '{{ route('backend.pick_warehouse_packing_code.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -759,7 +787,9 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'packing_code_desc', title :'<center>รหัสนำเบิก </center>', className: 'text-center'},
+                      {data: 'id', title :'', className: 'text-center w80'}, 
+                      {data: 'id', title :'เลือก', className: 'text-center w80'}, 
+                      {data: 'packing_code_desc', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -774,22 +804,11 @@ $(function() {
                             return '-';
                           }
                       }},
-                      // {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดเบิก </center>', className: 'text-center w250 '},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดเบิก</center>', className: 'text-center w250 ',render: function(d) {
-	                  	if(d=='0'){
-	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-	                  	}else{
-	                  		  return '90/16 ถ.ศรีอยุธยา บ.ออเร้นจ์ เทคโนโลยี โซลูชั่น จำกัด แขวงวชิรพยาบาล, เขตดุสิต, กทม. 10300' ;
-	                  	}
-	                  }},
-                      // {data: 'id', title :'<center>เปลี่ยนที่อยู่เบิก', className: 'text-center'}, 
-                      // {data: 'id',   title :'ใบจ่าหน้ากล่องเบิก', className: 'text-center ',render: function(d) {
-                      //     return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      // }},
+              
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
+                      {data: 'status_pick_warehouse',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
@@ -798,11 +817,20 @@ $(function() {
 	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
+                'columnDefs': [
+                   {
+                      'targets': 0,
+                      'checkboxes': {
+                         'selectRow': true
+                      }
+                   }
+                  ],
+                  'select': {
+                     'style': 'multi'
+                  },
                   rowCallback: function(nRow, aData, dataIndex){
 
-                     // $('td:eq(4)', nRow).html(''
-                     //        + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" data-receipt_no="'+aData['receipt']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                     //      ).addClass('input');
+                     $("td:eq(1)", nRow).hide();
 
                   	if (aData['status_delivery'] == "1") {
 
@@ -821,9 +849,9 @@ $(function() {
 
                     	if (aData['status_delivery'] != "1") {
                     		$('td:last-child', nRow).html(''
-                            + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                            + '<a href="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                          
-	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+	                          + '<a href="backend/pick_warehouse/" data-url="{{ route('backend.pick_warehouse_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 	                        ).addClass('input');
                 		}
 
@@ -928,7 +956,7 @@ $(function() {
         iDisplayLength: 10,
         stateSave: true,
         ajax: {
-          url: '{{ route('backend.pick_warehouse.datatable') }}',
+          url: '{{ route('backend.consignments_import.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -953,30 +981,25 @@ $(function() {
           method: 'POST'
         },
               columns: [
-                  {data: 'id', title :'ID', className: 'text-center'},
-                  {data: 'delivery_date', title :'<center>วันที่</center>', className: 'text-center w100 '},
-                  {data: 'receipt', title :'<center>Recipient Code<br>(รหัสผู้รับ) </center>', className: 'text-center'},
-                  {data: 'customer_name', title :'<center>Recipient Name <br> (ชื่อผู้รับ) </center>', className: 'text-center'},
-                  {data: 'id',title :'<center>Consignment No.<br>(หมายเลขพัสดุ)</center>',className: 'text-center ',render: function(d) {
-                        return '';
-                  }},
-                  {data: 'id',title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>',className: 'text-center ',render: function(d) {
-                        return '';
-                  }},
-                  {data: 'id',title :'<center>Postcode<br>(รหัสไปรษณีย์ผู้รับ)</center>',className: 'text-center ',render: function(d) {
-                        return '';
-                  }},
-                  {data: 'id',title :'<center>Mobile<br>(เบอร์มือถือผู้รับ)</center>',className: 'text-center ',render: function(d) {
-                        return '';
-                  }},
+                  {data: 'consignment_no', title :'<center>Consignment No. <br> (หมายเลขพัสดุ) </center>', className: 'text-center'},
+                  {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                  {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                  {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+                  // {data: 'id',title :'<center>Consignment No.<br>(หมายเลขพัสดุ)</center>',className: 'text-center ',render: function(d) {
+                  //       return '';
+                  // }},
+                  // {data: 'id',title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>',className: 'text-center ',render: function(d) {
+                  //       return '';
+                  // }},
+                  // {data: 'id',title :'<center>Postcode<br>(รหัสไปรษณีย์ผู้รับ)</center>',className: 'text-center ',render: function(d) {
+                  //       return '';
+                  // }},
+                  // {data: 'id',title :'<center>Mobile<br>(เบอร์มือถือผู้รับ)</center>',className: 'text-center ',render: function(d) {
+                  //       return '';
+                  // }},
               ],
 
               rowCallback: function(nRow, aData, dataIndex){
-                   if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(2)', nRow).html(
-                        '<span class="tooltip_packing badge badge-danger font-size-14">P</span> '+aData['packing_code']);
-                 }
-
        
               }
             });
@@ -1050,43 +1073,104 @@ $(function() {
 		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
 		                    $(".myloading").hide();
 		                }
-		            });
+		              });
+
                 });
 
 
 
-		       $('#branch_id_search').change(function(){
+      		       $('#branch_id_search').change(function(){
 
-		          var branch_id_fk = this.value;
-		          // alert(warehouse_id_fk);
+      		          var branch_id_fk = this.value;
+      		          // alert(warehouse_id_fk);
 
-		           if(branch_id_fk != ''){
-		             $.ajax({
-		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
-		                  method: "post",
-		                  data: {
-		                    branch_id_fk:branch_id_fk,
-		                    "_token": "{{ csrf_token() }}", 
-		                  },
-		                  success:function(data)
-		                  { 
-		                   if(data == ''){
-		                       alert('ไม่พบข้อมูลคลัง !!.'); 
-		                       $("#warehouse_id_search").val('').trigger('change'); 
-		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
-		                   }else{
-		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
-		                       $.each(data,function(key,value){
-		                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-		                       });
-		                       $('#warehouse_id_search').html(layout);
-		                   }
-		                  }
-		                })
-		           }
-		 
-		      });
+      		           if(branch_id_fk != ''){
+      		             $.ajax({
+      		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+      		                  method: "post",
+      		                  data: {
+      		                    branch_id_fk:branch_id_fk,
+      		                    "_token": "{{ csrf_token() }}", 
+      		                  },
+      		                  success:function(data)
+      		                  { 
+      		                   if(data == ''){
+      		                       alert('ไม่พบข้อมูลคลัง !!.'); 
+      		                       $("#warehouse_id_search").val('').trigger('change'); 
+      		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
+      		                   }else{
+      		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
+      		                       $.each(data,function(key,value){
+      		                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+      		                       });
+      		                       $('#warehouse_id_search').html(layout);
+      		                   }
+      		                  }
+      		                })
+      		           }
+      		 
+      		      });
 
+
+
+                $(".btnExportElsx").click(function(event) {
+                    /* Act on the event */
+                    $(".myloading").show();
+                    $.ajax({
+
+                           type:'POST',
+                           url: " {{ url('backend/excelExportConsignment') }} ", 
+                           data:{ _token: '{{csrf_token()}}' },
+                            success:function(data){
+                                 console.log(data); 
+                                 // location.reload();
+                                 setTimeout(function(){
+                                    var url='local/public/excel_files/consignments.xlsx';
+                                    window.open(url, 'Download');  
+                                    $(".myloading").hide();
+                                },3000);
+
+                              },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                $(".myloading").hide();
+                            }
+                        });
+                });
+
+
+               $(".btnImXlsx").click(function(event) {
+                      /* Act on the event */
+                      var v = $("input[name=fileXLS]").val();
+                      if(v!=''){
+                        $(".myloading").show();
+                      }
+                      
+                });
+
+
+
+              $(".btnClearImport").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxClearConsignment') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               location.reload();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                      });
+              });
 
 
 

@@ -49,15 +49,14 @@ class Pickup_goodsController extends Controller
         }
 
         DB::update(" 
-	        UPDATE
-			db_delivery_packing_code
-			Inner Join db_delivery ON db_delivery_packing_code.id = db_delivery.packing_code
-			SET
-			db_delivery.status_delivery=db_delivery_packing_code.status_delivery
-			WHERE
-			db_delivery_packing_code.status_delivery=1
-		 ");
-
+	          UPDATE
+      			db_delivery_packing_code
+      			Inner Join db_delivery ON db_delivery_packing_code.id = db_delivery.packing_code
+      			SET
+      			db_delivery.status_delivery=db_delivery_packing_code.status_delivery
+      			WHERE
+      			db_delivery_packing_code.status_delivery=1
+      		 ");
 
         return redirect()->to(url("backend/pickup_goods"));
 
@@ -130,13 +129,13 @@ class Pickup_goodsController extends Controller
 
         DB::update(" 
 	        UPDATE
-			db_delivery_packing_code
-			Inner Join db_delivery ON db_delivery_packing_code.id = db_delivery.packing_code
-			SET
-			db_delivery.status_delivery=db_delivery_packing_code.status_delivery
-			WHERE
-			db_delivery_packing_code.status_delivery=0
-		 ");
+    			db_delivery_packing_code
+    			Inner Join db_delivery ON db_delivery_packing_code.id = db_delivery.packing_code
+    			SET
+    			db_delivery.status_delivery=db_delivery_packing_code.status_delivery
+    			WHERE
+    			db_delivery_packing_code.status_delivery=0
+    		 ");
       
       return response()->json(\App\Models\Alert::Msg('success'));
 

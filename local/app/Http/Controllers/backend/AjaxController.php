@@ -542,6 +542,39 @@ class AjaxController extends Controller
           }
     }
 
+   public function ajaxProductValueCal(Request $request)
+    {
+
+        // return $request;
+        // dd();
+
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id_fk." GROUP BY frontstore_id_fk ");
+  
+        $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+        $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+
+        // return $vat;
+        // dd();
+
+        DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=".@$request->frontstore_id_fk." ");
+
+
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
+        return response()->json($rs);   
+
+    }
+
+   public function ajaxCheckDBfrontstore(Request $request)
+    {
+
+        // return $request;
+        // dd();
+        $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk='".$request->frontstore_id_fk."' ");
+        return $rs[0]->cnt;   
+
+    }
+
+
 
    public function ajaxShippingCalculate(Request $request)
     {
@@ -554,7 +587,7 @@ class AjaxController extends Controller
         $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstor[0]->business_location_id_fk."' ");
 
         if($sum_price>=$shipping[0]->purchase_amt){
-            DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."', shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
             return 0 ;
         }else{
 
@@ -564,7 +597,7 @@ class AjaxController extends Controller
                 // สาขาตัวเอง
                 if($request->sentto_branch_id==$request->branch_id_fk){
                     // return 'ส่งที่สาขาตัวเอง ไม่ต้องมีค่าขนส่ง ';
-                    DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+                    DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
                     return 0 ;
 
                 }else{
@@ -574,7 +607,7 @@ class AjaxController extends Controller
 
                     $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
 
-                    DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+                    DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
 
                     return $shipping_cost[0]->shipping_cost;
 
@@ -588,7 +621,7 @@ class AjaxController extends Controller
                     $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
 
                     if($request->province_id==$branchs[0]->province_id_fk){
-                        DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+                        DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
                         return 0;
                     }else{
                          // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
@@ -599,12 +632,12 @@ class AjaxController extends Controller
                         // return $shipping_cost[0]->id;
                         // return count($shipping_vicinity);
                         if(count($shipping_vicinity)>0){
-                            DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+                            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
                             return $shipping_cost[0]->shipping_cost;
                         }else{
 
                             $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
-                            DB::select(" UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
+                            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
                             return $shipping_cost[0]->shipping_cost;
 
                         }
@@ -945,6 +978,15 @@ class AjaxController extends Controller
         }        
         DB::select(" ALTER table db_promotion_cus AUTO_INCREMENT=1; ");
     }
+
+
+
+    public function ajaxClearConsignment(Request $request)
+    {
+        DB::delete(" DELETE FROM db_consignments_import ");
+        DB::select(" ALTER table db_consignments_import AUTO_INCREMENT=1; ");
+    }
+
 
 
     public function ajaxGetPayType(Request $request)

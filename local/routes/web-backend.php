@@ -205,8 +205,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pm_broadcast', 'Pm_broadcastController');
     Route::post('pm_broadcast/datatable', 'Pm_broadcastController@Datatable')->name('pm_broadcast.datatable');
 
+
+    Route::resource('consignments_import', 'Consignments_importController');
+    Route::post('consignments_import/datatable', 'Consignments_importController@Datatable')->name('consignments_import.datatable');
+
+
     Route::post('uploadFile', 'PagesController@uploadFile');
     Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
+    Route::post('uploadFileXLSConsignments', 'PagesController@uploadFileXLSConsignments');
     Route::post('uploadCe_regis', 'PagesController@uploadCe_regis');
     Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
     Route::post('uploadPromotionCus', 'PagesController@uploadPromotionCus');
@@ -214,6 +220,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
+    Route::post('excelExportConsignment', 'ExcelController@excelExportConsignment');
     Route::post('excelExportPromotionCus', 'ExcelController@excelExportPromotionCus');
     Route::post('excelExportCe_regis', 'ExcelController@excelExportCe_regis');
     Route::post('csvExportCe_regis', 'ExcelController@csvExportCe_regis');
@@ -224,6 +231,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
+    Route::post('ajaxClearConsignment', 'AjaxController@ajaxClearConsignment');
     Route::post('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
     Route::get('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
     Route::post('ajaxGenPromotionCodePrefixCoupon', 'AjaxController@ajaxGenPromotionCodePrefixCoupon');
@@ -254,8 +262,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCheckCouponUsed', 'AjaxController@ajaxCheckCouponUsed');
     Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
     Route::post('ajaxFeeCalculate', 'AjaxController@ajaxFeeCalculate');
+    Route::post('ajaxProductValueCal', 'AjaxController@ajaxProductValueCal');
     Route::post('ajaxShippingCalculate', 'AjaxController@ajaxShippingCalculate');
     Route::post('ajaxApproveCouponCode', 'AjaxController@ajaxApproveCouponCode');
+    Route::post('ajaxCheckDBfrontstore', 'AjaxController@ajaxCheckDBfrontstore');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -383,7 +393,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('promotion_cus', 'Promotion_cusController');
     Route::post('promotion_cus/datatable', 'Promotion_cusController@Datatable')->name('promotion_cus.datatable');
     Route::post('promotion_cus/plus', 'Promotion_cusController@plus');
-    // Route::post('promotion_cus_choose/datatable', 'Promotion_cusController@DatatableChoose')->name('promotion_cus_choose.datatable');
+
 
     Route::resource('promotion_code_product', 'Promotion_code_productController');
     Route::post('promotion_code_product/datatable', 'Promotion_code_productController@Datatable')->name('promotion_code_product.datatable');
@@ -484,11 +494,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 }); //route group backend
 
-
 Route::group(['prefix' => 'aboutfile', 'as' => 'aboutfile.'], function() {
-// Route::post('excel-import-upload', 'backend\ExcelController@excelImportEmployeeUpload');               
-Route::post('excel-import-upload', 'backend\ExcelController@excelExport');               
+        // Route::post('excel-import-upload', 'backend\ExcelController@excelImportEmployeeUpload');               
+        Route::post('excel-import-upload', 'backend\ExcelController@excelExport');               
 #===========================================================================
 }); //route group report
-
 

@@ -55,6 +55,104 @@
 
 		}
 
+
+		public function excelExportConsignment()
+		{
+
+			$spreadsheet = new Spreadsheet();
+			$amt_sheet = 1;
+
+			 $styleArray = array(
+			   'font'  => array(
+			        'bold'  => true,
+			        'color' => array('rgb' => '002699'),
+			        // 'size'  => 16,
+			        'name'  => 'Verdana'
+			    ));      
+			 
+
+
+			for ($j=0; $j < $amt_sheet ; $j++) { 
+
+				if($j>0){
+					$spreadsheet->createSheet();
+				}
+
+				$spreadsheet->setActiveSheetIndex($j);
+				$sheet = $spreadsheet->getActiveSheet();
+				$sheet->setTitle("Sheet".($j+1));
+
+				$sRow = \App\Models\Backend\Consignments::get();
+
+				$sheet->setCellValue('A1', 'Consignment No. (หมายเลขพัสดุ)');
+				$sheet->setCellValue('B1', 'Customer Ref No. (เลขอ้างอิง)');
+				$sheet->setCellValue('C1', 'Sender Code (รหัสผู้ส่ง)');
+				$sheet->setCellValue('D1', 'Recipient Code (รหัสผู้รับ)');
+				$sheet->setCellValue('E1', 'Recipient Name (ชื่อผู้รับ)');
+				$sheet->setCellValue('F1', 'Address (ที่อยู่ผู้รับ)');
+				$sheet->setCellValue('G1', 'Postcode (รหัสไปรษณีย์ผู้รับ)');
+				$sheet->setCellValue('H1', 'Mobile (เบอร์มือถือผู้รับ)');
+				$sheet->setCellValue('I1', 'Contact Person (ชื่อผู้ติดต่อ)');
+				$sheet->setCellValue('J1', 'Phone No. (เบอร์ผู้รับ)');
+				$sheet->setCellValue('K1', 'Email (อีเมลผู้รับ)');
+				$sheet->setCellValue('L1', 'Declare Value (มูลค่าสินค้า)');
+				$sheet->setCellValue('M1', 'COD Amount (ยอดเก็บเงินปลายทาง)');
+				$sheet->setCellValue('N1', 'Remark (หมายเหตุ)');
+				$sheet->setCellValue('O1', 'Total Box (จำนวนกล่อง)');
+				$sheet->setCellValue('P1', 'Sat Del (จัดส่งวันเสาร์)');
+				$sheet->setCellValue('Q1', 'HCR (Y/N)');
+				$sheet->setCellValue('R1', 'INVR (Y/N)');
+				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
+
+				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
+
+				for ($i=0; $i < count($sRow) ; $i++) { 
+					$sheet->setCellValue('A'.($i+2), $sRow[$i]->consignment_no);
+					$sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_ref_no);
+					$sheet->setCellValue('C'.($i+2), $sRow[$i]->sender_code);
+					$sheet->setCellValue('D'.($i+2), $sRow[$i]->recipient_code);
+					$sheet->setCellValue('E'.($i+2), $sRow[$i]->recipient_name);
+					$sheet->setCellValue('F'.($i+2), $sRow[$i]->address);
+					$sheet->setCellValue('G'.($i+2), $sRow[$i]->postcode);
+					$sheet->setCellValue('H'.($i+2), $sRow[$i]->mobile);
+					$sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
+					$sheet->setCellValue('J'.($i+2), $sRow[$i]->phone_no);
+					$sheet->setCellValue('K'.($i+2), $sRow[$i]->email);
+					$sheet->setCellValue('L'.($i+2), $sRow[$i]->declare_value);
+					$sheet->setCellValue('M'.($i+2), $sRow[$i]->cod_amount);
+					$sheet->setCellValue('N'.($i+2), $sRow[$i]->remark);
+					$sheet->setCellValue('O'.($i+2), $sRow[$i]->total_box);
+					$sheet->setCellValue('P'.($i+2), $sRow[$i]->sat_del);
+					$sheet->setCellValue('Q'.($i+2), $sRow[$i]->hrc);
+					$sheet->setCellValue('R'.($i+2), $sRow[$i]->invr);
+					$sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+				}
+
+			}
+
+			// $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+			// $cellIterator->setIterateOnlyExistingCells( true );
+			// foreach( $cellIterator as $cell ) {
+			//     $sheet->getColumnDimension( $cell->getColumn() )->setAutoSize( true );
+			// }
+			foreach ($sheet->getColumnIterator() as $column) {
+			    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+			}
+
+
+
+
+			$file = 'consignments.xlsx';
+			header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-disposition: attachment; filename='.$file);
+
+			$writer = new Xlsx($spreadsheet);
+			$writer->save('local/public/excel_files/'.$file);
+
+		}
+
+
+
 		public function csvExport()
 			{
 
