@@ -82,7 +82,7 @@
     <div class="row justify-content-center">
       <img src="{{asset('frontend/salepage/img/FB.png')}}" style="margin: 5px;" class="img-fluid p-10" width="50" alt="..."> 
       <img src="{{asset('frontend/salepage/img/IG.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="..."> 
-      <img src="{{asset('frontend/salepage/img/Line.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="...">
+      <img src="{{asset('frontend/salepage/img/line.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="...">
       
     </div>
 
