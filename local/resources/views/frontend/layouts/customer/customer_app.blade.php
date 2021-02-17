@@ -138,28 +138,44 @@
 							</li>
 
 							<li class="header-notification">
-								<a href="#!">
+								<?php  
+								$noti = \App\Helpers\Frontend::notifications(Auth::guard('c_user')->user()->id);
+
+
+								?>
+								
+								<a href="#!"> 
 									<i class="fa fa-envelope-o"></i>
+									@if($noti['count'] > 0)
 									<span class="badge bg-primary" style="font-size: 11px;border-radius: 100px;
-									right: 11px;position: absolute;top: 10px;padding: 3px;">10</span>
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ $noti['count'] }}</span>
+									@endif
 								</a>
+								
+								@if($noti['count'] > 0)
 								<ul class="show-notification">
 									<li>
 										<h6>Notifications</h6>
 										<label class="label label-danger">New</label>
 									</li>
 
+									@foreach($noti['data'] as $noti_value)
+
 									<li>
+										<a href="{{ route('message',['active'=>'inbox']) }}">
 										<div class="media">
-											<img class="d-flex align-self-center img-radius" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
+											<img class="d-flex align-self-center img-radius" src="{{asset('local/public/images/admin_aiyara.png')}}" alt="Generic placeholder image">
 											<div class="media-body">
-												<h5 class="notification-user">Sara Soudein</h5>
-												<p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+												<h5 class="notification-user">มีข้อความตอบกลับจากใส่ใจคะ</h5>
+												<p class="notification-msg">{{ $noti_value->topics_question }}</p>
 												<span class="notification-time">30 minutes ago</span>
-											</div>
+											</div> 
 										</div>
+									</a>
 									</li>
+									@endforeach
 								</ul>
+								@endif
 							</li>
 
 							<li class="user-profile header-notification">
@@ -207,47 +223,7 @@
 				</div>
 			</nav>
 
-			<!-- Sidebar inner chat start-->
-			<div class="showChat_inner">
-				<div class="media chat-inner-header">
-					<a class="back_chatBox">
-						<i class="fa fa-chevron-left text-success"></i> Josephin Doe
-					</a>
-				</div>
-				<div class="media chat-messages">
-					<a class="media-left photo-table" href="#!">
-						<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-3.jpg')}}" alt="Generic placeholder image">
-					</a>
-					<div class="media-body chat-menu-content">
-						<div class="">
-							<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-							<p class="chat-time">8:20 a.m.</p>
-						</div>
-					</div>
-				</div>
-				<div class="media chat-messages">
-					<div class="media-body chat-menu-reply">
-						<div class="">
-							<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-							<p class="chat-time">8:20 a.m.</p>
-						</div>
-					</div>
-					<div class="media-right photo-table">
-						<a href="#!">
-							<img class="media-object img-radius img-radius m-t-5" src="{{asset('frontend/assets/images/avatar-4.jpg')}}" alt="Generic placeholder image">
-						</a>
-					</div>
-				</div>
-				<div class="chat-reply-box p-b-20">
-					<div class="right-icon-control">
-						<input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-						<div class="form-icon">
-							<i class="fa fa-paper-plane text-success"></i>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Sidebar inner chat end-->
+			 
 			<div class="pcoded-main-container">
 				<div class="pcoded-wrapper">
 					<nav class="pcoded-navbar">
@@ -494,7 +470,7 @@
 				</li>	 
 			</ul>
 		</li>
- 
+		
 		
 		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
 			<a href="{{route('ai-pocket')}}">
@@ -512,80 +488,94 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') 
-		|| request()->is('course') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
-		<a href="javascript:void(0)">
-			<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>สิทธิประโยชน์</b></span>
-			<span class="pcoded-mtext">สิทธิประโยชน์</span>
-			<span class="pcoded-mcaret"></span>
-		</a>
-		<ul class="pcoded-submenu">
-			<li class="{{ (request()->is('reward-history')) ? 'active' : '' }}">
-				<a href="{{route('reward-history')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">รางวัลเกียรติยศ</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
+		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+			<a href="javascript:void(0)">
+				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>สิทธิประโยชน์</b></span>
+				<span class="pcoded-mtext">สิทธิประโยชน์</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+			<ul class="pcoded-submenu">
+				<li class="{{ (request()->is('reward-history')) ? 'active' : '' }}">
+					<a href="{{route('reward-history')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">รางวัลเกียรติยศ</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('travel')) ? 'active' : '' }}">
+					<a href="{{route('travel')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">โปรโมชั่นท่องเที่ยวท่องเที่ยว</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+			</ul>
+		</li>
+
+		<li class="{{ (request()->is('message')) ? 'active' : '' }}">
+			<a href="{{route('message')}}">
+				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b>ติดต่อ/สอบถาม</b></span>
+				<span class="pcoded-mtext">ติดต่อ/สอบถาม</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+		<li class="{{ (request()->is('news')) ? 'active' : '' }}">
+			<a href="{{route('news')}}">
+				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b>รวมข่าวสาร/กิจกรรม</b></span>
+				<span class="pcoded-mtext">รวมข่าวสาร/กิจกรรม</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_report') || request()->is('commission-per-day') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+			<a href="javascript:void(0)">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Sale Page</b></span>
+				<span class="pcoded-mtext">Sale Page</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+
+			<ul class="pcoded-submenu">
+				<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
+					<a href="{{route('commission_bonus_report')}}"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale Page 1</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
+					<a href="{{route('commission-per-day')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale Page 2</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
+					<a href="{{route('commission_faststart')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale Page 3</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('commission_matching')) ? 'active' : '' }}">
+					<a href="{{route('commission_matching')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale Page 4</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>	 
+			</ul>
+		</li>
+		
 
 
 
-			<li class="{{ (request()->is('travel')) ? 'active' : '' }}">
-				<a href="{{route('travel')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">โปรโมชั่นท่องเที่ยวท่องเที่ยว</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
-
-		</ul>
-	</li>
-
-{{-- 	<li class="pcoded-hasmenu {{ (request()->is('24extra/promote') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
-		<a href="javascript:void(0)">
-			<span class="pcoded-micon"><i class="fa fa-laptop text-success"></i><b>Sale Page</b></span>
-			<span class="pcoded-mtext">Sale Page</span>
-			<span class="pcoded-mcaret"></span>
-		</a>
-		<ul class="pcoded-submenu">
-
-			<li class="{{ (request()->is('24extra/promote')) ? 'active' : '' }}">
-				<a href="{{url('24extra/promote')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">Sale Page 1</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
-
-			<li class="{{ (request()->is('24extra/promote')) ? 'active' : '' }}">
-				<a href="{{url('24extra/promote')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">Sale Page 2</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
-
-			<li class="{{ (request()->is('24extra/promote')) ? 'active' : '' }}">
-				<a href="{{route('course')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">Sale Page 3</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
-
-			<li class="{{ (request()->is('24extra/promote')) ? 'active' : '' }}">
-				<a href="{{url('24extra/promote')}}">
-					<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-					<span class="pcoded-mtext">Sale Page 4</span>
-					<span class="pcoded-mcaret"></span>
-				</a>
-			</li>
-
-
-		</ul>
-	</li> --}}
-
-</ul>
+	</ul>
 
 </div>
 </nav>

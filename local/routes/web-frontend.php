@@ -175,6 +175,15 @@ Route::get('commission_matching','Frontend\CommissionController@commission_match
 Route::get('coupon','Frontend\CouponCodeController@coupon')->name('coupon');
 Route::get('dt_coupon_code','Frontend\CouponCodeController@dt_coupon_code')->name('dt_coupon_code');
  
+Route::get('message/{active?}','Frontend\MessageController@index')->name('message');
+Route::get('message_read/{id}','Frontend\MessageController@message_read')->name('message_read');
+
+Route::post('message_question','Frontend\MessageController@message_question')->name('message_question');
+
+Route::get('news','Frontend\NewsController@index')->name('news');
+
+Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
+
  
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');

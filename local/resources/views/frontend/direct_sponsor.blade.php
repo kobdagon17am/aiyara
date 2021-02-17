@@ -231,8 +231,6 @@ use App\Models\Frontend\DirectSponsor;
 @endsection
 @section('js')
 <!-- data-table js -->
-
-
   <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
   <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
   <script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
@@ -245,8 +243,6 @@ use App\Models\Frontend\DirectSponsor;
   <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
   <!-- Custom js -->
   <script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
-
-
 
   @endsection
 

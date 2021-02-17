@@ -27,6 +27,30 @@ class Frontend{
 		return $customer;
 	}
 
+	public static function notifications($customer_id){
+
+		$data = DB::table('pm')
+		->select('*') 
+		->where('customers_id_fk','=',$customer_id)
+		->where('see_status','=',0)    
+		->orderby('created_at','DESC')
+		->get();
+
+		$count_data = count($data);
+
+		if($count_data <= 0){
+		$rs = ['status'=>'fail','count'=>$count_data];
+
+		}else{
+
+		$rs = ['status'=>'success','data'=>$data,'count'=>$count_data];
+
+		}
+
+		return $rs;
+
+	}
+
 	// public static function get_customer_all_detail($id){
 	// 	$customer = DB::table('customers_detail')
 	// 	->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
