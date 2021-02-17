@@ -530,48 +530,27 @@
 			</a>
 		</li>
 
+
+
 		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_report') || request()->is('commission-per-day') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Sale Page</b></span>
-				<span class="pcoded-mtext">Sale Page</span>
+				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b>Sale page</b></span>
+				<span class="pcoded-mtext">Sale page</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 
 			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_report')}}"> 
+				<li class="{{ (request()->is('salepage/salepage_1')) ? 'active' : '' }}">
+					<a href="{{route('salepage/salepage_1')}}"> 
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale Page 1</span>
+						<span class="pcoded-mtext">Sale page 1</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
-					<a href="{{route('commission-per-day')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale Page 2</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-				<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
-					<a href="{{route('commission_faststart')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale Page 3</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-				<li class="{{ (request()->is('commission_matching')) ? 'active' : '' }}">
-					<a href="{{route('commission_matching')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale Page 4</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>	 
+				 
 			</ul>
 		</li>
-		
 
 
 

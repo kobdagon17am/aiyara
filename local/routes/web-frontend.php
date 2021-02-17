@@ -184,7 +184,10 @@ Route::get('news','Frontend\NewsController@index')->name('news');
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
- 
+
+Route::get('salepage/salepage_1','Frontend\SalepageController@salepage_1')->name('salepage/salepage_1');
+
+  
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');
 })->name('reward-history');
