@@ -339,29 +339,44 @@
 </div>
 
 <div class="form-group row">
- <div class="col-sm-12">
-  <h5 class="sub-title" style="color: #000;font-size: 16px">เอกสารสำหรับการสมัคร</h5>
+  <div class="col-sm-12">
+    <h5 class="sub-title" style="color: #000;font-size: 16px">เอกสารสำหรับการสมัคร</h5>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group row">
+     <div class="col-sm-12">
+      <label>บัตรประชาชน</label>
+      <input type="file" id="file_1" name="file_1" class="form-control">
+    </div>
+  </div>
 
   <div class="form-group row">
-   <div class="col-sm-6">
-    <label>บัตรประชาชน</label>
-    <input type="file" id="file_1" name="file_1" class="form-control">
-  </div>
-</div>
-
-<div class="form-group row">
- <div class="col-sm-6">
-   <label>หน้าบัญชีธนาคาร</label>
-   <input type="file" id="file_2"  name="file_2" class="form-control">
+   <div class="col-sm-12">
+     <label>หน้าบัญชีธนาคาร</label>
+     <input type="file" id="file_2"  name="file_2" class="form-control">
+   </div>
  </div>
-</div>
-<div class="form-group row">
-  <div class="col-sm-6"> 
-   <label>ลายเซ็น</label>
+ <div class="form-group row">
+  <div class="col-sm-12"> 
+   <label>เอกสารการสมัคร</label>
    <input type="file" id="file_3" name="file_3" class="form-control">
  </div>
 </div>
 
+</div>
+
+<div class="col-sm-6">
+ <div class="form-group row">
+  <div class="col-sm-12"> 
+    <label>ภาพใบหน้าพร้อมถือบัตรประชาชน</label>
+    <input type="file" id="file_4" name="file_4" class="form-control">
+
+  </div>
+</div> 
+
+<div class="m-t-2 col-sm-12 text-center"> 
+  <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
+</div>
 </div>
 
 <div class="form-group row text-right">
@@ -501,6 +516,24 @@
      return false;
    }
  });
+
+  $('#file_4').change( function () {
+    var fileExtension = ['jpg','png'];
+    if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+     alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
+     this.value = '';
+     return false;
+   }else {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+    // get loaded data and render thumbnail.
+    document.getElementById("preview").src = e.target.result;
+  };
+  // read the image file as a data URL.
+  reader.readAsDataURL(this.files[0]);
+}
+
+});
 </script>
 
 <script type="text/javascript">

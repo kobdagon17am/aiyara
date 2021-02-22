@@ -181,20 +181,24 @@ Route::get('message_read/{id}','Frontend\MessageController@message_read')->name(
 Route::post('message_question','Frontend\MessageController@message_question')->name('message_question');
 
 Route::get('news','Frontend\NewsController@index')->name('news');
+Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news_detail');
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
+ 
+Route::get('salepage/page-1/{user_name?}','Frontend\SalepageController@salepage')->name('salepage/page-1');
 
-
-Route::get('salepage/salepage_1','Frontend\SalepageController@salepage_1')->name('salepage/salepage_1');
-
+Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
+Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');
+Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
   
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');
 })->name('reward-history');
-Route::get('/regis-member', function () {
-  return view('frontend/regis-member');
-});
 
+
+Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
+
+ 
 
 Route::get('/comission', function () {
   return view('frontend/comission');

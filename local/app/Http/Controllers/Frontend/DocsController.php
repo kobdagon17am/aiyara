@@ -23,8 +23,9 @@ class DocsController extends Controller
 		$file_1 = $request->file_1;
 		$file_2 = $request->file_2;
 		$file_3 = $request->file_3;
+		$file_4 = $request->file_4;
 
-		if(!empty($file_1) || !empty($file_2) || !empty($file_3)){
+		if(!empty($file_1) || !empty($file_2) || !empty($file_3) || !empty($file_4)){
 
 			if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
@@ -41,7 +42,7 @@ class DocsController extends Controller
 			if(isset($file_2)){
             // $f_name = $file_2->getClientOriginalName().'_'.date('YmdHis').'.'.$file_2->getClientOriginalExtension();
 				$url='local/public/files_register/2/'.date('Ym');
-				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_1->getClientOriginalExtension();
+				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_2->getClientOriginalExtension();
 				if($file_2->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -52,19 +53,29 @@ class DocsController extends Controller
 			if(isset($file_3)){
             // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
 				$url='local/public/files_register/3/'.date('Ym');
-				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_1->getClientOriginalExtension();
+				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_3'.'.'.$file_3->getClientOriginalExtension();
 				if($file_3->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
 
 				}
 			}
+ 
+			if(isset($file_4)){
+            // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+				$url='local/public/files_register/4/'.date('Ym');
+				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
+				if($file_4->move($url,$f_name)){
+					DB::table('register_files')
+					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'4','url'=>$url,'file'=>$f_name,'status'=>'W']);
+				}
+			}
 
 			return redirect('docs')->withSuccess('Docs upload Success');
 
- 
+
 		}else{
-			 return redirect('docs')->withError('Docs upload Fail');
+			return redirect('docs')->withError('Docs upload Fail');
 		}
 	}
 }

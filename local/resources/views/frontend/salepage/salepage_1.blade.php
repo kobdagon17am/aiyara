@@ -1,4 +1,9 @@
 @extends('frontend.layouts.customer.customer_salepage')
+@section('heard_js')
+@if($rs['data']->js_page_1)
+{!! $rs['data']->js_page_1 !!}
+@endif
+@endsection
 @section('content')
 
 <main role="main">
@@ -80,17 +85,23 @@
     {{-- <p class="float-right"><a href="#">Back to top</a></p>
     <p>&copy; 2017-2020 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> --}}
     <div class="row justify-content-center">
-      <img src="{{asset('frontend/salepage/img/FB.png')}}" style="margin: 5px;" class="img-fluid p-10" width="50" alt="..."> 
-      <img src="{{asset('frontend/salepage/img/IG.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="..."> 
-      <img src="{{asset('frontend/salepage/img/line.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="...">
-      
-    </div>
 
+      @if($rs['data']->url_fb)
+       <a href="{{ $rs['data']->url_fb }}"> <img src="{{asset('frontend/salepage/img/FB.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
+      @endif
+      @if($rs['data']->url_ig)
+      <a href="{{ $rs['data']->url_ig }}"> <img src="{{asset('frontend/salepage/img/IG.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
+      @endif
+      @if($rs['data']->url_line)
+      <a href="{{ $rs['data']->url_line }}"> <img src="{{asset('frontend/salepage/img/line.png')}}" style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
+      @endif
+
+    </div>
+     @if($rs['data']->tel_mobile)
     <div class="row justify-content-center" style="margin-top: 10px">
-      <button type="button" class="btn btn-success"><i class="fa fa-phone-alt"></i> <b>086 785 333</b></button>
-    
-     
+      <a href="tel:{{$rs['data']->tel_mobile}}" class="btn btn-success"><i class="fa fa-phone-alt"></i> <b>{{ $rs['data']->tel_mobile }}</b></a>
    </div>
+   @endif
    
  </footer>
 </main>

@@ -22,13 +22,14 @@ class MessageController extends Controller
 			$inbox_tab = '';
 		}
 		$customers_id_fk = Auth::guard('c_user')->user()->id;
-		$data = DB::table('pm_answers')
+		$data = DB::table('pm')
 		->select('pm.*','pm_answers.txt_answers as answers',DB::raw('MAX(pm_answers.created_at) as answers_create')) 
 		->where('pm.customers_id_fk','=',$customers_id_fk)
-		->leftjoin('pm', 'pm_answers.pm_id_fk','=','pm.id') 
-		->groupby('pm_answers.pm_id_fk')
+		->leftjoin('pm_answers', 'pm_answers.pm_id_fk','=','pm.id') 
+		->groupby('pm.id')
 		->orderby('pm_answers.created_at','DESC')
 		->get(); 
+ 
 
 		return view('frontend/message',compact('data','contact','inbox','contact_tab','inbox_tab'));
 	} 

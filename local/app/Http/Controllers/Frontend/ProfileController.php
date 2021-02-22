@@ -148,8 +148,7 @@ public function update_profile(Request $request){
     return redirect('cart')->withSuccess('Upload image Success');
 
   } catch (Exception $e) {
-   dd($e);
-
+    return redirect('cart')->withError($e);
  }
 
             //$profile->save();

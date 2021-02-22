@@ -228,7 +228,7 @@
 				<div class="pcoded-wrapper">
 					<nav class="pcoded-navbar">
 						<div class="sidebar_toggle"><a href="#"><i class="icon-close icons text-success"></i></a></div>
-						<div class="pcoded-inner-navbar main-menu">
+						<div class="pcoded-inner-navbar main-menu" style="padding-bottom: 50px">
 <!-- 
 	<div class="pcoded-navigation-label">สมาชิก</div> -->
 
@@ -514,15 +514,9 @@
 			</ul>
 		</li>
 
-		<li class="{{ (request()->is('message')) ? 'active' : '' }}">
-			<a href="{{route('message')}}">
-				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b>ติดต่อ/สอบถาม</b></span>
-				<span class="pcoded-mtext">ติดต่อ/สอบถาม</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
+	
 
-		<li class="{{ (request()->is('news')) ? 'active' : '' }}">
+		<li class="{{ (request()->is('news') || request()->is('news_detail/*')) ? 'active' : '' }}">
 			<a href="{{route('news')}}">
 				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b>รวมข่าวสาร/กิจกรรม</b></span>
 				<span class="pcoded-mtext">รวมข่าวสาร/กิจกรรม</span>
@@ -532,7 +526,7 @@
 
 
 
-		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_report') || request()->is('commission-per-day') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('salepage/setting') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b>Sale page</b></span>
 				<span class="pcoded-mtext">Sale page</span>
@@ -540,16 +534,57 @@
 			</a>
 
 			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('salepage/salepage_1')) ? 'active' : '' }}">
-					<a href="{{route('salepage/salepage_1')}}"> 
+				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
+
+				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 1</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
+				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale page 2</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale page 3</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Sale page 4</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('salepage/setting')) ? 'active' : '' }}">
+					<a href="{{route('salepage/setting')}}"> 
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Setting</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
 				 
 			</ul>
+		</li>
+			<li class="{{ (request()->is('message/*')) ? 'active' : '' }}">
+			<a href="{{route('message')}}">
+				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b>ติดต่อ/สอบถาม</b></span>
+				<span class="pcoded-mtext">ติดต่อ/สอบถาม</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
 		</li>
 
 
@@ -608,4 +643,6 @@
 </body>
 
 </html>
-
+ 
+    
+   

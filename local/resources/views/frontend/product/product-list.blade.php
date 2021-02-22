@@ -1,113 +1,112 @@
 @extends('frontend.layouts.customer.customer_app')
-@section('conten')
 @section('css')
+
 @endsection
+@section('conten')
+
 <!-- Breadcombssss  area Start-->
- 
+
 @if($type!=6)
-<div class="page-header card">
+<div class="card">
   <div class="card-block" style="padding: 10px">
-
-    <h5 class="text-primary">@if($data['type']) {{ $data['type']->orders_type }} @else ไม่ทราบจุดประสงค์การสั่งซื้อ @endif</h5>
-
-    <div class="form-group row">
-
-        {{-- <form action="{{route('product-list-1_c_id')}}" method="post">
-            @csrf
-            
-          </form> --}}
+    <h5>@if($data['type']) {{ $data['type']->orders_type }} @else ไม่ทราบจุดประสงค์การสั่งซื้อ @endif</h5>
+    <div class="row">
 
 
-          <div class="col-lg-4 col-md-4 col-sm-6 m-t-5">
-           {{--  <label>หมวดสินค้า </label> --}}
-           <select class="form-control" id="category" name="category" onchange="select_category()">
+      <div class="col-sm-8 col-md-8 col-lg-8">
 
-            @foreach($categories as $value) 
-            <option value="{{$value->category_id}}">{{$value->category_name}}</option>
-            @endforeach
-          </select>
+        <div class="col-sm-10 row mt-2">
+         <div class="input-group input-group-button">
+          <span class="input-group-addon btn btn-warning" style="background-color: #FFB64D;" id="basic-addon11" data-toggle="modal" data-target="#large-Modal">
+            <span class="">Coupon Code</span>
+          </span>
+          <input type="text" id="coupon_code" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น" required="">
+          <span class="input-group-addon btn btn-warning" style="background-color: #FFB64D;" id="basic-addon12" onclick="coupon()">
+            <span class="">ใช้งาน</span>
+          </span>
         </div>
 
-
-        <div class="col-lg-4 col-md-4 col-sm-12 m-t-5">
-          {{-- <label>รหัสสินค้าโปรโมชั่น</label> --}} 
-          <div class="input-group input-group-button ">
-            <span class="input-group-addon btn btn-primary" id="basic-addon11" data-toggle="modal" data-target="#large-Modal">
-              <span class="">Coupon Code</span>
-            </span>
-            <input type="text" id="coupon_code" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น" required="">
-            <span class="input-group-addon btn btn-primary" id="basic-addon12" onclick="coupon()">
-              <span class="">ใช้งาน</span>
-            </span>
-          </div>
-
-          <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">Coupon Code</h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="card">
-                    <div class="card-header">
-                     {{--  <h5>Zero Configuration</h5> --}}
-                     
-                   </div>
-                   <div class="card-block">
-                    <div class="dt-responsive table-responsive">
-                      <table id="simpletable" class="table table-striped table-bordered nowrap">
-                        <thead>
-                          <tr>
-
-                           <th>Code</th>
-                           <th>Detail</th>
-                           {{-- <th>Start</th> --}}
-                           <th>Expiry</th>
-                           <th>Status</th>
-                           <th>Action</th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                        @foreach($coupon as $value)
-                        <tr>
-                          <td><span class="label label-primary"><b style="color:#000">{{ $value->promotion_code }}</b></span></td>
-                          <td>{{ $value->name_thai }}</td>
-
-                          <td><label class="label label-inverse-info-border"><b>{{ date('d/m/Y',strtotime($value->pro_edate)) }}</b></label></td>
-
-                          <td><span class="label label-success">ใช้งานได้</span></td>
-                          <td><button class="btn btn-success btn-sm"  onclick="coupon('{{$value->promotion_code}}')"><i class="icofont icofont-check-circled"></i> ใช้งาน </button></td>
-                        </tr>
-                         @endforeach
-
-
-                      </tbody>
-
-                    </table>
-
-                  </div>
-                  <span class="text-danger" style="font-size: 12px">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist</span>
-                </div>
+        <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Coupon Code</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
+              <div class="modal-body">
+                <div class="card">
+                  <div class="card-header">
+                   {{--  <h5>Zero Configuration</h5> --}}
+
+                 </div>
+                 <div class="card-block">
+                  <div class="dt-responsive table-responsive">
+                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+                      <thead>
+                        <tr>
+
+                         <th>Code</th>
+                         <th>Detail</th>
+                         {{-- <th>Start</th> --}}
+                         <th>Expiry</th>
+                         <th>Status</th>
+                         <th>Action</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                      @foreach($coupon as $value)
+                      <tr>
+                        <td><span class="label label-primary"><b style="color:#000">{{ $value->promotion_code }}</b></span></td>
+                        <td>{{ $value->name_thai }}</td>
+
+                        <td><label class="label label-inverse-info-border"><b>{{ date('d/m/Y',strtotime($value->pro_edate)) }}</b></label></td>
+
+                        <td><span class="label label-success">ใช้งานได้</span></td>
+                        <td><button class="btn btn-success btn-sm"  onclick="coupon('{{$value->promotion_code}}')"><i class="icofont icofont-check-circled"></i> ใช้งาน </button></td>
+                      </tr>
+                      @endforeach
 
 
+                    </tbody>
+
+                  </table>
+
+                </div>
+                <span class="text-danger" style="font-size: 12px">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist</span>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-              {{-- <a href="{{ route('profile')}}" class="btn btn-primary waves-effect waves-light ">Coupon All</a> --}}
-            </div>
+
+
+          </div>
+          <div class="modal-footer">
+           
+
+            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+            {{-- <a href="{{ route('profile')}}" class="btn btn-primary waves-effect waves-light ">Coupon All</a> --}}
           </div>
         </div>
       </div>
     </div>
 
+  </div>
 
+  <div class="row">
+    <div class="card-block button-list" style="padding: 7px;margin-left: 10px;">
+     @foreach($categories as $value) 
+      <button type="button" class="btn btn-success btn-sm btn-outline-success waves-effect md-trigger"  onclick="select_category('{{ $value->category_id }}')"><b style="color:#383636">{{$value->category_name}}</b></button>
 
-    <div class="col-lg-4 col-md-4 col-sm-12 ">
-      @if($type==1)
+    {{--  <button type="button" onclick="select_category('{{ $value->category_id }}')" class="btn btn-primary btn-sm waves-effect waves-light">{{$value->category_name}} --}}
+      {{-- <span class="badge">90</span> --}}
+    </button>
+    @endforeach
+  </div>
+</div>
+</div>
+
+<div class="col-sm-4 col-md-4 col-lg-4">
+   @if($type==1)
       <div class="card bg-c-green order-card m-b-0">
         <div class="card-block">
           <div class="row">
@@ -242,11 +241,12 @@
 @endif
 </div>
 
+</div>
 
+</div>
+</div>
 
-</div>
-</div>
-</div>
+ 
 @endif
 <div class="page-header card">
  <div class="card-block">
@@ -348,15 +348,11 @@
   </div>
 </div>
 
-
-
-
 @endsection
-
 @section('js')
 <script type="text/javascript">
-  function select_category(){
-    var category = $('#category').val();
+  function select_category(category_id){
+    var category = category_id;
     $.ajax({
       url: '{{route('product_list_select')}}',
       type: 'GET',
@@ -383,12 +379,12 @@
        var coupon_code = code;
        $('#coupon_code').val(coupon_code);
        $("#large-Modal").modal('hide');
-    }else{
+     }else{
        var coupon_code = $('#coupon_code').val();
-    }
+     }
 
-   
-    if(coupon_code == ''){
+
+     if(coupon_code == ''){
       Swal.fire({
         icon: 'error',
         title: 'กรุณาใส่ Coupon Code',
@@ -405,17 +401,17 @@
     })
      .done(function(data){
       if(data['status'] == 'fail'){
-         Swal.fire({
+       Swal.fire({
         icon: 'error',
         text: data['massage'],
               // text: 'Something went wrong!', 
               // footer: '<a href>Why do I have this issue?</a>'
             })
 
-      }else {
-         $('#product_list').html(data['html']);
- 
-      }
+     }else {
+       $('#product_list').html(data['html']);
+
+     }
 
       //$('#product_list').html(data);
       console.log("success");

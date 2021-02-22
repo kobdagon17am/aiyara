@@ -39,8 +39,7 @@ class Register extends Model
     $pass = implode($pass); //turn the array into a string
     $pass_db =md5($pass);
 
-    
-
+  
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
     $last_name= (trim($req->input('name_last')) == '') ? null : $req->input('name_last');
@@ -227,7 +226,7 @@ class Register extends Model
                  if(isset($file_2)){
 
                   $url='local/public/files_register/2/'.date('Ym');
-                  $f_name =  date('YmdHis').'_'.$id.'_2'.'.'.$file_1->getClientOriginalExtension();
+                  $f_name =  date('YmdHis').'_'.$id.'_2'.'.'.$file_2->getClientOriginalExtension();
                   if($file_2->move($url,$f_name)){
                      DB::table('register_files')
                      ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -239,7 +238,7 @@ class Register extends Model
              if(isset($file_3)){
 
               $url='local/public/files_register/3/'.date('Ym');
-              $f_name =  date('YmdHis').'_'.$id.'_3'.'.'.$file_1->getClientOriginalExtension();
+              $f_name =  date('YmdHis').'_'.$id.'_3'.'.'.$file_3->getClientOriginalExtension();
               if($file_3->move($url,$f_name)){
                  DB::table('register_files')
                  ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
@@ -247,6 +246,16 @@ class Register extends Model
              }
          }
 
+         $file_4 = $req->file_4;
+             if(isset($file_4)){
+              $url='local/public/files_register/4/'.date('Ym');
+              $f_name =  date('YmdHis').'_'.$id.'_4'.'.'.$file_4->getClientOriginalExtension();
+              if($file_4->move($url,$f_name)){
+                 DB::table('register_files')
+                 ->insert(['customer_id'=>$id,'type'=>'4','url'=>$url,'file'=>$f_name,'status'=>'W']);
+             }
+         }
+         
          $data = ['status'=>'success','massage'=>'Add User Success','data'=>$data_customer,'pass'=>$pass,'search_id'=>$id];
 
      } catch (Exception $e) {

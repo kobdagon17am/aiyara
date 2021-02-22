@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function product_list($type){
 
        $categories = DB::table('categories')
-       ->where('lang_id', '=', 1)
+       ->where('lang_id', '=', 2)
        ->where('status', '=',1)
        ->orderby('order')
        ->get();

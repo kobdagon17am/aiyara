@@ -33,6 +33,7 @@
     </style>
     <!-- Custom styles for this template -->
     <link href="{{asset('frontend/salepage/carousel.css')}}" rel="stylesheet">
+     @yield('heard_js')
   </head>
   <body>
     <header>
@@ -41,7 +42,9 @@
  {{--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button> --}}
-    <button type="button" class="btn btn-outline-light d-md-none d-lg-none d-xl-none" style="margin-right: 16px;"><i class="fa fa-phone-alt"></i> <b> 087 433 6407</b></button>
+    @if($rs['data']->tel_number)
+    <a href="tel:{{$rs['data']->tel_number}}" class="btn btn-outline-light d-md-none d-lg-none d-xl-none" style="margin-right: 16px;"><i class="fa fa-phone-alt"></i> <b>{{ $rs['data']->tel_number }}</b></a>
+    @endif
     <div class="collapse navbar-collapse " id="navbarCollapse">
       <ul class="navbar-nav ml-auto">
      {{--    <li class="nav-item active">
@@ -53,14 +56,15 @@
         <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li> --}}
-
+ 
       </ul> 
     {{--    <form class="form-inline mt-2 mt-md-0">
         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>  --}}
-
-      <button type="button" class="btn btn-outline-light"><i class="fa fa-phone-alt"></i> <b> 087 433 6407</b></button>
+       @if($rs['data']->tel_number)
+      <a href="tel:{{$rs['data']->tel_number}}" class="btn btn-outline-light"><i class="fa fa-phone-alt"></i> <b>{{ $rs['data']->tel_number }}</b></a>
+       @endif
     </div>
   </nav> 
 </header>

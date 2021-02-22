@@ -12,53 +12,70 @@
 <div class="card">
   <!-- Email-card start -->
   <div class="card-block email-card">
-{{--       <div class="row">
-        <div class="col-lg-12 col-xl-3">
-          <div class="user-head row">
-            <div class="user-face">
-              <img class="img-fluid" src="../files/assets/images/logo.png" alt="Theme-Logo" />
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-12 col-xl-9">
-          <div class="mail-box-head row">
-            <div class="col-md-12">
-              <form class="f-right">
-                <div class="right-icon-control">
-                  <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends-2">
-                  <div class="form-icon">
-                    <i class="icofont icofont-search"></i>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div> --}}
+ 
       <div class="row">
         <!-- Left-side section start -->
         <div class="col-lg-3 col-xl-3 ">
           <div class="user-body">
             <div class="p-20 text-center">
-              <h5> ติดต่อ/สอบถาม </h5>
-              {{-- <a href="email-compose.html" class="btn btn-danger">ติดต่อแจ้งปัญหา</a> --}}
+              <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"> <i class="fa fa-plus-square"></i> สอบถาม</button>
+              
             </div>
+
+              <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+
+              <form action="{{ route('message_question') }}" method="POST">
+                <div class="modal-content">
+
+                  <div class="modal-header">
+                    <h4 class="modal-title">สอบถาม</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                   
+                    @csrf
+                    <div class="form-group">
+                      <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
+                    </div>
+                    
+
+                    <textarea name="question"></textarea>
+
+                    
+                    
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit</button>
+                  </div>
+                  
+                </div>
+              </form>
+            </div>
+          </div>
+
             <ul class="page-list nav nav-tabs flex-column" id="pills-tab" role="tablist">
 
-             <li class="nav-item mail-section">
-              <a class="nav-link " data-toggle="pill" href="#e-contact" role="tab">
-                <i class="icofont icofont-inbox"></i> ติดต่อ/สอบถาม
-                {{--  <span class="label label-primary f-right">6</span> --}}
+     
+
+              <li class="nav-item mail-section">
+              <a class="nav-link active" data-toggle="pill" href="#e-inbox" role="tab">
+                <i class="fa fa-commenting-o"></i> Message
+                 {{-- <span class="label label-primary f-right">6</span> --}}
               </a>
             </li> 
 
             <li class="nav-item mail-section">
-              <a class="nav-link active" href="{{ route('message',['active'=>'inbox']) }}" >
-                <i class="icofont icofont-inbox"></i> Inbox
+              <a class="nav-link " href="{{ route('message',['active'=>'inbox']) }}" >
+                <i class="fa fa-envelope-o"></i> ติดต่อ/สอบถาม
                   <?php  
                   $noti = \App\Helpers\Frontend::notifications(Auth::guard('c_user')->user()->id);
                    
-                  
+                   
                    ?>
                    @if($noti['count'] > 0)
                   <span class="label label-primary f-right">{{ $noti['count'] }}</span>
@@ -68,7 +85,7 @@
  
 
           </ul>
-          <ul class="p-20 label-list">
+         {{--  <ul class="p-20 label-list">
             <li>
               <h5>Status</h5>
             </li>
@@ -76,20 +93,20 @@
             <li>
               <a class="mail-work">New Message</a>
             </li>
-         {{--      <li>
+              <li>
                 <a class="mail-work" href="">Work</a>
               </li>
               <li>
                 <a class="mail-design" href="">Design</a>
-              </li> --}}
+              </li>
               
-           {{--    <li>
+           <li>
                 <a class="mail-friends" href="">Friends</a>
               </li>
               <li>
                 <a class="mail-office" href="">Office</a>
-              </li> --}}
-            </ul>
+              </li>  
+            </ul> --}}
           </div>
         </div>
         <!-- Left-side section end -->
@@ -97,39 +114,7 @@
         <div class="col-lg-9 col-xl-9">
           <div class="tab-content" id="pills-tabContent">
 
-            <div class="tab-pane fade" id="e-contact" role="tabpanel">
-
-              <div class="mail-body">
-
-                <div class="mail-body-content">
-
-                 <form action="{{ route('message_question') }}" method="POST">
-                  @csrf
-                  <div class="form-group">
-                    <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
-                  </div>
-               {{--  <div class="form-group">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <input type="email" class="form-control" placeholder="Cc">
-                    </div>
-                    <div class="col-md-6">
-                      <input type="email" class="form-control" placeholder="Bcc">
-                    </div>
-                  </div>
-                </div>  --}}
-
-                <textarea name="question"></textarea>
-
-                <div class="row mt-2 f-right mr-0"> 
-                 <button type="submit" class="btn btn-primary">ส่งข้อมูลการสอบถาม</button>
-               </div>
-             </form>
-
-           </div>
-         </div>
-
-       </div>
+    
 
        <div class="tab-pane fade show active" id="e-inbox" role="tabpanel">
 

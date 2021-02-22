@@ -9,87 +9,44 @@
     <h5 class="text-primary"> ข่าวสารและกิจกกรรม </h5>
     <hr>
 
+    @if(count($data) > 0)
     <div class="row">
       <div class="col-lg-12 col-xl-12 ">
         <div class="card card-main">
           <div class="card-block">
-            <div class="row ">
+            @foreach($data as $value)
+            <div class="row mt-2">
               <div class="col-md-3">
-                <a href="http://localhost/aiyara/product-detail/6/2">
-                  <img class="card-img-top img-fluid zoom" src="http://localhost/aiyara/local/public/products/p11609215944.jpg" alt="Card image cap">
+                <a href="{{ route('news_detail',['id'=>$value->id]) }}">
+                  <img class="card-img-top img-fluid zoom" src="{{asset($value->img_url.''.$value->img_name)}}" alt="Card image cap">
                 </a>
                 
               </div>
               <div class="col-md-9">
                 <div class="card-block p-0">
-                  <a href="http://localhost/aiyara/product-detail/6/2"><h4 class="card-title m-b-5 m-t-5">กิจกรรม ที่ 2  </h4></a>
-                  <p class="card-text"><b class="text-primary">เริ่ม 28/10/2020 ถึง 28/03/2021</b> </p>
+                  <a href="{{ route('news_detail',['id'=>$value->id]) }}"><h4 class="card-title m-b-5 m-t-5">{{$value->news_name}} </h4></a>
+                  <p class="card-text"><b class="text-primary">เริ่ม {{date('d/m/Y',strtotime($value->start_date))}} ถึง {{date('d/m/Y',strtotime($value->end_date))}}</b> </p>
                   
-                  <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                  <p>{!!$value->title!!}</p>  
                   
-                  <a href="http://localhost/aiyara/product-detail/6/2" class="btn btn-primary btn-round"><i class="ti-shopping-cart-full"></i> <b>View</b></a> 
+                  <a href="{{ route('news_detail',['id'=>$value->id]) }}" class="btn btn-primary btn-round"><i class="fa fa-newspaper-o"></i> <b>View</b></a> 
                 </div>
               </div>
             </div>
+            @endforeach
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-12 col-xl-12 ">
-        <div class="card card-main">
-          <div class="card-block">
-            <div class="row ">
-              <div class="col-md-3">
-                <a href="http://localhost/aiyara/product-detail/6/2">
-                  <img class="card-img-top img-fluid zoom" src="http://localhost/aiyara/local/public/products/p11609215944.jpg" alt="Card image cap">
-                </a>
-                
-              </div>
-              <div class="col-md-9">
-                <div class="card-block p-0">
-                  <a href="http://localhost/aiyara/product-detail/6/2"><h4 class="card-title m-b-5 m-t-5">กิจกรรม ที่ 2  </h4></a>
-                  <p class="card-text"><b class="text-primary">เริ่ม 28/10/2020 ถึง 28/03/2021</b> </p>
-                  
-                  <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                  
-                  <a href="http://localhost/aiyara/product-detail/6/2" class="btn btn-primary btn-round"><i class="ti-shopping-cart-full"></i> <b>View</b></a> 
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    @else
+    <div class="alert alert-warning border-warning">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="icofont icofont-close-line-circled"></i>
+      </button>
+      <strong>Data is Null! </strong>: ไม่มีข่าวสารและกิจกกรรมในช่วงนี้
     </div>
-
-    <div class="row">
-      <div class="col-lg-12 col-xl-12 ">
-        <div class="card card-main">
-          <div class="card-block">
-            <div class="row ">
-              <div class="col-md-3">
-                <a href="http://localhost/aiyara/product-detail/6/2">
-                  <img class="card-img-top img-fluid zoom" src="http://localhost/aiyara/local/public/products/p11609215944.jpg" alt="Card image cap">
-                </a>
-                
-              </div>
-              <div class="col-md-9">
-                <div class="card-block p-0">
-                  <a href="http://localhost/aiyara/product-detail/6/2"><h4 class="card-title m-b-5 m-t-5">กิจกรรม ที่ 2  </h4></a>
-                  <p class="card-text"><b class="text-primary">เริ่ม 28/10/2020 ถึง 28/03/2021</b> </p>
-                  
-                  <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                  
-                  <a href="http://localhost/aiyara/product-detail/6/2" class="btn btn-primary btn-round"><i class="ti-shopping-cart-full"></i> <b>View</b></a> 
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>s
-
-     
+    @endif
+ 
   </div>
 
 </div>

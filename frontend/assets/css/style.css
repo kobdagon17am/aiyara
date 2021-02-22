@@ -11899,8 +11899,8 @@ body.menu-bottom #collapse-menu {
 }
 
 .button-list .btn {
-    margin-bottom: 10px;
-    margin-right: 30px
+    margin-bottom: 4px;
+    margin-right: 4px
 }
 
 .Note-delete {
@@ -15844,11 +15844,11 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .feed-blog li.active-feed .feed-user-img:after {
-    border-color: #2ed8b6
+   /* border-color: #2ed8b6*/
 }
 
 .feed-blog li.diactive-feed .feed-user-img:after {
-    border-color: #FF5370
+    /*border-color: #FF5370*/
 }
 
 .seo-card .overlay-bg {
