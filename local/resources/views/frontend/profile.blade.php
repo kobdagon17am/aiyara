@@ -24,7 +24,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
               </div>
               <div class="panel-body">
                 <h5 class="m-b-10 text-" style="color: #000">คะแนนสะสม</h5>
-                <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aipocket) }} PV</span></h4>
+                <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv) }} PV</span></h4>
               </div>
               <div class="panel-footer text-success ">
                 <h6> {{ $customer_data->qualification_name }} </h6>

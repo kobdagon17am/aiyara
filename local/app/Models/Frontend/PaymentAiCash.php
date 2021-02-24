@@ -5,28 +5,16 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use Auth;
+use App\Models\Frontend\RunNumberPayment;
 
 class PaymentAiCash extends Model
 {
 	public static function payment_uploadfile($rs){
-		
-		$price = str_replace(',','',$rs->price);
-		$business_location_id = '1';
 		DB::BeginTransaction();
+		$price = str_replace(',','',$rs->price);
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('ai_cash')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = 'C'.date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		try{
 			$id = DB::table('ai_cash')->insertGetId(
@@ -66,23 +54,12 @@ class PaymentAiCash extends Model
 	}
 
 	public static function payment_not_uploadfile($rs){
-		 	$price = str_replace(',','',$rs->price);
-		$business_location_id = '1';
 		DB::BeginTransaction();
+
+		$price = str_replace(',','',$rs->price);
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('ai_cash')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = 'C'.date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		try{
 			$id = DB::table('ai_cash')->insertGetId(
@@ -123,23 +100,12 @@ class PaymentAiCash extends Model
 
 	public static function credit_card($rs){
 
-		$price = str_replace(',','',$rs->price);
-		$business_location_id = '1';
 		DB::BeginTransaction();
+		$price = str_replace(',','',$rs->price);
+		
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('ai_cash')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = 'C'.date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		try{
 

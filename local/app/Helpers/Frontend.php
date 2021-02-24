@@ -39,11 +39,11 @@ class Frontend{
 		$count_data = count($data);
 
 		if($count_data <= 0){
-		$rs = ['status'=>'fail','count'=>$count_data];
+			$rs = ['status'=>'fail','count'=>$count_data];
 
 		}else{
 
-		$rs = ['status'=>'success','data'=>$data,'count'=>$count_data];
+			$rs = ['status'=>'success','data'=>$data,'count'=>$count_data];
 
 		}
 
@@ -75,6 +75,16 @@ class Frontend{
 
 		$sum = $orders + $course_event_regis;
 		return $sum;
+
+	}
+
+	public static function check_reward_history($customer_id,$reward_id){
+		$data = DB::table('db_logs_qualification')
+		->where('customer_id_fk','=',$customer_id)
+		->where('qualification_id_fk','=',$reward_id)
+		->first();
+ 
+		return $data;
 
 	}
 
@@ -133,7 +143,7 @@ class Frontend{
 		->where('db_orders.approve_status','=',0) 
 		->count();
 
-	
+
 		$course_event_regis = DB::table('course_event_regis') 
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)

@@ -10,33 +10,22 @@ use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Pvpayment;
 use App\Models\Frontend\PaymentSentAddressOrder;
 use App\Models\Frontend\PaymentAddProduct;
+use App\Models\Frontend\RunNumberPayment;
+
 
 class Payment extends Model
 {
 	public static function payment_uploadfile($rs){
-		$business_location_id = '1'; 
-
-		DB::BeginTransaction();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		// เลขใบเสร็จ
 		// ปีเดือน[รันเลข]
 		// 2020110 00001
 
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-		if ($id) {
-			$maxId  = $id->id +1;
-		}else{
-			$maxId = 1;
-		}
-		
-		
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
-
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
+		 
 		try{
+			
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data = $cartCollection->toArray();
 			$total = Cart::session($rs->type)->getTotal();
@@ -63,6 +52,8 @@ class Payment extends Model
 
 			$orderstatus_id = 2;
 			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
+
+
 
 			if($rs_update_rontstore_and_address['status'] == 'fail'){
 				DB::rollback(); 
@@ -108,6 +99,8 @@ class Payment extends Model
 
 				$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
 
+
+
 				if($resule['status'] == 'success'){
 					DB::commit();
 					return $resule;
@@ -124,24 +117,14 @@ class Payment extends Model
 		}
 
 		public static function payment_not_uploadfile($rs){
-			
-			$business_location_id = '1';
-			DB::BeginTransaction();
+			 
+			$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 			$customer_id = Auth::guard('c_user')->user()->id;
-			$id = DB::table('db_orders')
-			->select('id')
-			->orderby('id','desc')
-			->first();
-
-			if ($id) {
-				$maxId  = $id->id +1;
-			}else{
-				$maxId = 1;
-			}
-			$maxId = substr("0000000".$maxId, -7);
-			$code_order = date('ymd').''.$maxId;
+		  
+			$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 			try{
+			
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data=$cartCollection->toArray();
 				$total = Cart::session($rs->type)->getTotal();
@@ -168,7 +151,7 @@ class Payment extends Model
 
 				$orderstatus_id = 1;
 				$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
-
+				 
 				if($rs_update_rontstore_and_address['status'] == 'fail'){
 					DB::rollback(); 
 					return $rs_update_rontstore_and_address;
@@ -222,23 +205,12 @@ class Payment extends Model
 
 	public static function credit_card($rs){
 
-		$business_location_id = '1';
-		DB::BeginTransaction();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
 
-		if ($id) {
-			$maxId  = $id->id +1;
-		}else{
-			$maxId = 1;
-		}
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
+		 
 		try{
-
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
 			$total = Cart::session($rs->type)->getTotal();
@@ -324,24 +296,12 @@ class Payment extends Model
 	}
 
 	public static function ai_cash($rs){
-		$business_location_id = '1';
-		DB::BeginTransaction();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
-		if ($id) {
-			$maxId  = $id->id +1;
-		}else{
-			$maxId = 1;
-		}
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
 		try{
-
-
+		
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
 			$total = Cart::session($rs->type)->getTotal();
@@ -427,26 +387,16 @@ class Payment extends Model
 		}
 	}
 
+	
 	public static function gift_voucher($rs){
-		$business_location_id = '1';
-		DB::BeginTransaction();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if ($id) {
-			$maxId  = $id->id +1;
-		}else{
-			$maxId = 1;
-		}
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		$data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
 		$gv_customer = $data_gv->sum_gv;
 
+		DB::BeginTransaction();
 		try{
 
 			$cartCollection = Cart::session($rs->type)->getContent();

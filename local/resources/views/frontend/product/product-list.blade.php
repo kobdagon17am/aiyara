@@ -81,8 +81,6 @@
 
           </div>
           <div class="modal-footer">
-           
-
             <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
             {{-- <a href="{{ route('profile')}}" class="btn btn-primary waves-effect waves-light ">Coupon All</a> --}}
           </div>
@@ -95,9 +93,7 @@
   <div class="row">
     <div class="card-block button-list" style="padding: 7px;margin-left: 10px;">
      @foreach($categories as $value) 
-      <button type="button" class="btn btn-success btn-sm btn-outline-success waves-effect md-trigger"  onclick="select_category('{{ $value->category_id }}')"><b style="color:#383636">{{$value->category_name}}</b></button>
-
-    {{--  <button type="button" onclick="select_category('{{ $value->category_id }}')" class="btn btn-primary btn-sm waves-effect waves-light">{{$value->category_name}} --}}
+     <button type="button" onclick="select_category('{{ $value->category_id }}')" class="btn btn-primary btn-sm btn-outline-primary"><font style="color:#000">{{$value->category_name}}</font>
       {{-- <span class="badge">90</span> --}}
     </button>
     @endforeach
@@ -348,7 +344,11 @@
   </div>
 </div>
 
+
+
+
 @endsection
+
 @section('js')
 <script type="text/javascript">
   function select_category(category_id){

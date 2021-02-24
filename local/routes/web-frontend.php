@@ -138,7 +138,7 @@ Route::get('product-history','Frontend\HistoryController@index')->name('product-
 Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive_product')->name('modal_qr_recive_product');
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
-Route::get('cart-payment-history/{code_order}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
+Route::get('cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 
 
 Route::get('giftvoucher_history','Frontend\GiftVoucherController@index')->name('giftvoucher_history');

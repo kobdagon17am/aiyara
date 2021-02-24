@@ -4,28 +4,17 @@ namespace App\Models\Frontend;
 use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
-use Auth;
+use Auth; 
 use Cart;
+use App\Models\Frontend\RunNumberPayment;
 class PaymentCourse extends Model
 {
 	public static function payment_uploadfile($rs){
-		$business_location_id = '1';
 
-		DB::BeginTransaction();
+		DB::BeginTransaction();		
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
@@ -97,21 +86,10 @@ class PaymentCourse extends Model
 	public static function payment_not_uploadfile($rs){
 		$business_location_id = '1';
 		DB::BeginTransaction();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
-
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
-
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
+ 
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -174,19 +152,10 @@ class PaymentCourse extends Model
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$id = DB::table('db_orders')
-		->select('id')
-		->orderby('id','desc')
-		->first();
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
+		$customer_id = Auth::guard('c_user')->user()->id;
+		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
-		if(empty($id)){
-			$maxId  = 1; 
-		}else{
-			$maxId  = $id->id +1; 
-		}
-
-		$maxId = substr("0000000".$maxId, -7);
-		$code_order = date('ymd').''.$maxId;
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -256,24 +225,14 @@ class PaymentCourse extends Model
 }
 
 public static function ai_cash($rs){
-	$business_location_id = '1'; 
+	 
 
 	DB::BeginTransaction();
+	 
+	$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 	$customer_id = Auth::guard('c_user')->user()->id;
+	$code_order = RunNumberPayment::run_number_order($business_location_id);
 
-	$id = DB::table('db_orders')
-	->select('id')
-	->orderby('id','desc')
-	->first();
-
-	if(empty($id)){
-		$maxId  = 1; 
-	}else{
-		$maxId  = $id->id +1; 
-	}
-
-	$maxId = substr("0000000".$maxId, -7);
-	$code_order = date('ymd').''.$maxId;
 	try{
 		$cartCollection = Cart::session($rs->type)->getContent();
 		$data=$cartCollection->toArray();

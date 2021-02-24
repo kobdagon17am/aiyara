@@ -6,7 +6,7 @@
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/multiselect/css/multi-select.css')}}">
  @endsection
  @section('conten')
- <?php //dd($customer); ?>
+ <?php //dd($address); ?>
  
  <div class="row"> 
  	<div class="col-md-8 col-sm-12">
@@ -192,7 +192,7 @@
  										</div>
  										<div class="col-md-6 col-sm-6 col-6">
  											<label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
- 											<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="tel_mobile" value="{{ $address->tel_mobile }}" readonly="">
+ 											<input type="text" class="form-control form-control-bold" placeholder="เบอร์โทรศัพท์" name="card_tel_mobile" value="{{ $address->tel_mobile }}" readonly="">
  										</div>
  									</div>
  									<div class="row m-t-5">

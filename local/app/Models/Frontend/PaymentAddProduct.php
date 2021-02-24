@@ -35,7 +35,7 @@ class PaymentAddProduct extends Model
 					'add_from'=>1,
 				]);
 
-				Cart::session($type)->remove($value['id']);
+				
 
 				}else{
 					$type_product = 'product';
@@ -55,6 +55,8 @@ class PaymentAddProduct extends Model
 				]);
 
 				}
+
+				Cart::session($type)->remove($value['id']);
 
 				
 			}

@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use Auth;
+use App\Models\Frontend\RunNumberPayment;
 class PvPayment extends Model
 {
 
@@ -18,9 +19,10 @@ class PvPayment extends Model
 			return $resule;
 		}
 
-		$pv = $order_data->pv_total;
+		$pv = $order_data->pv_total; 
 		$customer_id = $order_data->customers_id_fk;
 		$type_id = $order_data->orders_type_id_fk;
+		$business_location_id = $order_data->business_location_id_fk;
 
 		if(empty($order_id) || empty($admin_id)){
 			$resule = ['status'=>'fail','message'=>'Data is Null'];
@@ -38,57 +40,36 @@ class PvPayment extends Model
 
 				}
 
-				if($type_id == 6){
+				if($type_id == 6){//course
 
 					$orderstatus_id = 7;
 					$opc_type_order = 'course_event';
 
-				$last_code = DB::table('db_invoice_code')//เจนเลข payment order
-				->where('business_location_id','=',$order_data->business_location_id_fk)
-				->where('type_order','=','course_event')
-				->orderby('id','desc')
-				->first();
+					$run_pament_code = RunNumberPayment::run_payment_code($business_location_id,$opc_type_order);
+					 
+					if($run_pament_code['status'] == 'fail'){
+						$resule = ['status'=>'fail','message'=>$run_pament_code['message']];
+						DB::rollback();
+						return $resule;
+
+					}
+					$code_order = $run_pament_code['code_order'];
 
 
-				if($last_code){
-					$last_code = $last_code->order_payment_code;
-					$code = substr($last_code,-7);
-					$last_code = $code + 1;
+				}else{//product ทั่วไป
 
-					$num_code = substr("0000000".$last_code, -7);
-					$code_order = 'E'.date('ymd').''.$num_code;
+					$opc_type_order = 'product';
+					$run_pament_code = RunNumberPayment::run_payment_code($business_location_id,$opc_type_order);
+					 
+					if($run_pament_code['status'] == 'fail'){
+						$resule = ['status'=>'fail','message'=>$run_pament_code['message']];
+						DB::rollback();
+						return $resule;
 
-				}else{
-					$last_code = 1;
-					$maxId = substr("0000000".$last_code, -7);
-					$code_order = 'E'.date('ymd').''.$maxId;
+					}
+					$code_order = $run_pament_code['code_order'];
+
 				}
-
-
-			}else{
-
-				$opc_type_order = 'db_invoice_code';
-				$last_code = DB::table('db_invoice_code')//เจนเลข payment order
-				->where('business_location_id','=',$order_data->business_location_id_fk)
-				->where('type_order','=','product') 
-				->orderby('id','desc')
-				->first();
-
-				if($last_code){
-					$last_code = $last_code->order_payment_code;
-					$code = substr($last_code,-7);
-					$last_code = $code + 1;
-					$num_code = substr("0000000".$last_code, -7);
-					$code_order = 'R'.date('ymd').''.$num_code;
-
-
-				}else{
-					$last_code = 1;
-					$maxId = substr("0000000".$last_code, -7);
-					$code_order = 'R'.date('ymd').''.$maxId;
-				}
-
-			}
 
 
 			$update_order = DB::table('db_orders')//update บิล
@@ -105,10 +86,10 @@ class PvPayment extends Model
 				if($check_payment_code){
 					$update_order_payment_code = DB::table('db_invoice_code') 
 					->where('order_id',$order_id)
-
 					->update(['order_payment_status' => 'Success',
 						'order_payment_code'=>$code_order,
-						'business_location_id'=>$order_data->business_location_id_fk,
+						'business_location_id'=>$business_location_id,
+						'date_setting_code'=>date('ym'),
 					'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}else{
@@ -117,7 +98,8 @@ class PvPayment extends Model
 						'order_id'=>$order_id,
 						'order_payment_code'=>$code_order,
 						'order_payment_status'=>'Success',
-						'business_location_id'=>$order_data->business_location_id_fk,
+						'business_location_id'=>$business_location_id,
+						'date_setting_code'=>date('ym'),
 						'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}
@@ -374,14 +356,14 @@ class PvPayment extends Model
 						->first();
 
 						 $update_order_type_5 = DB::table('db_orders')//update บิล
-				      	->where('id',$order_id)
-				      	->update(['pv_banlance' => $pv_banlance->pv ]);
-				      
+						 ->where('id',$order_id)
+						 ->update(['pv_banlance' => $pv_banlance->pv ]);
+
 						//ไม่เข้าสถานะต้อง Approve
 					}elseif($type_id == 6){//couse อบรม
 
 						$resuleRegisCourse = Couse_Event::couse_register($order_id,$admin_id); 
-						 
+
 						if($resuleRegisCourse['status'] != 'success'){
 							DB::rollback();
 							return $resuleRegisCourse;
@@ -410,6 +392,7 @@ class PvPayment extends Model
 
 					}else{//ไม่เข้าเงื่อนไขได้เลย
 						$resule = ['status'=>'fail','message'=>'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];
+						DB::rollback();
 						return $resule;
 					}
 
