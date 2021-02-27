@@ -44,13 +44,13 @@ public function form($id=NULL)
   \DB::beginTransaction();
   try {
 
-    if( $id ){
+    if($id){
       $sRow = \App\Models\Backend\Orders::find($id);
     }else{
       $sRow = new \App\Models\Backend\Orders;
     }
 
-    $sRow->id_admin_check  = \Auth::user()->id;
+    $sRow->approver  = \Auth::user()->id;
     $sRow->updated_at  = now();
 
     if (@request('approved') != null ){
@@ -58,7 +58,10 @@ public function form($id=NULL)
     }
 
     if (@request('no_approved') != null ){
+
+  
       $sRow->status_slip  = 'false' ;
+      $sRow->order_status_id_fk  = '3' ; 
     }
 
     $sRow->save();
@@ -87,20 +90,23 @@ public function destroy($id)
 
 public function Datatable(){
 
- $sTable =  DB::table('orders')
- ->select('orders.*','orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
- ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
- ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
- ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
+ $sTable =  DB::table('db_orders')
+ ->select('db_orders.*','db_orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+ ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk') 
+ ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk') 
+ ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk') 
  ->where('dataset_order_status.lang_id','=','1')
  ->where('dataset_orders_type.lang_id','=','1')
- ->where('orders.type_id','=','6')
- ->where('orders.orderstatus_id','=','2')
- ->orderby('id','DESC');
+ ->where('db_orders.orders_type_id_fk','=','6')
+ ->where('db_orders.order_status_id_fk','=','2')
+ ->orderby('id','DESC')
+ ->get();
+
+
  $sQuery = \DataTables::of($sTable);
  return $sQuery
  ->addColumn('price', function($row) {
-  return number_format($row->price);
+  return number_format($row->sum_price);
 })
  ->addColumn('date', function($row) {
   return  date('d/m/Y H:i:s',strtotime($row->created_at));

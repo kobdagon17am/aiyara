@@ -6,6 +6,6 @@ use App\Models\InitModel;
 
 class Orders extends InitModel
 {
-    protected $table = 'orders';
+    protected $table = 'db_orders';
 
 }

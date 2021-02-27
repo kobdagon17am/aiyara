@@ -50,19 +50,19 @@ public function form($id=NULL)
       $sRow = new \App\Models\Backend\Orders;
     }
 
-    $sRow->id_admin_check  = \Auth::user()->id;
+    $sRow->approver  = \Auth::user()->id;
     $sRow->updated_at  = now();
 
     if (@request('approved') != null ){
-      $sRow->id_admin_check  = \Auth::user()->id;
+      $sRow->approver  = \Auth::user()->id;
       $sRow->status_slip  = 'true' ;
       $sRow->date_action_pv  = now();
     }
 
     if (@request('no_approved') != null ){
-      $sRow->id_admin_check  = \Auth::user()->id;
+      $sRow->approver  = \Auth::user()->id;
       $sRow->status_slip  = 'false' ;
-      $sRow->orderstatus_id  = '3' ; 
+      $sRow->order_status_id_fk  = '3' ; 
     }
 
     $sRow->save();
@@ -74,7 +74,6 @@ public function form($id=NULL)
    \DB::commit();
 
    return redirect()->action('backend\Po_approveController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-
 
  } catch (\Exception $e) {
   echo $e->getMessage();
@@ -91,24 +90,26 @@ public function destroy($id)
 
 public function Datatable(){
 
- $sTable =  DB::table('orders')
- ->select('orders.*','orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
- ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','orders.orderstatus_id')
- ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','orders.type_id') 
- ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','orders.pay_type_id') 
+ $sTable =  DB::table('db_orders')
+ ->select('db_orders.*','db_orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+ ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk') 
+ ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk') 
+ ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk') 
  ->where('dataset_order_status.lang_id','=','1')
  ->where('dataset_orders_type.lang_id','=','1')
- ->where('orders.type_id','!=','6')
- ->where('orders.orderstatus_id','=','2')
- ->orderby('id','DESC');
+ ->where('db_orders.orders_type_id_fk','!=','6')
+ ->where('db_orders.order_status_id_fk','=','2')
+ ->orderby('id','DESC')
+ ->get();
+
 
  $sQuery = \DataTables::of($sTable);
  return $sQuery
  ->addColumn('price', function($row) {
-  if($row->type_id == 7){
-    return number_format($row->price,2);
+  if($row->orders_type_id_fk == 7){
+    return number_format($row->sum_price,2);
   }else{
-    return number_format($row->price + $row->shipping,2);
+    return number_format($row->sum_price + $row->shipping_price,2);
   }
   
 })

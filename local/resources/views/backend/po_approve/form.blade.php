@@ -78,7 +78,7 @@
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <button type="submit" name="no_approved" class="btn btn-success btn-sm waves-effect font-size-16 " value='no_approved'>
+                            <button type="submit" name="" class="btn btn-success btn-sm waves-effect font-size-16 " value='no_approved'>
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                             </button>
 

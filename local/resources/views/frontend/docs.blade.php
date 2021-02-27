@@ -10,60 +10,7 @@
         <h4 class="sub-title"><i class="fa fa-file-text"></i> เอกสารการลงทะเบียน</h4>
       </div>
       <div class="card-block table-border-style">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th width="100">#</th>
-                <th>เอกสาร</th>
-                <th width="200">วันที่</th>
-                <th width="200">สถานะ</th>
-                <th>รายละเอียด</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php $i = 0; ?>
-              @foreach($data as $value)
-              <?php $i++;
-              if($value->type == 1){
-                $type = "บัตรประชาชน";
-              }elseif($value->type == 2){
-                $type = "หน้าบัญชีธนาคาร";
-              }elseif($value->type == 3) {
-                $type = "เอกสารการสมัคร";
-              }elseif($value->type == 4) {
-                $type = "ภาพใบหน้าพร้อมถือบัตรประชาชน";
-
-              }else{
-                $type = "อื่นๆ";
-              }
-
-              if ($value->status=='W'){
-                $status = "<span class='pcoded-badge label label-warning'>รอการอนุมัติ</span>";
-              }elseif ($value->status=='S') {
-                $status = "<span class='pcoded-badge label label-success'>ผ่านการอนุมัติ</span>";
-              }elseif ($value->status=='F') {
-                $status = "<span class='pcoded-badge label label-danger'>ไม่ผ่านการอนุมัติ</span>";
-                                                                # code...
-              }else{
-                $status = "อื่นๆ";
-              }
-
-              ?>
-              <tr>
-                <th scope="row">{{ $i }}</th>
-                <td>{{ $type }}</td>
-                <td>{{ date('d/m/Y',strtotime($value->created_at)) }}</td>
-                <td>{!! $status !!}</td>
-                <td>{!! $value->comment !!}</td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div> 
-
-        <hr>
-        <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการคะ </p>
+        
 
         <h4 class="sub-title"><i class="fa fa-upload"></i> ส่งเอกสารเพิ่มเติม</h4>
 
@@ -118,6 +65,61 @@
       </div>
 
     </form>
+
+    <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="100">#</th>
+                <th>เอกสาร</th>
+                <th width="200">วันที่</th>
+                <th width="200">สถานะ</th>
+                <th>รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php $i = 0; ?>
+              @foreach($data as $value)
+              <?php $i++;
+              if($value->type == 1){
+                $type = "บัตรประชาชน";
+              }elseif($value->type == 2){
+                $type = "หน้าบัญชีธนาคาร";
+              }elseif($value->type == 3) {
+                $type = "เอกสารการสมัคร";
+              }elseif($value->type == 4) {
+                $type = "ภาพใบหน้าพร้อมถือบัตรประชาชน";
+
+              }else{
+                $type = "อื่นๆ";
+              }
+
+              if ($value->status=='W'){
+                $status = "<span class='pcoded-badge label label-warning'>รอการอนุมัติ</span>";
+              }elseif ($value->status=='S') {
+                $status = "<span class='pcoded-badge label label-success'>ผ่านการอนุมัติ</span>";
+              }elseif ($value->status=='F') {
+                $status = "<span class='pcoded-badge label label-danger'>ไม่ผ่านการอนุมัติ</span>";
+                                                                # code...
+              }else{
+                $status = "อื่นๆ";
+              }
+
+              ?>
+              <tr>
+                <th scope="row">{{ $i }}</th>
+                <td>{{ $type }}</td>
+                <td>{{ date('d/m/Y',strtotime($value->created_at)) }}</td>
+                <td>{!! $status !!}</td>
+                <td>{!! $value->comment !!}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div> 
+
+        <hr>
+        <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการคะ </p>
 
 
   </div>
