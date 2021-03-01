@@ -1,6 +1,6 @@
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
- 
+
  @endsection
  @section('conten')
  <!-- Invoice card start -->
@@ -12,7 +12,7 @@
                 <h6>Information :</h6>
 
                 @if($order->delivery_location_status == 'sent_office')
-                <h6 class="m-0">{{ $order->office_name }}</h6> 
+                <h6 class="m-0">{{ $order->office_name }}</h6>
                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->office_tel }} @endif</p>
                 <p class="m-0">@if($order->office_email) Email. {{ $order->office_email }} @endif</p>
                 <p class="m-0">@if($order->office_house_no) {{ $order->office_house_no }} @endif {{-- @if($order->office_moo) M.{{ $order->office_moo }} @endif  --}} @if($order->office_soi) , {{ $order->office_soi }} @endif</p>
@@ -20,7 +20,7 @@
                 <p class="m-0">@if($order->office_road) Road {{ $order->office_road }} @endif @if($order->office_province), {{ $order->office_province }} @endif @if($order->office_zipcode) , {{ $order->office_zipcode }} @endif</p>
 
                 @else
-                <h6 class="m-0">{{ $order->name }}</h6> 
+                <h6 class="m-0">{{ $order->name }}</h6>
                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->tel }} @endif</p>
                 <p class="m-0">@if($order->email) Email. {{ $order->email }} @endif</p>
                 <p class="m-0">@if($order->house_no) {{ $order->house_no }} @endif @if($order->moo) M.{{ $order->moo }} @endif @if($order->house_name) , {{ $order->house_name }} @endif</p>
@@ -28,7 +28,7 @@
                 <p class="m-0">@if($order->road) ,Road. {{ $order->road }} @endif @if($order->province), {{ $order->province }} @endif @if($order->zipcode) , {{ $order->zipcode }} @endif</p>
 
                 @endif
-                
+
             </div>
             <div class="col-md-4 col-sm-6">
                 <h6>Order Information :</h6>
@@ -115,7 +115,7 @@
                     </thead>
                     <tbody>
                         @foreach($order_items as $value)
-                         
+
                         <tr>
                             <td>
                                 <h6>{{ $value->product_name }}</h6>
@@ -123,19 +123,48 @@
                                 @if($value->type_product == 'promotion')
 
                                 <ul>
-                                   <?php 
+                                   <?php
                                    $location_id = Auth::guard('c_user')->user()->business_location_id;
                                    $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk,$location_id);
                                     ?>
                                     @foreach($get_promotion_detail as $promotion_product)
                                     <li style="font-size: 12px">
-                                        <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }} 
+                                        <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
                                     </li>
                                     @endforeach
                                 </ul>
+                                @endif
 
+                                @if($value->type_product == 'giveaway')
+                                <ul>
+                                   <?php
+                                   $location_id = Auth::guard('c_user')->user()->business_location_id;
+                                   $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->giveaway_id_fk,$location_id);
+                                    ?>
+
+                                    @if($get_giveaway['giveaway_option'] == 1)
+                                      @foreach($get_giveaway['giveaway_product'] as $giveaway_product_value)
+
+                                      <li style="font-size: 12px">
+                                        <?php $sum_giveaway = $giveaway_product_value->product_amt*$value->amt ?>
+                                        <i class="icofont icofont-double-right text-success"></i> {{ $giveaway_product_value->product_name }} {{ $giveaway_product_value->product_amt }} {{ $giveaway_product_value->product_unit }}
+                                       x [{{$value->amt}}] <b> => {{$sum_giveaway}} {{ $giveaway_product_value->product_unit }}</b></li>
+                                      @endforeach
+                                    @else
+
+                                      <li style="font-size: 12px">
+                                        <?php $gv_giveaway = number_format($get_giveaway['giveaway']->giveaway_voucher*$value->amt) ?>
+                                        <i class="icofont icofont-double-right text-success"></i>GiftVoucher {{$get_giveaway['giveaway']->giveaway_voucher}} x [{{$value->amt}}]
+                                         <b> => {{$gv_giveaway}} GV </b>
+                                      </li>
+
+                                    @endif
+
+
+                                </ul>
                                 @endif
                             </td>
+
                             @if($order->orders_type_id_fk == 6)
                             <td ><b class="text-primary">{{ $value->ticket_number }}</b></td>
                             @endif
@@ -150,11 +179,11 @@
                             @else
                             <td>{{ number_format($value->amt * $value->selling_price,2) }}</td>
                             @endif
-                            
+
                         </tr>
                         @endforeach
-                        
-                        
+
+
                     </tbody>
                 </table>
             </div>
@@ -167,16 +196,16 @@
                 <tr>
                     <th>มูลค่าสินค้า : </th>
 
-                    <?php 
+                    <?php
 
-                    $price_vat =  $order->sum_price * ($order->vat/100); 
+                    $price_vat =  $order->sum_price * ($order->vat/100);
                     $price_vat_sum  = $order->sum_price - $price_vat;
                     ?>
                     <td> {{ number_format($price_vat_sum,2) }}</td>
                 </tr>
                 <tr>
                     <th>VAT({{ $order->vat }}%) : </th>
-                    <td> {{ number_format($price_vat,2) }}</td> 
+                    <td> {{ number_format($price_vat,2) }}</td>
                 </tr>
                 <tr>
                     <th>รวม : </th>
@@ -194,9 +223,9 @@
                     <td class="text-success"><b> {{ $order->pv_total }} PV </b></td>
                 </tr>
 
-                
+
                 @if($order->orders_type_id_fk == 5)
-                
+
                 <tr>
                     <td><strong>ยอดรวม : </strong></td>
                     <td align="right"><strong> {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
@@ -248,7 +277,7 @@
 
 
 @endsection
-@section('js') 
+@section('js')
 
 @endsection
 

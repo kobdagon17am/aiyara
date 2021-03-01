@@ -12,10 +12,10 @@ use App\Models\Frontend\PaymentSentAddressOrder;
 use App\Models\Frontend\PaymentAddProduct;
 use App\Models\Frontend\RunNumberPayment;
 
-
 class Payment extends Model
 {
 	public static function payment_uploadfile($rs){
+    DB::BeginTransaction();
 		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		// เลขใบเสร็จ
@@ -23,9 +23,7 @@ class Payment extends Model
 		// 2020110 00001
 
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
-		 
 		try{
-			
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data = $cartCollection->toArray();
 			$total = Cart::session($rs->type)->getTotal();
@@ -54,9 +52,8 @@ class Payment extends Model
 			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
 
-
 			if($rs_update_rontstore_and_address['status'] == 'fail'){
-				DB::rollback(); 
+				DB::rollback();
 				return $rs_update_rontstore_and_address;
 			}else{
 				$id= $rs_update_rontstore_and_address['id'];
@@ -79,7 +76,7 @@ class Payment extends Model
 					$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
 					if($rs_log_gift['status'] != 'success'){
-						DB::rollback(); 
+						DB::rollback();
 						$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
 						return $resule;
 					}
@@ -97,7 +94,7 @@ class Payment extends Model
 					}
 				}
 
-				$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
+				$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type,$business_location_id,$rs->pv_total);
 
 
 
@@ -109,7 +106,7 @@ class Payment extends Model
 					DB::rollback();
 					return $resule;
 				}
-			}catch(Exception $e) { 
+			}catch(Exception $e) {
 				DB::rollback();
 				return $e;
 
@@ -117,14 +114,13 @@ class Payment extends Model
 		}
 
 		public static function payment_not_uploadfile($rs){
-			 
+      DB::BeginTransaction();
 			$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 			$customer_id = Auth::guard('c_user')->user()->id;
-		  
+
 			$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 			try{
-			
 				$cartCollection = Cart::session($rs->type)->getContent();
 				$data=$cartCollection->toArray();
 				$total = Cart::session($rs->type)->getTotal();
@@ -151,13 +147,14 @@ class Payment extends Model
 
 				$orderstatus_id = 1;
 				$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
-				 
+
 				if($rs_update_rontstore_and_address['status'] == 'fail'){
-					DB::rollback(); 
+					DB::rollback();
 					return $rs_update_rontstore_and_address;
 				}else{
 					$id= $rs_update_rontstore_and_address['id'];
 				}
+
 
 
 			if($rs->type == 4){//เติม Ai-Stockist
@@ -177,14 +174,14 @@ class Payment extends Model
 				$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
 				if($rs_log_gift['status'] != 'success'){
-					DB::rollback(); 
+					DB::rollback();
 					$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
 					return $resule;
 				}
 
 			}
 
-			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type,$business_location_id,$rs->pv_total);
 
 			//$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
 					//return $resule;
@@ -204,12 +201,12 @@ class Payment extends Model
 	}
 
 	public static function credit_card($rs){
-
+    DB::BeginTransaction();
 		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
-		 
+
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -237,10 +234,10 @@ class Payment extends Model
 
 			$orderstatus_id = 5;
 			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
-			
+
 
 			if($rs_update_rontstore_and_address['status'] == 'fail'){
-				DB::rollback(); 
+				DB::rollback();
 				return $rs_update_rontstore_and_address;
 			}else{
 				$id= $rs_update_rontstore_and_address['id'];
@@ -263,15 +260,15 @@ class Payment extends Model
 				$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
 				if($rs_log_gift['status'] != 'success'){
-					DB::rollback(); 
+					DB::rollback();
 					$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
 					return $resule;
 				}
 
 			}
 
-			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
-					 
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type,$business_location_id,$rs->pv_total);
+
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
 				if($resulePv['status'] == 'success'){
@@ -301,7 +298,7 @@ class Payment extends Model
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
 		try{
-		
+
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
 			$total = Cart::session($rs->type)->getTotal();
@@ -330,7 +327,7 @@ class Payment extends Model
 			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
 			if($rs_update_rontstore_and_address['status'] == 'fail'){
-				DB::rollback(); 
+				DB::rollback();
 				return $rs_update_rontstore_and_address;
 			}else{
 				$id= $rs_update_rontstore_and_address['id'];
@@ -354,14 +351,14 @@ class Payment extends Model
 				$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
 				if($rs_log_gift['status'] != 'success'){
-					DB::rollback(); 
+					DB::rollback();
 					$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
 					return $resule;
 				}
 
 			}
 
-			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type,$business_location_id,$rs->pv_total);
 
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
@@ -387,7 +384,7 @@ class Payment extends Model
 		}
 	}
 
-	
+
 	public static function gift_voucher($rs){
 		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
@@ -413,12 +410,12 @@ class Payment extends Model
 				$gv = $rs->price + $rs->shipping;
 				$price_remove_gv = 0;
 			}
-			
+
 			$orderstatus_id = 2;
 			$rs_update_rontstore_and_address = PaymentSentAddressOrder::update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv);
 
 			if($rs_update_rontstore_and_address['status'] == 'fail'){
-				DB::rollback(); 
+				DB::rollback();
 				return $rs_update_rontstore_and_address;
 			}else{
 				$id= $rs_update_rontstore_and_address['id'];
@@ -428,13 +425,13 @@ class Payment extends Model
 			$rs_log_gift = GiftVoucher::log_gift($price_total,$customer_id,$id);
 
 			if($rs_log_gift['status'] != 'success'){
-				DB::rollback(); 
+				DB::rollback();
 				$resule = ['status'=>'fail','message'=>'rs_log_gift fail'];
 				return $resule;
 			}
 
 
-			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type);
+			$resule = PaymentAddProduct::payment_add_product($id,$customer_id,$rs->type,$business_location_id,$rs->pv_total);
 
 			if($resule['status'] == 'success'){
 				$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');

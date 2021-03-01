@@ -7,8 +7,8 @@
  @endsection
  @section('conten')
  <?php //dd($address); ?>
- 
- <div class="row"> 
+
+ <div class="row">
  	<div class="col-md-8 col-sm-12">
  		<form action="{{route('payment_submit')}}" method="POST" enctype="multipart/form-data">
  			@csrf
@@ -21,7 +21,7 @@
  			<input type="hidden" name="price_total" value="{{ $bill['price_total'] }}">
  			<input type="hidden" name="pv_total" value="{{ $bill['pv_total'] }}">
  			<input type="hidden" name="price_total_type5" value="{{$bill['price_total_type5'] }}">
- 			
+
  			<!-- Choose Your Payment Method start -->
  			<div class="card card-border-success">
  				<div class="card-header p-3">
@@ -39,7 +39,7 @@
  					<h5>คอร์สอบรม</h5>
  					@else
  					<h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
- 					@endif  
+ 					@endif
  					{{-- <div class="card-header-right"></div> --}}
  				</div>
  				<div class="card-block payment-tabs">
@@ -60,7 +60,7 @@
  						</li>
  						@endif
 
- 						
+
 
  					{{-- <li class="nav-item">
  						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
@@ -84,13 +84,13 @@
  										<div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="sent_address('sent_address')" name="receive" value="sent_address" checked="checked">
- 												<i class="helper"></i><b>จัดส่ง</b> 
+ 												<i class="helper"></i><b>จัดส่ง</b>
  											</label>
  										</div>
  										<div class="radio radio-inline">
  											<label>
- 												<input type="radio" onchange="sent_address('sent_address_card')" name="receive" value="sent_address_card" > 
- 												<i class="helper"></i><b>ตามบัตรประชาชน</b> 
+ 												<input type="radio" onchange="sent_address('sent_address_card')" name="receive" value="sent_address_card" >
+ 												<i class="helper"></i><b>ตามบัตรประชาชน</b>
  											</label>
  										</div>
 
@@ -104,7 +104,7 @@
  										<div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="sent_address('sent_other')" id="sent_other" name="receive" value="sent_other" >
- 												<i class="helper"></i><b>อื่นๆ</b> 
+ 												<i class="helper"></i><b>อื่นๆ</b>
  											</label>
  										</div>
 
@@ -161,7 +161,7 @@
 
  										<div class="col-sm-4">
  											<label>จังหวัด <b class="text-danger">*</b></label>
- 											<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province"  value="{{ $address->provinces_name }}" readonly=""> 
+ 											<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province"  value="{{ $address->provinces_name }}" readonly="">
  											{{-- <input type="hidden" name="province" value="{{ $address->provinces_id }}"> --}}
  										</div>
 
@@ -177,7 +177,7 @@
  										</div>
 
  										<div class="col-sm-4">
- 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label>
  											<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $address->zipcode }}" readonly="">
  										</div>
  									</div>
@@ -245,7 +245,7 @@
  										</div>
 
  										<div class="col-sm-4">
- 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label> 
+ 											<label>รหัสไปษณีย์ <b class="text-danger">*</b></label>
  											<input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" name="card_zipcode" value="{{ $address_card->card_zipcode }}" readonly="">
  										</div>
  									</div>
@@ -331,7 +331,7 @@
  										<div class="col-sm-4">
  											<label>จังหวัด <font class="text-danger">*</font></label>
  											<select class="js-example-basic-single col-sm-12 sent_address_other" id="province" name="other_province">
- 												<option value=""> Select </option> 
+ 												<option value=""> Select </option>
  												@foreach($provinces as $value_provinces)
  												<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
  												@endforeach
@@ -342,7 +342,7 @@
  									</div>
 
  									<div class="form-group row m-t-5">
- 										
+
  										<div class="col-sm-4">
  											<label>เขต/อำเภอ <font class="text-danger">*</font></label>
  											<select class="js-example-basic-single col-sm-12 sent_address_other" name="other_district" id="district">
@@ -352,7 +352,7 @@
 
  										<div class="col-sm-4">
  											<label>แขวง/ตำบล <font class="text-danger">*</font></label>
- 											<select class="js-example-basic-single col-sm-12 sent_address_other" name="other_district_sub" id="district_sub"> 
+ 											<select class="js-example-basic-single col-sm-12 sent_address_other" name="other_district_sub" id="district_sub">
  												<option value=""> Select </option>
 
  											</select>
@@ -381,7 +381,7 @@
  								@endif
 
 
- 								@if($bill['price_total_type5'] == 0 and $bill['type'] == 5) 
+ 								@if($bill['price_total_type5'] == 0 and $bill['type'] == 5)
  								<div class="row">
  									<div class="col-md-12 col-xl-12">
  										<div class="card bg-c-pink order-card m-b-0">
@@ -391,7 +391,7 @@
  														<h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
  													</div>
  													<div class="col-md-4 col-sx-4 col-4">
- 														<?php  
+ 														<?php
  														$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
  														?>
  														<h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
@@ -442,7 +442,7 @@
  								</div>
 
 
- 
+
  								@else
 
  								<div class="demo-container card-block">
@@ -469,7 +469,7 @@
  														<input type="radio" onchange="open_input(3)" id="ai_cast" name="pay_type" value="3">
  														<i class="helper"></i><b>Ai-Cash</b>
  													</label>
- 												</div> 
+ 												</div>
 
 
  										{{-- <div class="radio radio-inline">
@@ -502,11 +502,11 @@
  										<div class="col-xs-6 p-1">
  											<button class="btn btn-primary btn-block" type="submit" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
  										</div>
- 										
- 										
+
+
  									</div>
  								</div>
- 								
+
  							</div>
 
  						</div>
@@ -522,12 +522,12 @@
  <div class="col-md-4">
  	<div class="card card-border-success">
  		<div class="card-header">
- 			<h3>สรุปรายการสั่งซื้อ</h3>
+ 			<h4>สรุปรายการสั่งซื้อ</h4>
  			{{--  <span class="label label-default f-right"> 28 January, 2015 </span> --}}
  		</div>
  		<div class="card-block">
  			<div class="col-md-12">
- 				<table class="table table-responsive" >
+ 				<table class="table table-responsive m-b-0" >
  					<tr>
  						<td><strong id="quantity_bill">มูลค่าสินค้า ({{ $bill['quantity'] }}) ชิ้น</strong></td>
  						<td align="right"><strong id="price"> {{ number_format($bill['price_vat'],2) }} </strong></td>
@@ -542,7 +542,7 @@
  					</tr>
 
  					@if($bill['type'] != 6)
- 					
+
  					<tr>
  						<td><strong>ค่าจัดส่ง</strong></td>
  						<td align="right"><strong > {{  number_format($bill['shipping'],2) }}</strong></td>
@@ -550,7 +550,7 @@
 
  					@endif
  					@if($bill['type'] == 5)
- 					<?php  
+ 					<?php
  					$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
  					?>
  					<tr>
@@ -589,13 +589,45 @@
  						</td>
  					</tr>
  					@endif
- 					
+
  					<tr>
  						<td><strong>คะแนนที่ได้รับ</strong></td>
  						<td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>
  					</tr>
 
  				</table>
+         <hr m-t-2>
+         @if($check_giveaway['status']== 'success')
+
+         <h4 class="text-danger">Promotion Free </h4>
+         @endif
+
+         <table class="table table-responsive m-b-0">
+           @foreach ($check_giveaway['s_data'] as $giveaway_value)
+           <?php //dd($giveaway_value); ?>
+          <tr class="table-danger">
+            <td><strong >{{$giveaway_value['name']}} x [{{$giveaway_value['count_free']}}]</strong></td>
+            <td>รวม</td>
+          </tr>
+          @if($giveaway_value['type'] == 1)
+          {{-- Product --}}
+          @foreach($giveaway_value['product'] as $product_value)
+            <tr>
+              <td><strong style="font-size: 12px">{{$product_value->product_name}} [{{$product_value->product_amt}}] x [{{$giveaway_value['count_free']}}]</strong></td>
+              <td align="right"><strong> {{ $product_value->product_amt * $giveaway_value['count_free']}} {{$product_value->product_unit}}</strong></td>
+            </tr>
+          @endforeach
+          @else
+          {{-- GiftVoucher --}}
+          <tr>
+            <td><strong style="font-size: 12px">GiftVoucher {{$giveaway_value['gv']}} x [{{$giveaway_value['count_free']}}]</strong></td>
+            <?php $gv_total = $giveaway_value['gv'] * $giveaway_value['count_free']; ?>
+            <td align="right"><strong > {{number_format($gv_total)}} GV</strong></td>
+          </tr>
+          @endif
+          @endforeach
+
+         </table>
  				<div class="row" align="center">
  					<a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-warning btn-block" ><font style="color: #000">เลือกสินค้าเพิ่มเติม</font> </a>
  				</div>
@@ -636,10 +668,10 @@
 		}
 	});
 
-	
+
 	function next(){
 		var check_sent_other = document.getElementById("sent_other").checked;
-		
+
 		if(check_sent_other == true){
 			var other_name = $('#other_name').val();
 			var other_tel_mobile = $('#other_tel_mobile').val();
@@ -714,7 +746,7 @@
 				document.getElementById("credit-card").classList.add('active');
 				document.getElementById("nav_card").classList.add('active');
 
-				
+
 			}
 		}else {
 			document.getElementById("address").classList.remove('active');
@@ -722,7 +754,7 @@
 			document.getElementById("credit-card").classList.add('active');
 			document.getElementById("nav_card").classList.add('active');
 
-			
+
 		}
 
 
@@ -733,31 +765,31 @@
 
 		if(type_sent == 'sent_address'){
 			document.getElementById("sent_address").style.display = 'block';
-			document.getElementById("sent_address_card").style.display = 'none'; 
-			document.getElementById("sent_address_other").style.display = 'none'; 
+			document.getElementById("sent_address_card").style.display = 'none';
+			document.getElementById("sent_address_other").style.display = 'none';
 			document.getElementById("sent_office").style.display = 'none';
-			$('.sent_address_other').prop('required',false);  
+			$('.sent_address_other').prop('required',false);
 
 		}else if(type_sent == 'sent_address_card'){
 			document.getElementById("sent_address").style.display = 'none';
-			document.getElementById("sent_address_card").style.display = 'block'; 
-			document.getElementById("sent_address_other").style.display = 'none'; 
+			document.getElementById("sent_address_card").style.display = 'block';
+			document.getElementById("sent_address_other").style.display = 'none';
 			document.getElementById("sent_office").style.display = 'none';
-			$('.sent_address_other').prop('required',false);  
+			$('.sent_address_other').prop('required',false);
 
 		}else if(type_sent == 'sent_office' ){
 			document.getElementById("sent_address").style.display = 'none';
-			document.getElementById("sent_address_card").style.display = 'none'; 
-			document.getElementById("sent_address_other").style.display = 'none'; 
-			document.getElementById("sent_office").style.display = 'block'; 
-			$('.sent_address_other').prop('required',false); 
+			document.getElementById("sent_address_card").style.display = 'none';
+			document.getElementById("sent_address_other").style.display = 'none';
+			document.getElementById("sent_office").style.display = 'block';
+			$('.sent_address_other').prop('required',false);
 		}else if(type_sent == 'sent_other'){
 			document.getElementById("sent_address").style.display = 'none';
-			document.getElementById("sent_address_card").style.display = 'none'; 
-			document.getElementById("sent_address_other").style.display = 'block'; 
+			document.getElementById("sent_address_card").style.display = 'none';
+			document.getElementById("sent_address_other").style.display = 'block';
 			document.getElementById("sent_office").style.display = 'none';
 
-			$('.sent_address_other').prop('required',true); 
+			$('.sent_address_other').prop('required',true);
 
 		}else{
 
@@ -769,7 +801,7 @@
 			alert('เลือกที่อยู่ไม่ถูกต้อง');
 		}
 
-		
+
 	}
 
 
@@ -884,9 +916,9 @@
 			url: "{{ route('location') }}",
 			data: {id:id_province,function:'provinces'},
 			success: function(data){
-				$('#district').html(data); 
-				$('#district_sub').val('');  
-        // $('#zipcode').val(''); 
+				$('#district').html(data);
+				$('#district_sub').val('');
+        // $('#zipcode').val('');
     }
 });
 
@@ -904,9 +936,9 @@
 				url: "{{ route('location') }}",
 				data: {id:id_province,function:'provinces'},
 				success: function(data){
-					$('#district').html(data); 
-					$('#district_sub').val('');  
-        // $('#zipcode').val(''); 
+					$('#district').html(data);
+					$('#district_sub').val('');
+        // $('#zipcode').val('');
     }
 });
 
@@ -917,7 +949,7 @@
 			url: "{{ route('location') }}",
 			data: {id:id_district,function:'district'},
 			success: function(data){
-				$('#district_sub').html(data);  
+				$('#district_sub').html(data);
 			}
 		});
 	});

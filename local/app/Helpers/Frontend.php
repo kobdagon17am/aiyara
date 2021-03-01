@@ -17,11 +17,11 @@ class Frontend{
 
 
 		$customer =  DB::table('customers')
-		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name') 
-		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id') 
+		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name')
+		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
 		->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 		->where('customers.id','=',$id)
-		->first(); 
+		->first();
 
 
 		return $customer;
@@ -30,9 +30,9 @@ class Frontend{
 	public static function notifications($customer_id){
 
 		$data = DB::table('pm')
-		->select('*') 
+		->select('*')
 		->where('customers_id_fk','=',$customer_id)
-		->where('see_status','=',0)    
+		->where('see_status','=',0)
 		->orderby('created_at','DESC')
 		->get();
 
@@ -55,10 +55,10 @@ class Frontend{
 	// 	$customer = DB::table('customers_detail')
 	// 	->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
 	// 	->where('customer_id','=',$id)
-	// 	->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province') 
-	// 	->leftjoin('dataset_amphures','dataset_amphures.province_id','=','dataset_provinces.id') 
-	// 	->leftjoin('dataset_districts','dataset_districts.amphure_id','=','dataset_amphures.id') 
-	// 	->first(); 
+	// 	->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province')
+	// 	->leftjoin('dataset_amphures','dataset_amphures.province_id','=','dataset_provinces.id')
+	// 	->leftjoin('dataset_districts','dataset_districts.amphure_id','=','dataset_amphures.id')
+	// 	->first();
 	// 	return $customer;
 	// }
 
@@ -69,7 +69,7 @@ class Frontend{
 		->where('approve_status','=',0)
 		->count();
 
-		$course_event_regis = DB::table('course_event_regis') 
+		$course_event_regis = DB::table('course_event_regis')
 		->where('ce_id_fk',$ce_id)
 		->count();
 
@@ -83,7 +83,7 @@ class Frontend{
 		->where('customer_id_fk','=',$customer_id)
 		->where('qualification_id_fk','=',$reward_id)
 		->first();
- 
+
 		return $data;
 
 	}
@@ -93,7 +93,7 @@ class Frontend{
 		$promotion_detail = DB::table('promotions_products')
 		->select('promotions_products.promotion_id_fk','promotions_products.product_id_fk','promotions_products.product_amt','products_details.product_name','products_cost.member_price'
 			,'dataset_product_unit.group_id as unit_id','dataset_product_unit.product_unit as unit_name')
-		->leftjoin('products','products.id','=','promotions_products.product_id_fk') 
+		->leftjoin('products','products.id','=','promotions_products.product_id_fk')
 		->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
 		->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
 
@@ -103,11 +103,35 @@ class Frontend{
 		->where('dataset_product_unit.lang_id', '=',1)
 		->where('products_cost.business_location_id','=',$location_id)
 		->get();
-		//dd($promotion_detail); 
+		//dd($promotion_detail);
 
 		return $promotion_detail;
 
 	}
+
+  public static function get_giveaway_detail($giveaway_id,$location_id){
+
+    $giveaway =  DB::table('db_giveaway')
+    ->where('business_location_id_fk','=',$location_id)
+    ->where('id','=',$giveaway_id)
+    ->first();
+
+    $giveaway_detail =  DB::table('db_giveaway_products')
+    ->select('products_details.product_id_fk','products_details.product_name','dataset_product_unit.product_unit','db_giveaway_products.product_amt')
+    ->leftJoin('products_details','products_details.product_id_fk','=','db_giveaway_products.product_id_fk')
+    ->leftJoin('dataset_product_unit','dataset_product_unit.group_id','=','db_giveaway_products.product_unit')
+    ->where('db_giveaway_products.giveaway_id_fk','=',$giveaway_id)
+    ->where('products_details.lang_id','=',$location_id)
+    ->where('dataset_product_unit.lang_id','=',$location_id)
+    ->get();
+
+    $resule = ['giveaway_option'=>$giveaway->giveaway_option_id_fk,'giveaway'=>$giveaway,'giveaway_product'=>$giveaway_detail];
+
+		return $resule;
+
+	}
+
+
 
 	public static function get_ce_register_per_customer_perday($ce_id,$customer_id){//ต่อวัน
 
@@ -115,15 +139,15 @@ class Frontend{
 		//$date_now = '2021-01-13';
 
 
-		$orders = DB::table('db_order_products_list') 
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk') 
+		$orders = DB::table('db_order_products_list')
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk')
 		->where('db_order_products_list.course_id_fk','=',$ce_id)
 		->where('db_orders.customers_id_fk','=',$customer_id)
 		->whereDate('db_orders.created_at','=',$date_now)
-		->where('db_orders.approve_status','=',0) 
+		->where('db_orders.approve_status','=',0)
 		->count();
 
-		$course_event_regis = DB::table('course_event_regis') 
+		$course_event_regis = DB::table('course_event_regis')
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)
 		->whereDate('created_at','=',$date_now)
@@ -137,14 +161,14 @@ class Frontend{
 	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อวัน
 
 		$orders = DB::table('db_order_products_list')
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk') 
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk')
 		->where('db_order_products_list.course_id_fk','=',$ce_id)
 		->where('db_orders.customers_id_fk','=',$customer_id)
-		->where('db_orders.approve_status','=',0) 
+		->where('db_orders.approve_status','=',0)
 		->count();
 
 
-		$course_event_regis = DB::table('course_event_regis') 
+		$course_event_regis = DB::table('course_event_regis')
 		->where('ce_id_fk',$ce_id)
 		->where('customers_id_fk','=',$customer_id)
 		->count();
@@ -156,7 +180,7 @@ class Frontend{
 	}
 
 	public static function check_mt_active($customer_id){
-		$data = DB::table('customers') 
+		$data = DB::table('customers')
 		->where('id','=',$customer_id)
 		->first();
 
@@ -172,7 +196,7 @@ class Frontend{
 				}else{
 					$date_mt_active= date('d/m/Y',strtotime($data->pv_mt_active));
 				}
-				
+
 				$resule = ['status'=>'success','type'=>'N','message'=>'Not Active','date'=>$date_mt_active];
 
 				return $resule;
@@ -188,7 +212,7 @@ class Frontend{
 	}
 
 	public static function check_tv_active($customer_id){
-		$data = DB::table('customers') 
+		$data = DB::table('customers')
 		->where('id','=',$customer_id)
 		->first();
 
@@ -198,7 +222,7 @@ class Frontend{
 
 		}else{
 			if(empty($data->pv_tv_active) || (strtotime($data->pv_tv_active) < strtotime(date('Ymd')))){
-				
+
 				$date_tv_active= date('d/m/Y',strtotime($data->pv_tv_active));
 				$resule = ['status'=>'success','type'=>'N','message'=>'Not Active','date'=>$date_tv_active];
 
@@ -214,10 +238,10 @@ class Frontend{
 
 	}
 
-	public static function check_customer_directsponsor($customer_id){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C 
+	public static function check_customer_directsponsor($customer_id){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C
 
 		$a =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id) 
+		->where('customers.introduce_id','=',$customer_id)
 		->where('introduce_type','=','A')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')
@@ -225,15 +249,15 @@ class Frontend{
 		->count();
 
 		$b =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id) 
+		->where('customers.introduce_id','=',$customer_id)
 		->where('introduce_type','=','B')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')
 		->where('package_id','!=',null)
-		->count(); 
+		->count();
 
 		$c =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id) 
+		->where('customers.introduce_id','=',$customer_id)
 		->where('introduce_type','=','C')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')
@@ -264,9 +288,9 @@ class Frontend{
 
 		//dd($c);
 		$data = ['A'=>$a,'B'=>$b,'C'=>$c,'reward_bonus'=>$reward_bonus];
-		return $data;  
+		return $data;
 
-	} 
+	}
 
 }
 ?>
