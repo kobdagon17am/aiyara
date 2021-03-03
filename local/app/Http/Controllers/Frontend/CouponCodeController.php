@@ -91,40 +91,37 @@ public static function dt_coupon_code(Request $request){
         ->orderby('db_promotion_cus.pro_status','ASC')
        ->get();
 
+
+
 // dd($request->input('status'));
 
    }else{
     $status = $request->status;
     $search=$request->input('search.value');
-    $date = date('Y-m-d H:i:s');
-        //$status=$request->input('status');
+    $date = date('Y-m-d');
 
-        //dd($status);
+    // <option value="">ทั้งหมด</option>
+    // <option value="1">ใช้งานได้(Usable)</option>
+    // <option value="2">ถูกใช้แล้ว(Used)</option>
+    // <option value="expiry_date">หมดอายุ(Expri)</option>
+    // dd($status);
 
      $totalData =  DB::table('db_promotion_cus')
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
        ->where('db_promotion_code.approve_status','=',1)
        ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
+       ->whereRaw(("case
+       WHEN '{$status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
+       WHEN '{$status}' = 2 THEN db_promotion_cus.pro_status = 2
+       WHEN '{$status}' = 'expiry_date' THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate < '{$date}'
+       END"))
+       ->whereRaw( "(db_promotion_cus.promotion_code LIKE '%{$search}%')" )
        ->count();
        $totalFiltered = $totalData;
        $limit = $request->input('length');
        $start = $request->input('start');
 
-        //dd($query);
-        //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir');
-
-    // $gift_voucher =  DB::table('log_gift_voucher')
-    // ->select('log_gift_voucher.*','orders.code_order')
-    // ->leftjoin('orders', 'orders.id', '=', 'log_gift_voucher.order_id')
-    // ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
-    // ->whereRaw(("case WHEN '{$status}' = 'success' THEN log_gift_voucher.status = 'success' || log_gift_voucher.status = 'order'  WHEN '{$status}' = 'cancel' THEN log_gift_voucher.status = 'cancel'
-    //     else 1 END"))
-    // ->whereRaw("(orders.code_order LIKE '%{$search}%')" )
-    // ->limit($limit)
-    // ->orderby('id','DESC')
-    // ->get();
 
     $coupon =  DB::table('db_promotion_cus')
        ->select('db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
@@ -132,7 +129,13 @@ public static function dt_coupon_code(Request $request){
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
        ->where('db_promotion_code.approve_status','=',1)
        ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
-       ->whereRaw("(db_promotion_cus.promotion_code LIKE '%{$search}%')" )
+
+       ->whereRaw(("case
+       WHEN '{$status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
+       WHEN '{$status}' = 2 THEN db_promotion_cus.pro_status = 2
+       WHEN '{$status}' = 'expiry_date' THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate < '{$date}'
+       END"))
+       ->whereRaw( "(db_promotion_cus.promotion_code LIKE '%{$search}%')" )
        ->offset($start)
        ->limit($limit)
        ->orderby('db_promotion_cus.pro_status','ASC')

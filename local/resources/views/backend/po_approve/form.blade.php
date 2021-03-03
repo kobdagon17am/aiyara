@@ -52,7 +52,7 @@
                             @ELSE
                             <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}" class="grow" width="200px">
                             @ENDIF
-                            
+
                           </div>
                         </div>
                   <!--       <div class="form-group row">
@@ -71,14 +71,14 @@
                             </a>
                           </div>
                           <div class="col-md-6 text-right">
-                            
+
                             <button type="submit" name="approved" class="btn btn-primary btn-sm waves-effect font-size-16 " value='approved'>
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
-                            </button> 
+                            </button>
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <button type="submit" name="" class="btn btn-success btn-sm waves-effect font-size-16 " value='no_approved'>
+                            <button type="submit" name="no_approved" class="btn btn-success btn-sm waves-effect font-size-16 " value='no_approved'>
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                             </button>
 
@@ -100,8 +100,8 @@
 @section('script')
 
 <script>
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";  
+var sU = "{{@$sU}}";
+var sD = "{{@$sD}}";
 var orders_id = "{{@$sRow->id?@$sRow->id:0}}";
 // alert(orders_id);
 var oTable;
@@ -127,7 +127,7 @@ $(function() {
                 },
             method: 'POST',
           },
-            
+
         columns: [
             {data: 'id', title :'PO-ID', className: 'text-center w50'},
             {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
@@ -140,11 +140,11 @@ $(function() {
               }else{
                   return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
               }
-            }}, 
+            }},
             {data: 'date', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          
+
         }
 
     });

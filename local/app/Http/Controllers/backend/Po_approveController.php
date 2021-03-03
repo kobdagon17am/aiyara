@@ -45,6 +45,7 @@ public function form($id=NULL)
   try {
 
     if( $id ){
+
       $sRow = \App\Models\Backend\Orders::find($id);
     }else{
       $sRow = new \App\Models\Backend\Orders;
@@ -54,15 +55,16 @@ public function form($id=NULL)
     $sRow->updated_at  = now();
 
     if (@request('approved') != null ){
-      $sRow->approver  = \Auth::user()->id;
+
       $sRow->status_slip  = 'true' ;
+      $sRow->order_status_id_fk  = '5' ;
       $sRow->date_action_pv  = now();
     }
 
-    if (@request('no_approved') != null ){
-      $sRow->approver  = \Auth::user()->id;
+    if(@request('no_approved') != null ){
+
       $sRow->status_slip  = 'false' ;
-      $sRow->order_status_id_fk  = '3' ; 
+      $sRow->order_status_id_fk  = '3' ;
     }
 
     $sRow->save();
@@ -91,10 +93,10 @@ public function destroy($id)
 public function Datatable(){
 
  $sTable =  DB::table('db_orders')
- ->select('db_orders.*','db_orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
- ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk') 
- ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk') 
- ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk') 
+ ->select('db_orders.*','db_orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
+ ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
+ ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+ ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
  ->where('dataset_order_status.lang_id','=','1')
  ->where('dataset_orders_type.lang_id','=','1')
  ->where('db_orders.orders_type_id_fk','!=','6')
@@ -111,7 +113,7 @@ public function Datatable(){
   }else{
     return number_format($row->sum_price + $row->shipping_price,2);
   }
-  
+
 })
  ->addColumn('date', function($row) {
   return  date('d/m/Y H:i:s',strtotime($row->created_at));

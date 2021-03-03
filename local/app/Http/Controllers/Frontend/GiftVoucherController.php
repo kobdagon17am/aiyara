@@ -64,7 +64,7 @@ class GiftVoucherController extends Controller
 
         $totalData =  DB::table('gift_voucher')
         ->where('gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
-        ->whereRaw(("case WHEN '{$status}' = 'not_expiry_date' THEN gift_voucher.expiry_date > '{$date}' WHEN '{$status}' = 'expiry_date' THEN  gift_voucher.expiry_date < '{$date}'
+        ->whereRaw(("case WHEN '{$status}' = 'not_expiry_date' THEN gift_voucher.expiry_date < '{$date}' WHEN '{$status}' = 'expiry_date' THEN  gift_voucher.expiry_date >= '{$date}'
             else 1 END"))
         ->whereRaw("(gift_voucher.code LIKE '%{$search}%')" )
         ->count();
@@ -80,7 +80,7 @@ class GiftVoucherController extends Controller
         $gift_voucher =  DB::table('gift_voucher')
         ->select('*')
         ->where('gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
-        ->whereRaw(("case WHEN '{$status}' = 'expiry_date' THEN gift_voucher.expiry_date > '{$date}' WHEN '{$status}' = 'not_expiry_date' THEN  gift_voucher.expiry_date < '{$date}'
+        ->whereRaw(("case WHEN '{$status}' = 'expiry_date' THEN gift_voucher.expiry_date < '{$date}' WHEN '{$status}' = 'not_expiry_date' THEN  gift_voucher.expiry_date >= '{$date}'
             else 1 END"))
         ->whereRaw("(gift_voucher.code LIKE '%{$search}%')" )
         ->limit($limit)
@@ -101,11 +101,11 @@ class GiftVoucherController extends Controller
 
         if (empty($value->expiry_date)){
          $nestedData['expiry_date'] = '';
-     }elseif( $expiry_date > strtotime(date('Y-m-d H:i:s')) ) {
-       $nestedData['expiry_date'] = '<label class="label label-inverse-success"><b>'.date('d-m-Y H:i:s',$expiry_date).'</b></label>';
+     }elseif( $expiry_date <= strtotime(date('Y-m-d H:i:s')) ) {
+       $nestedData['expiry_date'] = '<label class="label label-inverse-danger"><b>'.date('d-m-Y H:i:s',$expiry_date).'</b></label>';
 
    }else{
-    $nestedData['expiry_date'] = '<label class="label label-inverse-danger"><b>'.date('d-m-Y H:i:s',$expiry_date).'</b></label>';
+    $nestedData['expiry_date'] = '<label class="label label-inverse-success"><b>'.date('d-m-Y H:i:s',$expiry_date).'</b></label>';
 }
 
 $nestedData['code'] = '<label class="label label-inverse-info-border"><b>'.$value->code.'</b></label>';

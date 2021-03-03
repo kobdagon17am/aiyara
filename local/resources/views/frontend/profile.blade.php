@@ -1,4 +1,4 @@
-<?php 
+<?php
 use App\Helpers\Frontend;
 $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
 
@@ -64,7 +64,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
 
            </div>
            <div class="panel-footer text-primary">
-            <?php 
+            <?php
             $pv_tv_active = Auth::guard('c_user')->user()->pv_tv_active;
             if(!empty($pv_tv_active)){
               $pv_tv_active = date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active));
@@ -73,7 +73,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
 
             }
 
-            ?> 
+            ?>
 
             @if(empty(Auth::guard('c_user')->user()->pv_tv_active) || (strtotime(Auth::guard('c_user')->user()->pv_tv_active) < strtotime(date('Ymd')) ))
             <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ $pv_tv_active }}" style="font-size: 14px">Not Active </span>  </p>
@@ -84,7 +84,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
           </div>
         </div>
       </div>
-      
+
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
         <div class="panel panel-warning">
           <div class="panel-heading bg-warning">
@@ -100,7 +100,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
         </div>
       </div>
 
- 
+
 
   <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
     <div class="panel panel-danger" >
@@ -109,7 +109,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
      </div>
      <div class="panel-body">
       <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
-      <?php  
+      <?php
       $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
       ?>
       <h4>{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h4>
@@ -160,9 +160,9 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
               <option value="1">ใช้งานได้</option>
               <option value="2">ถูกใช้แล้ว</option>
               <option value="expiry_date">หมดอายุ</option>
-            </select>  
+            </select>
           </div>
-   
+
         </div>
       </div>
       <div class="card-block">
@@ -177,7 +177,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
                 <th>CODE</th>
                 <th>Detail</th>
                 <th>Status</th>
-                
+
               </tr>
             </thead>
 
@@ -216,7 +216,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
   });
 
   function fetch_data(status = '') {
-    
+
     $('#dt_coupon_code').DataTable({
         // scrollX: true,
         // scrollCollapsed: true,
@@ -237,15 +237,15 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
         {"data": "code"},
         {"data": "detail"},
         {"data": "status"},
- 
+
         ],
         //order: [[ "0", "desc" ]],
       });
   }
- 
+
   $('#status').on('change',function(){
     var status = $(this).val();
-    $('#dt_coupon_code').DataTable().destroy(); 
+    $('#dt_coupon_code').DataTable().destroy();
     fetch_data(status);
   });
 
