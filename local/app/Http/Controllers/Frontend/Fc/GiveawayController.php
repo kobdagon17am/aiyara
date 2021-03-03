@@ -50,7 +50,7 @@ class GiveawayController extends Controller
           if($value->giveaway_option_id_fk == 1){
 
             $product =  DB::table('db_giveaway_products')
-            ->select('products_details.product_id_fk','products_details.product_name','dataset_product_unit.product_unit','db_giveaway_products.product_amt')
+            ->select('products_details.product_id_fk','products_details.product_name','dataset_product_unit.product_unit','dataset_product_unit.group_id as unit_id','db_giveaway_products.product_amt')
             ->leftJoin('products_details','products_details.product_id_fk','=','db_giveaway_products.product_id_fk')
             ->leftJoin('dataset_product_unit','dataset_product_unit.group_id','=','db_giveaway_products.product_unit')
             ->where('db_giveaway_products.giveaway_id_fk','=',$value->id)

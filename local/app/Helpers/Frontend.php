@@ -109,25 +109,14 @@ class Frontend{
 
 	}
 
-  public static function get_giveaway_detail($giveaway_id,$location_id){
+  public static function get_giveaway_detail($product_list_id_fk){
 
-    $giveaway =  DB::table('db_giveaway')
-    ->where('business_location_id_fk','=',$location_id)
-    ->where('id','=',$giveaway_id)
-    ->first();
-
-    $giveaway_detail =  DB::table('db_giveaway_products')
-    ->select('products_details.product_id_fk','products_details.product_name','dataset_product_unit.product_unit','db_giveaway_products.product_amt')
-    ->leftJoin('products_details','products_details.product_id_fk','=','db_giveaway_products.product_id_fk')
-    ->leftJoin('dataset_product_unit','dataset_product_unit.group_id','=','db_giveaway_products.product_unit')
-    ->where('db_giveaway_products.giveaway_id_fk','=',$giveaway_id)
-    ->where('products_details.lang_id','=',$location_id)
-    ->where('dataset_product_unit.lang_id','=',$location_id)
+    $giveaway =  DB::table('db_order_products_list_giveaway')
+    ->select('db_order_products_list_giveaway.*')
+    ->where('db_order_products_list_giveaway.product_list_id_fk','=',$product_list_id_fk)
     ->get();
 
-    $resule = ['giveaway_option'=>$giveaway->giveaway_option_id_fk,'giveaway'=>$giveaway,'giveaway_product'=>$giveaway_detail];
-
-		return $resule;
+		return $giveaway;
 
 	}
 

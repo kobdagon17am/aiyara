@@ -114,7 +114,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($order_items as $value)
+                        @foreach($order_items as $index => $value)
 
                         <tr>
                             <td>
@@ -126,7 +126,7 @@
                                    <?php
                                    $location_id = Auth::guard('c_user')->user()->business_location_id;
                                    $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk,$location_id);
-                                    ?>
+                                ?>
                                     @foreach($get_promotion_detail as $promotion_product)
                                     <li style="font-size: 12px">
                                         <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
@@ -137,29 +137,32 @@
 
                                 @if($value->type_product == 'giveaway')
                                 <ul>
-                                   <?php
-                                   $location_id = Auth::guard('c_user')->user()->business_location_id;
-                                   $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->giveaway_id_fk,$location_id);
-                                    ?>
+                                  <?php
+                                  $location_id = Auth::guard('c_user')->user()->business_location_id;
+                                  $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->id,$location_id);
 
-                                    @if($get_giveaway['giveaway_option'] == 1)
-                                      @foreach($get_giveaway['giveaway_product'] as $giveaway_product_value)
+                                  ?>
 
-                                      <li style="font-size: 12px">
-                                        <?php $sum_giveaway = $giveaway_product_value->product_amt*$value->amt ?>
-                                        <i class="icofont icofont-double-right text-success"></i> {{ $giveaway_product_value->product_name }} {{ $giveaway_product_value->product_amt }} {{ $giveaway_product_value->product_unit }}
-                                       x [{{$value->amt}}] <b> => {{$sum_giveaway}} {{ $giveaway_product_value->product_unit }}</b></li>
-                                      @endforeach
-                                    @else
+                                  @foreach($get_giveaway as $giveaway_value)
 
-                                      <li style="font-size: 12px">
-                                        <?php $gv_giveaway = number_format($get_giveaway['giveaway']->giveaway_voucher*$value->amt) ?>
-                                        <i class="icofont icofont-double-right text-success"></i>GiftVoucher {{$get_giveaway['giveaway']->giveaway_voucher}} x [{{$value->amt}}]
-                                         <b> => {{$gv_giveaway}} GV </b>
-                                      </li>
+                                  @if($giveaway_value->type_product == 'giveaway_product')
 
-                                    @endif
+                                  <li style="font-size: 12px">
+                                    <?php $sum_giveaway = $giveaway_value->product_amt*$value->amt ?>
+                                    <i class="icofont icofont-double-right text-success"></i> {{ $giveaway_value->product_name }} {{ $giveaway_value->product_amt }} {{ $giveaway_value->product_unit_name }}
+                                   x [{{$value->amt}}] <b> => {{$sum_giveaway}} {{ $giveaway_value->product_unit_name }}</b></li>
 
+
+                                  @else
+
+                                  <li style="font-size: 12px">
+                                    <?php $gv_giveaway = number_format($giveaway_value->gv_free*$value->amt) ?>
+                                    <i class="icofont icofont-double-right text-success"></i>GiftVoucher {{$giveaway_value->gv_free}} x [{{$value->amt}}]
+                                     <b> => {{$gv_giveaway}} GV </b>
+                                  </li>
+                                  @endif
+
+                                  @endforeach
 
                                 </ul>
                                 @endif
@@ -172,7 +175,7 @@
                             @else
                             <td>{{ $value->amt }}</td>
                             @endif
-                            <td>{{ $value->selling_price }}</td>
+                            <td>{{ number_format($value->selling_price,2) }}</td>
                             <td class="text-success"><b>{{ $value->pv }}</b></td>
                             @if($order->orders_type_id_fk == 7)
                             <td>{{ number_format($value->selling_price,2) }}</td>

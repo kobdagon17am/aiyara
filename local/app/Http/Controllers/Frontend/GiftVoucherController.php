@@ -31,14 +31,13 @@ class GiftVoucherController extends Controller
             2 => 'expiry_date',
             3 => 'code',
             4 => 'detail',
-            5 => 'bill',
-            6 => 'gv',
-            7 => 'banlance',
+            5 => 'gv',
+            6 => 'banlance',
         );
 
         if( empty($request->input('search.value')) and empty($request->input('status')) ){
 
-           $totalData =  DB::table('gift_voucher') 
+           $totalData =  DB::table('gift_voucher')
            ->where('gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
            ->count();
            $totalFiltered = $totalData;
@@ -48,12 +47,12 @@ class GiftVoucherController extends Controller
             //$dir = $request->input('order.0.dir');
 
            $gift_voucher =  DB::table('gift_voucher')
-           ->select('*') 
+           ->select('*')
            ->where('gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
            ->offset($start)
            ->limit($limit)
            ->orderby('id','DESC')
-           ->get(); 
+           ->get();
 
 // dd($request->input('status'));
 
@@ -68,25 +67,25 @@ class GiftVoucherController extends Controller
         ->whereRaw(("case WHEN '{$status}' = 'not_expiry_date' THEN gift_voucher.expiry_date > '{$date}' WHEN '{$status}' = 'expiry_date' THEN  gift_voucher.expiry_date < '{$date}'
             else 1 END"))
         ->whereRaw("(gift_voucher.code LIKE '%{$search}%')" )
-        ->count(); 
+        ->count();
 
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
 
-        //dd($query); 
+        //dd($query);
         //$order = $columns[$request->input('order.0.column')];
         //$dir = $request->input('order.0.dir');
 
-        $gift_voucher =  DB::table('gift_voucher') 
-        ->select('*') 
+        $gift_voucher =  DB::table('gift_voucher')
+        ->select('*')
         ->where('gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
         ->whereRaw(("case WHEN '{$status}' = 'expiry_date' THEN gift_voucher.expiry_date > '{$date}' WHEN '{$status}' = 'not_expiry_date' THEN  gift_voucher.expiry_date < '{$date}'
             else 1 END"))
         ->whereRaw("(gift_voucher.code LIKE '%{$search}%')" )
         ->limit($limit)
         ->orderby('id','DESC')
-        ->get(); 
+        ->get();
 
     }
 
@@ -109,9 +108,9 @@ class GiftVoucherController extends Controller
     $nestedData['expiry_date'] = '<label class="label label-inverse-danger"><b>'.date('d-m-Y H:i:s',$expiry_date).'</b></label>';
 }
 
-$nestedData['code'] = $value->code;
+$nestedData['code'] = '<label class="label label-inverse-info-border"><b>'.$value->code.'</b></label>';
 $nestedData['detail'] = $value->detail;
-$nestedData['bill'] = $value->order_id;
+// $nestedData['bill'] = $value->order_id;
 
 $nestedData['gv'] = '<b class="text-primary">'.$value->gv.'</b>';
 $nestedData['banlance'] = '<b class="text-success">'.$value->banlance.'</b>';
@@ -141,7 +140,7 @@ public function dt_gift_order_history(Request $request){
 
     if( empty($request->input('search.value')) and empty($request->input('status')) ){
 
-       $totalData =  DB::table('log_gift_voucher') 
+       $totalData =  DB::table('log_gift_voucher')
        ->leftjoin('db_orders', 'db_orders.id', '=', 'log_gift_voucher.order_id')
        ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
        ->count();
@@ -152,13 +151,13 @@ public function dt_gift_order_history(Request $request){
             //$dir = $request->input('order.0.dir');
 
        $gift_voucher =  DB::table('log_gift_voucher')
-       ->select('log_gift_voucher.*','db_orders.code_order') 
+       ->select('log_gift_voucher.*','db_orders.code_order')
        ->leftjoin('db_orders','db_orders.id','=', 'log_gift_voucher.order_id')
        ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
        ->offset($start)
        ->limit($limit)
        ->orderby('id','DESC')
-       ->get(); 
+       ->get();
 
 // dd($request->input('status'));
 
@@ -174,18 +173,18 @@ public function dt_gift_order_history(Request $request){
     ->whereRaw(("case WHEN '{$status}' = 'success' THEN log_gift_voucher.status = 'success' || log_gift_voucher.status = 'order'  WHEN '{$status}' = 'cancel' THEN log_gift_voucher.status = 'cancel'
         else 1 END"))
     ->whereRaw("(db_orders.code_order LIKE '%{$search}%')" )
-    ->count(); 
+    ->count();
 
     $totalFiltered = $totalData;
-    $limit = $request->input('length'); 
+    $limit = $request->input('length');
     $start = $request->input('start');
 
-        //dd($query); 
+        //dd($query);
         //$order = $columns[$request->input('order.0.column')];
         //$dir = $request->input('order.0.dir');
 
-    $gift_voucher =  DB::table('log_gift_voucher') 
-    ->select('log_gift_voucher.*','db_orders.code_order') 
+    $gift_voucher =  DB::table('log_gift_voucher')
+    ->select('log_gift_voucher.*','db_orders.code_order')
     ->leftjoin('db_orders', 'db_orders.id', '=', 'log_gift_voucher.order_id')
     ->where('log_gift_voucher.customer_id','=',Auth::guard('c_user')->user()->id)
     ->whereRaw(("case WHEN '{$status}' = 'success' THEN log_gift_voucher.status = 'success' || log_gift_voucher.status = 'order'  WHEN '{$status}' = 'cancel' THEN log_gift_voucher.status = 'cancel'
@@ -193,7 +192,7 @@ public function dt_gift_order_history(Request $request){
     ->whereRaw("(db_orders.code_order LIKE '%{$search}%')" )
     ->limit($limit)
     ->orderby('id','DESC')
-    ->get(); 
+    ->get();
 
 }
 

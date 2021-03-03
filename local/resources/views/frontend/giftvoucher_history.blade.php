@@ -18,11 +18,11 @@
 							<option value="">ทั้งหมด</option>
 							<option value="not_expiry_date">ยังไม่หมดอายุ</option>
 							<option value="expiry_date">หมดอายุ</option>
-						</select> 
+						</select>
 					</div>
 					<div class="col">
-						<div class="page-header-breadcrumb"> 
-							<?php  
+						<div class="page-header-breadcrumb">
+							<?php
 							$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
 							?>
 							<div class="bg-danger p-10"><i class="fa fa-gift"></i> {{-- Gift Voucher --}} <b>{{ number_format($gv->sum_gv) }} </b></div>
@@ -35,7 +35,7 @@
 			<div class="card-block">
 				<div class="table-responsive dt-responsive">
 
-					<table id="giv_history" class="table table-striped table-bordered nowrap">
+					<table id="giv_history"  class="table table-striped table-bordered nowrap">
 						<thead>
 							<tr>
 								<th>#</th>
@@ -43,7 +43,7 @@
 								<th>วันหมดอายุ</th>
 								<th>CODE</th>
 								<th>รายละเอียด</th>
-								<th>Bill</th>
+
 								<th>Gift Voucher</th>
 								<th>คงเหลือ</th>
 							</tr>
@@ -82,7 +82,7 @@
 	});
 
 	function fetch_data(status = '') {
-		
+
 		$('#giv_history').DataTable({
 				// scrollX: true,
 				// scrollCollapsed: true,
@@ -102,7 +102,7 @@
 				{"data": "expiry_date"},
 				{"data": "code"},
 				{"data": "detail"},
-				{"data": "bill"},
+
 				{"data": "gv"},
 				{"data": "banlance"},
 
@@ -113,7 +113,7 @@
 
 	$('#status').on('change',function(){
 		var status = $(this).val();
-		$('#giv_history').DataTable().destroy(); 
+		$('#giv_history').DataTable().destroy();
 		fetch_data(status);
 	});
 

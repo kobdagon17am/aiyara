@@ -45,7 +45,7 @@ class HistoryController extends Controller
        $qr = $id.''.$random;
 
        $endata = date('Y-m-d H:i:s',strtotime("+30 minutes"));
-       $updated_qrcode = DB::table('db_orders') 
+       $updated_qrcode = DB::table('db_orders')
        ->where('id',$id)
        ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
 
@@ -57,7 +57,7 @@ class HistoryController extends Controller
     $qr = $id.''.$random;
 
     $endata = date('Y-m-d H:i:s',strtotime("+30 minutes"));
-    $updated_qrcode = DB::table('db_orders') 
+    $updated_qrcode = DB::table('db_orders')
     ->where('id',$id)
     ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
   }
@@ -102,10 +102,10 @@ public function dt_history(Request $request){
    $limit = $request->input('length');
    $start = $request->input('start');
         //$order = $columns[$request->input('order.0.column')];
-        //$dir = $request->input('order.0.dir'); 
+        //$dir = $request->input('order.0.dir');
 
    $orders =  DB::table('db_orders')
-   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
    ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
    ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
    ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
@@ -114,10 +114,10 @@ public function dt_history(Request $request){
    ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->offset($start)
    ->limit($limit)
-   ->orderby('db_orders.updated_at','DESC') 
-   ->get(); 
+   ->orderby('db_orders.updated_at','DESC')
+   ->get();
 
-   
+
 
  }else{
 
@@ -134,7 +134,7 @@ public function dt_history(Request $request){
    ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
    ->whereRaw( "(db_orders.code_order LIKE '%{$search}%' or db_orders.tracking_no LIKE '%{$search}%')" )
-   ->count(); 
+   ->count();
 
 
 
@@ -147,7 +147,7 @@ public function dt_history(Request $request){
         //$dir = $request->input('order.0.dir');
 
    $orders =  DB::table('db_orders')
-   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name') 
+   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
    ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
    ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
    ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
@@ -156,10 +156,10 @@ public function dt_history(Request $request){
    ->where('db_orders.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->whereRaw(("case WHEN '{$order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$order_type}' END"))
    ->whereRaw( "(db_orders.code_order LIKE '%{$search}%' or db_orders.tracking_no LIKE '%{$search}%')" )
-   ->offset($start) 
+   ->offset($start)
    ->limit($limit)
-   ->orderby('db_orders.updated_at','DESC') 
-   ->get(); 
+   ->orderby('db_orders.updated_at','DESC')
+   ->get();
 
  }
 
@@ -196,7 +196,7 @@ $nestedData['date'] = '<span class="label label-inverse-info-border">'.date('d/m
 $nestedData['type'] = $value->type;
 
 if( $value->delivery_location_status == 'sent_office' and $value->type == 4){
-  $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$value->detail.'</b></button>'; 
+  $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$value->detail.'</b></button>';
 }else{
   $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" > <b style="color: #000">'.$value->detail.'</b></button>';
 
@@ -274,7 +274,7 @@ public function upload_slip(Request $request){
 
 public function cart_payment_history($code_order){
 
-  
+
   $order =  DB::table('db_orders')
   ->select('db_orders.*','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type',
     'dataset_business_major.name as office_name',
@@ -290,10 +290,10 @@ public function cart_payment_history($code_order){
     'dataset_business_major.tel as office_tel',
     'dataset_business_major.email as office_email',
     'db_invoice_code.order_payment_code',
-    'dataset_pay_type.detail as pay_type_name') 
+    'dataset_pay_type.detail as pay_type_name')
   ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
-  ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk') 
-  ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','db_orders.sentto_branch_id') 
+  ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.orders_type_id_fk')
+  ->leftjoin('dataset_business_major','dataset_business_major.location_id','=','db_orders.sentto_branch_id')
   ->leftjoin('db_invoice_code','db_invoice_code.order_id','=','db_orders.id')
   ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','db_orders.pay_type_id_fk')
 
@@ -312,13 +312,11 @@ public function cart_payment_history($code_order){
   }else{
     $order_items =  DB::table('db_order_products_list')
     ->where('order_id_fk','=',$order->id)
+    ->orderby('id','ASC')
     ->get();
- 
   }
 
-        //dd($order_items);
-
-  if(!empty($order)){ 
+  if(!empty($order)){
    return view('frontend/product/cart-payment-history',compact('order','order_items'));
  }else{
   return redirect('product-history')->withError('Payment Data is Null');

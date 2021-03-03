@@ -32,14 +32,15 @@ class ProductController extends Controller
        }else{
 
         $coupon =  DB::table('db_promotion_cus')
-        ->select('db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status') 
+        ->select('db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
         ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
         ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
         ->where('db_promotion_code.approve_status','=',1)
+        ->where('db_promotion_code.pro_edate','=>',now())
         ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
         ->where('db_promotion_cus.pro_status','=',1)
         ->orderby('db_promotion_cus.pro_status','ASC')
-        ->get(); 
+        ->get();
 
         $data = Product::product_list($type);
     }
@@ -91,7 +92,7 @@ public function product_detail($type,$id,$category_id='')
 
             $couse_event = DB::table('course_event')
             ->select('course_event.*')
-            //->where('course_event_images.img_default', '=', 1) 
+            //->where('course_event_images.img_default', '=', 1)
             ->where('course_event.id','=',$id)
             ->orderby('course_event.ce_edate')
             ->first();
@@ -114,11 +115,11 @@ public function product_detail($type,$id,$category_id='')
                     ,'detail_thai as products_details')
                    // ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
                 ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
-                  // ->where('promotions_images.image_default','=',1) 
+                  // ->where('promotions_images.image_default','=',1)
                     // ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
                    // ->where('promotions.business_location','=',$business_location_id)
                    // ->where('promotions_cost.business_location_id','=',$business_location_id)
-                   // ->where('promotions_cost.status','=',1) 
+                   // ->where('promotions_cost.status','=',1)
                    // ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
                    // ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
                    // ->where('promotions.status','=',1)
@@ -187,10 +188,10 @@ public function add_cart(Request $request){
         $location_id = Auth::guard('c_user')->user()->business_location_id;
         $data = \App\Helpers\Frontend::get_promotion_detail($request->id,$location_id);
 
-        
+
     }else{
         $id = $request->id;
-        $data = ''; 
+        $data = '';
     }
 
     Cart::session($request->type)->add(array(
@@ -202,7 +203,7 @@ public function add_cart(Request $request){
                 'pv'=>$request->pv,
                 'img'=>$request->img,
                 'promotion'=>$request->promotion,
-                'promotion_id'=>$request->id, 
+                'promotion_id'=>$request->id,
                 'promotion_detail'=>$data,
                 'category_id'=>$request->category_id,
             )
@@ -210,7 +211,7 @@ public function add_cart(Request $request){
     $getTotalQuantity = Cart::session($request->type)->getTotalQuantity();
 
         // $item = Cart::session($request->type)->getContent();
-    return $getTotalQuantity; 
+    return $getTotalQuantity;
 
 }
 }

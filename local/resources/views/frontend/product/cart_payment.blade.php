@@ -597,10 +597,10 @@
 
  				</table>
          <hr m-t-2>
-         @if($check_giveaway['status']== 'success')
+         @if($check_giveaway['status']== 'success' and $check_giveaway['s_data'])
 
          <h4 class="text-danger">Promotion Free </h4>
-         @endif
+
 
          <table class="table table-responsive m-b-0">
            @foreach ($check_giveaway['s_data'] as $giveaway_value)
@@ -628,6 +628,7 @@
           @endforeach
 
          </table>
+         @endif
  				<div class="row" align="center">
  					<a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-warning btn-block" ><font style="color: #000">เลือกสินค้าเพิ่มเติม</font> </a>
  				</div>

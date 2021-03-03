@@ -19,7 +19,7 @@ class PvPayment extends Model
 			return $resule;
 		}
 
-		$pv = $order_data->pv_total; 
+		$pv = $order_data->pv_total;
 		$customer_id = $order_data->customers_id_fk;
 		$type_id = $order_data->orders_type_id_fk;
 		$business_location_id = $order_data->business_location_id_fk;
@@ -30,7 +30,7 @@ class PvPayment extends Model
 		}else{
 
 			try {
-				DB::BeginTransaction(); 
+				DB::BeginTransaction();
 
 				if($order_data->delivery_location_status == 'sent_office'){
 					$orderstatus_id = 4;
@@ -46,7 +46,7 @@ class PvPayment extends Model
 					$opc_type_order = 'course_event';
 
 					$run_pament_code = RunNumberPayment::run_payment_code($business_location_id,$opc_type_order);
-					 
+
 					if($run_pament_code['status'] == 'fail'){
 						$resule = ['status'=>'fail','message'=>$run_pament_code['message']];
 						DB::rollback();
@@ -60,31 +60,90 @@ class PvPayment extends Model
 
 					$opc_type_order = 'product';
 					$run_pament_code = RunNumberPayment::run_payment_code($business_location_id,$opc_type_order);
-					 
 					if($run_pament_code['status'] == 'fail'){
 						$resule = ['status'=>'fail','message'=>$run_pament_code['message']];
 						DB::rollback();
 						return $resule;
-
 					}
 					$code_order = $run_pament_code['code_order'];
-
 				}
 
 
 			$update_order = DB::table('db_orders')//update บิล
 			->where('id',$order_id)
-			->update(['approver' => $admin_id, 
+			->update(['approver' => $admin_id,
 				'order_status_id_fk'=> $orderstatus_id,
+        'approve_status'=> 1,
 				'approve_date'=> date('Y-m-d H:i:s')]);
+
+        //check รายการของแถม
+      $product_list = DB::table('db_order_products_list')
+      ->where('order_id_fk','=',$order_id)
+      ->get();
+
+      foreach($product_list as $product_list_value){
+
+        $update_products_lis = DB::table('db_order_products_list')
+        ->where('id',$product_list_value->id)
+        ->update(['approver' => $admin_id,
+          'approve_status'=> 1,
+          'approve_date'=> date('Y-m-d H:i:s')]);
+
+        if($product_list_value->type_product == 'giveaway'){
+          $giveaway =  DB::table('db_order_products_list_giveaway')
+          ->where('db_order_products_list_giveaway.product_list_id_fk','=',$product_list_value->id)
+          ->get();
+
+          foreach($giveaway as $giveaway_value){
+            if($giveaway_value->type_product == 'giveaway_product'){
+
+              $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
+              ->where('id',$giveaway_value->id)
+              ->update(['approver' => $admin_id,
+                'approve_status'=> 1,
+                'approve_date'=> date('Y-m-d H:i:s')]);
+
+            }else{
+              $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
+              ->where('id',$giveaway_value->id)
+              ->update(['approver' => $admin_id,
+                'approve_status'=> 1,
+                'approve_date'=> date('Y-m-d H:i:s')]);
+
+               $expiry_date = date("Y-m-d", strtotime("+1 month", strtotime(now())));
+
+                $inseart_gift_voucher  = DB::table('gift_voucher')->insert([
+                  'order_id'=>$order_id,
+                  'customer_id'=>$customer_id,
+                  'gv'=>$giveaway_value->gv_free,
+                  'banlance'=>$giveaway_value->gv_free,
+                  'detail'=>$product_list_value->product_name,
+                  'order_id'=>$order_id,
+                  'admin_id'=>$admin_id,
+                  'code'=>$order_data->code_order,
+                  'status'=>'promotion',
+                  'code_order'=>$order_data->code_order,
+                  'create_at'=>now(),
+                  'expiry_date'=>$expiry_date,
+                  'admin_id'=>$admin_id,
+
+                  ]);
+            }
+
+          }
+
+        }
+
+        }
+        //end check รายการของแถม
 
 
 				$check_payment_code = DB::table('db_invoice_code')//เจนเลข payment order
 				->where('order_id','=',$order_id)
-				->first(); 
+				->first();
 
 				if($check_payment_code){
-					$update_order_payment_code = DB::table('db_invoice_code') 
+					$update_order_payment_code = DB::table('db_invoice_code')
 					->where('order_id',$order_id)
 					->update(['order_payment_status' => 'Success',
 						'order_payment_code'=>$code_order,
@@ -103,6 +162,7 @@ class PvPayment extends Model
 						'type_order'=>$opc_type_order,]);//ลงข้อมูลบิลชำระเงิน
 
 				}
+        //check รายการสินค้าแถม
 
 				if($type_id == 1){//ทำคุณสมบติ
 						$data_user = DB::table('customers')//อัพ Pv ของตัวเอง
@@ -112,7 +172,7 @@ class PvPayment extends Model
 
 						$add_pv = $data_user->pv + $pv;
 
-						$update_pv = DB::table('customers') 
+						$update_pv = DB::table('customers')
 						->where('id',$customer_id)
 						->update(['pv' => $add_pv]);
 
@@ -168,9 +228,9 @@ class PvPayment extends Model
 					          $pv_mt_total = $pv_mt_all-($mt_mount*$pro_mt);//ค่า pv ที่ต้องเอาไปอัพเดท DB
 
 					          $mt_active = strtotime("+$mt_mount Month",strtotime($start_month));
-					          $mt_active = date('Y-m-t',$mt_active);//วันที่ mt_active 
+					          $mt_active = date('Y-m-t',$mt_active);//วันที่ mt_active
 
-					          $update_mt = DB::table('customers') 
+					          $update_mt = DB::table('customers')
 					          ->where('id',$customer_id)
 					          ->update(['pv_mt' => $pv_mt_total,'pv_mt_active' => $mt_active,
 					          	'status_pv_mt'=>'not','date_mt_first'=>date('Y-m-d h:i:s')]);
@@ -182,7 +242,7 @@ class PvPayment extends Model
 
 					        }else{
 					      	//dd('อัพเดท');
-					        	$update_mt = DB::table('customers') 
+					        	$update_mt = DB::table('customers')
 					        	->where('id',$customer_id)
 					        	->update(['pv_mt' => $pv_mt_all,
 					        		'pv_mt_active' => date('Y-m-t',strtotime($start_month)),
@@ -232,9 +292,9 @@ class PvPayment extends Model
 
 				          $strtime = strtotime($start_month);
 				          $mt_active = strtotime("+$mt_mount Month",$strtime);
-				          $mt_active = date('Y-m-t',$mt_active);//วันที่ mt_active 
+				          $mt_active = date('Y-m-t',$mt_active);//วันที่ mt_active
 
-				          $update_mt = DB::table('customers') 
+				          $update_mt = DB::table('customers')
 				          ->where('id',$customer_id)
 				          ->update(['pv_mt' => $pv_mt_total,'pv_mt_active' => $mt_active]);
 				          //dd($mt_active);
@@ -245,7 +305,7 @@ class PvPayment extends Model
 
 				          }else{
 				      	//dd('อัพเดท');
-				          	$update_mt = DB::table('customers') 
+				          	$update_mt = DB::table('customers')
 				          	->where('id',$customer_id)
 				          	->update(['pv_mt' => $pv_mt_all]);
 
@@ -301,7 +361,7 @@ class PvPayment extends Model
 				          $tv_active = strtotime("+$add_mount Month",$strtime);
 				          $tv_active = date('Y-m-t',$tv_active);//วันที่ tv_active
 
-				          $update_mt = DB::table('customers') 
+				          $update_mt = DB::table('customers')
 				          ->where('id',$customer_id)
 				          ->update(['pv_tv' => $pv_tv_total,'pv_tv_active' => $tv_active]);
 				          //dd($tv_active);
@@ -312,7 +372,7 @@ class PvPayment extends Model
 
 				      }else{
 				      	//dd('อัพเดท');
-				      	$update_mt = DB::table('customers') 
+				      	$update_mt = DB::table('customers')
 				      	->where('id',$customer_id)
 				      	->update(['pv_tv' => $pv_tv_all]);
 
@@ -335,11 +395,11 @@ class PvPayment extends Model
 
 						$add_pv_aipocket = $data_user->pv_aipocket + $pv;
 
-						$update_pv = DB::table('customers') 
+						$update_pv = DB::table('customers')
 						->where('id',$customer_id)
 						->update(['pv_aipocket' => $add_pv_aipocket]);
 
-						$update_ai_pocket = DB::table('ai_pocket') 
+						$update_ai_pocket = DB::table('ai_pocket')
 						->where('order_id',$order_id)
 						->update(['status' => 'success','pv_aipocket' => $add_pv_aipocket]);
 
@@ -362,12 +422,12 @@ class PvPayment extends Model
 						//ไม่เข้าสถานะต้อง Approve
 					}elseif($type_id == 6){//couse อบรม
 
-						$resuleRegisCourse = Couse_Event::couse_register($order_id,$admin_id); 
+						$resuleRegisCourse = Couse_Event::couse_register($order_id,$admin_id);
 
 						if($resuleRegisCourse['status'] != 'success'){
 							DB::rollback();
 							return $resuleRegisCourse;
-						} 
+						}
 
 						$data_user = DB::table('customers')//อัพ Pv ของตัวเอง
 						->select('*')
@@ -376,7 +436,7 @@ class PvPayment extends Model
 
 						$add_pv = $data_user->pv + $pv;
 
-						$update_pv = DB::table('customers') 
+						$update_pv = DB::table('customers')
 						->where('id',$customer_id)
 						->update(['pv' => $add_pv]);
 
@@ -399,7 +459,7 @@ class PvPayment extends Model
 
 					if($customer_id != 'AA' and $pv > 0 ){
 						$j = 2;
-						for ($i=1; $i <= $j ; $i++){ 
+						for ($i=1; $i <= $j ; $i++){
 
 							$data_user = DB::table('customers')
 							->where('id','=',$customer_id)
@@ -413,7 +473,7 @@ class PvPayment extends Model
 								if($last_upline_type == 'A'){
 
 									$add_pv = $data_user->pv_a + $pv;
-									$update_pv = DB::table('customers') 
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_a' => $add_pv]);
 
@@ -422,7 +482,7 @@ class PvPayment extends Model
 
 								}elseif($last_upline_type =='B'){
 									$add_pv = $data_user->pv_b + $pv;
-									$update_pv = DB::table('customers') 
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_b' => $add_pv]);
 
@@ -430,8 +490,8 @@ class PvPayment extends Model
 									$j = 0;
 
 								}elseif($last_upline_type == 'C'){
-									$add_pv = $data_user->pv_c + $pv; 
-									$update_pv = DB::table('customers') 
+									$add_pv = $data_user->pv_c + $pv;
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_c' => $add_pv]);
 
@@ -448,7 +508,7 @@ class PvPayment extends Model
 								if($last_upline_type == 'A'){
 
 									$add_pv = $data_user->pv_a + $pv;
-									$update_pv = DB::table('customers') 
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_a' => $add_pv]);
 
@@ -459,7 +519,7 @@ class PvPayment extends Model
 
 								}elseif($last_upline_type =='B'){
 									$add_pv = $data_user->pv_b + $pv;
-									$update_pv = DB::table('customers') 
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_b' => $add_pv]);
 
@@ -468,8 +528,8 @@ class PvPayment extends Model
 									$j = $j+1;
 
 								}elseif($last_upline_type == 'C'){
-									$add_pv = $data_user->pv_c + $pv; 
-									$update_pv = DB::table('customers') 
+									$add_pv = $data_user->pv_c + $pv;
+									$update_pv = DB::table('customers')
 									->where('id',$customer_id)
 									->update(['pv_c' => $add_pv]);
 
