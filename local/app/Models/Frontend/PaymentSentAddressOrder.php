@@ -5,13 +5,15 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use App\Models\Db_Orders;
+use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 DB::BeginTransaction();
 
 class PaymentSentAddressOrder extends Model
 
 {
 
-	public static function update_rontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv){
+	public static function update_fontstore_and_address($rs,$code_order,$customer_id,$business_location_id,$orderstatus_id,$gv,$price_remove_gv){
+
 
 		try{ 
 			
@@ -19,7 +21,7 @@ class PaymentSentAddressOrder extends Model
 			$insert_db_orders->code_order=$code_order;
 			$insert_db_orders->customers_id_fk = $customer_id;
 			$insert_db_orders->vat = $rs->vat;
-			$insert_db_orders->shipping_price = $rs->shipping;
+			
 			$insert_db_orders->sum_price = $rs->price;
 			// 'price_vat = $rs->price_vat;
 			// 'p_vat'  => $rs->p_vat;
@@ -34,8 +36,20 @@ class PaymentSentAddressOrder extends Model
 			$insert_db_orders->delivery_location_status = $rs->receive;
 			$insert_db_orders->business_location_id_fk = $business_location_id;
 			$insert_db_orders->sentto_branch_id = 0;
+			//$insert_db_orders->product_value = 0;
+			
+			if($rs->shipping_premium == 'true'){
+			$insert_db_orders->shipping_special = 1;
+			}
 
 			if($rs->receive == 'sent_address'){
+				$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->card_province,$rs->price,$rs->shipping_premium);
+				$shipping = $data_shipping['data']->shipping_cost;
+
+				$insert_db_orders->shipping_price = $shipping;
+				$insert_db_orders->shipping_cost_type_id = $data_shipping['data']->shipping_type_id;
+				$insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
+
 				$insert_db_orders->house_no = $rs->house_no;
 				$insert_db_orders->house_name = $rs->house_name;
 				$insert_db_orders->moo = $rs->moo;
@@ -49,6 +63,14 @@ class PaymentSentAddressOrder extends Model
 				$insert_db_orders->name = $rs->name;
 				$insert_db_orders->email = $rs->email;
 			}elseif ($rs->receive == 'sent_address_card') {
+
+				$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->card_province,$rs->price,$rs->shipping_premium);
+				$shipping = $data_shipping['data']->shipping_cost;
+
+				$insert_db_orders->shipping_price = $shipping;
+				$insert_db_orders->shipping_cost_type_id = $data_shipping['data']->shipping_type_id;
+				$insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
+
 				$insert_db_orders->house_no = $rs->card_house_no;
 				$insert_db_orders->house_name = $rs->card_house_name;
 				$insert_db_orders->moo = $rs->card_moo;
@@ -62,6 +84,12 @@ class PaymentSentAddressOrder extends Model
 				$insert_db_orders->name  = $rs->card_name;
 				$insert_db_orders->email  = $rs->card_email;
 			}elseif ($rs->receive == 'sent_other') {
+				$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->other_province,$rs->price,$rs->shipping_premium);
+				$shipping = $data_shipping['data']->shipping_cost;
+
+				$insert_db_orders->shipping_price = $shipping;
+				$insert_db_orders->shipping_cost_type_id = $data_shipping['data']->shipping_type_id;
+				$insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
 
 				$insert_db_orders->house_no = $rs->other_house_no;
 				$insert_db_orders->house_name = $rs->other_house_name;
@@ -73,11 +101,12 @@ class PaymentSentAddressOrder extends Model
 				$insert_db_orders->province = $rs->other_province;
 				$insert_db_orders->zipcode = $rs->other_zipcode; 
 
-				$insert_db_orders->tel  = $rs->other_tel_mobile;
+				$insert_db_orders->tel  = $rs->other_tel_mobile; 
 				$insert_db_orders->name  = $rs->other_name;
 				$insert_db_orders->email  = $rs->other_email;
 
 			}elseif($rs->receive == 'sent_office') {
+				$insert_db_orders->shipping_price = 0;
 				$insert_db_orders->tel  = $rs->tel_mobile; 
 				$insert_db_orders->name  = $rs->name;
 				$insert_db_orders->email  = $rs->email;

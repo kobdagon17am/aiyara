@@ -10,7 +10,7 @@
 |
 */
 //Auth::routes();
-// Route::get('register', function() { 
+// Route::get('register', function() {
 //    return view('errors.404');
 //  });
  //Clear Config cache:
@@ -27,7 +27,7 @@ Route::get('/', function () {
   }else{
     return view('frontend/member_login');
   }
-}); 
+});
 
 Route::get('login', function () {
   if(Auth::guard('c_user')->check()){
@@ -124,7 +124,7 @@ Route::get('product-list/{type}','Frontend\ProductController@product_list')->nam
 Route::get('product-detail/{type}/{id?}/{category_id?}','Frontend\ProductController@product_detail')->name('product-detail');
 
 Route::get('cart/{type}','Frontend\CartController@cart')->name('cart');
- 
+
 
 Route::get('add_cart','Frontend\ProductController@add_cart')->name('add_cart');
 // Route::get('cart','Frontend\CartController@index')->name('cart');
@@ -174,7 +174,7 @@ Route::get('commission_matching','Frontend\CommissionController@commission_match
 
 Route::get('coupon','Frontend\CouponCodeController@coupon')->name('coupon');
 Route::get('dt_coupon_code','Frontend\CouponCodeController@dt_coupon_code')->name('dt_coupon_code');
- 
+
 Route::get('message/{active?}','Frontend\MessageController@index')->name('message');
 Route::get('message_read/{id}','Frontend\MessageController@message_read')->name('message_read');
 
@@ -184,13 +184,16 @@ Route::get('news','Frontend\NewsController@index')->name('news');
 Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news_detail');
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
- 
+
 Route::get('salepage/page-1/{user_name?}','Frontend\SalepageController@salepage')->name('salepage/page-1');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');
 Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
-  
+
+
+Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
+
 Route::get('/reward-history', function () {
   return view('frontend/reward-history');
 })->name('reward-history');
@@ -198,13 +201,13 @@ Route::get('/reward-history', function () {
 
 Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
 
- 
+
 
 Route::get('/comission', function () {
   return view('frontend/comission');
 })->name('comission');
 
- 
+
 Route::get('/travel', function () {
   return view('frontend/travel');
 })->name('travel');
@@ -212,7 +215,6 @@ Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });
 
- 
 
 
- 
+

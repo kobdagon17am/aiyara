@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 class PaymentAddProduct extends Model
 {
 	public static function payment_add_product($order_id,$customer_id,$type,$business_location_id='',$pv_total=''){
+
     DB::BeginTransaction();
 		try {
 			$cartCollection = Cart::session($type)->getContent();
@@ -37,6 +38,7 @@ class PaymentAddProduct extends Model
 				]);
 
 				}else{
+
 					$type_product = 'product';
 					DB::table('db_order_products_list')->insert([
 					'order_id_fk'=>$order_id,
@@ -51,6 +53,7 @@ class PaymentAddProduct extends Model
 					'total_price'=>$total_price,
 					'add_from'=>1,
 				]);
+ 
 
 				}
 

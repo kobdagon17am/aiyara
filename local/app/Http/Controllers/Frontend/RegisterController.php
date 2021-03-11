@@ -21,7 +21,6 @@ class RegisterController extends Controller
 
   public function index($id,$line_type){
     
-
       if(empty($id) || empty($line_type)){
         return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
 
@@ -36,7 +35,13 @@ class RegisterController extends Controller
        ->select('*')
        ->get();
 
-       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces];
+       $business_location = DB::table('dataset_business_location')
+       ->select('*')
+       ->where('lang_id','=',1)
+       ->where('status','=',1)
+       ->get();
+
+       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces,'business_location'=>$business_location];
 
        return view('frontend/newregister',compact('data'));
 

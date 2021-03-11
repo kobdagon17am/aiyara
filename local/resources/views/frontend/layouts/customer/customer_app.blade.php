@@ -69,9 +69,16 @@
 						<a href="{{route('home')}}">
 							<img class="img-fluid" src="{{asset('frontend/assets/images/logo.png')}}"  width="140" alt="Theme-Logo" />
 						</a>
+						<a href="{{route('cart',['type'=>1])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
+								</a>
+
 						<a class="mobile-options">
 							<i class="ti-more"></i>
 						</a>
+
 					</div>
 
 					<div class="navbar-container container-fluid">
@@ -88,9 +95,9 @@
 						</ul>
 						<ul class="nav-right">
 
-							<li class="header">
+							<li class="header menu-shope-pc">
 								@if(request()->is('product-list/1') || request()->is('cart/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1'))
-								<a href="{{route('cart',['type'=>1])}}">
+								<a href="{{route('cart',['type'=>1])}}" class="d-sm-block d-xs-block">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>

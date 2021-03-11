@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +12,8 @@ use App\Models\Frontend\PaymentCourse;
 use App\Models\Frontend\PaymentAiCash;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
-
+use App\Http\Controllers\Frontend\Fc\ShippingCosController;
+ 
 class CartPaymentController extends Controller
 {
 	public function index($type){
@@ -23,9 +23,10 @@ class CartPaymentController extends Controller
       $cartCollection = Cart::session($type)->getContent();
       $data=$cartCollection->toArray();
       $quantity = Cart::session($type)->getTotalQuantity();
+      $customer_id = Auth::guard('c_user')->user()->id;
 
 		if($data){
-			foreach ($data as $value) {
+			foreach ($data as $value){
 				$pv[] = $value['quantity'] *  $value['attributes']['pv'];
 				if($type == '6'){
 					$chek_course = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
@@ -42,20 +43,22 @@ class CartPaymentController extends Controller
 
 		}
 
-		$shipping = DB::table('dataset_shipping')
-		->where('location_id','=','1')
-		->first();
-
-		$vat = DB::table('dataset_vat')
-		->where('location_id','=','1')
-		->first();
-
-
-		$vat = $vat->txt_value;
-		$shipping = $shipping->price_shipping;
-
         //ราคาสินค้า
 		$price = Cart::session($type)->getTotal();
+
+		$province_data = DB::table('customers_detail')
+		->select('province')
+		->where('customer_id','=',$customer_id)
+		->first();
+ 
+		$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$province_data->province,$price);
+
+		$vat = DB::table('dataset_vat')
+		->where('location_id','=', $business_location_id)
+		->first();
+
+		$vat = $vat->txt_value;
+		$shipping = $data_shipping['data']->shipping_cost;
 
 		//vatใน 7%
 		$p_vat = $price*($vat/(100+$vat));
@@ -66,7 +69,7 @@ class CartPaymentController extends Controller
 		$price_total = $price + $shipping;
 
 		if($type == 5){
-			$data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+			$data_gv = \App\Helpers\Frontend::get_gitfvoucher($customer_id);
 			$gv = $data_gv->sum_gv;
 			$gv_total = $gv - $price_total;
 
@@ -99,6 +102,7 @@ class CartPaymentController extends Controller
 			'gv_total'=>$gv_total,
 			'price_total_type5'=>$price_total_type5,
 			'type'=>$type,
+      'location_id'=> $business_location_id,
 			'status'=>'success'
 		);
 
@@ -112,7 +116,7 @@ class CartPaymentController extends Controller
 		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province')
 		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.district')
 		->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_sub')
-		->where('customer_id','=',Auth::guard('c_user')->user()->id)
+		->where('customer_id','=',$customer_id)
 		->first();
 
 		$address_card = DB::table('customers_address_card')
@@ -120,7 +124,7 @@ class CartPaymentController extends Controller
 		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_address_card.card_province')
 		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_address_card.card_district')
 		->leftjoin('dataset_districts','dataset_districts.id','=','customers_address_card.card_district_sub')
-		->where('customer_id','=',Auth::guard('c_user')->user()->id)
+		->where('customer_id','=',$customer_id)
 		->first();
 
 		$provinces = DB::table('dataset_provinces')

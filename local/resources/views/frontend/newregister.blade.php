@@ -17,79 +17,88 @@
  	<div class="card-block">
  		<form action="{{route('register_new_member')}}" id="register_new_member" method="POST" enctype="multipart/form-data">
  			@csrf
+        
 
-      <div class="form-group row">
-       <div class="col-sm-3">
-        <label><b>Uplind ID</b></label>
-        <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{ $data['data']->business_name }} ( {{$data['data']->user_name}} ) </font></span>
-        {{--  <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
+       <div class="form-group row">
+         <div class="col-sm-3">
+          <label><b>Uplind ID</b></label>
 
-        <input type="hidden"  name="upline_id" value="{{$data['data']->id}}">
+          <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{ $data['data']->business_name }} ( {{$data['data']->user_name}} ) </font></span>
+          {{--  <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
+          <input type="hidden"  name="upline_id" value="{{$data['data']->id}}">
 
-      </div>
-
-      <div class="col-sm-3">
-        <label><b>สายงาน</b></label>
-        <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{$data['line_type_back']}} </font></span>
-
-        {{--  <input type="text" class="form-control"   placeholder="สายงาน" value="{{$data['line_type_back']}}" disabled=""> --}}
-        <input type="hidden" name="line_type_back" value="{{$data['line_type_back']}}">        
-
-      </div>
-
-      <div class="col-sm-3">
-        <label><b>รหัสผู้แนะนำ</b></label>
-
-        <div class="input-group input-group-button">
-          <input type="text" class="form-control" name="introduce" id="introduce" placeholder="รหัสผู้แนะนำ" value="{{ Auth::guard('c_user')->user()->user_name }}">
-          <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="check_user()">
-            <span class=""><i class="icofont icofont-check-circled"></i> Check</span>
-          </span>
         </div>
+
+        <div class="col-sm-3">
+          <label><b>สายงาน</b></label>
+          <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{$data['line_type_back']}} </font></span>
+
+          {{--  <input type="text" class="form-control"   placeholder="สายงาน" value="{{$data['line_type_back']}}" disabled=""> --}}
+          <input type="hidden" name="line_type_back" value="{{$data['line_type_back']}}">        
+
+        </div>
+
+        <div class="col-sm-3">
+          <label><b>รหัสผู้แนะนำ</b></label>
+
+          <div class="input-group input-group-button">
+            <input type="text" class="form-control" name="introduce" id="introduce" placeholder="รหัสผู้แนะนำ" value="{{ Auth::guard('c_user')->user()->user_name }}">
+            <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="check_user()">
+              <span class=""><i class="icofont icofont-check-circled"></i> Check</span>
+            </span>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <label><b>ประเทศ</b></label>
+          <select name="business_location" class="form-control">
+            @foreach($data['business_location'] as $business_location_value)
+            <option value="{{ $business_location_value->id }}" @if($business_location_value->id == $data['data']->business_location_id) selected="" @endif>{{ $business_location_value->txt_desc }}</option>
+            @endforeach
+          </select>
+        </div>
+
       </div>
+      <div class="form-group row">
+       <div class="col-sm-2">
+        <label>คำนำหน้าชื่อ </label>
+        <select class="form-control" name="name_prefix">
+         <option value="คุณ">คุณ</option>
+         <option value="นาย">นาย</option> 
+         <option value="นาง">นาง</option>
+         <option value="นางสาว">นางสาว</option>
+       </select>
+
+     </div>
+
+     <div class="col-sm-3">
+      <label>ชื่อ <font class="text-danger">*</font></label>
+      <input type="text" class="form-control" placeholder="ชื่อ" name="name_first" value="{{ old('name_first') }}" required="">
 
     </div>
-    <div class="form-group row">
-     <div class="col-sm-2">
-      <label>คำนำหน้าชื่อ </label>
-      <select class="form-control" name="name_prefix">
-       <option value="คุณ">คุณ</option>
-       <option value="นาย">นาย</option> 
-       <option value="นาง">นาง</option>
-       <option value="นางสาว">นางสาว</option>
-     </select>
 
-   </div>
+    <div class="col-sm-3">
+      <label>นามสกุล <font class="text-danger">*</font></label>
+      <input type="text" class="form-control" placeholder="นามสกุล" name="name_last" value="{{ old('name_last') }}" required="">
+    </div>
 
-   <div class="col-sm-3">
-    <label>ชื่อ <font class="text-danger">*</font></label>
-    <input type="text" class="form-control" placeholder="ชื่อ" name="name_first" value="{{ old('name_first') }}" required="">
 
+    <div class="col-sm-4">
+      <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">*</font></label>
+      <input type="text" class="form-control" placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business" value="{{ old('name_business') }}" required="">
+    </div>
   </div>
 
-  <div class="col-sm-3">
-    <label>นามสกุล <font class="text-danger">*</font></label>
-    <input type="text" class="form-control" placeholder="นามสกุล" name="name_last" value="{{ old('name_last') }}" required="">
-  </div>
+  <div class="form-group row">
+   <div class="col-sm-2">
+    <label>สถานะภาพ</label>
+    <select class="form-control" name="family_status">
+     <option value="1">โสด</option>
+     <option value="2">สมรส</option>
+     <option value="3">หย่าร้าง</option>
+   </select>
+ </div>
 
-
-  <div class="col-sm-4">
-    <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">*</font></label>
-    <input type="text" class="form-control" placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business" value="{{ old('name_business') }}" required="">
-  </div>
-</div>
-
-<div class="form-group row">
- <div class="col-sm-2">
-  <label>สถานะภาพ</label>
-  <select class="form-control" name="family_status">
-   <option value="1">โสด</option>
-   <option value="2">สมรส</option>
-   <option value="3">หย่าร้าง</option>
- </select>
-</div>
-
-<div class="col-sm-3">
+ <div class="col-sm-3">
   <label>วัน/เดือน/ปีเกิด</label>
   <input class="form-control" type="date" name="birth_day" value="{{ old('birth_day') }}">
 </div>

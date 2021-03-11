@@ -220,6 +220,14 @@
                     <th>ค่าจัดส่ง : </th>
                     <td> {{ number_format($order->shipping_price,2) }} </td>
                 </tr>
+                    @if($order->shipping_cost_detail)
+                        <tr>
+                            <td colspan="2">
+                                <label class="label label-inverse-warning"> <font id="shipping_detail" style="color: #000">{{ $order->shipping_cost_detail }}</font> </label>
+                            </td>
+                        </tr>
+                    @endif
+
                 @endif
                 <tr>
                     <th>คะแนนที่ได้รับ : </th>
@@ -250,13 +258,13 @@
                 @elseif($order->orders_type_id_fk == 6 || $order->orders_type_id_fk == 7)
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>
-                    <td align="right"><strong > {{ number_format($order->sum_price,2) }}</strong>
+                    <td align="right"><strong > <u>{{ number_format($order->sum_price,2) }}</u></strong>
                     </td>
                 </tr>
                 @else
                 <tr>
                     <td><strong>ยอดชำระ</strong></td>
-                    <td align="right"><strong > {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
+                    <td align="right"><strong > <u>{{ number_format($order->sum_price + $order->shipping_price,2) }}</u></strong>
                     </td>
                 </tr>
                 @endif

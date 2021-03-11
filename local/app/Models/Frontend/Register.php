@@ -17,7 +17,6 @@ class Register extends Model
             $introduce_type = '';
         }
         
-
         $id =DB::table('Customers')
         ->select('id')
         ->orderby('id','DESC')
@@ -45,6 +44,9 @@ class Register extends Model
     $last_name= (trim($req->input('name_last')) == '') ? null : $req->input('name_last');
     $business_name= (trim($req->input('name_business')) == '') ? null : $req->input('name_business');
     $family_status= (trim($req->input('family_status')) == '') ? null : $req->input('family_status');
+
+    $business_location = (trim($req->input('business_location')) == '') ? null : $req->input('business_location');
+
         //birth_day
     $birth_day= (trim($req->input('birth_day')) == '') ? null : $req->input('birth_day');
 
@@ -142,6 +144,7 @@ class Register extends Model
           $two_month = date("Y-m-t", $caltime);
 
           $data_customer = [
+             'business_location_id'=>$business_location,
              'user_name'=>$username,
              'password'=>$pass_db,
              'prefix_name'=>$prefix_name,
