@@ -300,7 +300,7 @@
                    <div class="row m-t-5">
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
-                       <input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่"
+                       <input type="text" class="form-control form-control-bold" placeholder="ชื่อผู้รับ"
                        name="receive_name"
                        value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}"
                        readonly="">
@@ -327,7 +327,7 @@
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
                        <input type="text" class="form-control form-control-bold sent_address_other"
-                       placeholder="บ้านเลขที่" name="other_name" id="other_name">
+                       placeholder="ชื่อผู้รับ" name="other_name" id="other_name">
 
                      </div>
                      <div class="col-md-6 col-sm-6 col-6">

@@ -8,14 +8,15 @@ use App\Models\Frontend\CourseCheckRegis;
 <!-- Breadcombssss  area Start-->
 <div class="page-header card">
   <div class="card-block">
-    <h5 class="text-primary">@if($data['type']) {{ $data['type']->orders_type }} @else ไม่ทราบจุดประสงค์การสั่งซื้อ @endif</h5>
+    <h5 class="text-primary">@if($data['type']) {{ $data['type']->orders_type }} @else ไม่ทราบจุดประสงค์การสั่งซื้อ
+      @endif</h5>
     <hr>
 
     @foreach($data['couse_event'] as $value)
-    
-    <?php 
+
+    <?php
     if($value->ce_type == 1){
-      $type_name = 'COURSE';  
+      $type_name = 'COURSE';
     }elseif($value->ce_type == 2){
       $type_name = 'EVENT';
     }else{
@@ -33,10 +34,12 @@ use App\Models\Frontend\CourseCheckRegis;
               <div class="col-md-3">
                 @if($check_status['status'] == 'success')
                 <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}">
-                  <img class="card-img-top img-fluid zoom" src="{{asset($value->img_url.''.$value->img_name)}}" alt="Card image cap">
+                  <img class="card-img-top img-fluid zoom" src="{{asset($value->img_url.''.$value->img_name)}}"
+                    alt="Card image cap">
                 </a>
                 @else
-                <img class="card-img-top img-fluid" src="{{asset($value->img_url.''.$value->img_name)}}" alt="Card image cap">
+                <img class="card-img-top img-fluid" src="{{asset($value->img_url.''.$value->img_name)}}"
+                  alt="Card image cap">
                 @endif
 
               </div>
@@ -44,26 +47,41 @@ use App\Models\Frontend\CourseCheckRegis;
                 <div class="card-block p-0">
                   <?php $count_ce = \App\Helpers\Frontend::get_ce_register($value->id); ?>
                   @if($check_status['status'] == 'success')
-                  <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}"><h4 class="card-title m-b-5 m-t-5">{{$value->ce_name}} <span class="label label-success" style="font-size: 12px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$value->ce_max_ticket}} </span></h4></a>
+                  <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}">
+                    <h4 class="card-title m-b-5 m-t-5">{{$value->ce_name}} <span class="label label-success"
+                        style="font-size: 12px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$value->ce_max_ticket}}
+                      </span></h4>
+                  </a>
                   @else
-                  <h4 class="card-title m-b-5 m-t-5">{{$value->ce_name}} <span class="label label-success" style="font-size: 12px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$value->ce_max_ticket}} </span></h4> 
+                  <h4 class="card-title m-b-5 m-t-5">{{$value->ce_name}} <span class="label label-success"
+                      style="font-size: 12px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$value->ce_max_ticket}}
+                    </span></h4>
                   @endif
 
                   {!! $value->title !!}
 
-                  <span class="prod-price" style="font-size: 20px"> {{ number_format($value->ce_ticket_price,2)}} <b style="color:#00c454">[{{number_format($value->pv)}} PV]</b></span>
+                  <span class="prod-price" style="font-size: 20px"> {{ number_format($value->ce_ticket_price,2)}} <b
+                      style="color:#00c454">[{{number_format($value->pv)}} PV]</b></span>
 
-                  <p class="card-text"><b class="text-primary">เริ่ม {{date('d/m/Y',strtotime($value->ce_sdate))}} ถึง {{date('d/m/Y',strtotime($value->ce_edate))}}</b> </p>
-                  
+                  <p class="card-text"><b class="text-primary">เริ่ม {{date('d/m/Y',strtotime($value->ce_sdate))}} ถึง
+                      {{date('d/m/Y',strtotime($value->ce_edate))}}</b> </p>
+
                   @if($check_status['status'] == 'success')
-                  <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}"  class="btn btn-primary btn-round"><i class="ti-shopping-cart-full"></i> ลงทะเบียน <b>{{$type_name}}</b></a> 
+                  <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}"
+                    class="btn btn-primary btn-round"><i class="ti-shopping-cart-full"></i> ลงทะเบียน
+                    <b>{{$type_name}}</b></a>
                   @else
-                    @if($check_status['code'] == 'e01' || $check_status['code'] == 'e02' || $check_status['code'] == 'e03') 
-                      <button  class="btn btn-inverse btn-round"  data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ $check_status['message'] }}"><i class="ti-shopping-cart-full"></i> ใช้สิทธิ์ลงทะเบียน <b>{{$type_name}}</b> ครบแล้ว</button>
-                    @else
-                      <button class="btn btn-inverse btn-round" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ $check_status['message'] }}"><i class="ti-shopping-cart-full"></i> เงื่อนไขลงทะเบียน <b>{{$type_name}}</b> ไม่ครบ </button>
-                    @endif
-                    
+                  @if($check_status['code'] == 'e01' || $check_status['code'] == 'e02' || $check_status['code'] ==
+                  'e03')
+                  <button class="btn btn-inverse btn-round" data-toggle="tooltip" data-placement="right" title=""
+                    data-original-title="{{ $check_status['message'] }}"><i class="ti-shopping-cart-full"></i>
+                    ใช้สิทธิ์ลงทะเบียน <b>{{$type_name}}</b> ครบแล้ว</button>
+                  @else
+                  <button class="btn btn-inverse btn-round" data-toggle="tooltip" data-placement="right" title=""
+                    data-original-title="{{ $check_status['message'] }}"><i class="ti-shopping-cart-full"></i>
+                    เงื่อนไขลงทะเบียน <b>{{$type_name}}</b> ไม่ครบ </button>
+                  @endif
+
                   @endif
                 </div>
               </div>
@@ -74,15 +92,7 @@ use App\Models\Frontend\CourseCheckRegis;
     </div>
     @endforeach
   </div>
-
 </div>
-
-
-
-
-
 @endsection
-
 @section('js')
-
 @endsection

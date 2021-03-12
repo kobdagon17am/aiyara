@@ -78,10 +78,10 @@
     'normal' => $rootDir . '/lib/fonts/DejaVuSerif',
   ),
   'thsarabunnew' => array(
-    'normal' => $fontDir . '/thsarabunnew-normal_1df21894e858eb30b230a0123f779d48',
-    'bold' => $fontDir . '/thsarabunnew-bold_271e604406ab71513327f6554d14c81e',
-    'italic' => $fontDir . '/thsarabunnew-italic_8aa7445c95a5ba6794e3a2bd9f79ec1d',
-    'bold_italic' => $fontDir . '/thsarabunnew-bold-italic_1964d963fe18928d6cb54b3662c43ac5',
+    'normal' => $fontDir . '/thsarabunnew-normal_bf352139bf0b1338c41099cec9711a91',
+    'bold' => $fontDir . '/thsarabunnew-bold_6a91dd65c7c930875834b34fe5b4e46c',
+    'italic' => $fontDir . '/thsarabunnew-italic_c0402ba6fe2e128765f4eb232e9e85a7',
+    'bold_italic' => $fontDir . '/thsarabunnew-bold-italic_a92095bf69724993724228773ab8bb9a',
   ),
   'material design icons' => array(
     'normal' => $fontDir . '/material-design-icons-normal_b3632bd330ca4b2012afd2c5a5eec244',
@@ -101,5 +101,23 @@
   ),
   'summernote' => array(
     'normal' => $fontDir . '/summernote-normal_b4e180be2cda14b28df2e5e4ae793358',
+  ),
+  'typicons' => array(
+    'normal' => $fontDir . '/typicons-normal_dbab897423ad270a8230d334d3990fa6',
+  ),
+  'themify' => array(
+    'normal' => $fontDir . '/themify-normal_229099605f3852291985ca99181f5ff2',
+  ),
+  'icofont' => array(
+    'normal' => $fontDir . '/icofont-normal_cc0bfb05c9849ba013e2852c8b970cc8',
+  ),
+  'fontawesome' => array(
+    'normal' => $fontDir . '/fontawesome-normal_a390b8b35441cc8f7f000425170d0b1b',
+  ),
+  'poppins' => array(
+    '300' => $fontDir . '/poppins-300_ea8381d11630c33f2ab271919542aa73',
+    'normal' => $fontDir . '/poppins-normal_c885b15ae79e3daeece46b4ffe3f3d1b',
+    '500' => $fontDir . '/poppins-500_05fb5a75e2d8c287d160b394607b8bee',
+    '600' => $fontDir . '/poppins-600_c74f3fda4cb04848553a2345132469ca',
   ),
 ) ?>

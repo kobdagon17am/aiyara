@@ -135,6 +135,9 @@ Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
+
+Route::get('export_pdf_history/{code_order?}','Frontend\HistoryController@export_pdf_history')->name('export_pdf_history');
+
 Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive_product')->name('modal_qr_recive_product');
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
