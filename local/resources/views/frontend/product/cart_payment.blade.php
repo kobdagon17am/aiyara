@@ -13,7 +13,7 @@
    <div class="col-md-8 col-sm-12">
      <form action="{{route('payment_submit')}}" method="POST" enctype="multipart/form-data">
        @csrf
-       
+
        <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
        <input type="hidden" name="type" value="{{ $bill['type'] }}">
        <input type="hidden" name="vat" value="{{ $bill['vat'] }}">
@@ -112,7 +112,7 @@
                      <div class="radio radio-inline">
                        <label>
                          <input type="radio" id="sent_other" onchange="sent_address('sent_other')" name="receive"
-                         value="sent_other">
+                         value="sent_address_other">
                          <i class="helper"></i><b>อื่นๆ</b>
                        </label>
                      </div>
@@ -125,7 +125,7 @@
                    <div class="row m-t-5">
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
-                       <input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="name"
+                       <input type="text" class="form-control form-control-bold" placeholder="ชื่อผู้รับ" name="name"
                        value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}"
                        readonly="">
                      </div>
@@ -208,7 +208,7 @@
                    <div class="row m-t-5">
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
-                       <input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่"
+                       <input type="text" class="form-control form-control-bold" placeholder="ชื่อผู้รับ"
                        name="card_name"
                        value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}"
                        readonly="">
@@ -222,7 +222,7 @@
                    <div class="row m-t-5">
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>Email</label>
-                       <input type="email" class="form-control form-control-bold" placeholder="Email" name="email"
+                       <input type="email" class="form-control form-control-bold" placeholder="Email" name="card_email"
                        value="{{$customer->email}}" readonly="">
                      </div>
 
@@ -301,7 +301,7 @@
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
                        <input type="text" class="form-control form-control-bold" placeholder="ชื่อผู้รับ"
-                       name="receive_name"
+                       name="office_name"
                        value="{{$customer->prefix_name}} {{ $customer->first_name }} {{ $customer->last_name }}"
                        readonly="">
                      </div>
@@ -315,7 +315,7 @@
                    <div class="row m-t-5">
                      <div class="col-md-6 col-sm-6 col-6">
                        <label>Email </label>
-                       <input type="email" class="form-control form-control-bold" placeholder="Email" name="email"
+                       <input type="email" class="form-control form-control-bold" placeholder="Email" name="office_email"
                        value="{{$customer->email}}">
                      </div>
 
@@ -705,7 +705,7 @@
            <div class="row" align="center">
              <div class="form-control bootstrap-tagsinput" id="html_shipping_premium">
               <div class="checkbox-color checkbox-success">
-                <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true"> 
+                <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true">
                 <label for="checkbox13"> ส่งแบบพิเศษ / Premium
                 </label>
               </div>
@@ -767,8 +767,8 @@
       var sent_address =  document.getElementById('sent_address_check').checked;
       check_shipping({{$address_card->provinces_id}});
     }
- 
-    if(sent_other){ 
+
+    if(sent_other){
        var sent_other =  document.getElementById('province').value;
        if(sent_other){
         check_shipping(sent_other);

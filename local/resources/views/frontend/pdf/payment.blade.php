@@ -85,33 +85,24 @@
     <table width="100%" style="width:100%" border=0" width="30%" >
 
          <th style="text-align: left;">
-             @if($order->delivery_location_status == 'sent_office')
-             <p>{{ $order->name }}<br>
-                 @if($order->tel) Tel. {{ $order->office_tel }} @endif<br>
-                 @if($order->office_email) Email. {{ $order->office_email }} @endif<br>
-                 @if($order->office_house_no) {{ $order->office_house_no }} @endif
-                 {{-- @if($order->office_moo) M.{{ $order->office_moo }} @endif --}} @if($order->office_soi) ,
-                 {{ $order->office_soi }} @endif<br>
-                 @if($order->office_district), {{ $order->office_district }} @endif
-                 @if($order->office_district_sub) , {{ $order->office_district_sub }} @endif<br>
-                 @if($order->office_road) Road {{ $order->office_road }} @endif
-                 @if($order->office_province), {{ $order->office_province }} @endif @if($order->office_zipcode) ,
-                 {{ $order->office_zipcode }} @endif
-             </p>
-             @else
-             <p>{{ $order->name }}<br>
-                 @if($order->tel) Tel: {{ $order->tel }} <br>@endif
-                 @if($order->email) Email: {{ $order->email }} <br>@endif
-                 @if($order->house_no) {{ $order->house_no }} @endif @if($order->moo) หมู่. {{ $order->moo }}
-                 @endif @if($order->house_name) , บ. {{ $order->house_name }} @endif
-                 @if($order->soi),ซอย {{ $order->soi }} @endif @if($order->provinces_name),
-                 อ. {{ $order->provinces_name }} @endif @if($order->amphures_name) , จ.{{ $order->amphures_name }}
-                 @endif<br>
-                 @if($order->road) ,ถนน. {{ $order->road }} @endif @if($order->district_name),
-                 ต.{{ $order->district_name }} @endif @if($order->zipcode) , {{ $order->zipcode }} @endif
+          @if($address)
+          <p><b>{{ $address['name'] }}</b><br>
+           @if($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
+           @if($address['email']) Email: {{ $address['email']}}<br>@endif
+           @if($address['house_no']) {{$address['house_no']}},@endif
+           @if($address['moo']) หมู่.{{ $address['moo'] }},@endif
+           @if($address['house_name']) บ.{{ $address['house_name'] }},@endif
+           @if($address['soi']) ซอย.{{ $address['soi'] }},@endif
+           @if($address['road']) ถนน.{{ $address['road'] }},@endif
 
-                 @endif
-             </p>
+           @if($address['district_name'])<br> ต.{{ $address['district_name'] }},@endif
+           @if($address['amphures_name']) อ.{{ $address['amphures_name'] }},@endif
+           @if($address['provinces_name']) จ.{{ $address['provinces_name'] }},@endif
+           @if($address['zipcode']) {{ $address['zipcode'] }}@endif
+       </p>
+      @else
+       <p><b> Address Is Null</b>
+      @endif
          </th>
 
          <th style="text-align: left;" valign="top">

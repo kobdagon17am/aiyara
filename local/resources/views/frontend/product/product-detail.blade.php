@@ -17,10 +17,10 @@
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/notification/notification.css')}}">
  <!-- Animate.css -->
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/animate.css/css/animate.css')}}">
- 
+
  @endsection
  @section('conten')
- 
+
  <div class="row">
 
   <div class="col-md-12">
@@ -67,10 +67,10 @@
                 </div> -->
                 <div class="col-lg-12">
                   @if($data['type']=='6')
-                  <?php 
+                  <?php
 
                   if($data['product_data']->ce_type == 1){
-                    $type_name = 'COURSE';  
+                    $type_name = 'COURSE';
                   }elseif($data['product_data']->ce_type == 2){
                     $type_name = 'EVENT';
                   }else{
@@ -81,12 +81,12 @@
                   ?>
                   <h4 class="pro-desc">{{$data['product_data']->ce_name}} <span class="label label-success" style="font-size: 15px"><i class="fa fa-users"></i> {{ $count_ce }}/{{$data['product_data']->ce_max_ticket}} </span></h4>
                   @else
-                  
+
 
                   <h4 class="pro-desc">{{$data['product_data']->product_name}} </h4>
                   @endif
-                  
-                  
+
+
                 </div>
            {{--      <div class="col-lg-12">
                    {{$data['product_data']->descriptions}}
@@ -101,16 +101,16 @@
                   </select>
                 </div> -->
 
-                
+
                 @if($data['type'] == 6)
                 <div class="col-lg-12">
 
                   <h4> {{number_format($data['product_data']->ce_ticket_price,2)}} <b style="color:#00c454"> [{{$data['product_data']->pv}} PV] </b></h4>
                   <hr>
-                  {!! $data['product_data']->ce_place !!} 
+                  {!! $data['product_data']->ce_place !!}
                   <hr>
                 </div>
-                
+
                 @else
                 <div class="col-lg-12">
                   <h4>{!! @$data['product_data']->icon !!} {{number_format($data['product_data']->member_price,2)}} <b style="color:#00c454">@if($data['type'] == 5)[0 PV]@else[{{$data['product_data']->pv}} PV]@endif</b></h4>
@@ -138,12 +138,12 @@
                         </button>
                       </span>
                     </div>
-                  </div> 
+                  </div>
                 </div>
                 @if($data['type'] == 6)
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
-                  <?php 
-                  $ce_check = \App\Models\Frontend\CourseCheckRegis::check_register($data['product_data']->id); 
+                  <?php
+                  $ce_check = \App\Models\Frontend\CourseCheckRegis::check_register($data['product_data']->id);
                   ?>
                   @if($ce_check['status'] == 'success')
                     <button type="button" onclick="addcart({{$data['product_data']->id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
@@ -154,7 +154,7 @@
                     <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                   </button>
                   @endif
-                
+
 
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">
@@ -166,7 +166,7 @@
                  <button type="button" onclick="addcart({{$data['product_data']->products_id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
                   <i class="icofont icofont-cart-alt f-16"></i><span class="m-l-10">ADD TO CART</span>
                 </button>
- 
+
               </div>
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 text-center">
                <a href="{{ route('product-list',['type'=>$data['type']]) }}" class="btn btn-warning btn-block" style="margin-top: -2px" type=""><i class="fa fa-cart-plus"></i> <span class="m-l-10">เลือกสินค้าเพิ่ม </span></a>
@@ -201,10 +201,10 @@
 </div>
 </div>
 
-<?php 
+<?php
 
 if($data['type'] == 6 ){
-  $img = $data['img'][0]->img_url.''.$data['img'][0]->img_name; 
+  $img = $data['img'][0]->img_url.''.$data['img'][0]->img_name;
 
 }else{
   $img = $data['img'][0]->img_url.''.$data['img'][0]->product_img;
@@ -222,7 +222,7 @@ if($data['type'] == 6 ){
 <!-- product detail js -->
 <script  src="{{asset('frontend/assets/pages/product-detail/product-detail.js')}}"></script>
 <script type="text/javascript">
-  function addcart(id) { 
+  function addcart(id) {
     var type = {{ $data['type'] }};
     if(type == 6 ){
      var type = {{ $data['type'] }};
@@ -259,8 +259,10 @@ if($data['type'] == 6 ){
           })
   .done(function(data) {
    $('#count_cart').html(data);
+   $('#m_count_cart').html(data);
    var count_cart = '<i class="fa fa-shopping-cart"></i> '+data;
    $('#count_cart_1').html(count_cart);
+   notify();
           //console.log(data);
         })
   .fail(function() {
@@ -270,5 +272,6 @@ if($data['type'] == 6 ){
 </script>
 <script  src="{{asset('frontend/assets/js/bootstrap-growl.min.js')}}"></script>
 <script  src="{{asset('frontend/assets/pages/notification/notification.js')}}"></script>
+
 @endsection
 

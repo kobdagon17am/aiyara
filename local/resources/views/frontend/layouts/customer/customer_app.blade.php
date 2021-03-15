@@ -9,7 +9,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-<!-- Meta --> 
+<!-- Meta -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,7 +18,7 @@
 <meta name="author" content="codedthemes" />
 <!-- Favicon icon -->
 
-<link rel="icon" href="{{asset('frontend/assets/icon/logo_icon.png')}}" type="image/x-icon"> 
+<link rel="icon" href="{{asset('frontend/assets/icon/logo_icon.png')}}" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
 <!-- Required Fremwork -->
 
@@ -69,11 +69,53 @@
 						<a href="{{route('home')}}">
 							<img class="img-fluid" src="{{asset('frontend/assets/images/logo.png')}}"  width="140" alt="Theme-Logo" />
 						</a>
-						<a href="{{route('cart',['type'=>1])}}" class="menu-shope d-lg-none">
+
+                @if(request()->is('product-list/1') || request()->is('cart/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1'))
+								<a href="{{route('cart',['type'=>1])}}" class="menu-shope d-lg-none">
 									<i class="fa fa-shopping-cart"></i>
-									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
 									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
 								</a>
+								@elseif(request()->is('product-list/2') || request()->is('cart/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2'))
+								<a href="{{route('cart',['type'=>2])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(2)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list/3') || request()->is('cart/3') || request()->is('product-detail/3/*') || request()->is('cart_payment/3'))
+								<a href="{{route('cart',['type'=>3])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(3)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list/4') || request()->is('cart/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') )
+								<a href="{{route('cart',['type'=>4])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(4)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list/5') || request()->is('cart/5') || request()->is('product-detail/5/*') || request()->is('cart_payment/5'))
+								<a href="{{route('cart',['type'=>5])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(5)->getTotalQuantity() }}</span>
+								</a>
+								@elseif(request()->is('product-list/6') || request()->is('cart/6') || request()->is('product-detail/6/*') || request()->is('cart_payment/6'))
+								<a href="{{route('cart',['type'=>6])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(6)->getTotalQuantity() }}</span>
+								</a>
+
+								@else
+
+								<a href="{{route('cart',['type'=>1])}}" class="menu-shope d-lg-none">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
+									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ Cart::session(1)->getTotalQuantity() }}</span>
+								</a>
+								@endif
+
 
 						<a class="mobile-options">
 							<i class="ti-more"></i>
@@ -145,20 +187,20 @@
 							</li>
 
 							<li class="header-notification">
-								<?php  
+								<?php
 								$noti = \App\Helpers\Frontend::notifications(Auth::guard('c_user')->user()->id);
 
 
 								?>
-								
-								<a href="#!"> 
+
+								<a href="#!">
 									<i class="fa fa-envelope-o"></i>
 									@if($noti['count'] > 0)
 									<span class="badge bg-primary" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{ $noti['count'] }}</span>
 									@endif
 								</a>
-								
+
 								@if($noti['count'] > 0)
 								<ul class="show-notification">
 									<li>
@@ -176,7 +218,7 @@
 												<h5 class="notification-user">มีข้อความตอบกลับจากใส่ใจคะ</h5>
 												<p class="notification-msg">{{ $noti_value->topics_question }}</p>
 												<span class="notification-time">30 minutes ago</span>
-											</div> 
+											</div>
 										</div>
 									</a>
 									</li>
@@ -208,7 +250,7 @@
 										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> แก้ไขข้อมูลส่วนตัว </a>
 
 									</li>
-									
+
 									<li>
 										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i> สถานะเอกสารการสมัคร </a>
 
@@ -230,13 +272,13 @@
 				</div>
 			</nav>
 
-			 
+
 			<div class="pcoded-main-container">
 				<div class="pcoded-wrapper">
 					<nav class="pcoded-navbar">
 						<div class="sidebar_toggle"><a href="#"><i class="icon-close icons text-success"></i></a></div>
 						<div class="pcoded-inner-navbar main-menu" style="padding-bottom: 50px">
-<!-- 
+<!--
 	<div class="pcoded-navigation-label">สมาชิก</div> -->
 
 	<ul class="pcoded-item pcoded-left-item" item-border="true" item-border-style="none" subitem-border="true">
@@ -244,7 +286,7 @@
 		<li class="{{ (request()->is('home')) ? 'active' : '' }}">
 			<a href="{{route('home')}}">
 				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b>โครงสร้างสายงาน</b></span>
-				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
+				<span class="pcoded-mtext">โครงสร้างสายงาน</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
@@ -252,7 +294,7 @@
 {{-- 		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
 			<a href="{{route('home_type_tree')}}">
 				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b>โครงสร้างสายงาน</b></span>
-				<span class="pcoded-mtext">โครงสร้างสายงาน</span> 
+				<span class="pcoded-mtext">โครงสร้างสายงาน</span>
 				<span class="pcoded-mcaret"></span>
 				<span class="pcoded-badge label label-danger">NEW</span>
 			</a>
@@ -358,7 +400,7 @@
 
 			</ul>
 		</li>
-{{-- 
+{{--
 		<li class="pcoded-hasmenu {{ (request()->is('product-history') || request()->is('cart-payment-history/*') || request()->is('course') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b>ประวัติการสั่งซื้อ</b></span>
@@ -368,7 +410,7 @@
 
 			<ul class="pcoded-submenu">
 				<li class="{{ (request()->is('product-history')) ? 'active' : '' }}">
-					<a href="{{route('product-history')}}"> 
+					<a href="{{route('product-history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">สินค้า</span>
 						<span class="pcoded-mcaret"></span>
@@ -411,7 +453,7 @@
 
 			<ul class="pcoded-submenu">
 				<li class="{{ (request()->is('giftvoucher_history')) ? 'active' : '' }}">
-					<a href="{{route('giftvoucher_history')}}"> 
+					<a href="{{route('giftvoucher_history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">ความเคลื่อนไหว</span>
 						<span class="pcoded-mcaret"></span>
@@ -424,7 +466,7 @@
 						<span class="pcoded-mtext">แลกสินค้า</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>	 
+				</li>
 			</ul>
 		</li>
 
@@ -445,7 +487,7 @@
 
 			<ul class="pcoded-submenu">
 				<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_report')}}"> 
+					<a href="{{route('commission_bonus_report')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
 						<span class="pcoded-mcaret"></span>
@@ -474,11 +516,11 @@
 						<span class="pcoded-mtext">Matching</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>	 
+				</li>
 			</ul>
 		</li>
-		
-		
+
+
 		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
 			<a href="{{route('ai-pocket')}}">
 				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
@@ -486,7 +528,7 @@
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
-		
+
 		<li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
 			<a href="{{route('ai-cash')}}">
 				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
@@ -521,7 +563,7 @@
 			</ul>
 		</li>
 
-	
+
 
 		<li class="{{ (request()->is('news') || request()->is('news_detail/*')) ? 'active' : '' }}">
 			<a href="{{route('news')}}">
@@ -544,7 +586,7 @@
 				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
 
 				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 1</span>
 						<span class="pcoded-mcaret"></span>
@@ -552,7 +594,7 @@
 				</li>
 
 				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 2</span>
 						<span class="pcoded-mcaret"></span>
@@ -560,7 +602,7 @@
 				</li>
 
 				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 3</span>
 						<span class="pcoded-mcaret"></span>
@@ -568,7 +610,7 @@
 				</li>
 
 				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank"> 
+					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 4</span>
 						<span class="pcoded-mcaret"></span>
@@ -576,14 +618,14 @@
 				</li>
 
 				<li class="{{ (request()->is('salepage/setting')) ? 'active' : '' }}">
-					<a href="{{route('salepage/setting')}}"> 
+					<a href="{{route('salepage/setting')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Setting</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				 
+
 			</ul>
 		</li>
 			<li class="{{ (request()->is('message/*')) ? 'active' : '' }}">
@@ -646,10 +688,9 @@
 
 @include('frontend.layouts.flash-message')
 @yield('js')
-
 </body>
 
 </html>
- 
-    
-   
+
+
+

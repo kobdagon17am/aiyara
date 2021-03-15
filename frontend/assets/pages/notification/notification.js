@@ -30,6 +30,36 @@
    
 // });
 
+ 
+    //Welcome Message (not for login page)
+    
+    function notify(){
+        $.growl({
+            //message: message,
+            title: '<b><i class="fa fa-shopping-cart"></i>  Add cart success </b> ',
+        },{
+            type: 'success',
+            allow_dismiss: false,
+            label: 'Cancel',
+            className: 'btn-xs btn-inverse',
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            delay: 2500,
+            animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+            },
+            offset: {
+                x: 30,
+                y: 30
+            },
+            
+        });
+    };
+
+
 $(document).ready(function() {
    
     /*--------------------------------------
@@ -81,6 +111,7 @@ $(document).ready(function() {
     };
 
     $('.notifications .btn').on('click',function(e){
+        
         e.preventDefault();
         var nFrom = $(this).attr('data-from');
         var nAlign = $(this).attr('data-align');

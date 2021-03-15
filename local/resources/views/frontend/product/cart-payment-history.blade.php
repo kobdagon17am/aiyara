@@ -17,33 +17,25 @@
          <div class="row invoive-info">
              <div class="col-md-4 col-xs-12 invoice-client-info">
                  <h6>Information :</h6>
-                 @if($order->delivery_location_status == 'sent_office')
-                 <h6 class="m-0">{{ $order->office_name }}</h6>
-                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->office_tel }} @endif</p>
-                 <p class="m-0">@if($order->office_email) Email. {{ $order->office_email }} @endif</p>
-                 <p class="m-0">@if($order->office_house_no) {{ $order->office_house_no }} @endif
-                     {{-- @if($order->office_moo) M.{{ $order->office_moo }} @endif --}} @if($order->office_soi) ,
-                     {{ $order->office_soi }} @endif</p>
-                 <p class="m-0"> @if($order->office_district), {{ $order->office_district }} @endif
-                     @if($order->office_district_sub) , {{ $order->office_district_sub }} @endif</p>
-                 <p class="m-0">@if($order->office_road) Road {{ $order->office_road }} @endif
-                     @if($order->office_province), {{ $order->office_province }} @endif @if($order->office_zipcode) ,
-                     {{ $order->office_zipcode }} @endif</p>
 
+                 @if($address)
+                     <p><b>{{ $address['name'] }}</b><br>
+                      @if($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
+                      @if($address['email']) Email: {{ $address['email']}}<br>@endif
+                      @if($address['house_no']) {{$address['house_no']}},@endif
+                      @if($address['moo']) หมู่.{{ $address['moo'] }},@endif
+                      @if($address['house_name']) บ.{{ $address['house_name'] }},@endif
+                      @if($address['soi']) ซอย.{{ $address['soi'] }},@endif
+                      @if($address['road']) ถนน.{{ $address['road'] }},@endif
+
+                      @if($address['district_name'])<br> ต.{{ $address['district_name'] }},@endif
+                      @if($address['amphures_name']) อ.{{ $address['amphures_name'] }},@endif
+                      @if($address['provinces_name']) จ.{{ $address['provinces_name'] }},@endif
+                      @if($address['zipcode']) {{ $address['zipcode'] }}@endif
+                  </p>
                  @else
-                 <h6 class="m-0">{{ $order->name }}</h6>
-                 <p class="m-0 m-t-10">@if($order->tel) Tel. {{ $order->tel }} @endif</p>
-                 <p class="m-0">@if($order->email) Email. {{ $order->email }} @endif</p>
-                 <p class="m-0">@if($order->house_no) {{ $order->house_no }} @endif @if($order->moo) M.{{ $order->moo }}
-                     @endif @if($order->house_name) , {{ $order->house_name }} @endif</p>
-                 <p class="m-0">@if($order->soi) , {{ $order->soi }} @endif @if($order->district),
-                     {{ $order->district }} @endif @if($order->district_sub) , {{ $order->district_sub }} @endif</p>
-                 <p class="m-0">@if($order->road) ,Road. {{ $order->road }} @endif @if($order->province),
-                     {{ $order->province }} @endif @if($order->zipcode) , {{ $order->zipcode }} @endif</p>
-
+                  <p><b> Address Is Null</b>
                  @endif
-
-
              </div>
              <div class="col-md-4 col-sm-6">
                  <h6>Order Information :</h6>

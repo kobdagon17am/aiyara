@@ -75,6 +75,23 @@ class HistoryController extends Controller
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
 
+        if ($order->delivery_location_status == 'sent_address') {
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->province, $order->district, $order->district_sub, $order->zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_address_card') {
+
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->province, $order->district, $order->district_sub, $order->zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_office') {
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province, $order->office_district, $order->office_district_sub, $order->office_zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_address_other') {
+
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
+        } else {
+            $address = '';
+        }
+
         if ($order->orders_type_id_fk == 6) {
             $order_items = DB::table('db_order_products_list')
                 ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
@@ -91,7 +108,7 @@ class HistoryController extends Controller
 
         if (!empty($order)) {
             //return view('frontend.pdf.payment', compact('order', 'order_items'));
-            $pdf = PDF::loadView('frontend.pdf.payment', compact('order', 'order_items'));
+            $pdf = PDF::loadView('frontend.pdf.payment', compact('order', 'order_items', 'address'));
             //   return view('frontend.pdf.payment',compact('data'));
             //   // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
             return $pdf->stream('payment.pdf'); // เปิดไฟลฺ์
@@ -358,17 +375,38 @@ class HistoryController extends Controller
                 'dataset_business_major.tel as office_tel',
                 'dataset_business_major.email as office_email',
                 'db_invoice_code.order_payment_code',
-                'dataset_pay_type.detail as pay_type_name')
+                'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.orders_type_id_fk')
             ->leftjoin('dataset_business_major', 'dataset_business_major.location_id', '=', 'db_orders.sentto_branch_id')
             ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.pay_type_id', '=', 'db_orders.pay_type_id_fk')
 
+            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province')
+            ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.district')
+            ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_sub')
+
             ->where('dataset_order_status.lang_id', '=', '1')
             ->where('dataset_orders_type.lang_id', '=', '1')
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
+
+        if ($order->delivery_location_status == 'sent_address') {
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_address_card') {
+
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_office') {
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province, $order->office_district, $order->office_district_sub, $order->office_zipcode);
+
+        } elseif ($order->delivery_location_status == 'sent_address_other') {
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
+        } else {
+            $address = '';
+        }
+       // dd($order);
 
         if ($order->orders_type_id_fk == 6) {
             $order_items = DB::table('db_order_products_list')
@@ -385,10 +423,28 @@ class HistoryController extends Controller
         }
 
         if (!empty($order)) {
-            return view('frontend/product/cart-payment-history', compact('order', 'order_items'));
+            return view('frontend/product/cart-payment-history', compact('order', 'order_items', 'address'));
         } else {
             return redirect('product-history')->withError('Payment Data is Null');
         }
+
+    }
+    public function address($name, $tel, $email, $house_no, $moo, $house_name, $soi, $road, $district_name, $amphures_name, $provinces_name, $zipcode)
+    {
+        $address = ['name' => $name,
+            'tel' => $tel,
+            'email' => $email,
+            'house_no' => $house_no,
+            'moo' => $moo,
+            'house_name' => $house_name,
+            'soi' => $soi,
+            'road' => $road,
+            'district_name' => $district_name,
+            'amphures_name' => $amphures_name,
+            'provinces_name' => $provinces_name,
+            'zipcode' => $zipcode,
+        ];
+        return $address;
 
     }
 
