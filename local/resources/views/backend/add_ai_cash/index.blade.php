@@ -108,10 +108,11 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left'},
-            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash </center>', className: 'text-center'},
-            {data: 'action_user', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
+            {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
+            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
             {data: 'pay_type_id', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
-            {data: 'total_amt', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+            {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
             {data: 'updated_at', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
             // {data: 'aicash_amt',   title :'ยอด Ai-Cash ', className: 'text-center ',render: function(d) {
             //     return (parseFloat(d)>0)?d:'-';

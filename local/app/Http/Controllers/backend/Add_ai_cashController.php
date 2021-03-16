@@ -81,14 +81,18 @@ class Add_ai_cashController extends Controller
             $sRow = new \App\Models\Backend\Add_ai_cash;
           }
 
+          if(request('pay_type_id')!=''){
 
-           if(request('save_new')==1){
-              DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-           }
-           if(request('save_update')==1){
-              if($sRow->aicash_amt!=request('aicash_amt')){
+             if(request('save_new')==1){
                 DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-              }
+             }
+             
+             if(request('save_update')==1){
+                if($sRow->aicash_amt!=request('aicash_amt')){
+                  DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
+                }
+            }
+
           }
 
           // dd(str_replace(',','',request('fee_amt')));
@@ -124,6 +128,8 @@ class Add_ai_cashController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
+          DB::select(" UPDATE db_add_ai_cash SET total_amt=(aicash_amt + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
+
           \DB::commit();
 
           if(request('fromAddAiCash')==1){
@@ -143,6 +149,7 @@ class Add_ai_cashController extends Controller
 
     public function destroy($id)
     {
+      // dd($id);
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
       // if( $sRow ){
       //   $sRow->forceDelete();
@@ -151,15 +158,17 @@ class Add_ai_cashController extends Controller
       // เช็คเรื่องการตัดยอด Ai-Cash
        $ch_aicash_01 = DB::select(" select * from customers where id=".$sRow->customer_id_fk." ");
        // return($ch_aicash_01[0]->ai_cash);
-       $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=$id ");
+       // $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=$id ");
        // return($ch_aicash_02[0]->aicash_amt);
 
-       if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
-         // return 'no';
+       if( $ch_aicash_01[0]->ai_cash < $sRow->aicash_amt ){
+           
        }else{
-          DB::select(" UPDATE db_add_ai_cash SET approve_status=4 where id=$id ");
-          return response()->json(\App\Models\Alert::Msg('success'));
+            DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
+            DB::select(" UPDATE db_add_ai_cash SET approve_status=4 where id=$id ");
        }
+
+       return response()->json(\App\Models\Alert::Msg('success'));
 
       
     }
@@ -188,6 +197,14 @@ class Add_ai_cashController extends Controller
         if(@$row->pay_type_id!=''){
           $sD = DB::select(" select * from dataset_pay_type where id=".$row->pay_type_id." ");
            return @$sD[0]->detail;
+        }else{
+          return '';
+        }
+      })  
+      ->addColumn('aicash_remain', function($row) {
+        if(@$row->customer_id_fk!=''){
+          $Customer = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
+          return @$Customer[0]->ai_cash;
         }else{
           return '';
         }

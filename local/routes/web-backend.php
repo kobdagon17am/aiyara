@@ -286,6 +286,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('ajaxGetDBfrontstore', 'AjaxController@ajaxGetDBfrontstore');
     Route::post('ajaxCheckAddAiCash', 'AjaxController@ajaxCheckAddAiCash');
+    Route::post('ajaxGetDBAddAiCash', 'AjaxController@ajaxGetDBAddAiCash');
     
     Route::post('ajaxCalPriceFrontstore01', 'AjaxController@ajaxCalPriceFrontstore01');
     Route::post('ajaxCalPriceFrontstore02', 'AjaxController@ajaxCalPriceFrontstore02');

@@ -119,7 +119,7 @@
                     @if(@$sPurchase_type)
                       @foreach(@$sPurchase_type AS $r)
                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                          {{$r->orders_type}} [{{$r->detail}}] 
+                          {{$r->orders_type}} 
                         </option>
                       @endforeach
                     @endif
@@ -417,18 +417,31 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
             {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
-            {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
-                return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-            }},
-            // {data: 'purchase_type_id_fk',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
-            //   if(d==1){
-            //     return '<span class="badge badge-pill badge-soft-success font-size-16"><i class="fa fa-shopping-basket"></i></span>';
-            //   }else if(d==2){
-            //     return '<span class="badge badge-pill badge-soft-success font-size-16"><i class="fa fa-calendar-check-o"></i></span>';
-            //   }else{
-            //     return '';
-            //   }
+            // {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
+            //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             // }},
+/*
+ทำคุณสมบัติ  <i class="fa fa-shopping-basket"></i>
+รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
+รักษาคุณสมบัติท่องเที่ยว <i class="fa fa-bus"></i>
+เติม Ai-Stockist <i class="ti-wallet "></i>
+Gift Voucher  <i class="fa fa-gift"></i>
+*/
+            {data: 'purchase_type_id_fk',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
+              if(d==1){
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-shopping-basket"></i> </span>';
+              }else if(d==2){
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
+              }else if(d==3){
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
+              }else if(d==4){
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
+              }else if(d==5){
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
+              }else{ 
+                return '';
+              }
+            }},
             {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
             {data: 'sum_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
                 return d ;

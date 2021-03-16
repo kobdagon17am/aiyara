@@ -1652,6 +1652,15 @@ class AjaxController extends Controller
     }
 
 
+    public function ajaxGetDBAddAiCash(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id){
+                $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$request->id ");
+                return response()->json($rs);   
+            }
+        }
+    }
 
 
 

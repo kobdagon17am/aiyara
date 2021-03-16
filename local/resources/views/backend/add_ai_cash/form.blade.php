@@ -118,7 +118,7 @@
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่เติม :</label>
                             <div class="col-md-8">
-                              <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill" type="text" value="{{ @$sRow->aicash_amt }}" name="aicash_amt" autofocus required >
+                              <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill" type="text" value="{{ @$sRow->aicash_amt }}" name="aicash_amt" id="aicash_amt" autofocus required >
                             </div>
                           </div>
                          
@@ -345,22 +345,79 @@
 @section('script')
 
 <script>
+
   $(document).ready(function() {
 
 
           function formatNumber(num) {
               return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-            }
+          }
      
-      $(document).on('change', '#pay_type_id', function(event) {
+          function fnGetDBAddAiCash(){
+
+                    var id = "{{@$sRow->id}}";
+                    $("input[name=_method]").val('');
+
+                    $.ajax({
+                           type:'POST',
+                           dataType:'JSON',
+                           url: " {{ url('backend/ajaxGetDBAddAiCash') }} ", 
+                           data:{ _token: '{{csrf_token()}}',id:id,},
+                           success:function(d){
+                            if(d){
+                              $.each(d,function(key,value){
+                                  
+                                  $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
+                                  $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
+                                  $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+                                  $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
+
+                                  if(pay_type_id==''){
+                                     $("#cash_pay").val('');    
+                                  }else{
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                  }
+
+                                  if(value.transfer_money_datetime==''){
+                                     $("#transfer_money_datetime").val('');    
+                                  }else{
+                                     $("#transfer_money_datetime").val(value.transfer_money_datetime); 
+                                  }
+
+                                });
+
+                               }
+
+                              $("input[name=_method]").val('PUT');
+                              $(".myloading").hide();
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                $(".myloading").hide();
+                            }
+                      });
+              
+                    
+                }
+
+
+
+            $(document).on('change', '#customer_id_fk', function(event) {
+
+                setTimeout(function(){
+                  $("#aicash_amt").focus();
+                });
+
+            });
+
+           $(document).on('change', '#pay_type_id', function(event) {
 
               event.preventDefault();
               $(".myloading").show();
 
               var id = "{{@$sRow->id}}";
               var pay_type_id = $("#pay_type_id").val();
-
-              // alert(pay_type_id);
 
               $(".show_div_credit").hide();
               $(".div_fee").hide();
@@ -404,6 +461,9 @@
                                   $.each(data,function(key,value){
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));  
                                   });
+
+                                  fnGetDBAddAiCash();
+
 
                                   $("input[name=_method]").val('PUT');
                                   $(".myloading").hide();
@@ -524,15 +584,15 @@
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
                                   $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
-                                  // $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
+
                                   if(pay_type_id==''){
                                      $("#cash_pay").val('');    
                                   }else{
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
                                   }
-
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
+                                  $(".myloading").hide();
 
                                 });
 
@@ -698,6 +758,8 @@
                                  
                                 });
 
+                                fnGetDBAddAiCash();
+
                                 $('#pay_type_id').val("").select2();
                                 $(".show_div_cash_pay").hide();
 
@@ -818,6 +880,8 @@
             $('.btnUpSlip').on('click', function(e) {
                   $("#image01").trigger('click');
             });
+
+
 
       });
 
