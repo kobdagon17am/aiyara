@@ -23,7 +23,7 @@ class Pick_warehousePackingCodeController extends Controller
     }
     public function store(Request $request)
     {
-      // dd($request->all());
+      dd($request->all());
 
         if(isset($request->save_to_packing)){
 
@@ -33,7 +33,7 @@ class Pick_warehousePackingCodeController extends Controller
             // dd($rsDelivery);
 
             foreach ($rsDelivery as $key => $value) {
-                DB::update(" UPDATE db_delivery SET status_pack_pick=1 WHERE packing_code = ".$value->packing_code." ");
+                DB::update(" UPDATE db_delivery SET status_pick_pack=1 WHERE packing_code = ".$value->packing_code." ");
             }
 
             $PackingCode = new \App\Models\Backend\Pick_warehousePackingCode;

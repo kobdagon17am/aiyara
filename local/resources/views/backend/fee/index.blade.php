@@ -47,11 +47,11 @@
                     <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
                   </div>
 
-          <!--         <div class="col-4 text-right" style="{{@$sC}}">
+                  <div class="col-4 text-right" style="{{@$sC}}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.fee.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
-                  </div> -->
+                  </div> 
 
                 </div>
 
@@ -109,9 +109,27 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-center w200 '},
+            
             {data: 'txt_desc', title :'<center>ค่าธรรมเนียม (ข้อความ) </center>', className: 'text-center'},
-            {data: 'txt_value', title :'<center>ค่าธรรมเนียม (ค่าตัวเลข) </center>', className: 'text-center'},
-            {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'fee_type',   title :'<center>ประเภทการคำนวณ</center>', className: 'text-center',render: function(d) {
+               if(d==1){
+                  return '% (Percent)';
+               }else if(d==2){
+                  return 'หน่วยเงิน (บาท)';
+               }else{
+                  return 'ยังไม่ระบุ';
+               }
+            }},  
+            {data: 'txt_value',   title :'<center>ค่าธรรมเนียม (ค่าตัวเลข)</center>', className: 'text-center',render: function(d) {
+               return d>0?d:'';
+            }},            
+            // {data: 'txt_fixed_rate', title :'<center>ค่าธรรมเนียมคงที่ (บาท) </center>', className: 'text-center'},
+            {data: 'txt_fixed_rate',   title :'<center>ค่าธรรมเนียมคงที่ (บาท)</center>', className: 'text-center',render: function(d) {
+               return d>0?d:'';
+            }},
+            // {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>อัพเดต</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){

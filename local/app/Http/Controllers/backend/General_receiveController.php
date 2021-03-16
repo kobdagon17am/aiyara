@@ -13,8 +13,17 @@ class General_receiveController extends Controller
     public function index(Request $request)
     {
 
-      return view('backend.general_receive.index');
-      
+      $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBranchs = \App\Models\Backend\Branchs::get();
+      $Warehouse = \App\Models\Backend\Warehouse::get();
+      $Zone = \App\Models\Backend\Zone::get();
+      $Shelf = \App\Models\Backend\Shelf::get();
+
+        return View('backend.general_receive.index')->with(
+        array(
+           'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+        ) );
+
     }
 
  public function create()
@@ -28,6 +37,11 @@ class General_receiveController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
 
+      $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBranchs = \App\Models\Backend\Branchs::get();
+
+      // dd($sBranchs);
+
       // dd($Products);
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
@@ -37,7 +51,9 @@ class General_receiveController extends Controller
         array(
            'Product_in_cause'=>$Product_in_cause,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
+           'sBranchs'=>$sBranchs,
+           'User_branch_id'=>$User_branch_id
         ) );
     }
     public function store(Request $request)
@@ -61,13 +77,24 @@ class General_receiveController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();      
+
+      $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBranchs = \App\Models\Backend\Branchs::get();
+
+      // dd($sBranchs);
+
       return View('backend.general_receive.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id,
            'Product_in_cause'=>$Product_in_cause,
            'Recipient'=>$Recipient,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,
+           'Warehouse'=>$Warehouse,
+           'Zone'=>$Zone,
+           'Shelf'=>$Shelf,
+           'sBranchs'=>$sBranchs,
+           'User_branch_id'=>$User_branch_id
         ) );
     }
 
@@ -93,9 +120,11 @@ class General_receiveController extends Controller
           $sRow->lot_expired_date    = request('lot_expired_date');
           $sRow->amt    = request('amt');
           $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+          $sRow->branch_id_fk    = request('branch_id_fk');
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
           $sRow->zone_id_fk    = request('zone_id_fk');
           $sRow->shelf_id_fk    = request('shelf_id_fk');
+          $sRow->shelf_floor    = request('shelf_floor');
           $sRow->delivery_person    = request('delivery_person');
           
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');

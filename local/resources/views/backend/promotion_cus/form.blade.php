@@ -59,7 +59,9 @@
                   <div class="form-group row">
                     <label for="receipt" class="col-md-3 col-form-label">เลือกโปรโมชั่น :</label>
                     <div class="col-md-6">
-                      <!-- <input type="text" class="form-control" name="promotion_name" value="{{ @$sRow->promotion_name }}"  required > -->
+                      
+                     
+                      
                           <select name="promotion_id_fk" id="promotion_id_fk" class="form-control select2-templating " required >
                             <option value="">Select</option>
                               @if(@$sPromotions)
@@ -68,6 +70,7 @@
                                 @endforeach
                               @endif
                           </select>
+
 
                     </div>
 
@@ -92,6 +95,9 @@
                       <div class="col-md-3">
                          <input id="pro_sdate" name="pro_sdate" type="hidden" value="{{ @$sRow->pro_sdate }}" />
                          <input id="pro_edate" name="pro_edate" type="hidden" value="{{ @$sRow->pro_edate }}" />
+
+                         <input type='button' class="btn btn-success btnSaveDate " value='บันทึกแก้ไขวันที่'>
+
                       </div>
 
                   </div>
@@ -217,13 +223,13 @@
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                     <input type='button' class="btn btn-warning btnExportElsx " value='Export Excel' >
+                     <input type='button' class="btn btn-success btnExportExls " value='Export Excel' >
                
                   @endif
 
                 </div>
                 <div class="col-4 text-right" >
-                  <a class="btn btn-info btn-sm mt-1 font-size-16 btnApprove " href='' >
+                  <a class="btn btn-success btn-sm mt-1 font-size-16 btnApprove " href='' >
                     อนุมัติใช้งานได้ทั้งหมด
                   </a>
    
@@ -581,11 +587,11 @@ $(document).ready(function() {
 
       $(".btnGenCode").click(function(event) {
 
-          var v = $("input[name=promotion_name]").val();
+          var v = $("#promotion_id_fk").val();
           
 
           if(v=='' || v==0){
-            $("input[name=promotion_name]").focus();
+            // $("input[name=promotion_name]").focus();
             return false;
           }
 
@@ -648,8 +654,63 @@ $(document).ready(function() {
     });
 
 
+    $(".btnSaveDate").click(function(event) {
 
-    $(".btnExportElsx").click(function(event) {
+          var id = "{{@$sRow->id}}";
+          var promotion_id_fk = $("#promotion_id_fk").val();
+          // alert(promotion_id_fk);
+          // return false;
+
+          if(promotion_id_fk=='' || promotion_id_fk==0){
+            alert("! กรุณา เลือกโปรโมชั่น");
+            $("#promotion_id_fk").select2('open');
+            return false;
+          }
+
+          var pro_sdate = $("input[name=pro_sdate]").val();
+          // alert(pro_sdate);
+          if(pro_sdate=='' || pro_sdate==0){
+            $("#startDate").focus();
+            return false;
+          }
+          var pro_edate = $("input[name=pro_edate]").val();
+          // alert(pro_edate);
+          if(pro_edate=='' || pro_edate==0){
+            $("#endDate").focus();
+            return false;
+          }        
+
+        $(".myloading").show();
+
+        $.ajax({
+           type:'POST',
+           url: " {{ url('backend/ajaxGenPromotionSaveDate') }} ", 
+           data:{ _token: '{{csrf_token()}}',
+           id:id,
+           promotion_id_fk:promotion_id_fk,
+           pro_sdate:pro_sdate,
+           pro_edate:pro_edate,
+            },
+            success:function(data){
+                 console.log(data); 
+                 // return false;
+
+                 $(".myloading").hide();
+                 location.reload();
+              },
+            error: function(jqXHR, textStatus, errorThrown) { 
+                $(".myloading").hide();
+            }
+        });
+
+
+    });
+
+
+
+
+
+    $(".btnExportExls").click(function(event) {
         /* Act on the event */
         $(".myloading").show();
         $.ajax({
@@ -882,21 +943,27 @@ $(document).ready(function() {
              var promotion_code_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
              // console.log(promotion_code_id_fk);
 
-                          $.ajax({
-                             type:'POST',
-                             url: " {{ url('backend/ajaxApproveCouponCode') }} ", 
-                             data:{ _token: '{{csrf_token()}}',promotion_code_id_fk:promotion_code_id_fk },
-                              success:function(data){
+            if (!confirm("ยืนยัน Approve ? ")){
+                $(".myloading").hide();
+                return false;
+            }else{
+                    $.ajax({
+                       type:'POST',
+                       url: " {{ url('backend/ajaxApproveCouponCode') }} ", 
+                       data:{ _token: '{{csrf_token()}}',promotion_code_id_fk:promotion_code_id_fk },
+                        success:function(data){
 
-                                  location.reload();
+                            location.reload();
 
-                                },
-                              error: function(jqXHR, textStatus, errorThrown) { 
-                                  console.log(JSON.stringify(jqXHR));
-                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                                  $(".myloading").hide();
-                              }
-                          });
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                            $(".myloading").hide();
+                        }
+                    });
+
+             }
 
 
         });

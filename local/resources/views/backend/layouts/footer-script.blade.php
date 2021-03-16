@@ -51,6 +51,7 @@
 
 
 
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.js" type="text/javascript"></script>
 
 
 

@@ -317,5 +317,73 @@
 
 
 
+				public function excelExportGiftvoucherCus(Request $request)
+					{	
+
+						// return $request;
+						// dd();
+
+						$spreadsheet = new Spreadsheet();
+						$amt_sheet = 1;
+
+						for ($j=0; $j < $amt_sheet ; $j++) { 
+
+							if($j>0){
+								$spreadsheet->createSheet();
+							}
+
+							$spreadsheet->setActiveSheetIndex($j);
+							$sheet = $spreadsheet->getActiveSheet();
+							$sheet->setTitle("Sheet".($j+1));
+
+							$sRow = DB::table('db_giftvoucher_cus')->where('giftvoucher_code_id_fk',$request->giftvoucher_code_id_fk)->get();
+							$GiftvoucherCode = \App\Models\Backend\GiftvoucherCode::find($request->giftvoucher_code_id_fk);
+
+							$sheet->setCellValue('A1', 'ID');
+							$sheet->setCellValue('B1', 'DESCRIPTIONS_ID');
+							$sheet->setCellValue('C1', 'DESCRIPTIONS');
+							$sheet->setCellValue('D1', 'CUSTOMER_CODE');
+							$sheet->setCellValue('E1', 'GIFTVOUCHER_VALUE');
+							$sheet->setCellValue('F1', 'STATUS');
+							$sheet->setCellValue('G1', 'CREATED_AT');
+
+							for ($i=0; $i < count($sRow) ; $i++) { 
+
+								$d = $sRow[$i]->pro_status;
+								if($d==4){
+		                            $dd= 'รออนุมัติ';
+		                        }else if($d==1){
+		                            $dd= 'ใช้งานได้';
+		                        }else if($d==2){
+		                            $dd= 'ถูกใช้แล้ว';
+		                        }else if($d==3){
+		                            $dd= 'หมดอายุแล้ว';
+		                        }else{
+		                            $dd= '';
+		                        }
+
+								$sheet->setCellValue('A'.($i+2), $sRow[$i]->id);
+								$sheet->setCellValue('B'.($i+2), $request->giftvoucher_code_id_fk);
+								$sheet->setCellValue('C'.($i+2), $GiftvoucherCode->descriptions);
+								$sheet->setCellValue('D'.($i+2), $sRow[$i]->customer_code);
+								$sheet->setCellValue('E'.($i+2), $sRow[$i]->giftvoucher_value);
+								$sheet->setCellValue('F'.($i+2), $dd);
+								$sheet->setCellValue('G'.($i+2), $sRow[$i]->created_at);
+							}
+
+
+						}
+
+						$file = 'giftvoucher_cus.xlsx';
+						header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+						header('Content-disposition: attachment; filename='.$file);
+
+						$writer = new Xlsx($spreadsheet);
+						$writer->save('local/public/excel_files/'.$file);
+
+					}
+
+
+
 		
 	}

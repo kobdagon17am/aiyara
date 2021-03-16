@@ -64,6 +64,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('course_history_list/datatable', 'Course_history_listController@Datatable')->name('course_history_list.datatable');
     Route::get('course_history_list/index/{id}', 'Course_history_listController@index');
 
+    Route::resource('add_ai_cash', 'Add_ai_cashController');
+    Route::post('add_ai_cash/datatable', 'Add_ai_cashController@Datatable')->name('add_ai_cash.datatable');
+  
 // สาขา / คลัง @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     Route::resource('branchs', 'BranchsController');
     Route::post('branchs/datatable', 'BranchsController@Datatable')->name('branchs.datatable');
@@ -180,6 +183,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('fee', 'FeeController');
     Route::post('fee/datatable', 'FeeController@Datatable')->name('fee.datatable');
 
+    Route::resource('account_bank', 'Account_bankController');
+    Route::post('account_bank/datatable', 'Account_bankController@Datatable')->name('account_bank.datatable');
+
     Route::resource('maintain_balance', 'Maintain_balanceController');
     Route::post('maintain_balance/datatable', 'Maintain_balanceController@Datatable')->name('maintain_balance.datatable');
 
@@ -217,24 +223,32 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
     Route::post('uploadPromotionCus', 'PagesController@uploadPromotionCus');
     Route::get('uploadPromotionCus', 'PagesController@uploadPromotionCus');
+    
+    Route::post('uploadGiftVoucherCus', 'PagesController@uploadGiftVoucherCus');
 
     Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
     Route::post('excelExportConsignment', 'ExcelController@excelExportConsignment');
     Route::post('excelExportPromotionCus', 'ExcelController@excelExportPromotionCus');
+    Route::post('excelExportGiftvoucherCus', 'ExcelController@excelExportGiftvoucherCus');
     Route::post('excelExportCe_regis', 'ExcelController@excelExportCe_regis');
     Route::post('csvExportCe_regis', 'ExcelController@csvExportCe_regis');
 
     Route::post('excelImport', 'ExcelController@excelImport');
+    
+    Route::post('excelExportChart', 'ExcelChart@createexcelfileAction');
 
     Route::post('ajaxSetSession', 'AjaxController@ajaxSetSession');
     
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
+    Route::post('ajaxClearDataGiftvoucherCode', 'AjaxController@ajaxClearDataGiftvoucherCode');
     Route::post('ajaxClearConsignment', 'AjaxController@ajaxClearConsignment');
     Route::post('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
     Route::get('ajaxGenPromotionCode', 'AjaxController@ajaxGenPromotionCode');
     Route::post('ajaxGenPromotionCodePrefixCoupon', 'AjaxController@ajaxGenPromotionCodePrefixCoupon');
+
+    Route::post('ajaxGenPromotionSaveDate', 'AjaxController@ajaxGenPromotionSaveDate');
 
     Route::post('ajaxGetWarehouse', 'AjaxController@ajaxGetWarehouse');
     Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
@@ -245,6 +259,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetZipcode', 'AjaxController@ajaxGetZipcode');
     
     Route::post('ajaxGetPayType', 'AjaxController@ajaxGetPayType');
+    Route::post('ajaxGetLabelPayType', 'AjaxController@ajaxGetLabelPayType');
+    Route::post('ajaxGetLabelOthersPrice', 'AjaxController@ajaxGetLabelOthersPrice');
+    Route::post('ajaxGetVoucher', 'AjaxController@ajaxGetVoucher');
 
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
@@ -262,14 +279,45 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCheckCouponUsed', 'AjaxController@ajaxCheckCouponUsed');
     Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
     Route::post('ajaxFeeCalculate', 'AjaxController@ajaxFeeCalculate');
-    Route::post('ajaxProductValueCal', 'AjaxController@ajaxProductValueCal');
     Route::post('ajaxShippingCalculate', 'AjaxController@ajaxShippingCalculate');
     Route::post('ajaxApproveCouponCode', 'AjaxController@ajaxApproveCouponCode');
+    Route::post('ajaxApproveGiftvoucherCode', 'AjaxController@ajaxApproveGiftvoucherCode');
     Route::post('ajaxCheckDBfrontstore', 'AjaxController@ajaxCheckDBfrontstore');
+    
+    Route::post('ajaxGetDBfrontstore', 'AjaxController@ajaxGetDBfrontstore');
+    Route::post('ajaxCheckAddAiCash', 'AjaxController@ajaxCheckAddAiCash');
+    
+    Route::post('ajaxCalPriceFrontstore01', 'AjaxController@ajaxCalPriceFrontstore01');
+    Route::post('ajaxCalPriceFrontstore02', 'AjaxController@ajaxCalPriceFrontstore02');
+    Route::post('ajaxCalGiftVoucherPrice', 'AjaxController@ajaxCalGiftVoucherPrice');
+
+    Route::post('ajaxCalAicash', 'AjaxController@ajaxCalAicash');
+
+    Route::post('ajaxCalAddAiCashFrontstore', 'AjaxController@ajaxCalAddAiCashFrontstore');
+    
+    Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
+    Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
+    Route::post('ajaxCearCostFrontstore', 'AjaxController@ajaxCearCostFrontstore');
+
+    Route::post('ajaxClearAfterSelChargerType', 'AjaxController@ajaxClearAfterSelChargerType');
+
+
+    Route::post('ajaxSaveGiftvoucherCode', 'AjaxController@ajaxSaveGiftvoucherCode');
+    Route::post('ajaxCalAicashAmt', 'AjaxController@ajaxCalAicashAmt');
 
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+
+    Route::resource('pick_pack', 'Pick_packController');
+    Route::post('pick_pack/datatable', 'Pick_packController@Datatable')->name('pick_pack.datatable');
+
+    Route::resource('pick_pack_packing', 'Pick_packPackingController');
+    Route::post('pick_pack_packing/datatable', 'Pick_packPackingController@Datatable')->name('pick_pack_packing.datatable');
+
+    Route::resource('pick_pack_packing_code', 'Pick_packPackingCodeController');
+    Route::post('pick_pack_packing_code/datatable', 'Pick_packPackingCodeController@Datatable')->name('pick_pack_packing_code.datatable');
+
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
@@ -286,6 +334,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
+
+    Route::get('add_ai_cash/print_receipt/{id}', 'AjaxController@createPDFReceiptAicash');
 
     Route::resource('taxdata', 'TaxdataController');
     Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
@@ -379,7 +429,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+
+    Route::resource('pick_warehouse_fifo', 'Pick_warehouse_fifoController');
+    Route::post('pick_warehouse_fifo/datatable', 'Pick_warehouse_fifoController@Datatable')->name('pick_warehouse_fifo.datatable');
+    Route::post('pick_warehouse_fifo/fifo', 'Pick_warehouse_fifoController@calFifo');
     
+
     Route::resource('check_stock_account', 'Check_stock_accountController');
     Route::post('check_stock_account/datatable', 'Check_stock_accountController@Datatable')->name('check_stock_account.datatable');
 
@@ -393,6 +448,15 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('promotion_cus', 'Promotion_cusController');
     Route::post('promotion_cus/datatable', 'Promotion_cusController@Datatable')->name('promotion_cus.datatable');
     Route::post('promotion_cus/plus', 'Promotion_cusController@plus');
+
+
+    Route::resource('giftvoucher_code', 'GiftvoucherCodeController');
+    Route::post('giftvoucher_code/datatable', 'GiftvoucherCodeController@Datatable')->name('giftvoucher_code.datatable');
+    Route::post('giftvoucher_code/plus', 'GiftvoucherCodeController@plus');
+
+    Route::resource('giftvoucher_cus', 'GiftvoucherCusController');
+    Route::post('giftvoucher_cus/datatable', 'GiftvoucherCusController@Datatable')->name('giftvoucher_cus.datatable');
+    Route::post('giftvoucher_cus/plus', 'GiftvoucherCusController@plus');
 
 
     Route::resource('promotion_code_product', 'Promotion_code_productController');

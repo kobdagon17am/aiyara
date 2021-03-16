@@ -12,12 +12,16 @@ class FeeController extends Controller
 
     public function index(Request $request)
     {
-      return view('backend.fee.index');
+
+       return View('backend.fee.index');
+
     }
 
    public function create()
     {
-      return View('backend.fee.form');
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       return View('backend.fee.form')->with(array('sBusiness_location'=>$sBusiness_location) );
+
     }
 
     public function store(Request $request)
@@ -28,7 +32,8 @@ class FeeController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Fee::find($id);
-       return View('backend.fee.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       return View('backend.fee.form')->with(array('sRow'=>$sRow, 'id'=>$id,'sBusiness_location'=>$sBusiness_location) );
     }
 
     public function update(Request $request, $id)
@@ -47,8 +52,10 @@ class FeeController extends Controller
             $sRow = new \App\Models\Backend\Fee;
           }
            
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->txt_desc    = request('txt_desc');
           $sRow->txt_value    = request('txt_value');
+          $sRow->txt_fixed_rate    = request('txt_fixed_rate');
                     
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
@@ -77,10 +84,14 @@ class FeeController extends Controller
       $sTable = \App\Models\Backend\Fee::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('Crm_topic', function($row) {
-      //   $sCrm_topic = \App\Models\Backend\Fee_topic::where('id', $row->Crm_topic_id)->get();
-      //   return $sCrm_topic[0]->txt_desc;
-      // })
+       ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      }) 
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

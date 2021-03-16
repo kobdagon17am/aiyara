@@ -13,6 +13,11 @@ class Pick_warehouseController extends Controller
 
     public function index(Request $request)
     {
+
+
+      $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
+      // dd($Pick_warehouse_fifo);
+
       $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
       $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
       $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -137,9 +142,9 @@ class Pick_warehouseController extends Controller
 
     public function Datatable(){
       $sTable = DB::select(" 
-      	select * from db_delivery WHERE status_pack=0 and status_pack_pick=0 
+      	select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 
     		UNION
-    		select * from db_delivery WHERE status_pack=1 and status_pack_pick=0 GROUP BY packing_code
+    		select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 GROUP BY packing_code
     		ORDER BY delivery_date DESC
 		 ");
       $sQuery = \DataTables::of($sTable);

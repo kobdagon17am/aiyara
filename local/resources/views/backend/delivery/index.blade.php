@@ -46,6 +46,25 @@
 
     .select2-selection {height: 34px !important;margin-left: 3px;}
     .border-left-0 {height: 67%;}
+
+
+  .tooltip_shipping {
+    position: relative ;
+  }
+  .tooltip_shipping:hover::after {
+    content: "Shipping" ;
+    position: absolute ;
+    /*top: 0.5em ;*/
+    left: -4em ;
+    min-width: 80px ;
+    border: 1px #808080 solid ;
+    padding: 1px ;
+    color: black ;
+    background-color: #cfc ;
+    z-index: 9999 ;
+  } 
+
+
 </style>
 @endsection
 
@@ -218,7 +237,7 @@
 
               <?php }else{ ?>
 
-                    <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
               
               <?php }?>
 
@@ -251,7 +270,7 @@
 
               <?php }else{ ?>
 
-                     <table id="data-table-no-payproduct" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                     <!-- <table id="data-table-no-payproduct" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
               
               <?php }?>
 
@@ -394,6 +413,7 @@ $(function() {
               columns: [
                   {data: 'id', title :'ID', className: 'text-center'},
                   {data: 'id', title :'เลือก', className: 'text-center '},
+                  {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
@@ -430,18 +450,24 @@ $(function() {
                   //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   //     ).addClass('input');
 
+                if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                      $('td:eq(2)', nRow).html(
+                        '<span class="tooltip_shipping badge badge-info font-size-14">S</span>');
+                 }else{
+                      $("td:eq(2)", nRow).html('');
+                 }
                 
 
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
 
                  if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(7)', nRow).html(''
+                      $('td:eq(8)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');
                  }
                  else{ //2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(7)', nRow).html(''
+                      $('td:eq(8)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');
                  }
@@ -449,18 +475,18 @@ $(function() {
               	 if (aData['status_delivery'] == "1") {
           			        $('td', nRow).css('background-color', '#ffd9b3');
           			        $("td:eq(0)", nRow).html('');
+          			        $("td:eq(7)", nRow).html('');
           			        $("td:eq(6)", nRow).html('');
-          			        $("td:eq(5)", nRow).html('');
-          			        $("td:eq(9)", nRow).html('');
+          			        $("td:eq(10)", nRow).html('');
           			        var i;
               					for (i = 0; i < 10 ; i++) {
               					   $("td:eq("+i+")", nRow).prop('disabled',true); 
               					} 
 
     			      }else{
-      			      	$("td:eq(6)", nRow).prop('disabled',true); 
       			      	$("td:eq(7)", nRow).prop('disabled',true); 
-      			      	$("td:eq(9)", nRow).prop('disabled',true); 
+      			      	$("td:eq(8)", nRow).prop('disabled',true); 
+      			      	$("td:eq(10)", nRow).prop('disabled',true); 
     			      } 
 
                 if(sU!=''&&sD!=''){

@@ -308,7 +308,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="setToWarehouseModalTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง</b></h5>
+        <h5 class="modal-title" id="setToWarehouseModalTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง </b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -377,13 +377,20 @@
                     <div class="col-md-6 " >
                         <div class="form-group row">
                             <label for="shelf_id_fk_c" class="col-md-2 col-form-label"> Shelf : </label>
-                            <div class="col-md-10">
+                            <div class="col-md-6">
                               <select id="shelf_id_fk_c"  name="shelf_id_fk_c" class="form-control select2-templating " required >
                                  <option disabled selected>กรุณาเลือกโซนก่อน</option>
                               </select>
                             </div>
+
+                             <div class="col-md-4">
+                                <input type="text" class="form-control NumberOnly " id="shelf_floor_c" name="shelf_floor_c" placeholder="ชั้นของ Shelf" required >
+                            </div>
+
                           </div>
                     </div>
+
+
                   </div>
 
 
@@ -417,7 +424,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง</b></h5>
+        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง.</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -444,7 +451,7 @@
                              <option value="">Select</option>
                              @if(@$sBranchs)
                               @foreach(@$sBranchs AS $r)
-                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                              <option value="{{$r->id}}">
                                 {{$r->b_name}}
                               </option>
                               @endforeach
@@ -461,7 +468,7 @@
                                <option value="">Select</option>
                                  @if(@$Warehouse)
                                   @foreach(@$Warehouse AS $r)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->warehouse_id_fk)?'selected':'' }} >
+                                  <option value="{{$r->id}}">
                                     {{$r->w_name}}
                                   </option>
                                   @endforeach
@@ -481,7 +488,7 @@
                                 <option value="">เลือก Zone</option>
                                  @if(@$Zone)
                                   @foreach(@$Zone AS $r)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->zone_id_fk)?'selected':'' }} >
+                                  <option value="{{$r->id}}">
                                     {{$r->z_name}}
                                   </option>
                                   @endforeach
@@ -490,23 +497,31 @@
                             </div>
                           </div>
                     </div>
+
+                   <?php echo @$sRow->shelf_floor ; ?>
+
                     <div class="col-md-6 " >
                         <div class="form-group row">
                             <label for="shelf_id_fk_c_e" class="col-md-2 col-form-label"> Shelf : </label>
-                            <div class="col-md-10">
+                            <div class="col-md-6">
                               <select id="shelf_id_fk_c_e"  name="shelf_id_fk_c_e" class="form-control select2-templating " required >
                                  <option value="">เลือก Shelf</option>
                                  @if(@$Shelf)
                                   @foreach(@$Shelf AS $r)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->shelf_id_fk)?'selected':'' }} >
+                                  <option value="{{$r->id}}">
                                     {{$r->s_name}}
                                   </option>
                                   @endforeach
                                   @endif
                               </select>
                             </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control NumberOnly " id="shelf_floor_c_e" name="shelf_floor_c_e" placeholder="ชั้นของ Shelf"  required >
+                            </div>
                           </div>
                     </div>
+
+
                   </div>
 
 
@@ -684,6 +699,13 @@
 
 
 
+       $('#shelf_id_fk_c').change(function(){
+	       	 setTimeout(function(){
+	       	 	$('#shelf_floor_c').focus();
+	       	 })
+       });
+
+
        $('#branch_id_fk_c_e').change(function(){
 
           var branch_id_fk = this.value;
@@ -778,6 +800,15 @@
            }
  
       });
+
+
+       $('#shelf_id_fk_c_e').change(function(){
+	       	 setTimeout(function(){
+	       	 	$('#shelf_floor_c_e').focus();
+	       	 })
+       });
+
+
 
 
 $(document).ready(function() {
@@ -1221,15 +1252,18 @@ $(document).ready(function() {
                                 var warehouse_id_fk = value.warehouse_id_fk;
                                 var zone_id_fk = value.zone_id_fk;
                                 var shelf_id_fk = value.shelf_id_fk;
+                                var shelf_floor = value.shelf_floor;
 
                                 console.log(warehouse_id_fk);
                                 console.log(zone_id_fk);
                                 console.log(shelf_id_fk);
+                                console.log(shelf_floor);
 
                                 $('#branch_id_fk_c_e').val(branch_id_fk).select2();
                                 $('#warehouse_id_fk_c_e').val(warehouse_id_fk).select2();
                                 $('#zone_id_fk_c_e').val(zone_id_fk).select2();
                                 $('#shelf_id_fk_c_e').val(shelf_id_fk).select2();
+                                $('#shelf_floor_c_e').val(shelf_floor);
                                
 
                              });

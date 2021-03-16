@@ -42,11 +42,11 @@
                   <div class="col-8">
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}">
+            <!--       <div class="col-4 text-right" style="{{@$sC}}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.shipping_cost.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i> เพิ่ม
                     </a>
-                  </div> 
+                  </div>  -->
 
                 </div>
 
@@ -105,27 +105,27 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-center w200 '},
-            {data: 'shipping_name', title :'<center>รายการค่าขนส่ง </center>', className: 'text-center'},
-            {data: 'purchase_amt',   title :'<center>ยอดซื้อ (บาท) </center>', className: 'text-center',render: function(d) {
+            {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-center '},
+            // {data: 'shipping_name', title :'<center>รายการค่าขนส่ง </center>', className: 'text-center'},
+            {data: 'cost_set',   title :'<center>Shipping Cost Set</center>', className: 'text-center',render: function(d) {
                return d>0?d:'';
             }},            
-            {data: 'shipping_cost', title :'<center>ค่าขนส่ง (บาท) </center>', className: 'text-center'},
-            {data: 'shipping_type',   title :'<center>ประเภทเขต </center>', className: 'text-center',render: function(d) {
-                return d==2?"เมืองหลวงและปริมลฑล <br> (Capital and Metropolitan)":'เขตอื่นๆ (Other areas)';
-            }}, 
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center '}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
           }else{ 
 
+          	  if(aData['cost_set']>0){
+          	     	$("td:eq(2)", nRow).html('<i class="bx bx-check-square" style="font-size:26px;color:blue;"></i>');
+          	  }
+
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.shipping_cost.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a href="javascript: void(0);" data-url="{{ route('backend.shipping_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+           
               ).addClass('input');
-
+//      + '<a href="javascript: void(0);" data-url="{{ route('backend.shipping_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           }
         }
     });

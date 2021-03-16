@@ -106,7 +106,8 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'txt_desc', title :'<center>รายการ </center>', className: 'text-left'},
-            {data: 'lang', title :'<center>ภาษา </center>', className: 'text-left'},
+            {data: 'country', title :'<center>ประเทศ </center>', className: 'text-left'},
+            // {data: 'lang', title :'<center>ภาษา </center>', className: 'text-left'},
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

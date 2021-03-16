@@ -91,8 +91,12 @@
               <div class="divTH">
                 <label for="startDate" >วันสร้างเริ่มต้น : </label>
               </div>
+                <?php 
+                         $sd = date('d/m/Y');
+                         // echo $sd;
+                      ?>
               <div class="divTableCell">
-                <input id="startDate" class="form-control" autocomplete="off" />
+                <input id="startDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -101,16 +105,25 @@
                 <label for="endDate" >วันสร้างสิ้นสุด : </label>
               </div>
               <div class="divTableCell">
-                <input id="endDate" class="form-control" autocomplete="off" />
+                <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                <label for="" >ประเภทการสั่งซื้อ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <input id="" name="" class="form-control"  />
+                <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " required  >
+                    <option value="">Select</option>
+                    @if(@$sPurchase_type)
+                      @foreach(@$sPurchase_type AS $r)
+                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
+                          {{$r->orders_type}} [{{$r->detail}}] 
+                        </option>
+                      @endforeach
+                    @endif
+                  </select>
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -136,7 +149,7 @@
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="" >เลขที่ใบเสร็จ : </label>
+                <label for="" >เลขที่ใบสั่งซื้อ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
                 <input id="" name="" class="form-control"  />
@@ -146,6 +159,17 @@
               </div>
             </div>
             <div class="divTableRow">
+
+                  <div class="divTH">
+                <label for="" >เลขที่ใบเสร็จ : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <input id="" name="" class="form-control"  />
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+
               <div class="divTH">
                 <label for="" >ผู้สร้าง : </label>
               </div>
@@ -182,15 +206,7 @@
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
+            
             </div>
             <div class="divTableRow">
               <div class="divTableCell">
@@ -277,21 +293,34 @@
                     <tbody>
                       <tr style="color: red" >
                         <th scope="row">สถานะรอตรวจสอบ/รอชำระ</th>
-                        <td style="text-align: right;">0 รายการ</td>
-                        <td style="text-align: right;">0</td>
-                        <td style="text-align: right;">0.00</td>
+                        <td style="text-align: right;">{{@$approve_status_2}} รายการ</td>
+                        <td style="text-align: right;">{{@$pv_2}}</td>
+                        <td style="text-align: right;">{{@$sum_price_2}}</td>
                       </tr>
                       <tr>
-                        <th scope="row">สถานะ รอเบิก/สำเร็จ</th>
-                        <td style="text-align: right;">0 รายการ</td>
-                        <td style="text-align: right;">0</td>
-                        <td style="text-align: right;">0.00</td>
+                        <th scope="row">สถานะ สำเร็จ</th>
+                        <td style="text-align: right;">{{@$approve_status_9}} รายการ</td>
+                        <td style="text-align: right;">{{@$pv_9}}</td>
+                        <td style="text-align: right;">{{@$sum_price_9}}</td>
                       </tr>
+                      <tr>
+                        <th scope="row">สถานะ ยกเลิก</th>
+                        <td style="text-align: right;">{{@$approve_status_4}} รายการ</td>
+                        <td style="text-align: right;">{{@$pv_4}}</td>
+                        <td style="text-align: right;">{{@$sum_price_4}}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">สถานะ อื่นๆ <br>(ยกเว้น 3 สถานะข้างบน) </th>
+                        <td style="text-align: right;">{{@$approve_status_88}} รายการ</td>
+                        <td style="text-align: right;">{{@$pv_88}}</td>
+                        <td style="text-align: right;">{{@$sum_price_88}}</td>
+                      </tr>
+
                       <tr>
                         <th scope="row">รวมทั้งหมด</th>
-                        <td style="text-align: right;">0 รายการ</td>
-                        <td style="text-align: right;">0</td>
-                        <td style="text-align: right;">0.00</td>
+                        <td style="text-align: right;">{{@$approve_status_total}} รายการ</td>
+                        <td style="text-align: right;">{{@$pv_total}}</td>
+                        <td style="text-align: right;">{{@$sum_price_total}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -391,6 +420,15 @@ $(function() {
             {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
                 return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},
+            // {data: 'purchase_type_id_fk',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
+            //   if(d==1){
+            //     return '<span class="badge badge-pill badge-soft-success font-size-16"><i class="fa fa-shopping-basket"></i></span>';
+            //   }else if(d==2){
+            //     return '<span class="badge badge-pill badge-soft-success font-size-16"><i class="fa fa-calendar-check-o"></i></span>';
+            //   }else{
+            //     return '';
+            //   }
+            // }},
             {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
             {data: 'sum_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
                 return d ;
@@ -402,8 +440,8 @@ $(function() {
                 return '';
                }
             }},
-            {data: 'approve_status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รอจัดส่ง</span>';
+            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
             }},
             {data: 'id',   title :'ใบเสร็จ[1]', className: 'text-center w100 ',render: function(d) {
                 return '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>';
@@ -422,19 +460,49 @@ $(function() {
           } ],
         rowCallback: function(nRow, aData, dataIndex){
 
-			$("td:eq(3)", nRow).html(aData['customer_name']);
+
+           if(aData['type']!='0'){
+              $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16">Ai-Cash</span>');
+              $("td:eq(5)", nRow).html('');
+              $("td:eq(6)", nRow).html('');
+              $("td:eq(7)", nRow).html('');
+              $("td:eq(8)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
+              $("td:eq(9)", nRow).html('');
+              $("td:eq(10)", nRow).html('');
+            }
+
+
+		      	$("td:eq(3)", nRow).html(aData['customer_name']);
+
+            var info = $(this).DataTable().page.info();
+            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+        if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
 
 	          if(sU!=''&&sD!=''){
 	              $('td:last-child', nRow).html('-');
 	          }else{ 
 
-              $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                
-              ).addClass('input');
+              if(aData['type']!='0'){ // เติม Ai-Cash
 
+              }else{
+
+                $('td:last-child', nRow).html(''
+                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                  
+                ).addClass('input');
+
+            }
+
+             // $('td:last-child', nRow).html(aData['approve_status']);
+
+           
           }
+          }
+
+
+
         }
     });
 
@@ -453,11 +521,14 @@ $(function() {
             format: 'dd/mm/yyyy',
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
+            // setDate: today,
             // minDate: today,
             // maxDate: function () {
             //     return $('#endDate').val();
             // }
         });
+
+        // $("#startDate").datepicker().datepicker("setDate", new Date());
 
         $('#endDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -466,16 +537,6 @@ $(function() {
             minDate: function () {
                 return $('#startDate').val();
             }
-        });
-
-        $('#startDate2').datepicker({
-            format: 'dd/mm/yyyy',
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome',
-            // minDate: today,
-            // maxDate: function () {
-            //     return $('#endDate').val();
-            // }
         });
 
 

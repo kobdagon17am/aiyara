@@ -29,7 +29,8 @@ class FrontstorelistController extends Controller
         for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+
+           $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
 
@@ -37,12 +38,18 @@ class FrontstorelistController extends Controller
 
                  $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
 
+                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                    $pv = 0;
+                  }else{
+                    $pv = @$Promotions_cost[0]->pv  ;
+                  }
+
                   \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
                         [
                           'amt' => @$request->quantity[$i] ,
                           'selling_price' => @$Promotions_cost[0]->selling_price ,
-                          'pv' => @$Promotions_cost[0]->pv ,
-                          'total_pv' => @$Promotions_cost[0]->pv * @$request->quantity[$i] ,
+                          'pv' => $pv ,
+                          'total_pv' => $pv * @$request->quantity[$i] ,
                           'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
                         ]
                     ); 
@@ -55,6 +62,14 @@ class FrontstorelistController extends Controller
 
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
 
+
+                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                    $pv = 0;
+                  }else{
+                    $pv = @$Promotions_cost[0]->pv  ;
+                  }
+
+
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
                 $sRow->amt    =  @$request->quantity[$i];
@@ -62,8 +77,8 @@ class FrontstorelistController extends Controller
                 $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
 
                 $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
-                $sRow->pv    = @$Promotions_cost[0]->pv;
-                $sRow->total_pv    =  @$Promotions_cost[0]->pv * @$request->quantity[$i];
+                $sRow->pv    = $pv ;
+                $sRow->total_pv    =  $pv * @$request->quantity[$i];
                 $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity[$i];
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
@@ -92,20 +107,25 @@ class FrontstorelistController extends Controller
         for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+           $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
 
          if(@$sRow[0]->promotion_id_fk == @$request->promotion_id_fk_pro[$i]){
 
                  $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                    $pv = 0;
+                  }else{
+                    $pv = @$Promotions_cost[0]->pv  ;
+                  }
 
                   \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
                         [
                           'amt' => @$request->quantity[$i] ,
                           'selling_price' => @$Promotions_cost[0]->selling_price ,
-                          'pv' => @$Promotions_cost[0]->pv ,
-                          'total_pv' => @$Promotions_cost[0]->pv * @$request->quantity[$i] ,
+                          'pv' => $pv ,
+                          'total_pv' => $pv * @$request->quantity[$i] ,
                           'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
                         ]
                     ); 
@@ -174,12 +194,17 @@ class FrontstorelistController extends Controller
               if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
 
                 // echo @$request->quantity[$i];
+                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv * @$request->quantity[$i] ;
+                }
 
                   \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->update(
                         [
                           // 'frontstore_id_fk' => request('frontstore_id') ,
                           'amt' => @$request->quantity[$i] ,
-                          'total_pv' => @$sProducts[0]->pv * @$request->quantity[$i] ,
+                          'total_pv' => $pv ,
                           'total_price' => @$sProducts[0]->selling_price * @$request->quantity[$i] ,
                           // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                           'product_unit_id_fk' => @$sProducts[0]->product_unit,
@@ -190,15 +215,21 @@ class FrontstorelistController extends Controller
 
           }else{
 
+                if(request('purchase_type_id_fk')==5){
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv ;
+                }
+
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = request('frontstore_id') ;
                 $sRow->product_id_fk    = @$request->product_id_fk[$i];
                 $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
                 $sRow->selling_price    = @$sProducts[0]->selling_price;
-                $sRow->pv    = @$sProducts[0]->pv;
+                $sRow->pv    = $pv ;
                 $sRow->amt    =  @$request->quantity[$i];
                 $sRow->product_unit_id_fk    =  @$sProducts[0]->product_unit ;
-                $sRow->total_pv    =  @$sProducts[0]->pv * @$request->quantity[$i];
+                $sRow->total_pv    =  $pv * @$request->quantity[$i];
                 $sRow->total_price    =  @$sProducts[0]->selling_price * @$request->quantity[$i];
                 $sRow->created_at = date('Y-m-d H:i:s');
                 if(!empty(request('quantity')[$i])){
@@ -236,7 +267,7 @@ class FrontstorelistController extends Controller
 
        if(isset($request->add_delivery_custom)){
 
-            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at) 
               VALUES 
               ('".$request->frontstore_id."',
                '".$request->customers_id_fk."',
@@ -247,6 +278,7 @@ class FrontstorelistController extends Controller
                  '".$request->delivery_tambon."',
                  '".$request->delivery_zipcode."',
                  '".$request->delivery_tel."',
+                 '".$request->delivery_tel_home."',
                  now() 
               )
             ");       
@@ -269,7 +301,7 @@ class FrontstorelistController extends Controller
 
        	    if(count($ch)==0){
 
-       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel, created_at) 
+       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at) 
 		              VALUES 
 		              ('".$request->customers_addr_frontstore_id."',
 		               '".$request->customers_id_fk."',
@@ -280,6 +312,7 @@ class FrontstorelistController extends Controller
 		                 '".$request->delivery_tambon."',
 		                 '".$request->delivery_zipcode."',
 		                 '".$request->delivery_tel."',
+                     '".$request->delivery_tel_home."',
 		                 now() 
 		              )
 		            ");
@@ -294,6 +327,7 @@ class FrontstorelistController extends Controller
 	              tambon_code = '".$request->delivery_tambon."', 
 	              zip_code = '".$request->delivery_zipcode."', 
 	              tel = '".$request->delivery_tel."', 
+                tel_home = '".$request->delivery_tel_home."', 
 	              updated_at = now() where frontstore_id_fk=".$request->customers_addr_frontstore_id."
 	            ");    
 
@@ -355,6 +389,11 @@ class FrontstorelistController extends Controller
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
+                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv ;
+                }
         //     return @$Promotions_cost[0]->pv;
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
@@ -364,8 +403,8 @@ class FrontstorelistController extends Controller
                 $sRow->promotion_code    = @$request->txtSearchPro;
 
                 $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
-                $sRow->pv    = @$Promotions_cost[0]->pv;
-                $sRow->total_pv    =  @$Promotions_cost[0]->pv * @$request->quantity;
+                $sRow->pv    = $pv;
+                $sRow->total_pv    =  $pv * @$request->quantity;
                 $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity;
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
@@ -427,13 +466,21 @@ class FrontstorelistController extends Controller
 
                $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
                // return count($sRow);
+
+                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv ;
+                }
+
+
                   if( count($sRow)>0 ){
 
                         \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->update(
                               [
                                 // 'frontstore_id_fk' => request('frontstore_id') ,
                                 'amt' => @$request->quantity[$i] ,
-                                'total_pv' => @$sProducts[0]->pv * @$request->quantity[$i] ,
+                                'total_pv' => $pv * @$request->quantity[$i] ,
                                 'total_price' => @$sProducts[0]->selling_price * @$request->quantity[$i] ,
                                 // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk ,
                                 // 'product_unit_id_fk' => @$sProducts[0]->product_unit,
@@ -476,21 +523,7 @@ class FrontstorelistController extends Controller
       $sRow = \App\Models\Backend\Frontstorelist::find($id);
       if( $sRow ){
 
-        // $frontstore_products_list = DB::select(" select frontstore_id_fk from db_frontstore_products_list WHERE id=$id GROUP BY frontstore_id_fk ");
-
         $sRow->forceDelete();
-        
-        // $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".$frontstore_products_list[0]->frontstore_id_fk." GROUP BY frontstore_id_fk ");
-
-        // if($sFrontstoreDataTotal){
-        //   $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-        //   $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-        //   DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=".$frontstore_products_list[0]->frontstore_id_fk." ");
-        // }else{
-        //   DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=".$frontstore_products_list[0]->frontstore_id_fk." ");
-        //   return redirect()->to(url("backend/frontstore/".$frontstore_products_list[0]->frontstore_id_fk."/edit"));
-        // }
-
 
       }
     }
@@ -503,9 +536,7 @@ class FrontstorelistController extends Controller
             SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
             ORDER BY add_from,id 
         ");        
-        //  $sTable = DB::select("
-        //     SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." 
-        // ");
+    
       }else{
          $sTable = DB::select("
             SELECT * from db_frontstore_products_list 
@@ -649,7 +680,7 @@ class FrontstorelistController extends Controller
 
        $sTable = DB::select("
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
-          (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list
+          (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,'". $req->frontstore_id_fk."' as frontstore_id_fk
           from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
            AND 
             (
@@ -728,6 +759,10 @@ class FrontstorelistController extends Controller
           return 'local/public/images/example_img.png';
         }
       }) 
+      ->addColumn('approve_status', function($row) {
+          $d = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
+          return $d[0]->approve_status;        
+      })  
       ->make(true);
     }
 
