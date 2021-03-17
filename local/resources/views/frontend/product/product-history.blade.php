@@ -88,6 +88,19 @@
 		</div>
 	</div>
 </div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-block">
+
+        <table class="table table-bordered" id="users-table"> </table>
+
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 @section('js')
 <!-- data-table js -->
@@ -126,7 +139,7 @@
 			// var fiveMinutes = 60 * 30,
 			// display = document.querySelector('#time');
 			// startTimer(fiveMinutes, display);
-			
+
 		})
 		.fail(function() {
 			console.log("error");
@@ -152,7 +165,7 @@
 	// }
 
 	function fetch_data(order_type = '') {
-		
+
 		$('#history').DataTable({
 				// scrollX: true,
 				// scrollCollapsed: true,
@@ -207,8 +220,25 @@
 			alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
 			this.value = '';
 			return false;
-		} 
+		}
 	});
+</script>
+<script  type="text/javascript">
+  $(function() {
+    $('#users-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{!! route('datable/history') !!}',
+        type: "GET",
+        columns: [
+          {data: 'id', title :'<center>id </center>', className: 'text-center'},
+            { data: 'date', title :'<center>date </center>', className: 'text-center'},
+            { data: 'code_order', title :'<center>code_order </center>', className: 'text-center'},
+            { data: 'tracking', title :'<center>tracking </center>', className: 'text-center'},
+            { data: 'price', title :'<center>price </center>', className: 'text-center'},
+        ]
+    });
+});
 </script>
 
 @endsection

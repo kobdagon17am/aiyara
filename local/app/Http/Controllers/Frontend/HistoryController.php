@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use Datatables;
 
 class HistoryController extends Controller
 {
@@ -157,6 +158,23 @@ class HistoryController extends Controller
             ->first();
 
         return view('frontend/modal/modal_qr_recive_product', compact('data'));
+    }
+
+    public function datatable()
+    {
+      $orders = DB::table('db_orders')
+      ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
+      ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+      ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.orders_type_id_fk')
+      ->leftjoin('dataset_pay_type', 'dataset_pay_type.pay_type_id', '=', 'db_orders.pay_type_id_fk')
+      ->where('dataset_order_status.lang_id', '=', '1')
+      ->where('dataset_orders_type.lang_id', '=', '1')
+      ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+      ->orderby('db_orders.updated_at', 'DESC')
+      ->get();
+
+      $sQuery = DataTables::of($orders);
+      return $sQuery;
     }
 
     public function dt_history(Request $request)

@@ -368,7 +368,7 @@
 				<li class="{{ (request()->is('cart/4') || request()->is('product-list/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>4])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">เติม Ai-Pocket</span>
+						<span class="pcoded-mtext">เติม Ai-Stockist</span>
 						@if(Cart::session(4)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_4" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(4)->getTotalQuantity() }}</span>
 						@endif
