@@ -83,7 +83,7 @@ class Transfer_chooseController extends Controller
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         if($row->warehouse_id_fk!=""){
-          return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
+          return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$row->shelf_floor;
         }else{
           return 0;
         }

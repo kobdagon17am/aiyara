@@ -19,25 +19,28 @@
 <!-- end page title -->
 
   <?php 
-    $sPermission = \Auth::user()->permission ;
-    $menu_id = @$_REQUEST['menu_id'];
-    $role_group_id = @$_REQUEST['role_group_id'];
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-      $sA = '';
-    }else{
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sA = @$menu_permit->can_answer==1?'':'display:none;';
-    }
-
-      //   echo $sPermission;
+      $sPermission = \Auth::user()->permission ;
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
+      if($sPermission==1){
+        $sC = '';
+        $sU = '';
+        $sD = '';
+        $role_group_id = '%';
+      }else{
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        // echo $role_group_id;
+        // echo $menu_id;     
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+        $sC = @$menu_permit->c==1?'':'display:none;';
+        $sU = @$menu_permit->u==1?'':'display:none;';
+        $sD = @$menu_permit->d==1?'':'display:none;';
+      }
+      // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;  
-
+      // echo $menu_id;     
    ?>
+
 <div class="row">
     <div class="col-10">
         <div class="card">
@@ -134,24 +137,30 @@
                         </div>
 
 
-        <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> สาขา : * </label>
+
+
+
+
+                    @if( empty(@$sRow) )
+
+
+
+                      <div class="form-group row">
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขา : </label>
                             <div class="col-md-8">
-                              <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
-                                <option value="">Select</option>
-                                  @if(@$Warehouse)
-                                    @foreach(@$Warehouse AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->warehouse_id_fk)?'selected':'' }} >
-                                        {{$r->w_name}}
-                                      </option>
-                                    @endforeach
+                                <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
+                                 <option value="">Select</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                  <option value="{{$r->id}}" >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @endforeach
                                   @endif
                               </select>
                             </div>
                           </div>
 
-
-                    @if( empty(@$sRow) )
 
                         <div class="form-group row">
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
@@ -181,13 +190,41 @@
                           </div>
 
 
+
+                          <div class="form-group row">
+                            <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf  :</label>
+                            <div class="col-md-3">
+                              <input class="form-control" type="number" id="shelf_floor" name="shelf_floor" required >
+                            </div>
+                          </div>
+
+
                     @else
+
+
+
+                      <div class="form-group row">
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขา : </label>
+                            <div class="col-md-8">
+                                <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
+                                 <option value="">Select</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
+
 
                         <div class="form-group row">
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
                             <div class="col-md-8">
                               <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required >
-                                  <option value="">กรุณาเลือกคลังหลักก่อน</option>
+                                  <!-- <option value="">กรุณาเลือกคลังหลักก่อน</option> -->
                                     @if(@$Warehouse)
                                       @foreach(@$Warehouse AS $r)
                                       <?php if(@$r->id==@$sRow->warehouse_id_fk){ ?>
@@ -200,17 +237,16 @@
                               </select>
                             </div>
                           </div>
-                          
                           <div class="form-group row">
                             <label for="example-text-input" class="col-md-3 col-form-label"> Zone : * </label>
                             <div class="col-md-8">
                               <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating " required >
-                                <option value="">กรุณาเลือกคลังย่อยก่อน</option>
+                                <!-- <option value="">กรุณาเลือกคลังย่อยก่อน</option> -->
                                    @if(@$Zone)
                                     @foreach(@$Zone AS $r)
                                     <?php if(@$r->id==@$sRow->zone_id_fk){ ?>
                                       <option value="{{$r->id}}" selected >
-                                        {{$r->w_name}}
+                                        {{$r->z_name}}
                                       </option>
                                       <?php } ?>
                                     @endforeach
@@ -223,17 +259,24 @@
                             <label for="example-text-input" class="col-md-3 col-form-label"> Shelf : * </label>
                             <div class="col-md-8">
                               <select id="shelf_id_fk"  name="shelf_id_fk" class="form-control select2-templating " required >
-                                 <option value="">กรุณาเลือกโซนก่อน</option>
+                                 <!-- <option value="">กรุณาเลือกโซนก่อน</option> -->
                                   @if(@$Shelf)
                                     @foreach(@$Shelf AS $r)
                                     <?php if(@$r->id==@$sRow->shelf_id_fk){ ?>
                                       <option value="{{$r->id}}" selected >
-                                        {{$r->w_name}}
+                                        {{$r->s_name}}
                                       </option>
                                       <?php } ?>
                                     @endforeach
                                   @endif                                 
                               </select>
+                            </div>
+                          </div>
+
+                         <div class="form-group row">
+                            <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf  :</label>
+                            <div class="col-md-3">
+                              <input class="form-control" type="number" value="{{ @$sRow->shelf_floor }}" id="shelf_floor" name="shelf_floor" required >
                             </div>
                           </div>
 
@@ -322,6 +365,46 @@
 <script type="text/javascript">
 
 
+
+ $('#branch_id_fk').change(function(){
+
+          var branch_id_fk = this.value;
+          // alert(branch_id_fk);
+
+           if(branch_id_fk != ''){
+             $.ajax({
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                  method: "post",
+                  data: {
+                    branch_id_fk:branch_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลคลัง !!.');
+                   }else{
+                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                       });
+                       $('#warehouse_id_fk').html(layout);
+                       $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                       $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                       $('#shelf_floor').val(1);
+                   }
+                  }
+                })
+           }else{
+               $('#warehouse_id_fk').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
+               $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+               $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+               $('#shelf_floor').val(1);
+           }
+ 
+      });
+
+       
        $('#warehouse_id_fk').change(function(){
 
           var warehouse_id_fk = this.value;
@@ -342,7 +425,7 @@
                    }else{
                        var layout = '<option value="" selected>- เลือก Zone -</option>';
                        $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                        layout += '<option value='+value.id+'>'+value.z_name+'</option>';
                        });
                        $('#zone_id_fk').html(layout);
                        $('#shelf_id_fk').html('กรุณาเลือกโซนก่อน');
@@ -354,6 +437,7 @@
       });
 
 
+     
        $('#zone_id_fk').change(function(){
 
           var zone_id_fk = this.value;
@@ -374,7 +458,7 @@
                    }else{
                        var layout = '<option value="" selected>- เลือก Shelf -</option>';
                        $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                        layout += '<option value='+value.id+'>'+value.s_name+'</option>';
                        });
                        $('#shelf_id_fk').html(layout);
                    }
@@ -383,6 +467,7 @@
            }
  
       });
+
 
 
 </script>

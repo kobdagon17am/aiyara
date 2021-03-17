@@ -59,7 +59,7 @@ class DeliveryPackingCodeController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('packing_code_desc', function($row) {
-        return "P".sprintf("%05d",$row->id);
+        return "P1".sprintf("%05d",$row->id);
       })      
       ->addColumn('receipt', function($row) {
         if($row->id!==""){

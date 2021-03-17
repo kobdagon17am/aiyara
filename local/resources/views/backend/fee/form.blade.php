@@ -33,20 +33,42 @@
 
                       <div class="myBorder">
 
+                            <div class="form-group row">
+                                <label for="example-text-input" class="col-md-3 col-form-label">Business Location :</label>
+                                <div class="col-md-9">
+                                      <select name="business_location_id_fk" class="form-control select2-templating " required >
+                                        <option value="">-Business Location-</option>
+                                        @if(@$sBusiness_location)
+                                        @foreach(@$sBusiness_location AS $r)
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                                        @endforeach
+                                        @endif
+                                      </select>
+                                </div>
+                            </div>
+
+
                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">fee (ข้อความ) :</label>
-                                <div class="col-md-10">
+                                <label for="" class="col-md-3 col-form-label">ค่าธรรมเนียม (ข้อความ) :</label>
+                                <div class="col-md-9">
                                     <input class="form-control" type="text" value="{{ @$sRow->txt_desc }}" name="txt_desc"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">fee (ค่าภาษี) :</label>
-                                <div class="col-md-10">
+                                <label for="" class="col-md-3 col-form-label">ค่าธรรมเนียม (ค่าตัวเลข) :</label>
+                                <div class="col-md-9">
                                     <input class="form-control" type="text" value="{{ @$sRow->txt_value }}" name="txt_value"  >
                                 </div>
                             </div>
 
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-3 col-form-label">ค่าธรรมเนียมคงที่ (บาท) :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" value="{{ @$sRow->txt_fixed_rate }}" name="txt_fixed_rate"  >
+                                </div>
+                            </div>
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">

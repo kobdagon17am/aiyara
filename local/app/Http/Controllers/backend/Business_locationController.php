@@ -20,9 +20,10 @@ class Business_locationController extends Controller
 
  public function create()
     {
+      $sCountry = \App\Models\Backend\Country::get();
       $sLocale  = \App\Models\Locale::all();
       $sLang = \App\Models\Backend\Language::get();
-      return View('backend.business_location.form')->with(array('sLang'=>$sLang) );
+      return View('backend.business_location.form')->with(array('sLang'=>$sLang, 'sCountry'=>$sCountry) );
     }
 
     public function store(Request $request)
@@ -32,9 +33,10 @@ class Business_locationController extends Controller
 
     public function edit($id)
     {
+       $sCountry = \App\Models\Backend\Country::get();
        $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Business_location::find($id);
-       return View('backend.business_location.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang) );
+       return View('backend.business_location.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang, 'sCountry'=>$sCountry) );
     }
 
     public function update(Request $request, $id)
@@ -56,7 +58,7 @@ class Business_locationController extends Controller
 
           $sRow->txt_desc    = request('txt_desc');
 
-          $sRow->lang_id    = request('lang_id');
+          $sRow->country_id_fk    = request('country_id_fk');
           $sRow->status    = request('status')?request('status'):0;
                     
           $sRow->created_at = date('Y-m-d H:i:s');
@@ -87,10 +89,14 @@ class Business_locationController extends Controller
       $sTable = \App\Models\Backend\Business_location::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('lang', function($row) {
-          $sLang = \App\Models\Backend\Language::find($row->lang_id);
-          return $sLang->txt_desc;
-      })
+      ->addColumn('country', function($row) {
+          $C = \App\Models\Backend\Country::find($row->country_id_fk);
+          return $C->txt_desc;
+      })      
+      // ->addColumn('lang', function($row) {
+      //     $sLang = \App\Models\Backend\Language::find($row->lang_id);
+      //     return $sLang->txt_desc;
+      // })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

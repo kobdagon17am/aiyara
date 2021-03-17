@@ -32,20 +32,20 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Business location :</label>
+                    <label for="" class="col-md-2 col-form-label">Business location :</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->txt_desc }}" name="txt_desc" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">เลือกภาษา :</label>
+                  <label for="country_id_fk" class="col-md-2 col-form-label">เลือกประเทศ :</label>
                   <div class="col-md-10">
-                    <select name="lang_id" class="form-control select2-templating " >
-                      <option value="0">Select</option>
-                      @if(@$sLang)
-                        @foreach(@$sLang AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->lang_id)?'selected':'' }} >{{$r->txt_desc}}</option>
+                    <select name="country_id_fk" id="country_id_fk" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                      @if(@$sCountry)
+                        @foreach(@$sCountry AS $r)
+                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->country_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
                         @endforeach
                       @endif
                     </select>

@@ -1,8 +1,8 @@
 <header id="page-topbar">
-    <div class="navbar-header" style="background-color: #18c160;" >
+    <div class="navbar-header" style="background-color:#00cc66;" >
         <div class="d-flex" >
             <!-- LOGO -->
-            <div class="navbar-brand-box"  style="background-color: #18c160;">
+            <div class="navbar-brand-box"  style="background-color:#00cc66;">
           <!--       <a href="backend/nisit" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="backend/images/logo.svg" alt="" height="22">
@@ -14,7 +14,7 @@
 
                 <a href="backend/index" class="logo logo-light">
                 <!--     <span class="logo-sm">
-                        <img src="backend/images/logo-light.svg" alt="" height="22">
+                        <img src="backend/images/logo-light.svg" alt="" height="22">						
 						<h3 style="margin-top:20px; color: #ffffff;">N</h3>
                     </span> -->
                     <span class="logo-lg">

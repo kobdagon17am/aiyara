@@ -106,16 +106,22 @@ class PmController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('role_name', function($row) {
-        $sRole_group = \App\Models\Backend\Role::where('id', $row->role_group_id_fk)->get();
-        return $sRole_group[0]->role_name;
+        if($row->role_group_id_fk){
+          $sRole_group = \App\Models\Backend\Role::where('id', $row->role_group_id_fk)->get();
+          return $sRole_group[0]->role_name;
+        }
       })
       ->addColumn('recipient_name', function($row) {
-        $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->subject_recipient)->get();
-        return $sUser[0]->name;
+        if($row->subject_recipient){
+          $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->subject_recipient)->get();
+          return $sUser[0]->name;
+        }
       })
       ->addColumn('operator_name', function($row) {
-        $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->operator)->get();
-        return $sUser[0]->name;
+        if($row->operator){
+          $sUser = \App\Models\Backend\Permission\Admin::where('id', $row->operator)->get();
+          return $sUser[0]->name;
+        }
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

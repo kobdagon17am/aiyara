@@ -117,6 +117,7 @@ class Transfer_warehouses_codeController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Transfer_warehouses_code::find($id);
+       // dd($sRow);
         $receive_id = \App\Models\Backend\General_receive::get();
         $Products = \App\Models\Backend\Products::get();
         $ProductsUnit = \App\Models\Backend\Product_unit::get();

@@ -36,9 +36,10 @@ class Transfer_warehousesController extends Controller
       $sTransfer_chooseAll = \App\Models\Backend\Transfer_choose::where('action_user','=',(\Auth::user()->id))->get();
       // dd(\Auth::user()->id);
       // dd(count($sTransfer_chooseAll));
+     
       // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
-      // dd(count($sTransfer_choose));
+      // dd($sTransfer_choose);
 
         return View('backend.transfer_warehouses.index')->with(
         array(
@@ -62,6 +63,8 @@ class Transfer_warehousesController extends Controller
     }
     public function store(Request $request)
     {
+
+      // dd($request->all());
 
       if(isset($request->save_select_to_transfer)){
         // dd($request->all());
@@ -97,7 +100,8 @@ class Transfer_warehousesController extends Controller
                     SET branch_id_fk = ".$request->branch_id_set_to_warehouse.",
                      warehouse_id_fk = ".$request->warehouse_id_fk_c."  ,
                      zone_id_fk = ".$request->zone_id_fk_c."  ,
-                     shelf_id_fk = ".$request->shelf_id_fk_c."  
+                     shelf_id_fk = ".$request->shelf_id_fk_c."  ,
+                     shelf_floor = ".$request->shelf_floor_c."  
                     where id=".$request->id_set_to_warehouse." 
                 ");
               }
@@ -113,7 +117,8 @@ class Transfer_warehousesController extends Controller
                     SET branch_id_fk = ".$request->branch_id_set_to_warehouse_e.",
                      warehouse_id_fk = ".$request->warehouse_id_fk_c_e."  ,
                      zone_id_fk = ".$request->zone_id_fk_c_e."  ,
-                     shelf_id_fk = ".$request->shelf_id_fk_c_e."  
+                     shelf_id_fk = ".$request->shelf_id_fk_c_e.",  
+                     shelf_floor = ".$request->shelf_floor_c_e."  
                     where id=".$request->id_set_to_warehouse_e." 
                 ");
               }
@@ -258,7 +263,7 @@ class Transfer_warehousesController extends Controller
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
-        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
+        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$row->shelf_floor;
       })  
       ->addColumn('amt_in_warehouse', function($row) {
         // $Check_stock = \App\Models\Backend\Check_stock::where('id',$row->stock_id_fk);

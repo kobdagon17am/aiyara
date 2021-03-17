@@ -10,12 +10,8 @@ use Session;
 use Storage;
 use PDF;
 use Redirect;
-// use App\Model\CourseModel;
-// use App\Model\MemberModel;
-// use App\Model\MemberAddModel;  
-// use App\Http\Controllers\backend\ActiveMemberController;
-// use App\Http\Controllers\backend\ActiveCourseController;
 use App\Models\Backend\PromotionCode_add;
+use App\Models\Backend\GiftvoucherCode_add;
 
 class AjaxController extends Controller
 {
@@ -28,7 +24,7 @@ class AjaxController extends Controller
 
         $roleApprove = DB::select(" SELECT can_approve from role_permit WHERE role_group_id_fk=(SELECT role_group_id_fk FROM ck_users_admin WHERE id=".(\Auth::user()->id).") and menu_id_fk='$request->session_menu_id'  ; ");
         // echo $roleApprove[0]->can_approve;
-        Session::put('roleApprove', $roleApprove[0]->can_approve);
+        Session::put('roleApprove', @$roleApprove[0]->can_approve);
         echo (Session::get('roleApprove'));
 
     }
@@ -404,6 +400,7 @@ class AjaxController extends Controller
                 'warehouse_id_fk'=>$value->warehouse_id_fk ,
                 'zone_id_fk'=>$value->zone_id_fk ,
                 'shelf_id_fk'=>$value->shelf_id_fk ,
+                'shelf_floor'=>$value->shelf_floor ,
             ];
         }
 
@@ -536,42 +533,63 @@ class AjaxController extends Controller
           $fee = DB::select(" 
                 SELECT * from dataset_fee where id = ".$request->fee_id."
           ");
-            return $fee[0]->txt_value;
+                if($fee[0]->fee_type==1){
+                    return $fee[0]->txt_value;
+                }else{
+                    return $fee[0]->txt_fixed_rate;
+                }
           }else{
             return null;
           }
     }
 
-   public function ajaxProductValueCal(Request $request)
+
+   public function ajaxGetDBfrontstore(Request $request)
     {
 
         // return $request;
         // dd();
 
-        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id_fk." GROUP BY frontstore_id_fk ");
-  
-        $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-        $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+       $id = $request->frontstore_id_fk;
+       // if($id){
+       //     $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           // if(!empty($sFrontstoreDataTotal)){
+           //    $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+           //    $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+           //    DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+           //  }else{
+           //              DB::select(" UPDATE db_frontstore SET 
 
-        // return $vat;
-        // dd();
+           //              aicash_price='0', 
+           //              transfer_price='0', 
+           //              credit_price='0', 
 
-        DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=".@$request->frontstore_id_fk." ");
+           //              charger_type='0', 
+           //              fee='0', 
+           //              fee_amt='0', 
+           //              sum_credit_price='0', 
+           //              account_bank_id='0', 
+           //              shipping_price='0', 
 
+           //              transfer_money_datetime=NULL , 
+           //              file_slip=NULL,
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
-        return response()->json($rs);   
+           //              total_price='0',
+           //              cash_price='0',
+           //              cash_pay='0' 
+           //              WHERE id=$id ");
+           //  }
 
+            $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$id ");
+            return response()->json($rs);     
+        // }
     }
+
 
    public function ajaxCheckDBfrontstore(Request $request)
     {
-
-        // return $request;
-        // dd();
         $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk='".$request->frontstore_id_fk."' ");
         return $rs[0]->cnt;   
-
     }
 
 
@@ -580,75 +598,104 @@ class AjaxController extends Controller
     {
         // return $request;
         // dd();
-
         $sum_price = str_replace(',','',$request->sum_price);
+        $frontstore_id = $request->frontstore_id;
+        $delivery_location = $request->delivery_location;
+        $frontstore = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        /*
+            1   ส่งฟรี / Shipping Free
+            2   กรุงเทพฯ และปริมณฑล / Metropolitan area
+            3   ต่างจังหวัด / Upcountry
+            4   ส่งแบบพิเศษ / Premium  > $request->delivery_location_05
+        */
+        if(!empty($request->province_id)){
+            $province_id = $request->province_id;
+        }else{
+            $province_id = 0 ;
+        }
 
-        $frontstor = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
-        $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstor[0]->business_location_id_fk."' ");
+        // return $province_id;
+        // dd();
 
-        if($sum_price>=$shipping[0]->purchase_amt){
-            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."', shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
-            return 0 ;
+        // return $request->shipping_special;
+        // return $province_id;
+        // dd();
+
+        if(!empty($request->shipping_special)){
+
+            // return $province_id;
+            // dd();
+
+            $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=4 ");
+            DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1 WHERE id=$frontstore_id ");
+
+            return $shipping[0]->shipping_cost;
+            // dd();
+
         }else{
 
+            DB::select(" UPDATE db_frontstore SET shipping_special=0  WHERE id=$frontstore_id ");
+        
+            // return $province_id;
+            // dd();
 
-            if($request->delivery_location==0){ //รับสินค้าด้วยตัวเอง
-                //สาขา ?
-                // สาขาตัวเอง
-                if($request->sentto_branch_id==$request->branch_id_fk){
-                    // return 'ส่งที่สาขาตัวเอง ไม่ต้องมีค่าขนส่ง ';
-                    DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
+            // กรณีส่งฟรี
+            $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
+
+            if($sum_price>=$shipping[0]->purchase_amt){
+                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+                return 0 ;
+            }else{
+
+                DB::select(" UPDATE db_frontstore SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
+
+                 if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
+                    // รับสินค้าด้วยตัวเอง จะรับที่สาขาใด ก็ไม่มีค่าใช้จ่าย 
+                    // return $request->sentto_branch_id;
+                    // return $request->branch_id_fk;
+                    // dd();
                     return 0 ;
+                    // dd();
+                }else{ 
+                        
+                        $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
 
-                }else{
-
-                    // รับต่างสาขา หาต่อว่าอยู่ใน business_location ?
-                    $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->sentto_branch_id."");
-
-                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
-
-                    DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
-
-                    return $shipping_cost[0]->shipping_cost;
-
-                }
-                
-            }else{ 
-
-                // รับสินค้าตามที่อยู่ ที่ลงไว้ ที่อยู่ ตาม บัตร ปชช. หรือ ปณ. หรือ กำหนดเอง เอา รหัส จ. มาเช็ค
-                // ดูว่าเป็น จ. เดียวกันกับ จ. สาขาที่รับมั๊ย
-                // ต้อง Lock Business Lo ไว้ก่อนเลย
-                    $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
-
-                    if($request->province_id==$branchs[0]->province_id_fk){
-                        DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
-                        return 0;
-                    }else{
-                         // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
-
-                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
-
-                        $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".$request->province_id." ");
-                        // return $shipping_cost[0]->id;
-                        // return count($shipping_vicinity);
-                        if(count($shipping_vicinity)>0){
-                            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
-                            return $shipping_cost[0]->shipping_cost;
+                        if($province_id==$branchs[0]->province_id_fk){
+                            DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=0  WHERE id=$frontstore_id ");
+                            return 0;
                         }else{
+                             // ต่าง จ. กัน เช็คดูว่า อยู่ในเขตปริมณทฑลหรือไม่
+                            $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
 
-                            $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
-                            DB::select(" UPDATE db_frontstore SET delivery_location='".$request->delivery_location."',shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id='".$request->frontstore_id_fk."' ");
-                            return $shipping_cost[0]->shipping_cost;
+                            $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=$province_id ");
+
+                            if(count($shipping_vicinity)>0){
+
+                                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
+
+                                return $shipping_cost[0]->shipping_cost;
+
+                            }else{
+
+                                $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=3 ");
+
+                                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
+
+                                return $shipping_cost[0]->shipping_cost;
+
+                            }
 
                         }
 
-                    }
+                }
 
 
             }
+
+
+             
         }
-
-
+       
         
    
     }
@@ -656,64 +703,481 @@ class AjaxController extends Controller
 
    public function ajaxFeeCalculate(Request $request)
     {
-        // echo $request->product_id_fk;
+
+        
+     /*   
+        $pay_type_id
+          1 เงินสด
+          2 เงินสด + Ai-Cash
+          3 เครดิต + เงินสด
+          4 เครดิต + เงินโอน
+          5 เครดิต + Ai-Cash
+          6 เงินโอน + เงินสด
+          7 เงินโอน + Ai-Cash
+
+1	0	เงินโอน
+2	0	บัตรเครดิต
+3	0	Ai-Cash
+4	0	Gift Voucher
+
+5	1	เงินสด
+6	2	เงินสด + Ai-Cash
+7	3	เครดิต + เงินสด
+8	4	เครดิต + เงินโอน
+9	5	เครดิต + Ai-Cash
+10	6	เงินโอน + เงินสด
+11	7	เงินโอน + Ai-Cash
+
+
+
+          */ 
+
         // return $request;
         // dd();
-        // ถ้าส่งมาเป็น 0 ทั้งสองรายการเลย
-
-      $sum_price = str_replace(',','',$request->sum_price);
-      $fee_value = $request->fee_value?str_replace(',','',$request->fee_value):0;
-      $transfer_price = str_replace(',','',$request->transfer_price);
-      $cash_price = str_replace(',','',$request->cash_price);
-      $shipping_price = str_replace(',','',$request->shipping_price);
-      $pay_type_id_fk = $request->pay_type_id_fk;
+        $pay_type_id = $request->pay_type_id;
+        $frontstore_id =  $request->frontstore_id ;
+        $aicash_price = str_replace(',','',$request->aicash_price);
+        $sum_price = str_replace(',','',$request->sum_price);
+        $shipping_price = str_replace(',','',$request->shipping_price);
+        $sum_price = ($sum_price+$shipping_price) ;
 
 
-      if($request->this_id=="transfer_price"){
+        DB::select(" UPDATE db_frontstore SET 
+            aicash_price='0', 
+            transfer_price='0', 
+            credit_price='0', 
+            shipping_price='0', 
 
-            $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+            charger_type='0', 
+            fee='0', 
+            fee_amt='0', 
+            sum_credit_price='0', 
 
-            if($transfer_price==0){
-                $fee_amt    = 0;
-                DB::select(" UPDATE db_frontstore SET cash_price=$sum_price,transfer_price=0,fee_amt=0,sum_price=($sum_price+$shipping_price+$fee_amt) WHERE id='".$request->frontstore_id_fk."' ");
-            }else{
-                $cash_price = $sum_price - $transfer_price ;
-                if($pay_type_id_fk!=2){
-                  $fee_amt    = 0 ;
-                }else{
-                  $fee_amt    = $transfer_price * (@$fee_value/100) ;
-                }
-                DB::select(" UPDATE db_frontstore SET cash_price=$cash_price,transfer_price=$transfer_price,fee_amt=$fee_amt,sum_price=($sum_price+$shipping_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
-            }
+            total_price='0',
+            cash_price='0',
+            cash_pay='0' 
+            WHERE id=$frontstore_id ");
 
-      }else{
+        if($pay_type_id==5){
+            DB::select(" UPDATE db_frontstore SET cash_price=($sum_price-$shipping_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
+        }
 
-            $cash_price = $cash_price>$sum_price?$sum_price:$cash_price;
+        if($pay_type_id==6){
+            $aicash_price = $aicash_price>$sum_price?$sum_price:$aicash_price;
+            DB::select(" UPDATE db_frontstore SET aicash_price=$aicash_price,cash_price=($sum_price-$aicash_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
+        }
 
-            if($cash_price==0){
-                $fee_amt    = $sum_price * (@$fee_value/100) ;
-                DB::select(" UPDATE db_frontstore SET cash_price=0,transfer_price=$sum_price,fee_amt=$fee_amt,sum_price=($sum_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
-            }else{
-                $cash_price = $sum_price - $transfer_price ;
-                $fee_amt    = $transfer_price * (@$fee_value/100) ;
-                DB::select(" UPDATE db_frontstore SET cash_price=$cash_price,transfer_price=$transfer_price,fee_amt=$fee_amt,sum_price=($sum_price+$shipping_price+$fee_amt)  WHERE id='".$request->frontstore_id_fk."' ");
-
-            }
-
-      }
-
-        // if($sum_price >= $shipping[0]->purchase_amt){
-        //     DB::select(" UPDATE db_frontstore SET shipping_price=0  WHERE id='".$request->frontstore_id_fk."' ");
-        // }
-
-
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id='".$request->frontstore_id_fk."' ");
-
-        // return  $rs[0]->shipping_price;
-
+        if($pay_type_id == '') {
+            DB::select(" UPDATE db_frontstore SET pay_type_id=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+        }
+         
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
         return response()->json($rs);   
 
     }
+
+
+  public function ajaxCalPriceFrontstore01(Request $request)
+    {
+        // return $request;
+        // dd();
+     /*   
+        $pay_type_id
+          1 เงินสด
+          2 เงินสด + Ai-Cash
+          3 เครดิต + เงินสด
+          4 เครดิต + เงินโอน
+          5 เครดิต + Ai-Cash
+          6 เงินโอน + เงินสด
+          7 เงินโอน + Ai-Cash
+          */ 
+
+
+        $sum_price = str_replace(',','',$request->sum_price);
+        $pay_type_id = $request->pay_type_id?$request->pay_type_id:0;        
+        $frontstore_id =  $request->frontstore_id ;
+        $shipping_price = str_replace(',','',$request->shipping_price);
+
+        $sum_price = ($sum_price+$shipping_price) ;
+
+        if($request->purchase_type_id_fk==5){
+
+            $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);   // ที่มีอยู่ 
+            $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
+            $gift_voucher_price = $gift_voucher_price>$gift_voucher_cost?$gift_voucher_cost:$gift_voucher_price;
+            $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
+
+            $sum_price = $sum_price - $gift_voucher_price ;
+
+        }
+
+
+        DB::select(" UPDATE db_frontstore SET 
+
+            aicash_price='0', 
+            transfer_price='0', 
+            credit_price='0', 
+
+            charger_type='0', 
+            fee='0', 
+            fee_amt='0', 
+            sum_credit_price='0', 
+            account_bank_id='0', 
+
+            transfer_money_datetime=NULL , 
+            file_slip=NULL,
+
+            total_price='0',
+            cash_price='0',
+            cash_pay='0' 
+            WHERE id=$frontstore_id ");
+
+
+        DB::select(" UPDATE db_frontstore SET pay_type_id=($pay_type_id) WHERE id=$frontstore_id ");
+
+        if($pay_type_id==5){
+            DB::select(" UPDATE db_frontstore SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
+        }
+
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        return response()->json($rs);   
+
+    }
+
+    public function ajaxCearCostFrontstore(Request $request)
+    {
+          $frontstore_id_fk =  $request->frontstore_id_fk ;
+
+          DB::select(" UPDATE db_frontstore SET 
+
+            aicash_price='0', 
+            transfer_price='0', 
+            credit_price='0', 
+
+            charger_type='0', 
+            fee='0', 
+            fee_amt='0', 
+            sum_credit_price='0', 
+            account_bank_id='0', 
+
+            transfer_money_datetime=NULL , 
+            file_slip=NULL,
+
+            total_price='0',
+            cash_price='0',
+            cash_pay='0' 
+            WHERE id=$frontstore_id_fk ");
+    }
+
+
+
+   public function ajaxCalPriceFrontstore02(Request $request)
+    {
+        // return $request;
+        // dd();
+     /*   
+        $pay_type_id
+          1 เงินสด
+          2 เงินสด + Ai-Cash
+          3 เครดิต + เงินสด
+          4 เครดิต + เงินโอน
+          5 เครดิต + Ai-Cash
+          6 เงินโอน + เงินสด
+          7 เงินโอน + Ai-Cash
+          */ 
+
+        $pay_type_id = $request->pay_type_id;        
+        $frontstore_id =  $request->frontstore_id ;
+        $sum_price = str_replace(',','',$request->sum_price);
+        $shipping_price = str_replace(',','',$request->shipping_price);
+        $sum_price = ($sum_price+$shipping_price) ;
+
+        if($request->purchase_type_id_fk==5){
+
+            $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);   // ที่มีอยู่ 
+            $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
+            $gift_voucher_price = $gift_voucher_price>$gift_voucher_cost?$gift_voucher_cost:$gift_voucher_price;
+            $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
+
+            $sum_price = $sum_price - $gift_voucher_price ;
+
+        }
+
+
+        if($pay_type_id==5){
+            DB::select(" UPDATE db_frontstore SET aicash_price='0',cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
+        }
+
+        if($pay_type_id==6){
+            $aicash_price = str_replace(',','',$request->aicash_price);
+            $aicash_price = $aicash_price>$sum_price?$sum_price:$aicash_price;
+            $cash_price = $sum_price-$aicash_price;
+            $cash_pay = $sum_price-$aicash_price;
+            DB::select(" UPDATE db_frontstore SET aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+        }
+
+        if($pay_type_id==7){
+
+            if(empty($request->credit_price)){
+                exit;
+            }
+
+            $credit_price = str_replace(',','',$request->credit_price);
+            $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price WHERE id=$frontstore_id ");
+
+            if(!empty($request->fee)){
+                $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+                $fee_type = $fee[0]->fee_type;
+                if($fee_type==1){
+                    $fee = $fee[0]->txt_value;
+                    $fee_amt    = $credit_price * (@$fee/100) ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }else{
+                    $fee = $fee[0]->txt_fixed_rate;
+                    $fee_amt =  $fee ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }
+           }else{
+              $fee_id = 0 ;
+              $fee_amt  = 0 ;
+              $sum_credit_price  = 0 ;
+           }
+   
+          if(!empty($credit_price) && intval($credit_price) != 0){
+
+                $fee_id = $request->fee?$request->fee:0;
+                $charger_type = $request->charger_type;
+
+                if($charger_type==1){
+
+                    if($credit_price==$sum_price){
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    }else{
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
+                    }
+                    
+                }else{
+
+                    DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,cash_price=($sum_price-$credit_price),cash_pay=(($sum_price-$credit_price)+$fee_amt) WHERE id=$frontstore_id ");
+
+                }
+
+            }
+
+        }
+
+     if($pay_type_id==8){
+
+            if(empty($request->credit_price)){
+                exit;
+            }
+
+            $credit_price = str_replace(',','',$request->credit_price);
+            $transfer_price = str_replace(',','',$request->transfer_price);
+            $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+            $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price WHERE id=$frontstore_id ");
+
+            if(!empty($request->fee)){
+                $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+                $fee_type = $fee[0]->fee_type;
+                if($fee_type==1){
+                    $fee = $fee[0]->txt_value;
+                    $fee_amt    = $credit_price * (@$fee/100) ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }else{
+                    $fee = $fee[0]->txt_fixed_rate;
+                    $fee_amt =  $fee ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }
+           }else{
+              $fee_id = 0 ;
+              $fee_amt  = 0 ;
+              $sum_credit_price  = 0 ;
+           }
+   
+          if(!empty($credit_price) && intval($credit_price) != 0){
+
+                $fee_id = $request->fee?$request->fee:0;
+                $charger_type = $request->charger_type;
+                $transfer_money_datetime = $request->transfer_money_datetime;
+
+                if($charger_type==1){
+
+                    if($credit_price==$sum_price){
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    }else{
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,transfer_price=($sum_price-$credit_price),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    }
+                    
+                }else{
+
+                    DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,transfer_price=(($sum_price-$credit_price)+$fee_amt),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+
+                }
+
+            }
+
+        }
+
+
+   if($pay_type_id==9){
+
+            if(empty($request->credit_price)){
+                exit;
+            }
+
+            $credit_price = str_replace(',','',$request->credit_price);
+            $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+
+            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price,file_slip=NULL WHERE id=$frontstore_id ");
+
+            if(!empty($request->fee)){
+                $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+                $fee_type = $fee[0]->fee_type;
+                if($fee_type==1){
+                    $fee = $fee[0]->txt_value;
+                    $fee_amt    = $credit_price * (@$fee/100) ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }else{
+                    $fee = $fee[0]->txt_fixed_rate;
+                    $fee_amt =  $fee ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }
+           }else{
+              $fee_id = 0 ;
+              $fee_amt  = 0 ;
+              $sum_credit_price  = 0 ;
+           }
+   
+          if(!empty($credit_price) && intval($credit_price) != 0){
+
+                $fee_id = $request->fee?$request->fee:0;
+                $charger_type = $request->charger_type;
+
+
+                if($charger_type==1){
+
+                    if($credit_price==$sum_price){
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,aicash_price=0 WHERE id=$frontstore_id ");
+                    }else{
+
+                        // ถ้ายอดเครดิต ลบ ราคาสินค้ารวม แล้ว มากกว่า ยอด ai-cash ที่มี ให้ ยอด ai-cash = ยอด ai-cash ที่มี แล้ว ส่วนเอาที่เหลือ เอาไปรวมกับยอด เครดิต อีกรอบ 
+                        $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
+                        $Cus_Aicash = $sCustomer[0]->ai_cash;
+
+                        $AiCashInput =  $sum_price - $credit_price ;
+                        if($AiCashInput > $Cus_Aicash){
+                            $AiCash = $Cus_Aicash;
+                            $credit_price = $sum_price - $AiCash ;
+                        }else{
+                            $AiCash = $AiCashInput ; 
+                            $credit_price = $credit_price ;
+                        }
+
+                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    }
+                    
+                }else{
+
+                        $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
+                        $Cus_Aicash = $sCustomer[0]->ai_cash;
+
+                        $AiCashInput =  ($sum_price - $credit_price) + $fee_amt ;
+
+                        if($AiCashInput > $Cus_Aicash){
+                            $AiCash = $Cus_Aicash;
+                            $credit_price = ($sum_price - $AiCash) + $fee_amt  ;
+                        }else{
+                            $AiCash = $AiCashInput  ; 
+                            $credit_price = $credit_price + $fee_amt ;
+                        }
+
+
+                        if($credit_price==$sum_price){
+                            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,aicash_price=$fee_amt WHERE id=$frontstore_id ");
+                        }else{
+                        
+                           DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+
+                        }
+
+                }
+
+
+
+            }
+
+        }
+
+
+        if($pay_type_id==10){
+
+                    if(empty($request->transfer_price)){
+                        exit;
+                    }
+                    $transfer_price = str_replace(',','',$request->transfer_price);
+                    $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+                    $transfer_money_datetime = $request->transfer_money_datetime;
+                    DB::select(" UPDATE db_frontstore SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
+
+         }
+
+        if($pay_type_id==11){
+
+                    if(empty($request->transfer_price)){
+                        exit;
+                    }
+
+                    $transfer_price = str_replace(',','',$request->transfer_price);
+                    $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+                    $transfer_money_datetime = $request->transfer_money_datetime;
+                    DB::select(" UPDATE db_frontstore SET transfer_price=$transfer_price,aicash_price=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+
+         }
+
+        if(!empty($request->this_element)){
+            if($request->this_element=="aicash_price"){
+
+                $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
+                $Cus_Aicash = $sCustomer[0]->ai_cash;
+
+                $aicash_price = str_replace(',','',$request->aicash_price);
+                $aicash_price = $aicash_price>$Cus_Aicash?$Cus_Aicash:$aicash_price;
+                $cash_price = $sum_price-$aicash_price;
+                $cash_pay = $sum_price-$aicash_price;
+
+                if($aicash_price>$sum_price){
+
+                    DB::select(" UPDATE db_frontstore SET aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
+                }else{
+                    DB::select(" UPDATE db_frontstore SET aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+                }
+                
+
+            }
+        }
+
+        
+
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        return response()->json($rs);   
+
+    }
+
+
+
+
+
+   public function ajaxCalAicash(Request $request)
+    {
+        $rs =  DB::select(" select * from customers where id=".$request->customer_id." ");
+        // $Cus_Aicash = $sCustomer[0]->ai_cash;
+        return response()->json($rs);   
+
+    }
+
 
 
    public function ajaxGetProductPromotionCus(Request $request)
@@ -874,6 +1338,24 @@ class AjaxController extends Controller
 
     }
 
+
+
+    public function ajaxGenPromotionSaveDate(Request $request)
+    {
+
+        // return $request;
+        // dd();
+         if($request->id){
+            $sRow = \App\Models\Backend\PromotionCode::find($request->id);
+            $sRow->promotion_id_fk = $request->promotion_id_fk;
+            $sRow->pro_sdate = $request->pro_sdate;
+            $sRow->pro_edate = $request->pro_edate;
+            $sRow->save();
+          }
+
+    }
+
+
     public function ajaxCheckCouponUsed(Request $request)
     {
 
@@ -938,6 +1420,14 @@ class AjaxController extends Controller
 
     }
 
+    public function ajaxApproveGiftvoucherCode(Request $request)
+    {
+        DB::select(" 
+            UPDATE db_giftvoucher_cus  SET pro_status=1
+            WHERE giftvoucher_code_id_fk = '".$request->giftvoucher_code_id_fk."' AND pro_status = 4 ;
+          ");
+
+    }
 
     public function ajaxGetPromotionCode(Request $request)
     {
@@ -980,6 +1470,17 @@ class AjaxController extends Controller
     }
 
 
+    public function ajaxClearDataGiftvoucherCode(Request $request)
+    {
+        if($request->param=="Import"){
+            DB::delete(" DELETE FROM db_giftvoucher_cus WHERE giftvoucher_code_id_fk =".$request->giftvoucher_code_id_fk." and pro_status=4 ; ");
+        }
+        if($request->param=="ByCase"){
+           DB::delete(" DELETE FROM db_giftvoucher_cus WHERE id =".$request->id." and pro_status<>2 ; ");
+        }        
+        DB::select(" ALTER table db_giftvoucher_cus AUTO_INCREMENT=1; ");
+    }
+
 
     public function ajaxClearConsignment(Request $request)
     {
@@ -1016,6 +1517,475 @@ class AjaxController extends Controller
 
         }
     } 
+
+    public function ajaxGetLabelPayType(Request $request)
+    {
+        if($request->ajax()){
+       /* dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+        */
+        /* dataset_pay_type
+        1   โอนชำระ
+        2   บัตรเครดิต
+        3   Ai-Cash
+        4   Gift Voucher
+        5   เงินสด
+        */
+            if($request->id){
+              $query = DB::select(" select id,detail as pay_type from dataset_pay_type where id=".$request->id."  ");
+              return response()->json($query);      
+            }
+
+        }
+    } 
+
+    public function ajaxGetLabelOthersPrice(Request $request)
+    {
+        if($request->ajax()){
+       /* dataset_orders_type
+        1 ทำคุณสมบัติ
+        2 รักษาคุณสมบัติรายเดือน
+        3 รักษาคุณสมบัติท่องเที่ยว
+        4 เติม Ai-Stockist
+        5 แลก Gift Voucher
+        */
+        /* dataset_pay_type
+        1   โอนชำระ
+        2   บัตรเครดิต
+        3   Ai-Cash
+        4   Gift Voucher
+        5   เงินสด
+        */
+            if($request->id){
+              $query = DB::select(" select id,detail as pay_type from dataset_pay_type where id=".$request->id."  ");
+              return response()->json($query);      
+            }
+
+        }
+    }
+
+
+    public function ajaxGetVoucher(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $query = DB::select(" select * from gift_voucher where id=".$request->id." AND banlance>0  ");
+              return response()->json($query);      
+            }
+        }
+    } 
+
+
+    public function ajaxDelFileSlip(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_frontstore where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip);
+              DB::select(" UPDATE db_frontstore SET file_slip='' where id=".$request->id."  ");
+            }
+        }
+    }
+
+    public function ajaxDelFileSlipGiftVoucher(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_add_ai_cash where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip);
+              DB::select(" UPDATE db_add_ai_cash SET file_slip='' where id=".$request->id."  ");
+            }
+        }
+    }
+
+
+    public function ajaxCalAicashAmt(Request $request)
+    {
+        // return $request;
+        // dd();
+        if($request->ajax()){
+
+            $id = $request->id;
+
+            if($id){
+
+                DB::select(" UPDATE db_add_ai_cash SET pay_type_id=0 , cash_price='0', cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_price=0 ,account_bank_id=0 ,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+
+                $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$id ");
+                return response()->json($rs);   
+
+            }
+
+        }
+    }
+
+
+
+    public function ajaxCheckAddAiCash(Request $request)
+    {
+        // return $request;
+        // dd();
+        if($request->ajax()){
+              // เช็คเรื่องการตัดยอด Ai-Cash
+               $ch_aicash_01 = DB::select(" select * from customers where id=".$request->customer_id_fk." ");
+               // return($ch_aicash_01[0]->ai_cash);
+               $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=".$request->id." ");
+               // return($ch_aicash_02[0]->aicash_amt);
+
+               if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
+                 return 'no';
+               }
+        }
+    }
+
+
+    public function ajaxGetDBAddAiCash(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id){
+                $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$request->id ");
+                return response()->json($rs);   
+            }
+        }
+    }
+
+
+
+    public function ajaxSaveGiftvoucherCode(Request $request)
+    {
+        if($request->ajax()){
+            // return $request;
+            // dd();
+              if( !empty(@$request->giftvoucher_code_id_fk) ){
+                $sRow = \App\Models\Backend\GiftvoucherCode::find($request->giftvoucher_code_id_fk );
+              }else{
+                $sRow = new \App\Models\Backend\GiftvoucherCode;
+              }
+
+              $sRow->descriptions = $request->descriptions;
+              $sRow->pro_sdate = $request->pro_sdate;
+              $sRow->pro_edate = $request->pro_edate;
+              $sRow->created_at = date('Y-m-d H:i:s');
+              $sRow->save();
+
+              if($sRow->id){
+                $insertData = array(
+                 "giftvoucher_code_id_fk"=>$sRow->id,
+                 "customer_code"=>$request->customer_code,
+                 "giftvoucher_value"=>$request->giftvoucher_value,
+                 "pro_status"=> '4' ,
+                 "created_at"=>now());
+                GiftvoucherCode_add::insertData($insertData);
+              }
+
+             // return redirect()->to(url("backend/giftvoucher_code/".$sRow->id."/edit"));
+              return $sRow->id;
+        }
+        
+    }
+
+
+    public function ajaxClearAfterSelChargerType(Request $request)
+    {
+        if($request->ajax()){
+            // return $request;
+            // dd();
+                   // $("#credit_price").val('');
+                   //  $("#fee_amt").val('');
+                   //  $("#sum_credit_price").val('');  
+                   //  $("#aicash_price").val('');
+                   //  $("#transfer_price").val('');
+                   //  $("#cash_pay").val('');
+
+            DB::select(" UPDATE db_frontstore SET 
+                credit_price='0.00',
+                fee_amt='0.00',
+                sum_credit_price='0.00',
+                aicash_price='0.00',
+                transfer_price='0.00',
+                cash_pay='0.00'
+                where id=".$request->frontstore_id_fk."  ");
+          
+        }
+        
+    }
+
+    public function createPDFReceiptAicash($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $customPaper = array(0,0,300,500);
+        $pdf = PDF::loadView('backend.add_ai_cash.print_receipt',compact('data'))->setPaper($customPaper, 'landscape');
+        // $pdf = PDF::loadView('backend.add_ai_cash.print_receipt',compact('data'))->setPaper('a5', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+
+
+   public function ajaxCalGiftVoucherPrice(Request $request)
+    {
+        // return $request;
+        // dd();
+ 
+
+    if($request->purchase_type_id_fk!=5){
+    }else{ 
+
+        // Gift Voucher 
+
+            /*   
+                $pay_type_id
+                  1 เงินสด
+                  2 เงินสด + Ai-Cash
+                  3 เครดิต + เงินสด
+                  4 เครดิต + เงินโอน
+                  5 เครดิต + Ai-Cash
+                  6 เงินโอน + เงินสด
+                  7 เงินโอน + Ai-Cash
+            */
+
+            $pay_type_id = $request->pay_type_id;        
+            $frontstore_id =  $request->frontstore_id ;
+            $sum_price = str_replace(',','',$request->sum_price);
+            $shipping_price = str_replace(',','',$request->shipping_price);
+            
+            $sum_price = ($sum_price+$shipping_price) ;
+
+            $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);   // ที่มีอยู่ 
+            $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
+            $gift_voucher_price = $gift_voucher_price>$gift_voucher_cost?$gift_voucher_cost:$gift_voucher_price;
+            $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
+
+
+            if($gift_voucher_price>0){
+                DB::select(" UPDATE db_frontstore SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
+            }
+                
+        }
+
+        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        return response()->json($rs);   
+
+    }
+
+
+
+  public function ajaxCalAddAiCashFrontstore(Request $request)
+    {
+        // return $request;
+        // dd();
+     /*   
+        $pay_type_id
+          1 เงินสด
+          2 เงินสด + Ai-Cash
+          3 เครดิต + เงินสด
+          4 เครดิต + เงินโอน
+          5 เครดิต + Ai-Cash
+          6 เงินโอน + เงินสด
+          7 เงินโอน + Ai-Cash
+          */ 
+
+        $pay_type_id = $request->pay_type_id;        
+        $id =  $request->id ;
+
+        // return $pay_type_id;
+        // return $id;
+        // dd();
+        // if($pay_type_id==''){
+
+        // Clear ก่อน
+ //        DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+ // $pay_type_id = request('pay_type_id');
+            DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',account_bank_id=0,transfer_price=0,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+        // }
+
+        $sum_price = str_replace(',','',$request->aicash_amt);
+        
+        // return $sum_price;
+        // dd();
+
+
+        if($pay_type_id==5){
+            DB::select(" UPDATE db_add_ai_cash SET cash_price=($sum_price),cash_pay=($sum_price),total_amt=($sum_price) WHERE id=$id ");
+        }
+
+         // dd();
+
+        if($pay_type_id==7){
+
+
+                if(empty($request->credit_price)){
+                    exit;
+                }
+
+                $credit_price = str_replace(',','',$request->credit_price);
+                $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+
+                DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price WHERE id=$id ");
+
+                if(!empty($request->fee)){
+                    $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+                    $fee_type = $fee[0]->fee_type;
+                    if($fee_type==1){
+                        $fee = $fee[0]->txt_value;
+                        $fee_amt    = $credit_price * (@$fee/100) ;
+                        $sum_credit_price = $credit_price + $fee_amt ;
+                    }else{
+                        $fee = $fee[0]->txt_fixed_rate;
+                        $fee_amt =  $fee ;
+                        $sum_credit_price = $credit_price + $fee_amt ;
+                    }
+               }else{
+                  $fee_id = 0 ;
+                  $fee_amt  = 0 ;
+                  $sum_credit_price  = 0 ;
+               }
+       
+              if(!empty($credit_price) && intval($credit_price) != 0){
+
+                    $fee_id = $request->fee?$request->fee:0;
+                    $charger_type = $request->charger_type;
+
+                    if($charger_type==1){
+
+                        if($credit_price==$sum_price){
+                            DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+                        }else{
+                            DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price),total_amt=($sum_price) WHERE id=$id ");
+                        }
+                        
+                    }else{
+
+                        DB::select(" UPDATE db_add_ai_cash SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,cash_price=($sum_price-$credit_price),cash_pay=(($sum_price-$credit_price)+$fee_amt),total_amt=($sum_price) WHERE id=$id ");
+
+                    }
+
+                }
+
+        }
+
+
+        // return $pay_type_id;
+        // dd();
+     if($pay_type_id==8){
+
+            if(empty($request->credit_price)){
+                exit;
+            }
+
+            $credit_price = str_replace(',','',$request->credit_price);
+            $transfer_price = str_replace(',','',$request->transfer_price);
+            $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+            $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+            DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price WHERE id=$id ");
+
+            if(!empty($request->fee)){
+                $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+                $fee_type = $fee[0]->fee_type;
+                if($fee_type==1){
+                    $fee = $fee[0]->txt_value;
+                    $fee_amt    = $credit_price * (@$fee/100) ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }else{
+                    $fee = $fee[0]->txt_fixed_rate;
+                    $fee_amt =  $fee ;
+                    $sum_credit_price = $credit_price + $fee_amt ;
+                }
+           }else{
+              $fee_id = 0 ;
+              $fee_amt  = 0 ;
+              $sum_credit_price  = 0 ;
+           }
+   
+          if(!empty($credit_price) && intval($credit_price) != 0){
+
+                $fee_id = $request->fee?$request->fee:0;
+                $charger_type = $request->charger_type;
+                $transfer_money_datetime = $request->transfer_money_datetime;
+
+                if($charger_type==1){
+
+                    if($credit_price==$sum_price){
+                        DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+                    }else{
+                        DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,transfer_price=($sum_price-$credit_price),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+                    }
+                    
+                }else{
+
+                    DB::select(" UPDATE db_add_ai_cash SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,transfer_price=(($sum_price-$credit_price)+$fee_amt),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+
+                }
+
+            }
+
+        }
+
+
+
+        if($pay_type_id==10){
+
+                    if(empty($request->transfer_price)){
+                        exit;
+                    }
+                    $transfer_price = str_replace(',','',$request->transfer_price);
+                    $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+                    $transfer_money_datetime = $request->transfer_money_datetime;
+                    DB::select(" UPDATE db_add_ai_cash SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',total_amt=($sum_price) WHERE id=$id ");
+
+         }
+
+    
+
+        // if(!empty($request->this_element)){
+        //     if($request->this_element=="aicash_price"){
+
+        //         $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
+        //         $Cus_Aicash = $sCustomer[0]->ai_cash;
+
+        //         $aicash_price = str_replace(',','',$request->aicash_price);
+        //         $aicash_price = $aicash_price>$Cus_Aicash?$Cus_Aicash:$aicash_price;
+        //         $cash_price = $sum_price-$aicash_price;
+        //         $cash_pay = $sum_price-$aicash_price;
+
+        //         if($aicash_price>$sum_price){
+
+        //             DB::select(" UPDATE db_add_ai_cash SET aicash_price=$sum_price, cash_price=0, cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+        //         }else{
+        //             DB::select(" UPDATE db_add_ai_cash SET aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_amt=($sum_price) WHERE id=$id ");
+        //         }
+                
+
+        //     }
+
+        // }
+
+
+        $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$id ");
+        return response()->json($rs);   
+
+    }
+
+
+
+
+
+
 
 
 }

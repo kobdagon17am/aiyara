@@ -17,7 +17,10 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+    <?php 
+    
+    // echo Session::get('session_menu_id');
+
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -150,19 +153,6 @@ $(function() {
 });
 </script>
 
-
-<script type="text/javascript">
-/*
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
 
 @endsection
 

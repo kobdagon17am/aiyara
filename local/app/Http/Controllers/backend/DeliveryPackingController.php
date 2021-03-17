@@ -51,6 +51,16 @@ class DeliveryPackingController extends Controller
       return $this->form($id);
     }
 
+    public function destroy($id)
+    {
+      // $sRow = \App\Models\Backend\Delivery::find($id);
+      // if( $sRow ){
+      //   $sRow->forceDelete();
+      // }
+      // return response()->json(\App\Models\Alert::Msg('success'));
+    }
+
+  
    public function form($id=NULL)
     {
       \DB::beginTransaction();
@@ -83,16 +93,6 @@ class DeliveryPackingController extends Controller
       }
     }
 
-    public function destroy($id)
-    {
-      // $sRow = \App\Models\Backend\Delivery::find($id);
-      // if( $sRow ){
-      //   $sRow->forceDelete();
-      // }
-      // return response()->json(\App\Models\Alert::Msg('success'));
-    }
-
-  
 
 
 }

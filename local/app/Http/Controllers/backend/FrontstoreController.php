@@ -20,12 +20,121 @@ class FrontstoreController extends Controller
       $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 ");
 
 
+      $user_login_id = \Auth::user()->id;
+      $sDBFrontstoreApproveStatus = DB::select(" 
+
+          SELECT id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,updated_at,
+          (select total_pv FROM db_frontstore_products_list where frontstore_id_fk=db_frontstore.id GROUP BY frontstore_id_fk) as pv
+          FROM db_frontstore
+          WHERE action_user =$user_login_id
+
+          UNION
+
+          SELECT
+          db_add_ai_cash.id,
+          db_add_ai_cash.created_at as d2,
+          0 as purchase_type_id_fk,
+          'เติม Ai-Cash' AS type,
+          db_add_ai_cash.customer_id_fk as c2,
+          db_add_ai_cash.aicash_amt,
+          db_add_ai_cash.id as inv_no,approve_status,'',
+          db_add_ai_cash.updated_at as ud2,
+          0 as pv
+          FROM db_add_ai_cash
+          WHERE action_user =$user_login_id
+
+           ");
+      // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
+          $approve_status_2 = 0;
+          $sum_price_2 = 0;
+          $pv_2 = 0;
+
+          $approve_status_4 = 0;
+          $sum_price_4 = 0;
+          $pv_4 = 0;
+
+          $approve_status_9 = 0;
+          $sum_price_9 = 0;
+          $pv_9 = 0;
+
+// อื่นๆ ไม่รวม 2,4,9
+          $approve_status_88 = 0;
+          $sum_price_88 = 0;
+          $pv_88 = 0;
+
+// Total
+          $approve_status_total = 0;
+          $sum_price_total = 0;
+          $pv_total = 0;
+
+
+          foreach ($sDBFrontstoreApproveStatus as $key => $value) {
+
+            if($value->approve_status==2){
+              $approve_status_2 += $value->approve_status;
+              $sum_price_2 += $value->sum_price;
+              $pv_2 += $value->pv;
+            }
+
+            if($value->approve_status==4){
+              $approve_status_4 += $value->approve_status;
+              $sum_price_4 += $value->sum_price;
+              $pv_4 += $value->pv;
+            }
+
+            if($value->approve_status==9){
+              $approve_status_9 += $value->approve_status;
+              $sum_price_9 += $value->sum_price;
+              $pv_9 += $value->pv;
+            }
+
+            if($value->approve_status!=2 && $value->approve_status!=4 && $value->approve_status!=9){
+                $approve_status_88 += 1;
+                $sum_price_88 += @$value->sum_price;
+                $pv_88 += @$value->pv;
+            }
+
+              $approve_status_total += 1 ;
+              $sum_price_total += @$value->sum_price;
+              $pv_total += @$value->pv;
+
+
+           }    
+
+
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
+
       $Customer = DB::select(" select * from customers ");
       return View('backend.frontstore.index')->with(
         array(
            'Customer'=>$Customer,
            'sUser'=>$sUser,
            'sApproveStatus'=>$sApproveStatus,
+           'sPurchase_type'=>$sPurchase_type,
+           'sDBFrontstoreApproveStatus'=>$sDBFrontstoreApproveStatus,
+
+           'approve_status_2'=>($approve_status_2/2),
+           'sum_price_2'=>$sum_price_2,
+           'pv_2'=>$pv_2,
+
+           'approve_status_4'=>($approve_status_4/4),
+           'sum_price_4'=>$sum_price_4,
+           'pv_4'=>$pv_4,
+
+           'approve_status_9'=>($approve_status_9/9),
+           'sum_price_9'=>$sum_price_9,
+           'pv_9'=>$pv_9,
+
+           'approve_status_88'=>($approve_status_88),
+           'sum_price_88'=>$sum_price_88,
+           'pv_88'=>$pv_88,
+
+
+           'approve_status_total'=>($approve_status_total),
+           'sum_price_total'=>$sum_price_total,
+           'pv_total'=>$pv_total,
+
+
         ) );
       
     }
@@ -45,9 +154,8 @@ class FrontstoreController extends Controller
       $Customer = DB::select(" select * from customers ");
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
 
-      $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,3,4) and status=1 ");
-      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(1,3,5) and status=1 ORDER BY detail ");
-
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
+      
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
@@ -66,8 +174,6 @@ class FrontstoreController extends Controller
         array(
            'Customer'=>$Customer,
            'sPurchase_type'=>$sPurchase_type,
-           'sPay_type01'=>$sPay_type01,
-           'sPay_type02'=>$sPay_type02,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
            'Products'=>$Products,
@@ -77,6 +183,7 @@ class FrontstoreController extends Controller
            'User_branch_id'=>$User_branch_id,
            'aistockist'=>$aistockist,
            'agency'=>$agency,
+           'sPay_type'=>$sPay_type,
         ) );
     }
     public function store(Request $request)
@@ -88,12 +195,15 @@ class FrontstoreController extends Controller
     public function edit($id)
     {
       // dd($id);
-      // dd($request->all());
 
       $sRow = \App\Models\Backend\Frontstore::find($id);
+      if(!$sRow){
+        return redirect()->to(url("backend/frontstore"));
+      }
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
       $CusName = ($sCustomer[0]->user_name." : ".$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".$sCustomer[0]->last_name);
+      $Cus_Aicash = $sCustomer[0]->ai_cash;
 
       $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
       $BranchName = $sBranchs[0]->b_name;
@@ -106,7 +216,7 @@ class FrontstoreController extends Controller
 
       $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
 
-      // dd($sRow->purchase_type_id_fk);
+      $shipping_special = DB::select(" select * from dataset_shipping_cost where business_location_id_fk=".$sRow->purchase_type_id_fk." AND shipping_type_id=4 ");
 
       $Products = DB::select("
 
@@ -136,21 +246,14 @@ class FrontstoreController extends Controller
         4 เติม Ai-Stockist
         5 แลก Gift Voucher
         */
+
       if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
         $sPurchase_type = DB::select(" select * from dataset_orders_type where id<>5 and status=1 and lang_id=1 order by id limit 4");
-        $sPay_type01 = DB::select(" select * from dataset_pay_type where id in(1,2,3,4) and status=1 ");
       }else{
         $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
-        $sPay_type01 = DB::select(" select * from dataset_pay_type where id=4 and status=1 ");
       }
-		/* dataset_pay_type
-		1	โอนชำระ
-		2	บัตรเครดิต
-		3	Ai-Cash
-		4	Gift Voucher
-		5	เงินสด
-		*/
-      $sPay_type02 = DB::select(" select * from dataset_pay_type where id in(1,3,5) and status=1 ORDER BY detail ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
+
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
@@ -172,23 +275,34 @@ class FrontstoreController extends Controller
       $agency = DB::select(" select * from customers_aistockist_agency where agency=1 AND user_name <> '".$ThisCustomer[0]->user_name."' ");
 
 
-      $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
-      if($sFrontstoreDataTotal){
-          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - @$vat) ;
-          DB::select(" UPDATE db_frontstore SET product_value=".(@$product_value).",tax=".(@$vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
-      }else{
-          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id ");
+      $giftvoucher = DB::select(" select * from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0  "); //AND expiry_date>=now()
+      $giftvoucher_this = DB::select(" select sum(banlance) as gift_total from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0 AND expiry_date>=now() "); //AND expiry_date>=now()
+
+      $giftvoucher_this = $giftvoucher_this[0]->gift_total;
+
+      $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk=$id ");
+      if($rs[0]->cnt==0){
+        DB::select(" UPDATE db_frontstore SET pay_type_id_fk_1='0', pay_type_id_fk_2='0' WHERE (id=$id) ");
       }
 
+
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       // dd($sFrontstoreDataTotal);
+       if($sFrontstoreDataTotal){
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+        }else{
+          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+        }
+
+        $sAccount_bank = \App\Models\Backend\Account_bank::get();
 
       return View('backend.frontstore.form')->with(
         array(
            'sRow'=>$sRow,
            'Customer'=>$Customer,
            'sPurchase_type'=>$sPurchase_type,
-           'sPay_type01'=>$sPay_type01,
-           'sPay_type02'=>$sPay_type02,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
            'Products'=>$Products,
@@ -203,8 +317,14 @@ class FrontstoreController extends Controller
            'aistockist'=>$aistockist,
            'agency'=>$agency,           
            'CusName'=>$CusName,           
+           'Cus_Aicash'=>$Cus_Aicash,           
            'BranchName'=>$BranchName,           
            'PurchaseName'=>$PurchaseName,           
+           'GiftVoucher'=>$giftvoucher,           
+           'giftvoucher_this'=>$giftvoucher_this,           
+           'sAccount_bank'=>$sAccount_bank,           
+           'sPay_type'=>$sPay_type,           
+           'shipping_special'=>$shipping_special,           
         ) );
     }
 
@@ -212,50 +332,30 @@ class FrontstoreController extends Controller
     {
       // dd($request->all());
          if(isset($request->receipt_save_list)){
-
           // dd($request->all());
-
-            $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
-
-/*
-P2102100001
-P=Product
-2102=year-month
-1=business location
-00001=running no.*/
-
+   
+              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+              $table = 'db_frontstore';
               $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-              // dd($branchs[0]->business_location_id_fk);
-
-              $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,2,2)as y,SUBSTR(invoice_code,4,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from db_frontstore 
-                WHERE SUBSTR(invoice_code,2,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,4,2)=DATE_FORMAT(now(), '%m')
+              $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table 
+                WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
                 order by invoice_code desc limit 1 ");
               if($inv){
-                  $invoice_code = 'P'.date("ym").$branchs[0]->business_location_id_fk.sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+                  $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
               }else{
-                  $invoice_code = 'P'.date("ym").$branchs[0]->business_location_id_fk.sprintf("%05d",1);
+                  $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
               }
               // dd($invoice_code);
-
-              if($sRow->invoice_code==''){
+              if($sRow->invoice_code==''||$sRow->invoice_code==0){
                 $sRow->invoice_code = $invoice_code;
               }
 
-              
-              $sFee = \App\Models\Backend\Fee::find($sRow->fee);
 
-              if( $sRow->pay_type_id_fk==2 || $sRow->pay_type_id_fk_2 ==2 ){ 
-
-                $fee_amt    = (str_replace(',','',request('sum_price')) - str_replace(',','',request('cash_price')))*(@$sFee->txt_value/100);
-
-              }else{
-                $fee_amt    = 0 ;
-              }
-
-
-
-              $sRow->pay_type_id_fk    = request('pay_type_id_fk');
-              $sRow->pay_type_id_fk_2    = request('pay_type_id_fk_2');
+              $sRow->charger_type    = request('charger_type');
+              $sRow->credit_price    = str_replace(',','',request('credit_price'));
+              $sRow->sum_credit_price    = str_replace(',','',request('sum_credit_price'));
+              $sRow->pay_type_id    = request('pay_type_id')?request('pay_type_id'):0;
+              $sRow->gift_voucher_cost    = str_replace(',','',request('gift_voucher_cost'));
 
               $sRow->aistockist    = request('aistockist');
               $sRow->agency    = request('agency');
@@ -263,20 +363,50 @@ P=Product
 
               $sRow->delivery_location    = request('delivery_location');
               $sRow->cash_price    = str_replace(',','',request('cash_price'));
-              $sRow->transfer_price    = str_replace(',','',request('transfer_price'));
+
+              // dd(str_replace(',','',request('cash_price')));
+
+
+
               $sRow->shipping_price    = str_replace(',','',request('shipping_price'));
-              $sRow->fee_amt    =  $fee_amt ;
-              $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'));
+              $sRow->fee    =  str_replace(',','',request('fee'));
+              $sRow->fee_amt    =  str_replace(',','',request('fee_amt'));
+              $sRow->sum_price    =  str_replace(',','',request('sum_price'));
+              $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
+
+              $sRow->account_bank_id = request('account_bank_id');
+              $sRow->transfer_money_datetime = request('transfer_money_datetime');
+              // dd(request('shipping_price'));
+              if(empty(request('shipping_price'))){
+                $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('fee_amt'));
+              }else{
+                $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
+              }
+              
 
               $sRow->action_user = \Auth::user()->id;
               $sRow->action_date = date('Y-m-d H:i:s');
-              $sRow->updated_at = date('Y-m-d H:i:s');
+
+
+              $request = app('request');
+              if ($request->hasFile('image01')) {
+                  @UNLINK(@$sRow->file_slip);
+                  $this->validate($request, [
+                    'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image01');
+                  $name = 'S'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip = $image_path.$name;
+                }
+
               $sRow->save();    
 
 
              if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
                   $sRow->sentto_branch_id    = request('sentto_branch_id');
-                   DB::select("UPDATE `db_frontstore` SET `address_sent_id_fk`='0' WHERE (`id`='".$request->frontstore_id."')");
+                   DB::select("UPDATE db_frontstore SET address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }
   
              if(@$request->delivery_location==1){
@@ -316,7 +446,7 @@ P=Product
                             $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_district."', '".@$addr[0]->card_district_sub."', '".@$addr[0]->card_province."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
 
-                            DB::select("UPDATE `db_frontstore` SET `address_sent_id_fk`='".(DB::getPdo()->lastInsertId())."' WHERE (`id`='".$request->frontstore_id."')");
+                            DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
               
 
@@ -362,7 +492,7 @@ P=Product
                           '".@$addr[0]->district."', '".@$addr[0]->district_sub."', '".@$addr[0]->province."', 
                           'customers_detail', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
-                      DB::select("UPDATE `db_frontstore` SET `address_sent_id_fk`='".(DB::getPdo()->lastInsertId())."' WHERE (`id`='".$request->frontstore_id."')");
+                      DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
 
               }
@@ -382,7 +512,7 @@ P=Product
 
                         $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, recipient_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
 
-                       DB::select("UPDATE `db_frontstore` SET `address_sent_id_fk`='".(DB::getPdo()->lastInsertId())."' WHERE (`id`='".$request->frontstore_id."')");
+                       DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
 
              }
@@ -397,9 +527,26 @@ P=Product
                   WHERE
                   db_frontstore.invoice_code='".@$request->invoice_code."' ");
 
+            // เช็คเรื่องการตัดยอด Ai-Cash
+               $ch_aicash_01 = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
+
+               $ch_aicash_02 = DB::select(" select * from db_frontstore where customers_id_fk=".$request->customers_id_fk." ");
+               // dd($ch_aicash_02[0]->aicash_price);
+               // ถ้าค่าที่ส่งมาตัด รวมกับ ค่าเดิม แล้วเกินค่าเดิม ให้ลบกันได้เลย แต่ถ้า รวมแล้วน่อยกว่า ให้เอาค่าก่อนหน้า มาบวกก่อน ค่อยลบออก 
+              if($ch_aicash_01[0]->ai_cash>0){
+                 if( ($ch_aicash_02[0]->aicash_price + $ch_aicash_01[0]->ai_cash) >= $ch_aicash_01[0]->ai_cash ){
+                    DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$ch_aicash_02[0]->aicash_price.") where id=".$request->customers_id_fk." ");
+                 }else{
+                      $x = $ch_aicash_01[0]->ai_cash - $ch_aicash_02[0]->aicash_price ; 
+                      DB::select(" UPDATE customers SET ai_cash=($x) where id=".$request->customers_id_fk." ");
+                 }
+               }
+
              return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
 
         }else{
+
+          // dd($request->all());
           return $this->form($id);
         }
 
@@ -414,6 +561,12 @@ P=Product
           if( $id ){
             $sRow = \App\Models\Backend\Frontstore::find($id);
             $invoice_code = $sRow->invoice_code;
+
+              // $sRow->cash_price    = str_replace(',','',request('cash_price')) ;
+              // $sRow->fee_amt    = str_replace(',','',request('fee_amt')) ;
+              // $sRow->shipping_price    = str_replace(',','',request('shipping_price')) ;
+
+
           }else{
             $sRow = new \App\Models\Backend\Frontstore;
             /*
@@ -427,9 +580,14 @@ P=Product
             // $inv = DB::select(" select invoice_code from db_frontstore order by invoice_code desc limit 1 ");
             // $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
 
+            // $sRow->cash_price    = 0 ;
+            // $sRow->fee_amt    = 0 ;
+            // $sRow->shipping_price    = 0 ;
+
+
           }
           // 5=เงินสด,2=บัตรเครดิต
-          if( request('pay_type_id_fk')!=2 && request('pay_type_id_fk_2')!=2 ){
+          if( request('pay_type_id_fk_1')!=2 && request('pay_type_id_fk_2')!=2 ){
             $fee = 0;
           }else{
             $fee = request('fee');
@@ -437,19 +595,18 @@ P=Product
 
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
           // $sRow->invoice_code    = $invoice_code ;
-          $sRow->cash_price    = 0 ;
-          $sRow->transfer_price    = 0 ;
-          $sRow->fee_amt    = 0 ;
-          $sRow->fee_value   = 0 ;
-          $sRow->shipping_price    = 0 ;
+
+
           $sRow->branch_id_fk    = request('branch_id_fk');
           $Branchs = \App\Models\Backend\Branchs::find($sRow->branch_id_fk);
           $sRow->business_location_id_fk    = $Branchs->business_location_id_fk;
           $sRow->customers_id_fk    = request('customers_id_fk');
           $sRow->distribution_channel_id_fk    = request('distribution_channel_id_fk');
           $sRow->purchase_type_id_fk    = request('purchase_type_id_fk');
-          $sRow->pay_type_id_fk    = request('pay_type_id_fk');
+          $sRow->pay_type_id_fk_1    = request('pay_type_id_fk_1');
           $sRow->pay_type_id_fk_2    = request('pay_type_id_fk_2');
+          // $sRow->gift_voucher_cost    = request('gift_voucher_cost');
+          // $sRow->gift_voucher_id    = request('gift_voucher_id');
           $sRow->fee    = $fee;
           $sRow->aistockist    = request('aistockist');
           $sRow->agency    = request('agency');
@@ -474,16 +631,62 @@ P=Product
     public function destroy($id)
     {
       // dd($id);
+
+      $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       // dd($sFrontstoreDataTotal);
+       if($sFrontstoreDataTotal){
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+        }else{
+          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0,cash_pay='0', cash_price='0', shipping_price='0', total_price='0' WHERE id=$id  ");
+        }
+
       DB::select(" DELETE FROM db_frontstore_products_list where frontstore_id_fk=$id ");
-      $sRow = \App\Models\Backend\Frontstore::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
-      }
+
+      $r = DB::select(" SELECT * FROM db_frontstore where id=$id ");
+
+      DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".$r[0]->aicash_price.") WHERE (id='".$r[0]->customers_id_fk."') ");
+
+      DB::select(" UPDATE db_frontstore SET approve_status=4 where id=$id ");
+
+      // $sRow = \App\Models\Backend\Frontstore::find($id);
+      // if( $sRow ){
+      //   $sRow->forceDelete();
+      // }
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
+
+
     public function Datatable(){
-      $sTable = \App\Models\Backend\Frontstore::search();
+
+      $user_login_id = \Auth::user()->id;
+      $sTable = DB::select(" 
+
+          SELECT id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,updated_at
+          FROM db_frontstore
+          WHERE action_user = $user_login_id
+
+          UNION
+
+          SELECT
+          db_add_ai_cash.id,
+          db_add_ai_cash.created_at as d2,
+          0 as purchase_type_id_fk,
+          'เติม Ai-Cash' AS type,
+          db_add_ai_cash.customer_id_fk as c2,
+          db_add_ai_cash.aicash_amt,
+          db_add_ai_cash.id as inv_no,'','',
+          db_add_ai_cash.updated_at as ud2
+          FROM db_add_ai_cash
+          WHERE action_user = $user_login_id
+
+          ORDER BY action_date DESC
+
+
+        ");
+      // $sTable = \App\Models\Backend\Frontstore::search();
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('action_date', function($row) {
@@ -492,16 +695,33 @@ P=Product
       })
       ->addColumn('customer_name', function($row) {
         $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
-        return $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+        return $Customer[0]->user_name.' : '.$Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
       })
       ->addColumn('purchase_type', function($row) {
-          $purchase_type = DB::select(" select * from dataset_orders_type where id=".$row->purchase_type_id_fk." ");
-          return $purchase_type[0]->orders_type;
+        if(@$row->purchase_type_id_fk>0){
+          @$purchase_type = DB::select(" select * from dataset_orders_type where id=".@$row->purchase_type_id_fk." ");
+          // return $purchase_type[0]->orders_type;
+          return @$purchase_type[0]->detail;
+        }
       }) 
-      ->addColumn('total_price', function($row) {
-          $total_price = DB::select(" select sum(total_price) as tt from db_frontstore_products_list where frontstore_id_fk=".$row->id." ");
-          return $total_price[0]->tt;
-      })        
+      ->addColumn('status', function($row) {
+        // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ
+          if($row->approve_status==1){
+            return 'อนุมัติ';
+          }else if($row->approve_status==2){
+            return 'รอชำระ';
+          }else if($row->approve_status==3){
+            return 'รอจัดส่ง';
+          }else if($row->approve_status==4){
+            return 'ยกเลิก';
+          }else if($row->approve_status==5){
+            return 'ไม่อนุมัติ';
+          }else if($row->approve_status==9){
+            return 'สำเร็จ';
+          }else{
+            return 'รออนุมัติ';
+          }
+      })  
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

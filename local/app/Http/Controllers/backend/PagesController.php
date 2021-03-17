@@ -11,6 +11,7 @@ use Session;
 use App\Models\Backend\Page;
 use App\Models\Backend\Ce_regis_add;
 use App\Models\Backend\PromotionCode_add;
+use App\Models\Backend\GiftvoucherCode_add;
 use App\Models\Backend\Consignments_import;
 
 class PagesController extends Controller{
@@ -457,24 +458,20 @@ class PagesController extends Controller{
             // Check file size
             if($fileSize <= $maxFileSize){
 
+              if( @$request->promotion_code_id_fk ){
+                $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
+              }else{
+                $sRow = new \App\Models\Backend\PromotionCode;
+              }
 
-
-            if( @$request->promotion_code_id_fk ){
-              $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
-            }else{
-              $sRow = new \App\Models\Backend\PromotionCode;
-            }
-
-            $sRow->promotion_id_fk = $request->promotion_id_fk;
-            $sRow->pro_sdate = $request->pro_sdate;
-            $sRow->pro_edate = $request->pro_edate;
-            // $sRow->pro_status = 4 ;
-            $sRow->created_at = date('Y-m-d H:i:s');
-            $sRow->save();
-
+              $sRow->promotion_id_fk = $request->promotion_id_fk;
+              $sRow->pro_sdate = $request->pro_sdate;
+              $sRow->pro_edate = $request->pro_edate;
+              // $sRow->pro_status = 4 ;
+              $sRow->created_at = date('Y-m-d H:i:s');
+              $sRow->save();
 
               // File upload location
-
               $location = 'uploads/';
               $destinationPath = public_path($location);
               $file->move($destinationPath, $filename);
@@ -523,31 +520,133 @@ class PagesController extends Controller{
 
                   Session::flash('message','Import Successful.');
 
+                }
+
+              }else{
+                Session::flash('message','File too large. File must be less than 5MB.');
               }
 
             }else{
-              Session::flash('message','File too large. File must be less than 5MB.');
+               Session::flash('message','Invalid File Extension.');
             }
 
-          }else{
-             Session::flash('message','Invalid File Extension.');
           }
-
-        }
-
-        // Redirect to index
-        // return redirect()->to(url("backend/promotion_cus"));
-          // if( @$request->promotion_code_id_fk ){
-          //      return redirect()->to(url("backend/promotion_cus/".@$request->promotion_code_id_fk."/edit"));
-          // }else{
-          //      return redirect()->to(url("backend/promotion_cus"));
-          // }
 
            return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
 
-        
 
       }
+
+
+
+      public function uploadGiftVoucherCus(Request $request){
+
+          // dd($request->all());
+          // dd($request->promotion_code_id_fk);
+          // dd($request->input('submit'));
+
+        if ($request->input('submit') != null ){
+
+          $file = $request->file('fileXLS');
+           // dd($file);
+          // File Details 
+          $filename = $file->getClientOriginalName();
+          $extension = $file->getClientOriginalExtension();
+          $tempPath = $file->getRealPath();
+          $fileSize = $file->getSize();
+          $mimeType = $file->getMimeType();
+
+          // Valid File Extensions
+          $valid_extension = array("xlsx");
+
+          // 2MB in Bytes
+          // $maxFileSize = 2097152; 
+          // 5MB in Bytes
+          $maxFileSize = 5242880; 
+
+          // Check file extension
+          if(in_array(strtolower($extension),$valid_extension)){
+
+            // Check file size
+            if($fileSize <= $maxFileSize){
+
+              if( @$request->giftvoucher_code_id_fk ){
+                $sRow = \App\Models\Backend\GiftvoucherCode::find($request->giftvoucher_code_id_fk );
+              }else{
+                $sRow = new \App\Models\Backend\GiftvoucherCode;
+              }
+              $sRow->descriptions = $request->descriptions;
+              $sRow->pro_sdate = $request->pro_sdate;
+              $sRow->pro_edate = $request->pro_edate;
+              $sRow->created_at = date('Y-m-d H:i:s');
+              $sRow->save();
+
+              // File upload location
+              $location = 'uploads/';
+              $destinationPath = public_path($location);
+              $file->move($destinationPath, $filename);
+
+              $filepath = public_path("uploads/".$filename);
+
+              $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+              $spreadsheet = $reader->load($filepath);
+
+              $worksheet = $spreadsheet->getActiveSheet();
+              $highestRow = $worksheet->getHighestRow(); // total number of rows
+              $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+              $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+              $lines = $highestRow - 2; 
+              if ($lines <= 0) {
+                       // Exit ('There is no data in the Excel table');
+                  Session::flash('message','There is no data in the Excel table');
+
+              }else{
+
+                  $i = 0;
+
+                  for ($row = 1; $row <= $highestRow; ++$row) {
+
+                       $customer_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); 
+                       $giftvoucher_value = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); 
+
+                        // Skip first row (Remove below comment if you want to skip the first row)
+                         if($i == 0){
+                            $i++;
+                            continue; 
+                         }
+
+                        $insertData = array(
+                         "giftvoucher_code_id_fk"=>@$sRow->id,
+                         "customer_code"=>@$customer_code,
+                         "giftvoucher_value"=>@$giftvoucher_value,
+                         "pro_status"=> '4' ,
+                         "created_at"=>now());
+                        GiftvoucherCode_add::insertData($insertData);
+
+                       $i++;
+
+                  }
+
+                  Session::flash('message','Import Successful.');
+
+                }
+
+              }else{
+                Session::flash('message','File too large. File must be less than 5MB.');
+              }
+
+            }else{
+               Session::flash('message','Invalid File Extension.');
+            }
+
+          }
+
+           return redirect()->to(url("backend/giftvoucher_code/".$sRow->id."/edit"));
+
+
+      }
+
 
 
 

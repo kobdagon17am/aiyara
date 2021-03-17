@@ -16,7 +16,7 @@
 
             <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.products.index') }}/{{@$sRowNew->id}}/edit" }}">
                 <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-              </a>
+            </a>
 
         </div>
 
@@ -28,8 +28,6 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
-
-              
 
               @if( empty($sRow) )
               <form action="{{ route('backend.products_images.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
