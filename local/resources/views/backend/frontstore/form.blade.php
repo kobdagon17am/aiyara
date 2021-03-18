@@ -994,9 +994,33 @@
 
 
 
+                  <?php $show_div_aicash_price = @$sRow->pay_type_id==6||@$sRow->pay_type_id==9||@$sRow->pay_type_id==11?"":'display: none;'; ?>
 
-                   <?php $show_div_aicash_price = @$sRow->pay_type_id==6||@$sRow->pay_type_id==9||@$sRow->pay_type_id==11?"":'display: none;'; ?>
                   <div class="divTableRow show_div_aicash_price " style="<?=$show_div_aicash_price?>">
+                      <div class="divTableCell" ></div>
+                      <div class="divTH">
+                        <label for="aicash_price" class="" > ระบุรหัสสมาชิก Ai-cash :  </label>
+                      </div>
+                      <div class="divTableCell">
+
+							<select  id="member_id_aicash" name="member_id_aicash" class="form-control select2-templating " required="" >
+                                <option value="">Select</option>
+                                  @if(@$Customer)
+                                    @foreach(@$Customer AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->member_id_aicash)?'selected':'' }} >
+                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
+                                        {{$r->last_name}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                             </select>
+                          
+                      </div>
+                       <div class="divTableCell">
+                      	</div>
+                    </div>
+
+                   <div class="divTableRow show_div_aicash_price " style="<?=$show_div_aicash_price?>">
                         <div class="divTableCell" >
                         </div>
 
@@ -1006,7 +1030,7 @@
                         </div>
 
                         <div class="divTableCell">
-                            <input class="form-control f-ainumber-18 input-aireadonly  " name="" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
+                            <input class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
                         </div>
 
                         <div class="divTableCell">
@@ -1016,7 +1040,7 @@
 
 
 
-                  <?php $show_div_aicash_price = @$sRow->pay_type_id==6||@$sRow->pay_type_id==9||@$sRow->pay_type_id==11?"":'display: none;'; ?>
+
                   <div class="divTableRow show_div_aicash_price " style="<?=$show_div_aicash_price?>">
                       <div class="divTableCell" ></div>
                       <div class="divTH">
@@ -1979,10 +2003,10 @@
                 $('.btnProductAll1').trigger('click');
             })  
 
-            // $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
-            //     $("#spinner_frame").show();
-            //     window.location.reload(true);
-            // })
+            $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
+                $("#spinner_frame").show();
+                window.location.reload(true);
+            })
 
             $(document).on('click', '#addr_03', function(event) {
               var v = $(this).val();
@@ -2001,7 +2025,7 @@
 
 
         $(document).on('click', '.btn-plus, .btn-minus,.btn-plus-pro, .btn-minus-pro, .btn-plus-product-pro, .btn-minus-product-pro', function(event) {
-            event.preventDefault();
+            // event.preventDefault();
 
             setTimeout(function(){
 	            fnCheckDBfrontstore();
@@ -2022,9 +2046,9 @@
 
             $(".ShippingCalculate02").trigger('click');
 
-            $('#pay_type_id').val("").select2();
-      			$('#cash_price').val("");
-      			$('#cash_pay').val("");
+			$('#pay_type_id').val("").select2();
+			$('#cash_price').val("");
+			$('#cash_pay').val("");
 
 
         });
@@ -2096,6 +2120,16 @@
             $('#distribution_channel_id_fk').val(localStorage.getItem('distribution_channel_id_fk')).select2();
         }
 
+
+        $(document).on('change', '#member_id_aicash', function(event) {
+            event.preventDefault();
+            var id = $(this).val();
+            localStorage.setItem('member_id_aicash', id);
+        });
+
+        if(localStorage.getItem('member_id_aicash')){
+            $('#member_id_aicash').val(localStorage.getItem('member_id_aicash')).select2();
+        }
 
 
   			$(document).on('change', '#gift_voucher_id', function(event) {
@@ -3335,15 +3369,15 @@ $(document).ready(function() {
 
                                                 fnGetDBfrontstore();
 
-                                                $(".ShippingCalculate02").trigger('click');
+												$(".ShippingCalculate02").trigger('click');
 
-                                                $('#pay_type_id').val("").select2();
-                        												$('#cash_price').val("");
-                        												$('#cash_pay').val("");
+												$('#pay_type_id').val("").select2();
+												$('#cash_price').val("");
+												$('#cash_pay').val("");
 
-                        												fnCheckDBfrontstore();
+												fnCheckDBfrontstore();
 
-                      						              $(".myloading").hide();                                     
+												$(".myloading").hide();                                     
 
                                                 $('td:last-child', nRow).html(''
                                                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -3539,8 +3573,8 @@ $(document).ready(function() {
 
 		       			$(".myloading").show();
 		                var province_id = $('.ShippingCalculate02').attr('province_id');
-          		      fnShippingCalculate(province_id);
-				            fnGetDBfrontstore();
+          		      	fnShippingCalculate(province_id);
+				        fnGetDBfrontstore();
 
 		         	});
 
@@ -3881,6 +3915,9 @@ $(document).ready(function() {
                         });
 
 
+                        $('#member_id_aicash').attr('required', false);
+				        $('#member_id_aicash').val("").select2();
+
                         $("input[name=_method]").val('');
 
                         $.ajax({
@@ -3928,6 +3965,7 @@ $(document).ready(function() {
                                 $(".show_div_aicash_price").show();
                                 $(".show_div_cash_pay").show();
                                 $("#aicash_price").focus();
+                                $('#member_id_aicash').attr('required', true);
 
 		                        }else
 		                    // 3	เครดิต + เงินสด
@@ -3946,25 +3984,25 @@ $(document).ready(function() {
 		                        }else
 		                    // 4	เครดิต + เงินโอน
 		                        if(pay_type_id==8){
-                				 					// เครดิต
-                									$(".show_div_credit").show();
-                									$("#credit_price").val('');
-                									$(".div_fee").show();
-                									$("#fee_amt").val('');
-                									$('#fee').val("").select2();
-                									$('#fee').attr('required', true);
-                									$("#sum_credit_price").val('');
-                									// เงินโอน
-                									$(".show_div_transfer_price").show();
-                									$('input[name=account_bank_id]').prop('checked',false);
-                									$('input[name=account_bank_id]').attr('required', true);
-                									$(".div_account_bank_id").show();
-                									$("#transfer_price").val('');
-                									$(".transfer_money_datetime").attr('required', true);
-                									$("#transfer_price").removeAttr('required');
-                									$("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
+            				 					// เครดิต
+            									$(".show_div_credit").show();
+            									$("#credit_price").val('');
+            									$(".div_fee").show();
+            									$("#fee_amt").val('');
+            									$('#fee').val("").select2();
+            									$('#fee').attr('required', true);
+            									$("#sum_credit_price").val('');
+            									// เงินโอน
+            									$(".show_div_transfer_price").show();
+            									$('input[name=account_bank_id]').prop('checked',false);
+            									$('input[name=account_bank_id]').attr('required', true);
+            									$(".div_account_bank_id").show();
+            									$("#transfer_price").val('');
+            									$(".transfer_money_datetime").attr('required', true);
+            									$("#transfer_price").removeAttr('required');
+            									$("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
-                									$(".show_div_cash_pay").hide();
+            									$(".show_div_cash_pay").hide();
 
 		                        }else
 		                    // 5	เครดิต + Ai-Cash
@@ -3993,6 +4031,8 @@ $(document).ready(function() {
               									$(".transfer_money_datetime").removeAttr('required');
               									$("#transfer_price").removeAttr('required');
               									$("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
+
+              									$('#member_id_aicash').attr('required', true);
               								
     								}else 
     								// 6	เงินโอน + เงินสด
@@ -4037,15 +4077,18 @@ $(document).ready(function() {
           									$('#fee').removeAttr('required');
           									$("#cash_pay").val('');
 
-		                        }else{
-		                        	$('#fee').removeAttr('required');
-		                        	$('input[name=account_bank_id]').removeAttr('required');
-		                        	$('.transfer_money_datetime').removeAttr('required');
-		                        	$('#aicash_price').removeAttr('required');
-		                        	$(".show_div_cash_pay").hide();
-		                        	$(".show_div_transfer_price").hide();
-		                        	$(".div_account_bank_id").hide();
-		                        }
+          									$('#member_id_aicash').attr('required', true);
+
+			                        }else{
+				                        	$('#fee').removeAttr('required');
+				                        	$('input[name=account_bank_id]').removeAttr('required');
+				                        	$('.transfer_money_datetime').removeAttr('required');
+				                        	$('#aicash_price').removeAttr('required');
+				                        	$(".show_div_cash_pay").hide();
+				                        	$(".show_div_transfer_price").hide();
+				                        	$(".div_account_bank_id").hide();
+
+			                        }
 		                     
                                 $(".myloading").hide();
 
@@ -4126,40 +4169,6 @@ $(document).ready(function() {
               });
 
 
-              $(document).on('change', '#aicash_price', function(event) {
-
-                     var aicash_price = $(this).val();
-                     var customer_id = "{{@$sRow->customers_id_fk}}";
-
-                     // alert(aicash_price+":"+customer_id);
-
-                     $.ajax({
-                       type:'POST',
-                       dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalAicash') }} ", 
-                       data: { aicash_price:aicash_price,customer_id:customer_id },
-                        success:function(data){
-                               console.log(data); 
-                               $.each(data,function(key,value){
-                                  if(value.ai_cash==0){
-                                    alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
-                                     $(".myloading").hide();
-                                  }
-                                });
-                              $(".myloading").hide();
-                          },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            $(".myloading").hide();
-                        }
-                    });
-
-
-
-
-
-              });
-
-
 
               $(document).on('change', 'input[name=charger_type]', function(event) {
 
@@ -4174,7 +4183,6 @@ $(document).ready(function() {
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
 
-
                      $.ajax({
                        type:'POST',
                        // dataType:'JSON',
@@ -4182,6 +4190,7 @@ $(document).ready(function() {
                        data: { frontstore_id_fk:frontstore_id_fk },
                         success:function(data){
                                console.log(data); 
+                               
                                // $.each(data,function(key,value){
                                //    if(value.ai_cash==0){
                                //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
@@ -4201,6 +4210,51 @@ $(document).ready(function() {
                     });
 
               });
+
+
+             $(document).on('change', '#member_id_aicash', function(event) {
+             		$("#aicash_price").val('');
+             		$("#cash_pay").val('');
+              });
+
+
+              $(document).on('change', '#member_id_aicash,#aicash_price', function(event) {
+
+              		$(".myloading").show();
+
+                     var customer_id = $('#member_id_aicash').val();
+
+	                    if(customer_id==''){
+	                        alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
+	                        $(".myloading").hide();
+	                        return false;
+	                    }
+
+                     $.ajax({
+                       type:'POST',
+                       dataType:'JSON',
+                       url: " {{ url('backend/ajaxCalAicash') }} ", 
+                       data: { customer_id:customer_id },
+                        success:function(data){
+                               console.log(data); 
+                               $.each(data,function(key,value){
+                               		// $("#aicash_remain").val(value.ai_cash);
+                               		$("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
+	                                if(value.ai_cash==0){
+	                                    alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
+	                                    $(".myloading").hide();
+	                                }
+                                });
+                              $(".myloading").hide();
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            $(".myloading").hide();
+                        }
+                    });
+
+
+              });
+
 
 
             function fnGetDBfrontstore(){
@@ -4449,7 +4503,13 @@ $(document).ready(function() {
          $(document).on('click', '.btnAddAiCashModal02', function(event) {
             event.preventDefault();
              $(".myloading").show();
-            var customer_id = "{{@$sRow->customers_id_fk}}";
+            // var customer_id = "{{@$sRow->customers_id_fk}}";
+            var customer_id = $("#member_id_aicash").val();
+            if(customer_id==''){
+            	alert("! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ");
+            	$(".myloading").hide();
+            	return false;
+            }
             var frontstore_id_fk = $("#frontstore_id_fk").val();
             // alert(customer_id);
             setTimeout(function(){
@@ -4464,6 +4524,15 @@ $(document).ready(function() {
             var pay_type_id = $("#pay_type_id").val();
             var aicash_remain = parseFloat($("#aicash_remain").val());
             var aicash_price = parseFloat($("#aicash_price").val());
+
+            var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
+
+            var gift_voucher_price = $("#gift_voucher_price").val();
+            var sum_price = $("#sum_price").val();
+            var shipping_price = $("#shipping_price").val();
+
+            
+
             // alert(pay_type_id+":"+aicash_remain+":"+aicash_price);
             if(pay_type_id==6||pay_type_id==9||pay_type_id==11){
                 // event.preventDefault();
@@ -4475,13 +4544,61 @@ $(document).ready(function() {
                 $('.btnSave').removeAttr("type").attr("type", "submit");
               }
             }else{
+              $('#member_id_aicash').attr('required', false);
               $('.btnSave').removeAttr("type").attr("type", "submit");
             }
+
+            if(purchase_type_id_fk==5){
+
+            	if(gift_voucher_price == (+sum_price + +shipping_price)){
+            		$('#pay_type_id').attr('required', false);
+            	}else{
+            		$('#pay_type_id').attr('required', true);
+            	}
+            	
+            }
+
+
+         });
+
+         $(document).ready(function() {
+         	  
+         	        // var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
+         	        // alert(fromAddAiCash);
+         	        // if(fromAddAiCash==1){
+
+	         	        var customer_id = $('#member_id_aicash').val();
+	                    if(customer_id==''){
+	                        return false;
+	                    }else{
+
+	                   		$.ajax({
+			                       type:'POST',
+			                       dataType:'JSON',
+			                       url: " {{ url('backend/ajaxCalAicash') }} ", 
+			                       data: { customer_id:customer_id },
+			                        success:function(data){
+			                               console.log(data); 
+			                               $.each(data,function(key,value){
+			                               		$("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
+			                                });
+			                              $(".myloading").hide();
+			                          },
+			                        error: function(jqXHR, textStatus, errorThrown) { 
+			                            $(".myloading").hide();
+			                        }
+			                    });
+
+	                    }
+
+                    // }
+
 
          });
 
 
 		</script>
+
 
 @endsection
 

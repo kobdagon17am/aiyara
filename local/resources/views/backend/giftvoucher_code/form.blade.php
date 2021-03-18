@@ -565,12 +565,13 @@ $(document).ready(function() {
 
     $(".btnSaveDate").click(function(event) {
 
-          var promotion_id_fk = $("#promotion_id_fk").val();
-          // alert(promotion_id_fk);
-          // return false;
+          var id = "{{@$sRow->id}}";
 
-          if(promotion_id_fk=='' || promotion_id_fk==0){
-            alert("! กรุณา เลือกโปรโมชั่น");
+          var descriptions = $("#descriptions").val();
+
+          if(descriptions=='' || descriptions==0){
+            alert("! กรุณา กรอกข้อมูล Descriptions");
+            $("#descriptions").focus();
             return false;
           }
 
@@ -591,9 +592,9 @@ $(document).ready(function() {
 
         $.ajax({
            type:'POST',
-           url: " {{ url('backend/ajaxGenPromotionSaveDate') }} ", 
+           url: " {{ url('backend/ajaxGiftVoucherSaveDate') }} ", 
            data:{ _token: '{{csrf_token()}}',
-           promotion_id_fk:promotion_id_fk,
+           id:id,
            pro_sdate:pro_sdate,
            pro_edate:pro_edate,
             },

@@ -14,36 +14,48 @@ class FrontstoreController extends Controller
     public function index(Request $request)
     {
 
+      $user_login_id = \Auth::user()->id;
       $Frontstore = \App\Models\Backend\Frontstore::get();
-      // dd($Frontstore);
       $sUser = DB::select(" select * from ck_users_admin ");
       $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 ");
 
+      $sPermission = \Auth::user()->permission ;
+      if($sPermission==1){
+          $w1 = "";
+      }else{
+          $w1 = " AND action_user = $user_login_id ";
+      }
 
-      $user_login_id = \Auth::user()->id;
-      $sDBFrontstoreApproveStatus = DB::select(" 
+          
+          $sDBFrontstoreApproveStatus = DB::select(" 
 
-          SELECT id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,updated_at,
-          (select total_pv FROM db_frontstore_products_list where frontstore_id_fk=db_frontstore.id GROUP BY frontstore_id_fk) as pv
-          FROM db_frontstore
-          WHERE action_user =$user_login_id
+              SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type,pay_type_id,action_user
+              FROM db_frontstore
+              Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
+              WHERE 1 
+              $w1
 
-          UNION
+              UNION
 
-          SELECT
-          db_add_ai_cash.id,
-          db_add_ai_cash.created_at as d2,
-          0 as purchase_type_id_fk,
-          'เติม Ai-Cash' AS type,
-          db_add_ai_cash.customer_id_fk as c2,
-          db_add_ai_cash.aicash_amt,
-          db_add_ai_cash.id as inv_no,approve_status,'',
-          db_add_ai_cash.updated_at as ud2,
-          0 as pv
-          FROM db_add_ai_cash
-          WHERE action_user =$user_login_id
+              SELECT
+              db_add_ai_cash.id,
+              db_add_ai_cash.created_at as d2,
+              0 as purchase_type_id_fk,
+              'เติม Ai-Cash' AS type,
+              db_add_ai_cash.customer_id_fk as c2,
+              db_add_ai_cash.aicash_amt,
+              db_add_ai_cash.id as inv_no,approve_status
+              ,'',
+              db_add_ai_cash.updated_at as ud2,
+              'ai_cash' as pay_type,3 as pay_type_id,action_user
+              FROM db_add_ai_cash 
+              WHERE 1 AND db_add_ai_cash.approve_status<>4
+              $w1
 
            ");
+
+          // dd($sDBFrontstoreApproveStatus);
+
       // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
           $approve_status_2 = 0;
           $sum_price_2 = 0;
@@ -57,7 +69,7 @@ class FrontstoreController extends Controller
           $sum_price_9 = 0;
           $pv_9 = 0;
 
-// อื่นๆ ไม่รวม 2,4,9
+// อื่นๆ ไม่รวม 0,2,3,4,9
           $approve_status_88 = 0;
           $sum_price_88 = 0;
           $pv_88 = 0;
@@ -70,25 +82,25 @@ class FrontstoreController extends Controller
 
           foreach ($sDBFrontstoreApproveStatus as $key => $value) {
 
-            if($value->approve_status==2){
-              $approve_status_2 += $value->approve_status;
+            if($value->approve_status==0 || $value->approve_status==2 || $value->approve_status==3){
+              $approve_status_2 += 1;
               $sum_price_2 += $value->sum_price;
-              $pv_2 += $value->pv;
+              $pv_2 += @$value->pv;
             }
 
             if($value->approve_status==4){
-              $approve_status_4 += $value->approve_status;
+              $approve_status_4 += 1;
               $sum_price_4 += $value->sum_price;
-              $pv_4 += $value->pv;
+              $pv_4 += @$value->pv;
             }
 
             if($value->approve_status==9){
-              $approve_status_9 += $value->approve_status;
+              $approve_status_9 += 1;
               $sum_price_9 += $value->sum_price;
-              $pv_9 += $value->pv;
+              $pv_9 += @$value->pv;
             }
 
-            if($value->approve_status!=2 && $value->approve_status!=4 && $value->approve_status!=9){
+            if($value->approve_status==1 || $value->approve_status==5 || $value->approve_status==6  || $value->approve_status==7  || $value->approve_status==8 ){
                 $approve_status_88 += 1;
                 $sum_price_88 += @$value->sum_price;
                 $pv_88 += @$value->pv;
@@ -102,9 +114,48 @@ class FrontstoreController extends Controller
            }    
 
 
-      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
+        $sDBFrontstoreSumCostActionUser = DB::select(" 
+                SELECT
+                db_frontstore.action_user,
+                ck_users_admin.`name` as action_user_name,
+                db_frontstore.pay_type_id,
+                dataset_pay_type.detail AS pay_type,
+                date(db_frontstore.action_date) AS action_date,
+                sum(db_frontstore.cash_pay) as cash_pay,
+                sum(db_frontstore.credit_price) as credit_price,
+                sum(db_frontstore.transfer_price) as transfer_price,
+                sum(db_frontstore.aicash_price) as aicash_price,
+                sum(db_frontstore.shipping_price) as shipping_price,
+                sum(db_frontstore.fee_amt) as fee_amt,
+                sum(db_frontstore.total_price) as total_price
+                FROM
+                db_frontstore
+                Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
+                Left Join ck_users_admin ON db_frontstore.action_user = ck_users_admin.id
+                WHERE db_frontstore.pay_type_id<>0 $w1
+                GROUP BY action_user
+        ");
 
+        // dd($sDBFrontstoreSumCostActionUser);
+
+        $sDBFrontstoreUserAddAiCash = DB::select(" 
+              SELECT
+              db_add_ai_cash.action_user,ck_users_admin.`name`,
+              sum(db_add_ai_cash.aicash_amt) as sum,
+              count(*) as cnt,
+              db_add_ai_cash.created_at
+              FROM
+              db_add_ai_cash
+              Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+              WHERE approve_status<>4
+              GROUP BY action_user
+
+        ");
+
+
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       $Customer = DB::select(" select * from customers ");
+
       return View('backend.frontstore.index')->with(
         array(
            'Customer'=>$Customer,
@@ -113,15 +164,15 @@ class FrontstoreController extends Controller
            'sPurchase_type'=>$sPurchase_type,
            'sDBFrontstoreApproveStatus'=>$sDBFrontstoreApproveStatus,
 
-           'approve_status_2'=>($approve_status_2/2),
+           'approve_status_2'=>($approve_status_2),
            'sum_price_2'=>$sum_price_2,
            'pv_2'=>$pv_2,
 
-           'approve_status_4'=>($approve_status_4/4),
+           'approve_status_4'=>($approve_status_4),
            'sum_price_4'=>$sum_price_4,
            'pv_4'=>$pv_4,
 
-           'approve_status_9'=>($approve_status_9/9),
+           'approve_status_9'=>($approve_status_9),
            'sum_price_9'=>$sum_price_9,
            'pv_9'=>$pv_9,
 
@@ -134,6 +185,8 @@ class FrontstoreController extends Controller
            'sum_price_total'=>$sum_price_total,
            'pv_total'=>$pv_total,
 
+           'sDBFrontstoreSumCostActionUser'=>$sDBFrontstoreSumCostActionUser,
+           'sDBFrontstoreUserAddAiCash'=>$sDBFrontstoreUserAddAiCash,
 
         ) );
       
@@ -202,8 +255,10 @@ class FrontstoreController extends Controller
       }
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
-      $CusName = ($sCustomer[0]->user_name." : ".$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".$sCustomer[0]->last_name);
-      $Cus_Aicash = $sCustomer[0]->ai_cash;
+      @$CusName = (@$sCustomer[0]->user_name." : ".@$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".@$sCustomer[0]->last_name);
+
+      $Cus_Aicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
+      $Cus_Aicash = @$Cus_Aicash[0]->ai_cash;
 
       $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
       $BranchName = $sBranchs[0]->b_name;
@@ -275,10 +330,33 @@ class FrontstoreController extends Controller
       $agency = DB::select(" select * from customers_aistockist_agency where agency=1 AND user_name <> '".$ThisCustomer[0]->user_name."' ");
 
 
-      $giftvoucher = DB::select(" select * from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0  "); //AND expiry_date>=now()
-      $giftvoucher_this = DB::select(" select sum(banlance) as gift_total from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0 AND expiry_date>=now() "); //AND expiry_date>=now()
-
-      $giftvoucher_this = $giftvoucher_this[0]->gift_total;
+      // $giftvoucher_this = DB::select(" select sum(banlance) as gift_total from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0 AND expiry_date>=now() "); //AND expiry_date>=now()
+      $giftvoucher_this = DB::select(" SELECT
+            db_giftvoucher_cus.id,
+            db_giftvoucher_cus.giftvoucher_code_id_fk,
+            db_giftvoucher_cus.customer_code,
+            db_giftvoucher_cus.giftvoucher_value,
+            db_giftvoucher_cus.pro_status,
+            db_giftvoucher_cus.created_at,
+            db_giftvoucher_cus.updated_at,
+            db_giftvoucher_cus.deleted_at,
+            db_giftvoucher_code.descriptions,
+            db_giftvoucher_code.pro_sdate,
+            db_giftvoucher_code.pro_edate,
+            db_giftvoucher_code.`status`,
+            customers.id as customers_id
+            FROM
+            db_giftvoucher_cus
+            Left Join db_giftvoucher_code ON db_giftvoucher_cus.giftvoucher_code_id_fk = db_giftvoucher_code.id
+            Left Join customers ON db_giftvoucher_cus.customer_code = customers.user_name
+            WHERE
+            customers.id = ".$sRow->customers_id_fk." 
+            AND
+            curdate() BETWEEN pro_sdate and pro_edate
+            AND
+            db_giftvoucher_code.status = 1  "); //AND expiry_date>=now()
+      // dd($giftvoucher_this);
+      $giftvoucher_this = @$giftvoucher_this[0]->giftvoucher_value;
 
       $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk=$id ");
       if($rs[0]->cnt==0){
@@ -320,7 +398,6 @@ class FrontstoreController extends Controller
            'Cus_Aicash'=>$Cus_Aicash,           
            'BranchName'=>$BranchName,           
            'PurchaseName'=>$PurchaseName,           
-           'GiftVoucher'=>$giftvoucher,           
            'giftvoucher_this'=>$giftvoucher_this,           
            'sAccount_bank'=>$sAccount_bank,           
            'sPay_type'=>$sPay_type,           
@@ -356,6 +433,8 @@ class FrontstoreController extends Controller
               $sRow->sum_credit_price    = str_replace(',','',request('sum_credit_price'));
               $sRow->pay_type_id    = request('pay_type_id')?request('pay_type_id'):0;
               $sRow->gift_voucher_cost    = str_replace(',','',request('gift_voucher_cost'));
+
+              $sRow->member_id_aicash    = str_replace(',','',request('member_id_aicash'));
 
               $sRow->aistockist    = request('aistockist');
               $sRow->agency    = request('agency');
@@ -527,18 +606,21 @@ class FrontstoreController extends Controller
                   WHERE
                   db_frontstore.invoice_code='".@$request->invoice_code."' ");
 
-            // เช็คเรื่องการตัดยอด Ai-Cash
-               $ch_aicash_01 = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
 
                $ch_aicash_02 = DB::select(" select * from db_frontstore where customers_id_fk=".$request->customers_id_fk." ");
+
+            // เช็คเรื่องการตัดยอด Ai-Cash
+               $ch_aicash_01 = DB::select(" select * from customers where id=".$ch_aicash_02[0]->member_id_aicash." ");
+
+
                // dd($ch_aicash_02[0]->aicash_price);
                // ถ้าค่าที่ส่งมาตัด รวมกับ ค่าเดิม แล้วเกินค่าเดิม ให้ลบกันได้เลย แต่ถ้า รวมแล้วน่อยกว่า ให้เอาค่าก่อนหน้า มาบวกก่อน ค่อยลบออก 
-              if($ch_aicash_01[0]->ai_cash>0){
+              if(@$ch_aicash_01[0]->ai_cash>0){
                  if( ($ch_aicash_02[0]->aicash_price + $ch_aicash_01[0]->ai_cash) >= $ch_aicash_01[0]->ai_cash ){
-                    DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$ch_aicash_02[0]->aicash_price.") where id=".$request->customers_id_fk." ");
+                    DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$ch_aicash_02[0]->aicash_price.") where id=".$ch_aicash_02[0]->member_id_aicash." ");
                  }else{
                       $x = $ch_aicash_01[0]->ai_cash - $ch_aicash_02[0]->aicash_price ; 
-                      DB::select(" UPDATE customers SET ai_cash=($x) where id=".$request->customers_id_fk." ");
+                      DB::select(" UPDATE customers SET ai_cash=($x) where id=".$ch_aicash_02[0]->member_id_aicash." ");
                  }
                }
 
@@ -646,7 +728,7 @@ class FrontstoreController extends Controller
 
       $r = DB::select(" SELECT * FROM db_frontstore where id=$id ");
 
-      DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".$r[0]->aicash_price.") WHERE (id='".$r[0]->customers_id_fk."') ");
+      DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".$r[0]->aicash_price.") WHERE (id='".$r[0]->member_id_aicash."') ");
 
       DB::select(" UPDATE db_frontstore SET approve_status=4 where id=$id ");
 
@@ -661,41 +743,54 @@ class FrontstoreController extends Controller
 
     public function Datatable(){
 
-      $user_login_id = \Auth::user()->id;
-      $sTable = DB::select(" 
+          $user_login_id = \Auth::user()->id;
+          $sPermission = \Auth::user()->permission ;
+          // dd($sPermission);
+          if($sPermission==1){
+              $w1 = "";
+          }else{
+              $w1 = " AND action_user = $user_login_id ";
+          }
 
-          SELECT id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,updated_at
-          FROM db_frontstore
-          WHERE action_user = $user_login_id
+            $sTable = DB::select(" 
 
-          UNION
+                SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type
+                FROM db_frontstore
+                Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
+                WHERE 1
+                $w1
 
-          SELECT
-          db_add_ai_cash.id,
-          db_add_ai_cash.created_at as d2,
-          0 as purchase_type_id_fk,
-          'เติม Ai-Cash' AS type,
-          db_add_ai_cash.customer_id_fk as c2,
-          db_add_ai_cash.aicash_amt,
-          db_add_ai_cash.id as inv_no,'','',
-          db_add_ai_cash.updated_at as ud2
-          FROM db_add_ai_cash
-          WHERE action_user = $user_login_id
+                UNION
 
-          ORDER BY action_date DESC
+                SELECT
+                db_add_ai_cash.id,
+                db_add_ai_cash.created_at as d2,
+                0 as purchase_type_id_fk,
+                'เติม Ai-Cash' AS type,
+                db_add_ai_cash.customer_id_fk as c2,
+                db_add_ai_cash.aicash_amt,
+                db_add_ai_cash.id as inv_no,approve_status
+                ,'',
+                db_add_ai_cash.updated_at as ud2,
+                'ai_cash' as pay_type
+                FROM db_add_ai_cash
+                WHERE 1 AND db_add_ai_cash.approve_status<>4
+                $w1
 
+                ORDER BY action_date DESC
 
-        ");
+              ");
+
       // $sTable = \App\Models\Backend\Frontstore::search();
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('action_date', function($row) {
-        $d = strtotime($row->action_date); 
+        $d = strtotime(@$row->action_date); 
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('customer_name', function($row) {
-        $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
-        return $Customer[0]->user_name.' : '.$Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+        $Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+        return @$Customer[0]->user_name.' : '.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
       })
       ->addColumn('purchase_type', function($row) {
         if(@$row->purchase_type_id_fk>0){
@@ -722,6 +817,11 @@ class FrontstoreController extends Controller
             return 'รออนุมัติ';
           }
       })  
+      ->addColumn('shipping_price', function($row) {
+          if(@$row->shipping_price){
+            return number_format($row->shipping_price,0);
+          }
+      }) 
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

@@ -305,6 +305,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxSaveGiftvoucherCode', 'AjaxController@ajaxSaveGiftvoucherCode');
     Route::post('ajaxCalAicashAmt', 'AjaxController@ajaxCalAicashAmt');
+    
+    Route::post('ajaxGiftVoucherSaveDate', 'AjaxController@ajaxGiftVoucherSaveDate');
 
 
     Route::resource('delivery', 'DeliveryController');
