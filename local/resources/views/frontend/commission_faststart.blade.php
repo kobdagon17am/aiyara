@@ -10,17 +10,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card"> 
-
+        <div class="card">
          <div class="card-header">
-            <h4 class="m-b-10">FastStart Bonus Detail</h4>
-             <h5 class="m-b-10">User::ID : A0001 วันที่:2021/01/01</h5>
-        </div> 
+            <h4 class="m-b-10">FastStart Bonus Detail  ( {{ date('d/m/Y',strtotime($data['date'])) }} ) </h4>
+        </div>
 
         <div class="card-block">
             <div class="dt-responsive table-responsive">
                 <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
-
                     <thead>
                       <tr class="info" style='text-align:center;'>
                         <th class="text-center" >UserName</th>
@@ -29,39 +26,20 @@
                         <th class="text-center" >Benefit</th>
                         <th class="text-center" >FastStart Bonus</th>
                         <th class="text-center" >Invtype</th>
- 
-
-
                     </tr>
-                
                 </thead>
-                <tbody>
-                    @for($i=0;$i<20;$i++)
-                    <tr>
-                        <td>A0001</td>
-                        <td>นาย xxx xxx </td>
-                        <td>1,000</td>
-                        <td>5%</td>
-                        <td>50</td>
-                        <td> </td>
- 
-                    </tr>
-                    @endfor
 
-                </tbody>
-            </table> 
+            </table>
         </div>
 
     </div>
-</div> 
+</div>
 </div>
 </div>
 
 @endsection
 @section('js')
 <!-- data-table js -->
-
-
 <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
@@ -73,7 +51,34 @@
 <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
 <!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+<script type="text/javascript">
+
+  $(function() {
+
+      var oTable = $('#multi-colum-dt').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+          ajax: {
+              url: "{!! route('dt_commission_faststart') !!}",
+              type:'GET',
+              data: function (d) {
+                d.customer_id = "{{ $data['customer_id'] }}";
+                d.date =  "{{ $data['date'] }}";
+            }
+              },
+          // type: "POST",
+          columns: [{data: 'username'},
+              {data: 'name'},
+              {data: 'new_pv'},
+              {data: 'benefit'},
+              {data: 'faststart_bonus'},
+              {data: 'invtype'},
+          ],order:[[0,'DESC']]
+      });
+  });
+</script>
+
 
 
 

@@ -140,7 +140,7 @@ class LineModel extends Model
 			->where('line_type','=','C')
 			->get();
 
-			
+
 
 			if(count($lv2_c) > 0){
 
@@ -203,13 +203,13 @@ class LineModel extends Model
 
 public static function under_a($id=''){
 
-	if (empty($id)) { 
+	if (empty($id)) {
 
 		return null;
 	}else{
 		$j = 2;
 
-		for ($i=1; $i<$j; $i++) { 
+		for ($i=1; $i<$j; $i++) {
 
 
 			$last_id_a = DB::table('customers')
@@ -244,13 +244,13 @@ public static function under_a($id=''){
 
 public static function under_b($id=''){
 
-	if (empty($id)) { 
+	if (empty($id)) {
 
 		return null;
 	}else{
 		$j = 2;
 
-		for ($i=1; $i<$j; $i++) { 
+		for ($i=1; $i<$j; $i++) {
 
 
 			$last_id_a = DB::table('customers')
@@ -285,13 +285,13 @@ public static function under_b($id=''){
 
 public static function under_c($id=''){
 
-	if (empty($id)) { 
+	if (empty($id)) {
 
 		return null;
 	}else{
 		$j = 2;
 
-		for ($i=1; $i<$j; $i++) { 
+		for ($i=1; $i<$j; $i++) {
 
 
 			$last_id_a = DB::table('customers')
@@ -334,16 +334,16 @@ public static function check_line($username){
 	if(!empty($data_user)){
 
 		$use_id = Auth::guard('c_user')->user()->id;
-		
+
 		if( $data_user->id == $use_id){
 
-			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];	
+			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
 			return $resule;
 		}
 
 		$id = $data_user->upline_id;
 		$j = 2;
-		for ($i=1; $i <= $j ; $i++){ 
+		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
 				->select('*')
@@ -394,14 +394,11 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 	->select('*')
 	->where('id','=',$under_line_id)
 	->first();
-	
 
 	if(!empty($data_user)){
-
 		$upline_id = $data_user->upline_id;
-		 
 		if($upline_id == $introduce_id){
-			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];	
+			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
 			return $resule;
 		}
 
@@ -409,7 +406,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 		$id = $data_user->upline_id;
 		$j = 2;
-		for ($i=1; $i <= $j ; $i++){ 
+		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
 				->select('*')
@@ -448,7 +445,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 		//end group 1 หาภายใต้ตัวเอง
 		/////////////////////////////////////////////////////////////////////////////////////
-		
+
 		//หาด้านบนตัวเอง
 		$upline_id_arr = array();
 
@@ -461,7 +458,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 			$id = $data_account->upline_id;
 			$j = 2;
-			for ($i=1; $i <= $j ; $i++){ 
+			for ($i=1; $i <= $j ; $i++){
 				if($id == 'AA'){
 					$upline_id_arr[] = $data_account->id;
 					$j =0;
@@ -472,10 +469,10 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 					->first();
 					$upline_id_arr[] = $data_account->id;
 					$id = $data_account->upline_id;
-					$j = $j+1;	
+					$j = $j+1;
 				}
 			}
-			
+
 			//return $resule;
 		}
 		if (in_array($introduce_id, $upline_id_arr)) {
@@ -495,20 +492,24 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 public static function check_line_aipocket($username){
 
-	$data_user = DB::table('customers')
-	->select('*')
+	$data_user =  DB::table('customers')
+  ->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name')
+  ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
+  ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 	->where('user_name','=',$username)
 	->first();
-	
+
+  //dd($data_user);
+
 
 	if(!empty($data_user)){
 
 		$id_username = $data_user->id;
 		$use_id =Auth::guard('c_user')->user()->id;
-		
+
 		if( $id_username == $use_id){
 
-			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];	
+			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
 			return $resule;
 		}
 
@@ -516,7 +517,7 @@ public static function check_line_aipocket($username){
 
 		$id = $data_user->upline_id;
 		$j = 2;
-		for ($i=1; $i <= $j ; $i++){ 
+		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
 				->select('*')
@@ -554,7 +555,7 @@ public static function check_line_aipocket($username){
 
 		//end group 1 หาภายใต้ตัวเอง
 		/////////////////////////////////////////////////////////////////////////////////////
-		
+
 		//หาด้านบนตัวเอง
 		$upline_id_arr = array();
 
@@ -567,7 +568,7 @@ public static function check_line_aipocket($username){
 
 			$id = $data_account->upline_id;
 			$j = 2;
-			for ($i=1; $i <= $j ; $i++){ 
+			for ($i=1; $i <= $j ; $i++){
 				if($id == 'AA'){
 					$upline_id_arr[] = $data_account->id;
 					$j =0;
@@ -578,10 +579,10 @@ public static function check_line_aipocket($username){
 					->first();
 					$upline_id_arr[] = $data_account->id;
 					$id = $data_account->upline_id;
-					$j = $j+1;	
+					$j = $j+1;
 				}
 			}
-			
+
 			//return $resule;
 		}
 		if (in_array($id_username, $upline_id_arr)) {
@@ -601,6 +602,3 @@ public static function check_line_aipocket($username){
 
 
 }
-
-
-?>

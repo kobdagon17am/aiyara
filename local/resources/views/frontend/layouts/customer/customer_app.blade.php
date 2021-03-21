@@ -11,6 +11,7 @@
 <![endif]-->
 <!-- Meta -->
 <meta charset="utf-8">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="description" content="Gradient Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
@@ -76,6 +77,7 @@
 									<span class="badge bg-c-pink" id="m_count_cart" style="font-size: 11px;border-radius: 100px;
 									right: -9px;position: absolute;top:-6px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
 								</a>
+
 								@elseif(request()->is('product-list/2') || request()->is('cart/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2'))
 								<a href="{{route('cart',['type'=>2])}}" class="menu-shope d-lg-none">
 									<i class="fa fa-shopping-cart"></i>
@@ -144,6 +146,7 @@
 									<span class="badge bg-c-pink" id="count_cart" style="font-size: 11px;border-radius: 100px;
 									right: 11px;position: absolute;top: 10px;padding: 3px;">{{Cart::session(1)->getTotalQuantity() }}</span>
 								</a>
+
 								@elseif(request()->is('product-list/2') || request()->is('cart/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2'))
 								<a href="{{route('cart',['type'=>2])}}">
 									<i class="fa fa-shopping-cart"></i>
@@ -478,7 +481,7 @@
 			</a>
 		</li> --}}
 
-		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_report') || request()->is('commission-per-day') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_transfer') || request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
 				<span class="pcoded-mtext">Commission</span>
@@ -486,43 +489,43 @@
 			</a>
 
 			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('commission_bonus_report')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_report')}}">
+				<li class="{{ (request()->is('commission_bonus_transfer')) ? 'active' : '' }}">
+					<a href="{{route('commission_bonus_transfer')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('commission-per-day')) ? 'active' : '' }}">
+				<li class="{{ (request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') ) ? 'active' : '' }}">
 					<a href="{{route('commission-per-day')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รายงานคอมมิชชั่นรายวัน</span>
+						<span class="pcoded-mtext">ความเหลื่อนไหวคะแนน และโบนัดรายวัน</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
+				{{-- <li class="{{ (request()->is('commission_faststart')) ? 'active' : '' }}">
 					<a href="{{route('commission_faststart')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">FastStart Bonus</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>
+				</li> --}}
 
-				<li class="{{ (request()->is('commission_matching')) ? 'active' : '' }}">
+				{{-- <li class="{{ (request()->is('commission_matching')) ? 'active' : '' }}">
 					<a href="{{route('commission_matching')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Matching</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>
+				</li> --}}
 			</ul>
 		</li>
 
 
-		<li class="{{ (request()->is('ai-pocket')) ? 'active' : '' }}">
-			<a href="{{route('ai-pocket')}}">
+		<li class="{{ (request()->is('ai-stockist')) ? 'active' : '' }}">
+			<a href="{{route('ai-stockist')}}">
 				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
 				<span class="pcoded-mtext">Ai-Stockist</span>
 				<span class="pcoded-mcaret"></span>

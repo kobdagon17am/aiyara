@@ -115,3 +115,10 @@ $('#upload').change(function() {
         document.getElementById("submit_upload").disabled = false;
     }
 });
+
+
+function data_direct_confirm(){
+    $('#large-Modal').modal('hide')
+    document.getElementById("data_direct").style.display = "block";
+
+}

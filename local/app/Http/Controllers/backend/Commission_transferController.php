@@ -13,6 +13,7 @@ class Commission_transferController extends Controller
     public function index(Request $request)
     {
       $sBranchs = \App\Models\Backend\Branchs::get();
+
       return view('backend.commission_transfer.index')->with(array('sBranchs'=>$sBranchs ) );
     }
 
@@ -51,7 +52,7 @@ class Commission_transferController extends Controller
     }
 
 
-    
+
     public function form($id=NULL)
     {
       \DB::beginTransaction();
@@ -59,19 +60,19 @@ class Commission_transferController extends Controller
           if( $id ){
             $sRow = \App\Models\Backend\Commission_transfer::find($id);
             $langCnt = count(request('lang'));
-            for ($i=0; $i < $langCnt ; $i++) { 
+            for ($i=0; $i < $langCnt ; $i++) {
 
                 \App\Models\Backend\Commission_transfer::where('id', request('id')[$i])->update(
                       [
                         'product_unit' => request('product_unit')[$i] ,
                         'detail' => request('detail')[$i] ,
-                        
+
                         'date_added' => request('date_added') ,
 
                         'updated_at' => date('Y-m-d H:i:s') ,
                         'status' => request('status')?request('status'):0 ,
                       ]
-                  );     
+                  );
             }
 
           }else{
@@ -80,8 +81,8 @@ class Commission_transferController extends Controller
           $groupMaxID = $sRowGroup[0]->group_id+1;
 
             $langCnt = count(request('lang'));
-            for ($i=0; $i < $langCnt ; $i++) { 
-            
+            for ($i=0; $i < $langCnt ; $i++) {
+
                 \App\Models\Backend\Commission_transfer::insert(
                       [
                         'lang_id' => request('lang')[$i] ,
@@ -89,12 +90,12 @@ class Commission_transferController extends Controller
 
                         'product_unit' => request('product_unit')[$i] ,
                         'detail' => request('detail')[$i] ,
-                        
+
                         'date_added' => request('date_added') ,
                         'created_at' => date('Y-m-d H:i:s') ,
                         'status' => 1,
                       ]
-                  );     
+                  );
             }
 
           }

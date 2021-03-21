@@ -9,7 +9,7 @@ use Cart;
 use App\Models\Frontend\Product;
 use App\Models\Frontend\LineModel;
 use App\Models\Frontend\Runpv;
-use Auth; 
+use Auth;
 
 class AiCashController extends Controller
 {
@@ -28,8 +28,8 @@ class AiCashController extends Controller
     ->get();
 
     $ai_cash = DB::table('ai_cash')
-    ->select('ai_cash.*','dataset_pay_type.detail as pay_type','dataset_order_status.detail as order_status') 
-    ->leftjoin('dataset_pay_type','dataset_pay_type.pay_type_id','=','ai_cash.pay_type_id_fk')
+    ->select('ai_cash.*','dataset_pay_type.detail as pay_type','dataset_order_status.detail as order_status')
+    ->leftjoin('dataset_pay_type','dataset_pay_type.id','=','ai_cash.pay_type_id_fk')
     ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','ai_cash.order_status_id_fk')
     ->orderby('ai_cash.created_at','desc')
     ->get();

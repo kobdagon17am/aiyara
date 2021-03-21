@@ -15,12 +15,12 @@ use App\Models\Frontend\DirectSponsor;
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card"> 
+        <div class="card">
 
          <div class="card-header">
-            <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน รหัส xxxx</h4>
+            <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน</h4>
 
-        </div> 
+        </div>
         <div class="card-block">
 
             <div class="dt-responsive table-responsive">
@@ -43,8 +43,6 @@ use App\Models\Frontend\DirectSponsor;
                         <th class="text-center"  rowspan="2">Pool</th>
                         <th class="text-center"  rowspan="2">Outime</th>
                         <th class="text-center"  rowspan="2">รวมโบนัส</th>
-
-
                     </tr>
                     <tr>
                         <th class="text-center"  style="font-size: 12px;">A</th>
@@ -54,42 +52,15 @@ use App\Models\Frontend\DirectSponsor;
                         <th class="text-center"  style="font-size: 12px;">A</th>
                         <th class="text-center"  style="font-size: 12px;">B</th>
                         <th class="text-center"  style="font-size: 12px;">C</th>
-
-                        
 
                     </tr>
                 </thead>
-                <tbody>
-                    @for($i=0;$i<20;$i++)
-                    <tr>
-                        <td>2019/01/20</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td> 
-                        <td><a href="{{ route('commission_faststart') }}"><b class="text-primary">1000</b></a> </td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td> <a href="{{ route('commission_matching') }}"><b class="text-primary">1000</b></a> </td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        <td>1000</td>
-                        
-                    </tr>
-                    @endfor
 
-                </tbody>
-            </table> 
+            </table>
         </div>
 
     </div>
-</div> 
+</div>
 </div>
 </div>
 
@@ -108,9 +79,46 @@ use App\Models\Frontend\DirectSponsor;
 <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-<!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+<script type="text/javascript">
 
+  $(function() {
+    $.ajaxSetup({headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+
+});
+      var oTable = $('#multi-colum-dt').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+          ajax: {
+              url: "{!! route('dt_commission_perday') !!}",
+              type:'POST',
+              },
+          // type: "POST",
+          columns: [{data: 'action_date'},
+              {data: 'pv'},
+              {data: 'pv_pay_add'},
+              {data: 'pv_pay_active'},
+              {data: 'new_pv_a'},
+              {data: 'new_pv_b'},
+              {data: 'new_pv_c'},
+              {data: 'old_pv_a'},
+              {data: 'old_pv_b'},
+              {data: 'old_pv_c'},
+              {data: 'faststart'},
+              {data: 'pro'},
+              {data: 'tmb'},
+              {data: 'booster'},
+              {data: 'matching'},
+              {data: 'pool'},
+              {data: 'outtime'},
+              {data: 'bonus_total'},
+          ],order:[[0,'DESC']]
+      });
+  });
+
+</script>
 
 
 @endsection

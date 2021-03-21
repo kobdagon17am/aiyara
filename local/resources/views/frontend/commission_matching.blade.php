@@ -10,12 +10,12 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card"> 
+        <div class="card">
 
          <div class="card-header">
             <h4 class="m-b-10">Matching Bonus Detail</h4>
              <h5 class="m-b-10">User::ID : A0001 วันที่:2021/01/01</h5>
-        </div> 
+        </div>
 
         <div class="card-block">
             <div class="dt-responsive table-responsive">
@@ -26,31 +26,17 @@
                         <th class="text-center" >Deep</th>
                         <th class="text-center" >Gen</th>
                         <th class="text-center" >UserName</th>
-                        <th class="text-center" >Name</th>
                         <th class="text-center" >Bns_strong_leg</th>
                         <th class="text-center" >Benefit</th>
                         <th class="text-center" >Reward Bonus</th>
-                    </tr>  
-                </thead>
-                <tbody>
-                    @for($i=0;$i<20;$i++)
-                    <tr>
-                        <td>1.00</td>
-                        <td>G-1</td>
-                        <td>นาย ศาสนพงษ์ พิกุลศรี</td>
-                        <td> 132 .00 </td>
-                        <td> 832.50 </td>
-                        <td> 100% </td>
-                        <td>800.00</td>
                     </tr>
-                    @endfor
+                </thead>
 
-                </tbody>
-            </table> 
+            </table>
         </div>
 
     </div>
-</div> 
+</div>
 </div>
 </div>
 
@@ -70,8 +56,31 @@
 <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
 <!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+<script type="text/javascript">
+  $(function() {
+      var oTable = $('#multi-colum-dt').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+          ajax: {
+              url: "{!! route('dt_commission_matching') !!}",
+              type:'GET',
+              data: function (d) {
+                d.customer_id = "{{ $data['customer_id'] }}";
+                d.date =  "{{ $data['date'] }}";
+            }
+              },
 
+          columns: [{data: 'gen'},
+              {data: 'deep'},
+              {data: 'username'},
+              {data: 'bns_strong_leg'},
+              {data: 'benefit'},
+              {data: 'reward_bonus'},
+          ],order:[[0,'DESC']]
+      });
+  });
+</script>
 
 
 @endsection

@@ -14,8 +14,6 @@ class Frontend{
 	}
 
 	public static function get_customer($id){
-
-
 		$customer =  DB::table('customers')
 		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name')
 		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')

@@ -1,246 +1,250 @@
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
-<!-- Data Table Css -->
-<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
 
 @endsection
 @section('conten')
-<div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-header">
-				<div class="row">
-					<div class="col-md-4">
-						<select class="form-control" id="order_type" >
-							<option value="">ทั้งหมด</option>
-							@foreach($data as $value)
-							<option value="{{ $value->group_id }}">{{ $value->orders_type }}</option>
-							@endforeach
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="card-block">
-				<div class="table-responsive dt-responsive">
 
-					<table id="history" class="table table-striped table-bordered nowrap">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>วันที่สั่งซื้อ</th>
-								<th>เลขใบสั่งซื้อ</th>
-								<th>TRACKING</th>
-								<th>ยอดชำระ</th>
-								<th>PV</th>
-								<th>คงเหลือ</th>
-								<th>Active</th>
-								<th>จุดประสงค์การสั่งซื้อ</th>
-								<th>ชำระโดย</th>
-								<th>สถานะ</th>
-								<th>#</th>
-							</tr>
-						</thead>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
 
-					</table>
-				</div>
-				<div id="modal_qr_recive"></div>
+                <div class="card-header p-4">
+                    <form method="POST" id="search-form">
 
+                        <div class="col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 p-1">
+                                    <div class="form-group">
+                                        <select class="form-control" id="dt_order_type">
+                                            <option value="">จุดประสงค์การสั่งซื้อ(Type)</option>
+                                            @foreach ($data['orders_type'] as $value)
+                                                <option value="{{ $value->group_id }}">{{ $value->orders_type }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-				<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" >
-					<div class="modal-dialog modal-md" role="document">
-						<form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
-							@csrf
-							<div class="modal-content">
-								<div class="modal-header">
-									<h4 class="modal-title">Upload File Slip</h4>
-								</div>
+                                <div class="col-lg-2 col-md-2 p-1">
+                                    <div class="form-group">
+                                        <select class="form-control" id="dt_pay_type">
+                                            <option value="">ชำระโดย(All)</option>
+                                            @foreach ($data['pay_type'] as $value)
+                                                <option value="{{ $value->id }}">{{ $value->detail }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-								<div class="modal-body">
-									<div class="form-group row">
-										<div class="col-sm-12">
-											<div class="form-group row">
-												<div class="col-sm-10">
-													<label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b> </label>
-													<input type="file" name="file_slip" id="file_slip" class="form-control" required="">
-													<input type="hidden" name="order_id" id="order_id" value="">
-												</div>
-											</div>
-										</div>
+                                <div class="col-lg-3 col-md-3 p-1">
+                                    <input class="form-control" type="date" id="s_date">
+                                </div>
+                                <div class="col-lg-3 col-md-3  p-1">
+                                    <input class="form-control" type="date" id="e_date">
+                                </div>
+                                <div class="col-lg-1 col-md-1 p-1">
+                                    <button type="submit" class="btn btn-primary btn-block"> Seart </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-block">
+                    <div class="table-responsive dt-responsive">
+                        <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
+                            <thead>
+                                <tr>
+                                    <th>วันที่สั่งซื้อ</th>
+                                    <th>เลขใบสั่งซื้อ</th>
+                                    <th>TRACKING</th>
+                                    <th>ยอดชำระ</th>
+                                    <th>PV</th>
+                                    <th>คงเหลือ</th>
+                                    <th>Active</th>
+                                    <th>Type</th>
+                                    <th>ชำระโดย</th>
+                                    <th>สถานะ</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
 
-									</div>
-								</div>
+                    <div class="row">
+                        @foreach ($data['orders_type'] as $value)
+                            <code style="color: #000">{!! $value->icon !!} {{ $value->orders_type }} </code>
+                        @endforeach
+                    </div>
+                </div>
 
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                <div id="modal_qr_recive"></div>
 
-									<button class="btn btn-success" type="submit" name="submit" id="submit_upload" value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
+                <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-md" role="document">
+                        <form action="{{ route('upload_slip') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Upload File Slip</h4>
+                                </div>
 
-								</div>
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b>
+                                                    </label>
+                                                    <input type="file" name="file_slip" id="file_slip" class="form-control"
+                                                        required="">
+                                                    <input type="hidden" name="order_id" id="order_id" value="">
+                                                </div>
+                                            </div>
+                                        </div>
 
-							</div>
-						</form>
-					</div>
-				</div>
+                                    </div>
+                                </div>
 
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-block">
-
-        <table class="table table-bordered" id="users-table"> </table>
-
-			</div>
-		</div>
-	</div>
-</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect "
+                                        data-dismiss="modal">Close</button>
+                                    <button class="btn btn-success" type="submit" name="submit" id="submit_upload"
+                                        value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
-<!-- data-table js -->
+    <!-- data-table js -->
 
-<script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
-<script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-<!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
+    </script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
+    </script>
+
+    <script type="text/javascript">
+        function qrcode(id) {
+            $.ajax({
+                    url: '{{ route('modal_qr_recive_product') }}',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                })
+                .done(function(data) {
+                    console.log("success");
+                    $('#modal_qr_recive').html(data);
+                    $('#show_qr').modal('show');
+                    // var fiveMinutes = 60 * 30,
+                    // display = document.querySelector('#time');
+                    // startTimer(fiveMinutes, display);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+        }
+
+        function upload_slip(order_id) {
+            $('#order_id').val(order_id);
+        }
+
+        $('#file_slip').change(function() {
+            var fileExtension = ['jpg', 'png'];
+            if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+                alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
+                this.value = '';
+                return false;
+            }
+        });
+
+    </script>
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		fetch_data();
 
-	});
+    <script type="text/javascript">
+        $(function() {
+            var oTable = $('#multi-colum-dt').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: true,
+                ajax: {
+                    url: "{!! route('datable/history') !!}",
+                    data: function(d) {
+                        d.dt_order_type = $('#dt_order_type').val();
+                        d.dt_pay_type = $('#dt_pay_type').val();
+                        d.s_date = $('#s_date').val();
+                        d.e_date = $('#e_date').val();
+                    }
+                },
+                // type: "POST",
+                columns: [{
+                        data: 'date'
+                    },
+                    {
+                        data: 'code_order'
+                    },
+                    {
+                        data: 'tracking'
+                    },
+                    {
+                        data: 'price'
+                    },
+                    {
+                        data: 'pv_total'
+                    },
+                    {
+                        data: 'banlance'
+                    },
+                    {
+                        data: 'date_active'
+                    },
+                    {
+                        data: 'type',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'pay_type_name'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'action'
+                    },
+                ],
+                order: [
+                    [0, 'DESC']
+                ]
+            });
 
-	function qrcode(id){
-		$.ajax({
-			url: '{{ route('modal_qr_recive_product')}}',
-			type: 'GET',
-			data: {id:id},
-		})
-		.done(function(data) {
-			console.log("success");
-			$('#modal_qr_recive').html(data);
-			$('#show_qr').modal('show');
+            $('#search-form').on('submit', function(e) {
+                oTable.draw();
+                e.preventDefault();
+            });
 
-			// var fiveMinutes = 60 * 30,
-			// display = document.querySelector('#time');
-			// startTimer(fiveMinutes, display);
+        });
 
-		})
-		.fail(function() {
-			console.log("error");
-		})
-
-	}
-
-	// function startTimer(duration, display) {
-	// 	var timer = duration, minutes, seconds;
-	// 	setInterval(function () {
-	// 		minutes = parseInt(timer / 60, 10);
-	// 		seconds = parseInt(timer % 60, 10);
-
-	// 		minutes = minutes < 10 ? "0" + minutes : minutes;
-	// 		seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	// 		display.textContent = minutes + ":" + seconds;
-
-	// 		if (--timer < 0) {
-	// 			timer = duration;
-	// 		}
-	// 	}, 1000);
-	// }
-
-	function fetch_data(order_type = '') {
-
-		$('#history').DataTable({
-				// scrollX: true,
-				// scrollCollapsed: true,
-				processing: true,
-				serverSide: true,
-				searching: true,
-				ajax: {
-					url: "{{ route('dt_history') }}",
-					dataType: "json",
-					type: "POST",
-					data: {_token:'{{ csrf_token() }}',order_type:order_type}
-				},
-
-				columns:[
-				{"data": "id"},
-				{"data": "date"},
-				{"data": "code_order"},
-				{"data": "tracking"},
-				{"data": "price"},
-				{"data": "pv_total"},
-				{"data": "banlance"},
-				{"data": "date_active"},
-				{"data": "type"},
-				{"data": "pay_type_name"},
-				{"data": "status"},
-				{"data": "action"}
-				// {"data": "interesting"},
-				// {"data": "course"},
-				// {"data": "step"},
-				// {"data": "date_create"},
-				// {"data": "comment", },
-				// {"data": "source"},
-				// {"data": "payment_status"}
-				],
-				//order: [[ "0", "desc" ]],
-			});
-	}
-
-	$('#order_type').on('change',function(){
-		var order_type = $(this).val();
-		$('#history').DataTable().destroy();
-		fetch_data(order_type);
-	});
-
-	function upload_slip(order_id){
-		$('#order_id').val(order_id);
-	}
-
-	$('#file_slip').change( function () {
-		var fileExtension = ['jpg','png'];
-		if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-			alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
-			this.value = '';
-			return false;
-		}
-	});
-</script>
-<script  type="text/javascript">
-  $(function() {
-    $('#users-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{!! route('datable/history') !!}',
-        type: "GET",
-        columns: [
-          {data: 'id', title :'<center>id </center>', className: 'text-center'},
-            { data: 'date', title :'<center>date </center>', className: 'text-center'},
-            { data: 'code_order', title :'<center>code_order </center>', className: 'text-center'},
-            { data: 'tracking', title :'<center>tracking </center>', className: 'text-center'},
-            { data: 'price', title :'<center>price </center>', className: 'text-center'},
-        ]
-    });
-});
-</script>
+    </script>
 
 @endsection
-
-

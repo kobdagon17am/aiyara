@@ -92,7 +92,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
-                                                BRONZE STAR AWARD ( BSA )</h6>
+                                                <b id="qualification_name"></b></h6>
 
                                         </div>
 
@@ -205,7 +205,7 @@
                 })
                 .done(function(data) {
 
-                    //console.log(data['data']['data']);
+                    console.log(data['data']['data']);
                     if (data['status'] == 'success') {
                         document.getElementById("text_username").innerHTML = data['data']['data']['business_name'] +
                             ' (' + data['data']['data']['user_name'] + ')';
@@ -215,6 +215,10 @@
 
                         document.getElementById("text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                         $("#input_username").val(data['data']['data']['user_name']);
+
+                        document.getElementById("qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
+
+
 
 
                         $("#large-Modal").modal();

@@ -9,6 +9,7 @@ use Cart;
 use App\Models\Frontend\Product;
 use App\Models\Frontend\LineModel;
 use App\Models\Frontend\Runpv;
+use App\Helpers\Frontend;
 use Auth;
 
 class AipocketController extends Controller
@@ -27,7 +28,7 @@ class AipocketController extends Controller
     ->orderby('order')
     ->get();
 
-    return view('frontend/aipocket',compact('type'));
+    return view('frontend/aistockist',compact('type'));
   }
 
   public function dt_aipocket(Request $request){
@@ -49,7 +50,7 @@ class AipocketController extends Controller
         //3 เอกสารการชำระเงินไม่ผ่าน danger
         //4 จัดเตรียมสินค้า primary
         //5 จัดส่งสินค้า primary
-        //6 ได้รับสินค้าแล้ว Success 
+        //6 ได้รับสินค้าแล้ว Success
 
     if(empty($request->input('search.value'))){
 
@@ -69,7 +70,7 @@ class AipocketController extends Controller
         ////$dir = $request->input('order.0.dir');
 
       $ai_pocket =  DB::table('ai_pocket')
-      ->select('ai_pocket.*','c_use.business_name as business_name_use','c_to.business_name as business_name_to','c_use.user_name as c_use','c_to.user_name as c_to','dataset_orders_type.orders_type') 
+      ->select('ai_pocket.*','c_use.business_name as business_name_use','c_to.business_name as business_name_to','c_use.user_name as c_use','c_to.user_name as c_to','dataset_orders_type.orders_type')
       ->leftjoin('customers as c_use','ai_pocket.customer_id','=','c_use.id')
       ->leftjoin('customers as c_to','ai_pocket.to_customer_id','=','c_to.id')
       ->leftjoin('dataset_orders_type','ai_pocket.type_id','=','dataset_orders_type.group_id')
@@ -78,7 +79,7 @@ class AipocketController extends Controller
       ->offset($start)
       ->limit($limit)
       ->orderby('ai_pocket.update_at','DESC')
-      ->get(); 
+      ->get();
 
     }else{
 
@@ -96,13 +97,13 @@ class AipocketController extends Controller
       $totalFiltered = $totalData;
 
       $limit = $request->input('length');
-      $start = $request->input('start'); 
+      $start = $request->input('start');
         //$order = $columns[$request->input('order.0.column')];
         //$dir = $request->input('order.0.dir');
 
 
       $ai_pocket =  DB::table('ai_pocket')
-      ->select('ai_pocket.*','c_use.business_name as business_name_use','c_to.business_name as business_name_to','c_use.user_name as c_use','c_to.user_name as c_to','dataset_orders_type.orders_type') 
+      ->select('ai_pocket.*','c_use.business_name as business_name_use','c_to.business_name as business_name_to','c_use.user_name as c_use','c_to.user_name as c_to','dataset_orders_type.orders_type')
       ->leftjoin('customers as c_use','ai_pocket.customer_id','=','c_use.id')
       ->leftjoin('customers as c_to','ai_pocket.to_customer_id','=','c_to.id')
       ->leftjoin('dataset_orders_type','ai_pocket.type_id','=','dataset_orders_type.group_id')
@@ -112,7 +113,7 @@ class AipocketController extends Controller
       ->offset($start)
       ->limit($limit)
       ->orderby('ai_pocket.update_at','DESC')
-      ->get(); 
+      ->get();
 
           //dd($ai_pocket);
 
@@ -124,7 +125,7 @@ class AipocketController extends Controller
 
     foreach ($ai_pocket as $value){
       $i++;
- 
+
       $nestedData['order'] = $i;
       if(Auth::guard('c_user')->user()->id == $value->customer_id){
        $nestedData['customer_id'] = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';
@@ -166,14 +167,14 @@ class AipocketController extends Controller
      $class_css = 'warning';
      $banlance ='<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
    }else{
-     $class_css = 'danger'; 
+     $class_css = 'danger';
    }
 
    // $nestedData['status'] =  '<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
 
    $nestedData['banlance'] = $banlance;
 
-   if($value->detail == 'Sent Ai-Pocket'){
+   if($value->detail == 'Sent Ai-Stockist'){
     $detail = '';
   }else{
     $detail = $value->detail;
@@ -214,16 +215,16 @@ public function use_aipocket(Request $request){
   $username = $request->username;
 
   if($pv>Auth::guard('c_user')->user()->pv_aipocket){
-    return redirect('ai-pocket')->withError('PV Ai-Pocket ของคุณมีไม่เพียงพอ ');
+    return redirect('ai-stockist')->withError('PV Ai-Stockist ของคุณมีไม่เพียงพอ ');
 
   }else{
     if($type == 1){
       $resule = Runpv::run_pv($type,$pv,$username);
       //dd($resule);
       if($resule['status'] == 'success'){
-        return redirect('ai-pocket')->withSuccess('Sent Ai-Pocket Success');
+        return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
       }else{
-       return redirect('ai-pocket')->withError('Sent Ai-Pocket Fail');
+       return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
      }
 
    }elseif($type == 2){
@@ -232,7 +233,7 @@ public function use_aipocket(Request $request){
   }elseif ($type == 3){
     dd($type);
   }else{
-    return redirect('ai-pocket')->withError('ไม่มีคุณสมบัติที่เลือก');
+    return redirect('ai-stockist')->withError('ไม่มีคุณสมบัติที่เลือก');
   }
 
 

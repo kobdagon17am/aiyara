@@ -110,29 +110,69 @@
                                  </div>
 
                                  <div class="row" id="check_user" style="display: none">
-                                    <div class="col-md-6 col-lg-6 col-xl-6">
-                                         <div class="card">
-                                             <div class="card-block">
-                                                 <h6>รหัสของลูกทีมที่ต้องการส่งสินค้า</h6>
-                                                 <div class="form-group row">
-                                                     <div class="col-md-12">
-                                                         <div class="input-group input-group-button">
-                                                             <input type="text" id="username" class="form-control"
-                                                                 placeholder="รหัสสมาชิกที่ใช้">
-                                                             <span class="input-group-addon btn btn-primary"
-                                                                 onclick="check()">
-                                                                 <span class="">ทำรายการ</span>
-                                                             </span>
+                                     <div class="col-md-12">
+                                         <div class="row">
+                                             <div class="col-md-6 col-lg-6 col-xl-6">
+                                                 <div class="card">
+                                                     <div class="card-block">
+                                                         <h6>รหัสของลูกทีมที่ต้องการส่งสินค้า</h6>
+                                                         <div class="form-group row">
+                                                             <div class="col-md-12">
+                                                                 <div class="input-group input-group-button">
+                                                                     <input type="text" id="username" class="form-control"
+                                                                         placeholder="รหัสสมาชิกที่ใช้">
+                                                                     <span class="input-group-addon btn btn-primary"
+                                                                         onclick="check()">
+                                                                         <span class="">ทำรายการ</span>
+                                                                     </span>
+                                                                 </div>
+                                                             </div>
                                                          </div>
                                                      </div>
                                                  </div>
                                              </div>
+                                             <div class="col-md-6 col-lg-6 col-xl-6" id="data_direct" style="display: none">
+                                                 <div class="card bg-c-yellow order-card m-b-0">
+                                                     <div class="card-block">
+                                                         <div class="row">
+                                                             <div class="col-md-12">
+                                                                 <h6 id="text_username" style="color: #000">Orange Thailand
+                                                                     (A0000032)</h6>
+                                                                 <h6 class="m-b-0" style="color: #000">คุณ ชฎาพรww
+                                                                     พิกุลe</h6>
+
+                                                             </div>
+
+                                                         </div>
+                                                         <div class="row">
+                                                             <div class="col-md-12">
+                                                                 <h6 class="m-b-0" style="color: #000"><i
+                                                                         class="fa fa-star p-2 m-b-0"></i>
+                                                                     BRONZE STAR AWARD ( BSA )</h6>
+                                                             </div>
+
+                                                         </div>
+                                                         <hr class="m-b-5 m-t-5">
+                                                         <div class="row">
+                                                             <div class="col-md-6">
+                                                                 <h5 class="m-b-0" style="color: #000">คะแนนสะสม</h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                 <h5 class="m-b-0 text-right" id="text_pv"
+                                                                     style="color: #000">0 PV</h5>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+
                                          </div>
+
                                      </div>
 
-                                     <div class="col-md-6 col-lg-6  col-xl-6">
-                                       ssss
-                                     </div>
+
+
+
                                  </div>
 
                                  <div class="row">
@@ -840,7 +880,7 @@
                                  <div class="row">
                                      <div class="col-md-12">
                                          <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
-                                             BRONZE STAR AWARD ( BSA )</h6>
+                                             <b id="m_qualification_name">BRONZE STAR AWARD ( BSA )<b></h6>
 
                                      </div>
 
@@ -883,7 +923,7 @@
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                     <button class="btn btn-success">Confirm</button>
+                     <button class="btn btn-success" onclick="data_direct_confirm()" >Confirm</button>
                  </div>
              </div>
          </div>
@@ -976,7 +1016,7 @@
 
          function sent_address(type_sent, provinces_id) {
 
-             if (type_sent == 'sent_address'){
+             if (type_sent == 'sent_address') {
 
                  check_shipping({{ $address->provinces_id }});
                  document.getElementById("sent_address").style.display = 'block';
@@ -1237,6 +1277,7 @@
                          document.getElementById("text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                          $("#input_username").val(data['data']['data']['user_name']);
 
+                         document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
 
                          $("#large-Modal").modal();
                          //alert(data['status']);

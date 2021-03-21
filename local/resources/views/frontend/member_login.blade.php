@@ -57,15 +57,15 @@
 							<div class="auth-box">
 								<div class="row m-b-20">
 									<div class="col-md-12">
-										
+
 										<img src="http://website.aiyara.co.th/wp-content/themes/aiplanetfresh/images/logo.png" alt="logo.png">
 									</div>
-								</div>  
+								</div>
 
-								
+
 								<hr/>
 								<div class="input-group">
-									<input type="text" class="form-control" placeholder="User Name" name="username" value="0001" required="">
+									<input type="text" class="form-control" placeholder="User Name" name="username" value="A0000008" required="">
 									<span class="md-line"></span>
 								</div>
 								<div class="input-group">
