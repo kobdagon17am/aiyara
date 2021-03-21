@@ -39,53 +39,73 @@ class Pick_warehouse_fifoController extends Controller
     public function calFifo(Request $request)
     {
       // dd($request->all());
-      // return $request->picking_id;
+      // return $request;
       // dd();
+      // $row_id = explode(',', $request->picking_id);
+
       DB::select('TRUNCATE db_frontstore_tmp');
       DB::select('TRUNCATE db_frontstore_products_list_tmp');
       DB::select('TRUNCATE db_pick_warehouse_fifo');
 
-      $row_id = explode(',', $request->picking_id);
+        if(!empty($request->picking_id)){
 
-      $d1 = DB::table('db_pick_pack_packing')->whereIn('packing_code',$row_id)->get();
-      // return $d1;
-      // dd();
-      $arr = [];
-      foreach ($d1 as $key => $value) {
-          $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-          array_push($arr,$delivery[0]->receipt);
-      }
-      // return $arr;
-      // dd();
+             
 
-      $frontstore = DB::table('db_frontstore')->whereIn('invoice_code',$arr)->get();
-      foreach ($frontstore as $key => $value) {
-          DB::select('insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code="'.$value->invoice_code.'" ');
-      }
-      foreach ($frontstore as $key => $value) {
-          DB::select('insert ignore into db_frontstore_products_list_tmp select * from db_frontstore_products_list where frontstore_id_fk='.$value->id.' ');
-      }
+              DB::select(' 
+                  insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code in(
+                  SELECT
+                  db_delivery.receipt
+                  FROM
+                  db_pick_pack_packing
+                  Left Join db_delivery ON db_pick_pack_packing.delivery_id_fk = db_delivery.id
+                  WHERE db_pick_pack_packing.packing_code in ('.$request->picking_id.') and db_delivery.packing_code=0
+                  );
+              ');
 
-      $product = DB::select('select product_id_fk from db_frontstore_products_list_tmp');
-      $product_id = [];
-      foreach ($product as $key => $value) {
-         array_push($product_id,$value->product_id_fk);
-         DB::select('insert ignore into db_pick_warehouse_fifo (product_id_fk) values ('.$value->product_id_fk.') 
-            ');
-      }
-      return $product_id;
-      // dd();
 
-      // เอาลงตาราง db_pick_warehouse_fifo นี้ก่อน เพราะเป็นรายการสินค้าทั้งหมดจากใบเสร็จ ค่อยเช็คหาจำนวนในคลัง ถ้ามีก็ใส่เลข ถ้าไม่มี ก็ติดลบ 
+              DB::select(' 
+                 insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code in
+                  (
+                  SELECT receipt FROM db_delivery WHERE packing_code in 
+                  (
+                  SELECT
+                  db_delivery.packing_code
+                  FROM
+                  db_pick_pack_packing
+                  Left Join db_delivery ON db_pick_pack_packing.delivery_id_fk = db_delivery.id
+                  WHERE db_pick_pack_packing.packing_code in ('.$request->picking_id.') and  db_delivery.packing_code<>0
+                  )
+                  );
+              ');
 
- 
-      // เอา product_id ไป scan หาในคลังต่างๆ ก็คือ db_stocks  => แล้วยิงลงตาราง db_pick_warehouse_fifo
-      $fifo_01 =  DB::table('db_stocks')->whereIn('product_id_fk',$product_id)->get();
-      foreach ($fifo_01 as $key => $value) {
-          DB::select('insert ignore into db_pick_warehouse_fifo select * from db_stocks where product_id_fk='.$value->product_id_fk.' 
-            order by lot_expired_date desc 
-            ');
-      }
+
+              DB::select(' 
+                insert ignore into db_frontstore_products_list_tmp select * from db_frontstore_products_list where product_id_fk in 
+                (
+                SELECT
+                db_frontstore_products_list.product_id_fk
+                FROM
+                db_frontstore_products_list
+                Left Join db_frontstore_tmp ON db_frontstore_products_list.frontstore_id_fk = db_frontstore_tmp.id
+                GROUP BY db_frontstore_products_list.product_id_fk
+                )
+              ');
+
+        //  ได้รหัสสินค้ามาแล้ว 
+
+              $product = DB::select('select product_id_fk from db_frontstore_products_list_tmp');
+              $product_id = [];
+              foreach ($product as $key => $value) {
+                 array_push($product_id,$value->product_id_fk);
+                 DB::select('insert ignore into db_pick_warehouse_fifo (product_id_fk) values ('.$value->product_id_fk.')');
+              }
+
+              return $product_id;
+              // หา FIFO 
+
+
+        }
+
 
     }
 

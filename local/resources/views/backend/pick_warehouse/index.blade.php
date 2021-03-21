@@ -755,10 +755,6 @@ $(function() {
 
               $(".myloading").show();
 
-
- 
-
-    
                  setTimeout(function(){
   
                       var rows_selected = oTable2.column(0).checkboxes.selected();
@@ -785,6 +781,7 @@ $(function() {
                              data: $("#frm-packing").serialize()+"&picking_id="+ids,
                               success: function(response){ // What to do if we succeed
                                      console.log(response); 
+                                     return false;
 
                               },
                               error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail

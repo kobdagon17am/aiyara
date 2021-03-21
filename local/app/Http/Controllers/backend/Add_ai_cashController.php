@@ -83,17 +83,21 @@ class Add_ai_cashController extends Controller
 
           if(request('pay_type_id')!=''){
 
-             if(request('save_new')==1){
-                DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-             }
-             
-             if(request('save_update')==1){
-                if($sRow->aicash_amt!=request('aicash_amt')){
-                  DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-                }
-            }
+          //    if(request('save_new')==1){
+          //       DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
+          //    }
 
-          }
+          //    if(request('save_update')==1){
+          //       if($sRow->aicash_amt!=request('aicash_amt')){
+          //         DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
+          //       }
+          //   }
+
+         
+
+              DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
+
+            }
 
           // dd(str_replace(',','',request('fee_amt')));
 
@@ -133,11 +137,12 @@ class Add_ai_cashController extends Controller
           \DB::commit();
 
           if(request('fromAddAiCash')==1){
-            // return redirect()->to(url("backend/frontstore/".request('frontstore_id_fk')."/edit"));
             return redirect()->to(url("backend/add_ai_cash/".$sRow->id."/edit?customer_id=".request('customer_id_fk')."&frontstore_id_fk=".request('frontstore_id_fk')."&fromAddAiCash=1"));
           }else{
             return redirect()->to(url("backend/add_ai_cash/".$sRow->id."/edit"));
           }
+
+          // return redirect()->to(url("backend/add_ai_cash"));
 
 
       } catch (\Exception $e) {

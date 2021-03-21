@@ -15,7 +15,7 @@
             <h4 class="mb-0 font-size-18"> เติม Ai-Cash </h4>
 
             <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
-                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit") }}">
+                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
                       <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">กลับไปหน้าขาย</span>
                 </a>
             <?php }else{ ?>
