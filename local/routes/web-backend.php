@@ -27,16 +27,16 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('products', 'ProductsController');
     Route::post('products/datatable', 'ProductsController@Datatable')->name('products.datatable');
-	
+
     Route::resource('package', 'PackageController');
     Route::post('package/datatable', 'PackageController@Datatable')->name('package.datatable');
-  
+
     Route::resource('qualification', 'QualificationController');
     Route::post('qualification/datatable', 'QualificationController@Datatable')->name('qualification.datatable');
 
     Route::resource('orders_type', 'Orders_typeController');
     Route::post('orders_type/datatable', 'Orders_typeController@Datatable')->name('orders_type.datatable');
-  
+
     Route::resource('product_unit', 'Product_unitController');
     Route::post('product_unit/datatable', 'Product_unitController@Datatable')->name('product_unit.datatable');
 
@@ -45,10 +45,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('fsb', 'FsbController');
     Route::post('fsb/datatable', 'FsbController@Datatable')->name('fsb.datatable');
-  
+
     Route::resource('manage_bonus', 'Manage_bonusController');
     Route::post('manage_bonus/datatable', 'Manage_bonusController@Datatable')->name('manage_bonus.datatable');
-  
+
     Route::resource('businessweb', 'BusinesswebController');
     Route::post('businessweb/datatable', 'BusinesswebController@Datatable')->name('businessweb.datatable');
 
@@ -56,7 +56,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('businessweb_banner/datatable', 'Businessweb_bannerController@Datatable')->name('businessweb_banner.datatable');
     Route::get('businessweb_banner/index/{id}', 'Businessweb_bannerController@index');
 
-  
+
     Route::resource('course_history', 'Course_historyController');
     Route::post('course_history/datatable', 'Course_historyController@Datatable')->name('course_history.datatable');
 
@@ -66,7 +66,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('add_ai_cash', 'Add_ai_cashController');
     Route::post('add_ai_cash/datatable', 'Add_ai_cashController@Datatable')->name('add_ai_cash.datatable');
-  
+
 // สาขา / คลัง @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     Route::resource('branchs', 'BranchsController');
     Route::post('branchs/datatable', 'BranchsController@Datatable')->name('branchs.datatable');
@@ -158,7 +158,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_units', 'Products_unitsController');
     Route::post('products_units/datatable', 'Products_unitsController@Datatable')->name('products_units.datatable');
     Route::get('products_units/create/{id}', 'Products_unitsController@create');
-    
+
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {
 
@@ -203,7 +203,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('shipping_vicinity', 'Shipping_vicinityController');
     Route::post('shipping_vicinity/datatable', 'Shipping_vicinityController@Datatable')->name('shipping_vicinity.datatable');
     Route::get('shipping_vicinity/create/{id}', 'Shipping_vicinityController@create');
-    
+
 
     Route::resource('pm', 'PmController');
     Route::post('pm/datatable', 'PmController@Datatable')->name('pm.datatable');
@@ -223,7 +223,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('uploadCe_regisCSV', 'PagesController@uploadCe_regisCSV');
     Route::post('uploadPromotionCus', 'PagesController@uploadPromotionCus');
     Route::get('uploadPromotionCus', 'PagesController@uploadPromotionCus');
-    
+
     Route::post('uploadGiftVoucherCus', 'PagesController@uploadGiftVoucherCus');
 
     Route::post('csvExport', 'ExcelController@csvExport');
@@ -235,11 +235,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('csvExportCe_regis', 'ExcelController@csvExportCe_regis');
 
     Route::post('excelImport', 'ExcelController@excelImport');
-    
+
     Route::post('excelExportChart', 'ExcelChart@createexcelfileAction');
 
     Route::post('ajaxSetSession', 'AjaxController@ajaxSetSession');
-    
+
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
     Route::post('ajaxClearDataGiftvoucherCode', 'AjaxController@ajaxClearDataGiftvoucherCode');
@@ -257,7 +257,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
     Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
     Route::post('ajaxGetZipcode', 'AjaxController@ajaxGetZipcode');
-    
+
     Route::post('ajaxGetPayType', 'AjaxController@ajaxGetPayType');
     Route::post('ajaxGetLabelPayType', 'AjaxController@ajaxGetLabelPayType');
     Route::post('ajaxGetLabelOthersPrice', 'AjaxController@ajaxGetLabelOthersPrice');
@@ -283,11 +283,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxApproveCouponCode', 'AjaxController@ajaxApproveCouponCode');
     Route::post('ajaxApproveGiftvoucherCode', 'AjaxController@ajaxApproveGiftvoucherCode');
     Route::post('ajaxCheckDBfrontstore', 'AjaxController@ajaxCheckDBfrontstore');
-    
+
     Route::post('ajaxGetDBfrontstore', 'AjaxController@ajaxGetDBfrontstore');
     Route::post('ajaxCheckAddAiCash', 'AjaxController@ajaxCheckAddAiCash');
     Route::post('ajaxGetDBAddAiCash', 'AjaxController@ajaxGetDBAddAiCash');
-    
+
     Route::post('ajaxCalPriceFrontstore01', 'AjaxController@ajaxCalPriceFrontstore01');
     Route::post('ajaxCalPriceFrontstore02', 'AjaxController@ajaxCalPriceFrontstore02');
     Route::post('ajaxCalGiftVoucherPrice', 'AjaxController@ajaxCalGiftVoucherPrice');
@@ -295,7 +295,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCalAicash', 'AjaxController@ajaxCalAicash');
 
     Route::post('ajaxCalAddAiCashFrontstore', 'AjaxController@ajaxCalAddAiCashFrontstore');
-    
+
     Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
     Route::post('ajaxCearCostFrontstore', 'AjaxController@ajaxCearCostFrontstore');
@@ -305,7 +305,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxSaveGiftvoucherCode', 'AjaxController@ajaxSaveGiftvoucherCode');
     Route::post('ajaxCalAicashAmt', 'AjaxController@ajaxCalAicashAmt');
-    
+
     Route::post('ajaxGiftVoucherSaveDate', 'AjaxController@ajaxGiftVoucherSaveDate');
 
 
@@ -404,8 +404,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('check_orders_list', 'Check_orders_listController');
     Route::post('check_orders_list/datatable', 'Check_orders_listController@Datatable')->name('check_orders_list.datatable');
 
-    Route::resource('commission_transfer', 'Commission_transferController');
+
     Route::post('commission_transfer/datatable', 'Commission_transferController@Datatable')->name('commission_transfer.datatable');
+    Route::get('commission_transfer/modal_commission_transfer','Commission_transferController@modal_commission_transfer')->name('commission_transfer.modal_commission_transfer');
+    Route::resource('commission_transfer', 'Commission_transferController');
 
     Route::resource('commission_aistockist', 'Commission_aistockistController');
     Route::post('commission_aistockist/datatable', 'Commission_aistockistController@Datatable')->name('commission_aistockist.datatable');
@@ -436,7 +438,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pick_warehouse_fifo', 'Pick_warehouse_fifoController');
     Route::post('pick_warehouse_fifo/datatable', 'Pick_warehouse_fifoController@Datatable')->name('pick_warehouse_fifo.datatable');
     Route::post('pick_warehouse_fifo/fifo', 'Pick_warehouse_fifoController@calFifo');
-    
+
 
     Route::resource('check_stock_account', 'Check_stock_accountController');
     Route::post('check_stock_account/datatable', 'Check_stock_accountController@Datatable')->name('check_stock_account.datatable');
@@ -541,7 +543,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('scan_qrcode', 'Scan_qrcodeController');
     Route::post('scan_qrcode/datatable', 'Scan_qrcodeController@Datatable')->name('scan_qrcode.datatable');
 
-	
+
 	#=======================================================================================================================================================
 
     Route::get('qrcode', function () {
@@ -549,7 +551,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     });
 
 
-    // }); 
+    // });
     #=======================================================================================================================================================
 
     Route::get('template/{any?}', 'TemplateController@index')->name('template');
@@ -562,8 +564,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 }); //route group backend
 
 Route::group(['prefix' => 'aboutfile', 'as' => 'aboutfile.'], function() {
-        // Route::post('excel-import-upload', 'backend\ExcelController@excelImportEmployeeUpload');               
-        Route::post('excel-import-upload', 'backend\ExcelController@excelExport');               
+        // Route::post('excel-import-upload', 'backend\ExcelController@excelImportEmployeeUpload');
+        Route::post('excel-import-upload', 'backend\ExcelController@excelExport');
 #===========================================================================
 }); //route group report
 

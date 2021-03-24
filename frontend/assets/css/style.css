@@ -6168,7 +6168,7 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .label-info {
-    background: linear-gradient(45deg, #00bcd4, #08e3ff)
+    background: linear-gradient(45deg, #19c261, #19c261)
 }
 
 .label-warning {
@@ -6240,7 +6240,7 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .bg-success {
-    background-color: #28a745 !important;
+    background-color: #19c261 !important;
     color: #fff
 }
 
@@ -6272,7 +6272,7 @@ a[data-toggle="lightbox"] .img-fluid {
 }
 
 .color-success {
-    background-color: #2ed8b6
+    background-color: #19c261
 }
 
 .color-inverse {

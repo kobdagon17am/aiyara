@@ -20,22 +20,22 @@ class CourseEventController extends Controller
   }
 
   public function index(){
- 
-   
+
     // $data = DB::table('dataset_orders_type')
     // ->where('status','=','1')
     // ->where('lang_id','=','1')
     // ->orderby('order')
-    // ->get(); 
+    // ->get();
 
 
     return view('frontend/course');
   }
 
-  public function modal_qr_ce(Request $request){
+  public static function modal_qr_ce(Request $request){
+
     $course_event_regis_id = $request->id;
 
-    $data_course_event_regis = DB::table('course_event_regis') 
+    $data_course_event_regis = DB::table('course_event_regis')
     ->where('id',$course_event_regis_id)
     ->first();
 
@@ -47,7 +47,7 @@ class CourseEventController extends Controller
        $qr = $course_event_regis_id.''.$random;
 
        $endata = date('Y-m-d H:i:s',strtotime("+1 day"));
-       $updated_qrcode = DB::table('course_event_regis') 
+       $updated_qrcode = DB::table('course_event_regis')
        ->where('id',$course_event_regis_id)
        ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
 
@@ -59,18 +59,18 @@ class CourseEventController extends Controller
     $qr = $course_event_regis_id.''.$random;
 
     $edata = date('Y-m-d H:i:s',strtotime("+1 day"));
-    $updated_qrcode = DB::table('course_event_regis') 
+    $updated_qrcode = DB::table('course_event_regis')
     ->where('id',$course_event_regis_id)
     ->update(['qr_code' => $qr,'qr_endate' => $edata ]);
   }
 
   $data =  DB::table('course_event_regis')
   ->select('course_event_regis.*','course_ticket_number.ticket_number')
-  ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=','course_event_regis.ticket_id') 
+  ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=','course_event_regis.ticket_id')
   ->where('course_event_regis.id','=',$course_event_regis_id)
   ->first();
 
-  return view('frontend/modal/modal_qr_ce',compact('data')); 
+  return view('frontend/modal/modal_qr_ce',compact('data'));
 }
 
 public function dt_course(Request $request){
@@ -90,8 +90,8 @@ public function dt_course(Request $request){
   if(empty($request->input('search.value')) ){
 
     $totalData =  DB::table('course_event_regis')
-    ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk') 
-    ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id') 
+    ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk')
+    ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
     ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
     ->count();
     $totalFiltered = $totalData;
@@ -101,14 +101,14 @@ public function dt_course(Request $request){
         //$dir = $request->input('order.0.dir');
 
     $course_event_regis = DB::table('course_event_regis')
-    ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc') 
+    ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc')
     ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
-    ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id') 
+    ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id')
     ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
-    ->offset($start) 
+    ->offset($start)
     ->limit($limit)
-    ->orderby('course_event_regis.updated_at','DESC') 
-    ->get(); 
+    ->orderby('course_event_regis.updated_at','DESC')
+    ->get();
 
 // dd($request->input('order_type'));
 
@@ -118,8 +118,8 @@ public function dt_course(Request $request){
    $order_type=$request->input('order_type');
 
    $totalData =  DB::table('course_event_regis')
-   ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk') 
-   ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id') 
+   ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk')
+   ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->count();
    $totalFiltered = $totalData;
@@ -129,14 +129,14 @@ public function dt_course(Request $request){
       //$dir = $request->input('order.0.dir');
 
    $course_event_regis = DB::table('course_event_regis')
-   ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc') 
+   ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc')
    ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
-   ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id') 
+   ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id')
    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
-   ->offset($start) 
+   ->offset($start)
    ->limit($limit)
-   ->orderby('course_event_regis.updated_at','DESC') 
-   ->get();  
+   ->orderby('course_event_regis.updated_at','DESC')
+   ->get();
  }
 
  $data = array();
@@ -181,16 +181,16 @@ public function dt_course(Request $request){
   $nestedData['price'] = '<b class="text-primary">'.number_format($value->ce_ticket_price).'</b>';
   $nestedData['pv'] =  '<b class="text-success">'.number_format($value->pv).'</b>';
 
-  // $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>'; 
+  // $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>';
   if($value->status_ce == 'Y' ){
 
    $status = '<button class="btn btn-sm btn-success btn-outline-success"><b style="color: #000">ผ่านกิจกรรม</b></button>';
 
  }else{
   $status = '<button class="btn btn-sm btn-warning btn-outline-warning"><b style="color: #000">ยังไม่ผ่านกิจกรรม</b></button>';
-} 
+}
 
-$nestedData['status'] = $status;  
+$nestedData['status'] = $status;
 
 $nestedData['qrcode'] = '<button class="btn btn-sm btn-primary" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> QR </button>';
 

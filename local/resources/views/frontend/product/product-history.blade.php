@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header p-4">
-                    <form method="POST" id="search-form">
+
 
                         <div class="col-md-12 col-lg-12">
                             <div class="row">
@@ -51,11 +51,11 @@
                                     <input class="form-control" type="date" id="e_date">
                                 </div>
                                 <div class="col-lg-1 col-md-1 p-1">
-                                    <button type="submit" class="btn btn-primary btn-block"> Seart </button>
+                                    <button id="search-form" class="btn btn-primary btn-block"> Seart </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+
                 </div>
                 <div class="card-block">
                     <div class="table-responsive dt-responsive">
@@ -238,7 +238,7 @@
                 ]
             });
 
-            $('#search-form').on('submit', function(e) {
+            $('#search-form').on('click', function(e) {
                 oTable.draw();
                 e.preventDefault();
             });

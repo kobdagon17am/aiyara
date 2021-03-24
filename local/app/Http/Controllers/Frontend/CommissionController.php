@@ -29,11 +29,11 @@ class CommissionController extends Controller
             ->where('customer_id_fk', '=',  Auth::guard('c_user')->user()->id )
             ->orderby('bonus_transfer_date', 'DESC')
             ->get();
-
         //$customer_data = Frontend::get_customer('8');
         //dd($db_commission_faststart);
         $sQuery = Datatables::of($db_commission_bonus_transfer);
         return $sQuery
+
 
         ->addColumn('bonus_transfer_date', function ($row) {
           return date('d/m/Y', strtotime($row->bonus_transfer_date));
@@ -84,7 +84,6 @@ class CommissionController extends Controller
             ->wheredate('transfer_date','=',$date)
             ->orderby('action_date','DESC')
             ->get();
-
 
         $total = DB::table('db_report_bonus_per_day')
         ->select(db::raw('sum(faststart) as faststart_total ,sum(tmb) as tmb_total,sum(booster) as booster_total

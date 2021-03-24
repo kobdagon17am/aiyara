@@ -52,6 +52,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Date</th>
+                                    <th>OrderCode</th>
                                     <th>Send</th>
                                     <th>Receive(UserName)</th>
                                     <th>Type</th>
@@ -112,8 +113,9 @@
                                             <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
                                         </div>
                                         <div class="col-md-6 text-right">
-                                            <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
-                                            </span>
+                                            {{-- <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
+                                            </span> --}}
+                                            <div id="pv_mt_active"></div>
                                         </div>
                                     </div>
 
@@ -123,8 +125,7 @@
                                             <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
                                         </div>
                                         <div class="col-md-6 text-right">
-                                            <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
-                                            </span>
+                                            <div id="pv_tv_active"></div>
                                         </div>
                                     </div>
 
@@ -218,8 +219,10 @@
 
                         document.getElementById("qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
 
+                        document.getElementById("pv_mt_active").innerHTML = data['pv_mt_active'];
+                        document.getElementById("pv_tv_active").innerHTML = data['pv_tv_active'];
 
-
+                        console.log(data);
 
                         $("#large-Modal").modal();
                         //alert(data['status']);
@@ -299,7 +302,9 @@
                             "data": "order"
                         },
                         {
-                            "data": "create_at"
+                            "data": "created_at"
+                        },
+                        {"data": "order_code"
                         },
                         {
                             "data": "customer_id"

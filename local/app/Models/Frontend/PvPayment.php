@@ -399,8 +399,8 @@ class PvPayment extends Model
 						->where('id',$customer_id)
 						->update(['pv_aipocket' => $add_pv_aipocket]);
 
-						$update_ai_pocket = DB::table('ai_pocket')
-						->where('order_id',$order_id)
+						$update_ai_stockist = DB::table('ai_stockist')
+						->where('order_id_fk',$order_id)
 						->update(['status' => 'success','pv_aipocket' => $add_pv_aipocket]);
 
 						$upline_type = $data_user->line_type;

@@ -15,12 +15,12 @@ use App\Models\Frontend\DirectSponsor;
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card"> 
+        <div class="card">
 
            <div class="card-header">
             <h4 class="m-b-10">ข้อมูลแนะนำตรงทั้งหมด</h4>
 
-        </div> 
+        </div>
         <div class="card-block">
 
             <div class="dt-responsive table-responsive">
@@ -73,7 +73,7 @@ use App\Models\Frontend\DirectSponsor;
                         .$check_active_mt['date']."</b></span>";
 
                     }
-                    
+
                 }else{
                     $active_mt = "<span class='label label-inverse-info-border'><b> Not Active </b></span>";
                 }
@@ -118,19 +118,19 @@ use App\Models\Frontend\DirectSponsor;
 </div>
 
 </div>
-</div> 
+</div>
 </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card"> 
+        <div class="card">
 
            <div class="card-header">
-            <h4 class="m-b-10">ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker) 
-                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน 3 คน</h4>
+            <h4 class="m-b-10">ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker)
+                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน 0 คน</h4>
 
-            </div> 
+            </div>
             <div class="card-block">
 
                 <div class="dt-responsive table-responsive">
@@ -187,7 +187,7 @@ use App\Models\Frontend\DirectSponsor;
                          -
                          @else
                          {{ $value_sponser->dt_package }}
-                         @endif 
+                         @endif
                      </td>
                      <td style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($value_sponser->created_at)) }}</b></span></td>
 
@@ -224,7 +224,7 @@ use App\Models\Frontend\DirectSponsor;
  </div>
 
 </div>
-</div> 
+</div>
 </div>
 </div>
 

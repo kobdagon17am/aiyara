@@ -27,8 +27,7 @@
     </div>
 </div> --}}
 <div class="card-block">
-    < div class="table-responsive dt-responsive">
-
+    <div class="table-responsive dt-responsive">
         <table id="history" class="table table-striped table-bordered nowrap">
             <thead>
                 <tr>
@@ -45,7 +44,7 @@
             </thead>
 
         </table>
-    </>
+    </div>
     <div id="modal_qr"></div>
 
 </div>
@@ -79,8 +78,7 @@ $(document).ready(function() {
 
 function qrcode(id) {
     $.ajax({
-            url: '{{ route('
-            modal_qr_ce ')}}',
+            url: '{{ route('modal_qr_ce')}}',
             type: 'GET',
             data: {
                 id: id

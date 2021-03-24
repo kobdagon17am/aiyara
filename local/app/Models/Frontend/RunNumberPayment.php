@@ -41,6 +41,31 @@ class RunNumberPayment extends Model
 		return  $code_order;
 	}
 
+  public static function run_number_aistockis(){
+
+		$id = DB::table('ai_stockist')
+		->where('set_transection_code','=',date('ym'))
+		->orderby('id','desc')
+		->first();
+
+
+		if(@$id->transection_code){
+			$last_code = $id->transection_code;
+			$code = substr($last_code,-5);
+			$last_code = $code + 1;
+
+			$num_code = substr("00000".$last_code, -5);
+			$code_order = 'T'.date('ymd').''.$num_code;
+
+		}else{
+			$last_code = 1;
+			$num_code = substr("00000".$last_code, -5);
+			$code_order = 'T'.date('ymd').''.$num_code;
+		}
+
+		return  $code_order;
+	}
+
 
 	public static function run_payment_code($business_location_id,$type_order){
 		//R = Payment
@@ -78,7 +103,7 @@ class RunNumberPayment extends Model
 
 		$resule = ['status'=>'success','message'=>'success','code_order'=>$code_order];
 		return  $resule;
- 
+
 	}
 
 

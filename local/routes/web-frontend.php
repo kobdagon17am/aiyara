@@ -166,7 +166,9 @@ Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash'
 
 
 Route::get('course','Frontend\CourseEventController@index')->name('course');
+
 Route::get('modal_qr_ce','Frontend\CourseEventController@modal_qr_ce')->name('modal_qr_ce');
+
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
 
 Route::get('direct-sponsor','Frontend\DirectSponsorController@index')->name('direct-sponsor');
@@ -203,7 +205,6 @@ Route::get('salepage/page-1/{user_name?}','Frontend\SalepageController@salepage'
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');
 Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
-
 
 Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
 

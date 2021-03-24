@@ -5,9 +5,6 @@ use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 use App\Models\Db_Orders;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-
-DB::BeginTransaction();
-
 class PaymentSentAddressOrder extends Model
 {
 
@@ -114,7 +111,7 @@ class PaymentSentAddressOrder extends Model
 
             } else {
                 $resule = ['status' => 'fail', 'message' => 'Orderstatus Not Type'];
-                DB::rollback();
+
                 return $resule;
             }
 
@@ -124,7 +121,7 @@ class PaymentSentAddressOrder extends Model
             return $resule;
 
         } catch (Exception $e) {
-          DB::rollback();
+
             $resule = ['status' => 'fail', 'message' => 'Order Update Fail', 'id' => $insert_db_orders->id];
             return $resule;
         }

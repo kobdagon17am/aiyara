@@ -501,7 +501,6 @@ public static function check_line_aipocket($username){
 
   //dd($data_user);
 
-
 	if(!empty($data_user)){
 
 		$id_username = $data_user->id;

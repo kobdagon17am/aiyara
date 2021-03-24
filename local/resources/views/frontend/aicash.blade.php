@@ -1,4 +1,4 @@
-  
+
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 
@@ -30,7 +30,7 @@
         <div class="form-group row">
           <div class="col-md-6 m-t-5">
             <form action="{{ route('cart_payment_aicash') }}" id="cart_payment_aicash" method="post">
-              @csrf 
+              @csrf
               <div class="input-group input-group-button">
                 <input type="text" id="price" name="price" class="form-control autonumber" data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
                 <span class="input-group-addon btn btn-primary" onclick="add_aicash()">
@@ -53,7 +53,7 @@
       <div class="card-header">
         <h5>ประวัติการเติม Ai-Cash</h5>
         {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
-      </div>  
+      </div>
 
       <div class="card-block">
         <div class="dt-responsive table-responsive">
@@ -72,18 +72,19 @@
             <tbody>
               <?php $i = 0; ?>
               @foreach($ai_cash as $value)
+
               <?php $i++; ?>
               <tr>
                 <td>{{ $i }}</td>
                 <td><span class="label label-inverse-info-border">{{ date('d/m/Y H:i:s',strtotime($value->created_at)) }}</span></td>
 
-                <?php 
+                <?php
 
                 if( $value->status == 'success'){
                    $status ='<span class="label label-inverse-success"><b style="color: #000">'.$value->order_status.'</b></span>';
- 
+
                 }elseif($value->status == 'panding'){
-                  
+
                  $status ='<span class="label label-inverse-warning"><b style="color: #000">'.$value->order_status.'</b></span>';
                }else{
                   $status ='<span class="label label-inverse-warning"><b style="color: #000">'.$value->order_status.'</b></span>';
@@ -151,7 +152,7 @@
       Swal.fire({
         icon: 'error',
         title: 'กรุณาใส่จำนวนเงินที่ต้องการ',
-              // text: 'Something went wrong!', 
+              // text: 'Something went wrong!',
               // footer: '<a href>Why do I have this issue?</a>'
             })
 

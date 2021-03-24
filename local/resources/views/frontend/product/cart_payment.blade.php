@@ -38,7 +38,7 @@
                          @elseif($bill['type'] == 3)
                              <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติท่องเที่ยว</h5>
                          @elseif($bill['type'] == 4)
-                             <h5>รายการสั่งซื้อเพื่อเติม AiPocket</h5>
+                             <h5>รายการสั่งซื้อเพื่อเติม Ai-Stockist</h5>
                          @elseif($bill['type'] == 5)
                              <h5>Gift Voucher</h5>
                          @elseif($bill['type'] == 6)
