@@ -174,6 +174,101 @@
 
  </div>
 
+
+
+                <div class="myBorder">
+                  <div class="form-group row ">
+                    <div class="col-md-10 d-flex  ">
+                      <label class="col-5" ><i class="bx bx-play"></i> สแกนสินค้ารายชิ้น บันทึก QR-CODE : </label>
+                      <div class="col-md-5">
+                        <input type="text" class="form-control" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus >
+                      </div>
+                      <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%" >
+                        <i class="bx bx-search align-middle "></i> &nbsp;&nbsp;&nbsp;SCAN&nbsp;&nbsp;&nbsp;
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="myBorder">
+                  <div class="form-group row">
+                          <div class="col-md-12">
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจงรายการสินค้าตามบิล </span>
+                          </div>
+                        </div>
+                </div>
+
+
+
+   <div class="myBorder" style="background-color: #ffffcc;" >
+        <div class="container">
+          
+
+              <div class="" style="background-color: #ccffff;" >
+                <div class="container">
+                  
+                  <div class="col-12">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <div class="form-group row">
+                          <label for="receipt" class="col-md-3 col-form-label">ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY :</label>
+                          <div class="col-md-3" style="" >
+                            <input type='button' name="submit" class="btn btn-primary btnExportElsx " value='&nbsp;&nbsp;&nbsp;EXPORT EXCEL&nbsp;&nbsp;&nbsp;'>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+          <div class="col-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+      
+          <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
+          {{ csrf_field() }}
+
+                  <div class="form-group row">
+                    
+                    <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) จาก KERRY :</label>
+                    <div class="col-md-3">
+                      <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
+                    </div>
+                    <div class="col-md-3" style="" >
+                      <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='IMPORT'>
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                       <input type='button' class="btn btn-danger btnClearImport " value='Clear data Import' >
+                    </div>
+                    
+                  </div>
+                  
+                  @if(Session::has('message'))
+                  <div class="form-group row ">
+                    <label for="receipt" class="col-md-2 col-form-label"></label>
+                    <div class="col-md-6 ">
+                      <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
+                    </div>
+                  </div>
+                  @endif
+          
+          </form>
+
+                  <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
+
+                <center><input type='button' class="btn btn-primary " value='Map Consignment Code' > 
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
               <div class="myBorder">
                       <div style="">
                         <div class="form-group row">
@@ -203,7 +298,6 @@
                       </div>
                    
                     </div>
-
 
 
             </div>

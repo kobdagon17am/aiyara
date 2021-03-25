@@ -158,6 +158,23 @@
                           </label>
                           @ENDIF
 
+                           @IF(@$row->isSentmoney=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_sentmoney}}">
+                            <input class="checks" type="checkbox" name="can_sentmoney[]" {!! (@$menu_admin->can_sentmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ > ส่งเงิน
+                          </label>
+                          @ENDIF
+
+                          @IF(@$row->isGetmoney=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_getmoney}}">
+                            <input class="checks" type="checkbox" name="can_getmoney[]" {!! (@$menu_admin->can_getmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ > รับเงิน
+                          </label>
+                          @ENDIF
+
+
             				@ELSE
 
                         <label class="checkbox-inline" style="display: none;">

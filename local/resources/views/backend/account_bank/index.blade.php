@@ -20,31 +20,27 @@
 
   <?php 
       $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+    }else{
+      $role_group_id = \Auth::user()->role_group_id_fk;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      $sU = @$menu_permit->u==1?'':'display:none;';
+      $sD = @$menu_permit->d==1?'':'display:none;';
+    }
    ?>
+   
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-            <!--         <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าแจ้ง" name="topics_reported">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
+
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
@@ -110,7 +106,6 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-center w200 '},
-            
             {data: 'txt_account_name', title :'<center>ชื่อบัญชี </center>', className: 'text-center'},
             {data: 'txt_bank_name', title :'<center>ธนาคาร</center>', className: 'text-center'},
             {data: 'txt_bank_number', title :'<center>เลขบัญชี </center>', className: 'text-center'},

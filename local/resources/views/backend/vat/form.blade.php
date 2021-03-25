@@ -33,20 +33,42 @@
 
                       <div class="myBorder">
 
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-3 col-form-label">Business Location :</label>
+                                <div class="col-md-9">
+                                      <select name="business_location_id_fk" class="form-control select2-templating " required >
+                                        <option value="">-Business Location-</option>
+                                        @if(@$sBusiness_location)
+                                        @foreach(@$sBusiness_location AS $r)
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >{{$r->txt_desc}}</option>
+                                        @endforeach
+                                        @endif
+                                      </select>
+                                </div>
+                            </div>
+
                              <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">Vat (ข้อความ) :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow->txt_desc }}" name="txt_desc"  >
+                                <label for="" class="col-md-3 col-form-label">Vat :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->vat }}" name="vat"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-2 col-form-label">Vat (ค่าภาษี) :</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" value="{{ @$sRow->txt_value }}" name="txt_value"  >
+                                <label for="" class="col-md-3 col-form-label">Tax :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->tax }}" name="tax"  >
                                 </div>
                             </div>
 
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-3 col-form-label">นิติบุคคล :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->juristic_person }}" name="juristic_person"  >
+                                </div>
+                            </div>
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">

@@ -29,12 +29,16 @@
       $sC = '';
       $sU = '';
       $sD = '';
+      $can_sentmoney = '1';
+      $can_getmoney = '1';
     }else{
       $role_group_id = \Auth::user()->role_group_id_fk;
       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
       $sC = @$menu_permit->c==1?'':'display:none;';
       $sU = @$menu_permit->u==1?'':'display:none;';
       $sD = @$menu_permit->d==1?'':'display:none;';
+      $can_sentmoney = @$menu_permit->can_sentmoney==1?'1':'0';
+      $can_getmoney = @$menu_permit->can_getmoney==1?'1':'0';
     }
    ?>
 
@@ -103,8 +107,16 @@
 
                 </div>
 
+                
+                <span style="font-weight: bold;"> <i class="bx bx-play"></i> รวมรายการชำระค่าสินค้า </span>
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
+
+
+                <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash </span>
+                <table id="data-table-ai_cash" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
 
             </div>
         </div>
@@ -116,6 +128,15 @@
 @section('script')
 
 <script>
+
+  function commaSeparateNumber(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())) {
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+    }
+    return val;
+}
+
+
 var sU = "{{@$sU}}"; 
 var sD = "{{@$sD}}";
 var oTable;
@@ -128,7 +149,7 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
+        // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
           url: '{{ route('backend.check_money_daily.datatable') }}',
@@ -158,22 +179,38 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'employee_code', title :'<center>รหัสพนักงาน </center>', className: 'text-left'},
-            {data: 'employee_name', title :'<center>ชื่อพนักงาน </center>', className: 'text-left'},
-            {data: 'total_balance', title :'<center>ยอดเงินรวม</center>', className: 'text-left'},
-            {data: 'cash', title :'<center>เงินสด</center>', className: 'text-left'},
-            {data: 'transfer_money', title :'<center>เงินโอน</center>', className: 'text-left'},
-            {data: 'credit_card', title :'<center>บัตรเครดิต</center>', className: 'text-left'},
-            {data: 'wallet', title :'<center>PV Wallet</center>', className: 'text-left'},
-            {data: 'gift_voucher', title :'<center>Gift Voucher</center>', className: 'text-left'},
-            {data: 'giveaway_voucher', title :'<center>Voucher ที่แถม</center>', className: 'text-left'},
-            {data: 'billing_date', title :'<center>วันที่ออกบิล</center>', className: 'text-left'},
-            // {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
-            //    return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
-            // }},
+            {data: 'action_user_name', title :'<center>พนักงานขาย </center>', className: 'text-left'},
+            {data: 'cash_pay', title :'<center>เงินสด </center>', className: 'text-center'},
+            {data: 'aicash_price', title :'<center>Ai-cash </center>', className: 'text-center'},
+            {data: 'transfer_price', title :'<center>เงินโอน </center>', className: 'text-center'},
+            {data: 'credit_price', title :'<center>เครดิต </center>', className: 'text-center'},
+            {data: 'fee_amt', title :'<center>ค่าธรรมเนียม </center>', className: 'text-center'},
+            {data: 'shipping_price', title :'<center>ค่าขนส่ง </center>', className: 'text-center'},
+            {data: 'total_price', title :'<center>รวมทั้งสิ้น </center>', className: 'text-center'},
+            {data: 'approve_status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              if(d=="รออนุมัติ"){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              }else if(d=="ไม่อนุมัติ"){
+                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">'+d+'</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              }
+            }},
+            {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
+        "columnDefs": [
+            {
+                "render": function (data, type, row) {
+                     return commaSeparateNumber(data);
+                },
+                "targets": [2,3,4,5,6,7,8]
+            },
+        ],
         rowCallback: function(nRow, aData, dataIndex){
+
+          var info = $(this).DataTable().page.info();
+          $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
@@ -181,11 +218,11 @@ $(function() {
 
             $('td:last-child', nRow).html('-');
 
-          // $('td:last-child', nRow).html(''
-          //   + '<a href="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-          //   + '<a href="javascript: void(0);" data-url="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          // ).addClass('input');
-
+          $('td:last-child', nRow).html(''
+            + '<a href="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+          
+          ).addClass('input');
+//   + '<a href="javascript: void(0);" data-url="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           }
 
         }
@@ -194,6 +231,110 @@ $(function() {
       oTable.draw();
     });
 });
+
+
+
+var sU = "{{@$sU}}"; 
+var sD = "{{@$sD}}";  
+var oTable;
+$(function() {
+    oTable = $('#data-table-ai_cash').DataTable({
+    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        scroller: true,
+        scrollCollapse: true,
+        scrollX: true,
+        ordering: false,
+        // scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 25,
+        ajax: {
+          url: '{{ route('backend.add_ai_cash.datatable') }}',
+          data: function ( d ) {
+            d.Where={};
+            $('.myWhere').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Where[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Like={};
+            $('.myLike').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Like[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Custom={};
+            $('.myCustom').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Custom[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            oData = d;
+          },
+          method: 'POST'
+        },
+
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left'},
+            {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
+            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
+            {data: 'pay_type_id', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
+            {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
+             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              if(d=="รออนุมัติ"){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              }else if(d=="ไม่อนุมัติ"){
+                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">'+d+'</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              }
+            }},
+            {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+            // {data: 'aicash_amt',   title :'ยอด Ai-Cash ', className: 'text-center ',render: function(d) {
+            //     return (parseFloat(d)>0)?d:'-';
+            // }},
+            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
+
+          var info = $(this).DataTable().page.info();
+          $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+          if(aData['approve_status']==4){
+            for (var i = 0; i < 6; i++) {
+              $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
+            }
+
+            $('td:last-child', nRow).html('-ยกเลิก-');
+
+          }else{
+
+                 if(sU!=''&&sD!=''){
+                          $('td:last-child', nRow).html('-');
+                      }else{ 
+
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'/edit?fromAicash" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                      ).addClass('input');
+
+                    }
+
+          }
+
+     
+
+        }
+    });
+    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+      oTable.draw();
+    });
+});
+
+
+
+
 </script>
 
 

@@ -18,8 +18,7 @@
 </div>
 <!-- end page title -->
   <?php 
-    $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
+      $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
       $sC = '';
@@ -33,6 +32,7 @@
       $sD = @$menu_permit->d==1?'':'display:none;';
     }
    ?>
+   
 <div class="row">
     <div class="col-12">
         <div class="card">

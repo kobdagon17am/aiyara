@@ -17,9 +17,10 @@ class VatController extends Controller
 
    public function create()
     {
-      return View('backend.vat.form');
-    }
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+       return View('backend.vat.form')->with(array('sBusiness_location'=>$sBusiness_location) );
 
+    }
     public function store(Request $request)
     {
       return $this->form();
@@ -28,8 +29,10 @@ class VatController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Vat::find($id);
-       return View('backend.vat.form')->with(array('sRow'=>$sRow, 'id'=>$id) );
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       return View('backend.vat.form')->with(array('sRow'=>$sRow, 'id'=>$id,'sBusiness_location'=>$sBusiness_location) );
     }
+
 
     public function update(Request $request, $id)
     {
@@ -46,9 +49,13 @@ class VatController extends Controller
           }else{
             $sRow = new \App\Models\Backend\Vat;
           }
-           
-          $sRow->txt_desc    = request('txt_desc');
-          $sRow->txt_value    = request('txt_value');
+
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
+          $sRow->vat    = request('vat');
+          $sRow->tax    = request('tax');
+          $sRow->juristic_person    = request('juristic_person');
+
+          $sRow->action_user    = \Auth::user()->id;
                     
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
@@ -77,13 +84,25 @@ class VatController extends Controller
       $sTable = \App\Models\Backend\Vat::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('Crm_topic', function($row) {
-      //   $sCrm_topic = \App\Models\Backend\Vat_topic::where('id', $row->Crm_topic_id)->get();
-      //   return $sCrm_topic[0]->txt_desc;
+       ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      }) 
+       ->addColumn('action_user', function($row) {
+        if(@$row->action_user!=''){
+             $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
+             return @$P[0]->name;
+        }else{
+             return '-';
+        }
+      })        
+      // ->addColumn('updated_at', function($row) {
+      //   return is_null($row->updated_at) ? '-' : $row->updated_at;
       // })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
-      })
       ->make(true);
     }
 

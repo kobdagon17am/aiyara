@@ -402,6 +402,7 @@ class FrontstoreController extends Controller
            'sAccount_bank'=>$sAccount_bank,           
            'sPay_type'=>$sPay_type,           
            'shipping_special'=>$shipping_special,           
+           'sFrontstoreDataTotal'=>$sFrontstoreDataTotal,           
         ) );
     }
 
@@ -412,19 +413,37 @@ class FrontstoreController extends Controller
           // dd($request->all());
    
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
-              $table = 'db_frontstore';
-              $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-              $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table 
-                WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                order by invoice_code desc limit 1 ");
-              if($inv){
-                  $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+
+              // return request('pay_type_id');
+              // dd();
+
+              // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
+              if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
+
+                 $sRow->approve_status = 0  ;
+                 $sRow->invoice_code = '' ;
+
+              }else if(request('pay_type_id')==5 || request('pay_type_id')==6 || request('pay_type_id')==7 || request('pay_type_id')==9){
+                $sRow->approve_status = 2  ;
               }else{
-                  $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-              }
-              // dd($invoice_code);
-              if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                $sRow->invoice_code = $invoice_code;
+
+                  $table = 'db_frontstore';
+                  $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+                  $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table 
+                    WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
+                    order by invoice_code desc limit 1 ");
+                  if($inv){
+                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+                  }else{
+                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
+                  }
+                  // dd($invoice_code);
+                  if($sRow->invoice_code==''||$sRow->invoice_code==0){
+                    $sRow->invoice_code = $invoice_code;
+                  }
+
+                    $sRow->approve_status = 1 ;
+
               }
 
 
@@ -444,8 +463,6 @@ class FrontstoreController extends Controller
               $sRow->cash_price    = str_replace(',','',request('cash_price'));
 
               // dd(str_replace(',','',request('cash_price')));
-
-
 
               $sRow->shipping_price    = str_replace(',','',request('shipping_price'));
               $sRow->fee    =  str_replace(',','',request('fee'));
@@ -606,12 +623,13 @@ class FrontstoreController extends Controller
                   WHERE
                   db_frontstore.invoice_code='".@$request->invoice_code."' ");
 
+                // dd($request);
+               $ch_aicash_02 = DB::select(" select * from db_frontstore where id=".$request->frontstore_id." ");
 
-               $ch_aicash_02 = DB::select(" select * from db_frontstore where customers_id_fk=".$request->customers_id_fk." ");
+               // dd($ch_aicash_02[0]->member_id_aicash); 
 
             // เช็คเรื่องการตัดยอด Ai-Cash
                $ch_aicash_01 = DB::select(" select * from customers where id=".$ch_aicash_02[0]->member_id_aicash." ");
-
 
                // dd($ch_aicash_02[0]->aicash_price);
                // ถ้าค่าที่ส่งมาตัด รวมกับ ค่าเดิม แล้วเกินค่าเดิม ให้ลบกันได้เลย แต่ถ้า รวมแล้วน่อยกว่า ให้เอาค่าก่อนหน้า มาบวกก่อน ค่อยลบออก 
@@ -624,7 +642,8 @@ class FrontstoreController extends Controller
                  }
                }
 
-             return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
+             // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
+             return redirect()->to(url("backend/frontstore"));
 
         }else{
 
@@ -754,7 +773,7 @@ class FrontstoreController extends Controller
 
             $sTable = DB::select(" 
 
-                SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type
+                SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price
                 FROM db_frontstore
                 Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
                 WHERE 1
@@ -772,12 +791,12 @@ class FrontstoreController extends Controller
                 db_add_ai_cash.id as inv_no,approve_status
                 ,'',
                 db_add_ai_cash.updated_at as ud2,
-                'ai_cash' as pay_type
+                'ai_cash' as pay_type,cash_price,credit_price,fee_amt,transfer_price,0 as aicash_price,total_amt as total_price
                 FROM db_add_ai_cash
                 WHERE 1 AND db_add_ai_cash.approve_status<>4
                 $w1
 
-                ORDER BY action_date DESC
+                ORDER BY updated_at DESC
 
               ");
 
@@ -822,6 +841,24 @@ class FrontstoreController extends Controller
             return number_format($row->shipping_price,0);
           }
       }) 
+      ->addColumn('tooltip_price', function($row) {
+        // cash_pay,credit_price,fee_amt,transfer_price,aicash_price
+          $tootip_price = '';
+          if(@$row->cash_price!=0){
+             $tootip_price .= ' เงินสด: '.$row->cash_price;
+          }
+          if(@$row->credit_price!=0){
+             $tootip_price .= ' เครดิต: '.$row->credit_price.' ค่าธรรมเนียม :'.$row->fee_amt;
+          }  
+          if(@$row->transfer_price!=0){
+             $tootip_price .= ' เงินโอน: '.$row->transfer_price;
+          }
+          if(@$row->aicash_price!=0){
+             $tootip_price .= ' Ai-Cash: '.$row->aicash_price;
+          }
+          return $tootip_price;
+
+      })       
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

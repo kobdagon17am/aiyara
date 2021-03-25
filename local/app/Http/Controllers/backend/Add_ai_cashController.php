@@ -67,7 +67,21 @@ class Add_ai_cashController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
-      return $this->form($id);
+      if(isset($request->approved)){
+          // dd($request->all());
+            $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
+            $sRow->approver = \Auth::user()->id;
+            $sRow->approve_status = $request->approve_status ;
+            $sRow->approve_date = date('Y-m-d');
+            $sRow->note = $request->note;
+            $sRow->save();
+
+            return redirect()->to(url("backend/add_ai_cash/".$request->id."/edit"));
+
+      }else{
+           return $this->form($id);
+      }
+      
     }
 
    public function form($id=NULL)
@@ -80,25 +94,48 @@ class Add_ai_cashController extends Controller
           }else{
             $sRow = new \App\Models\Backend\Add_ai_cash;
           }
-
-          if(request('pay_type_id')!=''){
-
-          //    if(request('save_new')==1){
-          //       DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-          //    }
-
-          //    if(request('save_update')==1){
-          //       if($sRow->aicash_amt!=request('aicash_amt')){
-          //         DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-          //       }
-          //   }
-
-         
-
-              DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".str_replace(',','',request('aicash_amt')).") WHERE (id='".request('customer_id_fk')."') ");
-
+/*
+1 เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+*/
+            // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
+            if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
+               $sRow->approve_status = 0  ;
+            }else if(request('pay_type_id')==5 || request('pay_type_id')==6 || request('pay_type_id')==7 || request('pay_type_id')==9){
+              $sRow->approve_status = 2  ;
+            }else{
+              $sRow->approve_status = 1 ;
             }
 
+           if(request('pay_type_id')!=''){
+              if(request('save_update')==1){
+
+                if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
+                  // เป็นการโอนจะยังไม่ทำต่อจนกว่าจะผ่านการอนุมัติก่อน
+                }else{
+                   DB::select(" 
+                    UPDATE
+                    customers
+                    Inner Join db_add_ai_cash ON customers.id = db_add_ai_cash.customer_id_fk
+                    SET customers.ai_cash=(customers.ai_cash + ".str_replace(',','',request('aicash_amt')).")
+                    WHERE customers.id='".request('customer_id_fk')."' AND db_add_ai_cash.upto_customer_status=0 ;
+                 ");
+
+                  DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".request('customer_id_fk')."' ");
+                }
+
+                 
+              }
+           }
           // dd(str_replace(',','',request('fee_amt')));
 
           $sRow->customer_id_fk    = request('customer_id_fk');
@@ -132,7 +169,7 @@ class Add_ai_cashController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
-          DB::select(" UPDATE db_add_ai_cash SET total_amt=(aicash_amt + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
+          DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
 
           \DB::commit();
 
@@ -178,8 +215,18 @@ class Add_ai_cashController extends Controller
       
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Add_ai_cash::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+
+      if(!empty($req->id)){
+
+        $sTable = \App\Models\Backend\Add_ai_cash::where('id',$req->id);
+
+      }else{
+
+        $sTable = \App\Models\Backend\Add_ai_cash::search()->orderBy('id', 'asc');
+
+      }
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
@@ -213,7 +260,29 @@ class Add_ai_cashController extends Controller
         }else{
           return '';
         }
-      })          
+      })   
+      ->addColumn('status', function($row) {
+        // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ
+          if($row->approve_status==1){
+            return 'อนุมัติ';
+          }else if($row->approve_status==2){
+            return 'รอชำระ';
+          }else if($row->approve_status==3){
+            return 'รอจัดส่ง';
+          }else if($row->approve_status==4){
+            return 'ยกเลิก';
+          }else if($row->approve_status==5){
+            return 'ไม่อนุมัติ';
+          }else if($row->approve_status==9){
+            return 'สำเร็จ';
+          }else{
+            return 'รออนุมัติ';
+          }
+      })  
+      ->addColumn('action_date', function($row) {
+          $d = strtotime($row->updated_at);
+          return date("d/m/", $d).(date("Y", $d)+543);
+      })      
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

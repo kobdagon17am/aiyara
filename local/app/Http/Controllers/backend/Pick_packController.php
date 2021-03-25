@@ -145,9 +145,24 @@ class Pick_packController extends Controller
         }
       })
       ->addColumn('packing_code', function($row) {
+
+        $array = '';
+
         if(@$row->packing_code!=''){
-             return "P".sprintf("%05d",@$row->packing_code);
+             $array = "P".sprintf("%05d",@$row->packing_code);
         }
+
+        $array1 = array();
+        $rs = DB::table('db_delivery')->where('packing_code',$row->packing_code)->get();
+        foreach ($rs as $key => $value) {
+            if(!empty(@$value->receipt)){
+                array_push($array1, @$value->receipt);
+            }
+        }
+          
+          $array2 = implode(',', $array1);
+          return "(".$array."),".$array2;
+
       })
       ->addColumn('packing_id', function($row) {
         if(@$row->packing_code!=''){

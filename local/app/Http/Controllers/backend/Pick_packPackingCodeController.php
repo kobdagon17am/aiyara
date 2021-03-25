@@ -72,27 +72,22 @@ class Pick_packPackingCodeController extends Controller
         return "P2".sprintf("%05d",$row->id);
       })      
       ->addColumn('receipt', function($row) {
-            $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+         // กรณีไม่เป็น packing
+        if($row->packing_type==1){
+            $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->get();
             $array = array();
-            $delivery_id = array();
             if(@$DP){
               foreach ($DP as $key => $value) {
                 $rs = DB::table('db_delivery')->where('status_pack',"<>","1")->where('id',$value->delivery_id_fk)->get();
                 if(!empty(@$rs[0]->receipt)){
                   array_push($array, @$rs[0]->receipt);
                 }
-                array_push($delivery_id, $value->delivery_id_fk);
               }
-
-              $rs_pack = DB::table('db_delivery')->where('status_pick_pack',"=","1")->where('packing_code',"<>","0")->whereIn('id',$delivery_id)->limit(1)->get();
-              foreach ($rs_pack as $key => $value) {
-                array_push($array,  "P1".sprintf("%05d",@$value->packing_code));
-              }
-
               $array1 = implode(',', $array);
-      
               return $array1;
+             }
             }
+
       })
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();

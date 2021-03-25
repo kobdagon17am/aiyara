@@ -40,18 +40,14 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-            <!--         <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าแจ้ง" name="topics_reported">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
+
                   </div>
 
-             <!--      <div class="col-4 text-right" style="{{@$sC}}">
+                  <div class="col-4 text-right" style="{{@$sC}}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.vat.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
-                  </div> -->
+                  </div> 
 
                 </div>
 
@@ -109,9 +105,12 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'txt_desc', title :'<center>VAT (ข้อความ) </center>', className: 'text-center'},
-            {data: 'txt_value', title :'<center>VAT (ค่าภาษี) </center>', className: 'text-center'},
-            {data: 'created_at', title :'<center>วันที่สร้าง</center>', className: 'text-center'},
+            {data: 'business_location', title :'BUSINESS LOCATION', className: 'text-center w200 '},
+            {data: 'vat', title :'<center>VAT (%)</center>', className: 'text-center'},
+            {data: 'tax', title :'<center>TAX (%)</center>', className: 'text-center'},
+            {data: 'juristic_person', title :'<center>นิติบุคคล (%)</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>ผู้ดำเนินการ</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>อัพเดต</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){

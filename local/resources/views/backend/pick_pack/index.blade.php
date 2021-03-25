@@ -48,11 +48,11 @@
     .border-left-0 {height: 67%;}
 
 
-  .tooltip_shipping {
+  .tooltip_packing {
     position: relative ;
   }
-  .tooltip_shipping:hover::after {
-    content: "Shipping Price" ;
+  .tooltip_packing:hover::after {
+    content: "Packing" ;
     position: absolute ;
     /*top: 0.5em ;*/
     left: -4em ;
@@ -291,73 +291,6 @@
 </div> <!-- end row -->
 
 
-
-
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form id="frm-example" action="{{ route('backend.pick_pack.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-       	 <form id="frm-example" action="{{ route('backend.pick_pack.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr_edit" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result_edit"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
 @endsection
 
 @section('script')
@@ -415,11 +348,17 @@ $(function() {
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                  {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
+                  {data: 'id', title :'พิมพ์', className: 'text-center '},
                   {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
                     if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -442,22 +381,23 @@ $(function() {
               },
 
               rowCallback: function(nRow, aData, dataIndex){
-
-                  // $('td:last-child', nRow).html(''
-                  //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  //     ).addClass('input');
-
-                  if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(4)', nRow).html(aData['packing_code']).addClass('input');
-                 }
-
-                if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+ 
+                 if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
                         '<span class="tooltip_packing badge badge-danger font-size-14">P</span>');
+
+                      if(aData['packing_code']){
+                            $x= aData['packing_code'].replace(/ *, */g, '<br>');
+                        }else{
+                          $x='';
+                        }
+                      $('td:eq(4)', nRow).html($x).addClass('input');
+
                  }else{
                       $("td:eq(2)", nRow).html('');
                  }
 
+   
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
 
@@ -566,7 +506,13 @@ $(function() {
                   // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
                   //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
                   // }},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                  {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
@@ -638,7 +584,7 @@ $(function() {
                  // Create a hidden element 
                 $('#last_form').after(
                      $('<input>')
-                        .attr('type', 'hidden')
+                        .attr('type', 'text')
                         .attr('name', 'row_id[]')
                         .val(rowId)
                  );
@@ -707,7 +653,7 @@ $(function() {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
-                            return '-';
+                            return '';
                           }
                       }},
                       {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
