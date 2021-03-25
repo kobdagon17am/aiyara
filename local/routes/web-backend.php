@@ -290,6 +290,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxCalPriceFrontstore01', 'AjaxController@ajaxCalPriceFrontstore01');
     Route::post('ajaxCalPriceFrontstore02', 'AjaxController@ajaxCalPriceFrontstore02');
+    Route::post('ajaxCalPriceFrontstore03', 'AjaxController@ajaxCalPriceFrontstore03');
+    Route::post('ajaxCalPriceFrontstore04', 'AjaxController@ajaxCalPriceFrontstore04');
     Route::post('ajaxCalGiftVoucherPrice', 'AjaxController@ajaxCalGiftVoucherPrice');
 
     Route::post('ajaxCalAicash', 'AjaxController@ajaxCalAicash');
@@ -301,6 +303,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCearCostFrontstore', 'AjaxController@ajaxCearCostFrontstore');
 
     Route::post('ajaxClearAfterSelChargerType', 'AjaxController@ajaxClearAfterSelChargerType');
+    Route::post('ajaxClearAfterAddAiCash', 'AjaxController@ajaxClearAfterAddAiCash');
 
 
     Route::post('ajaxSaveGiftvoucherCode', 'AjaxController@ajaxSaveGiftvoucherCode');
