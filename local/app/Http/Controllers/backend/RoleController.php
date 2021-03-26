@@ -136,7 +136,25 @@ class RoleController extends Controller
                     }
                 }
               }
-                            
+
+              if(!empty(request('can_sentmoney'))){
+                $can_sentmoney = request('can_sentmoney');
+                if(!empty($can_sentmoney)){
+                    foreach ($can_sentmoney AS $row) {
+                         DB::update(" UPDATE role_permit SET can_sentmoney=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
+              if(!empty(request('can_getmoney'))){
+                $can_getmoney = request('can_getmoney');
+                if(!empty($can_getmoney)){
+                    foreach ($can_getmoney AS $row) {
+                         DB::update(" UPDATE role_permit SET can_getmoney=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
               
           }
 

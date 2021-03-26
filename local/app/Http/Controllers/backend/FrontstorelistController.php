@@ -243,9 +243,22 @@ class FrontstorelistController extends Controller
    
           }
 
+       $id=   @$request->frontstore_id;
 
-          $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
-          DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       // dd($sFrontstoreDataTotal);
+       if($sFrontstoreDataTotal){
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+        }else{
+          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+        }
+
+
+
+          // $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+          // DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
 
 
           if(isset($request->product_plus_addlist)){
@@ -494,8 +507,23 @@ class FrontstorelistController extends Controller
        
               }
 
-              $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
-              DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+
+
+           $id=   @$request->frontstore_id;
+
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           // dd($sFrontstoreDataTotal);
+           if($sFrontstoreDataTotal){
+              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+              DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+            }else{
+              DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+            }
+
+
+              // $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+              // DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
 
 
           }

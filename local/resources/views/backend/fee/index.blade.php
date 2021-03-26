@@ -17,22 +17,20 @@
     </div>
 </div>
 <!-- end page title -->
-
   <?php 
       $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+    }else{
+      $role_group_id = \Auth::user()->role_group_id_fk;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      $sU = @$menu_permit->u==1?'':'display:none;';
+      $sD = @$menu_permit->d==1?'':'display:none;';
+    }
    ?>
 <div class="row">
     <div class="col-12">

@@ -43,10 +43,36 @@
   display: table-row-group;
 }
 .divTH {text-align: right;}
+
+  
+  .tooltip_cost {
+    position: relative ;
+    cursor: pointer;
+
+  }
+
+.tooltip_cost:hover::after {
+    cursor: pointer;
+    /*content: "เงินสด : 9,999.00 , เงินโอน : 9,999.00 + ค่าธรรมเนียม : 100 ";*/
+    position: absolute;
+    top: 0.0em;
+    left: 5em;
+    min-width: 100px;
+    border-radius: 5%;
+    border: 1px #808080 solid;
+    padding: 3px;
+    color: black;
+    background-color: #cfc;
+    /*z-index: 9999;*/
+}
+
+  
 </style>
 @endsection
 
 @section('content')
+@include('popper::assets')
+
 
 <!-- start page title -->
 <div class="row">
@@ -134,7 +160,7 @@
                 <label for="" >รหัสลูกค้า : </label>
               </div>
               <div class="divTableCell">
-                <input id="" name="" class="form-control"  />
+                <input class="form-control"  />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -143,7 +169,7 @@
                 <label for="" >ชื่อลูกค้า : </label>
               </div>
               <div class="divTableCell">
-                <input id="" name="" class="form-control"  />
+                <input class="form-control"  />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -152,7 +178,7 @@
                 <label for="" >เลขที่ใบสั่งซื้อ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <input id="" name="" class="form-control"  />
+                <input class="form-control"  />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -164,7 +190,7 @@
                 <label for="" >เลขที่ใบเสร็จ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <input id="" name="" class="form-control"  />
+                <input class="form-control"  />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -450,6 +476,14 @@
             </div>
           </div>
 
+ <?php 
+
+      for ($i=1;$i<=5;$i++){
+        $x = $i."test";
+        ?> <span @popper({{$x}})> I'm a Span </span> <br><?php
+      }
+
+   ?>
 
         </div>
       </div>
@@ -461,12 +495,37 @@
 </div>
 </div>
 
+
+
+
 @endsection
 
 @section('script')
+
+
+<script>
+
+$(function() {
+      $('.ttt').hide();
+      $(document).on('mouseover', '.tooltip_cost', function(event) {
+            // var this_rec = $(this).attr('id');
+            // var this_rec = "เงินสด : "+this_rec+" , เงินโอน : "+this_rec+" + ค่าธรรมเนียม : "+this_rec+" ";
+            $(this).next('.ttt').toggle().show();
+      });
+
+      $(document).on('mouseout', '.tooltip_cost', function(event) {
+            $('.ttt').hide();
+          
+      });      
+
+});
+
+</script>
+
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
+
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
@@ -520,8 +579,9 @@ Gift Voucher  <i class="fa fa-gift"></i>
               }
             }},
             {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
-            {data: 'sum_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
-                return d ;
+            {data: 'total_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
+                return d;
+                // return '<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+d+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;"> เงินสด : 9,999.00 , เงินโอน : 9,999.00 + ค่าธรรมเนียม : 100</span>' ;
             }},
             {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                if(d){
@@ -544,7 +604,11 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }},
 
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              if(d=="รออนุมัติ"){
+                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              }
             }},
             {data: 'id',   title :'ใบเสร็จ', className: 'text-center w80 ',render: function(d) {
                 return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
@@ -561,6 +625,10 @@ Gift Voucher  <i class="fa fa-gift"></i>
           } ],
         rowCallback: function(nRow, aData, dataIndex){
 
+            if(aData['total_price']){
+
+              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+            }
 
            if(aData['type']!='0'){
               $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
@@ -643,12 +711,18 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
 
         $(document).ready(function() {
-            $(document).on('click', '.btnAdd', function(event) {
-              localStorage.clear();
-            });
+
+          localStorage.clear();
+
+            // $(document).on('click', '.btnAdd', function(event) {
+            //   localStorage.clear();
+            // });
+
         });
 
+
 </script>
+
 
 @endsection
 

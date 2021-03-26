@@ -38,12 +38,12 @@ class DeliveryPackingCodeController extends Controller
     public function destroy($id)
     {
 
-      $DP = DB::table('db_delivery_packing')->where('packing_code',$id)->get();
+      $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$id)->get();
       foreach ($DP as $key => $value) {
           DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
       }
 
-      DB::update(" DELETE FROM db_delivery_packing WHERE packing_code = $id  ");
+      DB::update(" DELETE FROM db_delivery_packing WHERE packing_code_id_fk = $id  ");
 
       $sRow = \App\Models\Backend\DeliveryPackingCode::find($id);
       if( $sRow ){
@@ -63,7 +63,7 @@ class DeliveryPackingCodeController extends Controller
       })      
       ->addColumn('receipt', function($row) {
         if($row->id!==""){
-            $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+            $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->orderBy('id', 'asc')->get();
             $array = array();
             if(@$DP){
               foreach ($DP as $key => $value) {
@@ -76,7 +76,7 @@ class DeliveryPackingCodeController extends Controller
           }
       })
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_delivery_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->orderBy('id', 'asc')->get();
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {

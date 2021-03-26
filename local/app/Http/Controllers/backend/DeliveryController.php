@@ -230,7 +230,8 @@ class DeliveryController extends Controller
 
   	     foreach ($rsDelivery as $key => $value) {
     	     	$DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
-    	     	$DeliveryPacking->packing_code = $DeliveryPackingCode->id;
+    	     	$DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
+            $DeliveryPacking->packing_code = "P1".sprintf("%05d",$DeliveryPackingCode->id) ;
     	     	$DeliveryPacking->delivery_id_fk = @$value->id;
     	     	$DeliveryPacking->created_at = date('Y-m-d H:i:s');
   	        $DeliveryPacking->save();
@@ -247,7 +248,7 @@ class DeliveryController extends Controller
             Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
             SET
             db_delivery.packing_code=
-            db_delivery_packing.packing_code ");
+            db_delivery_packing.packing_code_id_fk ");
 
 
 

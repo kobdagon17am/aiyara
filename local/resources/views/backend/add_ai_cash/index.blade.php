@@ -18,8 +18,7 @@
 </div>
 <!-- end page title -->
   <?php 
-    $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
+      $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
       $sC = '';
@@ -77,7 +76,7 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
+        // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
           url: '{{ route('backend.add_ai_cash.datatable') }}',
@@ -113,6 +112,13 @@ $(function() {
             {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
             {data: 'pay_type_id', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
+             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              if(d=="รออนุมัติ"){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              }
+            }},
             {data: 'updated_at', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
             // {data: 'aicash_amt',   title :'ยอด Ai-Cash ', className: 'text-center ',render: function(d) {
             //     return (parseFloat(d)>0)?d:'-';
@@ -126,7 +132,8 @@ $(function() {
               $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
             }
 
-            $('td:last-child', nRow).html('-ยกเลิก-');
+            // $('td:last-child', nRow).html('-ยกเลิก-');
+            $('td:last-child', nRow).html('-');
 
           }else{
 

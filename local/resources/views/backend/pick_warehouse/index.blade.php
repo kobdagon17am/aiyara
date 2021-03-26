@@ -75,7 +75,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จ่ายสินค้าตามใบเบิก  </h4>
+            <h4 class="mb-0 font-size-18"> จ่ายสินค้าตามใบเบิก </h4>
         </div>
     </div>
 </div>
@@ -254,104 +254,60 @@
 
  </div>
 
-    <div class="myBorder" style="background-color: #ffffcc;" >
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-body">
-              <div class="form-group row">
-                <div class="col-md-12">
-                  <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลังทั้งหมด (FIFO) </span>
-                </div>
-              </div>
-            </div>
-            <div style="">
-              
-              <div class="form-group row  " >
-                <div class="col-md-12 ">
-                  <table id="data-table-fifo" class="table table-bordered dt-responsive" style="width: 100%;">
-                  </table>
-                  
-                </div>
-              </div>
+
+<!-- <div class="myBorder" style="background-color: #ffffcc;" > -->
+<div class="myBorder" style="" >
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลังทั้งหมด (FIFO) </span>
             </div>
           </div>
         </div>
-      </div>
-
-            <div class="" style="background-color: #ccffff;" >
-                <div class="container">
-                  
-                  <div class="col-12">
-                    <div class="panel panel-default">
-                      <div class="panel-body">
-                        <div class="form-group row">
-                          <label for="receipt" class="col-md-3 col-form-label">พิมพ์รายการใบเบิกที่เลือก:</label>
-                          <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary  ">
-                            <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์ใบเบิก
-                            </button>
-                          </div>
-                          <label for="receipt" class="col-md-3 col-form-label">ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY :</label>
-                          <div class="col-md-3" style="" >
-                            <input type='button' name="submit" class="btn btn-success btnExportElsx " value='&nbsp;&nbsp;&nbsp;EXPORT EXCEL&nbsp;&nbsp;&nbsp;'>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-      </div> <!-- end col -->
-
-
-   <div class="myBorder" style="background-color: #ffffcc;" >
-        <div class="container">
           
-          <div class="col-12">
-            <div class="panel panel-default">
-              <div class="panel-body">
+          <div class="form-group row  " >
+            <div class="col-md-12 ">
+              <table id="data-table-fifo" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+  </div> <!-- end col -->
+
+
+
+<div class="myBorder" style="" >
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจงจำนวนสินค้าที่เบิกจากคลังลงบิลที่เบิก </span>
+            </div>
+          </div>
+        </div>
+        <div style="">
+          
+          <div class="form-group row  " >
+            <div class="col-md-12 ">
       
-          <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
-          {{ csrf_field() }}
-
-                  <div class="form-group row">
-                    
-                    <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) จาก KERRY :</label>
-                    <div class="col-md-3">
-                      <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
-                    </div>
-                    <div class="col-md-3" style="" >
-                      <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='IMPORT'>
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
-                       <input type='button' class="btn btn-danger btnClearImport " value='Clear data Import' >
-                    </div>
-                    
-                  </div>
-                  
-                  @if(Session::has('message'))
-                  <div class="form-group row ">
-                    <label for="receipt" class="col-md-2 col-form-label"></label>
-                    <div class="col-md-6 ">
-                      <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
-                    </div>
-                  </div>
-                  @endif
-          
-          </form>
-
-                  <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
-
-                <center><input type='button' class="btn btn-primary " value='Map Consignment Code' > 
-
-              </div>
+              
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  </div> <!-- end col -->
+
+
 
 
 
@@ -374,9 +330,11 @@ var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
+
 $(function() {
 
      $.fn.dataTable.ext.errMode = 'throw';
+
 
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -780,9 +738,84 @@ $(function() {
                              url: " {{ url('backend/pick_warehouse_fifo/fifo') }} ", 
                              data: $("#frm-packing").serialize()+"&picking_id="+ids,
                               success: function(response){ // What to do if we succeed
-                                     console.log(response); 
-                                     return false;
+                    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                                      var oTablePickup;
+                                      $(function() {
+                                          oTablePickup = $('#data-table-fifo').DataTable({
+                                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                              processing: true,
+                                              serverSide: true,
+                                              scroller: true,
+                                              scrollCollapse: true,
+                                              scrollX: true,
+                                              ordering: false,
+                                              destroy:true,
+                                              // scrollY: ''+($(window).height()-370)+'px',
+                                              iDisplayLength: 25,
+                                              ajax: {
+                                                url: '{{ route('backend.pick_warehouse_fifo.datatable') }}',
+                                                data: function ( d ) {
+                                                  d.Where={};
+                                                  $('.myWhere').each(function() {
+                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                                                    }
+                                                  });
+                                                  d.Like={};
+                                                  $('.myLike').each(function() {
+                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                                                    }
+                                                  });
+                                                  d.Custom={};
+                                                  $('.myCustom').each(function() {
+                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                                                    }
+                                                  });
+                                                  oData = d;
+                                                },
+                                                method: 'POST'
+                                              },
 
+                                              columns: [
+                                                    {data: 'id', title :'ID', className: 'text-center w50'},
+                                                    {data: 'product_name',   title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left',render: function(d) {
+                                                      if(d){
+                                                        return d.replace(/\:/g, "<br>");
+                                                      }else{
+                                                        return '';
+                                                      }
+                                                    }},
+                                                    {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+                                                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                                                    {data: 'amt',
+                                                    defaultContent: "0",   title :'<center>จำนวนในคลัง</center>', className: 'text-center',render: function(d) {
+                                                      return d;
+                                                    }},
+                                                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
+                                                     {data: 'amt_get',   title :'<center>จำนวนเบิก </center>', className: 'text-center',render: function(d) {
+                                                        return d ;
+                                                     }},
+                                                    {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-left'},
+                                           
+                                              ],
+                                              fnRowCallback : function (nRow, aData, iDisplayIndex) {
+                                                     var info = $(this).DataTable().page.info();
+                                                     $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
+
+                                                     if(aData['amt_get']>aData['amt']){
+                                                        for (var i = 0; i < 8; i++) {
+                                                          $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'red','font-style':'italic'});
+                                                        }
+                                                     }
+                                                  
+                                                 },
+                                         
+                                          });
+                                      
+                                      });
+              // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                               },
                               error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
                                   console.log(JSON.stringify(jqXHR));
@@ -792,109 +825,8 @@ $(function() {
 
 
 
-                      var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-                      var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-                      var sU = "{{@$sU}}"; //alert(sU);
-                      var sD = "{{@$sD}}"; //alert(sD);
-                      var oTablePickup;
-                      $(function() {
-                          oTablePickup = $('#data-table-fifo').DataTable({
-                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                              processing: true,
-                              serverSide: true,
-                              scroller: true,
-                              scrollCollapse: true,
-                              scrollX: true,
-                              ordering: false,
-                              destroy:true,
-                              scrollY: ''+($(window).height()-370)+'px',
-                              iDisplayLength: 25,
-                              ajax: {
-                                url: '{{ route('backend.pick_warehouse_fifo.datatable') }}',
-                                data: function ( d ) {
-                                  d.Where={};
-                                  $('.myWhere').each(function() {
-                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                      d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                    }
-                                  });
-                                  d.Like={};
-                                  $('.myLike').each(function() {
-                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                      d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                    }
-                                  });
-                                  d.Custom={};
-                                  $('.myCustom').each(function() {
-                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                    }
-                                  });
-                                  oData = d;
-                                },
-                                method: 'POST'
-                              },
+                   
 
-                              columns: [
-                                    {data: 'id', title :'ID', className: 'text-center w50'},
-                                    {data: 'id',   title :'รหัสใบเบิก', className: 'text-center',render: function(d) {
-                                        return '';
-                                    }},
-                                    {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                                    {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-                                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                                    // {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
-                                    {data: 'amt',
-                                    defaultContent: "0",   title :'<center>จำนวนในคลัง</center>', className: 'text-center',render: function(d) {
-                                      return d;
-                                    }},
-
-                                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-                                    {data: 'amt', title :'<center>จำนวนเบิก </center>', className: 'text-center'},
-                                    // {data: 'amt_pick', title :'<center>จำนวนเบิก </center>', className: 'text-center'},
-                                    // {data: 'id',   title :'จำนวนเบิก', className: 'text-center w80',render: function(d) {
-                                    // return '<center><input type="text" style="width:95%"></center>';
-                                    // }},
-                                    {data: 'id', title :'Approved', className: 'text-center w100'},             
-                              ],
-                              order: [[1, 'asc']],
-                              rowGroup: {
-                                  startRender: null,
-                                  endRender: function ( rows, group ) {
-                                      var sTotal = rows
-                                         .data()
-                                         .pluck('amt')
-                                         .reduce( function (a, b) {
-                                             return a + b*1;
-                                         }, 0);
-                                          sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
-                                      // sTotal = 2;
-                       
-                                      return $('<tr/ style=" background-color:#f2f2f2 !important;">')
-                                          .append( '<td colspan="4" style="text-align:center;">Total for '+group+'</td>' )
-                                          .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                          .append( '<td></td>' );
-                                  },
-                                  dataSrc: "product_name"
-                              },
-
-                               rowCallback: function(nRow, aData, dataIndex){
-
-                                       $('td:last-child', nRow).html(''
-                                              + '<a href="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                              
-                                            ).addClass('input');
-
-                                   
-                                    }
-                         
-                          });
-
-                      
-                      });
-
-
-      
 
                  $(".myloading").hide();
                   }, 1500);

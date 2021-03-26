@@ -14,6 +14,9 @@ class Pick_warehouseController extends Controller
     public function index(Request $request)
     {
 
+      // $sTable = \App\Models\Backend\Pick_warehouse_fifo::get();
+      //  dd($sTable);
+
 
       $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
       // dd($Pick_warehouse_fifo);

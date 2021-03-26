@@ -15,9 +15,7 @@
             <h4 class="mb-0 font-size-18"> เติม Ai-Cash </h4>
 
             <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
-                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
-                      <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">กลับไปหน้าขาย</span>
-                </a>
+              
             <?php }else{ ?>
                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/add_ai_cash") }}">
                       <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
@@ -31,21 +29,19 @@
 </div>
 <!-- end page title -->
   <?php 
-
       $sPermission = \Auth::user()->permission ;
-      $menu_id = @$_REQUEST['menu_id'];
-      $role_group_id = @$_REQUEST['role_group_id'];
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $sA = '';
-      }else{
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sA = @$menu_permit->can_answer==1?'':'display:none;';
-      }
-
+      $menu_id = Session::get('session_menu_id');
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+    }else{
+      $role_group_id = \Auth::user()->role_group_id_fk;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      $sU = @$menu_permit->u==1?'':'display:none;';
+      $sD = @$menu_permit->d==1?'':'display:none;';
+    }
    ?>
 
 <div class="row">
@@ -64,12 +60,13 @@
 
                       <div class="myBorder">
 
+                       
                         <?php if(isset($_REQUEST['fromAddAiCash'])){ $customer_id = $_REQUEST['customer_id']; ?>
 
                           <div class="form-group row">
                             <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
                             <div class="col-md-8">
-                              <select  id="customer_id_fk" class="form-control select2-templating " disabled="" >
+                              <select class="form-control select2-templating " disabled="" >
                                 <option value="">Select</option>
                                   @if(@$Customer)
                                     @foreach(@$Customer AS $r)
@@ -87,33 +84,56 @@
 
                        <?php }else{ ?>
 
-                         <div class="form-group row">
-                            <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
-                            <div class="col-md-8">
-                              <select name="customer_id_fk" id="customer_id_fk" class="form-control select2-templating " required >
-                                <option value="">Select</option>
-                                  @if(@$Customer)
-                                    @foreach(@$Customer AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id_fk)?'selected':'' }} >
-                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
-                                        {{$r->last_name}}
-                                      </option>
-                                    @endforeach
-                                  @endif
-                              </select>
+                         <?php $ch_dis = empty(@$sRow)?'required':'disabled'; ?>
+
+                          @if( empty(@$sRow) )
+                            <div class="form-group row">
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
+                              <div class="col-md-8">
+                                <select name="customer_id_fk" id="member_id_aicash" class="form-control select2-templating " required >
+                                  <option value="">Select</option>
+                                    @if(@$Customer)
+                                      @foreach(@$Customer AS $r)
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id_fk)?'selected':'' }} >
+                                          {{@$r->user_name}} : {{@$r->prefix_name}}{{@$r->first_name}} 
+                                          {{@$r->last_name}}
+                                        </option>
+                                      @endforeach
+                                    @endif
+                                </select>
+                              </div>
                             </div>
-                          </div>
+                          @else
+                            <div class="form-group row">
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
+                              <div class="col-md-8">
+                                <input type="hidden" id="member_id_aicash" name="customer_id_fk" value="{{@$sRow->customer_id_fk}}">
+                                <select class="form-control select2-templating " disabled >
+                                  <option value="">Select</option>
+                                    @if(@$Customer)
+                                      @foreach(@$Customer AS $r)
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id_fk)?'selected':'' }} >
+                                          {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
+                                          {{$r->last_name}}
+                                        </option>
+                                      @endforeach
+                                    @endif
+                                </select>
+                              </div>
+                            </div>
+                          @endif
+
+                     
 
                         <?php } ?>
-<?php //dd($CustomerAicash) ?>
-                        @if(!empty(@$sRow))
+
+
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่มี :</label>
                             <div class="col-md-8">
-                               <input class="form-control f-ainumber-18 input-aireadonly " value="{{number_format(@$CustomerAicash[0]->ai_cash,2)}}" readonly />
+                               <input class="form-control f-ainumber-18 input-aireadonly " id="aicash_remain" value="{{number_format(@$CustomerAicash[0]->ai_cash,2)}}" readonly />
                             </div>
                           </div>
-                        @ENDIF
                           
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่เติม :</label>
@@ -122,7 +142,7 @@
                             </div>
                           </div>
                          
-                          @if( !empty(@$sRow) )
+        @if( !empty(@$sRow) )
                 <hr>
 
                           <div class="form-group row">
@@ -203,11 +223,11 @@
                         <div class="form-group row div_account_bank_id " style="<?=$div_account_bank_id?>">
                           <label for="" class="col-md-4 col-form-label"> เลือกบัญชีสำหรับโอน : </label>
                           <div class="col-md-8 ">
-                              @if(@$sAccount_bank)
+                             @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
                                   <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
-                            @endif 
+                            @endif  
                           </div>
                         </div>
 
@@ -215,7 +235,7 @@
                         <div class="form-group row div_account_bank_id " style="<?=$div_account_bank_id?>">
                           <label for="" class="col-md-4 col-form-label">  </label>
                            <div class="col-md-8 d-flex ">
-                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-info btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
                               $ds = explode("-", $ds1);
@@ -284,7 +304,7 @@
                           </div>
                         </div>
 
-@ENDIF
+        @ENDIF
 
                        <div class="form-group row">
                             <label for="" class="col-md-4 col-form-label">ผู้ดำเนินการ(User Login):</label>
@@ -314,24 +334,119 @@
                                 </button>
                                 @else
                                 <input type="hidden" name="save_update" value="1" >
-                                <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                                <button type="submit" class="btn btn-primary btn-sm waves-effect" >
                                 <i class="bx bx-save font-size-18 align-middle mr-1"></i><span style="font-size: 14px;"> บันทึกข้อมูล</span>
                                 </button>
                                 @endif
 
-
-                                  <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/{{@$sRow->id}}" target=_blank style="float: right;" >
+                                <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/{{@$sRow->id}}" target=_blank style="float: right;" >
                                   <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ </span></a>
+                                  
 
+                            </div>
+                       </div>
+                    
+                       <div class="form-group row" style="text-align: right;">
+                            <label for="" class="col-md-4 col-form-label"></label>
+                            <div class="col-md-8" >
+                            <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
+                            <hr>
+                                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
+                                      <span style="font-size: 14px;">ย้อนกลับไปออกบิลต่อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-1"></i> 
+                                </a>
+                            <?php } ?>
 
                             </div>
                        </div>
 
-
               </form>
               </div>
 
-            </div>
+
+@if( !empty(@$sRow->id) )
+
+
+@if( $sPermission==1 || @$menu_permit->can_approve==1 )
+
+
+@if( @$sRow->pay_type_id==8 || @$sRow->pay_type_id==10 || @$sRow->pay_type_id==11 )
+
+            <div class="myBorder">
+
+
+        
+              <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input name="_method" type="hidden" value="PUT">
+                <input name="id" type="hidden" value="{{@$sRow->id}}">
+                <input name="approved" type="hidden" value="1">
+                {{ csrf_field() }}
+
+                 <div class="form-group row">
+                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                      <div class="col-md-6">
+                        @if( empty(@$sRow->id) )
+                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
+                            @else
+                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
+                         @endif
+                          
+                      </div>
+                  </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
+                    <div class="col-md-3 mt-2">
+                      <div class=" ">
+
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
+                          <label for="customSwitch1">อนุมัติ / Aproved</label>
+
+                      </div>
+                    </div>
+                     <div class="col-md-4 mt-2">
+                      <div class=" ">
+              
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="5" {{ ( @$sRow->approve_status=='5')?'checked':'' }} required >
+                          <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
+
+                      </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                  <label for="note" class="col-md-4 col-form-label">หมายเหตุ (ถ้ามี) :</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                  </div>
+                </div>
+
+
+                <div class="form-group mb-0 row">
+                  <div class="col-md-6">
+                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/add_ai_cash") }}">
+                      <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
+                   </a>
+                  </div>
+                  <div class="col-md-6 text-right">
+
+                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
+                    <i class="bx bx-save font-size-16 align-middle mr-1"></i>  บันทึก > การอนุมัติ
+                    </button>
+
+                  </div>
+                </div>
+
+            </form>
+
+          </div>
+
+@ENDIF 
+@ENDIF 
+@ENDIF 
+
         </div>
     </div> <!-- end col -->
 </div>
@@ -347,6 +462,34 @@
 <script>
 
   $(document).ready(function() {
+
+                var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
+                  // alert(fromAddAiCash);
+                if(fromAddAiCash==1){
+
+                    var customer_id = "<?=@$_REQUEST['customer_id']?>";
+
+                    // alert(customer_id);
+
+                      $.ajax({
+                               type:'POST',
+                               dataType:'JSON',
+                               url: " {{ url('backend/ajaxCalAicash') }} ", 
+                               data: { _token: '{{csrf_token()}}', customer_id:customer_id },
+                                success:function(data){
+                                       console.log(data); 
+                                       $.each(data,function(key,value){
+                                          // $("#aicash_remain").val(value.ai_cash);
+                                          $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
+                                         
+                                        });
+                                      $(".myloading").hide();
+                                  },
+                                error: function(jqXHR, textStatus, errorThrown) { 
+                                    $(".myloading").hide();
+                                }
+                            });
+                }
 
 
           function formatNumber(num) {
@@ -403,7 +546,31 @@
 
 
 
-            $(document).on('change', '#customer_id_fk', function(event) {
+            $(document).on('change', '#member_id_aicash', function(event) {
+
+              $(".myloading").show();
+
+              var customer_id = $('#member_id_aicash').val();
+
+              $.ajax({
+                       type:'POST',
+                       dataType:'JSON',
+                       url: " {{ url('backend/ajaxCalAicash') }} ", 
+                       data: { _token: '{{csrf_token()}}', customer_id:customer_id },
+                        success:function(data){
+                               console.log(data); 
+                               $.each(data,function(key,value){
+                                  // $("#aicash_remain").val(value.ai_cash);
+                                  $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
+                                 
+                                });
+                              $(".myloading").hide();
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            $(".myloading").hide();
+                        }
+                    });
+
 
                 setTimeout(function(){
                   $("#aicash_amt").focus();
@@ -435,7 +602,6 @@
               $('#fee').attr('required', false);
               $('#credit_price').attr('required', false);
               $('input[name=account_bank_id]').attr('required', false);
-              $('input[name=account_bank_id]').val('');
               $(".transfer_money_datetime").attr('required', false);
               $(".transfer_money_datetime").val('');
               $("#transfer_price").removeAttr('required');
@@ -548,13 +714,6 @@
 
 
               var pay_type_id = $("#pay_type_id").val();
-
-
-              // $(".show_div_credit").hide();
-              // $(".div_fee").hide();
-              // $(".show_div_transfer_price").hide();
-              // $(".div_account_bank_id").hide();
-              // $('#fee').val("").select2();
 
               if(pay_type_id==''){
                 $("#cash_price").val('');
@@ -859,6 +1018,13 @@
             $(document).on('change', '#fee', function(event) {
                     event.preventDefault();
                     $(".myloading").show();
+
+                    $("#credit_price").val('');
+                    $("#fee_amt").val('');
+                    $("#sum_credit_price").val('');  
+                    $("#transfer_price").val('');
+                    $("#cash_pay").val('');
+                                        
                     $('#credit_price').attr('required', true);
                     setTimeout(function(){
                     $('#credit_price').focus();

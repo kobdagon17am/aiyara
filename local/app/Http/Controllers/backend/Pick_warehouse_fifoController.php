@@ -86,10 +86,15 @@ class Pick_warehouse_fifoController extends Controller
                 db_frontstore_products_list.product_id_fk
                 FROM
                 db_frontstore_products_list
-                Left Join db_frontstore_tmp ON db_frontstore_products_list.frontstore_id_fk = db_frontstore_tmp.id
+                INNER Join db_frontstore_tmp ON db_frontstore_products_list.frontstore_id_fk = db_frontstore_tmp.id
                 GROUP BY db_frontstore_products_list.product_id_fk
                 )
               ');
+
+// รวมจำนวนสินค้าแต่ละรายการ
+              // DB::select(' 
+        
+              // ');
 
         //  ได้รหัสสินค้ามาแล้ว 
 
@@ -100,8 +105,49 @@ class Pick_warehouse_fifoController extends Controller
                  DB::select('insert ignore into db_pick_warehouse_fifo (product_id_fk) values ('.$value->product_id_fk.')');
               }
 
-              return $product_id;
+              // return $product_id;
               // หา FIFO 
+
+              DB::select("
+
+                    UPDATE
+                    db_pick_warehouse_fifo
+                    Inner Join 
+                    (SELECT * FROM `db_stocks` GROUP BY db_stocks.branch_id_fk,db_stocks.product_id_fk,db_stocks.lot_number ORDER BY db_stocks.lot_expired_date ASC) as db_stocks
+                     ON db_pick_warehouse_fifo.product_id_fk = db_stocks.product_id_fk
+                    SET
+                    db_pick_warehouse_fifo.branch_id_fk=
+                    db_stocks.branch_id_fk,
+                    db_pick_warehouse_fifo.lot_number=
+                    db_stocks.lot_number,
+                    db_pick_warehouse_fifo.lot_expired_date=
+                    db_stocks.lot_expired_date,
+                    db_pick_warehouse_fifo.amt=
+                    db_stocks.amt,
+                    db_pick_warehouse_fifo.warehouse_id_fk=
+                    db_stocks.warehouse_id_fk,
+                    db_pick_warehouse_fifo.zone_id_fk=
+                    db_stocks.zone_id_fk,
+                    db_pick_warehouse_fifo.shelf_id_fk=
+                    db_stocks.shelf_id_fk,
+                    db_pick_warehouse_fifo.shelf_floor=
+                    db_stocks.shelf_floor
+
+                ");
+
+
+              DB::select("
+
+                    UPDATE
+                    db_pick_warehouse_fifo
+                    Left Join db_frontstore_products_list_tmp ON db_pick_warehouse_fifo.product_id_fk = db_frontstore_products_list_tmp.product_id_fk
+                    SET
+                    db_pick_warehouse_fifo.amt_get=
+                    db_frontstore_products_list_tmp.amt,
+                    db_pick_warehouse_fifo.product_unit_id_fk=
+                    db_frontstore_products_list_tmp.product_unit_id_fk
+
+                ");
 
 
         }
@@ -135,7 +181,7 @@ class Pick_warehouse_fifoController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
+      $sTable = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
@@ -148,7 +194,11 @@ class Pick_warehouse_fifoController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE products.id=".($row->product_id_fk)." AND lang_id=1");
 
-        return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+          if(@$Products[0]->product_code!=@$Products[0]->product_name){
+             return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+          }else{
+             return @$Products[0]->product_name;
+          }
 
       })
       ->addColumn('lot_expired_date', function($row) {
@@ -164,8 +214,15 @@ class Pick_warehouse_fifoController extends Controller
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
-        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
-      })      
+        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
+      }) 
+      ->addColumn('product_unit', function($row) {
+        $p = DB::select("  SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = ".$row->product_unit_id_fk." AND  lang_id=1  ");
+          return @$p[0]->product_unit;
+      }) 
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
