@@ -147,6 +147,7 @@ class Commission_transferController extends Controller
 
 
 
+
         $sQuery = \DataTables::of($sTable);
         return $sQuery
 
@@ -175,7 +176,7 @@ class Commission_transferController extends Controller
                 if ($row->status_transfer == '0') {
                   $status = 'รออนุมัติ';
                 } elseif ($row->status_transfer == '1') {
-                  $status = 'อนุมัติ';
+                  $status = 'โอนสำเร็จ';
                 } elseif ($row->status_transfer == '2') {
                   $status = 'ยกเลิก';
                 } elseif ($row->status_transfer == '3') {

@@ -184,6 +184,13 @@ Route::get('commission_bonus_transfer','Frontend\CommissionController@commission
 Route::get('dt_commission_bonus_transfer','Frontend\CommissionController@dt_commission_bonus_transfer')->name('dt_commission_bonus_transfer');
 Route::get('modal_commission_transfer','Frontend\CommissionController@modal_commission_transfer')->name('modal_commission_transfer');
 
+Route::get('commission_bonus_transfer_aistockist','Frontend\CommissionController@commission_bonus_transfer_aistockist')->name('commission_bonus_transfer_aistockist');
+Route::get('dt_commission_bonus_transfer_aistockist','Frontend\CommissionController@dt_commission_bonus_transfer_aistockist')->name('dt_commission_bonus_transfer_aistockist');
+Route::get('modal_commission_bonus_transfer_aistockist','Frontend\CommissionController@modal_commission_bonus_transfer_aistockist')->name('modal_commission_bonus_transfer_aistockist');
+
+Route::get('commission_bonus_transfer_af','Frontend\CommissionController@commission_bonus_transfer_af')->name('commission_bonus_transfer_af');
+Route::get('dt_commission_bonus_transfer_af','Frontend\CommissionController@dt_commission_bonus_transfer_af')->name('dt_commission_bonus_transfer_af');
+
 Route::get('commission_matching/{customer_id?}/{date?}','Frontend\CommissionController@commission_matching')->name('commission_matching');
 Route::get('dt_commission_matching','Frontend\CommissionController@dt_commission_matching')->name('dt_commission_matching');
 

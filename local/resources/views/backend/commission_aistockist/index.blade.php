@@ -53,7 +53,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-12">
                             <div class="row">
                                 <div class="col-12 d-flex ">
                                     <div class="col-md-4 ">
@@ -71,21 +71,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-2">
-                                <div class="form-group row">
-                                    <select id="warehouse_id_search" name="warehouse_id_search"
-                                        class="form-control select2-templating ">
-                                        <option disabled selected>(คลัง) กรุณาเลือกสาขาก่อน</option>
-                                    </select>
-                                </div>
-                            </div> --}}
+
                                     <div class="col-md-2">
                                         <div class="form-group row">
                                             <select id="status_search" name="status_search"
                                                 class="form-control select2-templating ">
                                                 <option value="">สถานะ</option>
                                                 <option value="0">รออนุมัติ</option>
-                                                <option value="1">อนุมัติ</option>
+                                                <option value="1">โอนสำเร็จ</option>
                                                 <option value="3">ไม่อนุมัติ</option>
                                                 <option value="2">ยกเลิก</option>
                                             </select>
@@ -110,11 +103,11 @@
 
                         </div>
 
-                        <div class="col-4 text-right" style="{{ @$sC }}">
+                        {{-- <div class="col-4 text-right" style="{{ @$sC }}">
                             <!--    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.check_money_daily.create') }}">
                           <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                         </a> -->
-                        </div>
+                        </div> --}}
 
                     </div>
 
@@ -147,7 +140,7 @@
                 scrollY: '' + ($(window).height() - 370) + 'px',
                 iDisplayLength: 25,
                 ajax: {
-                    url: '{{ route('backend.commission_transfer.datatable') }}',
+                    url: '{{ route('backend.commission_aistockist.datatable') }}',
                     data: function(d) {
                         d.business_location = $('#business_location').val();
                         d.status_search = $('#status_search').val();
@@ -181,7 +174,12 @@
                     },
                     {
                         data: 'transferee_bank_no',
-                        title: '<center>เลขที่บัญชีธนาคารผู้รับโอน</center>',
+                        title: '<center>เลขที่บัญชี</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'fee',
+                        title: '<center>ค่าธรรมเนียม</center>',
                         className: 'text-left'
                     },
                     {
@@ -248,7 +246,7 @@
 
             //alert(date_transfer);
             $.ajax({
-                    url: '{{ url('backend/commission_transfer/modal_commission_transfer') }}',
+                    url: '{{ url('backend/commission_transfer_aistockist/modal_commission_transfer_aistockist') }}',
                     type: 'GET',
                     data: {
                         customer_id: customer_id,
