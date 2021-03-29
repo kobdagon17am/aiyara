@@ -16,6 +16,8 @@ class Pick_warehouseController extends Controller
 
       // $sTable = \App\Models\Backend\Pick_warehouse_fifo::get();
       //  dd($sTable);
+      $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
+     // dd($Pick_warehouse_fifo_topicked);
 
 
       $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
@@ -41,6 +43,7 @@ class Pick_warehouseController extends Controller
            'Customer'=>$Customer,
            'sBusiness_location'=>$sBusiness_location,
            'sPacking'=>$sPacking,
+           'Pick_warehouse_fifo_topicked'=>$Pick_warehouse_fifo_topicked,
         ) );
 
       

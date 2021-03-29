@@ -245,6 +245,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
+          // url: '{{ route('backend.check_stock_account.datatable') }}',
           url: '{{ route('backend.check_stock.datatable') }}',
           data: function ( d ) {
             d.Where={};

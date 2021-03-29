@@ -195,7 +195,18 @@
                           <div class="col-md-12">
                             <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจงรายการสินค้าตามบิล </span>
                           </div>
+
+
+
                         </div>
+
+                         <div class="form-group row">
+                          <div class="col-md-12">
+                          <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+
+                          </div>
+                        </div>
+
                 </div>
 
 
@@ -465,68 +476,68 @@ $(function() {
                   //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   //     ).addClass('input');
 
-                if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(2)', nRow).html(
-                        '<span class="tooltip_packing badge badge-danger font-size-14">P</span>');
-                 }else{
-                      $("td:eq(2)", nRow).html('');
-                 }
+                // if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                //       $('td:eq(2)', nRow).html(
+                //         '<span class="tooltip_packing badge badge-danger font-size-14">P</span>');
+                //  }else{
+                //       $("td:eq(2)", nRow).html('');
+                //  }
 
-                 $("td:eq(1)", nRow).hide();
-                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
+                //  $("td:eq(1)", nRow).hide();
+                //  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
 
-                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
-                      $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                 }
-                 else{ //2=db_frontstore จากการขายหลังบ้าน
+                //  if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                //       $('td:eq(8)', nRow).html(''
+                //         + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                //       ).addClass('input');
+                //  }
+                //  else{ //2=db_frontstore จากการขายหลังบ้าน
 
-                      if(aData['status_pack']==1){
-                          $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                      }else{
-                          $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                      }
+                //       if(aData['status_pack']==1){
+                //           $('td:eq(8)', nRow).html(''
+                //         + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                //       ).addClass('input');
+                //       }else{
+                //           $('td:eq(8)', nRow).html(''
+                //         + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                //       ).addClass('input');
+                //       }
                       
-                 }
+                //  }
 
-                 if (aData['status_delivery'] == "1") {
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        $("td:eq(0)", nRow).html('');
-                        $("td:eq(7)", nRow).html('');
-                        $("td:eq(6)", nRow).html('');
-                        $("td:eq(10)", nRow).html('');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        } 
+                //  if (aData['status_delivery'] == "1") {
+                //         $('td', nRow).css('background-color', '#ffd9b3');
+                //         $("td:eq(0)", nRow).html('');
+                //         $("td:eq(7)", nRow).html('');
+                //         $("td:eq(6)", nRow).html('');
+                //         $("td:eq(10)", nRow).html('');
+                //         var i;
+                //         for (i = 0; i < 10 ; i++) {
+                //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                //         } 
 
-                }else{
-                    $("td:eq(7)", nRow).prop('disabled',true); 
-                    $("td:eq(8)", nRow).prop('disabled',true); 
-                    $("td:eq(10)", nRow).prop('disabled',true); 
-                } 
+                // }else{
+                //     $("td:eq(7)", nRow).prop('disabled',true); 
+                //     $("td:eq(8)", nRow).prop('disabled',true); 
+                //     $("td:eq(10)", nRow).prop('disabled',true); 
+                // } 
 
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{ 
+                // if(sU!=''&&sD!=''){
+                //     $('td:last-child', nRow).html('-');
+                // }else{ 
 
-                  if (aData['status_delivery'] != "1") {
+                //   if (aData['status_delivery'] != "1") {
 
-                      $('td:last-child', nRow).html(''
-                        + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                //       $('td:last-child', nRow).html(''
+                //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                         
-                      ).addClass('input');
+                //       ).addClass('input');
 
-                    }
+                //     }
 
-                    // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                //     // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
-                }
+                // }
               }
           });
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -751,7 +762,7 @@ $(function() {
 	                  		return 'อนุมัติ/จ่ายสินค้าแล้ว';
 	                  	}
 	                  }},
-                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                      // {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -774,13 +785,13 @@ $(function() {
                         $('td:last-child', nRow).html('-');
                     }else{ 
 
-                    	if (aData['status_delivery'] != "1") {
-                    		$('td:last-child', nRow).html(''
-                            + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                  //   	if (aData['status_delivery'] != "1") {
+                  //   		$('td:last-child', nRow).html(''
+                  //           + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 	                          
-	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-	                        ).addClass('input');
-                		}
+	                 //          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+	                 //        ).addClass('input');
+                		// }
 
                     }
                   }
@@ -865,6 +876,128 @@ $(function() {
                 oTableNoPayproduct.draw();
               });
           });
+
+
+
+          var oTableListBill;
+          $(function() {
+              oTableListBill = $('#data-table-list-bill').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  ordering: false,
+                  scrollY: ''+($(window).height()-370)+'px',
+                  iDisplayLength: 10,
+                  // stateSave: true,
+                  ajax: {
+                    url: '{{ route('backend.products_fifo_bill.datatable') }}',
+                    data: function ( d ) {
+                      d.Where={};
+                      $('.myWhere').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Where[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Like={};
+                      $('.myLike').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Like[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Custom={};
+                      $('.myCustom').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      oData = d;
+                    },
+                    method: 'POST'
+                  },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'recipient_code', title :'<center>รหัสใบเเสร็จ </center>', className: 'text-center'},
+                      {data: 'id',   title :'<center>รายการสินค้า</center>', className: 'text-center ',render: function(d) {
+                          return '' ;
+                      }},
+                      {data: 'id',   title :'<center>จำนวนเบิก</center>', className: 'text-center ',render: function(d) {
+                          return '' ;
+                      }},
+                      {data: 'id',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
+                          return '' ;
+                      }},
+                      {data: 'id',   title :'<center>Tools</center>', className: 'text-center ',render: function(d) {
+                          return '' ;
+                      }},                                                                  
+                    
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+                  }
+              });
+
+        
+          });
+
+
+
+      $.fn.dataTable.ext.errMode = 'throw';
+
+      var sU = "{{@$sU}}"; //alert(sU);
+      var sD = "{{@$sD}}"; //alert(sD);
+      var oTable;
+      $(function() {
+          oTable = $('#data-table-import').DataTable({
+          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+              processing: true,
+              serverSide: true,
+              scroller: true,
+              scrollCollapse: true,
+              scrollX: true,
+              ordering: false,
+              scrollY: ''+($(window).height()-370)+'px',
+              iDisplayLength: 10,
+              stateSave: true,
+              ajax: {
+                url: '{{ route('backend.consignments_import.datatable') }}',
+                data: function ( d ) {
+                  d.Where={};
+                  $('.myWhere').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Like={};
+                  $('.myLike').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Custom={};
+                  $('.myCustom').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  oData = d;
+                },
+                method: 'POST'
+              },
+              columns: [
+                  {data: 'consignment_no', title :'<center>Consignment No. <br> (หมายเลขพัสดุ) </center>', className: 'text-center'},
+                  {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                  {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                  {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+              ],
+              rowCallback: function(nRow, aData, dataIndex){
+       
+              }
+            });
+     
+          });
+
 
 </script>
 
@@ -970,6 +1103,38 @@ $(function() {
 		      });
 
 
+
+               $(".btnImXlsx").click(function(event) {
+                      /* Act on the event */
+                      var v = $("input[name=fileXLS]").val();
+                      if(v!=''){
+                        $(".myloading").show();
+                      }
+                      
+                });
+
+
+
+              $(".btnClearImport").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxClearConsignment') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               location.reload();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                      });
+              });
 
 
           });

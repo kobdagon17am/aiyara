@@ -58,12 +58,21 @@ class DeliveryPackingCodeController extends Controller
       $sTable = \App\Models\Backend\DeliveryPackingCode::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('status_pick_pack', function($row) {
+         $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+         if(@$DP){
+              foreach ($DP as $key => $value) {
+                $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+                return $rs[0]->status_pick_pack;
+              }
+            }
+      })  
       ->addColumn('packing_code_desc', function($row) {
         return "P1".sprintf("%05d",$row->id);
       })      
       ->addColumn('receipt', function($row) {
         if($row->id!==""){
-            $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->orderBy('id', 'asc')->get();
+            $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
             $array = array();
             if(@$DP){
               foreach ($DP as $key => $value) {
@@ -76,7 +85,7 @@ class DeliveryPackingCodeController extends Controller
           }
       })
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->orderBy('id', 'asc')->get();
+          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {

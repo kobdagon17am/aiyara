@@ -109,6 +109,8 @@ $(function() {
             {data: 'vat', title :'<center>VAT (%)</center>', className: 'text-center'},
             {data: 'tax', title :'<center>TAX (%)</center>', className: 'text-center'},
             {data: 'juristic_person', title :'<center>นิติบุคคล (%)</center>', className: 'text-center'},
+            {data: 'aistockis_bonus', title :'<center>Ai-Stockis Bonus (%)</center>', className: 'text-center'},
+            {data: 'agency_bonus', title :'<center>Agency Bonus (%)</center>', className: 'text-center'},
             {data: 'action_user', title :'<center>ผู้ดำเนินการ</center>', className: 'text-center'},
             {data: 'updated_at', title :'<center>อัพเดต</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 

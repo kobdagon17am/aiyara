@@ -261,12 +261,13 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
+
           <div class="form-group row">
             <div class="col-md-12">
               <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลังทั้งหมด (FIFO) </span>
             </div>
           </div>
-        </div>
+       
           
           <div class="form-group row  " >
             <div class="col-md-12 ">
@@ -274,6 +275,34 @@
               </table>
             </div>
           </div>
+
+         </div>
+   
+  
+      <form action="{{ route('backend.pick_warehouse_fifo_topicked.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input name="pick_warehouse_fifo_topicked" type="hidden" value="1">
+            {{ csrf_field() }}
+
+
+              <div class="form-group row  divBtn " style="display: none;">
+                <!-- <div class="col-md-2 "></div> -->
+                <div class="col-md-12">
+           <!--        <div class="  " style="">
+                    <button type="button" class="btn btn-primary btn-sm font-size-16  float-left ">
+                    <i class="bx bx-print font-size-16 align-middle mr-1"></i> พิมพ์รายการเบิก
+                    </button>
+                  </div> -->
+                  <div>
+                    <center>
+                    <button type="submit" class="btn btn-primary btn-sm font-size-16 ">
+                    <i class="bx bx-print font-size-16 align-middle mr-1"></i> บันทึกรายการลงใบเบิก
+                    </button>
+                  </div>
+                </div>
+              </div>
+    
+    </form>
+
 
       </div>
     </div>
@@ -287,26 +316,73 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
+
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจงจำนวนสินค้าที่เบิกจากคลังลงบิลที่เบิก </span>
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลัง (ใบเบิก) </span>
             </div>
           </div>
-        </div>
-        <div style="">
-          
+
           <div class="form-group row  " >
             <div class="col-md-12 ">
-      
-              
+              <table id="data-table-fifo-topicked" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
             </div>
           </div>
+<?php //echo count($Pick_warehouse_fifo_topicked) ?>
+@IF(!empty($Pick_warehouse_fifo_topicked) && count($Pick_warehouse_fifo_topicked)>0 )
+              <div class="form-group row  divBtnApproved " >
+                <!-- <div class="col-md-2 "></div> -->
+                <div class="col-md-12">
+                   <div class="  " style="">
+                    <button type="button" class="btn btn-primary btn-sm font-size-16  float-right btnPrint ">
+                    <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์ใบเบิก
+                    </button>
+                  </div> 
+                  <div>
+                    <center>
+                    <button type="submit" class="btn btn-primary btn-sm font-size-16 btnApprove ">
+                    <i class="font-size-16 align-middle mr-1"></i> อนุมัติใบเบิก
+                    </button>
+                  </div>
+                </div>
+              </div>
+@ENDIF 
+
+
         </div>
+
       </div>
     </div>
   </div>
   </div> <!-- end col -->
 
+
+<div class="myBorder" style="" >
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่จำนวนไม่เพียงพอในการเบิก </span>
+            </div>
+          </div>
+
+          <div class="form-group row  " >
+            <div class="col-md-12 ">
+              <table id="data-table-fifo-no" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div> <!-- end col -->
 
 
 
@@ -583,6 +659,7 @@ $(function() {
   		            	}else{
   		            		$('.divBtnSave').hide();
   		            	}
+
   		            }, 500);
 
             } );
@@ -655,7 +732,7 @@ $(function() {
                         return '-รอจัดเบิก-';
                       }
                     }},
-                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                      // {data: 'id', title :'Tools', className: 'text-center w80'}, 
                       // {data: 'packing_code_01', title :'test', className: 'text-center '}, 
                   ],
                                 'columnDefs': [
@@ -690,22 +767,25 @@ $(function() {
                         }else{ 
 
                           if (aData['status_delivery'] != "1") {
-                            $('td:last-child', nRow).html(''
-                                + '<a href="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                            // $('td:last-child', nRow).html(''
+                            //     + '<a href="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                             
-                              ).addClass('input');
+                            //   ).addClass('input');
                         }
 
                     }
 
-
+                 
 
                   }
               });
 
+
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
                 oTable2.draw();
               });
+
+
           });
 
 
@@ -798,7 +878,7 @@ $(function() {
                                                         return d ;
                                                      }},
                                                     {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-left'},
-                                           
+
                                               ],
                                               fnRowCallback : function (nRow, aData, iDisplayIndex) {
                                                      var info = $(this).DataTable().page.info();
@@ -809,12 +889,22 @@ $(function() {
                                                           $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'red','font-style':'italic'});
                                                         }
                                                      }
+
+                                                     $(".divBtn").show();
+
+                                                     $('#data-table-fifo-topicked').DataTable().clear().draw();
+                                                     $('#data-table-fifo-no').DataTable().clear().draw();
+                                                     $('.divBtnApproved').hide();
+
                                                   
                                                  },
                                          
                                           });
-                                      
+
+
                                       });
+
+                                    
               // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                               },
                               error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -824,17 +914,25 @@ $(function() {
                           });
 
 
+                   $(".myloading").hide();
 
-                   
-
-
-                 $(".myloading").hide();
                   }, 1500);
 
 
-            } );
 
 
+            });
+
+
+         $('#data-table-packing').on( 'click', 'tr', function () {
+                 setTimeout(function(){
+                   $.fn.dataTable.ext.errMode = 'throw';
+                      $('#data-table-packing').DataTable().draw();
+                 }, 3000);
+          });
+
+
+          $.fn.dataTable.ext.errMode = 'throw';
           var oTableNoPayproduct;
           $(function() {
               oTableNoPayproduct = $('#data-table-no-payproduct').DataTable({
@@ -894,7 +992,7 @@ $(function() {
               });
           });
 
-
+ $.fn.dataTable.ext.errMode = 'throw';
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
@@ -966,8 +1064,179 @@ $(function() {
 
 <script type="text/javascript">
 
+ // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  $.fn.dataTable.ext.errMode = 'throw';
+            var oTableFifo_topicked;
+            $(function() {
+                oTableFifo_topicked = $('#data-table-fifo-topicked').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    destroy:true,
+                    // scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 25,
+                    ajax: {
+                      url: '{{ route('backend.pick_warehouse_fifo_topicked.datatable') }}',
+                      data: function ( d ) {
+                        d.Where={};
+                        $('.myWhere').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Where[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        d.Like={};
+                        $('.myLike').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Like[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        d.Custom={};
+                        $('.myCustom').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        oData = d;
+                      },
+                      method: 'POST'
+                    },
 
+                    columns: [
+                          {data: 'id', title :'ID', className: 'text-center w50'},
+                          {data: 'product_name',   title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left',render: function(d) {
+                            if(d){
+                              return d.replace(/\:/g, "<br>");
+                            }else{
+                              return '';
+                            }
+                          }},
+                          {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+                          {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                          {data: 'amt',
+                          defaultContent: "0",   title :'<center>จำนวนในคลัง</center>', className: 'text-center',render: function(d) {
+                            return d;
+                          }},
+                          {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
+                           {data: 'amt_get',   title :'<center>จำนวนเบิก </center>', className: 'text-center',render: function(d) {
+                              return d ;
+                           }},
+                          {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-left'},
+                          {data: 'status_desc',   title :'<center>สถานะการเบิก</center>', className: 'text-center',render: function(d) {
+                            if(d>0){
+                              return "<span style='color:green;'>อนุมัติแล้ว</span>";
+                            }else{
+                              return "<span style='color:red;'>รออนุมัติ</span>";
+                            }
+                          }},
+                 
+                    ],
+                    fnRowCallback : function (nRow, aData, iDisplayIndex) {
+
+                           var info = $(this).DataTable().page.info();
+                           $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
+
+                           if(aData['amt_get']>aData['amt']){
+                              for (var i = 0; i < 8; i++) {
+                                $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'red','font-style':'italic'});
+                              }
+                           }
+
+                       },
+               
+                });
+            
+            });
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 </script>
+
+
+<script type="text/javascript">
+
+ // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  $.fn.dataTable.ext.errMode = 'throw';
+            var oTableFifo_No;
+            $(function() {
+                oTableFifo_No = $('#data-table-fifo-no').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    destroy:true,
+                    // scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 25,
+                    ajax: {
+                      url: '{{ route('backend.pick_warehouse_fifo_no.datatable') }}',
+                      data: function ( d ) {
+                        d.Where={};
+                        $('.myWhere').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Where[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        d.Like={};
+                        $('.myLike').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Like[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        d.Custom={};
+                        $('.myCustom').each(function() {
+                          if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                            d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                          }
+                        });
+                        oData = d;
+                      },
+                      method: 'POST'
+                    },
+
+                    columns: [
+                          {data: 'id', title :'ID', className: 'text-center w50'},
+                          {data: 'product_name',   title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left',render: function(d) {
+                            if(d){
+                              return d.replace(/\:/g, "<br>");
+                            }else{
+                              return '';
+                            }
+                          }},
+                          {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+                          {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                          {data: 'amt',
+                          defaultContent: "0",   title :'<center>จำนวนในคลัง</center>', className: 'text-center',render: function(d) {
+                            return d;
+                          }},
+                          {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
+                           {data: 'amt_get',   title :'<center>จำนวนเบิก </center>', className: 'text-center',render: function(d) {
+                              return d ;
+                           }},
+                          {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-left'},
+                 
+                    ],
+                    fnRowCallback : function (nRow, aData, iDisplayIndex) {
+                           var info = $(this).DataTable().page.info();
+                           $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
+
+                           if(aData['amt_get']>aData['amt']){
+                              for (var i = 0; i < 8; i++) {
+                                $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'red'});
+                              }
+                           }
+
+                       },
+               
+                });
+            
+            });
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+</script>
+
   <script> 
 
         
@@ -1118,6 +1387,28 @@ $(function() {
 
                          type:'POST',
                          url: " {{ url('backend/ajaxClearConsignment') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               location.reload();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                      });
+              });
+
+
+              $(".btnApprove").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxFifoApproved') }} ", 
                          data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
                                console.log(data); 

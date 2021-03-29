@@ -2100,6 +2100,20 @@ class AjaxController extends Controller
     }
 
 
+    public function ajaxFifoApproved(Request $request)
+    {
+        // return $request;
+        // dd();
+        
+        if($request->ajax()){
+            // if($request->id){
+                DB::select(" UPDATE db_pick_warehouse_fifo_topicked SET status='1' WHERE (status='0') ");
+                // DB::select(' UPDATE db_pick_pack_packing_code SET status_picked=1 WHERE id in ('.$request->picking_id.') ');
+
+                // return response()->json($rs);   
+            // }
+        }
+    }
 
 
 

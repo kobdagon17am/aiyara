@@ -317,7 +317,7 @@ $(function() {
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 10,
-        stateSave: true,
+        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.pick_pack.datatable') }}',
           data: function ( d ) {
@@ -473,7 +473,7 @@ $(function() {
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 10,
-        // stateSave: true,
+        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.pick_pack.datatable') }}',
           data: function ( d ) {
@@ -545,67 +545,51 @@ $(function() {
                 oTableNopacking.draw();
               });
           });
+
+
             $('#data-table').on( 'click', 'tr', function () {
 
   					     setTimeout(function(){
   	            		if($('.select-info').text()!=''){
   	            			var str = $('.select-info').text();
         							var str = str.split(" ");
-        							// if(parseInt(str[0])>1){
         								$('.divBtnSave').show();
-        							// }else{
-        							// 	$('.divBtnSave').hide();
-        							// }
+        				
   		            	}else{
   		            		$('.divBtnSave').hide();
+                       $('input[name*=row_id').remove();
   		            	}
   		            }, 500);
 
             } );
 
-           // Handle form submission event 
-           $('#frm-example').on('submit', function(e){
+           $('#frm-example').on( 'click', 'tr', function (e) {
             // e.preventDefault();
               var form = this;
+
+              $('input[name*=row_id').remove();
 
               console.log(form);
               
               var rows_selected = oTable.column(0).checkboxes.selected();
 
-              console.log(rows_selected);
+               console.log(rows_selected);
 
-               // return false;
+                  // Iterate over all selected checkboxes
+                  $.each(rows_selected, function(index, rowId){
 
-              // Iterate over all selected checkboxes
-              $.each(rows_selected, function(index, rowId){
+                    console.log(rowId);
+                    $('#last_form').after(
+                         $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', 'row_id[]')
+                            .val(rowId)
+                     );
+                  });
 
-                console.log(rowId);
-                // $("#last_form").after("<input type='text' name='row_id[]' value='"+rowId+"' >");
-                 // Create a hidden element 
-                $('#last_form').after(
-                     $('<input>')
-                        .attr('type', 'text')
-                        .attr('name', 'row_id[]')
-                        .val(rowId)
-                 );
-              });
-
-              // FOR DEMONSTRATION ONLY
-              // The code below is not needed in production
-              
-              // Output form data to a console     
-              // $('#example-console-rows').text(rows_selected.join(","));
-              
-              // Output form data to a console     
-              // $('#example-console-form').text($(form).serialize());
-               
-              // Remove added elements
-              // $('input[name="id\[\]"]', form).remove();
-               
-              // Prevent actual form submission
-              // e.preventDefault();
 
                });
+
 
 
           var oTable2;
@@ -621,7 +605,7 @@ $(function() {
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
                   iDisplayLength: 10,
-                  // stateSave: true,
+                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     url: '{{ route('backend.pick_pack_packing_code.datatable') }}',
                     data: function ( d ) {
@@ -687,19 +671,31 @@ $(function() {
             						} 
 			      	      }
 
-                    if(sU!=''&&sD!=''){
+
+                    if (aData['status'] == "1") {
+
+                        $('td', nRow).css('background-color', '#ffd9b3');
+                        var i;
+                        for (i = 0; i < 10 ; i++) {
+                           $("td:eq("+i+")", nRow).prop('disabled',true); 
+                        } 
                         $('td:last-child', nRow).html('-');
-                    }else{ 
+                    }else{
 
-                    	if (aData['status_delivery'] != "1") {
-                    		$('td:last-child', nRow).html(''
-                            + '<a href="{{ route('backend.pick_pack.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                          
-	                          + '<a href="backend/pick_pack/" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-	                        ).addClass('input');
-                		}
+                        if(sU!=''&&sD!=''){
+                            $('td:last-child', nRow).html('-');
+                        }else{ 
 
-                    }
+                        	if (aData['status_delivery'] != "1") {
+                        		$('td:last-child', nRow).html(''
+                                + '<a href="{{ route('backend.pick_pack.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+    	                          
+    	                          + '<a href="backend/pick_pack/" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+    	                        ).addClass('input');
+                    		}
+
+                        }
+                  }
 
 
 
@@ -726,7 +722,7 @@ $(function() {
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
                   iDisplayLength: 10,
-                  // stateSave: true,
+                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     data: function ( d ) {
@@ -801,6 +797,8 @@ $(function() {
 
           $(document).ready(function() {
 
+            $('input[name*=row_id').remove();
+
           		$('input[type=checkbox]').click(function(event) {
           	
                  setTimeout(function(){
@@ -864,37 +862,43 @@ $(function() {
 
 
 
-		       $('#branch_id_search').change(function(){
+      		       $('#branch_id_search').change(function(){
 
-		          var branch_id_fk = this.value;
-		          // alert(warehouse_id_fk);
+      		          var branch_id_fk = this.value;
+      		          // alert(warehouse_id_fk);
 
-		           if(branch_id_fk != ''){
-		             $.ajax({
-		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
-		                  method: "post",
-		                  data: {
-		                    branch_id_fk:branch_id_fk,
-		                    "_token": "{{ csrf_token() }}", 
-		                  },
-		                  success:function(data)
-		                  { 
-		                   if(data == ''){
-		                       alert('ไม่พบข้อมูลคลัง !!.'); 
-		                       $("#warehouse_id_search").val('').trigger('change'); 
-		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
-		                   }else{
-		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
-		                       $.each(data,function(key,value){
-		                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-		                       });
-		                       $('#warehouse_id_search').html(layout);
-		                   }
-		                  }
-		                })
-		           }
-		 
-		      });
+      		           if(branch_id_fk != ''){
+      		             $.ajax({
+      		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+      		                  method: "post",
+      		                  data: {
+      		                    branch_id_fk:branch_id_fk,
+      		                    "_token": "{{ csrf_token() }}", 
+      		                  },
+      		                  success:function(data)
+      		                  { 
+      		                   if(data == ''){
+      		                       alert('ไม่พบข้อมูลคลัง !!.'); 
+      		                       $("#warehouse_id_search").val('').trigger('change'); 
+      		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
+      		                   }else{
+      		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
+      		                       $.each(data,function(key,value){
+      		                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+      		                       });
+      		                       $('#warehouse_id_search').html(layout);
+      		                   }
+      		                  }
+      		                })
+      		           }
+      		 
+      		      });
+
+
+                
+                // $(document).on('click', '.cDelete', function(event) {
+                //   event.preventDefault();
+                // });
 
 
 
