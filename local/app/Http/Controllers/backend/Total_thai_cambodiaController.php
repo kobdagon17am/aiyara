@@ -175,7 +175,7 @@ class Total_thai_cambodiaController extends Controller
             })
 
             ->addColumn('action_date', function ($row) {
-                return is_null($row->action_date) ? '-' : date('d/m/Y', strtotime($row->action_date));
+                return is_null($row->action_date) ? '-' : date('Y/m/d', strtotime($row->action_date));
             })
             ->make(true);
     }

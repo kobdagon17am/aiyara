@@ -12,8 +12,9 @@ class Transfer_corporate_membersController extends Controller
 
     public function index(Request $request)
     {
-      $sBranchs = \App\Models\Backend\Branchs::get();
-      return view('backend.transfer_corporate_members.index')->with(array('sBranchs'=>$sBranchs ) );
+      $data = DB::table('dataset_business_location')
+      ->get();
+      return view('backend.transfer_corporate_members.index')->with(array('business_location' => $data));
     }
 
    public function create()
@@ -51,7 +52,7 @@ class Transfer_corporate_membersController extends Controller
     }
 
 
-    
+
     public function form($id=NULL)
     {
       \DB::beginTransaction();
@@ -59,19 +60,19 @@ class Transfer_corporate_membersController extends Controller
           if( $id ){
             $sRow = \App\Models\Backend\Transfer_corporate_members::find($id);
             $langCnt = count(request('lang'));
-            for ($i=0; $i < $langCnt ; $i++) { 
+            for ($i=0; $i < $langCnt ; $i++) {
 
                 \App\Models\Backend\Transfer_corporate_members::where('id', request('id')[$i])->update(
                       [
                         'product_unit' => request('product_unit')[$i] ,
                         'detail' => request('detail')[$i] ,
-                        
+
                         'date_added' => request('date_added') ,
 
                         'updated_at' => date('Y-m-d H:i:s') ,
                         'status' => request('status')?request('status'):0 ,
                       ]
-                  );     
+                  );
             }
 
           }else{
@@ -80,8 +81,8 @@ class Transfer_corporate_membersController extends Controller
           $groupMaxID = $sRowGroup[0]->group_id+1;
 
             $langCnt = count(request('lang'));
-            for ($i=0; $i < $langCnt ; $i++) { 
-            
+            for ($i=0; $i < $langCnt ; $i++) {
+
                 \App\Models\Backend\Transfer_corporate_members::insert(
                       [
                         'lang_id' => request('lang')[$i] ,
@@ -89,12 +90,12 @@ class Transfer_corporate_membersController extends Controller
 
                         'product_unit' => request('product_unit')[$i] ,
                         'detail' => request('detail')[$i] ,
-                        
+
                         'date_added' => request('date_added') ,
                         'created_at' => date('Y-m-d H:i:s') ,
                         'status' => 1,
                       ]
-                  );     
+                  );
             }
 
           }
@@ -120,17 +121,80 @@ class Transfer_corporate_membersController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Transfer_corporate_members::search()->orderBy('id', 'asc');
-      $sQuery = \DataTables::of($sTable);
-      return $sQuery
-      // ->addColumn('name', function($row) {
-      //   // return $row->fname.' '.$row->surname;
-      // })
-      // ->addColumn('updated_at', function($row) {
-      //   return is_null($row->updated_at) ? '-' : $row->updated_at;
-      // })
-      ->make(true);
+    public function Datatable(Request $rs)
+    {
+      if ($rs->startDate) {
+        $date = str_replace('/','-',$rs->startDate);
+        $s_date = date('Y-m-d', strtotime($date));
+
+      } else {
+          $s_date = '';
+      }
+
+      if ($rs->endDate) {
+          $date = str_replace('/','-',$rs->endDate);
+          $e_date = date('Y-m-d', strtotime($date));
+      } else {
+          $e_date = '';
+      }
+
+        $sTable = DB::table('db_report_bonus_transfer_member')
+            ->select('db_report_bonus_transfer_member.*', 'customers.user_name','customers.business_name','customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_id_fk', '=', 'customers.id')
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_member.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_member.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_member.bonus_transfer_date', 'DESC')
+            ->get();
+
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+
+            ->addColumn('id', function ($row) {
+                return $row->user_name;
+            })
+            ->addColumn('cus_name', function ($row) {
+                return $row->business_name;
+            })
+            ->addColumn('destination_bank', function ($row) {
+                return is_null($row->bank_name) ? '-' : $row->bank_name;
+            })
+
+            ->addColumn('transferee_bank_no', function ($row) {
+                return is_null($row->bank_account) ? '-' : $row->bank_account;
+            })
+            ->addColumn('amount', function ($row) {
+                return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
+            })
+
+            ->addColumn('transfer_result', function ($row) {
+                // value="0" รออนุมัติ
+                // value="1" อนุมัติ
+                // value="3" ไม่อนุมัติ
+                // value="2" ยกเลิก
+                if ($row->status_transfer == '0') {
+                    $status = 'รออนุมัติ';
+                } elseif ($row->status_transfer == '1') {
+                    $status = 'โอนสำเร็จ';
+                } elseif ($row->status_transfer == '2') {
+                    $status = 'ยกเลิก';
+                } elseif ($row->status_transfer == '3') {
+                    $status = 'ไม่อนุมัติ';
+                } else {
+                    $status = '-';
+                }
+                return $status;
+            })
+
+            ->addColumn('note', function ($row) {
+                return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
+            })
+            ->addColumn('action_date', function ($row) {
+                return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
+            })
+            ->make(true);
     }
 
 

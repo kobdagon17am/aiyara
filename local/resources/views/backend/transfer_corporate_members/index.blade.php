@@ -21,7 +21,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -40,167 +40,165 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                  <div class="col-8">
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-                      <div class="col-md-3 ">
-                        <div class="form-group row">
-                          <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
-                            <option value="">สาขา</option>
-                            @if(@$sBranchs)
-                            @foreach(@$sBranchs AS $r)
-                            <option value="{{$r->id}}"  >
-                              {{$r->b_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12 d-flex ">
+                            <div class="col-md-4 ">
+                                <div class="form-group row">
+                                    <select id="business_location" name="business_location"
+                                        class="form-control select2-templating ">
+                                        <option value="">Business Location</option>
+                                        @if (@$business_location)
+                                            @foreach (@$business_location as $r)
+                                                <option value="{{ $r->id }}">
+                                                    {{ $r->txt_desc }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group row">
+                                    <select id="status_search" name="status_search"
+                                        class="form-control select2-templating ">
+                                        <option value="">สถานะ</option>
+                                        <option value="0">รออนุมัติ</option>
+                                        <option value="1">โอนสำเร็จ</option>
+                                        <option value="3">ไม่อนุมัติ</option>
+                                        <option value="2">ยกเลิก</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex  ">
+                                <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}" placeholder="วันเริ่ม" />
+                                <input id="endDate" autocomplete="off" value="{{ date('t/m/Y') }}" placeholder="วันสิ้นสุด" />
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group row"> &nbsp; &nbsp;
+                                    <button type="button" id="search-form"
+                                        class="btn btn-success btn-sm waves-effect btnSearchInList "
+                                        style="font-size: 14px !important;">
+                                        <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="warehouse_id_search" name="warehouse_id_search" class="form-control select2-templating "  >
-                            <option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="status_search" name="status_search" class="form-control select2-templating " >
-                            <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-4 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
-                          </button>
-                        </div>
-                      </div>
                     </div>
-                  </div>
 
-
-                  </div>
-
-                  <div class="col-4 text-right" style="{{@$sC}}" >
-                 <!--    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.check_money_daily.create') }}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
-                    </a> -->
-                  </div>
 
                 </div>
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
+                {{-- <div class="col-4 text-right" style="{{ @$sC }}">
+                    <!--    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.check_money_daily.create') }}">
+                  <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
+                </a> -->
+                </div> --}}
 
             </div>
+
+            <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+            </table>
+            <div id="view_transfer"></div>
+
         </div>
+    </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
 
 @endsection
 
 @section('script')
-
 <script>
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";
-var oTable;
-$(function() {
-    oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
-        ajax: {
-          url: '{{ route('backend.commission_transfer.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
+  var sU = "{{ @$sU }}";
+  var sD = "{{ @$sD }}";
+  var oTable;
+  $(function() {
+      oTable = $('#data-table').DataTable({
+          // "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+          processing: true,
+          serverSide: true,
+          scroller: true,
+          scrollCollapse: true,
+          scrollX: true,
+          ordering: false,
+          scrollY: '' + ($(window).height() - 370) + 'px',
+          iDisplayLength: 25,
+          ajax: {
+              url: '{{ route('backend.transfer_corporate_members.datatable') }}',
+              data: function(d) {
+                  d.business_location = $('#business_location').val();
+                  d.status_search = $('#status_search').val();
+                  d.startDate = $('#startDate').val();
+                  d.endDate = $('#endDate').val();
+              },
+              method: 'POST'
           },
-          method: 'POST'
-        },
 
-// วันที่ทำรายการจ่าย รหัสสมาชิก  ชื่อนิติบุคคล ค่าคอมมิชชั่น จำนวนภาษีมูลค่าเพิ่ม  จำนวนภาษีหัก ณ ที่จ่าย  ค่าคอมมิชชั่นที่จ่ายจริง
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'action_date', title :'<center>วันที่ทำรายการจ่าย</center>', className: 'text-left'},
-            {data: 'status',   title :'<center>รหัสสมาชิก</center>', className: 'text-center',render: function(d) {
-               return 'A221158';
-            }},
-            {data: 'status',   title :'<center>ชื่อนิติบุคคล</center>', className: 'text-center',render: function(d) {
-               return 'หจก.ปาฏิหาริย์ กรุ๊ป';
-            }},
-            {data: 'status',   title :'<center>ค่าคอมมิชชั่น</center>', className: 'text-center',render: function(d) {
-               return '14,000.00';
-            }},
-            {data: 'status',   title :'<center>จำนวนภาษีมูลค่าเพิ่ม</center>', className: 'text-center',render: function(d) {
-               return '900.00';
-            }},
-            {data: 'status',   title :'<center>จำนวนภาษีหัก ณ ที่จ่าย</center>', className: 'text-center',render: function(d) {
-               return '20,000';
-            }},
-            {data: 'status',   title :'<center>ค่าคอมมิชชั่นที่จ่ายจริง</center>', className: 'text-center',render: function(d) {
-               return '5,000';
-            }},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
-        ],
-        rowCallback: function(nRow, aData, dataIndex){
 
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+          columns: [{
+                  data: 'action_date',
+                  title: '<center>วันที่ทำรายการ</center>',
+                  className: 'text-center'
+              },
 
-            $('td:last-child', nRow).html('-');
+              {
+                  data: 'id',
+                  title: 'UserName',
+                  className: 'text-center'
+              },
+              {
+                  data: 'cus_name',
+                  title: '<center>ชื่อนิติบุคคล</center>',
+                  className: 'text-left'
+              },
+              {
+                  data: 'destination_bank',
+                  title: '<center>ธนาคารปลายทาง </center>',
+                  className: 'text-center'
+              },
+              {
+                  data: 'transferee_bank_no',
+                  title: '<center>เลขที่บัญชี</center>',
+                  className: 'text-left'
+              },
+              {
+                  data: 'fee',
+                  title: '<center>ค่าธรรมเนียม</center>',
+                  className: 'text-right'
+              },
+              {
+                  data: 'amount',
+                  title: '<center>จำนวนเงิน</center>',
+                  className: 'text-right'
+              },
+              {
+                  data: 'transfer_result',
+                  title: '<center>ผลการโอน</center>',
+                  className: 'text-center'
+              },
+              {
+                  data: 'note',
+                  title: '<center>หมายเหตุ</center>',
+                  className: 'text-center'
+              },
+          ],
+      });
+      $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+          oTable.draw();
+      });
 
-          // $('td:last-child', nRow).html(''
-          //   + '<a href="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-          //   + '<a href="javascript: void(0);" data-url="{{ route('backend.check_money_daily.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          // ).addClass('input');
+      $('#search-form').on('click', function(e) {
 
-          }
+          oTable.draw();
+          e.preventDefault();
+      });
+  });
 
-        }
-    });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
-});
 </script>
 
 
@@ -225,7 +223,7 @@ $(function() {
 
          $('#startDate').change(function(event) {
            $('#endDate').val($(this).val());
-         });        
+         });
 
 </script>
 

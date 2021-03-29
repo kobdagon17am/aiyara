@@ -180,7 +180,7 @@ class Commission_aistockistController extends Controller
                 return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
             })
             ->addColumn('action_date', function ($row) {
-                return is_null($row->bonus_transfer_date) ? '-' : date('d/m/Y', strtotime($row->bonus_transfer_date));
+                return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
             })
             ->addColumn('view', function ($row) {
                 $date = strtotime($row->bonus_transfer_date);
