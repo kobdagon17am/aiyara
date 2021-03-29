@@ -122,15 +122,19 @@ class Commission_transferController extends Controller
 
     public function Datatable(Request $rs)
     {
-      if($rs->startDate){
-        $s_date= date('Y-m-d',strtotime($rs->startDate));
-      }else{
-        $s_date ='';
+      if ($rs->startDate) {
+        $date = str_replace('/','-',$rs->startDate);
+        $s_date = date('Y-m-d', strtotime($date));
+
+      } else {
+          $s_date = '';
       }
-      if($rs->endDate){
-        $e_date= date('Y-m-d',strtotime($rs->endDate));
-      }else{
-        $e_date ='';
+
+      if ($rs->endDate) {
+          $date = str_replace('/','-',$rs->endDate);
+          $e_date = date('Y-m-d', strtotime($date));
+      } else {
+          $e_date = '';
       }
 
         //$sTable = \App\Models\Backend\Commission_transfer::search()->orderBy('id', 'asc');

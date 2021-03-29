@@ -17,10 +17,10 @@ class RegisterController extends Controller
   public function __construct()
   {
     $this->middleware('customer');
-  } 
+  }
 
   public function index($id,$line_type){
-    
+
       if(empty($id) || empty($line_type)){
         return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
 
@@ -35,13 +35,17 @@ class RegisterController extends Controller
        ->select('*')
        ->get();
 
+       $country = DB::table('db_country')
+       ->select('*')
+       ->get();
+
        $business_location = DB::table('dataset_business_location')
        ->select('*')
        ->where('lang_id','=',1)
        ->where('status','=',1)
        ->get();
 
-       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces,'business_location'=>$business_location];
+       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country];
 
        return view('frontend/newregister',compact('data'));
 
@@ -94,7 +98,7 @@ class RegisterController extends Controller
     }
 
   }
-  
+
   public function check_user(Request $request){
     // $data =DB::table('customers')
     // ->where('user_name','=',$request->user_name)
@@ -110,18 +114,18 @@ class RegisterController extends Controller
       return $resule;
     }
   }
-  
+
   public function register_new_member(Request $req){
 
     if(empty($req->introduce)){
       $data = Register::register($req);
-      
+
       //add data
 
       if($data['status'] == 'success'){
 
         //return redirect('home')->withInput()->withSuccess($data['massage']);
-        return view('frontend/register_success',compact('data'));  
+        return view('frontend/register_success',compact('data'));
 
       }else{
         return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);
@@ -138,7 +142,7 @@ class RegisterController extends Controller
         $data = Register::register($req,$introduce_id->id);
 
         if($data['status'] == 'success'){
-          return view('frontend/register_success',compact('data'));         
+          return view('frontend/register_success',compact('data'));
           //return redirect('home')->withInput()->withSuccess($data['massage']);
         }else{
           return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);

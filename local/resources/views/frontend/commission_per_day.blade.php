@@ -18,7 +18,7 @@ use App\Models\Frontend\DirectSponsor;
         <div class="card">
 
          <div class="card-header">
-            <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน</h4>
+            <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
 
         </div>
         <div class="card-block">

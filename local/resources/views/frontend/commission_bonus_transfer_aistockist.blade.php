@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist</h4>
+                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
                 </div>
 
                 <div class="card-block">
@@ -89,11 +89,11 @@
                         className: 'text-center'
                     },
 
-                    {
-                        data: 'id',
-                        title: 'UserName',
-                        className: 'text-center'
-                    },
+                    // {
+                    //     data: 'id',
+                    //     title: 'UserName',
+                    //     className: 'text-center'
+                    // },
                     {
                         data: 'cus_name',
                         title: '<center>ชื่อ-นามสกุล</center>',
@@ -134,7 +134,7 @@
                         title: '<center>view</center>',
                         className: 'text-left'
                     },
-                ],
+                ],order:[[0,'DESC']],
             });
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
                 oTable.draw();

@@ -422,6 +422,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('total_thai_cambodia', 'Total_thai_cambodiaController');
     Route::post('total_thai_cambodia/datatable', 'Total_thai_cambodiaController@Datatable')->name('total_thai_cambodia.datatable');
+    Route::post('total_thai_cambodia/datatable_total', 'Total_thai_cambodiaController@DatatableTotal')->name('total_thai_cambodia.datatable_total');
 
     Route::resource('cambodia_account', 'Cambodia_accountController');
     Route::post('cambodia_account/datatable', 'Cambodia_accountController@Datatable')->name('cambodia_account.datatable');

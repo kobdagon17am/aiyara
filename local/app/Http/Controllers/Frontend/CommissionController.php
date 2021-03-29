@@ -36,7 +36,7 @@ class CommissionController extends Controller
 
 
         ->addColumn('bonus_transfer_date', function ($row) {
-          return date('d/m/Y', strtotime($row->bonus_transfer_date));
+          return date('Y/m/d', strtotime($row->bonus_transfer_date));
       })
 
             ->addColumn('bonus_total', function ($row) {
@@ -113,7 +113,7 @@ class CommissionController extends Controller
         $sQuery = Datatables::of($db_report_bonus_per_day);
         return $sQuery
             ->addColumn('action_date', function ($row) {
-                return date('d/m/Y', strtotime($row->action_date));
+                return date('Y/m/d', strtotime($row->action_date));
             })
             ->addColumn('pv', function ($row) {
                 if ($row->pv) {
@@ -200,7 +200,7 @@ class CommissionController extends Controller
 
             ->addColumn('outtime', function ($row) {
                 if ($row->outtime) {
-                    return date('d/m/Y', strtotime($row->outtime));
+                    return date('Y/m/d', strtotime($row->outtime));
                 } else {
                     return '-';
                 }
@@ -432,7 +432,7 @@ class CommissionController extends Controller
             return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
         })
         ->addColumn('action_date', function ($row) {
-            return is_null($row->bonus_transfer_date) ? '-' : date('d/m/Y', strtotime($row->bonus_transfer_date));
+            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
         })
         ->addColumn('view', function ($row) {
             $date = strtotime($row->bonus_transfer_date);
@@ -553,7 +553,7 @@ class CommissionController extends Controller
             return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
         })
         ->addColumn('action_date', function ($row) {
-            return is_null($row->bonus_transfer_date) ? '-' : date('d/m/Y', strtotime($row->bonus_transfer_date));
+            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
         })
 
 

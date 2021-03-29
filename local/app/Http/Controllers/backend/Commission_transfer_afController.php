@@ -124,16 +124,20 @@ class Commission_transfer_afController extends Controller
 
     public function Datatable(Request $rs)
     {
-        if ($rs->startDate) {
-            $s_date = date('Y-m-d', strtotime($rs->startDate));
-        } else {
-            $s_date = '';
-        }
-        if ($rs->endDate) {
-            $e_date = date('Y-m-d', strtotime($rs->endDate));
-        } else {
-            $e_date = '';
-        }
+      if ($rs->startDate) {
+        $date = str_replace('/','-',$rs->startDate);
+        $s_date = date('Y-m-d', strtotime($date));
+
+      } else {
+          $s_date = '';
+      }
+
+      if ($rs->endDate) {
+          $date = str_replace('/','-',$rs->endDate);
+          $e_date = date('Y-m-d', strtotime($date));
+      } else {
+          $e_date = '';
+      }
 
         $sTable = DB::table('db_report_bonus_transfer_af')
             ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')

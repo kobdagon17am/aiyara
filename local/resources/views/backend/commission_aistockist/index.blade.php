@@ -130,7 +130,7 @@
         var oTable;
         $(function() {
             oTable = $('#data-table').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                // "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                 processing: true,
                 serverSide: true,
                 scroller: true,
@@ -170,37 +170,37 @@
                     {
                         data: 'destination_bank',
                         title: '<center>ธนาคารปลายทาง </center>',
-                        className: 'text-left'
+                        className: 'text-center'
                     },
                     {
                         data: 'transferee_bank_no',
                         title: '<center>เลขที่บัญชี</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'fee',
                         title: '<center>ค่าธรรมเนียม</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'amount',
                         title: '<center>จำนวนเงิน</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'transfer_result',
                         title: '<center>ผลการโอน</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'note',
                         title: '<center>หมายเหตุ</center>',
-                        className: 'text-left'
+                        className: 'text-center'
                     },
                     {
                         data: 'view',
                         title: '<center>view</center>',
-                        className: 'text-left'
+                        className: 'text-center'
                     },
                 ],
             });

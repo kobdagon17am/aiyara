@@ -8,7 +8,6 @@
  @endsection
 
  @section('conten')
-
  <div class="card">
  	<div class="card-header">
  		<h4>กรอกข้อมูลลงทะเบียนสมาชิกใหม่</h4>
@@ -17,7 +16,7 @@
  	<div class="card-block">
  		<form action="{{route('register_new_member')}}" id="register_new_member" method="POST" enctype="multipart/form-data">
  			@csrf
-        
+
 
        <div class="form-group row">
          <div class="col-sm-3">
@@ -34,7 +33,7 @@
           <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{$data['line_type_back']}} </font></span>
 
           {{--  <input type="text" class="form-control"   placeholder="สายงาน" value="{{$data['line_type_back']}}" disabled=""> --}}
-          <input type="hidden" name="line_type_back" value="{{$data['line_type_back']}}">        
+          <input type="hidden" name="line_type_back" value="{{$data['line_type_back']}}">
 
         </div>
 
@@ -49,7 +48,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <label><b>ประเทศ</b></label>
+          <label><b> Besines Location </b></label>
           <select name="business_location" class="form-control">
             @foreach($data['business_location'] as $business_location_value)
             <option value="{{ $business_location_value->id }}" @if($business_location_value->id == $data['data']->business_location_id) selected="" @endif>{{ $business_location_value->txt_desc }}</option>
@@ -63,7 +62,7 @@
         <label>คำนำหน้าชื่อ </label>
         <select class="form-control" name="name_prefix">
          <option value="คุณ">คุณ</option>
-         <option value="นาย">นาย</option> 
+         <option value="นาย">นาย</option>
          <option value="นาง">นาง</option>
          <option value="นางสาว">นางสาว</option>
        </select>
@@ -107,7 +106,23 @@
   <label>เลขที่บัตรประชาชน <font class="text-danger">*</font></label>
   <input class="form-control" type="text" placeholder="เลขที่บัตรประชาชน" name="id_card" value="{{ old('id_card') }}" required="">
 </div>
+
+
+
+<div class="col-sm-3">
+  <label>สัญชาติ <font class="text-danger">*</font></label>
+  <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
+    <option value="" >Select</option>
+    @foreach($data['country'] as $country_value)
+    <option value="{{ $country_value->nation_id }}"  @if($country_value->nation_id == $data['data']->nation_id) selected="" @endif>{{ $country_value->nation_name_en }}</option>
+
+    @endforeach
+  </select>
 </div>
+
+</div>
+
+
 
 <div class="form-group row">
   <div class="col-sm-12">
@@ -180,7 +195,7 @@
 <div class="form-group row">
  <div class="col-sm-12">
   <h3 class="sub-title" style="color: #000;font-size: 16px">ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน </h3>
-</div> 
+</div>
 </div>
 
 <div class="col-sm-12 col-xl-6 m-b-30">
@@ -209,7 +224,7 @@
 <div class="col-sm-3">
   <label>หมู่ที่ <font class="text-danger">*</font></label>
   <input type="text" class="form-control" placeholder="หมู่ที่" id="moo" name="moo" value="{{ old('moo') }}" required="">
-</div> 
+</div>
 
 <div class="col-sm-3">
   <label>ตรอก/ซอย <font class="text-danger">*</font></label>
@@ -366,7 +381,7 @@
    </div>
  </div>
  <div class="form-group row">
-  <div class="col-sm-12"> 
+  <div class="col-sm-12">
    <label>เอกสารการสมัคร</label>
    <input type="file" id="file_3" name="file_3" class="form-control">
  </div>
@@ -376,25 +391,25 @@
 
 <div class="col-sm-6">
  <div class="form-group row">
-  <div class="col-sm-12"> 
+  <div class="col-sm-12">
     <label>ภาพใบหน้าพร้อมถือบัตรประชาชน</label>
     <input type="file" id="file_4" name="file_4" class="form-control">
 
   </div>
-</div> 
+</div>
 
-<div class="m-t-2 col-sm-12 text-center"> 
+<div class="m-t-2 col-sm-12 text-center">
   <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
 </div>
 </div>
 
 <div class="form-group row text-right">
  <label class="col-sm-2"></label>
- <div class="col-sm-10"> 
+ <div class="col-sm-10">
   <button type="submit" class="btn btn-primary m-b-0">Submit</button>
 </div>
 </div>
-</form> 
+</form>
 </div>
 
 </div>
@@ -440,7 +455,7 @@
       // district = $('#district').val(card_district);
       // district_sub = $('#district_sub').val(card_district_sub);
       // province = $('#province').val(card_province);
-      
+
 
       var card_province = $('#card_province').val();
       $('#province').val(card_province).change();
@@ -480,7 +495,7 @@
           Swal.fire({
             icon: 'error',
             title: data['data']['message'],
-          }) 
+          })
 
         }else {
           Swal.fire({
@@ -492,7 +507,7 @@
         }
 
         console.log(data);
-      })  
+      })
       .fail(function() {
         console.log("error");
       })
@@ -553,9 +568,9 @@
       url: "{{ route('location') }}",
       data: {id:id_province,function:'provinces'},
       success: function(data){
-        $('#card_district').html(data); 
-        $('#card_district_sub').val('');  
-        $('#card_zipcode').val('');  
+        $('#card_district').html(data);
+        $('#card_district_sub').val('');
+        $('#card_zipcode').val('');
       }
     });
   });
@@ -567,7 +582,7 @@
       url: "{{ route('location') }}",
       data: {id:id_district,function:'district'},
       success: function(data){
-        $('#card_district_sub').html(data);  
+        $('#card_district_sub').html(data);
 
       }
     });
@@ -596,9 +611,9 @@
      url: "{{ route('location') }}",
      data: {id:id_province,function:'provinces'},
      success: function(data){
-      $('#district').html(data); 
-      $('#district_sub').val('');  
-        // $('#zipcode').val(''); 
+      $('#district').html(data);
+      $('#district_sub').val('');
+        // $('#zipcode').val('');
       }
     });
     if (ckeck_address.checked == true){
@@ -616,7 +631,7 @@
       url: "{{ route('location') }}",
       data: {id:id_district,function:'district'},
       success: function(data){
-        $('#district_sub').html(data);  
+        $('#district_sub').html(data);
       }
     });
 

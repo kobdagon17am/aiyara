@@ -10,13 +10,13 @@ class Register extends Model
 	public static function register($req,$introduce_id=''){
 
         $type_introduce = LineModel::check_type_introduce($introduce_id,$req->upline_id);
-      
+
         if( $type_introduce['status'] == 'success'){
             $introduce_type = $type_introduce['data']->line_type;
         }else{
             $introduce_type = '';
         }
-        
+
         $id =DB::table('Customers')
         ->select('id')
         ->orderby('id','DESC')
@@ -38,7 +38,7 @@ class Register extends Model
     $pass = implode($pass); //turn the array into a string
     $pass_db =md5($pass);
 
-  
+
     $prefix_name= (trim($req->input('name_prefix')) == '') ? null : $req->input('name_prefix');
     $first_name= (trim($req->input('name_first')) == '') ? null : $req->input('name_first');
     $last_name= (trim($req->input('name_last')) == '') ? null : $req->input('name_last');
@@ -51,6 +51,8 @@ class Register extends Model
     $birth_day= (trim($req->input('birth_day')) == '') ? null : $req->input('birth_day');
 
     $id_card= (trim($req->input('id_card')) == '') ? null : $req->input('id_card');
+    $nation_id= (trim($req->input('nation_id')) == '') ? null : $req->input('nation_id');
+
     $email= (trim($req->input('email')) == '') ? null : $req->input('email');
     $line_type = (trim($req->input('line_type_back')) == '') ? null : $req->input('line_type_back');
     $upline_id = (trim($req->input('upline_id')) == '') ? null : $req->input('upline_id');
@@ -61,7 +63,7 @@ class Register extends Model
     $moo= (trim($req->input('moo')) == '') ? null : $req->input('moo');
     $soi= (trim($req->input('soi')) == '') ? null : $req->input('soi');
     $road= (trim($req->input('road')) == '') ? null : $req->input('road');
-    
+
     $province= ($req->province == '') ? null : $req->province;
     $district= ( $req->district == '') ? null : $req->district;
     $district_sub= ($req->district_sub == '') ? null : $req->district_sub;
@@ -72,7 +74,7 @@ class Register extends Model
     $card_moo= (trim($req->input('card_moo')) == '') ? null : $req->input('card_moo');
     $card_soi= (trim($req->input('card_soi')) == '') ? null : $req->input('card_soi');
 
-   
+
     $card_province= ($req->card_province == '') ? null : $req->card_province;
     $card_district= ( $req->card_district == '') ? null : $req->card_district;
 
@@ -92,7 +94,7 @@ class Register extends Model
     $bank_name= (trim($req->input('bank_name')) == '') ? null : $req->input('bank_name');
     $tel_home= (trim($req->input('tel_home')) == '') ? null : $req->input('tel_home');
     $tel_mobile= (trim($req->input('tel_mobile')) == '') ? null : $req->input('tel_mobile');
-     
+
 
     $count_user = DB::table('customers')
     ->select('*')
@@ -107,6 +109,7 @@ class Register extends Model
     $check_id_card = DB::table('customers')
     ->select('*')
     ->where('id_card','=',$id_card)
+    ->where('nation_id','=',$nation_id)
     ->count();
 
     $check_email = DB::table('customers')
@@ -138,7 +141,7 @@ class Register extends Model
    }else{
        try {
           DB::BeginTransaction();
-  //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร  
+  //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร
           $strtime = strtotime(date('Y-m-t'));
           $caltime=strtotime("+1 Month",$strtime);
           $two_month = date("Y-m-t", $caltime);
@@ -153,9 +156,10 @@ class Register extends Model
              'business_name'=>$business_name,
              'family_status'=>$family_status,
              'id_card'=>$id_card,
+             'nation_id'=>$nation_id,
              'email'=>$email,
              'line_type'=>$line_type,
-             'introduce_type'=>$introduce_type, 
+             'introduce_type'=>$introduce_type,
              'upline_id'=>$upline_id,
              'birth_day'=>$birth_day,
              'introduce_id'=>$introduce_id,
@@ -258,7 +262,7 @@ class Register extends Model
                  ->insert(['customer_id'=>$id,'type'=>'4','url'=>$url,'file'=>$f_name,'status'=>'W']);
              }
          }
-         
+
          $data = ['status'=>'success','massage'=>'Add User Success','data'=>$data_customer,'pass'=>$pass,'search_id'=>$id];
 
      } catch (Exception $e) {
