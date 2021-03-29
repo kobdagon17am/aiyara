@@ -24,6 +24,7 @@ class Check_stockController extends Controller
       $Check_stock = \App\Models\Backend\Check_stock::get();
 
       $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
@@ -31,7 +32,7 @@ class Check_stockController extends Controller
 
       return View('backend.check_stock.index')->with(
         array(
-           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,'sBusiness_location'=>$sBusiness_location,
         ) );
 
     }
@@ -59,8 +60,14 @@ class Check_stockController extends Controller
     {
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Check_stock::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+
+      if(isset($req->id)){
+        $sTable = \App\Models\Backend\Check_stock::where('id',$req->id);
+      }else{
+        $sTable = \App\Models\Backend\Check_stock::search()->orderBy('id', 'asc');
+      }
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {

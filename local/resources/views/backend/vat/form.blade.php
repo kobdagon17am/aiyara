@@ -49,14 +49,14 @@
                             </div>
 
                              <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label">Vat :</label>
+                                <label for="" class="col-md-3 col-form-label">Vat (%) :</label>
                                 <div class="col-md-9">
                                     <input class="form-control NumberOnly " type="text" value="{{ @$sRow->vat }}" name="vat"  >
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label">Tax :</label>
+                                <label for="" class="col-md-3 col-form-label">Tax (%) :</label>
                                 <div class="col-md-9">
                                     <input class="form-control NumberOnly " type="text" value="{{ @$sRow->tax }}" name="tax"  >
                                 </div>
@@ -64,9 +64,23 @@
 
 
                             <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label">นิติบุคคล :</label>
+                                <label for="juristic_person" class="col-md-3 col-form-label">นิติบุคคล (%) :</label>
                                 <div class="col-md-9">
                                     <input class="form-control NumberOnly " type="text" value="{{ @$sRow->juristic_person }}" name="juristic_person"  >
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label for="aistockis_bonus" class="col-md-3 col-form-label">Ai-Stockis Bonus (%) :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->aistockis_bonus }}" name="aistockis_bonus"  >
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label for="agency_bonus" class="col-md-3 col-form-label">Agency Bonus (%) :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->agency_bonus }}" name="agency_bonus"  >
                                 </div>
                             </div>
 

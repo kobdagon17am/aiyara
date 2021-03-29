@@ -24,15 +24,16 @@ class Check_stock_accountController extends Controller
       $Check_stock = \App\Models\Backend\Check_stock_account::get();
 
       $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
 
-
       return View('backend.check_stock_account.index')->with(
         array(
-           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
+           'sBusiness_location'=>$sBusiness_location,
         ) );
 
     }
@@ -46,6 +47,10 @@ class Check_stock_accountController extends Controller
 
     public function edit($id)
     {
+       $sRow = \App\Models\Backend\Check_stock::find($id);
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       $Action_user = DB::select(" select * from ck_users_admin  ");
+       return View('backend.check_stock_account.form')->with(array('sRow'=>$sRow, 'id'=>$id,'sBusiness_location'=>$sBusiness_location,'Action_user'=>$Action_user) );
     }
 
     public function update(Request $request, $id)

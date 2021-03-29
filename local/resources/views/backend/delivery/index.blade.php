@@ -384,7 +384,7 @@ $(function() {
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 10,
-        stateSave: true,
+        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.delivery.datatable') }}',
           data: function ( d ) {
@@ -489,22 +489,40 @@ $(function() {
       			      	$("td:eq(10)", nRow).prop('disabled',true); 
     			      } 
 
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{ 
 
-                	if (aData['status_delivery'] != "1") {
+                    if(aData['status_pick_pack']=='1'){
+                        $('td', nRow).css('background-color', '#ffd9b3');
+                        var i;
+                        for (i = 0; i < 10 ; i++) {
+                           $("td:eq("+i+")", nRow).prop('disabled',true); 
+                        }
+                        $('td:last-child', nRow).html('-');
+                        $('td:eq(8)', nRow).html(''
+                           + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                         ).addClass('input');
 
-	                    // $('td:last-child', nRow).html(''
-	                    //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                      
-	                    // ).addClass('input');
+                    }else{
+                    
+                          if(sU!=''&&sD!=''){
+                              $('td:last-child', nRow).html('-');
+                          }else{ 
+
+                            if (aData['status_delivery'] != "1") {
+
+                                // $('td:last-child', nRow).html(''
+                                //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                  
+                                // ).addClass('input');
+                              }
+
+                              // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+                          }
 
                     }
 
-                    // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
-                }
+
               }
           });
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -526,7 +544,7 @@ $(function() {
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 10,
-        // stateSave: true,
+        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.delivery.datatable') }}',
           data: function ( d ) {
@@ -668,7 +686,7 @@ $(function() {
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
                   iDisplayLength: 10,
-                  // stateSave: true,
+                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     data: function ( d ) {
@@ -720,7 +738,7 @@ $(function() {
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                      {data: 'status_delivery',   title :'<center>สถานะการส่ง </center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
@@ -730,10 +748,6 @@ $(function() {
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
-
-                     // $('td:eq(4)', nRow).html(''
-                     //        + '<a href="" class="btn btn-sm btn-primary btnEditAddr " data-id="'+aData['id']+'" data-receipt_no="'+aData['receipt']+'" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                     //      ).addClass('input');
 
                   	if (aData['status_delivery'] == "1") {
 
@@ -746,19 +760,33 @@ $(function() {
             						} 
 			      	      }
 
-                    if(sU!=''&&sD!=''){
+                    if(aData['status_pick_pack']=='1'){
+                        $('td', nRow).css('background-color', '#ffd9b3');
+                        var i;
+                        for (i = 0; i < 10 ; i++) {
+                           $("td:eq("+i+")", nRow).prop('disabled',true); 
+                        }
                         $('td:last-child', nRow).html('-');
-                    }else{ 
+                        $('td:eq(4)', nRow).html(''
+                           + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                         ).addClass('input');
 
-                    	if (aData['status_delivery'] != "1") {
-                    		$('td:last-child', nRow).html(''
-                            + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                          
-	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-	                        ).addClass('input');
-                		}
+                    }else{
 
+                        if(sU!=''&&sD!=''){
+                            $('td:last-child', nRow).html('-');
+                        }else{ 
+
+                        	if (aData['status_delivery'] != "1") {
+                        		$('td:last-child', nRow).html(''
+                                + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+    	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+    	                        ).addClass('input');
+                    		  }
+                        }
                     }
+
+
                   }
               });
 
@@ -782,7 +810,7 @@ $(function() {
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
                   iDisplayLength: 10,
-                  // stateSave: true,
+                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     data: function ( d ) {

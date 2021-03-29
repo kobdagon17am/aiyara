@@ -54,6 +54,8 @@ class VatController extends Controller
           $sRow->vat    = request('vat');
           $sRow->tax    = request('tax');
           $sRow->juristic_person    = request('juristic_person');
+          $sRow->aistockis_bonus    = request('aistockis_bonus');
+          $sRow->agency_bonus    = request('agency_bonus');
 
           $sRow->action_user    = \Auth::user()->id;
                     

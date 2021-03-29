@@ -47,9 +47,13 @@ class Pick_warehouse_fifoController extends Controller
       DB::select('TRUNCATE db_frontstore_products_list_tmp');
       DB::select('TRUNCATE db_pick_warehouse_fifo');
 
-        if(!empty($request->picking_id)){
+      DB::select('TRUNCATE db_pick_warehouse_fifo_topicked');
+      DB::select('TRUNCATE db_pick_warehouse_fifo_no');
 
-             
+
+      DB::select(' UPDATE db_pick_pack_packing_code SET status=1 WHERE id in ('.$request->picking_id.') ');
+
+      if(!empty($request->picking_id)){
 
               DB::select(' 
                   insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code in(
@@ -102,8 +106,10 @@ class Pick_warehouse_fifoController extends Controller
               $product_id = [];
               foreach ($product as $key => $value) {
                  array_push($product_id,$value->product_id_fk);
-                 DB::select('insert ignore into db_pick_warehouse_fifo (product_id_fk) values ('.$value->product_id_fk.')');
+                 DB::select('insert ignore into db_pick_warehouse_fifo (product_id_fk,pick_pack_packing_code_id_fk) values ('.$value->product_id_fk.','.$request->picking_id.')');
               }
+
+              DB::select(" UPDATE db_pick_pack_packing_code SET status_picked='1' WHERE (id in(select pick_pack_packing_code_id_fk from db_pick_warehouse_fifo)) ");
 
               // return $product_id;
               // หา FIFO 
@@ -113,7 +119,7 @@ class Pick_warehouse_fifoController extends Controller
                     UPDATE
                     db_pick_warehouse_fifo
                     Inner Join 
-                    (SELECT * FROM `db_stocks` GROUP BY db_stocks.branch_id_fk,db_stocks.product_id_fk,db_stocks.lot_number ORDER BY db_stocks.lot_expired_date ASC) as db_stocks
+                    (SELECT * FROM db_stocks GROUP BY db_stocks.branch_id_fk,db_stocks.product_id_fk,db_stocks.lot_number ORDER BY db_stocks.lot_expired_date ASC) as db_stocks
                      ON db_pick_warehouse_fifo.product_id_fk = db_stocks.product_id_fk
                     SET
                     db_pick_warehouse_fifo.branch_id_fk=

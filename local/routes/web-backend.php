@@ -215,6 +215,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('consignments_import', 'Consignments_importController');
     Route::post('consignments_import/datatable', 'Consignments_importController@Datatable')->name('consignments_import.datatable');
 
+    Route::resource('products_fifo_bill', 'Products_fifo_billController');
+    Route::post('products_fifo_bill/datatable', 'Products_fifo_billController@Datatable')->name('products_fifo_bill.datatable');
 
     Route::post('uploadFile', 'PagesController@uploadFile');
     Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
@@ -310,6 +312,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCalAicashAmt', 'AjaxController@ajaxCalAicashAmt');
 
     Route::post('ajaxGiftVoucherSaveDate', 'AjaxController@ajaxGiftVoucherSaveDate');
+
+    Route::post('ajaxFifoApproved', 'AjaxController@ajaxFifoApproved');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -444,6 +448,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse_fifo/datatable', 'Pick_warehouse_fifoController@Datatable')->name('pick_warehouse_fifo.datatable');
     Route::post('pick_warehouse_fifo/fifo', 'Pick_warehouse_fifoController@calFifo');
 
+    Route::resource('pick_warehouse_fifo_topicked', 'Pick_warehouse_fifo_topickedController');
+    Route::post('pick_warehouse_fifo_topicked/datatable', 'Pick_warehouse_fifo_topickedController@Datatable')->name('pick_warehouse_fifo_topicked.datatable');
+
+    Route::resource('pick_warehouse_fifo_no', 'Pick_warehouse_fifo_noController');
+    Route::post('pick_warehouse_fifo_no/datatable', 'Pick_warehouse_fifo_noController@Datatable')->name('pick_warehouse_fifo_no.datatable');
 
     Route::resource('check_stock_account', 'Check_stock_accountController');
     Route::post('check_stock_account/datatable', 'Check_stock_accountController@Datatable')->name('check_stock_account.datatable');
