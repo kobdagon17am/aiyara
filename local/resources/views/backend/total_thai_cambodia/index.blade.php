@@ -259,9 +259,9 @@
             }
         });
 
-         $('#startDate').change(function(event) {
-           $('#endDate').val($(this).val());
-         });
+        //  $('#startDate').change(function(event) {
+        //    $('#endDate').val($(this).val());
+        //  });
 
 </script>
 
