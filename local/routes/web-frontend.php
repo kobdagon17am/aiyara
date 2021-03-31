@@ -191,6 +191,9 @@ Route::get('modal_commission_bonus_transfer_aistockist','Frontend\CommissionCont
 Route::get('commission_bonus_transfer_af','Frontend\CommissionController@commission_bonus_transfer_af')->name('commission_bonus_transfer_af');
 Route::get('dt_commission_bonus_transfer_af','Frontend\CommissionController@dt_commission_bonus_transfer_af')->name('dt_commission_bonus_transfer_af');
 
+Route::get('commission_bonus_transfer_member','Frontend\CommissionController@commission_bonus_transfer_member')->name('commission_bonus_transfer_member');
+Route::get('dt_commission_bonus_transfer_member','Frontend\CommissionController@dt_commission_bonus_transfer_member')->name('dt_commission_bonus_transfer_member');
+
 Route::get('commission_matching/{customer_id?}/{date?}','Frontend\CommissionController@commission_matching')->name('commission_matching');
 Route::get('dt_commission_matching','Frontend\CommissionController@dt_commission_matching')->name('dt_commission_matching');
 

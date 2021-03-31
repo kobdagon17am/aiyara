@@ -560,5 +560,85 @@ class CommissionController extends Controller
         ->make(true);
     }
 
+    public function commission_bonus_transfer_member()
+    {
+        return view('frontend/commission_bonus_transfer_af');
+
+    }
+
+    public function dt_commission_bonus_transfer_member(Request $rs)
+    {
+      if ($rs->startDate) {
+        $s_date = date('Y-m-d', strtotime($rs->startDate));
+    } else {
+        $s_date = '';
+    }
+    if ($rs->endDate) {
+        $e_date = date('Y-m-d', strtotime($rs->endDate));
+    } else {
+        $e_date = '';
+    }
+    $customer_id =Auth::guard('c_user')->user()->id;
+
+    $sTable = DB::table('db_report_bonus_transfer_af')
+        ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+        ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_id_fk', '=', 'customers.id')
+        ->where('db_report_bonus_transfer_af.customer_id_fk','=',$customer_id)
+        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
+        ->orderby('db_report_bonus_transfer_af.bonus_transfer_date', 'DESC')
+        ->get();
+
+    $sQuery = DataTables::of($sTable);
+    return $sQuery
+
+        ->addColumn('id', function ($row) {
+            return $row->user_name;
+        })
+        ->addColumn('cus_name', function ($row) {
+            return $row->first_name . ' ' . $row->last_name;
+        })
+        ->addColumn('destination_bank', function ($row) {
+            return is_null($row->bank_name) ? '-' : $row->bank_name;
+        })
+
+        ->addColumn('transferee_bank_no', function ($row) {
+            return is_null($row->bank_account) ? '-' : $row->bank_account;
+        })
+        ->addColumn('amount', function ($row) {
+            return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
+        })
+
+        ->addColumn('transfer_result', function ($row) {
+
+            if ($row->status_transfer == '0') {
+                $status = 'รออนุมัติ';
+            } elseif ($row->status_transfer == '1') {
+                $status = 'โอนสำเร็จ';
+            } elseif ($row->status_transfer == '2') {
+                $status = 'ยกเลิก';
+            } elseif ($row->status_transfer == '3') {
+                $status = 'ไม่อนุมัติ';
+            } else {
+                $status = '-';
+            }
+            return $status;
+        })
+
+        ->addColumn('note', function ($row) {
+            return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
+        })
+        ->addColumn('action_date', function ($row) {
+            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
+        })
+
+
+        ->make(true);
+    }
+
+
 
 }
