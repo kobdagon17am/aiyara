@@ -179,9 +179,6 @@
         });
 
     </script>
-
-
-
     <script type="text/javascript">
         $(function() {
             var oTable = $('#multi-colum-dt').DataTable({
