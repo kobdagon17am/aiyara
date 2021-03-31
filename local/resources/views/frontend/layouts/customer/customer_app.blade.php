@@ -483,7 +483,7 @@
 
 		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_transfer') || request()->is('commission-per-day')
     || request()->is('commission_faststart*') || request()->is('commission_matching*')
-    ||  request()->is('commission_bonus_transfer_aistockist') ||  request()->is('commission_bonus_transfer_af') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+    ||  request()->is('commission_bonus_transfer_aistockist') ||  request()->is('commission_bonus_transfer_af') ||  request()->is('commission_bonus_transfer_member'))  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
 				<span class="pcoded-mtext">Commission</span>
@@ -519,6 +519,14 @@
 					<a href="{{route('commission_bonus_transfer_af')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น AF</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+        <li class="{{ (request()->is('commission_bonus_transfer_member')) ? 'active' : '' }}">
+					<a href="{{route('commission_bonus_transfer_member')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">รายการโอนค่าคอมมิชชั่นสมาชิกนิติบุคคล</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>

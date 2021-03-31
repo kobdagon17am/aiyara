@@ -1,7 +1,7 @@
 <?php
 use App\Helpers\Frontend;
 use App\Models\Frontend\DirectSponsor;
-
+$count_sponser = 0;
 ?>
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
@@ -9,6 +9,7 @@ use App\Models\Frontend\DirectSponsor;
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
+
 
 @endsection
 @section('conten')
@@ -83,7 +84,7 @@ use App\Models\Frontend\DirectSponsor;
 
                 ?>
 
-                <tr>
+                <tr >
                     <th style="font-size: 14px;">{{ $i }}</th>
                     <th style="font-size: 14px;"><b>{{ $value->introduce_type }}</b></th>
                     <th style="font-size: 14px;">{{ $value->user_name }}</th>
@@ -128,7 +129,7 @@ use App\Models\Frontend\DirectSponsor;
 
            <div class="card-header">
             <h4 class="m-b-10">ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker)
-                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน 0 คน</h4>
+                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน <b id="count_sponser" class="text-primary"></b> คน</h4>
 
             </div>
             <div class="card-block">
@@ -141,7 +142,7 @@ use App\Models\Frontend\DirectSponsor;
                             <th class="text-center" >#</th>
                             <th class="text-center" >Line</th>
                             <th class="text-center" >ID</th>
-                            <th class="text-center" >Buniness/Name</th>
+                            <th class="text-center" >Name (Buniness)</th>
                             <th class="text-center" >OwnPV</th>
                             <th class="text-center" >Package</th>
                             <th class="text-center" >First Date</th>
@@ -153,6 +154,7 @@ use App\Models\Frontend\DirectSponsor;
                         <?php $i=0; ?>
                         @foreach($customers_sponser as $value_sponser)
                         <?php $i++;
+
                         $end_date = strtotime($value_sponser->end_date);
                         $start_date = strtotime(date('Y-m-d'));
 
@@ -173,37 +175,46 @@ use App\Models\Frontend\DirectSponsor;
 
                     ?>
 
-                    <tr>
+                    <tr class="table-warning">
 
-                        <td {{ $rowspan_index }} style="font-size: 13px;">{{ $i }}</td>
-                        <td style="font-size: 13px;">{{ $value_sponser->introduce_type }}</td>
-                        <td style="font-size: 15px;"><label class="label label-inverse-primary">{{ $value_sponser->user_name }}</label></td>
-                        <td style="font-size: 13px;">{{ $value_sponser->business_name.' / '.$value_sponser->prefix_name.' '.$value_sponser->first_name.' '.$value_sponser->last_name }}</td>
+                        <th {{ $rowspan_index }} style="font-size: 13px;"  class="text-center">{{ $i }}</th>
+                        <th style="font-size: 13px;"  class="text-center">{{ $value_sponser->introduce_type }}</th>
+                        <th style="font-size: 15px;"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></th>
+                        <th style="font-size: 13px;">{{ $value_sponser->prefix_name.' '.$value_sponser->first_name.' '.$value_sponser->last_name }} ({{ $value_sponser->business_name}})</th>
 
 
-                        <td style="font-size: 13px;">{{ number_format($value_sponser->pv) }}</td>
-                        <td style="font-size: 14px;">
+                        <th style="font-size: 13px;"  class="text-center">{{ number_format($value_sponser->pv) }}</th>
+                        <th style="font-size: 14px;">
                          @if(empty($value_sponser->dt_package))
                          -
                          @else
                          {{ $value_sponser->dt_package }}
                          @endif
-                     </td>
-                     <td style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($value_sponser->created_at)) }}</b></span></td>
+                     </th>
+                     <th style="font-size: 13px;"  class="text-center"><span class='label label-inverse-info-border'><b>{{ date('Y/m/d',strtotime($value_sponser->created_at)) }}</b></span></th>
 
-                     <td style="font-size: 13px;">{{  $remine  }}</td>
+                     <th style="font-size: 13px;"  class="text-center">{{  $remine  }}</th>
 
                  </tr>
 
 
                  @if($count_directsponsor > 0 )
                  @foreach($directsponsor as $directsponsor_value)
-                 <tr>
+
+                 <?php
+                 $count_sponser++;
+                 $end_date = strtotime($directsponsor_value->end_date);
+                 $start_date = strtotime(date('Y-m-d'));
+                 $date_remine_sponsor = ($end_date - $start_date)/  ( 60 * 60 * 24 );  // 1 day = 60*60*24
+                 $remine_sponsor = ceil($date_remine_sponsor);
+                 ?>
+
+                 <tr class="table-active">
                     <td></td>
-                    <td style="font-size: 13px;">{{ $directsponsor_value->introduce_type }}</td>
-                    <td style="font-size: 15px;">{{ $directsponsor_value->user_name }}</td>
-                    <td style="font-size: 13px;">{{ $directsponsor_value->business_name.' / '.$directsponsor_value->prefix_name.' '.$directsponsor_value->first_name.' '.$directsponsor_value->last_name }}</td>
-                    <td style="font-size: 13px;">{{ number_format($directsponsor_value->pv) }}</td>
+                    <td style="font-size: 13px;"  class="text-center">{{ $directsponsor_value->introduce_type }}</td>
+                    <td style="font-size: 15px;"><span class='label label-inverse-info-border'>{{ $directsponsor_value->user_name }}</span></td>
+                    <td style="font-size: 13px;">{{ $directsponsor_value->prefix_name.' '.$directsponsor_value->first_name.' '.$directsponsor_value->last_name }} ({{ $directsponsor_value->business_name}})</td>
+                    <td style="font-size: 13px;"  class="text-center">{{ number_format($directsponsor_value->pv) }}</td>
                     <td style="font-size: 14px;">
                      @if(empty($directsponsor_value->dt_package))
                      -
@@ -211,9 +222,9 @@ use App\Models\Frontend\DirectSponsor;
                      {{ $directsponsor_value->dt_package }}
                      @endif
                  </td>
-                 <td style="font-size: 13px;"><span class='label label-inverse-success'><b>{{ date('d/m/Y',strtotime($directsponsor_value->created_at)) }}</b></span></td>
+                 <td style="font-size: 13px;"  class="text-center"><span class='label label-inverse-info-border'><b>{{ date('Y/m/d',strtotime($directsponsor_value->created_at)) }}</b></span></td>
 
-                 <td>-</td>
+                 <td  class="text-center">{{ $remine_sponsor }}</td>
              </tr>
              @endforeach
              @endif
@@ -243,7 +254,10 @@ use App\Models\Frontend\DirectSponsor;
   <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
   <!-- Custom js -->
   <script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
-
+  <script>
+    var data = {{ $count_sponser }};
+    $('#count_sponser').html(data);
+  </script>
   @endsection
 
 

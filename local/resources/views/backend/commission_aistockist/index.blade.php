@@ -85,8 +85,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 d-flex  ">
-                                        <input id="startDate" autocomplete="off" placeholder="วันเริ่ม" />
-                                        <input id="endDate" autocomplete="off" placeholder="วันสิ้นสุด" />
+                                      <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}" placeholder="วันเริ่ม" />
+                                      <input id="endDate" autocomplete="off" value="{{ date('t/m/Y') }}" placeholder="วันสิ้นสุด" />
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group row"> &nbsp; &nbsp;
@@ -238,9 +238,9 @@
             }
         });
 
-        $('#startDate').change(function(event) {
-            $('#endDate').val($(this).val());
-        });
+        // $('#startDate').change(function(event) {
+        //     $('#endDate').val($(this).val());
+        // });
 
         function modal_commission_transfer(customer_id, date_transfer) {
 
