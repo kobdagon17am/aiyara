@@ -135,7 +135,8 @@ public function dt_gift_order_history(Request $request){
         1 => 'date',
         2 => 'order',
         3 => 'gv',
-        4 => 'status'
+        4 => 'status',
+        5 => 'actions'
     );
 
     if( empty($request->input('search.value')) and empty($request->input('status')) ){
@@ -211,6 +212,7 @@ foreach ($gift_voucher as $value){
      $nestedData['status'] = '<label class="label label-inverse-danger"><b> Cancel </b></label>';
 
  }
+ $nestedData['action'] = '<a class="btn btn-sm btn-primary" href="' . route('gift-cart-payment-history', ['code_order' => $value->code_order]) . '" ><i class="fa fa-search"></i></a> ';
 
 
  $data[] = $nestedData;

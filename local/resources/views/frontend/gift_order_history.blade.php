@@ -18,11 +18,11 @@
 							<option value="">ทั้งหมด</option>
 							<option value="success">Success</option>
 							<option value="cancel">Cancle</option>
-						</select> 
+						</select>
 					</div>
 					<div class="col">
-						<div class="page-header-breadcrumb"> 
-							<?php  
+						<div class="page-header-breadcrumb">
+							<?php
 							$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
 							?>
 							<div class="bg-danger p-10"><i class="fa fa-gift"></i> {{-- Gift Voucher --}} <b>{{ number_format($gv->sum_gv) }} </b></div>
@@ -43,6 +43,7 @@
 								<th>Order</th>
 								<th>Gift Voucher</th>
 								<th>Status</th>
+                <th>#</th>
 							</tr>
 						</thead>
 
@@ -79,7 +80,7 @@
 	});
 
 	function fetch_data(status = '') {
-		
+
 		$('#giv_history').DataTable({
 				// scrollX: true,
 				// scrollCollapsed: true,
@@ -99,6 +100,7 @@
 				{"data": "order"},
 				{"data": "gv"},
 				{"data": "status"},
+        {"data": "action"},
 				],
 				//order: [[ "0", "desc" ]],
 			});
@@ -106,7 +108,7 @@
 
 	$('#status').on('change',function(){
 		var status = $(this).val();
-		$('#giv_history').DataTable().destroy(); 
+		$('#giv_history').DataTable().destroy();
 		fetch_data(status);
 	});
 

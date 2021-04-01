@@ -447,7 +447,7 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Gift Voucher</b></span>
 				<span class="pcoded-mtext">Gift Voucher</span>
@@ -463,7 +463,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('gift_order_history')) ? 'active' : '' }}">
+				<li class="{{ (request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  ) ? 'active' : '' }}">
 					<a href="{{route('gift_order_history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">แลกสินค้า</span>

@@ -145,6 +145,7 @@ Route::get('datable/history','Frontend\HistoryController@datatable')->name('data
 
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::get('cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
+Route::get('gift-cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('gift-cart-payment-history');
 
 
 Route::get('giftvoucher_history','Frontend\GiftVoucherController@index')->name('giftvoucher_history');
