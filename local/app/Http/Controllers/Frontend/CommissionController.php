@@ -25,8 +25,16 @@ class CommissionController extends Controller
     }
     public function dt_commission_bonus_transfer(Request $rs)
     {
+        $s_date = !empty($rs->s_date) ? date('Y-m-d', strtotime($rs->s_date)) : date('Y-m-01');
+        $e_date = !empty($rs->e_date) ? date('Y-m-d', strtotime($rs->e_date)) : date('Y-m-t');
+
+        $date_between = [$s_date, $e_date];
+
         $db_commission_bonus_transfer = DB::table('db_report_bonus_transfer')
-            ->where('customer_id_fk', '=',  Auth::guard('c_user')->user()->id )
+            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->when($date_between, function ($query, $date_between) {
+                return $query->whereBetween('bonus_transfer_date', $date_between);
+            })
             ->orderby('bonus_transfer_date', 'DESC')
             ->get();
         //$customer_data = Frontend::get_customer('8');
@@ -34,67 +42,67 @@ class CommissionController extends Controller
         $sQuery = Datatables::of($db_commission_bonus_transfer);
         return $sQuery
 
-
-        ->addColumn('bonus_transfer_date', function ($row) {
-          return date('Y/m/d', strtotime($row->bonus_transfer_date));
-      })
+            ->addColumn('bonus_transfer_date', function ($row) {
+                return date('Y/m/d', strtotime($row->bonus_transfer_date));
+            })
 
             ->addColumn('bonus_total', function ($row) {
                 if ($row->bonus_total) {
-                    return number_format($row->bonus_total,2);
+                    return number_format($row->bonus_total, 2);
                 } else {
                     return '-';
                 }
             })
             ->addColumn('tax', function ($row) {
-                if($row->tax){
-                  return number_format($row->tax,2);
-                }else{
+                if ($row->tax) {
+                    return number_format($row->tax, 2);
+                } else {
                     return '-';
                 }
             })
             ->addColumn('fee', function ($row) {
                 if ($row->fee) {
-                    return number_format($row->fee,2);
+                    return number_format($row->fee, 2);
                 } else {
                     return '-';
                 }
             })
             ->addColumn('price_transfer_total', function ($row) {
                 if ($row->price_transfer_total) {
-                    return number_format($row->price_transfer_total,2);
+                    return number_format($row->price_transfer_total, 2);
                 } else {
                     return '-';
                 }
             })
 
             ->addColumn('action', function ($row) {
-              $date=  strtotime($row->bonus_transfer_date);
-                  return "<button class='btn btn-sm btn-success btn-outline-success' onclick='modal_commission_transfer($date)'><i class='fa fa-search'></i></button>";
-          })
-          ->rawColumns(['action'])
+                $date = strtotime($row->bonus_transfer_date);
+                return "<button class='btn btn-sm btn-success btn-outline-success' onclick='modal_commission_transfer($date)'><i class='fa fa-search'></i></button>";
+            })
+            ->rawColumns(['action'])
             ->make(true);
     }
 
-    public function modal_commission_transfer(Request $rs){
-       $date = (date('Y-m-d',$rs->date));
-       $data = DB::table('db_report_bonus_per_day')
+    public function modal_commission_transfer(Request $rs)
+    {
+        $date = (date('Y-m-d', $rs->date));
+        $data = DB::table('db_report_bonus_per_day')
             ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
-            ->where('status_payment', '=',1)
-            ->wheredate('transfer_date','=',$date)
-            ->orderby('action_date','DESC')
+            ->where('status_payment', '=', 1)
+            ->wheredate('transfer_date', '=', $date)
+            ->orderby('action_date', 'DESC')
             ->get();
 
         $total = DB::table('db_report_bonus_per_day')
-        ->select(db::raw('sum(faststart) as faststart_total ,sum(tmb) as tmb_total,sum(booster) as booster_total
+            ->select(db::raw('sum(faststart) as faststart_total ,sum(tmb) as tmb_total,sum(booster) as booster_total
         ,sum(reward) as reward_total,sum(team_maker) as team_maker_total,sum(pro) as pro_total,sum(bonus_total) as sum_bonus_total'))
-        ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
-        ->where('status_payment', '=',1)
-        ->wheredate('transfer_date','=',$date)
-        ->orderby('action_date','DESC')
-        ->first();
+            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->where('status_payment', '=', 1)
+            ->wheredate('transfer_date', '=', $date)
+            ->orderby('action_date', 'DESC')
+            ->first();
 
-      return view('frontend.modal.modal_commission_transfer',compact('data','date','total'));
+        return view('frontend.modal.modal_commission_transfer', compact('data', 'date', 'total'));
     }
 
     public function commission_per_day()
@@ -103,10 +111,18 @@ class CommissionController extends Controller
         return view('frontend/commission_per_day');
     }
 
-    public function dt_commission_perday()
+    public function dt_commission_perday(Request $rs)
     {
+        $s_date = !empty($rs->s_date) ? date('Y-m-d 00:00:00', strtotime($rs->s_date)) : date('Y-m-01 00:00:00');
+        $e_date = !empty($rs->e_date) ? date('Y-m-d 23:59:59', strtotime($rs->e_date)) : date('Y-m-t 23:59:59');
+
+        $date_between = [$s_date, $e_date];
+
         $db_report_bonus_per_day = DB::table('db_report_bonus_per_day')
             ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->when($date_between, function ($query, $date_between) {
+                return $query->whereBetween('action_date', $date_between);
+            })
             ->orderby('action_date', 'DESC')
             ->get();
 
@@ -181,17 +197,17 @@ class CommissionController extends Controller
             })
             ->addColumn('faststart', function ($row) {
                 if ($row->faststart) {
-                  // $row->action_date
-                  $url = route('commission_faststart', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
-                    return "<a href='".$url."' class='text-primary'>".number_format($row->faststart)."</a>";
+                    // $row->action_date
+                    $url = route('commission_faststart', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
+                    return "<a href='" . $url . "' class='text-primary'>" . number_format($row->faststart) . "</a>";
                 } else {
                     return '-';
                 };
             })
             ->addColumn('matching', function ($row) {
                 if ($row->matching) {
-                  $url = route('commission_matching', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
-                    return "<a href='".$url."' class='text-primary'>".number_format($row->matching)."</a>";
+                    $url = route('commission_matching', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
+                    return "<a href='" . $url . "' class='text-primary'>" . number_format($row->matching) . "</a>";
 
                 } else {
                     return '-';
@@ -213,13 +229,13 @@ class CommissionController extends Controller
                 }
             })
             ->addColumn('bonus_total', function ($row) {
-              if ($row->bonus_total) {
-                  return number_format($row->bonus_total, 2);
-              } else {
-                  return '-';
-              }
-          })
-            ->rawColumns(['faststart','matching'])
+                if ($row->bonus_total) {
+                    return number_format($row->bonus_total, 2);
+                } else {
+                    return '-';
+                }
+            })
+            ->rawColumns(['faststart', 'matching'])
             // {data: 'faststart'},
             // {data: 'pro'},
             // {data: 'tmb'},
@@ -232,16 +248,16 @@ class CommissionController extends Controller
             ->make(true);
     }
 
-    public function commission_faststart($customer_id,$date)
+    public function commission_faststart($customer_id, $date)
     {
-      if($customer_id == '' || $date == ''){
-        return redirect('commission_per_day')->withError('Data Is Null');
-      }else{
-        $date = date('Y-m-d',strtotime($date));
-        $data = ['customer_id'=>$customer_id,'date'=>$date];
-      }
+        if ($customer_id == '' || $date == '') {
+            return redirect('commission_per_day')->withError('Data Is Null');
+        } else {
+            $date = date('Y-m-d', strtotime($date));
+            $data = ['customer_id' => $customer_id, 'date' => $date];
+        }
 
-      return view('frontend/commission_faststart',compact('data'));
+        return view('frontend/commission_faststart', compact('data'));
     }
 
     public function dt_commission_faststart(Request $rs)
@@ -277,9 +293,9 @@ class CommissionController extends Controller
                 }
             })
             ->addColumn('benefit', function ($row) {
-                if($row->benefit){
+                if ($row->benefit) {
                     return $row->benefit;
-                }else{
+                } else {
                     return '-';
                 }
             })
@@ -300,18 +316,16 @@ class CommissionController extends Controller
             ->make(true);
     }
 
-
-
-    public function commission_matching($customer_id,$date)
+    public function commission_matching($customer_id, $date)
     {
-      if($customer_id == '' || $date == ''){
-        return redirect('commission_per_day')->withError('Data Is Null');
-      }else{
-        $date = date('Y-m-d',strtotime($date));
-        $data = ['customer_id'=>$customer_id,'date'=>$date];
-      }
+        if ($customer_id == '' || $date == '') {
+            return redirect('commission_per_day')->withError('Data Is Null');
+        } else {
+            $date = date('Y-m-d', strtotime($date));
+            $data = ['customer_id' => $customer_id, 'date' => $date];
+        }
 
-      return view('frontend/commission_matching',compact('data'));
+        return view('frontend/commission_matching', compact('data'));
     }
 
     public function dt_commission_matching(Request $rs)
@@ -332,28 +346,28 @@ class CommissionController extends Controller
 
             ->addColumn('deep', function ($row) {
                 if ($row->deep) {
-                    return number_format($row->deep,2);
+                    return number_format($row->deep, 2);
                 } else {
                     return '-';
                 }
             })
             ->addColumn('benefit', function ($row) {
-                if($row->benefit){
+                if ($row->benefit) {
                     return $row->benefit;
-                }else{
+                } else {
                     return '-';
                 }
             })
             ->addColumn('bns_strong_leg', function ($row) {
                 if ($row->bns_strong_leg) {
-                    return number_format($row->bns_strong_leg,2);
+                    return number_format($row->bns_strong_leg, 2);
                 } else {
                     return '-';
                 }
             })
             ->addColumn('reward_bonus', function ($row) {
                 if ($row->reward_bonus) {
-                    return number_format($row->reward_bonus,2);
+                    return number_format($row->reward_bonus, 2);
                 } else {
                     return '-';
                 }
@@ -368,91 +382,104 @@ class CommissionController extends Controller
     }
     public function dt_commission_bonus_transfer_aistockist(Request $rs)
     {
-      if ($rs->startDate) {
-        $s_date = date('Y-m-d', strtotime($rs->startDate));
-    } else {
-        $s_date = '';
+        if ($rs->startDate) {
+            $s_date = date('Y-m-d', strtotime($rs->startDate));
+        } else {
+            $s_date = '';
+        }
+        if ($rs->endDate) {
+            $e_date = date('Y-m-d', strtotime($rs->endDate));
+        } else {
+            $e_date = '';
+        }
+        $customer_id = Auth::guard('c_user')->user()->id;
+
+        $sTable = DB::table('db_report_bonus_transfer_aistockist')
+            ->select('db_report_bonus_transfer_aistockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_id_fk', '=', 'customers.id')
+            ->where('db_report_bonus_transfer_aistockist.customer_id_fk', '=', $customer_id)
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_aistockist.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_aistockist.bonus_transfer_date', 'DESC')
+            ->get();
+
+        $sQuery = DataTables::of($sTable);
+        return $sQuery
+
+            ->addColumn('id', function ($row) {
+                return $row->user_name;
+            })
+            ->addColumn('cus_name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
+            ->addColumn('commission', function ($row) {
+                return is_null($row->bonus_total) ? '-' : number_format($row->bonus_total, 2);
+            })
+            ->addColumn('tax_percent', function ($row) {
+                return number_format($row->tax_percent).'%';
+            })
+            ->addColumn('tax', function ($row) {
+                return is_null($row->tax) ? '-' : number_format($row->tax, 2);
+            })
+            ->addColumn('fee', function ($row) {
+                return is_null($row->fee) ? '-' : number_format($row->fee, 2);
+            })
+            ->addColumn('destination_bank', function ($row) {
+                return is_null($row->bank_name) ? '-' : $row->bank_name;
+            })
+
+            ->addColumn('transferee_bank_no', function ($row) {
+                return is_null($row->bank_account) ? '-' : $row->bank_account;
+            })
+            ->addColumn('amount', function ($row) {
+                return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
+            })
+
+            ->addColumn('transfer_result', function ($row) {
+
+                if ($row->status_transfer == '0') {
+                    $status = 'รออนุมัติ';
+                } elseif ($row->status_transfer == '1') {
+                    $status = 'โอนสำเร็จ';
+                } elseif ($row->status_transfer == '2') {
+                    $status = 'ยกเลิก';
+                } elseif ($row->status_transfer == '3') {
+                    $status = 'ไม่อนุมัติ';
+                } else {
+                    $status = '-';
+                }
+                return $status;
+            })
+
+            ->addColumn('note', function ($row) {
+                return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
+            })
+            ->addColumn('action_date', function ($row) {
+                return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
+            })
+            ->addColumn('view', function ($row) {
+                $date = strtotime($row->bonus_transfer_date);
+                return '<button class="btn btn-sm btn-success btn-outline-success" onclick="modal_commission_transfer_aistockist(' . $date . ')"><i class="fa fa-search"></i></button>';
+            })
+            ->rawColumns(['view'])
+            ->make(true);
     }
-    if ($rs->endDate) {
-        $e_date = date('Y-m-d', strtotime($rs->endDate));
-    } else {
-        $e_date = '';
-    }
-    $customer_id =Auth::guard('c_user')->user()->id;
 
-    $sTable = DB::table('db_report_bonus_transfer_aistockist')
-        ->select('db_report_bonus_transfer_aistockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-        ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_id_fk', '=', 'customers.id')
-        ->where('db_report_bonus_transfer_aistockist.customer_id_fk','=',$customer_id)
-        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
-        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$s_date}' else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_aistockist.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$e_date}' else 1 END"))
-        ->orderby('db_report_bonus_transfer_aistockist.bonus_transfer_date', 'DESC')
-        ->get();
+    public function modal_commission_bonus_transfer_aistockist(Request $rs)
+    {
 
-    $sQuery = DataTables::of($sTable);
-    return $sQuery
-
-        ->addColumn('id', function ($row) {
-            return $row->user_name;
-        })
-        ->addColumn('cus_name', function ($row) {
-            return $row->first_name . ' ' . $row->last_name;
-        })
-        ->addColumn('destination_bank', function ($row) {
-            return is_null($row->bank_name) ? '-' : $row->bank_name;
-        })
-
-        ->addColumn('transferee_bank_no', function ($row) {
-            return is_null($row->bank_account) ? '-' : $row->bank_account;
-        })
-        ->addColumn('amount', function ($row) {
-            return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
-        })
-
-        ->addColumn('transfer_result', function ($row) {
-
-            if ($row->status_transfer == '0') {
-                $status = 'รออนุมัติ';
-            } elseif ($row->status_transfer == '1') {
-                $status = 'โอนสำเร็จ';
-            } elseif ($row->status_transfer == '2') {
-                $status = 'ยกเลิก';
-            } elseif ($row->status_transfer == '3') {
-                $status = 'ไม่อนุมัติ';
-            } else {
-                $status = '-';
-            }
-            return $status;
-        })
-
-        ->addColumn('note', function ($row) {
-            return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
-        })
-        ->addColumn('action_date', function ($row) {
-            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
-        })
-        ->addColumn('view', function ($row) {
-            $date = strtotime($row->bonus_transfer_date);
-          return '<button class="btn btn-sm btn-success btn-outline-success" onclick="modal_commission_transfer_aistockist('.$date.')"><i class="fa fa-search"></i></button>';
-        })
-        ->rawColumns(['view'])
-        ->make(true);
-    }
-
-    public function modal_commission_bonus_transfer_aistockist(Request $rs){
-
-       $date = (date('Y-m-d',$rs->date));
-       $customer_id = Auth::guard('c_user')->user()->id;
+        $date = (date('Y-m-d', $rs->date));
+        $customer_id = Auth::guard('c_user')->user()->id;
 
         $data_customer = DB::table('customers')
-        ->where('customers.id', '=', $customer_id)
-        ->first();
+            ->where('customers.id', '=', $customer_id)
+            ->first();
 
         $data = DB::table('ai_stockist')
-            ->select('ai_stockist.*','customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_orders_type.orders_type')
+            ->select('ai_stockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'dataset_orders_type.orders_type')
             ->leftjoin('customers', 'ai_stockist.to_customer_id', '=', 'customers.id')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'ai_stockist.type_id')
             ->where('dataset_orders_type.lang_id', '=', $data_customer->business_location_id)
@@ -465,19 +492,19 @@ class CommissionController extends Controller
             ->where('business_location_id_fk', '=', $data_customer->business_location_id)
             ->first();
 
-        $total =  DB::table('ai_stockist')
-        ->select(db::raw('sum(pv) as pv_total'))
-        ->where('ai_stockist.customer_id', '=', $customer_id)
-        ->where('ai_stockist.status_transfer', '=', 1)
-        ->wheredate('ai_stockist.bonus_transfer_date', '=', $date)
-        ->first();
+        $total = DB::table('ai_stockist')
+            ->select(db::raw('sum(pv) as pv_total'))
+            ->where('ai_stockist.customer_id', '=', $customer_id)
+            ->where('ai_stockist.status_transfer', '=', 1)
+            ->wheredate('ai_stockist.bonus_transfer_date', '=', $date)
+            ->first();
 
         $vat = $vat_tax->vat;
         $tax = $vat_tax->tax;
         $pv_total = $total->pv_total;
-        $data_total = ['vat'=>$vat,'tax'=>$tax,'pv_total'=>$pv_total];
+        $data_total = ['vat' => $vat, 'tax' => $tax, 'pv_total' => $pv_total];
 
-        return view('frontend.modal.modal_commission_transfer_aistockist', compact('data','date','data_total'));
+        return view('frontend.modal.modal_commission_transfer_aistockist', compact('data', 'date', 'data_total'));
 
     }
 
@@ -489,156 +516,175 @@ class CommissionController extends Controller
 
     public function dt_commission_bonus_transfer_af(Request $rs)
     {
-      if ($rs->startDate) {
-        $s_date = date('Y-m-d', strtotime($rs->startDate));
-    } else {
-        $s_date = '';
-    }
-    if ($rs->endDate) {
-        $e_date = date('Y-m-d', strtotime($rs->endDate));
-    } else {
-        $e_date = '';
-    }
-    $customer_id =Auth::guard('c_user')->user()->id;
+        if ($rs->startDate) {
+            $s_date = date('Y-m-d', strtotime($rs->startDate));
+        } else {
+            $s_date = '';
+        }
+        if ($rs->endDate) {
+            $e_date = date('Y-m-d', strtotime($rs->endDate));
+        } else {
+            $e_date = '';
+        }
+        $customer_id = Auth::guard('c_user')->user()->id;
 
-    $sTable = DB::table('db_report_bonus_transfer_af')
-        ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-        ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_id_fk', '=', 'customers.id')
-        ->where('db_report_bonus_transfer_af.customer_id_fk','=',$customer_id)
-        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
-        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
-        ->orderby('db_report_bonus_transfer_af.bonus_transfer_date', 'DESC')
-        ->get();
+        $sTable = DB::table('db_report_bonus_transfer_af')
+            ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_id_fk', '=', 'customers.id')
+            ->where('db_report_bonus_transfer_af.customer_id_fk', '=', $customer_id)
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_af.bonus_transfer_date', 'DESC')
+            ->get();
 
-    $sQuery = DataTables::of($sTable);
-    return $sQuery
+        $sQuery = DataTables::of($sTable);
+        return $sQuery
 
-        ->addColumn('id', function ($row) {
-            return $row->user_name;
-        })
-        ->addColumn('cus_name', function ($row) {
-            return $row->first_name . ' ' . $row->last_name;
-        })
-        ->addColumn('destination_bank', function ($row) {
-            return is_null($row->bank_name) ? '-' : $row->bank_name;
-        })
+            ->addColumn('id', function ($row) {
+                return $row->user_name;
+            })
+            ->addColumn('cus_name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
+            ->addColumn('commission', function ($row) {
+                return is_null($row->bonus_total) ? '-' : number_format($row->bonus_total, 2);
+            })
+            ->addColumn('tax_percent', function ($row) {
+                return number_format($row->tax_percent).'%';
+            })
+            ->addColumn('tax', function ($row) {
+                return is_null($row->tax) ? '-' : number_format($row->tax, 2);
+            })
+            ->addColumn('fee', function ($row) {
+                return is_null($row->fee) ? '-' : number_format($row->fee, 2);
+            })
+            ->addColumn('destination_bank', function ($row) {
+                return is_null($row->bank_name) ? '-' : $row->bank_name;
+            })
+            ->addColumn('transferee_bank_no', function ($row) {
+                return is_null($row->bank_account) ? '-' : $row->bank_account;
+            })
+            ->addColumn('amount', function ($row) {
+                return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
+            })
 
-        ->addColumn('transferee_bank_no', function ($row) {
-            return is_null($row->bank_account) ? '-' : $row->bank_account;
-        })
-        ->addColumn('amount', function ($row) {
-            return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
-        })
+            ->addColumn('transfer_result', function ($row) {
 
-        ->addColumn('transfer_result', function ($row) {
+                if ($row->status_transfer == '0') {
+                    $status = 'รออนุมัติ';
+                } elseif ($row->status_transfer == '1') {
+                    $status = 'โอนสำเร็จ';
+                } elseif ($row->status_transfer == '2') {
+                    $status = 'ยกเลิก';
+                } elseif ($row->status_transfer == '3') {
+                    $status = 'ไม่อนุมัติ';
+                } else {
+                    $status = '-';
+                }
+                return $status;
+            })
 
-            if ($row->status_transfer == '0') {
-                $status = 'รออนุมัติ';
-            } elseif ($row->status_transfer == '1') {
-                $status = 'โอนสำเร็จ';
-            } elseif ($row->status_transfer == '2') {
-                $status = 'ยกเลิก';
-            } elseif ($row->status_transfer == '3') {
-                $status = 'ไม่อนุมัติ';
-            } else {
-                $status = '-';
-            }
-            return $status;
-        })
+            ->addColumn('note', function ($row) {
+                return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
+            })
+            ->addColumn('action_date', function ($row) {
+                return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
+            })
 
-        ->addColumn('note', function ($row) {
-            return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
-        })
-        ->addColumn('action_date', function ($row) {
-            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
-        })
-
-
-        ->make(true);
+            ->make(true);
     }
 
     public function commission_bonus_transfer_member()
     {
-        return view('frontend/commission_bonus_transfer_af');
+        return view('frontend/commission_bonus_transfer_member');
 
     }
 
     public function dt_commission_bonus_transfer_member(Request $rs)
     {
-      if ($rs->startDate) {
-        $s_date = date('Y-m-d', strtotime($rs->startDate));
-    } else {
-        $s_date = '';
+        if ($rs->startDate) {
+            $s_date = date('Y-m-d', strtotime($rs->startDate));
+        } else {
+            $s_date = '';
+        }
+        if ($rs->endDate) {
+            $e_date = date('Y-m-d', strtotime($rs->endDate));
+        } else {
+            $e_date = '';
+        }
+        $customer_id = Auth::guard('c_user')->user()->id;
+
+        $sTable = DB::table('db_report_bonus_transfer_member')
+            ->select('db_report_bonus_transfer_member.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_id_fk', '=', 'customers.id')
+            ->where('db_report_bonus_transfer_member.customer_id_fk', '=', $customer_id)
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_member.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_member.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_member.bonus_transfer_date', 'DESC')
+            ->get();
+
+        $sQuery = DataTables::of($sTable);
+        return $sQuery
+
+            ->addColumn('id', function ($row) {
+                return $row->user_name;
+            })
+            ->addColumn('cus_name', function ($row) {
+                return $row->first_name . ' ' . $row->last_name;
+            })
+            ->addColumn('commission', function ($row) {
+                return is_null($row->bonus_total) ? '-' : number_format($row->bonus_total, 2);
+            })
+            ->addColumn('tax_percent', function ($row) {
+                return number_format($row->tax_percent).'%';
+            })
+            ->addColumn('tax', function ($row) {
+                return is_null($row->tax) ? '-' : number_format($row->tax, 2);
+            })
+            ->addColumn('fee', function ($row) {
+                return is_null($row->fee) ? '-' : number_format($row->fee, 2);
+            })
+            ->addColumn('destination_bank', function ($row) {
+                return is_null($row->bank_name) ? '-' : $row->bank_name;
+            })
+
+            ->addColumn('transferee_bank_no', function ($row) {
+                return is_null($row->bank_account) ? '-' : $row->bank_account;
+            })
+            ->addColumn('amount', function ($row) {
+                return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
+            })
+
+            ->addColumn('transfer_result', function ($row) {
+
+                if ($row->status_transfer == '0') {
+                    $status = 'รออนุมัติ';
+                } elseif ($row->status_transfer == '1') {
+                    $status = 'โอนสำเร็จ';
+                } elseif ($row->status_transfer == '2') {
+                    $status = 'ยกเลิก';
+                } elseif ($row->status_transfer == '3') {
+                    $status = 'ไม่อนุมัติ';
+                } else {
+                    $status = '-';
+                }
+                return $status;
+            })
+
+            ->addColumn('note', function ($row) {
+                return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
+            })
+            ->addColumn('action_date', function ($row) {
+                return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
+            })
+
+            ->make(true);
     }
-    if ($rs->endDate) {
-        $e_date = date('Y-m-d', strtotime($rs->endDate));
-    } else {
-        $e_date = '';
-    }
-    $customer_id =Auth::guard('c_user')->user()->id;
-
-    $sTable = DB::table('db_report_bonus_transfer_af')
-        ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-        ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_id_fk', '=', 'customers.id')
-        ->where('db_report_bonus_transfer_af.customer_id_fk','=',$customer_id)
-        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
-        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
-        ->orderby('db_report_bonus_transfer_af.bonus_transfer_date', 'DESC')
-        ->get();
-
-    $sQuery = DataTables::of($sTable);
-    return $sQuery
-
-        ->addColumn('id', function ($row) {
-            return $row->user_name;
-        })
-        ->addColumn('cus_name', function ($row) {
-            return $row->first_name . ' ' . $row->last_name;
-        })
-        ->addColumn('destination_bank', function ($row) {
-            return is_null($row->bank_name) ? '-' : $row->bank_name;
-        })
-
-        ->addColumn('transferee_bank_no', function ($row) {
-            return is_null($row->bank_account) ? '-' : $row->bank_account;
-        })
-        ->addColumn('amount', function ($row) {
-            return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
-        })
-
-        ->addColumn('transfer_result', function ($row) {
-
-            if ($row->status_transfer == '0') {
-                $status = 'รออนุมัติ';
-            } elseif ($row->status_transfer == '1') {
-                $status = 'โอนสำเร็จ';
-            } elseif ($row->status_transfer == '2') {
-                $status = 'ยกเลิก';
-            } elseif ($row->status_transfer == '3') {
-                $status = 'ไม่อนุมัติ';
-            } else {
-                $status = '-';
-            }
-            return $status;
-        })
-
-        ->addColumn('note', function ($row) {
-            return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
-        })
-        ->addColumn('action_date', function ($row) {
-            return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
-        })
-
-
-        ->make(true);
-    }
-
-
 
 }

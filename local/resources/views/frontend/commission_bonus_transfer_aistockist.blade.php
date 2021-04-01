@@ -17,6 +17,19 @@
 
                 <div class="card-header">
                     <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 p-1">
+                                <input class="form-control" type="date" id="startDate">
+                            </div>
+                            <div class="col-lg-3 col-md-3  p-1">
+                                <input class="form-control" type="date" id="endDate">
+                            </div>
+                            <div class="col-lg-1 col-md-1 p-1">
+                                <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-block">
@@ -72,14 +85,12 @@
               serverSide: true,
               searching: true,
                 ajax: {
-                    url: '{{ route('dt_commission_bonus_transfer_aistockist') }}',
+                    url: '{{ route("dt_commission_bonus_transfer_aistockist") }}',
+                    type: 'get',
                     data: function(d) {
-                        d.business_location = $('#business_location').val();
-                        d.status_search = $('#status_search').val();
                         d.startDate = $('#startDate').val();
                         d.endDate = $('#endDate').val();
                     },
-                    method: 'get'
                 },
 
 
@@ -99,6 +110,27 @@
                         title: '<center>ชื่อ-นามสกุล</center>',
                         className: 'text-left'
                     },
+                    
+                    {
+                        data: 'commission',
+                        title: '<center>Commission</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'tax_percent',
+                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'tax',
+                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'fee',
+                        title: '<center>ค่าธรรมเนียม</center>',
+                        className: 'text-left'
+                    },
                     {
                         data: 'destination_bank',
                         title: '<center>ธนาคารปลายทาง </center>',
@@ -107,11 +139,6 @@
                     {
                         data: 'transferee_bank_no',
                         title: '<center>เลขที่บัญชี</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'fee',
-                        title: '<center>ค่าธรรมเนียม</center>',
                         className: 'text-left'
                     },
                     {
@@ -141,7 +168,6 @@
             });
 
             $('#search-form').on('click', function(e) {
-
                 oTable.draw();
                 e.preventDefault();
             });
@@ -152,10 +178,10 @@
 
         //alert(date_transfer);
             $.ajax({
-                    url: '{{ route('modal_commission_bonus_transfer_aistockist') }}',
+                    url: '{{ route("modal_commission_bonus_transfer_aistockist") }}',
                     type: 'GET',
                     data: {
-                        date:date_transfer
+                        date: date_transfer
                     },
                 })
                 .done(function(data) {

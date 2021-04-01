@@ -17,6 +17,19 @@
 
                 <div class="card-header">
                     <h4 class="m-b-10">รายงานการจ่ายโบนัส  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 p-1">
+                                <input class="form-control" type="date" id="s_date">
+                            </div>
+                            <div class="col-lg-3 col-md-3  p-1">
+                                <input class="form-control" type="date" id="e_date">
+                            </div>
+                            <div class="col-lg-1 col-md-1 p-1">
+                                <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-block">
@@ -65,25 +78,34 @@
     <!-- Custom js -->
     <script type="text/javascript">
 
-          var oTable = $('#multi-colum-dt').DataTable({
-              processing: true,
-              serverSide: true,
-              searching: true,
-              ajax: {
-                  url: "{!! route('dt_commission_bonus_transfer') !!}",
-                  type:'GET',
-                  },
-              // type: "POST",
-              columns: [{data: 'bonus_transfer_date'},
-                  {data: 'umber_round'},
-                  {data: 'bonus_total'},
-                  {data: 'tax'},
-                  {data: 'fee'},
-                  {data: 'price_transfer_total'},
-                  {data: 'remark_transfer'},
-                  {data: 'action'},
-              ],order:[[0,'DESC']]
-          });
+        var oTable = $('#multi-colum-dt').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: true,
+            ajax: {
+                url: "{!! route('dt_commission_bonus_transfer') !!}",
+                type:'GET',
+                data: function(d) {
+                    d.s_date = $('#s_date').val();
+                    d.e_date = $('#e_date').val();
+                }
+                },
+            // type: "POST",
+            columns: [{data: 'bonus_transfer_date'},
+                {data: 'umber_round'},
+                {data: 'bonus_total'},
+                {data: 'tax'},
+                {data: 'fee'},
+                {data: 'price_transfer_total'},
+                {data: 'remark_transfer'},
+                {data: 'action'},
+            ],order:[[0,'DESC']]
+        });
+
+        $('#search-form').on('click', function(e) {
+            oTable.draw();
+            e.preventDefault();
+        });
 
       function modal_commission_transfer(date_transfer) {
 

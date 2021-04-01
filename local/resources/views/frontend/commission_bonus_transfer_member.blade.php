@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น AF  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Member  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 p-1">
@@ -84,7 +84,7 @@
               serverSide: true,
               searching: true,
                 ajax: {
-                    url: '{{ route("dt_commission_bonus_transfer_af") }}',
+                    url: '{{ route("dt_commission_bonus_transfer_member") }}',
                     data: function(d) {
                         d.startDate = $('#startDate').val();
                         d.endDate = $('#endDate').val();
