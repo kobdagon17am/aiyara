@@ -19,7 +19,19 @@ use App\Models\Frontend\DirectSponsor;
 
          <div class="card-header">
             <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
-
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 p-1">
+                        <input class="form-control" type="date" id="s_date">
+                    </div>
+                    <div class="col-lg-3 col-md-3  p-1">
+                        <input class="form-control" type="date" id="e_date">
+                    </div>
+                    <div class="col-lg-1 col-md-1 p-1">
+                        <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-block">
 
@@ -94,6 +106,10 @@ use App\Models\Frontend\DirectSponsor;
           ajax: {
               url: "{!! route('dt_commission_perday') !!}",
               type:'POST',
+              data: function(d) {
+                    d.s_date = $('#s_date').val();
+                    d.e_date = $('#e_date').val();
+                }
               },
           // type: "POST",
           columns: [{data: 'action_date'},
@@ -116,7 +132,15 @@ use App\Models\Frontend\DirectSponsor;
               {data: 'bonus_total'},
           ],order:[[0,'DESC']]
       });
+
+      $('#search-form').on('click', function(e) {
+            oTable.draw();
+            e.preventDefault();
+        });
   });
+
+  
+
 
 </script>
 
