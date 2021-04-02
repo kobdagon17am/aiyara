@@ -185,6 +185,32 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFStock_account($id)
+     {
+        // dd($id);
+        $data = [$id];
+        // dd($qrcode);
+        $pdf = PDF::loadView('backend.check_stock_account.print_receipt',compact('data'))->setPaper('a4', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFStock_card(Request $request,$id)
+     {
+        // dd($request->lot_number);
+        // dd($id);
+        $data['id'] = [$id];
+        $data['lot_number'] = [$request->lot_number];
+        // dd($qrcode);
+        $pdf = PDF::loadView('backend.check_stock.print',compact('data'))->setPaper('a4', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+
+
     public function createPDFCoverSheet01($id)
      {
         // dd($id);
@@ -329,6 +355,32 @@ class AjaxController extends Controller
     }
 
 
+        
+    public function ajaxAcceptCheckStock(Request $req)
+    {
+        // // return($req->id);
+        // $d = DB::select(" select * from db_delivery WHERE id=".$req->id." ");
+        // // return $d;
+        // if($d[0]->approver=="0"){
+        //     $user = \Auth::user()->id;
+        //     DB::select(" UPDATE db_delivery SET approver='$user',approved_date=CURDATE() WHERE id=".$req->id." ");
+        // }else{
+        //     DB::select(" UPDATE db_delivery SET approver=0,approved_date=NULL WHERE id=".$req->id." ");
+        // }
+
+          DB::select(" UPDATE db_stocks_account SET status_accepted=1  ");
+
+    }
+
+
+    public function ajaxGetBranch(Request $request)
+    {
+        if($request->ajax()){
+          $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)->get()->toArray();
+          return response()->json($query);      
+        }
+    }  
+    
     public function ajaxGetWarehouse(Request $request)
     {
         if($request->ajax()){
@@ -1607,7 +1659,6 @@ class AjaxController extends Controller
     }
 
 
-
     public function ajaxGetPayType(Request $request)
     {
         if($request->ajax()){
@@ -2115,7 +2166,35 @@ class AjaxController extends Controller
         }
     }
 
+    public function ajaxProcessTaxdata(Request $request)
+    {
+        // return $request;
+        // dd();
+        // business_location_id_fk: "1"
+        // end_date: "2021-04-22"
+        // start_date: "2021-04-01"
+        if($request->ajax()){
+               DB::select(" TRUNCATE db_taxdata ");
+               DB::select(' INSERT INTO db_taxdata select * from db_taxdata_test ');
+        }
+    }
 
+
+    public function ajaxProcessStockcard(Request $request)
+    {
+        // return  $request->product_id_fk ;
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
+        // dd();
+        if($request->ajax()){
+              DB::select(" TRUNCATE db_stock_card; ");
+              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_test 
+                where 
+                product_id_fk =".$request->product_id_fk."
+                 AND action_date >= '".$request->start_date."' AND action_date <= '".$request->end_date."'
+
+                ; ");
+        }
+    }
 
 
 

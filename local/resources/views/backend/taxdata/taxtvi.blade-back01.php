@@ -96,13 +96,11 @@ body{
       ?>
 
     <div style="position:absolute;z-index:1;color:red;">
-      <!-- เล่มที่ -->
-      <div style="margin-left: 90%;margin-top:45px;"> <!-- เล่มที่ --> </div>
-      <!-- เลขที่ -->
-      <div style="margin-left: 90%;margin-top:-17px;"> <!-- เลขที่ --> </div>
+      <div style="margin-left: 90%;margin-top:45px;">9999999</div>
+      <div style="margin-left: 90%;margin-top:-17px;">9999999</div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;">
+    <div style="position:absolute;z-index:1;color:red;">
       <div style="margin-left: 10%;margin-top:105px;"><?=$cusname?></div>
       <div style="margin-left: 65.5%;margin-top:-52px;">
         <?php 
@@ -243,149 +241,149 @@ body{
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:150px;">
-      <div style="margin-left: 15%;margin-top:112px;color:white;"> </div>
+      <div style="margin-left: 15%;margin-top:112px;">999999</div>
       
-      <div style="margin-left: 37%;margin-top:-35px;"> </div>
-      <div style="margin-left: 50.5%;margin-top:-55px;"> </div>
-      <div style="margin-left: 69.2%;margin-top:-55px;"> </div>
-      <div style="margin-left: 82.5%;margin-top:-55px;"> </div>
+      <div style="margin-left: 37%;margin-top:-35px;">/</div>
+      <div style="margin-left: 50.5%;margin-top:-55px;">/</div>
+      <div style="margin-left: 69.2%;margin-top:-55px;">/</div>
+      <div style="margin-left: 82.5%;margin-top:-55px;">/</div>
 
-      <div style="margin-left: 37%;margin-top:-15px;"> </div>
-      <div style="margin-left: 50.5%;margin-top:-35px;"> </div>
-      <div style="margin-left: 69.2%;margin-top:-35px;"> </div>
+      <div style="margin-left: 37%;margin-top:-15px;">/</div>
+      <div style="margin-left: 50.5%;margin-top:-35px;">/</div>
+      <div style="margin-left: 69.2%;margin-top:-35px;">/</div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:360px;">
-      <div style="margin-left: 58%;margin-top:-15px;">  
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:360px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:378px;">
-      <div style="margin-left: 58%;margin-top:-15px;"><?=date('d-m-Y')?> 
-        <span style="margin-left: 6%"> {{@$value[0]->commission_cost}} </span>
-        <span style="margin-left: 10%"> {{@$value[0]->commission_cost}} </span>
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:396px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:396px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:414px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:414px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:480px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:480px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:499px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:499px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:518px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:518px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:537px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:537px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:570px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:570px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:605px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:605px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:642px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:642px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:678px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:678px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:748px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:748px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
-    <div style="position:absolute;z-index:1;color:white;margin-top:767px;">
-      <div style="margin-left: 58%;margin-top:-15px;">   
-        <span style="margin-left: 6%">   </span>
-        <span style="margin-left: 7%">   </span>
+    <div style="position:absolute;z-index:1;color:red;margin-top:767px;">
+      <div style="margin-left: 58%;margin-top:-15px;">12 ม.ค. 2564 
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 7%"> 12,345.55</span>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:788px;">
         <div style="margin-left: 71%;margin-top:-15px;">
-        <span style="margin-left: 6%">{{@$value[0]->commission_cost}}</span>
-        <span style="margin-left: 14%">{{@$value[0]->commission_cost}}</span>
+        <span style="margin-left: 6%"> 12,345.55</span>
+        <span style="margin-left: 10%"> 12,345.55</span>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:799px;">
         <!-- <div style="margin-left: 35%;">(เก้าล้านเก้าแสนเก้าหมื่นเก้าพันเก้าร้อยเก้าสิบเก้าบาทเก้าสิบเก้าสตางค์) -->
-        <div style="margin-left: 35%;"><?=ThaiBahtConversion(@$value[0]->commission_cost)?>
+        <div style="margin-left: 35%;"><?=ThaiBahtConversion(9999999.99)?>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:842px;font-size: 14px">
-        <div style="margin-left: 42%;margin-top:-15px;"> 
-        <span style="margin-left: 26%"> </span>
-        <span style="margin-left: 28%"> </span>
+        <div style="margin-left: 42%;margin-top:-15px;"> 12,345.55
+        <span style="margin-left: 26%"> 12,345.55</span>
+        <span style="margin-left: 28%"> 12,345.55</span>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:850px;">
         <span style="margin-left: 15%;margin-top:-15px;">/</span>
-        <span style="margin-left: 14.8%;margin-top:-15px;"> </span>
-        <span style="margin-left: 17%;margin-top:-15px;"> </span>
-        <span style="margin-left: 18%;margin-top:-15px;"> </span>
-        <span style="margin-left: 12%;margin-top:-15px;"> </span>
+        <span style="margin-left: 14.8%;margin-top:-15px;">/</span>
+        <span style="margin-left: 17%;margin-top:-15px;">/</span>
+        <span style="margin-left: 18%;margin-top:-15px;">/</span>
+        <span style="margin-left: 12%;margin-top:-15px;">ระบุระบุระบุ</span>
       </div>
     </div>
 
     <div style="position:absolute;z-index:1;color:red;margin-top:920px;">
       <div style="margin-left: 60%;margin-top:-15px;">
-        <?=date('d')?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        <?=date('m')?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        <?=date('Y')?>
+        12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        01 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        2564 
       </div>
     </div>

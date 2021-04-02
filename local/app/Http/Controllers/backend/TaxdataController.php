@@ -13,7 +13,14 @@ class TaxdataController extends Controller
 
     public function index(Request $request)
     {
-      return view('backend.taxdata.index');
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
+
+      return View('backend.taxdata.index')->with(
+        array(
+           'sBusiness_location'=>$sBusiness_location,'sBranchs'=>$sBranchs
+        ) );
+
     }
 
 
@@ -62,6 +69,14 @@ class TaxdataController extends Controller
       $sTable = \App\Models\Backend\Taxdata::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+       ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      })       
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id_fk!=''){
          	$Customer = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
@@ -70,8 +85,8 @@ class TaxdataController extends Controller
       		return '';
       	}
       })
-      ->addColumn('order_amount', function($row) {
-        return number_format($row->order_amount,2);
+      ->addColumn('commission_cost', function($row) {
+        return number_format($row->commission_cost,2);
       })     
       ->addColumn('tax_amount', function($row) {
         return number_format($row->tax_amount,2);
