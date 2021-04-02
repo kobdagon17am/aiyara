@@ -45,6 +45,9 @@ class CommissionController extends Controller
             ->addColumn('bonus_transfer_date', function ($row) {
                 return date('Y/m/d', strtotime($row->bonus_transfer_date));
             })
+            ->addColumn('tax_percent', function ($row) {
+              return number_format($row->tax_percent).'%';
+          })
 
             ->addColumn('bonus_total', function ($row) {
                 if ($row->bonus_total) {
@@ -75,11 +78,27 @@ class CommissionController extends Controller
                 }
             })
 
+            ->addColumn('status_transfer', function ($row) {
+
+              if ($row->status_transfer == '0') {
+                  $status = 'รออนุมัติ';
+              } elseif ($row->status_transfer == '1') {
+                  $status = 'โอนสำเร็จ';
+              } elseif ($row->status_transfer == '2') {
+                  $status = 'ยกเลิก';
+              } elseif ($row->status_transfer == '3') {
+                  $status = 'ไม่อนุมัติ';
+              } else {
+                  $status = '-';
+              }
+              return $status;
+          })
+
             ->addColumn('action', function ($row) {
                 $date = strtotime($row->bonus_transfer_date);
                 return "<button class='btn btn-sm btn-success btn-outline-success' onclick='modal_commission_transfer($date)'><i class='fa fa-search'></i></button>";
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','transfer_result'])
             ->make(true);
     }
 

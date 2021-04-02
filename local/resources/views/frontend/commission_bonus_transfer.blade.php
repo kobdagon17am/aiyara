@@ -17,37 +17,28 @@
 
                 <div class="card-header">
                     <h4 class="m-b-10">รายงานการจ่ายโบนัส  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+
+
                     <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 p-1">
-                                <input class="form-control" type="date" id="s_date">
-                            </div>
-                            <div class="col-lg-3 col-md-3  p-1">
-                                <input class="form-control" type="date" id="e_date">
-                            </div>
-                            <div class="col-lg-1 col-md-1 p-1">
-                                <button id="search-form" class="btn btn-primary btn-block"> Start </button>
-                            </div>
-                        </div>
-                    </div>
+                      <div class="row">
+                          <div class="col-lg-3 col-md-3 p-1">
+                              <input class="form-control" type="date" id="s_date" value="{{ date('Y-m-01') }}">
+                          </div>
+                          <div class="col-lg-3 col-md-3  p-1">
+                              <input class="form-control" type="date" id="e_date" value="{{ date('Y-m-t') }}">
+                          </div>
+                          <div class="col-lg-1 col-md-1 p-1">
+                              <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                          </div>
+                      </div>
+                  </div>
                 </div>
 
                 <div class="card-block">
                     <div class="dt-responsive table-responsive">
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
 
-                            <thead>
-                                <tr class="info" style='text-align:center;'>
-                                    <th class="text-center">วันที่โอน</th>
-                                    <th class="text-center">จำนวนรอบ</th>
-                                    <th class="text-center">รวมโบนัส</th>
-                                    <th class="text-center">ภาษี 5%</th>
-                                    <th class="text-center">ค่าธรรมเนียมโอน</th>
-                                    <th class="text-center">โอนสุทธิ</th>
-                                    <th class="text-center">หมายเหตุ</th>
-                                    <th class="text-center">#</th>
-                                </tr>
-                            </thead>
+
                         </table>
                     </div>
 
@@ -91,15 +82,73 @@
                 }
                 },
             // type: "POST",
-            columns: [{data: 'bonus_transfer_date'},
-                {data: 'umber_round'},
-                {data: 'bonus_total'},
-                {data: 'tax'},
-                {data: 'fee'},
-                {data: 'price_transfer_total'},
-                {data: 'remark_transfer'},
-                {data: 'action'},
-            ],order:[[0,'DESC']]
+
+            columns: [{
+                        data: 'bonus_transfer_date',
+                        title: '<center>วันที่โอน</center>',
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: 'umber_round',
+                        title: 'จำนวนรอบ',
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: 'bonus_total',
+                        title: '<center>Commission</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'tax_percent',
+                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'tax',
+                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'fee',
+                        title: '<center>ค่าธรรมเนียม</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'price_transfer_total',
+                        title: '<center>ยอดโอนสุทธิ</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'bank_name',
+                        title: '<center>ธนาคารปลายทาง </center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'bank_account',
+                        title: '<center>เลขที่บัญชี</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'status_transfer',
+                        title: '<center>ผลการโอน</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'remark_transfer',
+                        title: '<center>หมายเหตุ</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'action',
+                        title: '<center>#</center>',
+                        className: 'text-left'
+                    },
+                ],order:[[0,'DESC']],
+
+
         });
 
         $('#search-form').on('click', function(e) {

@@ -139,9 +139,10 @@ class Commission_transferController extends Controller
 
         //$sTable = \App\Models\Backend\Commission_transfer::search()->orderBy('id', 'asc');
         $sTable = DB::table('db_report_bonus_transfer')
-            ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
             ->leftjoin('customers', 'db_report_bonus_transfer.customer_id_fk', '=', 'customers.id')
-            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
+            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer.business_location_id_fk')
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer.bonus_transfer_date) <= '{$e_date}'else 1 END"))
@@ -168,7 +169,7 @@ class Commission_transferController extends Controller
             ->addColumn('transferee_bank_no', function ($row) {
                 return is_null($row->bank_account) ? '-' : $row->bank_account;
             })
-            ->addColumn('amount', function ($row) {
+            ->addColumn('price_transfer_total', function ($row) {
                 return is_null($row->price_transfer_total) ? '-' : number_format($row->price_transfer_total, 2);
             })
 
@@ -194,7 +195,7 @@ class Commission_transferController extends Controller
             ->addColumn('note', function ($row) {
                 return is_null($row->remark_transfer) ? '-' : $row->remark_transfer;
             })
-            ->addColumn('action_date', function ($row) {
+            ->addColumn('bonus_transfer_date', function ($row) {
                 return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
             })
             ->addColumn('view', function ($row) {

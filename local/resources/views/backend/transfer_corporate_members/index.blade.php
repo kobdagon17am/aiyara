@@ -53,9 +53,9 @@
                                         <option value="">Business Location</option>
                                         @if (@$business_location)
                                             @foreach (@$business_location as $r)
-                                                <option value="{{ $r->id }}">
-                                                    {{ $r->txt_desc }}
-                                                </option>
+                                              <option value="{{ $r->country_id_fk }}">
+                                                {{ $r->txt_desc }}
+                                              </option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -101,7 +101,7 @@
 
             </div>
 
-            <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+            <table id="data-table" class="table table-centered table-nowrap table-hover"  >
             </table>
             <div id="view_transfer"></div>
 
@@ -139,54 +139,76 @@
               method: 'POST'
           },
 
-
           columns: [{
-                  data: 'action_date',
-                  title: '<center>วันที่ทำรายการ</center>',
-                  className: 'text-center'
-              },
+                        data: 'action_date',
+                        title: '<center>วันที่โอน</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'location',
+                        title: 'Location',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'id',
+                        title: 'UserName',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'cus_name',
+                        title: '<center>ชื่อนิติบุคคล</center>',
+                        className: 'text-left'
+                    },
 
-              {
-                  data: 'id',
-                  title: 'UserName',
-                  className: 'text-center'
-              },
-              {
-                  data: 'cus_name',
-                  title: '<center>ชื่อนิติบุคคล</center>',
-                  className: 'text-left'
-              },
-              {
-                  data: 'destination_bank',
-                  title: '<center>ธนาคารปลายทาง </center>',
-                  className: 'text-center'
-              },
-              {
-                  data: 'transferee_bank_no',
-                  title: '<center>เลขที่บัญชี</center>',
-                  className: 'text-left'
-              },
-              {
-                  data: 'fee',
-                  title: '<center>ค่าธรรมเนียม</center>',
-                  className: 'text-right'
-              },
-              {
-                  data: 'amount',
-                  title: '<center>จำนวนเงิน</center>',
-                  className: 'text-right'
-              },
-              {
-                  data: 'transfer_result',
-                  title: '<center>ผลการโอน</center>',
-                  className: 'text-center'
-              },
-              {
-                  data: 'note',
-                  title: '<center>หมายเหตุ</center>',
-                  className: 'text-center'
-              },
-          ],
+                    {
+                        data: 'bonus_total',
+                        title: '<center>Commission</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'tax_percent',
+                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'tax',
+                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'fee',
+                        title: '<center>ค่าธรรมเนียม</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'price_transfer_total',
+                        title: '<center>ยอดโอนสุทธิ</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'bank_name',
+                        title: '<center>ธนาคารปลายทาง </center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'bank_account',
+                        title: '<center>เลขที่บัญชี</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'transfer_result',
+                        title: '<center>ผลการโอน</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'note',
+                        title: '<center>หมายเหตุ</center>',
+                        className: 'text-left'
+                    },
+
+                ],order:[[0,'DESC']],
+
       });
       $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
           oTable.draw();

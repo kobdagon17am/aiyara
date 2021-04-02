@@ -423,10 +423,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('commission_transfer_af', 'Commission_transfer_afController');
     Route::post('commission_af/datatable', 'Commission_transfer_afController@Datatable')->name('commission_af.datatable');
 
-
+    Route::get('total_thai_cambodia/datatable_total_all', 'Total_thai_cambodiaController@datatable_total_all')->name('total_thai_cambodia.datatable_total_all');
     Route::resource('total_thai_cambodia', 'Total_thai_cambodiaController');
     Route::post('total_thai_cambodia/datatable', 'Total_thai_cambodiaController@Datatable')->name('total_thai_cambodia.datatable');
     Route::post('total_thai_cambodia/datatable_total', 'Total_thai_cambodiaController@DatatableTotal')->name('total_thai_cambodia.datatable_total');
+
 
     Route::resource('cambodia_account', 'Cambodia_accountController');
     Route::post('cambodia_account/datatable', 'Cambodia_accountController@Datatable')->name('cambodia_account.datatable');
