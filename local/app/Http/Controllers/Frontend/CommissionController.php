@@ -450,7 +450,7 @@ class CommissionController extends Controller
                     $status = 'ไม่อนุมัติ';
                 } else {
                     $status = '-';
-                }
+                } 
                 return $status;
             })
 
