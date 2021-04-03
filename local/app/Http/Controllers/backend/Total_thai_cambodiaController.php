@@ -231,45 +231,5 @@ class Total_thai_cambodiaController extends Controller
 
             ->make(true);
     }
-    public static function datatable_total_all(Request $rs)
-    {
-
-        if ($rs->startDate) {
-            $date = str_replace('/', '-', $rs->startDate);
-            $s_date = date('Y-m-d', strtotime($date));
-
-        } else {
-            $s_date = '';
-        }
-
-        if ($rs->endDate) {
-            $date = str_replace('/', '-', $rs->endDate);
-            $e_date = date('Y-m-d', strtotime($date));
-        } else {
-            $e_date = '';
-        }
-
-        $sTable = DB::table('db_total_thai_cambodia')
-            ->select(DB::raw('SUM(db_total_thai_cambodia.total_balance) as total_balance , SUM(db_total_thai_cambodia.total_price) as total_price
-          ,SUM(db_total_thai_cambodia.total_transfer) as total_transfer,SUM(db_total_thai_cambodia.total_credit_card) as total_credit_card,SUM(db_total_thai_cambodia.total_aicash) as total_aicash
-          ,SUM(db_total_thai_cambodia.total_add_aicash) as total_add_aicash'))
-            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
-            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) = '{$e_date}' else 1 END"))
-            // ->groupby('db_total_thai_cambodia.business_location_id_fk')
-            ->first();
-
-            $data = [
-              'total_balance'=>number_format($sTable->total_balance,2),
-              'total_price'=>number_format($sTable->total_price,2),
-              'total_transfer'=>number_format($sTable->total_transfer,2),
-              'total_credit_card'=>number_format($sTable->total_credit_card,2),
-              'total_aicash'=>number_format($sTable->total_aicash,2),
-              'total_add_aicash'=>number_format($sTable->total_add_aicash,2),
-          ];
-            return $data;
-    }
 
 }

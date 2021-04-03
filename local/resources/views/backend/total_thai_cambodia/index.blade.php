@@ -115,42 +115,22 @@
 
 
                     <div class="table-responsive">
-                        <table id="data-table" class="table table-bordered dt-responsive thai_cambodia"
+                        <table id="thai_cambodia" class="table table-bordered dt-responsive thai_cambodia"
                             style="width: 100%;">
-                        </table>
-
-                    </div>
-
-                    <div class="table-responsive mt-2">
-                        <table class="table table-centered table-nowrap mb-0">
-                            <thead class="thead-light">
+                            <tfoot>
                                 <tr>
-                                    <th style="width: 20px;"></th>
                                     <th></th>
-                                    <th>จำนวนรวม</th>
-                                    <th>จำนวนเงินสดรวม</th>
-                                    <th>จำนวนเงินโอนรวม</th>
-                                    <th>จำนวนเงินเครดิตรวม</th>
-                                    <th>Ai-Cash</th>
-                                    <th>เติม Ai-Cash</th>
-
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                    <tr class="table-success">
-                                    <td><b>Total</b></td>
-                                    <td> </td>
-                                    <td class="text-right"><b id="total_balance"></b></td>
-                                    <td class="text-right"><b id="total_price"></b></td>
-                                    <td class="text-right"><b id="total_transfer"></b></td>
-                                    <td class="text-right"><b id="total_credit_card"></b></td>
-                                    <td class="text-right"><b id="total_aicash"></b></td>
-                                    <td class="text-right"><b id="total_add_aicash"></b></td>
-                                </tr>
-
-                            </tbody>
-
+                            </tfoot>
                         </table>
+
                     </div>
 
                 </div>
@@ -189,35 +169,15 @@
 
     <script>
 
-
-      function get_total_all(){
-          business_location = $('#business_location').val();
-          status_search = $('#status_search').val();
-          startDate = $('#startDate').val();
-          endDate = $('#endDate').val();
-            $.ajax({
-                type: "get",
-                url: '{{ route('backend.total_thai_cambodia.datatable_total_all') }}',
-                data: {'business_location': business_location,'status_search':status_search,startDate:startDate,'endDate':endDate},
-                async:false,
-                success: function(data) {
-
-                  $('#total_balance').html(data['total_balance']);
-                  $('#total_price').html(data['total_price']);
-                  $('#total_transfer').html(data['total_transfer']);
-                  $('#total_credit_card').html(data['total_credit_card']);
-                  $('#total_aicash').html(data['total_aicash']);
-                  $('#total_add_aicash').html(data['total_add_aicash']);
-                }
-            });
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
         }
 
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
         var oTable;
         $(function() {
-          get_total_all()
-            oTable = $('.thai_cambodia').DataTable({
+            oTable = $('#thai_cambodia').DataTable({
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                 processing: true,
                 serverSide: true,
@@ -249,8 +209,8 @@
                     },
                     {
                         data: 'total_balance',
-                        title: '<center>จำนวนรวม</center>',
-                        className: 'text-right'
+                        title :'<center>จำนวน</center>', 
+                        className: 'text-center'
                     },
                     {
                         data: 'total_price',
@@ -279,13 +239,70 @@
                         'footer': 'Id',
                         className: 'text-right table-warning'
                     },
-
                 ],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+        
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
 
+                    total_balance = api
+                        .column( 2, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
 
+                    total_price = api
+                        .column( 3, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
 
+                    total_transfer = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
 
+                    total_credit_card = api
+                        .column( 5, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    total_aicash = api
+                        .column( 6, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    total_add_aicash = api
+                        .column( 7, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    // Update footer
+                    $(api.column( 2 ).footer()).html(numberWithCommas(total_balance));
+                    $(api.column( 3 ).footer()).html(numberWithCommas(total_price));
+                    $(api.column( 4 ).footer()).html(numberWithCommas(total_transfer));
+                    $(api.column( 5 ).footer()).html(numberWithCommas(total_credit_card));
+                    $(api.column( 6 ).footer()).html(numberWithCommas(total_aicash));
+                    $(api.column( 7 ).footer()).html(numberWithCommas(total_add_aicash));
+                }
             });
+
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
                  oTable.draw();
                 get_total_all()
