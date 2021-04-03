@@ -7,13 +7,12 @@ use DB;
 class Location extends Model
 {
 	public static function location($zon,$lang_id){
-        //te 
+        //te
         $data = DB::table('dataset_business_location')
         ->select('*')
-        ->leftjoin('dataset_business_major', 'dataset_business_location.id', '=', 'dataset_business_major.location_id')
-        ->where('dataset_business_major.lang_id', '=',$lang_id)
+        ->leftjoin('branchs', 'dataset_business_location.id', '=', 'branchs.business_location_id_fk')
+        ->where('branchs.lang_id', '=',$lang_id)
         ->where('dataset_business_location.id', '=',$zon)
-        ->orderby('order')
         ->get();
 
         return $data;

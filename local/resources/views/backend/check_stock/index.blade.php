@@ -8,9 +8,9 @@
 
   .form-group {
      /*margin-bottom: 1rem; */
-     margin-bottom: 0rem  !important; 
+     margin-bottom: 0rem  !important;
   }
-    
+
 </style>
 @endsection
 
@@ -45,7 +45,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
@@ -94,7 +94,7 @@
                       <div class="form-group row">
                             <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
                             <div class="col-md-10">
-                            
+
                               <?php if(!empty(@$sRow->condition_branch)){ ?>
                                   <select class="form-control select2-templating " disabled="" >
                                       @if(@$sBranchs)
@@ -117,7 +117,7 @@
 
                </div>
 
-      
+
                   <div class="row" >
                     <div class="col-md-6 " >
                        <div class="form-group row">
@@ -259,7 +259,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
 
                   </div>
 
@@ -276,7 +276,7 @@
                         </div>
                     </div>
                   </div>
-                  @ENDIF 
+                  @ENDIF
 
               </div>
 
@@ -354,8 +354,7 @@ $(function() {
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
             {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
             // {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
-            {data: 'amt',
-                 defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+            {data: 'amt',defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
                      return d;
             }},
 
@@ -374,7 +373,7 @@ $(function() {
                        return a + b*1;
                    }, 0);
                     sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
- 
+
                 return $('<tr>')
                     .append( '<td colspan="4" style="text-align:center;background-color:#f2f2f2 !important;font-weight: bold;">Total for '+group+'</td>' )
                     .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' );
@@ -386,12 +385,12 @@ $(function() {
 
                 if(sU!=''&&sD!=''){
                     $('td:last-child', nRow).html('-');
-                }else{ 
+                }else{
                       $('td:last-child', nRow).html(''
                         + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"> STOCK CARD </a>  '
-                        
+
                       ).addClass('input');
-                }
+                } 
 
 
 
@@ -408,7 +407,7 @@ $(function() {
 
 
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnSearch', function(event) {
                   event.preventDefault();
 
@@ -494,7 +493,7 @@ $(function() {
                                                }, 0);
                                                 sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
                                             // sTotal = 2;
-                             
+
                                             return $('<tr>')
                                             .append( '<td colspan="4" style="text-align:center;background-color:#f2f2f2 !important;font-weight: bold;">Total for '+group+'</td>' )
                                             .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' );
@@ -509,26 +508,26 @@ $(function() {
 
                                             if(sU!=''&&sD!=''){
                                                 $('td:last-child', nRow).html('-');
-                                            }else{ 
+                                            }else{
                                                   $('td:last-child', nRow).html(''
                                                     + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"> STOCK CARD </a>  '
-                                                    
+
                                                   ).addClass('input');
                                             }
 
                                      },
 
-                               
+
                                 });
 
                             });
 
 
-               
-               
+
+
             });
 
-        }); 
+        });
     </script>
 
 
@@ -543,14 +542,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
                    }else{
@@ -566,7 +565,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -577,14 +576,14 @@ $(function() {
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -599,7 +598,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -610,14 +609,14 @@ $(function() {
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -631,7 +630,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -642,14 +641,14 @@ $(function() {
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -662,7 +661,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 </script>

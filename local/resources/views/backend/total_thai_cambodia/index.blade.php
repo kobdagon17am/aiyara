@@ -277,12 +277,10 @@
                         data: 'total_add_aicash',
                         title: '<center>เติม Ai-Cash</center>',
                         'footer': 'Id',
-                        className: 'text-right table-warning'
-                    },
+                        className: 'text-right table-warning'}
+                    }
 
-                ],
-
-
+                ]
 
 
             });
