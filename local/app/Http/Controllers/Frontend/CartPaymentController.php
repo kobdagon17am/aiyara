@@ -13,13 +13,13 @@ use App\Models\Frontend\PaymentAiCash;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\ShippingCosController;
- 
+
 class CartPaymentController extends Controller
 {
 	public function index($type){
     $business_location_id = Auth::guard('c_user')->user()->business_location_id;
 
-      $location = Location::location($business_location_id,1);
+      $location = Location::location($business_location_id,$business_location_id);
       $cartCollection = Cart::session($type)->getContent();
       $data=$cartCollection->toArray();
       $quantity = Cart::session($type)->getTotalQuantity();
@@ -50,14 +50,14 @@ class CartPaymentController extends Controller
 		->select('province')
 		->where('customer_id','=',$customer_id)
 		->first();
- 
+
 		$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$province_data->province,$price);
 
 		$vat = DB::table('dataset_vat')
-		->where('location_id','=', $business_location_id)
+		->where('business_location_id_fk','=', $business_location_id)
 		->first();
 
-		$vat = $vat->txt_value;
+		$vat = $vat->vat;
 		$shipping = $data_shipping['data']->shipping_cost;
 
 		//vatใน 7%

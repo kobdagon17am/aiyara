@@ -404,8 +404,10 @@
                                      <div class="row m-t-5">
                                          <div class="col-sm-12">
                                              <select name="receive_location" class="form-control" readonly="">
+
                                                  @foreach ($location as $value)
-                                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
+
+                                                     <option value="{{ $value->id }}">{{ $value->b_name }} ({{$value->b_details}})</option>
                                                  @endforeach
                                              </select>
                                          </div>
@@ -871,8 +873,8 @@
                              <div class="card-block">
                                  <div class="row">
                                      <div class="col-md-12">
-                                         <h5 id="text_username" style="color: #000"></h5>
-                                         <h6 class="m-b-0" id="name" style="color: #000"></h6>
+                                         <h5 id="modal_text_username" style="color: #000"></h5>
+                                         <h6 class="m-b-0" id="modal_name" style="color: #000"></h6>
 
                                      </div>
 
@@ -880,7 +882,7 @@
                                  <div class="row">
                                      <div class="col-md-12">
                                          <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
-                                             <b id="m_qualification_name">BRONZE STAR AWARD ( BSA )<b></h6>
+                                             <b id="m_qualification_name"><b></h6>
 
                                      </div>
 
@@ -891,7 +893,7 @@
                                          <h5 class="m-b-0" style="color: #000">คะแนนสะสม</h5>
                                      </div>
                                      <div class="col-md-6">
-                                         <h5 class="m-b-0 text-right" id="text_pv" style="color: #000"></h5>
+                                         <h5 class="m-b-0 text-right" id="modal_text_pv" style="color: #000"></h5>
                                      </div>
                                  </div>
                                  <hr class="m-b-5 m-t-5">
@@ -1266,15 +1268,15 @@
                      }
                  })
                  .done(function(data) {
-                     //console.log(data['data']['data']);
+                     console.log(data['data']['data']);
                      if (data['status'] == 'success') {
-                         document.getElementById("text_username").innerHTML = data['data']['data']['business_name'] +
+                         document.getElementById("modal_text_username").innerHTML = data['data']['data']['business_name'] +
                              ' (' + data['data']['data']['user_name'] + ')';
 
-                         document.getElementById("name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
+                         document.getElementById("modal_name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
                              'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
 
-                         document.getElementById("text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
+                         document.getElementById("modal_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                          $("#input_username").val(data['data']['data']['user_name']);
 
                          document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
