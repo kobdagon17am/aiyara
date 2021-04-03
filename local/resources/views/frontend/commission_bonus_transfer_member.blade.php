@@ -18,18 +18,18 @@
                 <div class="card-header">
                     <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Member  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
                     <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 p-1">
-                                <input class="form-control" type="date" id="startDate">
-                            </div>
-                            <div class="col-lg-3 col-md-3  p-1">
-                                <input class="form-control" type="date" id="endDate">
-                            </div>
-                            <div class="col-lg-1 col-md-1 p-1">
-                                <button id="search-form" class="btn btn-primary btn-block"> Start </button>
-                            </div>
-                        </div>
-                    </div>
+                      <div class="row">
+                          <div class="col-lg-3 col-md-3 p-1">
+                              <input class="form-control" type="date" id="startDate" value="{{ date('Y-m-01') }}">
+                          </div>
+                          <div class="col-lg-3 col-md-3  p-1">
+                              <input class="form-control" type="date" id="endDate" value="{{ date('Y-m-t') }}">
+                          </div>
+                          <div class="col-lg-1 col-md-1 p-1">
+                              <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                          </div>
+                      </div>
+                  </div>
                 </div>
 
                 <div class="card-block">

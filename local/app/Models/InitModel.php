@@ -74,7 +74,7 @@ class InitModel extends Model
     public function scopesearch($sQuery)
     {
 
-      // ยังไม่ได้ใช้
+      // ใช้กับ http://localhost/aiyara.host/backend/check_stock_account
       if( request('myWhere') ){
         foreach(request('myWhere') AS $sKey => $sValue){
           if( $sValue && $sKey!='action_date'){
@@ -83,6 +83,10 @@ class InitModel extends Model
             if($sValue=='0'){
               $sQuery->where('approve_status', '0');
             }
+          }else if($sKey=='status_accepted' ){
+            if($sValue=='0'){
+              $sQuery->where('status_accepted', '0');
+            }            
           }else if($sKey=='action_date' ){
               $str = explode(":", $sValue);
               $sQuery->where($sKey,'>=', $str[0] );

@@ -3,11 +3,20 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
+<style>
+    @media screen and (min-width: 676px) {
+        .modal-dialog {
+          max-width: 1200px !important; /* New width for default modal */
+        }
+    }
 
+    .select2-selection {height: 34px !important;margin-left: 3px;}
+    .border-left-0 {height: 67%;}
+</style>
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -39,15 +48,55 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                  <div class="col-8">
-                    <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="รหัสย่อ" name="short_code"> -->
+                  <div class="col-11">
+                    
+                  <div class="row">
+                    <div class="col-12 d-flex ">
+
+
+                      <div class="col-md-2 ">
+                        <div class="form-group row">
+                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                              <option value="">-Business Location-</option>
+                              @if(@$sBusiness_location)
+                                @foreach(@$sBusiness_location AS $r)
+                                <option value="{{$r->id}}" >
+                                  {{$r->txt_desc}}
+                                </option>
+                                @endforeach
+                              @endif
+                            </select>
+                        </div>
+                      </div>
+
+          <!--             <div class="col-md-3">
+                        <div class="form-group row">
+                          <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating "  >
+                            <option disabled selected >(สาขา) เลือก Business Location ก่อน</option>
+                          </select>
+                        </div>
+                      </div> -->
+                    
+                      <div class="col-md-4 d-flex  ">
+                         <input id="start_date"  autocomplete="off" placeholder="วันเริ่ม"  />
+                         <input id="end_date"  autocomplete="off" placeholder="วันสิ้นสุด"  />
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group row"> &nbsp; &nbsp;
+                          <button type="button" class="btn btn-info btn-sm waves-effect btnProcess " style="font-size: 14px !important;" >
+                          <i class="bx bx-cog font-size-16 align-middle mr-1"></i> ประมวลผลภาษีบุคคล
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}" >
+        <!--           <div class="col-1 text-right" style="{{@$sC}}" >
                     <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.taxdata.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
-                  </div>
+                  </div> -->
 
                 </div>
 
@@ -63,6 +112,37 @@
 
 @section('script')
 
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#start_date').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // minDate: today,
+            // maxDate: function () {
+            //     return $('#end_date').val();
+            // }
+        });
+        $('#end_date').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                return $('#start_date').val();
+            }
+        });
+
+         $('#start_date').change(function(event) {
+           $('#end_date').val($(this).val());
+         });
+
+  </script>          
+
 <script>
 
 var sU = "{{@$sU}}"; 
@@ -77,7 +157,7 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
+        // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
           url: '{{ route('backend.taxdata.datatable') }}',
@@ -107,30 +187,34 @@ $(function() {
      
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'business_location', title :'<center>Business Location </center>', className: 'text-left'},
             {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left'},
-            {data: 'order_amount',   title :'ยอดสั่งซื้อ (ปีล่าสุด)', className: 'text-center ',render: function(d) {
+            {data: 'commission_cost',   title :'ค่า Commission ', className: 'text-center ',render: function(d) {
                 return (parseFloat(d)>0)?d:'-';
               }},
-            {data: 'tax_amount',   title :'ยอดภาษี (ปีล่าสุด)', className: 'text-center ',render: function(d) {
+            {data: 'tax_amount',   title :'ยอดภาษี หัก ณ ที่จ่าย ', className: 'text-center ',render: function(d) {
                 return (parseFloat(d)>0)?d:'-';
-              }},                         
+              }},  
+            {data: 'start_date', title :'<center>วันเริ่ม </center>', className: 'text-center'},
+            {data: 'end_date', title :'<center>วันสิ้นสุด </center>', className: 'text-center'},
+            {data: 'tax_year', title :'<center>งวด/ปีภาษี </center>', className: 'text-center'},
             {data: 'customer_id_fk',   title :'พิมพ์ 50 ทวิ', className: 'text-center ',render: function(d) {
                   return '<center><a href="{{ URL::to('backend/taxdata/taxtvi') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
               }},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            // {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+            //   if(sU!=''&&sD!=''){
+            //       $('td:last-child', nRow).html('-');
+            //   }else{ 
 
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.taxdata.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.taxdata.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
+            //   $('td:last-child', nRow).html(''
+            //     + '<a href="{{ route('backend.taxdata.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            //     + '<a href="javascript: void(0);" data-url="{{ route('backend.taxdata.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            //   ).addClass('input');
 
-        }
+            // }
 
         }
     });
@@ -141,14 +225,110 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-  /*
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
+
+       $('#business_location_id_fk').change(function(){
+
+          var business_location_id_fk = this.value;
+          // alert(warehouse_id_fk);
+
+           if(business_location_id_fk != ''){
+             $.ajax({
+                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  method: "post",
+                  data: {
+                    business_location_id_fk:business_location_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลสาขา !!.');
+                   }else{
+                       var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.b_name+'</option>';
+                       });
+                       $('#branch_id_fk').html(layout);
+                   }
+                  }
+                })
+           }
+
+ 
+      });
+
 </script>
+
+
+  <script>
+
+
+        $(document).ready(function() {
+          
+            $(document).on('click', '.btnProcess', function(event) {
+                  event.preventDefault();
+
+                  var business_location_id_fk = $('#business_location_id_fk').val();
+                  // var branch_id_fk = $('#branch_id_fk').val();
+                  var start_date = $('#start_date').val();
+                  var end_date = $('#end_date').val();
+                  // alert(start_date+":"+end_date);
+
+                   if(business_location_id_fk==''){
+                      $("#business_location_id_fk").select2('open');
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+                   // if(branch_id_fk==''){
+                   //    $("#branch_id_fk").select2('open');
+                   //    $("#spinner_frame").hide();
+                   //     return false;
+                   //  }
+
+                    if(start_date==''){
+                      $("#start_date").focus();
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+                  
+                   if(end_date==''){
+                      $("#end_date").focus();
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+
+                  $(".myloading").show();
+
+                   setTimeout(function(){
+                        $(".myloading").hide();
+                        // location.reload();
+                    },3000);
+
+                      $.ajax({
+                        url: " {{ url('backend/ajaxProcessTaxdata') }} ", 
+                        method: "post",
+                        data: {
+                          business_location_id_fk:business_location_id_fk,
+                          // branch_id_fk:branch_id_fk,
+                          start_date:start_date,
+                          end_date:end_date,
+                          "_token": "{{ csrf_token() }}", 
+                        },
+                        success:function(data)
+                        { 
+                          console.log(data);
+                            location.reload();
+                        }
+                      })
+
+
+
+
+
+           }); 
+
+        }); 
+    </script>
+
 @endsection
 

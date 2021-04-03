@@ -46,7 +46,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD / Import / Export 
                     </a>
                   </div>
@@ -138,18 +138,7 @@ $(function() {
 });
 </script>
 
-<script type="text/javascript">
-/*
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
+
 
 @endsection
 

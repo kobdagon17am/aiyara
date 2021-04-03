@@ -20,18 +20,18 @@ use App\Models\Frontend\DirectSponsor;
          <div class="card-header">
             <h4 class="m-b-10">ความเหลื่อนไหวคะแนน และโบนัสรายวัน  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
             <div class="col-md-12">
-                <div class="row">
-                    <div class="col-lg-3 col-md-3 p-1">
-                        <input class="form-control" type="date" id="s_date">
-                    </div>
-                    <div class="col-lg-3 col-md-3  p-1">
-                        <input class="form-control" type="date" id="e_date">
-                    </div>
-                    <div class="col-lg-1 col-md-1 p-1">
-                        <button id="search-form" class="btn btn-primary btn-block"> Start </button>
-                    </div>
-                </div>
-            </div>
+              <div class="row">
+                  <div class="col-lg-3 col-md-3 p-1">
+                      <input class="form-control" type="date" id="s_date" value="{{ date('Y-m-01') }}">
+                  </div>
+                  <div class="col-lg-3 col-md-3  p-1">
+                      <input class="form-control" type="date" id="e_date" value="{{ date('Y-m-t') }}">
+                  </div>
+                  <div class="col-lg-1 col-md-1 p-1">
+                      <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                  </div>
+              </div>
+          </div>
         </div>
         <div class="card-block">
 
@@ -139,7 +139,7 @@ use App\Models\Frontend\DirectSponsor;
         });
   });
 
-  
+
 
 
 </script>

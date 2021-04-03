@@ -211,11 +211,11 @@
 
 
 
-   <div class="myBorder" style="background-color: #ffffcc;" >
+   <div class="myBorder"  >
         <div class="container">
           
 
-              <div class="" style="background-color: #ccffff;" >
+              <div class=""  >
                 <div class="container">
                   
                   <div class="col-12">

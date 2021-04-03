@@ -20,10 +20,10 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 p-1">
-                                <input class="form-control" type="date" id="startDate">
+                                <input class="form-control" type="date" id="startDate" value="{{ date('Y-m-01') }}">
                             </div>
                             <div class="col-lg-3 col-md-3  p-1">
-                                <input class="form-control" type="date" id="endDate">
+                                <input class="form-control" type="date" id="endDate" value="{{ date('Y-m-t') }}">
                             </div>
                             <div class="col-lg-1 col-md-1 p-1">
                                 <button id="search-form" class="btn btn-primary btn-block"> Start </button>
@@ -110,26 +110,31 @@
                         title: '<center>ชื่อ-นามสกุล</center>',
                         className: 'text-left'
                     },
-                    
+
                     {
                         data: 'commission',
                         title: '<center>Commission</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'tax_percent',
                         title: '<center>% หัก ณ ที่จ่าย</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'tax',
                         title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
-                        className: 'text-left'
+                        className: 'text-right'
                     },
                     {
                         data: 'fee',
                         title: '<center>ค่าธรรมเนียม</center>',
-                        className: 'text-left'
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'amount',
+                        title: '<center>ยอดโอนสุทธิ</center>',
+                        className: 'text-right'
                     },
                     {
                         data: 'destination_bank',
@@ -141,11 +146,7 @@
                         title: '<center>เลขที่บัญชี</center>',
                         className: 'text-left'
                     },
-                    {
-                        data: 'amount',
-                        title: '<center>จำนวนเงิน</center>',
-                        className: 'text-left'
-                    },
+
                     {
                         data: 'transfer_result',
                         title: '<center>ผลการโอน</center>',
