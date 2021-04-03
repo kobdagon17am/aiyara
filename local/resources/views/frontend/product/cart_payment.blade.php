@@ -112,7 +112,7 @@
                                  <div class="row" id="check_user" style="display: none">
                                      <div class="col-md-12">
                                          <div class="row">
-                                             <div class="col-md-6 col-lg-6 col-xl-6">
+                                             <div class="col-md-5 col-lg-5 col-xl-5">
                                                  <div class="card">
                                                      <div class="card-block">
                                                          <h6>รหัสของลูกทีมที่ต้องการส่งสินค้า</h6>
@@ -131,26 +131,23 @@
                                                      </div>
                                                  </div>
                                              </div>
-                                             <div class="col-md-6 col-lg-6 col-xl-6" id="data_direct" style="display: none">
+                                             <div class="col-md-7 col-lg-7 col-xl-7" id="data_direct" style="display: none">
                                                  <div class="card bg-c-yellow order-card m-b-0">
                                                      <div class="card-block">
                                                          <div class="row">
                                                              <div class="col-md-12">
-                                                                 <h6 id="text_username" style="color: #000">Orange Thailand
-                                                                     (A0000032)</h6>
-                                                                 <h6 class="m-b-0" style="color: #000">คุณ ชฎาพรww
-                                                                     พิกุลe</h6>
+                                                                 <h5 id="c_text_username" style="color: #000"></h5>
+                                                                 <h6 class="m-b-0" id="c_name" style="color: #000"></h6>
 
                                                              </div>
 
                                                          </div>
                                                          <div class="row">
                                                              <div class="col-md-12">
-                                                                 <h6 class="m-b-0" style="color: #000"><i
-                                                                         class="fa fa-star p-2 m-b-0"></i>
-                                                                     BRONZE STAR AWARD ( BSA )</h6>
+                                                                 <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
+                                                                     <b id="c_qualification_name"></b>
+                                                                 </h6>
                                                              </div>
-
                                                          </div>
                                                          <hr class="m-b-5 m-t-5">
                                                          <div class="row">
@@ -158,21 +155,36 @@
                                                                  <h5 class="m-b-0" style="color: #000">คะแนนสะสม</h5>
                                                              </div>
                                                              <div class="col-md-6">
-                                                                 <h5 class="m-b-0 text-right" id="text_pv"
-                                                                     style="color: #000">0 PV</h5>
+                                                                 <h5 class="m-b-0 text-right" id="c_text_pv"
+                                                                     style="color: #000"></h5>
+                                                             </div>
+                                                         </div>
+                                                         <hr class="m-b-5 m-t-5">
+                                                         <div class="row">
+                                                             <div class="col-md-6">
+                                                                 <p class="m-b-0" style="color: #000">
+                                                                     <b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
+                                                             </div>
+                                                             <div class="col-md-6 text-right">
+                                                                 <div id="c_pv_tv_active"></div>
+                                                             </div>
+                                                         </div>
+
+                                                         <hr class="m-b-5 m-t-5">
+                                                         <div class="row">
+                                                             <div class="col-md-6">
+                                                                 <p class="m-b-0" style="color: #000">
+                                                                     <b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
+                                                             </div>
+                                                             <div class="col-md-6 text-right">
+                                                                 <div id="c_pv_mt_active"></div>
                                                              </div>
                                                          </div>
                                                      </div>
                                                  </div>
                                              </div>
-
                                          </div>
-
                                      </div>
-
-
-
-
                                  </div>
 
                                  <div class="row">
@@ -407,7 +419,8 @@
 
                                                  @foreach ($location as $value)
 
-                                                     <option value="{{ $value->id }}">{{ $value->b_name }} ({{$value->b_details}})</option>
+                                                     <option value="{{ $value->id }}">{{ $value->b_name }}
+                                                         ({{ $value->b_details }})</option>
                                                  @endforeach
                                              </select>
                                          </div>
@@ -882,7 +895,8 @@
                                  <div class="row">
                                      <div class="col-md-12">
                                          <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
-                                             <b id="m_qualification_name"><b></h6>
+                                             <b id="m_qualification_name"></b>
+                                         </h6>
 
                                      </div>
 
@@ -902,8 +916,7 @@
                                          <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
                                      </div>
                                      <div class="col-md-6 text-right">
-                                         <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
-                                         </span>
+                                         <div id="modal_pv_tv_active"></div>
                                      </div>
                                  </div>
 
@@ -913,8 +926,7 @@
                                          <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
                                      </div>
                                      <div class="col-md-6 text-right">
-                                         <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
-                                         </span>
+                                         <div id="modal_pv_mt_active"></div>
                                      </div>
                                  </div>
 
@@ -925,7 +937,7 @@
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                     <button class="btn btn-success" onclick="data_direct_confirm()" >Confirm</button>
+                     <button class="btn btn-success" onclick="data_direct_confirm()">Confirm</button>
                  </div>
              </div>
          </div>
@@ -1268,18 +1280,38 @@
                      }
                  })
                  .done(function(data) {
-                     console.log(data['data']['data']);
+                     console.log(data['data']);
                      if (data['status'] == 'success') {
-                         document.getElementById("modal_text_username").innerHTML = data['data']['data']['business_name'] +
+                         document.getElementById("modal_text_username").innerHTML = data['data']['data'][
+                                 'business_name'] +
                              ' (' + data['data']['data']['user_name'] + ')';
 
-                         document.getElementById("modal_name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
+                         document.getElementById("c_text_username").innerHTML = data['data']['data']['business_name'] +
+                             ' (' + data['data']['data']['user_name'] + ')';
+
+                         document.getElementById("modal_name").innerHTML = data['data']['data']['prefix_name'] + ' ' +
+                             data[
+                                 'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
+
+                         document.getElementById("c_name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
                              'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
 
                          document.getElementById("modal_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                          $("#input_username").val(data['data']['data']['user_name']);
 
-                         document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
+                         document.getElementById("c_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
+                         $("#input_username").val(data['data']['data']['user_name']);
+
+
+                         document.getElementById("modal_pv_tv_active").innerHTML = data['pv_tv_active'];
+                         document.getElementById("modal_pv_mt_active").innerHTML = data['pv_mt_active'];
+
+                         document.getElementById("c_pv_tv_active").innerHTML = data['pv_tv_active'];
+                         document.getElementById("c_pv_mt_active").innerHTML = data['pv_mt_active'];
+
+                         document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'];
+                         document.getElementById("c_qualification_name").innerHTML = data['data']['data']['qualification_name'];
+
 
                          $("#large-Modal").modal();
                          //alert(data['status']);
