@@ -226,8 +226,6 @@ Route::get('/reward-history', function () {
 
 Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
 
-
-
 Route::get('/comission', function () {
   return view('frontend/comission');
 })->name('comission');
@@ -239,6 +237,9 @@ Route::get('/travel', function () {
 Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });
+
+// Tax Data
+Route::get('taxdata', 'Frontend\TaxController@index')->name('taxdata');
 
 
 

@@ -111,7 +111,22 @@
 
                     </div>
 
-                    <table id="data-table" class="table table-centered table-nowrap table-hover"  >
+                    <table id="data-table" class="table table-centered table-nowrap table-hover w-100"  >
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" style="text-align: left !important"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                     <div id="view_transfer"></div>
 
@@ -128,6 +143,11 @@
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
         var oTable;
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
+        }
+
         $(function() {
             oTable = $('#data-table').DataTable({
                 // "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -222,8 +242,52 @@
                         className: 'text-left'
                     },
                 ],order:[[0,'DESC']],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+        
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
 
+                    bonus_total = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
 
+                    tax = api
+                        .column( 6, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    fee = api
+                        .column( 7, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    price_transfer_total = api
+                        .column( 8, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    // Update footer
+                    $(api.column( 0 ).footer()).html('Total');
+                    $(api.column( 4 ).footer()).html(numberWithCommas(bonus_total));
+                    $(api.column( 6 ).footer()).html(numberWithCommas(tax));
+                    $(api.column( 7 ).footer()).html(numberWithCommas(fee));
+                    $(api.column( 8 ).footer()).html(numberWithCommas(price_transfer_total));
+                }
             });
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
                 oTable.draw();

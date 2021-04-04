@@ -120,7 +120,6 @@ class Total_thai_cambodiaController extends Controller
 
     public function Datatable(Request $rs)
     {
-
         if ($rs->startDate) {
             $date = str_replace('/', '-', $rs->startDate);
             $s_date = date('Y-m-d', strtotime($date));
@@ -137,8 +136,9 @@ class Total_thai_cambodiaController extends Controller
         }
 
         $sTable = DB::table('db_total_thai_cambodia')
-            ->select('db_total_thai_cambodia.*', 'dataset_business_location.txt_desc')
+            ->select('db_total_thai_cambodia.*', 'dataset_business_location.txt_desc', 'branchs.id', 'branchs.b_name', 'branchs.b_details')
             ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
+            ->leftjoin('branchs', 'branchs.id', '=', 'db_total_thai_cambodia.branchs_id_fk')
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
@@ -147,7 +147,9 @@ class Total_thai_cambodiaController extends Controller
 
         $sQuery = \DataTables::of($sTable);
         return $sQuery
-
+            ->addColumn('branchs', function ($row) {
+                return "{$row->b_name} ({$row->b_details})";
+            })
             ->addColumn('total_balance', function ($row) {
                 return number_format($row->total_balance, 2);
             })
@@ -175,7 +177,7 @@ class Total_thai_cambodiaController extends Controller
             ->make(true);
     }
 
-    public function DatatableTotal(Request $rs)
+    public function DatatableTotalThai(Request $rs)
     {
 
         if ($rs->startDate) {
@@ -196,18 +198,82 @@ class Total_thai_cambodiaController extends Controller
         $sTable = DB::table('db_total_thai_cambodia')
             ->select(DB::raw('dataset_business_location.txt_desc , SUM(db_total_thai_cambodia.total_balance) as total_balance , SUM(db_total_thai_cambodia.total_price) as total_price
           ,SUM(db_total_thai_cambodia.total_transfer) as total_transfer,SUM(db_total_thai_cambodia.total_credit_card) as total_credit_card,SUM(db_total_thai_cambodia.total_aicash) as total_aicash
-          ,SUM(db_total_thai_cambodia.total_add_aicash) as total_add_aicash'))
+          ,SUM(db_total_thai_cambodia.total_add_aicash) as total_add_aicash'), 'branchs.id', 'branchs.b_name', 'branchs.b_details')
             ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
-            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
+            ->leftjoin('branchs', 'branchs.id', '=', 'db_total_thai_cambodia.branchs_id_fk')
+            // ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) = '{$e_date}' else 1 END"))
-            ->groupby('db_total_thai_cambodia.business_location_id_fk')
+            ->where('db_total_thai_cambodia.business_location_id_fk', 1)
+            ->groupby('db_total_thai_cambodia.branchs_id_fk')
             ->get();
 
         $sQuery = \DataTables::of($sTable);
         return $sQuery
+            ->addColumn('branchs', function ($row) {
+                return "{$row->b_name} ({$row->b_details})";
+            })
+            ->addColumn('total_balance', function ($row) {
+                return number_format($row->total_balance, 2);
+            })
+            ->addColumn('total_price', function ($row) {
+                return number_format($row->total_price, 2);
+            })
+            ->addColumn('total_transfer', function ($row) {
+                return number_format($row->total_transfer, 2);
+            })
 
+            ->addColumn('total_credit_card', function ($row) {
+                return number_format($row->total_credit_card, 2);
+            })
+            ->addColumn('total_aicash', function ($row) {
+                return number_format($row->total_aicash, 2);
+            })
+
+            ->addColumn('total_add_aicash', function ($row) {
+                return number_format($row->total_add_aicash, 2);
+            })
+
+            ->make(true);
+    }
+
+    public function DatatableTotalCambodia(Request $rs)
+    {
+        if ($rs->startDate) {
+            $date = str_replace('/', '-', $rs->startDate);
+            $s_date = date('Y-m-d', strtotime($date));
+
+        } else {
+            $s_date = '';
+        }
+
+        if ($rs->endDate) {
+            $date = str_replace('/', '-', $rs->endDate);
+            $e_date = date('Y-m-d', strtotime($date));
+        } else {
+            $e_date = '';
+        }
+
+        $sTable = DB::table('db_total_thai_cambodia')
+            ->select(DB::raw('dataset_business_location.txt_desc , SUM(db_total_thai_cambodia.total_balance) as total_balance , SUM(db_total_thai_cambodia.total_price) as total_price
+          ,SUM(db_total_thai_cambodia.total_transfer) as total_transfer,SUM(db_total_thai_cambodia.total_credit_card) as total_credit_card,SUM(db_total_thai_cambodia.total_aicash) as total_aicash
+          ,SUM(db_total_thai_cambodia.total_add_aicash) as total_add_aicash'), 'branchs.id', 'branchs.b_name', 'branchs.b_details')
+            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
+            ->leftjoin('branchs', 'branchs.id', '=', 'db_total_thai_cambodia.branchs_id_fk')
+            // ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) = '{$e_date}' else 1 END"))
+            ->where('db_total_thai_cambodia.business_location_id_fk', 5)
+            ->groupby('db_total_thai_cambodia.branchs_id_fk')
+            ->get();
+
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+            ->addColumn('branchs', function ($row) {
+                return "{$row->b_name} ({$row->b_details})";
+            })
             ->addColumn('total_balance', function ($row) {
                 return number_format($row->total_balance, 2);
             })
