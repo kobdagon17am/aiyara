@@ -216,6 +216,7 @@ class AipocketController extends Controller
                 $pv_tv_active = '<span class="label label-info" style="font-size: 14px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '</span>';
             }
             $data = array('status' => 'success', 'data' => $resule, 'pv_tv_active' => $pv_tv_active, 'pv_mt_active' => $pv_mt_active);
+
         } else {
             $data = array('status' => 'fail', 'data' => $resule);
         }
