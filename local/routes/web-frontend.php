@@ -135,6 +135,11 @@ Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
+Route::post('delete_order','Frontend\HistoryController@delete_order')->name('delete_order');
+
+Route::post('cancel_order','Frontend\HistoryController@cancel_order')->name('cancel_order');
+
+
 
 Route::get('export_pdf_history/{code_order?}','Frontend\HistoryController@export_pdf_history')->name('export_pdf_history');
 
@@ -226,6 +231,8 @@ Route::get('/reward-history', function () {
 
 Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
 
+Route::get('travel','Frontend\TravelController@index')->name('travel');
+Route::get('travel_detail/{id}','Frontend\TravelController@travel_detail')->name('travel_detail');
 
 
 Route::get('/comission', function () {
@@ -233,9 +240,6 @@ Route::get('/comission', function () {
 })->name('comission');
 
 
-Route::get('/travel', function () {
-  return view('frontend/travel');
-})->name('travel');
 Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });

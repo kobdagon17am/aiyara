@@ -16,8 +16,7 @@
          </div>
          <div class="row invoive-info">
              <div class="col-md-4 col-xs-12 invoice-client-info">
-                 <h6>Information :</h6>
-
+                 <h6>ที่อยู่การจัดส่ง :</h6>
                  @if($address)
                      <p><b>{{ $address['name'] }}</b><br>
                       @if($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
@@ -35,6 +34,25 @@
                   </p>
                  @else
                   <p><b> Address Is Null</b>
+                 @endif
+                 @if($order->status_payment_sent_other == 1)
+                 <?php
+                 $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->sent_to_customer_id_fk);
+
+  //                dd($sent_to_customer_data);
+  //                +"prefix_name": "คุณ"
+  // +"first_name": "ชฎาพรww"
+  // +"last_name": "พิกุลe"
+  // +"business_name": "Orange Thailand"
+  // +"user_name": "A0000032"
+                 ?>
+                 <hr>
+                 <p>
+                  <b>สั่งซื้อให้กับ {{ $sent_to_customer_data->prefix_name }} {{ $sent_to_customer_data->first_name }} {{ $sent_to_customer_data->last_name }}
+                      </b><br>
+                  <b>( {{ $sent_to_customer_data->business_name }} ) User : {{ $sent_to_customer_data->user_name }}</b>
+                 </p>
+
                  @endif
              </div>
              <div class="col-md-4 col-sm-6">

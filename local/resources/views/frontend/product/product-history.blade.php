@@ -123,6 +123,69 @@
                         </form>
                     </div>
                 </div>
+
+                <div class="modal fade" id="delete" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-md" role="document">
+                      <form action="{{ route('delete_order') }}" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h4 class="modal-title" id="delete_title">ยืนยันการลบรายการ </h4>
+                              </div>
+
+                              <div class="modal-body">
+                                  <div class="form-group row">
+                                      <div class="col-sm-12 text-center">
+                                        <button type="button" class="btn btn-default waves-effect "
+                                      data-dismiss="modal">Close</button>
+                                      <button class="btn btn-primary" type="submit" name="submit" >Confirm</button>
+
+                                        <input type="hidden" name="delete_order_id" id="delete_order_id" value="">
+                                      </div>
+
+                                  </div>
+                              </div>
+
+                              {{-- <div class="modal-footer">
+                                  <button type="button" class="btn btn-default waves-effect "
+                                      data-dismiss="modal">Close</button>
+
+                              </div> --}}
+                          </div>
+                      </form>
+                  </div>
+              </div>
+
+              <div class="modal fade" id="cancel" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-md" role="document">
+                    <form action="{{ route('cancel_order') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <div class="col-sm-12 text-center">
+                                      <button type="button" class="btn btn-default waves-effect "
+                                    data-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit" name="submit" >Confirm</button>
+                                      <input type="hidden" name="cancel_order_id" id="cancel_order_id" value="">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {{-- <div class="modal-footer">
+                                <button type="button" class="btn btn-default waves-effect "
+                                    data-dismiss="modal">Close</button>
+
+                            </div> --}}
+                        </div>
+                    </form>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -167,6 +230,17 @@
 
         function upload_slip(order_id) {
             $('#order_id').val(order_id);
+        }
+
+        function delete_order(order_id,code){
+            $('#delete_order_id').val(order_id);
+            $('#delete_title').html('ยืนยันการลบรายการ ('+code+')');
+
+        }
+
+        function cancel_order(order_id,code){
+            $('#cancel_order_id').val(order_id);
+            $('#cancel_title').html('ยืนยันการยกเลิกรายการ ('+code+')');
         }
 
         $('#file_slip').change(function() {

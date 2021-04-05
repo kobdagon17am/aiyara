@@ -16,6 +16,12 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders = new Db_Orders();
             $insert_db_orders->code_order = $code_order;
             $insert_db_orders->customers_id_fk = $customer_id;
+
+            if($rs->sent_type_to_customer == 'sent_type_other'){
+              $insert_db_orders->sent_to_customer_id_fk = $rs->sent_to_customer_id_fk;
+              $insert_db_orders->status_payment_sent_other = 1;
+            }
+
             $insert_db_orders->vat = $rs->vat;
 
             $insert_db_orders->sum_price = $rs->price;

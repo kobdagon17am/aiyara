@@ -9,6 +9,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use App\Models\Frontend\PvPayment;
 
 class HistoryController extends Controller
 {
@@ -176,12 +177,13 @@ class HistoryController extends Controller
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
             ->where('dataset_order_status.lang_id', '=', '1')
             ->where('dataset_orders_type.lang_id', '=', '1')
-            ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
             ->whereRaw(("case WHEN '{$request->dt_pay_type}' = '' THEN 1 else dataset_pay_type.id = '{$request->dt_pay_type}' END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
+            ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->orwhere('db_orders.sent_to_customer_id_fk', '=', Auth::guard('c_user')->user()->id)
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();
 
@@ -211,7 +213,7 @@ class HistoryController extends Controller
                 return '<b class="text-success">' . number_format($row->pv_total) . '</b>';
             })
             ->addColumn('date', function ($row) {
-                return date('d/m/Y H:i:s', strtotime($row->created_at));
+                return date('Y/m/d H:i:s', strtotime($row->created_at));
             })
 
             ->addColumn('status', function ($row) {
@@ -225,9 +227,12 @@ class HistoryController extends Controller
 
             ->addColumn('action', function ($row) {
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
-                    $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>';
-                } else {
-                    $upload = '';
+                    $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>
+                    <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-trash"></i></a>';
+                } elseif($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5) {
+                    $upload = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                }else{
+                    $upload ='';
                 }
                 return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $upload;
             })
@@ -295,9 +300,46 @@ class HistoryController extends Controller
         }
     }
 
+    public function delete_order(Request $rs){
+      if($rs->delete_order_id){
+        DB::BeginTransaction();
+        try{
+          DB::table('db_orders')->where('id', '=', $rs->delete_order_id)->delete();
+          DB::table('db_order_products_list')->where('order_id_fk', '=', $rs->delete_order_id)->delete();
+          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $rs->delete_order_id)->delete();
+
+          DB::commit();
+          return redirect('product-history')->withSuccess('Delete Oder Success');
+        }catch(Exception $e){
+          DB::rollback();
+          return redirect('product-history')->withError('Delete Oder Fail :'.$e);
+        }
+
+      }else{
+        return redirect('product-history')->withError('Delete Oder Fail : Data is null');
+      }
+
+    }
+
+    public function cancel_order(Request $rs){
+
+      if($rs->cancel_order_id){
+        $customer_id = Auth::guard('c_user')->user()->id;
+        $resule = PvPayment::PvPayment_type_cancel($rs->cancel_order_id,$customer_id);
+        if($resule['status']== 'success'){
+          return redirect('product-history')->withSuccess('Cancel Oder Success');
+        }else{
+          return redirect('product-history')->withError($resule['message']);
+        }
+
+      }else{
+        return redirect('product-history')->withSuccess('Cancel Oder Fail : Data is null');
+      }
+    }
+
+
     public function cart_payment_history($code_order)
     {
-
         $order = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
                 'dataset_business_major.name as office_name',

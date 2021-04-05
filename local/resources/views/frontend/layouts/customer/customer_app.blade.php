@@ -551,7 +551,7 @@
 			</a>
 		</li>
 
-		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>สิทธิประโยชน์</b></span>
 				<span class="pcoded-mtext">สิทธิประโยชน์</span>
@@ -566,7 +566,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('travel')) ? 'active' : '' }}">
+				<li class="{{ (request()->is('travel*')) ? 'active' : '' }}">
 					<a href="{{route('travel')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">โปรโมชั่นท่องเที่ยวท่องเที่ยว</span>

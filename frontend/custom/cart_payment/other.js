@@ -1,7 +1,18 @@
 function next() {
     var check_sent_other = document.getElementById("sent_other").checked;
     var check_office_check = document.getElementById("sent_office_check").checked;
+    var sent_type_other = document.getElementById("sent_type_other").checked;//จัดส่งให้คนอื่น
     
+    if(sent_type_other){
+        sent_to_customer_id_fk = document.getElementById("sent_to_customer_id_fk").value;
+        if(sent_to_customer_id_fk == ''){
+            Swal.fire({
+                icon: 'error',
+                title: 'เลือกผู้รับไม่ถูกต้อง',
+            })
+            return false;
+        }
+    }
 
     if (check_sent_other == true) {
         var other_name = $('#other_name').val();
@@ -117,8 +128,46 @@ $('#upload').change(function() {
 });
 
 
-function data_direct_confirm(){
-    $('#large-Modal').modal('hide')
-    document.getElementById("data_direct").style.display = "block";
+function data_direct_confirm(sent_to_customer_username){
+    var url =   document.getElementById("url_check_user").value;
+    
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'user_name': sent_to_customer_username}
+    })
+    .done(function(data) {
+        console.log(data['data']);
+        if (data['status'] == 'success') {
+ 
+            document.getElementById("c_text_username").innerHTML = data['data']['data']['business_name'] +
+                ' (' + data['data']['data']['user_name'] + ')';
+            document.getElementById("c_name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
+                'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
+            document.getElementById("c_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
+            $("#input_username").val(data['data']['data']['user_name']);
+
+            document.getElementById("c_pv_tv_active").innerHTML = data['pv_tv_active'];
+            document.getElementById("c_pv_mt_active").innerHTML = data['pv_mt_active'];
+ 
+            document.getElementById("c_qualification_name").innerHTML = data['data']['data']['qualification_name'];
+            
+            var sent_to_customer_id =  data['data']['data']['id'];
+            document.getElementById("sent_to_customer_id_fk").value = sent_to_customer_id;
+
+            $('#large-Modal').modal('hide')
+            document.getElementById("data_direct").style.display = "block";
+
+           
+
+        }
+    })
+    
 
 }

@@ -16,7 +16,7 @@
          <div class="col-md-8 col-sm-12">
              <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data">
                  @csrf
-
+                 <input type="hidden" id="url_check_user" name="url_check_user" value="{{ route('check_customer_id') }}">
                  <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
                  <input type="hidden" name="type" value="{{ $bill['type'] }}">
                  <input type="hidden" name="vat" value="{{ $bill['vat'] }}">
@@ -94,14 +94,14 @@
                                          <div class="form-radio">
                                              <div class="radio radio-inline">
                                                  <label>
-                                                     <input type="radio" name="radio" onclick="sent_type('customer')"
+                                                     <input type="radio" name="sent_type_to_customer" value="sent_type_customer" id="sent_type_customer" onclick="sent_type('customer')"
                                                          checked="checked">
                                                      <i class="helper"></i><b>จัดส่งให้ตัวเอง</b>
                                                  </label>
                                              </div>
                                              <div class="radio radio-inline">
                                                  <label>
-                                                     <input type="radio" name="radio" onclick="sent_type('other')">
+                                                     <input type="radio" name="sent_type_to_customer" value="sent_type_other" id="sent_type_other" onclick="sent_type('other')">
                                                      <i class="helper"></i><b>จัดส่งให้ลูกทีม</b>
                                                  </label>
                                              </div>
@@ -126,8 +126,11 @@
                                                                          <span class="">ทำรายการ</span>
                                                                      </span>
                                                                  </div>
+                                                                 <span class="label label-inverse-info-border">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
                                                              </div>
+
                                                          </div>
+
                                                      </div>
                                                  </div>
                                              </div>
@@ -138,6 +141,7 @@
                                                              <div class="col-md-12">
                                                                  <h5 id="c_text_username" style="color: #000"></h5>
                                                                  <h6 class="m-b-0" id="c_name" style="color: #000"></h6>
+                                                                 <input type="hidden" name="sent_to_customer_id_fk" id="sent_to_customer_id_fk" value="">
 
                                                              </div>
 
@@ -937,7 +941,8 @@
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                     <button class="btn btn-success" onclick="data_direct_confirm()">Confirm</button>
+                     <div id="confirm_pay_sent_customer"></div>
+
                  </div>
              </div>
          </div>
@@ -1286,32 +1291,20 @@
                                  'business_name'] +
                              ' (' + data['data']['data']['user_name'] + ')';
 
-                         document.getElementById("c_text_username").innerHTML = data['data']['data']['business_name'] +
-                             ' (' + data['data']['data']['user_name'] + ')';
-
                          document.getElementById("modal_name").innerHTML = data['data']['data']['prefix_name'] + ' ' +
                              data[
                                  'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
 
-                         document.getElementById("c_name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
-                             'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
-
                          document.getElementById("modal_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                          $("#input_username").val(data['data']['data']['user_name']);
-
-                         document.getElementById("c_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
-                         $("#input_username").val(data['data']['data']['user_name']);
-
 
                          document.getElementById("modal_pv_tv_active").innerHTML = data['pv_tv_active'];
                          document.getElementById("modal_pv_mt_active").innerHTML = data['pv_mt_active'];
 
-                         document.getElementById("c_pv_tv_active").innerHTML = data['pv_tv_active'];
-                         document.getElementById("c_pv_mt_active").innerHTML = data['pv_mt_active'];
-
                          document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'];
-                         document.getElementById("c_qualification_name").innerHTML = data['data']['data']['qualification_name'];
 
+                         var sent_to_customer_username =  data['data']['data']['user_name'];
+                         document.getElementById("confirm_pay_sent_customer").innerHTML = '<button  class="btn btn-success" onclick="data_direct_confirm(\''+sent_to_customer_username+'\')">Confirm</button>';
 
                          $("#large-Modal").modal();
                          //alert(data['status']);
