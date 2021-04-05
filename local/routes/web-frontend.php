@@ -244,6 +244,9 @@ Route::get('/comhistory', function () {
   return view('frontend/comhistory');
 });
 
+// Tax Data
+Route::get('taxdata', 'Frontend\TaxController@index')->name('taxdata');
+
 
 
 
