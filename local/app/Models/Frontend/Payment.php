@@ -29,7 +29,7 @@ class Payment extends Model
             $total = Cart::session($rs->type)->getTotal();
 
             if ($rs->type == 5) {
-                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
@@ -126,7 +126,7 @@ class Payment extends Model
             $total = Cart::session($rs->type)->getTotal();
 
             if ($rs->type == 5) {
-                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
@@ -215,7 +215,7 @@ class Payment extends Model
             $total = Cart::session($rs->type)->getTotal();
 
             if ($rs->type == 5) {
-                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
@@ -399,7 +399,7 @@ class Payment extends Model
         $customer_id = Auth::guard('c_user')->user()->id;
         $code_order = RunNumberPayment::run_number_order($business_location_id);
 
-        $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+        $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
         $gv_customer = $data_gv->sum_gv;
 
         DB::BeginTransaction();

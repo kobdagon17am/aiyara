@@ -1,5 +1,5 @@
  <?php
- use App\Models\Frontend\CourseCheckRegis; 
+ use App\Models\Frontend\CourseCheckRegis;
  ?>
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
@@ -8,7 +8,7 @@
     position: static !important;
     display: table-cell !important;
     float: none !important;
-}   
+}
 </style> --}}
 @endsection
 @section('conten')
@@ -36,7 +36,7 @@
                         @else
                         <h4 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h4>
                         @endif
-                        
+
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
                         <a href="{{route('product-list',['type'=>$type])}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
@@ -58,14 +58,14 @@
                                         <th>Pv</th>
                                         <th>Action</th>
                                     </tr>
-                                </thead> 
+                                </thead>
                                 <tbody>
                                     @foreach($bill['data'] as $value)
-                                    <?php 
+                                    <?php
 
                                     if($type == 6){
                                         $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
-                                    } 
+                                    }
 
                                     ?>
 
@@ -75,14 +75,14 @@
                                         </td>
                                         <td>
                                             <h6> <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}">{{ $value['name'] }}</a></h6>
-                                           
+
                                             @if($value['attributes']['promotion_detail'])
                                             <ul>
                                                 @foreach($value['attributes']['promotion_detail'] as $promotion_product)
                                                 <li style="font-size: 12px">
-                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }} 
+                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
                                                 </li>
-                                                
+
                                                 @endforeach
                                             </ul>
 
@@ -121,8 +121,8 @@
             </div>
             <div class="card-block">
                 <div class="col-md-12">
-                   <?php  
-                   $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                   <?php
+                   $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                    ?>
                    <table class="table table-responsive" >
                     @if($type == 5)
@@ -149,7 +149,7 @@
                         @if($bill['quantity'] > 0)
                         <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                         @endif
-                        
+
                     </div>
 
                 </div>
@@ -190,7 +190,7 @@
 
     function cart_delete(item_id){
         var url = '{{ route('cart_delete') }}';
-        Swal.fire({ 
+        Swal.fire({
           title: 'Are you sure?',
           // text: "You won't be able to revert this!",
           icon: 'warning',
@@ -213,10 +213,10 @@
     })
   }
 
-  function quantity_change(item_id){ 
+  function quantity_change(item_id){
 
     var qty = $('#quantity_'+item_id).val();
-    var type = {{ $type }}; 
+    var type = {{ $type }};
 
     $.ajax({
         url: '{{ route('edit_item') }}',
@@ -237,7 +237,7 @@
       $('#quantity_bill').html('ยอดรวมจำนวน ('+data['quantity']+') ชิ้น');
       $('#price_total').html(data['price_total']);
       $('#pv').html(data['pv_total']+' PV');
-      console.log(data); 
+      console.log(data);
       console.log("success");
   })
     .fail(function() {

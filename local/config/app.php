@@ -236,7 +236,7 @@ return [
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
-	'Popper' => andcarpi\Popper\Facades\Popper::class,
+	      'Popper' => andcarpi\Popper\Facades\Popper::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
 
     ],

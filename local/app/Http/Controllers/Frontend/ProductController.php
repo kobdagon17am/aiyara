@@ -111,7 +111,7 @@ public function product_detail($type,$id,$category_id='')
 
                 $product = DB::table('promotions')
                 ->select('promotions.id as products_id','name_thai as product_name',
-                    'selling_price as member_price','promotions_cost.pv','title_thai as descriptions'
+                    'selling_price as member_price','promotions_cost.pv','detail_thai as descriptions'
                     ,'detail_thai as products_details')
                    // ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
                 ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')

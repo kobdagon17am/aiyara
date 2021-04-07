@@ -13,11 +13,16 @@
       <div class="card">
 
           <div class="card-header">
-              <h4 class="m-b-10">ความเคลื่อนไหว Gift Voucher</h4>
+            <div class="row">
+              <?php
+              $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
+              ?>
+              <h4 class="m-b-10">ความเคลื่อนไหว Gift Voucher [ คงเหลือ <b class="text-danger">{{ number_format($gv->sum_gv) }}</b> ]</h4>
+            </div>
 
               <div class="col-md-12">
                 <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <select class="form-control" id="status" >
                       <option value="">ทั้งหมด</option>
                       <option value="not_expiry_date">ยังไม่หมดอายุ</option>
@@ -28,11 +33,12 @@
                     <div class="col-lg-3 col-md-3">
                         <input class="form-control" type="date" id="s_date">
                     </div>
+
                     <div class="col-lg-3 col-md-3 ">
                         <input class="form-control" type="date" id="e_date">
                     </div>
-                    <div class="col-lg-2 col-md-2 ">
-                        <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                    <div class="col-lg-3 col-md-2 ">
+                        <button id="search-form" class="btn btn-primary btn-block"> Search </button>
                     </div>
                 </div>
             </div>
@@ -63,10 +69,6 @@
 <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-<!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
-
-
 
 <script type="text/javascript">
 
@@ -86,21 +88,15 @@
       // type: "POST",
 
       columns: [{
-                        data: 'date',
+                        data: 'pro_sdate',
                         title: '<center>วันที่ได้รับ</center>',
                         className: 'text-center'
                     },
 
                     {
-                        data: 'expiry_date',
+                        data: 'pro_edate',
                         title: 'วันหมดอายุ',
                         className: 'text-center'
-                    },
-
-                    {
-                        data: 'code',
-                        title: '<center>CODE</center>',
-                        className: 'text-right'
                     },
 
                     {
@@ -110,10 +106,11 @@
                     },
 
                     {
-                        data: 'gv',
+                        data: 'giftvoucher_value',
                         title: '<center>Gift Voucher</center>',
                         className: 'text-right'
                     },
+
                     {
                         data: 'banlance',
                         title: '<center>คงเหลือ</center>',

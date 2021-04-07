@@ -3,12 +3,17 @@ namespace App\Helpers;
 use DB;
 use Auth;
 class Frontend{
-	public static function get_gitfvoucher($id){
-		$data_gv = DB::table('gift_voucher')
-		->selectRaw('sum(banlance) as sum_gv')
-		->where('customer_id','=',$id)
-		->where('expiry_date','>',date('Y-m-d H:i:s'))
+	public static function get_gitfvoucher($user_name){
+
+		$data_gv = DB::table('db_giftvoucher_cus')
+		->selectRaw('sum(giftvoucher_banlance) as sum_gv')
+		->where('customer_code','=',$user_name)
+		->where('pro_sdate','<=',date('Y-m-d'))
+    ->where('pro_edate','>=',date('Y-m-d'))
+    ->whereraw('(pro_status = 1 || pro_status = 2)')
+
 		->first();
+
 		return $data_gv;
 
 	}

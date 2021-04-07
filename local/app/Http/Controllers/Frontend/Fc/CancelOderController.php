@@ -9,7 +9,7 @@ use App\Models\Backend\Giveaway;
 class CancelOderController extends Controller
 {
 
-    public static function cancel_oder($order_id,$admin_id,$type_user_cancel)
+    public static function cancel_oder($order_id,$customer_or_admin,$type_user_cancel)
     {
 
         $order_data = DB::table('db_orders')
@@ -30,7 +30,7 @@ class CancelOderController extends Controller
             if($type_id  == 1 || $type_id  == 2 || $type_id  == 3 || $type_id  == 4 ){//1 ทำคุณสมบัติ , 2 รักษาคุณสมบัติ ,3 รักษาคุณสมบัตรท่องเที่ยว ,4 เติม Aistockist
               $update_order = DB::table('db_orders')//update บิล
               ->where('id', $order_id)
-              ->update(['cancel_by_user_id_fk' => $admin_id,
+              ->update(['cancel_by_user_id_fk' => $customer_or_admin,
                   'order_status_id_fk' => 8,//Status  8 = Cancel
                   'approve_status' => 2,//status = Cancel
                   'type_user_cancel' => 1, //Customer
@@ -41,9 +41,13 @@ class CancelOderController extends Controller
                   ->update(['approve_status' => 2,
                       'approve_date' => date('Y-m-d H:i:s')]);
 
-                  $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
+              $update_products_lis = DB::table('db_order_products_list_giveaway')
+                    ->where('order_id_fk', $order_id)
+                    ->update(['approve_status' => 2,
+                      'approve_date' => date('Y-m-d H:i:s')]);
 
-            }elseif($type_id  == 5 ){//Gift Voucher
+                  $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
+            }elseif($type_id  == 5 ){//GivtVoucher
 
             }elseif($type_id  == 6 ){//Course
 

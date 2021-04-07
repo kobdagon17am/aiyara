@@ -9,51 +9,51 @@
 @section('conten')
 
 <div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-header">
-				<div class="row">
-					<div class="col-md-4">
-						<select class="form-control" id="status" >
-							<option value="">ทั้งหมด</option>
-							<option value="success">Success</option>
-							<option value="cancel">Cancle</option>
-						</select>
-					</div>
-					<div class="col">
-						<div class="page-header-breadcrumb">
-							<?php
-							$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
-							?>
-							<div class="bg-danger p-10"><i class="fa fa-gift"></i> {{-- Gift Voucher --}} <b>{{ number_format($gv->sum_gv) }} </b></div>
-						</div>
-					</div>
+  <div class="col-md-12">
+      <div class="card">
 
+          <div class="card-header">
+            <div class="row">
+              <?php
+              $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
+              ?>
+              <h4 class="m-b-10">ประวัติการแลกสินค้าด้วย Gift Voucher [ คงเหลือ <b class="text-danger">{{ number_format($gv->sum_gv) }}</b> ]</h4>
+            </div>
 
-				</div>
-			</div>
-			<div class="card-block">
-				<div class="table-responsive dt-responsive">
+              <div class="col-md-12">
+                <div class="row">
+                  {{-- <div class="col-md-3">
+                    <select class="form-control" id="status" >
+                      <option value="">ทั้งหมด</option>
+                      <option value="not_expiry_date">ยังไม่หมดอายุ</option>
+                      <option value="expiry_date">หมดอายุ</option>
+                    </select>
+                  </div> --}}
 
-					<table id="giv_history" class="table table-striped table-bordered nowrap">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Date</th>
-								<th>Order</th>
-								<th>Gift Voucher</th>
-								<th>Status</th>
-                <th>#</th>
-							</tr>
-						</thead>
+                    <div class="col-lg-3 col-md-3">
+                        <input class="form-control" type="date" id="s_date">
+                    </div>
 
-					</table>
-				</div>
+                    <div class="col-lg-3 col-md-3 ">
+                        <input class="form-control" type="date" id="e_date">
+                    </div>
+                    <div class="col-lg-3 col-md-2 ">
+                        <button id="search-form" class="btn btn-primary btn-block"> Search </button>
+                    </div>
+                </div>
+            </div>
+          </div>
 
+          <div class="card-block">
+              <div class="dt-responsive table-responsive">
+                  <table id="log_gv" class="table table-striped table-bordered nowrap">
+                  </table>
+              </div>
 
-			</div>
-		</div>
-	</div>
+          </div>
+
+      </div>
+  </div>
 </div>
 @endsection
 @section('js')
@@ -74,44 +74,70 @@
 
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		fetch_data();
 
-	});
+  var oTable = $('#log_gv').DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      ajax: {
+          url: "{!! route('dt_gift_order_history') !!}",
+          type:'GET',
+          data: function(d) {
+              d.s_date = $('#s_date').val();
+              d.e_date = $('#e_date').val();
+          }
+        },
+      columns: [{
+                        data: 'date',
+                        title: '<center>Date</center>',
+                        className: 'text-center'
+                    },
 
-	function fetch_data(status = '') {
+                    {
+                        data: 'code_order',
+                        title: 'OrderCode',
+                        className: 'text-center'
+                    },
 
-		$('#giv_history').DataTable({
-				// scrollX: true,
-				// scrollCollapsed: true,
-				processing: true,
-				serverSide: true,
-				searching: true,
-				ajax: {
-					url: "{{ route('dt_gift_order_history') }}",
-					dataType: "json",
-					type: "get",
-					data: {status:status}
-				},
+                    {
+                        data: 'detail',
+                        title: '<center>รายละเอียด</center>',
+                        className: 'text-center'
+                    },
 
-				columns:[
-				{"data": "id"},
-				{"data": "date"},
-				{"data": "order"},
-				{"data": "gv"},
-				{"data": "status"},
-        {"data": "action"},
-				],
-				//order: [[ "0", "desc" ]],
-			});
-	}
+                    {
+                        data: 'giftvoucher_banlance',
+                        title: '<center>คงเหลือ</center>',
+                        className: 'text-right'
+                    },
 
-	$('#status').on('change',function(){
-		var status = $(this).val();
-		$('#giv_history').DataTable().destroy();
-		fetch_data(status);
-	});
+                    {
+                        data: 'giftvoucher_value',
+                        title: '<center>ถูกใช้ไป</center>',
+                        className: 'text-right'
+                    },
 
+                    {
+                        data: 'status',
+                        title: '<center>Stattus</center>',
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: 'type',
+                        title: '<center>Type</center>',
+                        className: 'text-center'
+                    },
+
+
+          ],order:[[0,'DESC']],
+
+  });
+
+  $('#search-form').on('click', function(e) {
+      oTable.draw();
+      e.preventDefault();
+  });
 
 </script>
 @endsection

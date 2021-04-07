@@ -582,7 +582,7 @@
                          @if ($bill['price_total_type5'] == 0 and $bill['type'] == 5)
                              <div class="row">
                                  <div class="col-md-12 col-xl-12">
-                                     <div class="card bg-c-pink order-card m-b-0">
+                                     <div class="card bg-c-green order-card m-b-0">
                                          <div class="card-block">
                                              <div class="row">
                                                  <div class="col-md-8 col-sx-8 col-8">
@@ -590,7 +590,7 @@
                                                  </div>
                                                  <div class="col-md-4 col-sx-4 col-4">
                                                      <?php $gv =
-                                                     \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+                                                     \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                                                      ?>
                                                      <h3 class="text-right">
                                                          {{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }}
@@ -772,7 +772,7 @@
                          </tr>
                          @if ($bill['type'] == 5)
                              <?php $gv =
-                             \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id); ?>
+                             \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
                              <tr>
                                  <td><strong>ยอดรวม</strong></td>
                                  <td align="right"><strong> {{ number_format($bill['price_total'], 2) }}</strong>
@@ -798,14 +798,14 @@
                          @elseif($bill['type'] == 6)
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                 <td align="right"><strong id="price_total"></strong>
+                                 <td align="right"><strong class="price_total"></strong>
                                  </td>
                              </tr>
 
                          @else
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                 <td align="right"><u><strong id="price_total"></strong></u>
+                                 <td align="right"><u><strong class="price_total"></strong></u>
                                  </td>
                              </tr>
                          @endif
@@ -960,10 +960,19 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-     <script type="text/javascript">
-         document.getElementById("submit_upload").disabled = true;
+     @if ($bill['price_total_type5'] != 0 and $bill['type'] != 5)
 
-         check_shipping({{ $address->provinces_id }});
+     <script type="text/javascript">
+        document.getElementById("submit_upload").disabled = true;
+     </script>
+
+     @endif
+
+     <script type="text/javascript">
+
+      var address_provinces_id = {{ $address->provinces_id }};
+
+         check_shipping({{$address->provinces_id}});
 
          var premium = document.getElementById('checkbox13').checked;
          if (premium) {
@@ -1017,12 +1026,13 @@
                      shipping_premium: shipping_premium
                  },
                  success: function(data) {
+
                      document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
                      document.getElementById('shipping').textContent = shipping_cost;
-                     document.getElementById('price_total').textContent = price_total;
+                     document.getElementsByClassName('price_total').textContent = price_total;
                      //console.log(data);
                  }
              });
@@ -1340,13 +1350,14 @@
                  })
          }
 
-     </script>
+    </script>
+    <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
+    <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
 
      <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/e-payment.js') }}"></script>
 
-     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
-     <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
+
 
  @endsection

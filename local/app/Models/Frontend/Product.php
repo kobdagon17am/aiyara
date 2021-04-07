@@ -10,12 +10,12 @@ use App\Models\Frontend\ProductList;
 
 class Product extends Model
 {
-	public static function product_list($type){ 
- 
+	public static function product_list($type){
+
         $data_type = DB::table('dataset_orders_type')
         ->where('lang_id', '=', 1)
         ->where('group_id', '=',$type)
-        
+
         //->orderby('order')
         ->first();
 
@@ -54,7 +54,7 @@ class Product extends Model
   //       ->orderby('order')
   //       ->get();
 
-         
+
 
 //DB::enableQueryLog();
         $product = DB::table('products')
@@ -94,11 +94,11 @@ class Product extends Model
      ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img','promotions_cost.selling_price','promotions_cost.pv')
      ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
      ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
-     ->where('promotions_images.image_default','=',1) 
+     ->where('promotions_images.image_default','=',1)
      ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
      ->where('promotions.business_location','=',$business_location_id)
      ->where('promotions_cost.business_location_id','=',$business_location_id)
-     ->where('promotions_cost.status','=',1) 
+     ->where('promotions_cost.status','=',1)
      ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
      ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
      ->where('promotions.status','=',1)
@@ -120,7 +120,7 @@ class Product extends Model
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
         $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
 
-        $html=''; 
+        $html='';
 
         foreach ($promotions as $value){
 
@@ -170,46 +170,44 @@ class Product extends Model
             }elseif($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0 ){//เป็น aistockist
                 $resule = ['status'=>'fail','message'=>'ต้องเป็น Ai-Stockist '];
 
-            }elseif($value->aistockist == 0 and !empty($value->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist  
+            }elseif($value->aistockist == 0 and !empty($value->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist
 
                 $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist'];
 
             }elseif($value->agency == 1 and !empty($value->agency) and $agency_status == 0 ){//เป็น aistockist
                 $resule = ['status'=>'fail','message'=>'ต้องเป็น Agency'];
 
-            }elseif($value->agency == 0 and !empty($value->agency) and $agency_status == 1){//ต้องไม่เป็น aistockist  
+            }elseif($value->agency == 0 and !empty($value->agency) and $agency_status == 1){//ต้องไม่เป็น aistockist
                 $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Agency'];
 
             }elseif($value->limited_amt_type == 1 ){
         //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
                 if($value->limited_amt_person <= $count_per_promotion['count']){
                     $resule = ['status'=>'fail','message'=>'การซื้อเฉพาะต่อรอบโปรโมชั่นครบแล้ว'];
-                }else{ 
+                }else{
                     $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
 
-                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv,$category_id);
+                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,$category_id);
                 }
 
             }elseif($value->limited_amt_type == 2 ){
                 //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
 
-                if($value->limited_amt_person <= $count_per_promotion_day['count']){ 
+                if($value->limited_amt_person <= $count_per_promotion_day['count']){
                     $resule = ['status'=>'fail','message'=>'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
                 }else{
                     $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
-                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv,$category_id);
-
-                    
+                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,$category_id);
                 }
 
             }else{
                 $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
-                $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->title_thai,$icon='',$value->selling_price,$value->pv,$category_id);
 
+                $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,$category_id);
             }
 
 
-        } 
+        }
 
         return $html;
     }
@@ -222,7 +220,7 @@ class Product extends Model
      ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img','promotions_cost.selling_price','promotions_cost.pv')
      ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
      ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
-     ->where('promotions_images.image_default','=',1) 
+     ->where('promotions_images.image_default','=',1)
      // ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
      ->where('promotions.business_location','=',$business_location_id)
      ->where('promotions_cost.business_location_id','=',$business_location_id)
@@ -232,8 +230,8 @@ class Product extends Model
      ->first();
 
      //$resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
-     $html = ProductList::product_list_html($promotions->id,$type,$promotions->img_url,$promotions->promotion_img,$promotions->name_thai,$promotions->title_thai,$icon='',$promotions->selling_price,$promotions->pv,$category_id);
+     $html = ProductList::product_list_html($promotions->id,$type,$promotions->img_url,$promotions->promotion_img,$promotions->name_thai,$promotions->detail_thai,$icon='',$promotions->selling_price,$promotions->pv,$category_id);
      return $html;
  }
 
-} 
+}

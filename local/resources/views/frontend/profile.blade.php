@@ -110,7 +110,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
      <div class="panel-body">
       <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
       <?php
-      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
       ?>
       <h4>{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h4>
     </div>

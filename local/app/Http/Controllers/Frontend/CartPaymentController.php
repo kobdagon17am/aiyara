@@ -24,6 +24,7 @@ class CartPaymentController extends Controller
       $data=$cartCollection->toArray();
       $quantity = Cart::session($type)->getTotalQuantity();
       $customer_id = Auth::guard('c_user')->user()->id;
+      $user_name = Auth::guard('c_user')->user()->user_name;
 
 		if($data){
 			foreach ($data as $value){
@@ -69,7 +70,7 @@ class CartPaymentController extends Controller
 		$price_total = $price + $shipping;
 
 		if($type == 5){
-			$data_gv = \App\Helpers\Frontend::get_gitfvoucher($customer_id);
+			$data_gv = \App\Helpers\Frontend::get_gitfvoucher($user_name);
 			$gv = $data_gv->sum_gv;
 			$gv_total = $gv - $price_total;
 

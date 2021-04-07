@@ -14,6 +14,7 @@ class CartController extends Controller
 {
     public function cart($type)
     {
+
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
 

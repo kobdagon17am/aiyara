@@ -92,7 +92,7 @@
 
   <div class="row">
     <div class="card-block button-list" style="padding: 7px;margin-left: 10px;">
-     @foreach($categories as $value) 
+     @foreach($categories as $value)
      <button type="button" onclick="select_category('{{ $value->category_id }}')" class="btn btn-primary btn-sm btn-outline-primary"><font style="color:#000">{{$value->category_name}}</font>
       {{-- <span class="badge">90</span> --}}
     </button>
@@ -124,7 +124,7 @@
     @elseif($type==2)
     <div class="card bg-c-yellow order-card m-b-0">
       <div class="card-block">
-        <div class="row"> 
+        <div class="row">
           <div class="col-md-6">
            <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
 
@@ -162,7 +162,7 @@
 
     <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติท่องเที่ยวของคุณ </p>
 
-    <?php 
+    <?php
     $pv_tv_active = Auth::guard('c_user')->user()->pv_tv_active;
     if(!empty($pv_tv_active)){
       $pv_tv_active = date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_tv_active));
@@ -171,7 +171,7 @@
 
     }
 
-    ?>  
+    ?>
 
     @if(empty(Auth::guard('c_user')->user()->pv_tv_active) || (strtotime(Auth::guard('c_user')->user()->pv_tv_active) < strtotime(date('Ymd')) ))
     <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ $pv_tv_active }}" style="font-size: 14px">Not Active </span>  </p>
@@ -184,7 +184,7 @@
 @elseif($type==4)
 <div class="card bg-c-blue order-card m-b-0">
   <div class="card-block">
-    <div class="row"> 
+    <div class="row">
       <div class="col-md-5">
         <h5 class="m-b-20" style="color: #000">Ai-Stockist</h5>
 
@@ -207,8 +207,8 @@
 
      </div>
      <div class="col-md-6">
-      <?php  
-      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
+      <?php
+      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
       ?>
       <h3 class="text-right">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h3>
     </div>
@@ -242,7 +242,7 @@
 </div>
 </div>
 
- 
+
 @endif
 <div class="page-header card">
  <div class="card-block">
@@ -257,7 +257,7 @@
           <div class="prod-img">
             <div class="option-hover">
 
-             <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button" 
+             <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" type="button"
               class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
               <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}"
                 class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
@@ -275,9 +275,9 @@
         <div class="prod-info">
           <a href="{{route('product-detail',['type'=>$type,'id'=>$value->products_id])}}" class="txt-muted">
             <h5 style="font-size: 15px">{{$value->product_name}}</h5>
-            <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->title!!}</p> 
+            <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->title!!}</p>
 
-          </a> 
+          </a>
         <!--<div class="m-b-10">
         <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
       </div> -->
@@ -293,12 +293,12 @@
 @foreach($data['couse_event'] as $value)
 <div class="col-xl-3 col-md-3 col-sm-6 col-xs-6" >
   <input type="hidden" id="item_id" value="{{$value->id}}">
-  <div class="card prod-view"> 
+  <div class="card prod-view">
     <div class="prod-item text-center">
       <div class="prod-img">
         <div class="option-hover">
 
-         <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}" type="button" 
+         <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}" type="button"
           class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
           <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}"
             class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
@@ -316,15 +316,15 @@
         <div class="prod-info">
           <a href="{{route('product-detail',['type'=>$type,'id'=>$value->id])}}" class="txt-muted">
             <h5 style="font-size: 15px">{{$value->ce_name}}</h5>
-            {{-- <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->ce_place!!}</p> 
+            {{-- <p class="text-left p-2 m-b-0" style="font-size: 12px">{!!$value->ce_place!!}</p>
             --}}
-          </a> 
+          </a>
         <!--<div class="m-b-10">
         <label class="label label-success">3.5 <i class="fa fa-star"></i></label><a class="text-muted f-w-600">14 Ratings &amp;  3 Reviews</a>
       </div> -->
 
       <span class="prod-price" style="font-size: 20px"> @if($type==6) @else {!! $value->icon !!} @endif {{number_format($value->ce_ticket_price,2)}} <b
-        style="color:#00c454">@if($type==5)[0 PV] 
+        style="color:#00c454">@if($type==5)[0 PV]
         @elseif( $type==6 )
         [{{$value->pv}} PV]
         @else [{{$value->pv}} PV]@endif</b></span>
@@ -336,7 +336,7 @@
 @endif
         {{-- <div class="row justify-content-end">
         <div class="col-ml-12">
-        
+
         </div>
         {!! $product->links(); !!}
       </div> --}}
@@ -388,7 +388,7 @@
       Swal.fire({
         icon: 'error',
         title: 'กรุณาใส่ Coupon Code',
-              // text: 'Something went wrong!', 
+              // text: 'Something went wrong!',
               // footer: '<a href>Why do I have this issue?</a>'
             })
 
@@ -404,7 +404,7 @@
        Swal.fire({
         icon: 'error',
         text: data['massage'],
-              // text: 'Something went wrong!', 
+              // text: 'Something went wrong!',
               // footer: '<a href>Why do I have this issue?</a>'
             })
 
