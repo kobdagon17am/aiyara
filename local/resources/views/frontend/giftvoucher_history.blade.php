@@ -9,53 +9,45 @@
 @section('conten')
 
 <div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-header">
-				<div class="row">
-					<div class="col-md-4">
-						<select class="form-control" id="status" >
-							<option value="">ทั้งหมด</option>
-							<option value="not_expiry_date">ยังไม่หมดอายุ</option>
-							<option value="expiry_date">หมดอายุ</option>
-						</select>
-					</div>
-					<div class="col">
-						<div class="page-header-breadcrumb">
-							<?php
-							$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
-							?>
-							<div class="bg-danger p-10"><i class="fa fa-gift"></i> {{-- Gift Voucher --}} <b>{{ number_format($gv->sum_gv) }} </b></div>
-						</div>
-					</div>
+  <div class="col-md-12">
+      <div class="card">
 
+          <div class="card-header">
+              <h4 class="m-b-10">ความเคลื่อนไหว Gift Voucher</h4>
 
-				</div>
-			</div>
-			<div class="card-block">
-				<div class="table-responsive dt-responsive">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <select class="form-control" id="status" >
+                      <option value="">ทั้งหมด</option>
+                      <option value="not_expiry_date">ยังไม่หมดอายุ</option>
+                      <option value="expiry_date">หมดอายุ</option>
+                    </select>
+                  </div>
 
-					<table id="giv_history"  class="table table-striped table-bordered nowrap">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>วันที่ได้รับ</th>
-								<th>วันหมดอายุ</th>
-								<th>CODE</th>
-								<th>รายละเอียด</th>
+                    <div class="col-lg-3 col-md-3">
+                        <input class="form-control" type="date" id="s_date">
+                    </div>
+                    <div class="col-lg-3 col-md-3 ">
+                        <input class="form-control" type="date" id="e_date">
+                    </div>
+                    <div class="col-lg-2 col-md-2 ">
+                        <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                    </div>
+                </div>
+            </div>
+          </div>
 
-								<th>Gift Voucher</th>
-								<th>คงเหลือ</th>
-							</tr>
-						</thead>
+          <div class="card-block">
+              <div class="dt-responsive table-responsive">
+                  <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
+                  </table>
+              </div>
 
-					</table>
-				</div>
+          </div>
 
-
-			</div>
-		</div>
-	</div>
+      </div>
+  </div>
 </div>
 @endsection
 @section('js')
@@ -75,50 +67,69 @@
 <script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
 
 
+
 <script type="text/javascript">
-	$(document).ready(function() {
-		fetch_data();
 
-	});
+  var oTable = $('#multi-colum-dt').DataTable({
+      processing: true,
+      serverSide: true,
+      searching: true,
+      ajax: {
+          url: "{!! route('dt_giftvoucher_history') !!}",
+          type:'GET',
+          data: function(d) {
+              d.status = $('#status').val();
+              d.s_date = $('#s_date').val();
+              d.e_date = $('#e_date').val();
+          }
+          },
+      // type: "POST",
 
-	function fetch_data(status = '') {
+      columns: [{
+                        data: 'date',
+                        title: '<center>วันที่ได้รับ</center>',
+                        className: 'text-center'
+                    },
 
-		$('#giv_history').DataTable({
-				// scrollX: true,
-				// scrollCollapsed: true,
-				processing: true,
-				serverSide: true,
-				searching: true,
-				ajax: {
-					url: "{{ route('dt_giftvoucher_history') }}",
-					dataType: "json",
-					type: "get",
-					data: {status:status}
-				},
+                    {
+                        data: 'expiry_date',
+                        title: 'วันหมดอายุ',
+                        className: 'text-center'
+                    },
 
-				columns:[
-				{"data": "id"},
-				{"data": "date"},
-				{"data": "expiry_date"},
-				{"data": "code"},
-				{"data": "detail"},
+                    {
+                        data: 'code',
+                        title: '<center>CODE</center>',
+                        className: 'text-right'
+                    },
 
-				{"data": "gv"},
-				{"data": "banlance"},
+                    {
+                        data: 'detail',
+                        title: '<center>รายละเอียด</center>',
+                        className: 'text-right'
+                    },
 
-				],
-				//order: [[ "0", "desc" ]],
-			});
-	}
+                    {
+                        data: 'gv',
+                        title: '<center>Gift Voucher</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'banlance',
+                        title: '<center>คงเหลือ</center>',
+                        className: 'text-right'
+                    },
+          ],order:[[0,'DESC']],
 
-	$('#status').on('change',function(){
-		var status = $(this).val();
-		$('#giv_history').DataTable().destroy();
-		fetch_data(status);
-	});
+  });
 
+  $('#search-form').on('click', function(e) {
+      oTable.draw();
+      e.preventDefault();
+  });
 
 </script>
+
 @endsection
 
 

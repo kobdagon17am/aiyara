@@ -240,7 +240,7 @@
                     },
                     {
                         data: 'total_balance',
-                        title :'<center>จำนวน</center>', 
+                        title :'<center>จำนวน</center>',
                         className: 'text-center'
                     },
                     {
@@ -273,7 +273,7 @@
                 ],
                 "footerCallback": function ( row, data, start, end, display ) {
                     var api = this.api(), data;
-        
+
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
@@ -394,27 +394,27 @@
                     {
                         data: 'total_balance',
                         title: '<center>จำนวนรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_price',
                         title: '<center>จำนวนเงินสดรวม</center>',
-                        className: 'text-right text-success '
+                        className: 'text-right'
                     },
                     {
                         data: 'total_transfer',
                         title: '<center>จำนวนเงินโอนรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_credit_card',
                         title: '<center>จำนวนเงินเครดิตรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_aicash',
                         title: '<center>Ai-Cash</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_add_aicash',
@@ -424,7 +424,7 @@
                 ],
                 "footerCallback": function ( row, data, start, end, display ) {
                     var api = this.api(), data;
-        
+
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
@@ -529,27 +529,27 @@
                     {
                         data: 'total_balance',
                         title: '<center>จำนวนรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_price',
                         title: '<center>จำนวนเงินสดรวม</center>',
-                        className: 'text-right text-success '
+                        className: 'text-right '
                     },
                     {
                         data: 'total_transfer',
                         title: '<center>จำนวนเงินโอนรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_credit_card',
                         title: '<center>จำนวนเงินเครดิตรวม</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_aicash',
                         title: '<center>Ai-Cash</center>',
-                        className: 'text-right text-success'
+                        className: 'text-right'
                     },
                     {
                         data: 'total_add_aicash',
@@ -559,7 +559,7 @@
                 ],
                 "footerCallback": function ( row, data, start, end, display ) {
                     var api = this.api(), data;
-        
+
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?

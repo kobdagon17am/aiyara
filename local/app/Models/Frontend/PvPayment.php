@@ -568,7 +568,7 @@ class PvPayment extends Model
     }
 
 
-    public static function PvPayment_type_cancel($order_id,$admin_id)
+    public static function PvPayment_type_cancel($order_id,$admin_id,$type_user_cancel)
     {
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
@@ -600,10 +600,11 @@ class PvPayment extends Model
                 $orderstatus_id = 8;
                 $update_order = DB::table('db_orders') //update บิล
                     ->where('id', $order_id)
-                    ->update(['approver' => $admin_id,
+                    ->update(['cancel_by_user_id_fk' => $admin_id,
                         'order_status_id_fk' => $orderstatus_id,
                         'approve_status' => 2,
-                        'approve_date' => date('Y-m-d H:i:s')]);
+                        'type_user_cancel' => 1,
+                        'cancel_action_date' => date('Y-m-d H:i:s')]);
 
                 //check รายการของแถม
                 $product_list = DB::table('db_order_products_list')

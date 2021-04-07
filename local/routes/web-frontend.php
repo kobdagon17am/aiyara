@@ -139,8 +139,6 @@ Route::post('delete_order','Frontend\HistoryController@delete_order')->name('del
 
 Route::post('cancel_order','Frontend\HistoryController@cancel_order')->name('cancel_order');
 
-
-
 Route::get('export_pdf_history/{code_order?}','Frontend\HistoryController@export_pdf_history')->name('export_pdf_history');
 
 Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive_product')->name('modal_qr_recive_product');

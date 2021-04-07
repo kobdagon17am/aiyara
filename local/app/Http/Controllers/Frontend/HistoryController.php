@@ -9,7 +9,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
-use App\Models\Frontend\PvPayment;
+use App\Http\Controllers\Frontend\Fc\CancelOderController;
 
 class HistoryController extends Controller
 {
@@ -325,7 +325,7 @@ class HistoryController extends Controller
 
       if($rs->cancel_order_id){
         $customer_id = Auth::guard('c_user')->user()->id;
-        $resule = PvPayment::PvPayment_type_cancel($rs->cancel_order_id,$customer_id);
+        $resule = CancelOderController::cancel_oder($rs->cancel_order_id,$customer_id,1);
         if($resule['status']== 'success'){
           return redirect('product-history')->withSuccess('Cancel Oder Success');
         }else{
