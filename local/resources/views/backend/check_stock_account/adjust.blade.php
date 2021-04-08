@@ -73,9 +73,26 @@
    ?>
 
            <div class="myBorder">
-                <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionChoose')}} </span>
+
+            <?php //echo $sRow->status_accepted; ?>
+
+
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_RefCode')}} </span> 
+            @if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2||@$sRow->status_accepted==5)
+                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}}  </span> 
+                  <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Action_user')}} </span>
+            @ELSE 
+                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}} </span>
+                  <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Approver')}} </span>
+            @ENDIF 
+            <br>
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionChoose')}} </span><br>
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionNoChoose')}} </span>
+
+
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
+
             </div>
 
 
@@ -112,13 +129,6 @@
               </div>
             </div>
             @ENDIF 
-
-             <div class="form-group row">
-                <label for="cuase_desc" class="col-md-3 col-form-label">หมายเหตุ (สาเหตุที่ปรับยอด) :</label>
-                <div class="col-md-6">
-                  <textarea class="form-control" rows="3" id="cuase_desc" name="cuase_desc" >{{@$sRow->cuase_desc}}</textarea>
-                </div>
-              </div>
 
             <div class="form-group row">
               <label for="action_user" class="col-md-3 col-form-label">คนตรวจ :</label>
@@ -177,6 +187,8 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        "info":     false,
+        "paging":   false,        
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
@@ -197,15 +209,6 @@ $(function() {
                      return d;
             }},
             {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-            {data: 'status_accepted',   title :'<center>สถานะ</center>', className: 'text-center  ',render: function(d) {
-              if(d=="0"){
-                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">รออนุมัติ</span>';
-              }else if(d=="2"){
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ไม่อนุมัติ</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">อนุมัติ/ตรวจสอบแล้ว</span>';
-              }
-            }},
         ],
         order: [[1, 'asc']],
         rowGroup: {

@@ -367,7 +367,7 @@
                             return d;
                         }
                 }},
-                {data: 'id', title :'ID', className: 'text-center w50'},
+                {data: 'id', title :'Tools', className: 'text-center w50'},
             ],
              fnRowCallback: function (nRow, aData, iDisplayIndex) {
                  var info = $(this).DataTable().page.info();

@@ -615,12 +615,14 @@ class PagesController extends Controller{
                             $i++;
                             continue; 
                          }
-
                         $insertData = array(
                          "giftvoucher_code_id_fk"=>@$sRow->id,
                          "customer_code"=>@$customer_code,
                          "giftvoucher_value"=>@$giftvoucher_value,
+                         "giftvoucher_banlance"=>@$giftvoucher_value,
                          "pro_status"=> '4' ,
+                         "pro_sdate"=> $request->pro_sdate ,
+                         "pro_edate"=> $request->pro_edate ,
                          "created_at"=>now());
                         GiftvoucherCode_add::insertData($insertData);
 

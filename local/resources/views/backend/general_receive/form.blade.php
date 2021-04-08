@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รับสินค้าเข้าทั่วไป</h4>
+            <h4 class="mb-0 font-size-18"> รับสินค้าเข้า</h4>
         </div>
     </div>
 </div>
@@ -72,6 +72,21 @@
                             </div>
                           </div>
 
+                          <div class="form-group row">
+                            <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : *</label>
+                            <div class="col-md-8">
+                              <select name="supplier_id_fk" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                  @if(@$sSupplier)
+                                    @foreach(@$sSupplier AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
+                                        {{$r->txt_desc}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
 
                           <div class="form-group row">
                             <label for="delivery_person" class="col-md-3 col-form-label">ผู้ส่งมอบ : *</label>

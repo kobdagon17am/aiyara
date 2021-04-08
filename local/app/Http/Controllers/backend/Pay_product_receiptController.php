@@ -81,6 +81,26 @@ class Pay_product_receiptController extends Controller
 
         return redirect()->to(url("backend/pick_warehouse"));
 
+      }else if(isset($request->save_to_qrscan)){
+
+        DB::select(" DELETE from db_pick_warehouse_qrcode 
+              where pick_warehouse_tmp_id_fk=".$request->pick_warehouse_tmp_id_fk." and product_id_fk=".$request->product_id_fk."
+               ");
+        // dd($request->all());
+        if($request->txtScan){
+          foreach ($request->txtScan as $key => $value) {
+              DB::select(" INSERT IGNORE INTO db_pick_warehouse_qrcode (pick_warehouse_tmp_id_fk,product_id_fk,qr_code) 
+              values (".$request->pick_warehouse_tmp_id_fk.",".$request->product_id_fk.",'".$value."')
+               ");
+          }
+        }
+
+        DB::select(" UPDATE db_pick_warehouse_tmp  set status=1
+              where id=".$request->pick_warehouse_tmp_id_fk."
+               ");
+
+        return redirect()->to(url("backend/pay_product_receipt"));
+
       }else{
         // dd($request->all());
         return $this->form();

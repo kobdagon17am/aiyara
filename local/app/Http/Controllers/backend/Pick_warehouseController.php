@@ -13,12 +13,46 @@ class Pick_warehouseController extends Controller
 
     public function index(Request $request)
     {
-
+      // dd($request);
       // $sTable = \App\Models\Backend\Pick_warehouse_fifo::get();
-      //  dd($sTable);
+    //  DB::select(" DROP TABLE IF EXISTS TEMP_db_products_fifo_bill; ");
+      // DB::select(" TRUNCATE TEMP_db_products_fifo_bill; ");
+
+     //  DB::select("
+     //    CREATE TEMPORARY TABLE `TEMP_db_products_fifo_bill` (
+     //      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+     //      `consignment_no` varchar(255) DEFAULT NULL,
+     //      `customer_ref_no` varchar(255) DEFAULT NULL,
+     //      `sender_code` varchar(255) DEFAULT NULL,
+     //      `recipient_code` varchar(255) DEFAULT NULL,
+     //      `recipient_name` varchar(255) DEFAULT NULL,
+     //      `address` varchar(255) DEFAULT NULL,
+     //      `postcode` varchar(255) DEFAULT NULL,
+     //      `mobile` varchar(255) DEFAULT NULL,
+     //      `contact_person` varchar(255) DEFAULT NULL,
+     //      `phone_no` varchar(255) DEFAULT NULL,
+     //      `email` varchar(255) DEFAULT NULL,
+     //      `declare_value` varchar(255) DEFAULT NULL,
+     //      `cod_amount` varchar(255) DEFAULT NULL,
+     //      `remark` varchar(255) DEFAULT NULL,
+     //      `total_box` varchar(255) DEFAULT NULL,
+     //      `sat_del` varchar(255) DEFAULT NULL,
+     //      `hrc` varchar(255) DEFAULT NULL,
+     //      `invr` varchar(255) DEFAULT NULL,
+     //      `service_code` varchar(255) DEFAULT NULL,
+     //      `created_at` timestamp NULL DEFAULT NULL,
+     //      `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     //      `deleted_at` timestamp NULL DEFAULT NULL,
+     //      PRIMARY KEY (`id`)
+     //    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8
+     // ");
+
+     // DB::select(" INSERT INTO `temp_db_products_fifo_bill` (`consignment_no`) VALUES ('tttttttttt'); ");
+     // $TEMP_db_products_fifo_bill = DB::select(" SELECT * FROM TEMP_db_products_fifo_bill; ");
+     // dd($TEMP_db_products_fifo_bill);
+
       $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
      // dd($Pick_warehouse_fifo_topicked);
-
 
       $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
       // dd($Pick_warehouse_fifo);

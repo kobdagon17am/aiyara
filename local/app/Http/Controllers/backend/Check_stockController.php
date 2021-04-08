@@ -41,6 +41,7 @@ class Check_stockController extends Controller
     public function stock_card(Request $request,$id)
     {
         // dd($request->lot_number);
+        // dd($request);
         // dd($id);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -52,11 +53,16 @@ class Check_stockController extends Controller
 
             $lot_number = $request->lot_number;
 
-           return View('backend.check_stock.stock_card')->with(
-           array(
-             'Products'=>$Products,
-             'lot_number'=>$lot_number,
-           ) );
+         $sBalance = DB::select(" SELECT amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' ");
+
+         // dd($sBalance);
+
+         return View('backend.check_stock.stock_card')->with(
+         array(
+           'Products'=>$Products,
+           'lot_number'=>$lot_number,
+           'sBalance'=>$sBalance,
+         ));
 
     }
 

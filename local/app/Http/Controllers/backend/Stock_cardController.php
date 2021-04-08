@@ -13,14 +13,12 @@ class Stock_cardController extends Controller
 
     public function index(Request $request)
     {
+       // dd($request);
     }
-
 
     public function create()
     {
-
     }
-
 
     public function store(Request $request)
     {
@@ -29,7 +27,7 @@ class Stock_cardController extends Controller
 
     public function edit($id)
     {
-
+       // dd($id);
     }
 
     public function update(Request $request, $id)
@@ -60,29 +58,14 @@ class Stock_cardController extends Controller
           return '';
         }
       })      
-     
-      //  ->addColumn('business_location', function($row) {
-      //   if(@$row->business_location_id_fk!=''){
-      //        $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
-      //        return @$P[0]->txt_desc;
-      //   }else{
-      //        return '-';
-      //   }
-      // })       
-      // ->addColumn('customer_name', function($row) {
-      // 	if(@$row->customer_id_fk!=''){
-      //    	$Customer = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
-      //   	return @$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
-      // 	}else{
-      // 		return '';
-      // 	}
-      // })
-      // ->addColumn('commission_cost', function($row) {
-      //   return number_format($row->commission_cost,2);
-      // })     
-      // ->addColumn('tax_amount', function($row) {
-      //   return number_format($row->tax_amount,2);
-      // })        
+      ->addColumn('approver', function($row) {
+        if(@$row->approver!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
+           return @$sD[0]->name;
+        }else{
+          return '';
+        }
+      })        
       ->make(true);
     }
 

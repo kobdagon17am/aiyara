@@ -64,11 +64,45 @@
   } 
 
 
+
+    .divTable{
+        display: table;
+        width: 100%;
+        
+      }
+      .divTableRow {
+        display: table-row;
+      }
+      .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+      }
+      .divTableCell, .divTableHead {
+        border: 1px solid white;
+        display: table-cell;
+        padding: 3px 6px;
+      }
+      .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+      }
+      .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+      }
+      .divTableBody {
+        display: table-row-group;
+      }
+      .divTH {text-align: right;}
+
+
 </style>
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -116,14 +150,14 @@
 
 
 
-        <div class="myBorder">
+        <div class="myBorder" style="display: none;">
 
           <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
          
-                <div class="myBorder">
+         <!--        <div class="myBorder">
                   <div class="form-group row ">
                     <div class="col-md-10 d-flex  ">
                       <label class="col-5" ><i class="bx bx-play"></i> ค้นสินค้า > ค้นด้วย : QR-CODE : </label>
@@ -135,10 +169,10 @@
                       </a>
                     </div>
                   </div>
-                </div>
+                </div> -->
 
 
-                <div class="row">
+      <!--           <div class="row">
                   <div class="col-8">
 
 
@@ -150,32 +184,32 @@
                   </div>
 
                 </div>
-
+ -->
 
               <?php if($can_packing_list=='1'){ ?>
 
-                    <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    <!-- <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
 
               <?php }else{ ?>
 
                     <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
               
               <?php }?>
-
+<!-- 
                  <div class="col-md-6 text-right divBtnSave " style="display: none;">
                     <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิล Packing List
                     </button>
                   </div>
 
-              <div id="last_form"></div>
+              <div id="last_form"></div> -->
 
               </form>
 
  </div>
 
 
-
+<!-- 
                 <div class="myBorder">
                   <div class="form-group row ">
                     <div class="col-md-10 d-flex  ">
@@ -189,26 +223,20 @@
                     </div>
                   </div>
                 </div>
+ -->
 
-                <div class="myBorder">
-                  <div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจงรายการสินค้าตามบิล </span>
-                          </div>
-
-
-
-                        </div>
-
-                         <div class="form-group row">
-                          <div class="col-md-12">
-                          <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-
-                          </div>
-                        </div>
-
-                </div>
-
+                  <div class="myBorder">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า </span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                      <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    </div>
+                  </div>
+                  </div>
 
 
    <div class="myBorder"  >
@@ -270,7 +298,7 @@
 
                   <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
 
-                <center><input type='button' class="btn btn-primary " value='Map Consignment Code' > 
+                <center><input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code' > 
 
               </div>
             </div>
@@ -278,7 +306,18 @@
         </div>
       </div>
 
-
+                  <div class="myBorder">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลเก็บข้อมูล Consignments </span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                      <table id="data-table-map-consignments" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    </div>
+                  </div>
+                  </div>
 
               <div class="myBorder">
                       <div style="">
@@ -878,7 +917,7 @@ $(function() {
           });
 
 
-
+          $.fn.dataTable.ext.errMode = 'throw';
           var oTableListBill;
           $(function() {
               oTableListBill = $('#data-table-list-bill').DataTable({
@@ -893,7 +932,7 @@ $(function() {
                   iDisplayLength: 10,
                   // stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.products_fifo_bill.datatable') }}',
+                    url: '{{ route('backend.products_fifo_bill_send.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -918,23 +957,35 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'recipient_code', title :'<center>รหัสใบเเสร็จ </center>', className: 'text-center'},
-                      {data: 'id',   title :'<center>รายการสินค้า</center>', className: 'text-center ',render: function(d) {
-                          return '' ;
-                      }},
-                      {data: 'id',   title :'<center>จำนวนเบิก</center>', className: 'text-center ',render: function(d) {
-                          return '' ;
-                      }},
-                      {data: 'id',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
-                          return '' ;
-                      }},
-                      {data: 'id',   title :'<center>Tools</center>', className: 'text-center ',render: function(d) {
-                          return '' ;
-                      }},                                                                  
-                    
+                      {data: 'invoice_code', title :'<center>รหัสใบเเสร็จ </center>', className: 'text-center '},
+                      {data: 'product_name', title :'<center>รายการสินค้า </center>', className: 'text-left '},
+                      {data: 'amt_get', title :'<center>จำนวนเบิก </center>', className: 'text-center '},
+                      {data: 'product_unit', title :'<center> หน่วย </center>', className: 'text-left '},
+                      {data: 'status',title :'<center>สถานะการจ่าย</center>',className: 'text-center ',render: function(d) {
+                        if(d==0){
+                          return '* รอจ่ายสินค้า';
+                        }else{
+                          return 'จ่ายแล้ว';
+                        }
+                      }},  
+                      {data: 'status',title :'<center>สถานะสแกนคิวอาร์</center>',className: 'text-center ',render: function(d) {
+                        if(d==0){
+                          return '* รอสแกน';
+                        }else{
+                          return 'สแกนแล้ว';
+                        }
+                      }},    
+                      {data: 'status',title :'<center> Scan QR-Code </center>',className: 'text-center ',render: function(d) {
+                          return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">CLICK</span>';
+                      }},                                                           
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
+
+                    $('td:last-child', nRow).html(''
+                          +'<a href="{{ url('backend/pay_product_receipt/scan_qr') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="" ><span class="" >CLICK</span></a>'
+                        ).addClass('input');
+
+
                   }
               });
 
@@ -990,6 +1041,58 @@ $(function() {
                   {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
                   {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
                   {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+              ],
+              rowCallback: function(nRow, aData, dataIndex){
+       
+              }
+            });
+     
+          });
+
+
+
+      $.fn.dataTable.ext.errMode = 'throw';
+      var oTableC;
+      $(function() {
+          oTableC = $('#data-table-map-consignments').DataTable({
+          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+              processing: true,
+              serverSide: true,
+              scroller: true,
+              scrollCollapse: true,
+              scrollX: true,
+              ordering: false,
+              scrollY: ''+($(window).height()-370)+'px',
+              iDisplayLength: 10,
+              stateSave: true,
+              ajax: {
+                url: '{{ route('backend.warehouse_consignments.datatable') }}',
+                data: function ( d ) {
+                  d.Where={};
+                  $('.myWhere').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Like={};
+                  $('.myLike').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Custom={};
+                  $('.myCustom').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  oData = d;
+                },
+                method: 'POST'
+              },
+              columns: [
+                  {data: 'invoice_code', title :'<center>รหัสใบเเสร็จ</center>', className: 'text-center'},
+                  {data: 'consignments', title :'<center> Consignments Code </center>', className: 'text-center'},
               ],
               rowCallback: function(nRow, aData, dataIndex){
        
@@ -1137,6 +1240,33 @@ $(function() {
               });
 
 
+
+            $(".btnMapConsignments").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxMapConsignments') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               // location.reload();
+                               $('#data-table-map-consignments').DataTable().draw();
+                               $(".myloading").hide();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                  });
+                  
+              });
+
+
+
           });
     </script> 
 
@@ -1203,4 +1333,5 @@ $(function() {
 </script>
 
 @endsection
+
 

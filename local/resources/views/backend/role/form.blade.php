@@ -36,7 +36,7 @@
 
                      <div class="form-group row">
                         <label for="example-text-input" class="col-md-2 col-form-label">ชื่อกลุ่มสิทธิ์ :</label>
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <input class="form-control" type="text" value="{{ @$sRow->role_name }}" name="role_name" required style="color: blue;font-weight: bold;font-size: 24px;" >
                         </div>
                     </div>
@@ -206,13 +206,7 @@
 
                                       @endforeach
 
-                       <div class="col-md-6">
-
-                       <center>
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                            </button>
-                        </div>
+                       
                         
                                     </div>
                                 </div>
@@ -234,6 +228,16 @@
                             @endif
                               <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
                           </div>
+                        </div>
+                    </div>
+
+
+                     <div class="form-group row">
+                        <label for="example-text-input" class="col-md-2 col-form-label"> </label>
+                        <div class="col-md-10">
+                             <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                            </button>
                         </div>
                     </div>
 

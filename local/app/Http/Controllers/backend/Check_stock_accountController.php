@@ -13,7 +13,7 @@ class Check_stock_accountController extends Controller
 
     public function index(Request $request)
     {
-
+  
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       $sStocks_account_code = \App\Models\Backend\Stocks_account_code::get();
@@ -57,22 +57,6 @@ class Check_stock_accountController extends Controller
 
     }
 
-    public function Adjust($id)
-    {
-      // dd($id);
-      // return View('backend.check_stock_account.adjust');
-
-      $sRow = \App\Models\Backend\Check_stock_check::find($id);
-      $Action_user = DB::select(" select * from ck_users_admin ");
-      // dd($sRow);
-      return View('backend.check_stock_account.adjust')->with(
-        array(
-           'id'=>$id,
-           'sRow'=>$sRow,
-           'Action_user'=>$Action_user,
-        ));
-
-    }
 
     public function store(Request $request)
     {
@@ -185,10 +169,190 @@ class Check_stock_accountController extends Controller
 
     }
 
+
+    public function Adjust($id)
+    {
+      // dd($id);
+      // return View('backend.check_stock_account.adjust');
+
+      $sRow = \App\Models\Backend\Check_stock_check::find($id);
+      // dd($sRow);
+
+      $sStocks_account_code = \App\Models\Backend\Stocks_account_code::find($sRow->stocks_account_code_id_fk);
+      // dd($sStocks_account_code);
+
+      $sRow['status_accepted'] = $sStocks_account_code->status_accepted;
+      // dd($sStocks_account_code->status_accepted);
+      // dd($sRow['status_accepted']);
+      // dd($sRow);
+
+        $Products = DB::select("SELECT products.id as product_id,
+      products.product_code,
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      FROM
+      products_details
+      Left Join products ON products_details.product_id_fk = products.id
+      WHERE lang_id=1");
+
+      // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+      if(@$sStocks_account_code->status_accepted=="1"){
+          $status_accepted = 'PENDDING';
+      }else if(@$sStocks_account_code->status_accepted=="2"){
+          $status_accepted = 'REQUEST';
+      }else if(@$sStocks_account_code->status_accepted=="3"){
+          $status_accepted = 'ACCEPTED';
+      }else if(@$sStocks_account_code->status_accepted=="4"){
+          $status_accepted = 'NO APPROVED';
+      }else if(@$sStocks_account_code->status_accepted=="5"){
+          $status_accepted = 'CANCELED';
+      }else{
+          $status_accepted = 'NEW';
+      }
+
+      if(empty($sRow)){
+        return redirect()->to(url("backend/check_stock_account/"));
+      }
+
+// condition_business_location
+// condition_branch
+// condition_warehouse
+// condition_zone
+// condition_shelf
+// condition_shelf_floor
+// condition_product
+// condition_lot_number
+
+        $sL = DB::select(" select * from dataset_business_location where id=".($sStocks_account_code->condition_business_location?$sStocks_account_code->condition_business_location:0)." ");
+        $sB = DB::select(" select * from branchs where id=".($sStocks_account_code->condition_branch?$sStocks_account_code->condition_branch:0)." ");
+        $sW = DB::select(" select * from warehouse where id=".($sStocks_account_code->condition_warehouse?$sStocks_account_code->condition_warehouse:0)." ");
+        $sZ = DB::select(" select * from zone where id=".($sStocks_account_code->condition_zone?$sStocks_account_code->condition_zone:0)." ");
+        $sS = DB::select(" select * from shelf where id=".($sStocks_account_code->condition_shelf?$sStocks_account_code->condition_shelf:0)." ");
+        $shelf_floor = @$sStocks_account_code->condition_shelf_floor?" > ชั้น ".@$sStocks_account_code->condition_shelf_floor:NULL;
+
+        $sW_No = $sStocks_account_code->condition_warehouse==0||$sStocks_account_code->condition_warehouse==NULL?', คลัง':NULL;// dd($sW_No);
+        $sZ_No = $sStocks_account_code->condition_zone==0||$sStocks_account_code->condition_zone==NULL?', โซน':NULL; //dd($sZ_No);
+        $sS_No = $sStocks_account_code->condition_shelf==0||$sStocks_account_code->condition_shelf==NULL?', Shelf':NULL; //dd($sS_No);
+        $shelf_floor_No = $sStocks_account_code->condition_shelf_floor==0||$sStocks_account_code->condition_shelf_floor==NULL?', ชั้น':NULL; //dd($shelf_floor_No);
+        $sProductSel = $sStocks_account_code->condition_product==0||$sStocks_account_code->condition_product==NULL?', สินค้า':NULL; //dd($shelf_floor_No);
+        $sLot = $sStocks_account_code->condition_lot_number==0||$sStocks_account_code->condition_lot_number==NULL?', Lot Number':NULL; //dd($shelf_floor_No);
+
+
+        $ConditionNo = $sW_No." ".$sZ_No." ".$sS_No." ".$shelf_floor_No." ".$sProductSel." ".$sLot ;
+
+        $ConditionNoChoose = "เงื่อนไขที่ไม่ได้ระบุ  ".$ConditionNo;
+        Session::put('session_ConditionNoChoose', $ConditionNoChoose);      
+
+        // dd($ConditionNoChoose);  
+
+        if(!empty(@$sStocks_account_code->condition_product)){
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".$sStocks_account_code->condition_product." AND lang_id=1");
+
+            $sProduct =  ' > สินค้า : '.@$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+        }else{
+          $sProduct = '';
+        }
+
+        $lot_number = @$sStocks_account_code->condition_lot_number?" > ".@$sStocks_account_code->condition_lot_number:NULL;
+
+        $Condition = @$sL[0]->txt_desc." > ".
+        @$sB[0]->b_name.' '.(@$sW[0]->w_name?' > '.@$sW[0]->w_name:NULL).' '.(@$sZ[0]->z_name?' > '.@$sZ[0]->z_name:NULL).' '.(@$sS[0]->s_name?' > '.@$sS[0]->s_name:NULL).$shelf_floor.' '.$sProduct.' '.$lot_number;
+
+
+        $RefCode = "รหัสอ้างอิง : ".@$sStocks_account_code->ref_code ;
+        Session::put('session_RefCode', $RefCode);
+
+        $ConditionChoose = "เงื่อนไขที่ระบุ : ".$Condition;
+        Session::put('session_ConditionChoose', $ConditionChoose);
+
+        // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+        $sAction_user = DB::select(" select * from ck_users_admin where id=".$sStocks_account_code->action_user." ");
+        // dd($sAction_user);
+        if(@$sStocks_account_code->status_accepted==0||@$sStocks_account_code->status_accepted==1||@$sStocks_account_code->status_accepted==2||@$sStocks_account_code->status_accepted==5){
+           $sAction_user = " ผู้ดำเนินการ : ".@$sAction_user[0]->name." > วันที่ : ".@$sStocks_account_code->action_date." ";
+           Session::put('session_Action_user', @$sAction_user);
+        }
+
+        $sApprover = DB::select(" select * from ck_users_admin where id=".$sStocks_account_code->approver." ");
+        if(@$sStocks_account_code->status_accepted==3||@$sStocks_account_code->status_accepted==4){
+           $sApprover = " ผู้อนุมัติ : ".@$sApprover[0]->name." > วันที่ : ".@$sStocks_account_code->approve_date." ";
+           Session::put('session_Approver', @$sApprover);
+        }
+
+        $Status_accepted = "[ สถานะ : ".$status_accepted." ]";
+        Session::put('session_Status_accepted', $Status_accepted);
+
+
+
+      $Check_stock = \App\Models\Backend\Check_stock::get();
+      $User_branch_id = \Auth::user()->branch_id_fk;
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
+      $Warehouse = \App\Models\Backend\Warehouse::get();
+      $Zone = \App\Models\Backend\Zone::get();
+      $Shelf = \App\Models\Backend\Shelf::get();
+
+      $Action_user = DB::select(" select * from ck_users_admin ");
+
+      return View('backend.check_stock_account.adjust')->with(
+        array(
+           'id'=>$id,
+           'sRow'=>$sRow,
+           'Products'=>$Products,'Check_stock'=>$Check_stock,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
+           'sBusiness_location'=>$sBusiness_location,
+           'Condition'=>$Condition,
+           'Action_user'=>$Action_user,
+        ));
+
+    }
+
+    public function ScanQr($id)
+    {
+      // dd($id);
+      $r = DB::select(" Select * from db_pick_warehouse_tmp where id=$id ");
+      $warehouse_qrcode = DB::select(" Select * from db_pick_warehouse_qrcode where pick_warehouse_tmp_id_fk=$id ");
+      // dd($r);
+      // dd($warehouse_qrcode);
+      /*
+      0 => {#2931 ▼
+        +"id": 1
+        +"invoice_code": "P1210300017"
+        +"product_code": "00002"
+        +"product_name": "MATCHA GREEN TEA LATTE"
+        +"amt": 1
+        +"product_unit": "กล่อง"
+        +"amt_get": 1
+        +"status": 0
+        +"product_id_fk": 2
+      }
+  */
+      $product_name = $r[0]->product_code." : ".$r[0]->product_name;
+      $amt = $r[0]->amt;
+      return View('backend.pay_product_receipt.scan_qr')->with(
+        array(
+           'id'=>$id,
+           'sRow'=>$r,
+           'product_name'=>$product_name,
+           'amt'=>$amt,
+           'warehouse_qrcode'=>$warehouse_qrcode,
+        ));
+    }
+
+
     public function edit($id)
     {
       // return View('backend.check_stock_account.form');
       // dd($id);
+      $sRow = \App\Models\Backend\Stocks_account_code::find($id);
+      // dd($sRow->action_user);
+
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
       (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
@@ -197,9 +361,20 @@ class Check_stock_accountController extends Controller
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
-      $sRow = \App\Models\Backend\Stocks_account_code::find($id);
-      // dd(@$sRow->ref_code);
-      // dd(@$sRow);
+      // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+      if(@$sRow->status_accepted=="1"){
+          $status_accepted = 'PENDDING';
+      }else if(@$sRow->status_accepted=="2"){
+          $status_accepted = 'REQUEST';
+      }else if(@$sRow->status_accepted=="3"){
+          $status_accepted = 'ACCEPTED';
+      }else if(@$sRow->status_accepted=="4"){
+          $status_accepted = 'NO APPROVED';
+      }else if(@$sRow->status_accepted=="5"){
+          $status_accepted = 'CANCELED';
+      }else{
+          $status_accepted = 'NEW';
+      }
 
       if(empty($sRow)){
         return redirect()->to(url("backend/check_stock_account/"));
@@ -220,6 +395,21 @@ class Check_stock_accountController extends Controller
         $sZ = DB::select(" select * from zone where id=".($sRow->condition_zone?$sRow->condition_zone:0)." ");
         $sS = DB::select(" select * from shelf where id=".($sRow->condition_shelf?$sRow->condition_shelf:0)." ");
         $shelf_floor = @$sRow->condition_shelf_floor?" > ชั้น ".@$sRow->condition_shelf_floor:NULL;
+
+        $sW_No = $sRow->condition_warehouse==0||$sRow->condition_warehouse==NULL?', คลัง':NULL;// dd($sW_No);
+        $sZ_No = $sRow->condition_zone==0||$sRow->condition_zone==NULL?', โซน':NULL; //dd($sZ_No);
+        $sS_No = $sRow->condition_shelf==0||$sRow->condition_shelf==NULL?', Shelf':NULL; //dd($sS_No);
+        $shelf_floor_No = $sRow->condition_shelf_floor==0||$sRow->condition_shelf_floor==NULL?', ชั้น':NULL; //dd($shelf_floor_No);
+        $sProductSel = $sRow->condition_product==0||$sRow->condition_product==NULL?', สินค้า':NULL; //dd($shelf_floor_No);
+        $sLot = $sRow->condition_lot_number==0||$sRow->condition_lot_number==NULL?', Lot Number':NULL; //dd($shelf_floor_No);
+
+
+        $ConditionNo = $sW_No." ".$sZ_No." ".$sS_No." ".$shelf_floor_No." ".$sProductSel." ".$sLot ;
+
+        $ConditionNoChoose = "เงื่อนไขที่ไม่ได้ระบุ  ".$ConditionNo;
+        Session::put('session_ConditionNoChoose', $ConditionNoChoose);      
+
+        // dd($ConditionNoChoose);  
 
         if(!empty(@$sRow->condition_product)){
 
@@ -242,11 +432,32 @@ class Check_stock_accountController extends Controller
         $Condition = @$sL[0]->txt_desc." > ".
         @$sB[0]->b_name.' '.(@$sW[0]->w_name?' > '.@$sW[0]->w_name:NULL).' '.(@$sZ[0]->z_name?' > '.@$sZ[0]->z_name:NULL).' '.(@$sS[0]->s_name?' > '.@$sS[0]->s_name:NULL).$shelf_floor.' '.$sProduct.' '.$lot_number;
 
-        $ConditionChoose = "รหัสอ้างอิง : ".@$sRow->ref_code." > เงื่อนไขที่ระบุ : ".$Condition;
+
+        $RefCode = "รหัสอ้างอิง : ".@$sRow->ref_code ;
+        Session::put('session_RefCode', $RefCode);
+
+        $ConditionChoose = "เงื่อนไขที่ระบุ : ".$Condition;
         Session::put('session_ConditionChoose', $ConditionChoose);
 
-      $Check_stock = \App\Models\Backend\Check_stock::get();
+        // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+        $sAction_user = DB::select(" select * from ck_users_admin where id=".$sRow->action_user." ");
+        if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2||@$sRow->status_accepted==5){
+           $sAction_user = " ผู้ดำเนินการ : ".@$sAction_user[0]->name." > วันที่ : ".@$sRow->action_date." ";
+           Session::put('session_Action_user', @$sAction_user);
+        }
 
+        $sApprover = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
+        if(@$sRow->status_accepted==3||@$sRow->status_accepted==4){
+           $sApprover = " ผู้อนุมัติ : ".@$sApprover[0]->name." > วันที่ : ".@$sRow->approve_date." ";
+           Session::put('session_Approver', @$sApprover);
+        }
+
+        $Status_accepted = "[ สถานะ : ".$status_accepted." ]";
+        Session::put('session_Status_accepted', $Status_accepted);
+
+
+
+      $Check_stock = \App\Models\Backend\Check_stock::get();
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
@@ -269,13 +480,17 @@ class Check_stock_accountController extends Controller
 
         if(!empty($request->Adjust)){
 
+            $amt = request('amt_check') - request('amt');
+
             $sRow = \App\Models\Backend\Check_stock_account::find(request('id'));
             $sRow->amt_check    = request('amt_check');
-            $sRow->amt_diff    = request('amt_check') - request('amt') ;
-            $sRow->cuase_desc    = request('cuase_desc');
+            $sRow->amt_diff    = $amt ;
             $sRow->action_user    = request('action_user');
-            // $sRow->status_accepted    = request('approve_status');
             $sRow->save();
+
+            if($amt!=0){
+              DB::update(" UPDATE db_stocks_account_code SET status_accepted=1 where id=".$sRow->stocks_account_code_id_fk."");
+            }
 
             return redirect()->to(url("backend/check_stock_account/adjust/".request('id')."?from_id=".request('from_id')));
 
@@ -338,7 +553,9 @@ class Check_stock_accountController extends Controller
       $sRow = \App\Models\Backend\Check_stock_account::find($id);
       if( $sRow ){
         // $sRow->forceDelete();
-        DB::select("UPDATE db_stocks_account_code SET status_accepted='3' WHERE (id=$id)");
+         // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+        DB::select("UPDATE db_stocks_account_code SET status_accepted='5' WHERE status_accepted in(1,2) AND id=$id ");
+        DB::select("DELETE FROM db_stocks_account_code  WHERE status_accepted=0 AND id=$id ");
 
       }
       return response()->json(\App\Models\Alert::Msg('success'));
@@ -346,7 +563,9 @@ class Check_stock_accountController extends Controller
     }
 
     public function Datatable(){
+
       $sTable = \App\Models\Backend\Check_stock_account::search()->orderBy('id', 'asc');
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {

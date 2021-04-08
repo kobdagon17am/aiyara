@@ -54,23 +54,23 @@ body{
 
                ");
 
-                echo "<b>".$value[0]->recipient_name."</b><br>";
+                echo "<b>".@$value[0]->recipient_name."</b><br>";
 
-                $addr = $value[0]->house_no?$value[0]->house_no.", ":'';
-                $addr .= $value[0]->house_name;
-                $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
-                $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
-                $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
-                $addr .= $value[0]->district?", อ.".$value[0]->district:'';
-                $addr .= $value[0]->province?", จ.".$value[0]->province:'';
+                $addr = @$value[0]->house_no?@$value[0]->house_no.", ":'';
+                $addr .= @$value[0]->house_name;
+                $addr .= @$value[0]->moo?", หมู่ ".@$value[0]->moo:'';
+                $addr .= @$value[0]->soi?", ซอย".@$value[0]->soi:'';
+                $addr .= @$value[0]->road?", ถนน".@$value[0]->road:'';
+                $addr .= @$value[0]->district_sub?", ต.".@$value[0]->district_sub:'';
+                $addr .= @$value[0]->district?", อ.".@$value[0]->district:'';
+                $addr .= @$value[0]->province?", จ.".@$value[0]->province:'';
 
-                if($value[0]->id!=''){
+                if(@$value[0]->id!=''){
                     $addr = $addr;
                 }else{
                     $addr = "-ไม่พบข้อมูลที่อยู่-";
                 }
 
       ?>
-      {{$addr}}<br>{{$value[0]->zipcode?$value[0]->zipcode:''}}
+      {{$addr}}<br>{{@$value[0]->zipcode?@$value[0]->zipcode:''}}
 
