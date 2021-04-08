@@ -47,7 +47,6 @@ class CancelOderController extends Controller
                       'approve_date' => date('Y-m-d H:i:s')]);
 
                   $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
-            }elseif($type_id  == 5 ){//GivtVoucher
 
             }elseif($type_id  == 6 ){//Course
 
