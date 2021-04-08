@@ -39,15 +39,41 @@ class Stocks_account_codeController extends Controller
 
     public function Datatable(Request $req){
 
-      if(isset($req->id)){
-        $sTable = \App\Models\Backend\Stocks_account_code::where('id',$req->id);
+      // if(\Auth::user()->permission==1){
+      //         if(isset($req->id)){
+      //           $sTable = \App\Models\Backend\Stocks_account_code::where('id',$req->id);
+      //         }else{
+      //           $sTable = \App\Models\Backend\Stocks_account_code::where('status_confirm_to_approve','1')->search()->orderBy('id', 'asc');
+      //         }
+      // }else{
+      //         if(isset($req->id)){
+      //           $sTable = \App\Models\Backend\Stocks_account_code::where('id',$req->id)->where('action_user',\Auth::user()->id);
+      //         }else{
+      //           if($req->sA==''){
+      //               $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
+      //           }else{
+      //               $sTable = \App\Models\Backend\Stocks_account_code::where('action_user',\Auth::user()->id)->orderBy('id', 'asc');
+      //           }
+                
+      //         }
+      // }
+
+      if(\Auth::user()->permission==1){
+            $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
       }else{
-        $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
+           $sTable = \App\Models\Backend\Stocks_account_code::where('branch_id_fk',\Auth::user()->branch_id_fk)->search()->orderBy('id', 'asc');
       }
 
       // $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('action_user_id', function($row) {
+        if(@$row->action_user!=''){
+           return @$row->action_user;
+        }else{
+          return '0';
+        }
+      }) 
       ->addColumn('action_user', function($row) {
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");

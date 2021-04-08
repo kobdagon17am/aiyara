@@ -173,26 +173,15 @@ tr.border_bottom td {
 
 
 <?php /* dd($data['id'][0][0]); */ //echo ($data['lot_number'][0]) ; ?>
-<?php  $value = DB::select(" SELECT * FROM db_stock_card where lot_number='".$data['lot_number'][0]."' AND product_id_fk = ".$data['id'][0]." "); 
+<?php  $value = DB::select(" SELECT * FROM `db_pick_warehouse_fifo_topicked`  "); 
 
-       $Products = DB::select("
-          SELECT products.id as product_id,
-          products.product_code,
-          (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
-          FROM
-          products_details
-          Left Join products ON products_details.product_id_fk = products.id
-          WHERE products.id=".$data['id'][0]." AND lang_id=1");
-
-
-       $d = strtotime(date("Y-m-d")); $d = date("d/m/", $d).(date("Y", $d)+543);
 ?>
 
   <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
         <tr> 
           <th style="text-align: center;font-size: 30px;">
-           <center> Stock Card </center>
+           <center> ใบเบิกสินค้าออกจากคลัง</center>
           </th>
         </tr>
       </table>
@@ -204,10 +193,10 @@ tr.border_bottom td {
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
           <td style="width:50%;vertical-align: top;font-weight: bold;" > 
-            สินค้า / Product : {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$data['lot_number'][0]}}
+            รหัสใบเบิก / Ref-Code : <?=sprintf("%05d",@$value[0]->pick_pack_packing_code_id_fk); ?>
           </td> 
           <td style="width:50%;vertical-align: top;font-weight: bold;text-align: right;padding-right: 2%;" > 
-            วันที่ / Date : <?=$d?>  
+            วันที่ / Date : <?=date('d-m-Y')?>
           </td>
       </tr>
 
@@ -220,67 +209,74 @@ tr.border_bottom td {
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr style="background-color: #cccccc;">
         <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" >id</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">วันที่ดำเนินการ <br> Date-time : Processing</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ประเภทรายการ<br>Item Type</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">รหัสอ้างอิ<br>Reference code</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ผู้ดำเนินการ<br>Operator</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ผู้อนมุัติ<br>Approval</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">รับเข้า<br>Import</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">จ่ายออก<br>Export</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ยอดคงเหลือ<br>Balance</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">รหัสสินค้า : ชื่อสินค้า</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ล็อตนัมเบอร์</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">วันหมดอายุ</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">จำนวนในคลัง</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">คลังสินค้า</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">จำนวนเบิก</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">หน่วย</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">หมายเหตุ</td>
      </tr>
 
 <?php 
 
-  $P = DB::select(" SELECT * FROM db_stock_card where lot_number='".$data['lot_number'][0]."' AND product_id_fk = ".$data['id'][0]." "); 
+  $P   = DB::select(" SELECT * FROM `db_pick_warehouse_fifo_topicked`  "); 
 
   $i=1;
   foreach ($P as $key => $v) {
 
-        if(@$v->action_user!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$v->action_user." ");
-           $action_user = @$sD[0]->name;
-        }else{
-          $action_user = '';
-        }
+          $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".($v->product_id_fk)." AND lang_id=1");
 
-      if(@$v->approver!=''){
-          $sD2 = DB::select(" select * from ck_users_admin where id=".$v->approver." ");
-           $approver = @$sD2[0]->name;
-        }else{
-           $approver = '';
-        }
+          if(@$Products[0]->product_code!=@$Products[0]->product_name){
+             $product_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+          }else{
+             $product_name = @$Products[0]->product_name;
+          }
 
-        if(intval($v->amt)>0){$amt01 = $v->amt;}else{$amt01 ='';}
-        if(intval($v->amt)<0){$amt02 = $v->amt;}else{$amt02 ='';}
+
+            $sBranchs = DB::select(" select * from branchs where id=".$v->branch_id_fk." ");
+            $warehouse = DB::select(" select * from warehouse where id=".$v->warehouse_id_fk." ");
+            $zone = DB::select(" select * from zone where id=".$v->zone_id_fk." ");
+            $shelf = DB::select(" select * from shelf where id=".$v->shelf_id_fk." ");
+            $sW =  @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v->shelf_floor;
+
+          $p = DB::select("  SELECT product_unit
+                  FROM
+                  dataset_product_unit
+                  WHERE id = ".$v->product_unit_id_fk." AND  lang_id=1  ");
+              $product_unit= @$p[0]->product_unit;
 
      ?>
       <tr>
         <td style="border-bottom: 1px solid #ccc;text-align: center;"><?=@$i?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"><?=@$v->action_date?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->details?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->ref_inv?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$action_user?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$approver?></td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=$amt01?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=$amt02?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=@$v->amt_remain?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: left;"><?=@$product_name?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->lot_number?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->lot_expired_date?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->amt?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$sW?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$v->amt_get?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$product_unit?></td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
       </tr>
 
 <?php $i++; } ?>
 
 <?php for ($i=1;$i<=5;$i++){ ?>
-      <tr>
+<!--       <tr>
         <td> </td>
         <td> </td>
         <td> </td>
         <td> </td>
         <td> </td>
         <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-      </tr>
+      </tr> -->
 <?php } ?>
 
  

@@ -44,7 +44,7 @@
 
                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_stock_account") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
+                      </a>
 
         </div>
     </div>
@@ -67,14 +67,23 @@
 
     if(isset($_REQUEST['Approve'])){
       $dis = "display:none;";
+      $Approved = '1';
     }else{
       $dis = '';
+      $Approved = '0';
     }
+
+   // echo $Approved;
+
+
    ?>
 
 
-
-<div class="row" style="<?=$dis?>">
+@IF(!empty(@$sRow))
+<div class="row" style="display: none;">
+@else
+<div class="row" style="">
+@ENDIF 
     <div class="col-12">
         <div class="card">
             <div class="card-body">
@@ -238,7 +247,7 @@
                         <div class="col-md-9">
                            <?php $dis03 = !empty(@$sRow->condition_product)?'disabled':'' ?>
                            <select name="product" id="product" class="form-control select2-templating " <?=$dis03?> >
-                                <option value="">-รหัสสินค้า : ชื่อสินค้า-</option>
+                                <option value="">-PRODUCT-</option>
                                    @if(@$Products)
                                         @foreach(@$Products AS $r)
                                           <option value="{{@$r->product_id}}" {{ (@$r->product_id==@$sRow->condition_product)?'selected':'' }} >
@@ -296,16 +305,24 @@
           </div>
         </div>
 
- @IF(isset($_REQUEST['Approve']))
-        <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
- @ENDIF 
-
         <form id="frm-02" action="{{ route('backend.check_stock_account.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_stock_check" value="1" >
-            @IF(!empty(@$sRow))
-            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionChoose')}} </span>
-            @ENDIF
+
+ @IF(!empty(@$sRow))
+ 
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_RefCode')}} </span> 
+            @if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2||@$sRow->status_accepted==5)
+                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}}  </span> 
+                  <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Action_user')}} </span>
+            @ELSE 
+                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}} </span>
+                  <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Approver')}} </span>
+            @ENDIF 
+            <br>
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionChoose')}} </span><br>
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionNoChoose')}} </span>
+ @ENDIF 
+
             <input type="hidden" name="condition_business_location" value="{{@$sRow->condition_business_location?@$sRow->condition_business_location:0}}" >
             <input type="hidden" name="condition_branch" value="{{@$sRow->condition_branch?@$sRow->condition_branch:0}}" >
             <input type="hidden" name="condition_warehouse" value="{{@$sRow->condition_warehouse?@$sRow->condition_warehouse:0}}" >
@@ -333,28 +350,72 @@
       </form>
 
           @IF(!empty(@$sRow))
+          
                 <table id="data-table-check" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-
-                  <div class="row  " style="" >
-                    <div class="col-md-12" >
-                       <div class="form-group row">
-                        <div class="col-md-12" style="<?=$dis?>">
-                        <center>
-                          <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock_account/print_receipt') }}/{{@$sRow->id}}" style="font-size: 14px !important;" target="_blank" >
-                            <i class="bx bx-printer align-middle "></i> พิมพ์ใบตรวจนับสินค้า
-                          </a>
-                          </center>
+                       
+                         <div class="row  " style="" >
+                          <div class="col-md-12" >
+                             <div class="form-group row">
+                              <div class="col-md-12" style="">
+                              <center>
+            
+                      <form id="basic-form" action="" method="post">
+                                 <div class="form-group row">
+                                  <label for="cuase_desc" class="col-md-3 col-form-label">หมายเหตุ * :</label>
+                                  <div class="col-md-6">
+                                    <textarea class="form-control" rows="3" id="cuase_desc" name="cuase_desc" required  minlength="5" >{{@$sRow->cuase_desc}}</textarea>
+                                  </div>
+                                </div>
+                        </form>                             
+                                </center>
+                              </div>
+                              </div>
+                          </div>
                         </div>
+
+                        <br>
+            
+                @IF(isset($_REQUEST['Approve']))
+                @ELSE
+                        <div class="row  " style="" >
+                          <div class="col-md-12" >
+                             <div class="form-group row">
+                              <div class="col-md-12" style="">
+                              <center>
+
+
+                             @IF($sRow->action_user==\Auth::user()->id)
+
+                                 @if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2)
+                                  <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock_account/print_receipt') }}/{{@$sRow->id}}" style="font-size: 14px !important;width: 160px;" target="_blank" >
+                                    <i class="bx bx-printer align-middle "></i> พิมพ์ใบตรวจนับสินค้า
+                                  </a>
+                                 @ENDIF 
+                               &nbsp;
+                               &nbsp;
+                               &nbsp;
+                               @if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2)
+                                <a class="btn btn-primary btn-sm btnOffer " href="{{ URL::to('backend/check_stock_account/') }}/{{@$sRow->id}}" style="font-size: 14px !important;width: 160px;" >
+                                  <i class="bx bx-save align-middle "></i> บันทึก > ขออนุมัติ
+                                </a>
+                                @ENDIF 
+
+                             @ENDIF 
+
+                                </center>
+                              </div>
+                              </div>
+                          </div>
                         </div>
-                    </div>
-                  </div>
+                 @ENDIF 
 
-            @ENDIF 
+    @ENDIF 
 
 
-@IF(isset($_REQUEST['Approve']))
-
+@IF( ( isset($_REQUEST['Approve']) || @$sRow->status_accepted==3 || @$sRow->status_accepted==4 ) && @$sRow->status_accepted!=0 && @$sRow->status_accepted!=1 && @$sRow->status_accepted!=5 )
+          
+         <br> 
          <form action="{{ route('backend.check_stock_account.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="approved" type="hidden" value="1">
@@ -362,17 +423,11 @@
   
                 {{ csrf_field() }}
 
-
-      @if( $sPermission==1 || @$menu_permit->can_approve==1 )
-
-            <?php // echo @$sRow->status_accepted ?> 
-
-            @IF(@$sRow->status_accepted!=1)
-
+            <!-- 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED -->
             <div class="myBorder">
 
                  <div class="form-group row">
-                      <label for="" class="col-md-3 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                      <label for="" class="col-md-3 col-form-label">ผู้อนุมัติ/Approval (Admin Login) :</label>
                       <div class="col-md-6">
                          @if( empty(@sRow[0]->id) )
                           <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -385,13 +440,13 @@
                   </div>
 
                     <div class="form-group row">
-                        <label class="col-md-3 col-form-label">สถานะการอนุมัติ :</label>
+                        <label class="col-md-3 col-form-label">สถานะการอนุมัติ / Status :</label>
                         <div class="col-md-3 mt-2">
                           <div class=" ">
                             @if( empty($sRow) )
-                              <input type="radio" class="" id="customSwitch1" name="approve_status" value="1"  >
+                              <input type="radio" class="" id="customSwitch1" name="approve_status" value="3" required >
                             @else
-                              <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->status_accepted=='1')?'checked':'' }}>
+                              <input type="radio" class="" id="customSwitch1" name="approve_status" required value="3" {{ ( @$sRow->status_accepted=='3')?'checked':'' }}>
                             @endif
                               <label for="customSwitch1">อนุมัติ / Aproved</label>
                           </div>
@@ -399,9 +454,9 @@
                          <div class="col-md-6 mt-2">
                           <div class=" ">
                             @if( empty($sRow) )
-                              <input type="radio" class="" id="customSwitch2" name="approve_status" value="2"  >
+                              <input type="radio" class="" id="customSwitch2" name="approve_status" value="4" required >
                             @else
-                              <input type="radio" class="" id="customSwitch2" name="approve_status" value="2" {{ ( @$sRow->status_accepted=='2')?'checked':'' }}>
+                              <input type="radio" class="" id="customSwitch2" name="approve_status" required value="4" {{ ( @$sRow->status_accepted=='4')?'checked':'' }}>
                             @endif
                               <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                           </div>
@@ -410,23 +465,30 @@
                     </div>
 
                     <div class="form-group row">
-                      <label for="note" class="col-md-3 col-form-label">หมายเหตุ (ถ้ามี) :</label>
+                      <label for="note" class="col-md-3 col-form-label">หมายเหตุ / Note :</label>
                       <div class="col-md-6">
-                        <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                        <textarea class="form-control" rows="3" id="note" name="note" required  minlength="5" >{{ @$sRow->note }}</textarea>
                       </div>
                     </div>
 
                     <br>
 
-                   <div class="form-group row">
+                    @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
-                      <label for="note" class="col-md-3 col-form-label"> </label>
-                      <div class="col-md-6 text-right ">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
-                        <i class="bx bx-save font-size-16 align-middle mr-1"></i>  บันทึก > การอนุมัติ
-                        </button>
-                      </div>
-                    </div>
+                        @IF(@$sRow->status_accepted!=3 && @$sRow->status_accepted!=4)
+
+                          <div class="form-group row">
+                            <label for="note" class="col-md-3 col-form-label"> </label>
+                            <div class="col-md-6 text-right ">
+                                  <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
+                              <i class="bx bx-save font-size-16 align-middle mr-1"></i>  บันทึก > การอนุมัติ
+                              </button>
+                            </div>
+                           </div>
+
+                        @endif
+
+                    @endif
 
                    <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -439,9 +501,7 @@
                   </div> 
 
               </form>
-
-        @endif
-     @endif
+    
   @endif
 
             </div>
@@ -496,58 +556,10 @@
 
 <script type="text/javascript">
 
-var id = "{{@$sRow->id}}"; //alert(id);
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";
-var oTable01;
-$(function() {
-    oTable01 = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        // scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
-        ajax: {
-            url: '{{ route('backend.stocks_account_code.datatable') }}',
-            data :{
-                  id:id,
-                },
-              method: 'POST',
-            },
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'ref_code', title :'<center> รหัสอ้างอิง </center>', className: 'text-left'},
-            {data: 'action_user', title :'<center> ผู้ดำเนินการ </center>', className: 'text-center'},
-            {data: 'action_date', title :'<center> วันที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'status_accepted',   title :'<center>สถานะ</center>', className: 'text-center  ',render: function(d) {
-              if(d=="0"){
-                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">รออนุมัติ</span>';
-              }else if(d=="2"){
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ไม่อนุมัติ</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">อนุมัติ/ตรวจสอบแล้ว</span>';
-              }
-            }},
-        ],
-        rowCallback: function(nRow, aData, dataIndex){
-
-                var info = $(this).DataTable().page.info();
-                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-
-        }
-    });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable01.draw();
-    });
-});
-
-
-
-
+var sPermission = "<?=\Auth::user()->permission?>";
+var sUserID = "<?=\Auth::user()->id?>";
+var sStatus_accepted = "<?=@$sRow->status_accepted?>";
+var Approved = "<?=$Approved?>"; //alert(Approved);
 var id = "{{@$sRow->id}}"; //alert(id);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
@@ -572,12 +584,12 @@ $(function() {
             },
         columns: [
             {data: 'run_code', title :'REF-CODE', className: 'text-center '},
-            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w250'},
-            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ : วันหมดอายุ</center>', className: 'text-left'},
-            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-            {data: 'amt', title :'<center>ยอดเดิม </center>', className: 'text-center'},
-            {data: 'amt_check', title :'<center>ยอดที่นับได้ </center>', className: 'text-center'},
-            {data: 'amt_diff',   title :'<center>ยอดต่าง</center>', className: 'text-center ',render: function(d) {
+            {data: 'product_name', title :'<center>PRODUCT </center>', className: 'text-left w250'},
+            {data: 'lot_number', title :'<center>Lot number : Expired date</center>', className: 'text-left'},
+            {data: 'warehouses', title :'<center>Warehouse </center>', className: 'text-left'},
+            {data: 'amt', title :'<center>Balance </center>', className: 'text-center'},
+            {data: 'amt_check', title :'<center>ountable amount  </center>', className: 'text-center'},
+            {data: 'amt_diff',   title :'<center>Difference amount</center>', className: 'text-center ',render: function(d) {
                if(d<0 || d>0){
                    return '<span class="badge badge-pill badge-danger font-size-16" style="color:black">'+d+'</span>';
                }else{
@@ -589,16 +601,37 @@ $(function() {
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{ 
-                      $('td:last-child', nRow).html(''
-                        + '<a href="{{ url('backend/check_stock_account/adjust') }}/'+aData['id']+'?from_id='+id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        
-                      ).addClass('input');
-                }
+                  if(sPermission==1){
 
+                    if(sStatus_accepted==2||sStatus_accepted==3||sStatus_accepted==4||sStatus_accepted==5){
+                        $('td:last-child', nRow).html('-');
+                    }else{
 
+                        $('td:last-child', nRow).html(''
+                          +'<a href="{{ url('backend/check_stock_account/adjust') }}/'+aData['id']+'?from_id='+id+'" class="btn btn-sm btn-primary" style="" ><i class="bx bx-edit font-size-16 align-middle"></i></a>'
+                        ).addClass('input');
+
+                    }
+
+                  }else{
+
+                      if(sStatus_accepted==2||sStatus_accepted==3||sStatus_accepted==4||sStatus_accepted==5){
+                          $('td:last-child', nRow).html('-');
+                      }else{
+
+                         if(aData['action_user_id']==sUserID){
+                            $('td:last-child', nRow).html(''
+                            +'<a href="{{ url('backend/check_stock_account/adjust') }}/'+aData['id']+'?from_id='+id+'" class="btn btn-sm btn-primary" style="" ><i class="bx bx-edit font-size-16 align-middle"></i></a>'
+                           ).addClass('input');
+                         }else{
+                             $('td:last-child', nRow).html('-');
+                         }
+
+                         // $('td:last-child', nRow).html(aData['action_user_id']);
+
+                      }
+
+                  }
 
            },
    
@@ -686,7 +719,7 @@ $(function() {
                                        },
                                     columns: [
                                         {data: 'id', title :'ID', className: 'text-center w50'},
-                                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                                        {data: 'product_name', title :'<center>PRODUCT </center>', className: 'text-left'},
                                         {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                                         {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                                         {data: 'amt',
@@ -798,7 +831,6 @@ $(function() {
 
 
     </script>
-
 <script type="text/javascript">
 
 
@@ -930,6 +962,45 @@ $(function() {
            }
  
       });
+
+
+    $('.btnOffer').click(function(e){
+          e.preventDefault();
+
+          if (!confirm("ยืนยัน เพื่อขออนุมัติ ? ")){
+             return false;
+          }else{
+
+             var id = "{{@$sRow->id}}";
+             var cuase_desc = $("#cuase_desc").val();
+             // alert(id+cuase_desc);
+             $("#cuase_desc").valid();
+             // return false;
+             if($("#cuase_desc").valid()==false){
+                return false;
+             }
+
+             $.ajax({
+                  url: " {{ url('backend/ajaxOfferToApprove') }} ", 
+                  method: "post",
+                  data: {
+                    id:id,
+                    cuase_desc:cuase_desc,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                    location.reload();
+                  }
+                });
+
+          }
+
+
+ 
+      });
+
+
 
 </script>
 

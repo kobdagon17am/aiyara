@@ -31,15 +31,21 @@
 <!-- end page title -->
 
   <?php 
+
+    // echo  \Auth::user()->branch_id_fk;
+
     $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
+      // echo $menu_id;
     if($sPermission==1){
       $sC = '';
       $sU = '';
       $sD = '';
       $sA = '';
+      $dis_edit = '';
     }else{
+
       $role_group_id = \Auth::user()->role_group_id_fk;
       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
       // dd($menu_permit);
@@ -49,7 +55,17 @@
       $sA = @$menu_permit->can_approve==1?'':'display:none;';
       // echo  @$menu_permit->can_approve;
       // echo $sA;
+      if(@$menu_permit->can_approve==1){
+        $dis_edit = 'display:none;';
+      }else{
+        $dis_edit = '';
+      }
+
     }
+
+    // echo $menu_id;
+    // echo \Auth::user()->id;
+    // echo \Auth::user()->role_group_id_fk;
    ?>
 
 
@@ -80,7 +96,7 @@
 
                     <div class="col-md-6 " >
                       <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
+                            <label for="branch_id_fk" class="col-md-2 col-form-label"> Branch : </label>
                             <div class="col-md-10">
 
                               <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
@@ -97,11 +113,11 @@
                   <div class="row" >
                     <div class="col-md-6 " >
                        <div class="form-group row">
-                            <label for="ref_code" class="col-md-3 col-form-label"> รหัสอ้างอิง : </label>
+                            <label for="ref_code" class="col-md-3 col-form-label"> Ref-Code : </label>
                             <div class="col-md-9">
 
                               <select id="ref_code" name="ref_code" class="form-control select2-templating " >
-                              <option value="">-รหัสอ้างอิง-</option>
+                              <option value="">-Ref-Code-</option>
                               @if(@$sStocks_account_code)
                                 @foreach(@$sStocks_account_code AS $r)
                                 <option value="{{$r->ref_code}}" >
@@ -117,15 +133,18 @@
 
                     <div class="col-md-6 " >
                         <div class="form-group row">
-                            <label for="status_accepted" class="col-md-2 col-form-label"> สถานะ : </label>
+                            <label for="status_accepted" class="col-md-2 col-form-label"> Status : </label>
                             <div class="col-md-10">
-                              
+                          
+                          <!-- 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED -->
                            <select id="status_accepted" name="status_accepted" class="form-control select2-templating " >
                             <option value="" >-สถานะ-</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
+                            <option value="0" >NEW</option>
+                            <option value="1" >PENDDING</option>
+                            <option value="2" >REQUEST</option>
+                            <option value="3" >ACCEPTED</option>
+                            <option value="4" >NO APPROVED</option>
+                            <option value="5" >CANCELED</option>
                           </select>
 
                             </div>
@@ -139,8 +158,8 @@
                             <label for="ref_code" class="col-md-3 col-form-label">  </label>
                             <div class="col-md-9 d-flex">
 
-                                 <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  style="margin-left: 2%;border: 1px solid grey;" />
-                                 <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  style="border: 1px solid grey;" />
+                                 <input id="startDate"  autocomplete="off" placeholder="Begin"  style="margin-left: 2%;border: 1px solid grey;" />
+                                 <input id="endDate"  autocomplete="off" placeholder="End"  style="border: 1px solid grey;" />
 
                             </div>
                           </div>
@@ -225,10 +244,13 @@
     return val;
 }
 
-
+var sPermission = "<?=\Auth::user()->permission?>";
+var sUserID = "<?=\Auth::user()->id?>";
 var sA = "{{@$sA}}"; 
 var sU = "{{@$sU}}"; 
 var sD = "{{@$sD}}";
+var dis_edit = "{{@$dis_edit}}"; //alert(dis_edit);
+// alert(sA+":"+sU+":"+sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -239,55 +261,43 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        // stateSave: true,
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
-        ajax: {
-          url: '{{ route('backend.stocks_account_code.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
+         ajax: {
+            url: '{{ route('backend.stocks_account_code.datatable') }}',
+            // data :{
+            //       branch_id_fk:branch_id_fk,
+            //     },
+              method: 'POST',
+            },
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'business_location', title :'<center> Business <br> location </center>', className: 'text-left'},
-            {data: 'branch', title :'<center> สาขา </center>', className: 'text-left'},
-            {data: 'ref_code', title :'<center> รหัสอ้างอิง </center>', className: 'text-left'},
-            {data: 'action_user', title :'<center> ผู้ดำเนินการ </center>', className: 'text-center'},
-            {data: 'action_date', title :'<center> วันที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'status_accepted',   title :'<center>สถานะ</center>', className: 'text-center  ',render: function(d) {
-              if(d=="0"){
-                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">รออนุมัติ</span>';
+            {data: 'branch', title :'<center> Branch </center>', className: 'text-left'},
+            {data: 'ref_code', title :'<center> Ref-Code </center>', className: 'text-left'},
+            {data: 'action_user', title :'<center> Operator </center>', className: 'text-center'},
+            {data: 'action_date', title :'<center> Implementation date  </center>', className: 'text-center'},
+            {data: 'status_accepted',   title :'<center>Status</center>', className: 'text-center  ',render: function(d) {
+              // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED             
+              if(d=="1"){
+                  return '<span class="badge badge-pill badge-soft-info font-size-14" style="color:black">PENDDING</span>';
               }else if(d=="2"){
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ไม่อนุมัติ</span>';
+                  return '<span class="badge badge-pill badge-info font-size-14" style="color:white">REQUEST</span>';
               }else if(d=="3"){
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ยกเลิก</span>';
+                  return '<span class="badge badge-pill badge-soft-success font-size-14" style="color:black">ACCEPTED</span>';
+              }else if(d=="4"){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-14" style="color:black">NO APPROVED</span>';
+              }else if(d=="5"){
+                  return '<span class="badge badge-pill badge-soft-warning font-size-14" style="color:black">CANCELED</span>';
               }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">อนุมัติ/ตรวจสอบแล้ว</span>';
+                  return '<span class="badge badge-pill badge-soft-info font-size-14" style="color:black">NEW</span>';
               }
             }},
-            {data: 'amt_diff', title :'<center> หมายเหตุ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center> ผู้อนุมัติ </center>', className: 'text-center'},
-            {data: 'approve_date', title :'<center> วันที่อนุมัติ </center>', className: 'text-center'},            
+            {data: 'amt_diff', title :'<center> Note </center>', className: 'text-center'},
+            {data: 'approver', title :'<center> Approval </center>', className: 'text-center'},
+            {data: 'approve_date', title :'<center> Approval date  </center>', className: 'text-center'},            
             {data: 'id', title :'Tools', className: 'text-center w100'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
@@ -301,18 +311,82 @@ $(function() {
                   $("td:eq(7)", nRow).html('');
                 }
 
-                if(sU!=''&&sA!=''){
-                    $('td:last-child', nRow).html(aData['amt_diff']);
-                }else{ 
+                // sPermission
+                if(sPermission==1){
 
-                  $('td:last-child', nRow).html(''
-                  + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="mdi mdi-eye-outline align-middle"></i></a> '
-                  + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                
-                ).addClass('input');
+                      if(aData['status_accepted']==3||aData['status_accepted']==4){
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                              ).addClass('input');
+                      }else if(aData['status_accepted']==2){
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+                      }else if(aData['status_accepted']==0||aData['status_accepted']==1){
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+                      }else if(aData['status_accepted']==5){
+                        $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                              ).addClass('input');
 
-          }
+                      }
+
+               // sPermission       
+              }else{
+
+
+                  if(aData['action_user_id']==sUserID){
+
+                     if(aData['status_accepted']==3||aData['status_accepted']==4){
+
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                              ).addClass('input');
+
+                      }else if(aData['status_accepted']==2){
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+
+                       }else if(aData['status_accepted']==0||aData['status_accepted']==1){
+                            
+                                $('td:last-child', nRow).html(''
+                                + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                ).addClass('input');
+
+                            // $('td:last-child', nRow).html(aData['action_user_id']);
+                              
+                      }else if(aData['status_accepted']==5){
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                              ).addClass('input');
+
+                      }
+
+                }else{
+
+                              $('td:last-child', nRow).html(''
+                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                              + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                              ).addClass('input');
+
+                }
+
+
+              } // sPermission   
+
 
         }
     });
@@ -358,6 +432,12 @@ $(function() {
 
                   // console.log(lot_number);
                   // return false;
+
+                  var sA = "{{@$sA}}"; 
+                  var sU = "{{@$sU}}"; 
+                  var sD = "{{@$sD}}";
+                  var dis_edit = "{{@$dis_edit}}"; //alert(dis_edit);
+
                         var oTable02;
                         $(function() {
                                 oTable02 = $('#data-table').DataTable({
@@ -369,6 +449,7 @@ $(function() {
                                     scrollX: true,
                                     ordering: false,
                                     destroy: true,
+                                    // stateSave: true,
                                     // scrollY: ''+($(window).height()-370)+'px',
                                     iDisplayLength: 25,
                                     ajax: {
@@ -385,56 +466,125 @@ $(function() {
                                         },
                                          method: 'POST',
                                        },
-                                        columns: [
-							            {data: 'id', title :'ID', className: 'text-center w50'},
-							            {data: 'business_location', title :'<center> Business <br> location </center>', className: 'text-left'},
-							            {data: 'branch', title :'<center> สาขา </center>', className: 'text-left'},
-							            {data: 'ref_code', title :'<center> รหัสอ้างอิง </center>', className: 'text-left'},
-							            {data: 'action_user', title :'<center> ผู้ดำเนินการ </center>', className: 'text-center'},
-							            {data: 'action_date', title :'<center> วันที่ดำเนินการ </center>', className: 'text-center'},
-							            {data: 'status_accepted',   title :'<center>สถานะ</center>', className: 'text-center  ',render: function(d) {
-							              if(d=="0"){
-							                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">รออนุมัติ</span>';
-							              }else if(d=="2"){
-							                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ไม่อนุมัติ</span>';
-							              }else if(d=="3"){
-							                  return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:red">ยกเลิก</span>';
-							              }else{
-							                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">อนุมัติ/ตรวจสอบแล้ว</span>';
-							              }
-							            }},
-							            {data: 'amt_diff', title :'<center> หมายเหตุ </center>', className: 'text-center'},
-							            {data: 'approver', title :'<center> ผู้อนุมัติ </center>', className: 'text-center'},
-							            {data: 'approve_date', title :'<center> วันที่อนุมัติ </center>', className: 'text-center'},            
-							            {data: 'id', title :'Tools', className: 'text-center w100'}, 
-							        ],
-							        rowCallback: function(nRow, aData, dataIndex){
+                                         columns: [
+                                          {data: 'id', title :'ID', className: 'text-center w50'},
+                                          {data: 'business_location', title :'<center> Business <br> location </center>', className: 'text-left'},
+                                          {data: 'branch', title :'<center> Branch </center>', className: 'text-left'},
+                                          {data: 'ref_code', title :'<center> Ref-Code </center>', className: 'text-left'},
+                                          {data: 'action_user', title :'<center> Operator </center>', className: 'text-center'},
+                                          {data: 'action_date', title :'<center> Implementation date  </center>', className: 'text-center'},
+                                          {data: 'status_accepted',   title :'<center>Status</center>', className: 'text-center  ',render: function(d) {
+                                            // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED             
+                                            if(d=="1"){
+                                                return '<span class="badge badge-pill badge-soft-info font-size-14" style="color:black">PENDDING</span>';
+                                            }else if(d=="2"){
+                                                return '<span class="badge badge-pill badge-info font-size-14" style="color:white">REQUEST</span>';
+                                            }else if(d=="3"){
+                                                return '<span class="badge badge-pill badge-soft-success font-size-14" style="color:black">ACCEPTED</span>';
+                                            }else if(d=="4"){
+                                                return '<span class="badge badge-pill badge-soft-warning font-size-14" style="color:black">NO APPROVED</span>';
+                                            }else if(d=="5"){
+                                                return '<span class="badge badge-pill badge-soft-warning font-size-14" style="color:black">CANCELED</span>';
+                                            }else{
+                                                return '<span class="badge badge-pill badge-soft-info font-size-14" style="color:black">NEW</span>';
+                                            }
+                                          }},
+                                          {data: 'amt_diff', title :'<center> Note </center>', className: 'text-center'},
+                                          {data: 'approver', title :'<center> Approval </center>', className: 'text-center'},
+                                          {data: 'approve_date', title :'<center> Approval date  </center>', className: 'text-center'},            
+                                          {data: 'id', title :'Tools', className: 'text-center w100'}, 
+                                      ],
+                                      rowCallback: function(nRow, aData, dataIndex){
 
-							                var info = $(this).DataTable().page.info();
-							                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                              var info = $(this).DataTable().page.info();
+                                              $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-							                if( aData['amt_diff']>0 || aData['amt_diff'] <0 ){
-							                    $("td:eq(7)", nRow).html("<span style='color:red;'>* มีปรับยอด </span>");
-							                }else{
-							                  $("td:eq(7)", nRow).html('');
-							                }
+                                              if( aData['amt_diff']>0 || aData['amt_diff'] <0 ){
+                                                  $("td:eq(7)", nRow).html("<span style='color:red;'>* มีปรับยอด </span>");
+                                              }else{
+                                                $("td:eq(7)", nRow).html('');
+                                              }
 
-							                if(sU!=''&&sA!=''){
-							                    $('td:last-child', nRow).html(aData['amt_diff']);
-							                }else{ 
+                                              // sPermission
+                                              if(sPermission==1){
 
-							                  $('td:last-child', nRow).html(''
-							                  + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-							                  + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="mdi mdi-eye-outline align-middle"></i></a> '
-							                  + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-							                
-							                ).addClass('input');
+                                                    if(aData['status_accepted']==3||aData['status_accepted']==4){
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                                                            ).addClass('input');
+                                                    }else if(aData['status_accepted']==2){
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                            ).addClass('input');
+                                                    }else if(aData['status_accepted']==0||aData['status_accepted']==1){
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                            ).addClass('input');
+                                                    }else if(aData['status_accepted']==5){
+                                                      $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                                                            ).addClass('input');
 
-							          }
+                                                    }
 
-							        }
-							    });
-							    });
+                                             // sPermission       
+                                            }else{
+
+
+                                                if(aData['action_user_id']==sUserID){
+
+                                                   if(aData['status_accepted']==3||aData['status_accepted']==4){
+
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                                                            ).addClass('input');
+
+                                                    }else if(aData['status_accepted']==2){
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="'+sA+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                            ).addClass('input');
+
+                                                     }else if(aData['status_accepted']==0||aData['status_accepted']==1){
+                                                          
+                                                              $('td:last-child', nRow).html(''
+                                                              + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                              + '<a href="javascript: void(0);" data-url="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+';" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                                              ).addClass('input');
+
+                                                          // $('td:last-child', nRow).html(aData['action_user_id']);
+                                                            
+                                                    }else if(aData['status_accepted']==5){
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+';" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                                                            ).addClass('input');
+
+                                                    }
+
+                                              }else{
+
+                                                            $('td:last-child', nRow).html(''
+                                                            + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit?Approve" class="btn btn-sm btn-primary" style="" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                            + '<a href="javascript: void(0);" class="btn btn-sm btn-secondary " title="ยกเลิก"><i class="bx bx-trash font-size-16 align-middle" style="color:#bfbfbf;"></i></a>'
+                                                            ).addClass('input');
+
+                                              }
+
+
+                                            } // sPermission   
+
+
+                                      }
+                                  });
+                                  });
 
                
             });

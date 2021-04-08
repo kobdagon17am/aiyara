@@ -77,6 +77,12 @@ class Check_stock_checkController extends Controller
       //   $d = strtotime($row->lot_expired_date); 
       //   return date("d/m/", $d).(date("Y", $d)+543);
       // })
+
+      ->addColumn('action_user_id', function($row) {
+        $sTable = DB::select("SELECT action_user FROM db_stocks_account_code  WHERE id=$row->stocks_account_code_id_fk ");
+        return @$sTable[0]->action_user;
+      }) 
+
       ->addColumn('product_name', function($row) {
         
           $Products = DB::select("SELECT products.id as product_id,

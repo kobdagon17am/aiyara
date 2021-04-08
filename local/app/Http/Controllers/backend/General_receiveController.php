@@ -47,13 +47,17 @@ class General_receiveController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
+      $sSupplier = \App\Models\Backend\Supplier::get();
+
+
       return View('backend.general_receive.form')->with(
         array(
            'Product_in_cause'=>$Product_in_cause,
            'Products'=>$Products,
            'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
            'sBranchs'=>$sBranchs,
-           'User_branch_id'=>$User_branch_id
+           'User_branch_id'=>$User_branch_id,
+           'sSupplier'=>$sSupplier,
         ) );
     }
     public function store(Request $request)
@@ -81,6 +85,8 @@ class General_receiveController extends Controller
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
 
+      $sSupplier = \App\Models\Backend\Supplier::get();
+
       // dd($sBranchs);
 
       return View('backend.general_receive.form')->with(
@@ -94,7 +100,8 @@ class General_receiveController extends Controller
            'Zone'=>$Zone,
            'Shelf'=>$Shelf,
            'sBranchs'=>$sBranchs,
-           'User_branch_id'=>$User_branch_id
+           'User_branch_id'=>$User_branch_id,
+           'sSupplier'=>$sSupplier,
         ) );
     }
 

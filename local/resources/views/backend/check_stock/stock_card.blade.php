@@ -57,26 +57,30 @@
                     <div class="col-12 d-flex ">
 
                       <div class="col-md-4 d-flex  ">
-                         <input id="start_date"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="end_date"  autocomplete="off" placeholder="วันสิ้นสุด"  />
+                        <?php
+                          $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
+                          $last_day_this_month  = date('Y-m-t');
+                         ?>
+                         <input id="start_date"  autocomplete="off" placeholder="วันเริ่ม" value="<?=$first_day_this_month?>" />
+                         <input id="end_date"  autocomplete="off" placeholder="วันสิ้นสุด" value="<?=$last_day_this_month?>" />
                       </div>
 
-                      <div class="col-md-2">
+                      <div class="col-md-3">
                         <div class="form-group row"> &nbsp; &nbsp;
                           <button type="button" class="btn btn-info btn-sm waves-effect btnProcess " style="font-size: 14px !important;" >
-                          <i class="bx bx-cog font-size-16 align-middle mr-1"></i> ประมวลผล
+                          <i class="bx bx-cog font-size-16 align-middle mr-1"></i> ประมวลผล / Processing
                           </button>
                         </div>
                       </div>
 
-                      <div class="col-md-6" >
+                      <div class="col-md-5" >
                         <div class="form-group row" style="float: right;" > 
                           <!-- <button type="button" class="btn btn-info btn-sm waves-effect btnPrint " style="font-size: 14px !important;display: none;" >
                           <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์
                           </button> -->
 
                            <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;" target="_blank" >
-                            <i class="bx bx-printer align-middle "></i> พิมพ์
+                            <i class="bx bx-printer align-middle "></i> พิมพ์ / Print-Out
                           </a>
 
                         </div>
@@ -87,8 +91,11 @@
                   </div>
 
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
+                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+
+                <div class="row div_balance " style="float: right;font-size: 18px !important;margin-right: 5%;font-weight: bold;text-decoration: underline;text-decoration-style: double;display: none;margin-top: 1%;">
+                  ยอดคงเหลือ = {{@$sBalance[0]->amt}}
+                </div>
 
             </div>
         </div>
@@ -105,6 +112,7 @@
 
 <script>
 $(document).ready(function() {
+
 
 
       $(document).on('click', '.btnProcess', function(event) {
@@ -142,7 +150,8 @@ $(document).ready(function() {
 
                             console.log(data);
                       
-                            /* datatables */
+                          
+                                /* datatables */
                                   var oTable;
                                   $(function() {
                                       oTable = $('#data-table').DataTable({
@@ -186,17 +195,44 @@ $(document).ready(function() {
                                           },
                                           columns: [
                                               {data: 'id', title :'ID', className: 'text-center w50'},
-                                              {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-left'},
-                                              {data: 'details', title :'<center>รายการเคลื่อนไหว </center>', className: 'text-left'},
-                                              {data: 'ref_inv', title :'<center>รหัสอ้างอิง </center>', className: 'text-center'},
-                                              {data: 'amt', title :'<center>ยอดดำเนินการ </center>', className: 'text-center'},
-                                              {data: 'amt_remain', title :'<center>ยอดคงเหลือ </center>', className: 'text-center'},
+                                              // {data: 'action_date', title :'<center>วันที่ : เวลา ดำเนินการ </center>', className: 'text-left'},
+                                              {data: 'action_date', title :'<center>Date-time : Processing  </center>', className: 'text-left'},
+                                              // {data: 'details', title :'<center>ประเภทรายการ </center>', className: 'text-left'},
+                                              {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
+                                              // {data: 'ref_inv', title :'<center>รหัสอ้างอิง </center>', className: 'text-center'},
+                                              {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
+                                              // {data: 'action_user', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
+                                              {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
+                                              // {data: 'approver', title :'<center>ผู้อนมุัติ </center>', className: 'text-center'},
+                                              {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
+                                              {data: 'id', title :'<center>รับเข้า/Import </center>', className: 'text-right'},
+                                              {data: 'id', title :'<center>จ่ายออก/Export </center>', className: 'text-right'},
+                                              {data: 'amt_remain', title :'<center>ยอดคงเหลือ/Balance </center>', className: 'text-right'},
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
                                             var info = $(this).DataTable().page.info();
                                             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
+                                              var decreased = parseInt(aData['amt']);
+
+                                              if(isNaN(decreased) || decreased > 0) {
+                                                $("td:eq(6)", nRow).html(aData['amt']);
+                                              }else{
+                                                $("td:eq(6)", nRow).html('');
+                                              }
+
+
+                                              var increased = parseInt(aData['amt']);
+
+                                              if(isNaN(increased) || increased <= 0) {
+                                                $("td:eq(7)", nRow).html(aData['amt']);
+                                              }else{
+                                                $("td:eq(7)", nRow).html('');
+                                              }
+
                                             $(".btnPrint").show();
+
+                                            
 
                                           }
                                       });
@@ -210,6 +246,9 @@ $(document).ready(function() {
                           }
                         })
 
+                setTimeout(function(){
+                  $(".div_balance").show();
+                }, 1000);
 
                 $(".myloading").hide();
 
@@ -228,6 +267,7 @@ $(document).ready(function() {
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script>
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        var firstday = new Date(new Date().getFullYear(), new Date().getMonth(),'01');
         $('#start_date').datepicker({
             // format: 'dd/mm/yyyy',
             format: 'yyyy-mm-dd',

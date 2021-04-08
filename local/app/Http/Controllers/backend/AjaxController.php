@@ -191,6 +191,8 @@ class AjaxController extends Controller
         $data = [$id];
         // dd($qrcode);
         $pdf = PDF::loadView('backend.check_stock_account.print_receipt',compact('data'))->setPaper('a4', 'landscape');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
 
@@ -209,7 +211,18 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFPick_warehouse(Request $request,$id)
+     {
+        // dd($request->lot_number);
+        // dd($id);
+        $data['id'] = [$id];
+        // $data['lot_number'] = [$request->lot_number];
+        // dd($qrcode);
+        $pdf = PDF::loadView('backend.pick_warehouse.print',compact('data'))->setPaper('a4', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('cover_sheet.pdf'); // เปิดไฟลฺ์
 
+    }
 
     public function createPDFCoverSheet01($id)
      {
@@ -358,17 +371,9 @@ class AjaxController extends Controller
         
     public function ajaxAcceptCheckStock(Request $req)
     {
-        // // return($req->id);
-        // $d = DB::select(" select * from db_delivery WHERE id=".$req->id." ");
-        // // return $d;
-        // if($d[0]->approver=="0"){
-        //     $user = \Auth::user()->id;
-        //     DB::select(" UPDATE db_delivery SET approver='$user',approved_date=CURDATE() WHERE id=".$req->id." ");
-        // }else{
-        //     DB::select(" UPDATE db_delivery SET approver=0,approved_date=NULL WHERE id=".$req->id." ");
-        // }
-
-          DB::select(" UPDATE db_stocks_account SET status_accepted=1  ");
+        // return($req->id);
+        // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+        DB::select(" UPDATE db_stocks_account SET status_accepted=3 ");
 
     }
 
@@ -1855,6 +1860,9 @@ class AjaxController extends Controller
                  "giftvoucher_code_id_fk"=>$sRow->id,
                  "customer_code"=>$request->customer_code,
                  "giftvoucher_value"=>$request->giftvoucher_value,
+                 "giftvoucher_banlance"=>$request->giftvoucher_value,
+                 "pro_sdate"=> $request->pro_sdate ,
+                 "pro_edate"=> $request->pro_edate ,
                  "pro_status"=> '4' ,
                  "created_at"=>now());
                 GiftvoucherCode_add::insertData($insertData);
@@ -2163,8 +2171,61 @@ class AjaxController extends Controller
 
                 // return response()->json($rs);   
             // }
+
+
+          // $c = "SELECT db_frontstore.invoice_code FROM
+          //   db_frontstore_products_list
+          //   Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+          //   WHERE  db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked where status=1)";
+
+          // $sTable = DB::select(" SELECT * from db_products_fifo_bill where recipient_code in ($c) ");
+
+          DB::select(" TRUNCATE TABLE db_pick_warehouse_tmp; ");
+          DB::select(" INSERT INTO db_pick_warehouse_tmp
+          SELECT
+          NULL,
+          db_frontstore.invoice_code,
+          (SELECT product_code FROM products WHERE id=db_frontstore_products_list.product_id_fk limit 1) as product_code,
+          (SELECT product_name FROM products_details WHERE product_id_fk=db_frontstore_products_list.product_id_fk and lang_id=1 limit 1) as product_name,
+          db_frontstore_products_list.amt,
+          dataset_product_unit.product_unit,0,0,db_frontstore_products_list.product_id_fk
+          FROM
+          db_frontstore_products_list
+          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+          Left Join dataset_product_unit ON db_frontstore_products_list.product_unit_id_fk = dataset_product_unit.id
+          WHERE db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked) 
+          AND db_frontstore.invoice_code<>'' ");
+
+
         }
     }
+
+
+    public function ajaxSetProductToBil(Request $request)
+    {
+        if($request->ajax()){
+            DB::select(" UPDATE db_pick_warehouse_tmp SET amt_get = db_pick_warehouse_tmp.amt ");
+        }
+    }
+
+
+
+    public function ajaxMapConsignments(Request $request)
+    {
+        if($request->ajax()){
+
+            DB::select(" TRUNCATE `db_pick_warehouse_consignments` ; ");
+            DB::select(" INSERT IGNORE INTO db_pick_warehouse_consignments(invoice_code) SELECT invoice_code FROM db_pick_warehouse_tmp ; ");
+            DB::select(" UPDATE
+              db_pick_warehouse_consignments
+              Inner Join db_consignments_import ON db_pick_warehouse_consignments.invoice_code = db_consignments_import.recipient_code
+              SET
+              db_pick_warehouse_consignments.consignments=
+              db_consignments_import.consignment_no ");
+        }
+    }
+
+
 
     public function ajaxProcessTaxdata(Request $request)
     {
@@ -2190,6 +2251,12 @@ class AjaxController extends Controller
               DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_test 
                 where 
                 product_id_fk =".$request->product_id_fk."
+                 AND action_date <= '".$request->start_date."' LIMIT 1
+
+                ; ");
+              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_test 
+                where 
+                product_id_fk =".$request->product_id_fk."
                  AND action_date >= '".$request->start_date."' AND action_date <= '".$request->end_date."'
 
                 ; ");
@@ -2197,6 +2264,17 @@ class AjaxController extends Controller
     }
 
 
+
+    public function ajaxOfferToApprove(Request $request)
+    {
+        // return  $request->product_id_fk ;
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
+        // dd();
+        if($request->ajax()){
+          //0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
+            DB::select(" UPDATE  db_stocks_account_code SET status_accepted=2,cuase_desc='".$request->cuase_desc."' where id=".$request->id." ; ");
+        }
+    }
 
 
 }

@@ -108,6 +108,7 @@
       // echo  @$menu_permit->can_packing_list;     
       // echo  @$menu_permit->can_payproduct;     
       // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+      // echo $can_payproduct;
    ?>
 
 <div class="row">

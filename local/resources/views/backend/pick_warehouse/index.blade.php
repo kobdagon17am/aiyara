@@ -64,6 +64,40 @@
   } 
 
 
+.divTable{
+    display: table;
+    width: 100%;
+    
+  }
+  .divTableRow {
+    display: table-row;
+  }
+  .divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+  }
+  .divTableCell, .divTableHead {
+    border: 1px solid white;
+    display: table-cell;
+    padding: 3px 6px;
+  }
+  .divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+    font-weight: bold;
+  }
+  .divTableFoot {
+    background-color: #EEE;
+    display: table-footer-group;
+    font-weight: bold;
+  }
+  .divTableBody {
+    display: table-row-group;
+  }
+  .divTH {text-align: right;}
+
+
+
 </style>
 @endsection
 
@@ -310,54 +344,6 @@
   </div> <!-- end col -->
 
 
-
-<div class="myBorder" style="" >
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-
-          <div class="form-group row">
-            <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลัง (ใบเบิก) </span>
-            </div>
-          </div>
-
-          <div class="form-group row  " >
-            <div class="col-md-12 ">
-              <table id="data-table-fifo-topicked" class="table table-bordered dt-responsive" style="width: 100%;">
-              </table>
-            </div>
-          </div>
-<?php //echo count($Pick_warehouse_fifo_topicked) ?>
-@IF(!empty($Pick_warehouse_fifo_topicked) && count($Pick_warehouse_fifo_topicked)>0 )
-              <div class="form-group row  divBtnApproved " >
-                <!-- <div class="col-md-2 "></div> -->
-                <div class="col-md-12">
-                   <div class="  " style="">
-                    <button type="button" class="btn btn-primary btn-sm font-size-16  float-right btnPrint ">
-                    <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์ใบเบิก
-                    </button>
-                  </div> 
-                  <div>
-                    <center>
-                    <button type="submit" class="btn btn-primary btn-sm font-size-16 btnApprove ">
-                    <i class="font-size-16 align-middle mr-1"></i> อนุมัติใบเบิก
-                    </button>
-                  </div>
-                </div>
-              </div>
-@ENDIF 
-
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-  </div> <!-- end col -->
-
-
 <div class="myBorder" style="" >
   <div class="row">
     <div class="col-12">
@@ -383,6 +369,78 @@
     </div>
   </div>
   </div> <!-- end col -->
+
+
+
+<div class="myBorder" style="" >
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลัง (ใบเบิก) </span>
+            </div>
+          </div>
+
+          <div class="form-group row  " >
+            <div class="col-md-12 ">
+              <table id="data-table-fifo-topicked" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+<?php //echo count($Pick_warehouse_fifo_topicked) ?>
+@IF(!empty($Pick_warehouse_fifo_topicked) && count($Pick_warehouse_fifo_topicked)>0 )
+              <div class="form-group row  divBtnApproved " >
+                <!-- <div class="col-md-2 "></div> -->
+                <div class="col-md-12">
+                    <center>
+
+                      <button type="submit" class="btn btn-primary font-size-16 btnApprove ">
+                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติใบเบิก
+                      </button>
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                      <a class="btn btn-info  btnPrint " href="{{ URL::to('backend/pick_warehouse/print') }}/1" style="font-size: 16px !important;" target="_blank" >
+                        <i class="bx bx-printer align-middle "></i> พิมพ์ใบเบิก / Print-Out
+                      </a>
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                      <button type="button" class="btn btn-primary font-size-16 btnSetProductToBill ">
+                      <i class="bx bx-cog font-size-16 align-middle mr-1"></i> แจงสินค้าที่เบิกจากคลังลงบิล
+                      </button>
+
+                     </center>
+                </div>
+              </div>
+@ENDIF 
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div> <!-- end col -->
+
+
+
+                
+                  <div class="myBorder">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าตามบิล </span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                      <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    </div>
+                  </div>
+                  </div>
 
 
 
@@ -894,7 +952,10 @@ $(function() {
 
                                                      $('#data-table-fifo-topicked').DataTable().clear().draw();
                                                      $('#data-table-fifo-no').DataTable().clear().draw();
+                                                     $('#data-table-list-bill').DataTable().clear().draw();
                                                      $('.divBtnApproved').hide();
+
+                                                    
 
                                                   
                                                  },
@@ -914,11 +975,12 @@ $(function() {
                           });
 
 
-                   $(".myloading").hide();
 
                   }, 1500);
 
-
+                    setTimeout(function(){
+                            $(".myloading").hide();
+                    }, 9000);
 
 
             });
@@ -1237,6 +1299,70 @@ $(function() {
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 </script>
 
+<script type="text/javascript">
+  $.fn.dataTable.ext.errMode = 'throw';
+          var oTableListBill;
+          $(function() {
+              oTableListBill = $('#data-table-list-bill').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  ordering: false,
+                  // scrollY: ''+($(window).height()-370)+'px',
+                  // iDisplayLength: 10,
+                  // stateSave: true,
+                  ajax: {
+                    url: '{{ route('backend.products_fifo_bill.datatable') }}',
+                    data: function ( d ) {
+                      d.Where={};
+                      $('.myWhere').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Where[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Like={};
+                      $('.myLike').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Like[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      d.Custom={};
+                      $('.myCustom').each(function() {
+                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                        }
+                      });
+                      oData = d;
+                    },
+                    method: 'POST'
+                  },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'recipient_code', title :'<center>รหัสใบเเสร็จ </center>', className: 'text-center w150'},
+                      {data: 'product_name', title :'<center>รายการสินค้า </center>', className: 'text-left w300'},
+                      {data: 'get_product', title :'<center>จำนวนเบิก </center>', className: 'text-center'},
+                      // {data: 'id',   title :'<center>จำนวนเบิก</center>', className: 'text-center ',render: function(d) {
+                      //     return '' ;
+                      // }},
+                      // {data: 'id',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
+                      //     return '' ;
+                      // }},
+                      // {data: 'id',   title :'<center>Tools</center>', className: 'text-center ',render: function(d) {
+                      //     return '' ;
+                      // }},                                                                  
+                    
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+                  }
+              });
+
+        
+          });
+</script>
+
   <script> 
 
         
@@ -1412,7 +1538,10 @@ $(function() {
                          data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
                                console.log(data); 
-                               location.reload();
+                               // location.reload();
+                               $('#data-table-fifo-topicked').DataTable().draw();
+                               $('#data-table-list-bill').DataTable().draw();
+                               $(".myloading").hide();
                             },
                           error: function(jqXHR, textStatus, errorThrown) { 
                               console.log(JSON.stringify(jqXHR));
@@ -1422,6 +1551,30 @@ $(function() {
                       });
               });
 
+
+              $(".btnSetProductToBill").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxSetProductToBil') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               // location.reload();
+                               $('#data-table-list-bill').DataTable().draw();
+                               $(".myloading").hide();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                  });
+                  
+              });
 
 
           });
