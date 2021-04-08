@@ -274,7 +274,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id, '99');
+                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
@@ -370,7 +370,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id, '99');
+                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
                     return $resulePv;
@@ -442,7 +442,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id, '99');
+                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
                     return $resulePv;

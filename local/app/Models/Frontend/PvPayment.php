@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class PvPayment extends Model
 {
 
-    public static function PvPayment_type_confirme($order_id, $admin_id)
+    public static function PvPayment_type_confirme($order_id, $admin_id,$distribution_channel,$action_type)
+    //distribution_channel 1 ติดต่อหน้าร้าน , 2 ช่องทางการจำหน่ายอื่นๆ
+    // $action_type Type ของผู้ดำเนินการ 'admin','customer'
+
     { //1 ทำคุณสมบัติ //2 รักษาคุณสมบัตรรายเดือน
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
@@ -452,6 +455,10 @@ class PvPayment extends Model
                     DB::rollback();
                     return $resule;
                 }
+
+                $order_data = DB::table('db_orders')
+            ->where('id', '=', $order_id)
+            ->first();
 
                 if ($customer_id != 'AA' and $pv > 0) {
                     $j = 2;

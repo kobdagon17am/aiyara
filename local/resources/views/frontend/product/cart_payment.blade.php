@@ -114,19 +114,19 @@
                                          <div class="row">
                                              <div class="col-md-5 col-lg-5 col-xl-5">
                                                  <div class="card">
-                                                     <div class="card-block">
+                                                     <div class="card-block" style="padding: 10px;">
                                                          <h6>รหัสของลูกทีมที่ต้องการส่งสินค้า</h6>
                                                          <div class="form-group row">
                                                              <div class="col-md-12">
                                                                  <div class="input-group input-group-button">
                                                                      <input type="text" id="username" class="form-control"
-                                                                         placeholder="รหัสสมาชิกที่ใช้">
+                                                                         placeholder="รหัสสมาชิก">
                                                                      <span class="input-group-addon btn btn-primary"
                                                                          onclick="check()">
                                                                          <span class="">ทำรายการ</span>
                                                                      </span>
                                                                  </div>
-                                                                 <span class="label label-inverse-info-border">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
+                                                                 <span style="font-size: 12px">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
                                                              </div>
 
                                                          </div>
@@ -136,10 +136,10 @@
                                              </div>
                                              <div class="col-md-7 col-lg-7 col-xl-7" id="data_direct" style="display: none">
                                                  <div class="card bg-c-yellow order-card m-b-0">
-                                                     <div class="card-block">
+                                                     <div class="card-block" style="padding: 10px;">
                                                          <div class="row">
                                                              <div class="col-md-12">
-                                                                 <h5 id="c_text_username" style="color: #000"></h5>
+                                                                 <h5 id="c_text_username" style="color: #000;font-size: 16px"></h5>
                                                                  <h6 class="m-b-0" id="c_name" style="color: #000"></h6>
                                                                  <input type="hidden" name="sent_to_customer_id_fk" id="sent_to_customer_id_fk" value="">
 
@@ -732,7 +732,7 @@
                  <h4>สรุปรายการสั่งซื้อ</h4>
                  {{-- <span class="label label-default f-right"> 28 January, 2015 </span> --}}
              </div>
-             <div class="card-block">
+             <div class="card-block" style="padding: 10px">
                  <div class="col-md-12">
                      <table class="table table-responsive m-b-0">
                          <tr>
@@ -805,7 +805,7 @@
                          @else
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                 <td align="right"><u><strong class="price_total"></strong></u>
+                                 <td align="right"><u><strong class="price_total">2</strong></u>
                                  </td>
                              </tr>
                          @endif
@@ -960,13 +960,18 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-     @if ($bill['price_total_type5'] != 0 and $bill['type'] != 5)
-
+    @if ($bill['price_total_type5'] > 0 and $bill['type'] == 5)
      <script type="text/javascript">
         document.getElementById("submit_upload").disabled = true;
+        document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
      </script>
+    @elseif($bill['type'] != 5)
+      <script type="text/javascript">
+        document.getElementById("submit_upload").disabled = true;
+        document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
+     </script>
+    @endif
 
-     @endif
 
      <script type="text/javascript">
 
@@ -1032,7 +1037,8 @@
                      var price_total = data['price_total'];
 
                      document.getElementById('shipping').textContent = shipping_cost;
-                     document.getElementsByClassName('price_total').textContent = price_total;
+                     $('.price_total').html(price_total);
+                     //document.getElementsByClassName('.price_total').textContent = price_total;
                      //console.log(data);
                  }
              });
@@ -1185,6 +1191,7 @@
                  check_shipping({{ $address->provinces_id }});
                  document.getElementById("cart_pament").innerHTML = (conten_1);
                  document.getElementById("submit_upload").disabled = true;
+                 document.getElementById("submit_upload").className = "btn btn-success";
                  $('#upload').change(function() {
                      var fileExtension = ['jpg', 'png'];
                      if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {

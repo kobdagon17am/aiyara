@@ -124,6 +124,7 @@ $('#upload').change(function() {
         return false;
     } else {
         document.getElementById("submit_upload").disabled = false;
+        document.getElementById("submit_upload").className = "btn btn-success";
     }
 });
 

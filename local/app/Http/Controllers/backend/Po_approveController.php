@@ -70,7 +70,7 @@ public function form($id=NULL)
     $sRow->save();
 
     if (@request('approved') != null ){
-     \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id,\Auth::user()->id);
+     \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id,\Auth::user()->id,'1','admin');
    }
 
    \DB::commit();

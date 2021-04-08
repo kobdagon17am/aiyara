@@ -21,12 +21,14 @@
 </head>
 
 <body>
+
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-success ">
             <img class="img-fluid" src="{{ asset('frontend/assets/images/logo.png') }}" width="120" alt="Theme-Logo" />
             {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button> --}}
+
             @if ($rs['data']->tel_number)
                 <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-outline-light d-md-none d-lg-none d-xl-none"
                     style="margin-right: 16px;"><i class="fa fa-phone-alt"></i>

@@ -9,7 +9,8 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
-use App\Http\Controllers\Frontend\Fc\CancelOderController;
+use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 
 class HistoryController extends Controller
 {
@@ -170,13 +171,14 @@ class HistoryController extends Controller
 
     public function datatable(Request $request)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $orders = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon', 'dataset_pay_type.detail as pay_type_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.orders_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
-            ->where('dataset_order_status.lang_id', '=', '1')
-            ->where('dataset_orders_type.lang_id', '=', '1')
+            ->where('dataset_order_status.lang_id', '=', $business_location_id)
+            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
             ->whereRaw(("case WHEN '{$request->dt_pay_type}' = '' THEN 1 else dataset_pay_type.id = '{$request->dt_pay_type}' END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
@@ -302,17 +304,11 @@ class HistoryController extends Controller
 
     public function delete_order(Request $rs){
       if($rs->delete_order_id){
-        DB::BeginTransaction();
-        try{
-          DB::table('db_orders')->where('id', '=', $rs->delete_order_id)->delete();
-          DB::table('db_order_products_list')->where('order_id_fk', '=', $rs->delete_order_id)->delete();
-          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $rs->delete_order_id)->delete();
-
-          DB::commit();
+        $rs = DeleteOrderController::delete_order($rs->delete_order_id);
+        if($rs['status'] == 'success'){
           return redirect('product-history')->withSuccess('Delete Oder Success');
-        }catch(Exception $e){
-          DB::rollback();
-          return redirect('product-history')->withError('Delete Oder Fail :'.$e);
+        }else{
+          return redirect('product-history')->withError('Delete Oder Fail : Data is null');
         }
 
       }else{
@@ -325,9 +321,9 @@ class HistoryController extends Controller
 
       if($rs->cancel_order_id){
         $customer_id = Auth::guard('c_user')->user()->id;
-        $resule = CancelOderController::cancel_oder($rs->cancel_order_id,$customer_id,1);
+        $resule = CancelOrderController::cancel_order($rs->cancel_order_id,$customer_id,1,'customer');
         if($resule['status']== 'success'){
-          return redirect('product-history')->withSuccess('Cancel Oder Success');
+          return redirect('product-history')->withSuccess($resule['message']);
         }else{
           return redirect('product-history')->withError($resule['message']);
         }
@@ -370,6 +366,8 @@ class HistoryController extends Controller
             ->where('dataset_orders_type.lang_id', '=', '1')
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
+
+
 
         if ($order->delivery_location_status == 'sent_address') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);

@@ -4,14 +4,14 @@ namespace App\Models\Frontend;
 use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
-use Auth; 
+use Auth;
 use Cart;
 use App\Models\Frontend\RunNumberPayment;
 class PaymentCourse extends Model
 {
 	public static function payment_uploadfile($rs){
 
-		DB::BeginTransaction();		
+		DB::BeginTransaction();
 		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
@@ -34,7 +34,7 @@ class PaymentCourse extends Model
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
-				] 
+				]
 			);
 
 
@@ -65,7 +65,7 @@ class PaymentCourse extends Model
 						'total_price'=>$value['price'],
 					]);
 				}
-				
+
 				Cart::session($rs->type)->remove($value['id']);
 			}
 
@@ -76,10 +76,10 @@ class PaymentCourse extends Model
 			DB::commit();
 			return $resule;
 
-		}catch(Exception $e){ 
+		}catch(Exception $e){
 			DB::rollback();
 			$resule = ['status'=>'fail','message'=>$e];
-			return $resule; 
+			return $resule;
 		}
 	}
 
@@ -89,7 +89,7 @@ class PaymentCourse extends Model
 		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
- 
+
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
 			$data=$cartCollection->toArray();
@@ -102,13 +102,13 @@ class PaymentCourse extends Model
 					'customers_id_fk' => $customer_id,
 					'vat'  => $rs->vat,
 					'sum_price' => $rs->price,
-					
+
 					'pv_total'  => $rs->pv_total,
 					'orders_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
-				] 
+				]
 			);
 
 			foreach ($data as $value) {
@@ -174,7 +174,7 @@ class PaymentCourse extends Model
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
-				]  
+				]
 			);
 
 			foreach ($data as $value) {
@@ -203,7 +203,7 @@ class PaymentCourse extends Model
 
 		if($resule['status'] == 'success'){
 
-			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 
 			if($resulePv['status'] == 'fail'){
 
@@ -225,10 +225,10 @@ class PaymentCourse extends Model
 }
 
 public static function ai_cash($rs){
-	 
+
 
 	DB::BeginTransaction();
-	 
+
 	$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$code_order = RunNumberPayment::run_number_order($business_location_id);
@@ -251,7 +251,7 @@ public static function ai_cash($rs){
 				'pay_type_id_fk'  => $rs->pay_type,
 				'business_location_id_fk' => $business_location_id,
 				'order_status_id_fk' => '2'
-			] 
+			]
 		);
 
 		foreach ($data as $value) {
@@ -268,7 +268,7 @@ public static function ai_cash($rs){
 					'total_pv'=>$value['attributes']['pv'],
 					'total_price'=>$value['price'],
 				]);
-				
+
 			}
 
 			Cart::session($rs->type)->remove($value['id']);
@@ -278,7 +278,7 @@ public static function ai_cash($rs){
 
 
 		if($resule['status'] == 'success'){
-			$resulePv = Pvpayment::PvPayment_type_confirme($id,'99');
+			$resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 			if($resulePv['status'] == 'fail'){
 
 				DB::rollback();

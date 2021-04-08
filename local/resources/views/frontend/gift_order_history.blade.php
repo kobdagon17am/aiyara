@@ -106,15 +106,27 @@
                     },
 
                     {
-                        data: 'giftvoucher_banlance',
-                        title: '<center>คงเหลือ</center>',
+                        data: 'giftvoucher_value_old',
+                        title: '<center>ยอดเดิม</center>',
                         className: 'text-right'
                     },
 
                     {
-                        data: 'giftvoucher_value',
+                        data: 'giftvoucher_value_use',
                         title: '<center>ถูกใช้ไป</center>',
                         className: 'text-right'
+                    },
+
+                    {
+                        data: 'giftvoucher_value_banlance',
+                        title: '<center>Banlance</center>',
+                        className: 'text-right'
+                    },
+
+                    {
+                        data: 'type',
+                        title: '<center>Type</center>',
+                        className: 'text-center'
                     },
 
                     {
@@ -123,11 +135,7 @@
                         className: 'text-center'
                     },
 
-                    {
-                        data: 'type',
-                        title: '<center>Type</center>',
-                        className: 'text-center'
-                    },
+
 
 
           ],order:[[0,'DESC']],

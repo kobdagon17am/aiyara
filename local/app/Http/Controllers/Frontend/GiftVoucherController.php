@@ -125,15 +125,20 @@ class GiftVoucherController extends Controller
               return $date;
           })
 
-          ->addColumn('giftvoucher_banlance', function ($row) {
-            $gv = '<b class="text-primary">' . number_format($row->giftvoucher_banlance) . '</b>';
+          ->addColumn('giftvoucher_value_old', function ($row) {
+            $gv = '<b class="text-primary">' . number_format($row->giftvoucher_value_old) . '</b>';
             return $gv;
         })
 
-          ->addColumn('giftvoucher_value', function ($row) {
-              $gv = '<b class="text-danger">' . number_format($row->giftvoucher_value) . '</b>';
+          ->addColumn('giftvoucher_value_use', function ($row) {
+              $gv = '<b class="text-danger">' . number_format($row->giftvoucher_value_use) . '</b>';
               return $gv;
           })
+
+          ->addColumn('giftvoucher_value_banlance', function ($row) {
+            $gv = '<b class="text-success">' . number_format($row->giftvoucher_value_banlance) . '</b>';
+            return $gv;
+        })
           ->addColumn('status', function ($row) {
               return $row->status;
           })
@@ -146,7 +151,7 @@ class GiftVoucherController extends Controller
           return $row->code_order;
       })
 
-          ->rawColumns(['date','giftvoucher_value','giftvoucher_banlance'])
+          ->rawColumns(['date','giftvoucher_value_old','giftvoucher_value_use','giftvoucher_value_banlance'])
           ->make(true);
   }
 

@@ -206,14 +206,14 @@ class AipocketController extends Controller
                 $pv_mt_active = '<span class="label label-danger"  data-toggle="tooltip" data-placement="right" data-original-title="' . date('d/m/Y', strtotime($resule['data']->pv_mt_active)) . '"  style="font-size: 14px">Not Active </span>  ';
 
             } else {
-                $pv_mt_active = '<span class="label label-info" style="font-size: 14px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_mt_active)) . '</span>';
+                $pv_mt_active = '<span class="label label-info" style="font-size: 12px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_mt_active)) . '</span>';
             }
 
             if (empty($resule['data']->pv_tv_active) || (strtotime($resule['data']->pv_tv_active) < strtotime(date('Ymd')))) {
                 $pv_tv_active = '<span class="label label-danger"  data-toggle="tooltip" data-placement="right" data-original-title="' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '"  style="font-size: 14px">Not Active </span>  ';
 
             } else {
-                $pv_tv_active = '<span class="label label-info" style="font-size: 14px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '</span>';
+                $pv_tv_active = '<span class="label label-info" style="font-size: 12px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '</span>';
             }
             $data = array('status' => 'success', 'data' => $resule, 'pv_tv_active' => $pv_tv_active, 'pv_mt_active' => $pv_mt_active);
 

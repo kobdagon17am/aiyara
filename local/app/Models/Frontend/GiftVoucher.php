@@ -48,7 +48,7 @@ class GiftVoucher extends Model
 		// $price_total = 900;
 		// $order_id = 99;
 
-    $oder_data = DB::table('db_orders')
+    $order_data = DB::table('db_orders')
     ->select('code_order')
     ->where('id','=',$order_id)
 		->first();
@@ -77,17 +77,17 @@ class GiftVoucher extends Model
 				foreach ($data_gv as $value){
 				$update_giftvoucher = DB::table('db_giftvoucher_cus')//update บิล
 				->where('id',$value->id)
-				->update(['giftvoucher_banlance' => 0 ]);
+				->update(['giftvoucher_banlance' => 0 ,'pro_status' =>2]);
 
 				$insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
 					'customer_id_fk'=>$id,
 					'giftvoucher_cus_id_fk'=>$value->id,
 					'order_id_fk'=>$order_id,
-          'giftvoucher_banlance'=>$value->giftvoucher_banlance,
-					'giftvoucher_value'=>$value->giftvoucher_banlance,
-          'code_order'=>$oder_data->code_order,
+          'giftvoucher_value_old'=>$value->giftvoucher_banlance,
+          'giftvoucher_value_use'=>$value->giftvoucher_banlance,
+          'giftvoucher_value_banlance'=>0,
+          'code_order'=>$order_data->code_order,
           'detail'=>$value->descriptions,
-          'Detail'=>'success',
 					'status'=>'success',
           'type'=>'Remove',
           'type_action_giftvoucher'=>0,
@@ -104,15 +104,16 @@ class GiftVoucher extends Model
 
 					$update_giftvoucher = DB::table('db_giftvoucher_cus')//update บิล
 					->where('id',$value->id)
-					->update(['giftvoucher_banlance' => 0 ]);
+					->update(['giftvoucher_banlance' => 0 ,'pro_status' =>2]);
 
           $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
             'customer_id_fk'=>$id,
             'giftvoucher_cus_id_fk'=>$value->id,
             'order_id_fk'=>$order_id,
-            'giftvoucher_banlance'=>$value->giftvoucher_banlance,
-            'giftvoucher_value'=>$value->giftvoucher_banlance,
-            'code_order'=>$oder_data->code_order,
+            'giftvoucher_value_old'=>$value->giftvoucher_banlance,
+            'giftvoucher_value_use'=>$value->giftvoucher_banlance,
+            'giftvoucher_value_banlance'=>0,
+            'code_order'=>$order_data->code_order,
             'detail'=>$value->descriptions,
             'type'=>'Remove',
             'status'=>'success',
@@ -125,15 +126,16 @@ class GiftVoucher extends Model
 
           $update_giftvoucher = DB::table('db_giftvoucher_cus')//update บิล
 					->where('id',$value->id)
-					->update(['giftvoucher_banlance' =>  abs($gv_rs) ]);
+					->update(['giftvoucher_banlance' =>  abs($gv_rs) ,'pro_status' =>2]);
 
           $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
             'customer_id_fk'=>$id,
             'giftvoucher_cus_id_fk'=>$value->id,
             'order_id_fk'=>$order_id,
-            'giftvoucher_banlance'=>$value->giftvoucher_banlance,
-            'giftvoucher_value'=>$price_total,
-            'code_order'=>$oder_data->code_order,
+            'giftvoucher_value_old'=>$value->giftvoucher_banlance,
+            'giftvoucher_value_use'=>$price_total,
+            'giftvoucher_value_banlance'=>abs($gv_rs),
+            'code_order'=>$order_data->code_order,
             'detail'=>$value->descriptions,
             'type'=>'Remove',
             'status'=>'success',

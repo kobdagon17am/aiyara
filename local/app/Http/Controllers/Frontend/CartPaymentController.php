@@ -132,7 +132,6 @@ class CartPaymentController extends Controller
 		->select('*')
 		->get();
 
-
 		return view('frontend/product/cart_payment',compact('check_giveaway','customer','address','address_card','location','provinces','bill'));
 
 	}
