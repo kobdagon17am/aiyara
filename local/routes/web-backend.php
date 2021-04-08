@@ -217,6 +217,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('products_fifo_bill', 'Products_fifo_billController');
     Route::post('products_fifo_bill/datatable', 'Products_fifo_billController@Datatable')->name('products_fifo_bill.datatable');
+    Route::post('products_fifo_bill_send/datatable', 'Products_fifo_billController@DatatableToSend')->name('products_fifo_bill_send.datatable');
+    Route::post('warehouse_consignments/datatable', 'Products_fifo_billController@DatatableConsignments')->name('warehouse_consignments.datatable');
 
     Route::post('uploadFile', 'PagesController@uploadFile');
     Route::post('uploadFileXLS', 'PagesController@uploadFileXLS');
@@ -317,10 +319,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGiftVoucherSaveDate', 'AjaxController@ajaxGiftVoucherSaveDate');
 
     Route::post('ajaxFifoApproved', 'AjaxController@ajaxFifoApproved');
+    Route::post('ajaxSetProductToBil', 'AjaxController@ajaxSetProductToBil');
+    Route::post('ajaxMapConsignments', 'AjaxController@ajaxMapConsignments');
     
     Route::post('ajaxProcessTaxdata', 'AjaxController@ajaxProcessTaxdata');
 
     Route::post('ajaxProcessStockcard', 'AjaxController@ajaxProcessStockcard');
+    Route::post('ajaxOfferToApprove', 'AjaxController@ajaxOfferToApprove');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -473,6 +478,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('stock_card/datatable', 'Stock_cardController@Datatable')->name('stock_card.datatable');
 
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
+    Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');
 
 
     Route::resource('pick_warehouse_fifo', 'Pick_warehouse_fifoController');
@@ -489,6 +495,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_stock_account/datatable', 'Check_stock_accountController@Datatable')->name('check_stock_account.datatable');
     Route::post('check_stock_account/adjust/{id}', 'Check_stock_accountController@Adjust');
     Route::get('check_stock_account/adjust/{id}', 'Check_stock_accountController@Adjust');
+
+
+    Route::post('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
+    Route::get('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
 
     Route::resource('check_money_daily', 'Check_money_dailyController');
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
