@@ -246,5 +246,12 @@ Route::get('/comhistory', function () {
 Route::get('taxdata', 'Frontend\TaxController@index')->name('taxdata');
 
 
+Route::get('success', function() {
+  return view('frontend.payment.success');
+})->name('payment.success');
+
+Route::get('fail', function() {
+  return view('frontend.payment.fail');
+})->name('payment.fail');
 
 

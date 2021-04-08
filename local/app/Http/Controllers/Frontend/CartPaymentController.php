@@ -138,6 +138,8 @@ class CartPaymentController extends Controller
 
 	public function payment_submit(Request $request){
 
+		dd('form1');
+
 		if($request->submit == 'upload'){
 			if($request->type == '6'){
 				$resule = PaymentCourse::payment_uploadfile($request);

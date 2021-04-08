@@ -8,13 +8,30 @@
          href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
  @endsection
  @section('conten')
-     <?php
-     //dd($bill);
-     ?>
+
+     <form name="payForm" action="https://ipay.bangkokbank.com/b2c/eng/dPayment/payComp.jsp" method="post" id="form1">
+        @csrf
+        <input type="hidden" name="merchantId" value="6845">
+        <input type="hidden" name="amount" value="1" >
+        <input type="hidden" name="orderRef" value="OR-0001">
+        <input type="hidden" name="currCode" value="764" >
+        <input type="hidden" name="pMethod" value="VISA" >
+        <input type="hidden" name="cardNo" value="4918914107195005" >
+        <input type="hidden" name="securityCode" value="123" >
+        <input type="hidden" name="cardHolder" value="CardHolder" >
+        <input type="hidden" name="epMonth" value="07" >
+        <input type="hidden" name="epYear" value="2021" >
+        <input type="hidden" name="payType" value="N" >
+        <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
+        <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
+        <input type="hidden" name="errorUrl" value="http://www.yourwebsite.com/pError.jsp">
+        <input type="hidden" name="lang" VALUE="E">
+        <input type="hidden" name="remark" value="-">
+    </form>
 
      <div class="row">
          <div class="col-md-8 col-sm-12">
-             <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data">
+             <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data" id="form2">
                  @csrf
                  <input type="hidden" id="url_check_user" name="url_check_user" value="{{ route('check_customer_id') }}">
                  <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
@@ -1129,60 +1146,62 @@
                  '</div>' +
                  '</div>' +
                  '</div>';
-
-             var conten_2 = '<div class="col-sm-6">' +
-                 '<div class="form-group">' +
-                 '<input type="text" class="form-control" placeholder="Type your Full Name">' +
-                 '</div>' +
-                 '<div class="form-group CVV">' +
-                 '<input type="text" class="form-control" id="cvv" placeholder="CVV">' +
-                 '</div>' +
-                 '<div class="form-group" id="card-number-field">' +
-                 '<input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number">' +
-                 '</div>' +
-                 '</div>' +
-                 '<div class="col-sm-6">' +
-                 '<div class="form-group" id="expiration-date">' +
-                 '<label>Expiration Date</label>' +
-                 '<div class="row">' +
-                 '<div class="col-sm-6">' +
-                 '<select class="form-control m-b-10">' +
-                 '<option>Select Month</option>' +
-                 '<option value="01">01</option>' +
-                 '<option value="02">02 </option>' +
-                 '<option value="03">03</option>' +
-                 '<option value="04">04</option>' +
-                 '<option value="05">05</option>' +
-                 '<option value="06">06</option>' +
-                 '<option value="07">07</option>' +
-                 '<option value="08">08</option>' +
-                 '<option value="09">09</option>' +
-                 '<option value="10">10</option>' +
-                 '<option value="11">11</option>' +
-                 '<option value="12">12</option>' +
-                 '</select>' +
-                 '</div>' +
-                 '<div class="col-sm-6">' +
-                 '<select class="form-control m-b-10">' +
-                 '<option><b>Select Year</b></option>' +
-                 '<option value="16"> 2016</option>' +
-                 '<option value="17"> 2017</option>' +
-                 '<option value="18"> 2018</option>' +
-                 '<option value="19"> 2019</option>' +
-                 '<option value="20"> 2020</option>' +
-                 '<option value="21"> 2021</option>' +
-                 '</select>' +
-                 '</div>' +
-                 '</div>' +
-                 '</div>' +
-                 '<div class="form-group" id="debit-cards">' +
-                 '<img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">' +
-                 '<img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">' +
-                 '</div>' +
-                 '</div>' +
-                 '<div class="col-sm-12 text-right">' +
-                 '<button class="btn btn-success btn-block" name="submit" value="credit_card"  type="submit">ชำระเงิน</button>' +
-                 '</div>';
+    
+            var conten_2 = `
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Type your Full Name" value="John Doe">
+                    </div>
+                    <div class="form-group CVV">
+                        <input type="text" class="form-control" id="cvv" placeholder="CVV" value="999">
+                    </div>
+                    <div class="form-group" id="card-number-field">
+                        <input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number" value="1111-1111-1111-1111">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" id="expiration-date">
+                        <label>Expiration Date</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select class="form-control m-b-10">
+                                    <option>Select Month</option>
+                                    <option value="01" selected>01</option>
+                                    <option value="02">02 </option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control m-b-10">
+                                    <option><b>Select Year</b></option>
+                                    <option value="16"> 2016</option>
+                                    <option value="17"> 2017</option>
+                                    <option value="18" selected> 2018</option>
+                                    <option value="19"> 2019</option>
+                                    <option value="20"> 2020</option>
+                                    <option value="21"> 2021</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="debit-cards">
+                        <img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">
+                        <img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">
+                    </div>
+                </div>
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-success btn-block" name="submit" form="form1" value="credit_card"  type="submit">ชำระเงิน</button>
+                </div>
+            `;
              var conten_3 =
                  '<button class="btn btn-success btn-block" type="submit" name="submit" value="ai_cash">ชำระเงิน</button>';
              var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
@@ -1203,7 +1222,6 @@
                      }
                  });
              } else if (data == '2') {
-
                  document.getElementById("cart_pament").innerHTML = (conten_2);
              } else if (data == '3') {
                  document.getElementById("cart_pament").innerHTML = (conten_3);
