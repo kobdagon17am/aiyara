@@ -25,6 +25,7 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->vat = $rs->vat;
 
             $insert_db_orders->sum_price = $rs->price;
+
             // 'price_vat = $rs->price_vat;
             // 'p_vat'  => $rs->p_vat;
             $insert_db_orders->pv_total = $rs->pv_total;
