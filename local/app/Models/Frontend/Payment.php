@@ -48,7 +48,7 @@ class Payment extends Model
             }
 
             $orderstatus_id = 2;
-            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_fontstore_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
+            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
 
             if ($rs_update_rontstore_and_address['status'] == 'fail') {
                 DB::rollback();
@@ -120,10 +120,13 @@ class Payment extends Model
 
         $code_order = RunNumberPayment::run_number_order($business_location_id);
 
+
         try {
             $cartCollection = Cart::session($rs->type)->getContent();
             $data = $cartCollection->toArray();
             $total = Cart::session($rs->type)->getTotal();
+
+
 
             if ($rs->type == 5) {
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
@@ -145,8 +148,7 @@ class Payment extends Model
             }
 
             $orderstatus_id = 1;
-            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_fontstore_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
-
+            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
             if ($rs_update_rontstore_and_address['status'] == 'fail') {
                 DB::rollback();
                 return $rs_update_rontstore_and_address;
@@ -182,6 +184,7 @@ class Payment extends Model
             }
 
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
+
 
             //$resule = ['status'=>'success','message'=>'สั่งซื้อสินค้าเรียบร้อย','order_id'=>$id];
             //return $resule;
@@ -235,7 +238,7 @@ class Payment extends Model
             }
 
             $orderstatus_id = 5;
-            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_fontstore_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
+            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
 
             if ($rs_update_rontstore_and_address['status'] == 'fail') {
                 DB::rollback();
@@ -330,7 +333,7 @@ class Payment extends Model
             }
 
             $orderstatus_id = 5;
-            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_fontstore_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
+            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
 
             if ($rs_update_rontstore_and_address['status'] == 'fail') {
                 DB::rollback();
@@ -421,7 +424,7 @@ class Payment extends Model
             }
 
             $orderstatus_id = 2;
-            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_fontstore_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
+            $rs_update_rontstore_and_address = PaymentSentAddressOrder::update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv);
 
             if ($rs_update_rontstore_and_address['status'] == 'fail') {
                 DB::rollback();

@@ -64,9 +64,9 @@ class Register extends Model
     $soi= (trim($req->input('soi')) == '') ? null : $req->input('soi');
     $road= (trim($req->input('road')) == '') ? null : $req->input('road');
 
-    $province= ($req->province == '') ? null : $req->province;
-    $district= ( $req->district == '') ? null : $req->district;
-    $district_sub= ($req->district_sub == '') ? null : $req->district_sub;
+    $province_id= ($req->province_id == '') ? null : $req->province_id;
+    $amphures_id= ( $req->amphures_id == '') ? null : $req->amphures_id;
+    $district_id= ($req->district_id == '') ? null : $req->district_id;
     $zipcode= (trim($req->input('zipcode')) == '') ? null : $req->input('zipcode');
 
     $card_house_no= (trim($req->input('card_house_no')) == '') ? null : $req->input('card_house_no');
@@ -171,9 +171,9 @@ class Register extends Model
              'moo'=>$moo,
              'soi'=>$soi,
              'road'=>$road,
-             'district_sub'=>$district_sub,
-             'district'=>$district,
-             'province'=>$province,
+             'district_sub'=>$district_id,
+             'district'=>$amphures_id,
+             'province'=>$province_id,
              'zipcode'=>$zipcode,
              'benefit_name'=>$benefit_name,
              'benefit_relation'=>$benefit_relation,

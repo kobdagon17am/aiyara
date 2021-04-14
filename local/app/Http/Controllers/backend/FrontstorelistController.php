@@ -25,8 +25,8 @@ class FrontstorelistController extends Controller
       // return($request->all());
       // dd();
       if(isset($request->promotion_id_fk_pro)){
-        
-        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
+
+        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -52,7 +52,7 @@ class FrontstorelistController extends Controller
                           'total_pv' => $pv * @$request->quantity[$i] ,
                           'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
                         ]
-                    ); 
+                    );
 
 
           }else{
@@ -103,8 +103,8 @@ class FrontstorelistController extends Controller
       // return($request->all());
       // dd();
       if(isset($request->promotion_id_fk_pro)){
-        
-        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) { 
+
+        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
@@ -128,13 +128,13 @@ class FrontstorelistController extends Controller
                           'total_pv' => $pv * @$request->quantity[$i] ,
                           'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
                         ]
-                    ); 
+                    );
 
 
           }
 
            DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
-           
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         }
@@ -153,7 +153,7 @@ class FrontstorelistController extends Controller
       // dd();
 
       if(isset($request->product_plus)){
-        for ($i=0; $i < count($request->product_id_fk) ; $i++) { 
+        for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
               $sProducts = DB::select("
@@ -164,7 +164,7 @@ class FrontstorelistController extends Controller
                   FROM
                   dataset_product_unit
                   WHERE id = products.id AND lang_id=1 LIMIT 1
-                ) as product_unit,                
+                ) as product_unit,
                 products.category_id ,categories.category_name,
                 (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
                 (
@@ -180,10 +180,10 @@ class FrontstorelistController extends Controller
                 products
                 LEFT JOIN categories on products.category_id=categories.id
                 LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1 
+                WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
             ");
               // echo ($sProducts[0]->product_unit);
-           
+
            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -209,7 +209,7 @@ class FrontstorelistController extends Controller
                           // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                           'product_unit_id_fk' => @$sProducts[0]->product_unit,
                         ]
-                    ); 
+                    );
 
               }
 
@@ -240,7 +240,7 @@ class FrontstorelistController extends Controller
 
           }
 
-   
+
           }
 
        $id=   @$request->frontstore_id;
@@ -280,8 +280,8 @@ class FrontstorelistController extends Controller
 
        if(isset($request->add_delivery_custom)){
 
-            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at) 
-              VALUES 
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+              VALUES
               ('".$request->frontstore_id."',
                '".$request->customers_id_fk."',
                '".$request->delivery_cusname."',
@@ -292,16 +292,16 @@ class FrontstorelistController extends Controller
                  '".$request->delivery_zipcode."',
                  '".$request->delivery_tel."',
                  '".$request->delivery_tel_home."',
-                 now() 
+                 now()
               )
-            ");       
+            ");
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
-              
+
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
-              $sRow->save();    
+              $sRow->save();
 
         }
 
@@ -314,8 +314,8 @@ class FrontstorelistController extends Controller
 
        	    if(count($ch)==0){
 
-       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at) 
-		              VALUES 
+       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+		              VALUES
 		              ('".$request->customers_addr_frontstore_id."',
 		               '".$request->customers_id_fk."',
 		               '".$request->delivery_cusname."',
@@ -326,25 +326,25 @@ class FrontstorelistController extends Controller
 		                 '".$request->delivery_zipcode."',
 		                 '".$request->delivery_tel."',
                      '".$request->delivery_tel_home."',
-		                 now() 
+		                 now()
 		              )
 		            ");
 
        	    }else{
 
-       	    	 DB::insert(" UPDATE customers_addr_frontstore 
-	              SET recipient_name = '".$request->delivery_cusname."', 
-	              addr_no = '".$request->delivery_addr."', 
-	              province_id_fk  = '".$request->delivery_province."', 
-	              amphur_code = '".$request->delivery_amphur."',  
-	              tambon_code = '".$request->delivery_tambon."', 
-	              zip_code = '".$request->delivery_zipcode."', 
-	              tel = '".$request->delivery_tel."', 
-                tel_home = '".$request->delivery_tel_home."', 
+       	    	 DB::insert(" UPDATE customers_addr_frontstore
+	              SET recipient_name = '".$request->delivery_cusname."',
+	              addr_no = '".$request->delivery_addr."',
+	              province_id_fk  = '".$request->delivery_province."',
+	              amphur_code = '".$request->delivery_amphur."',
+	              tambon_code = '".$request->delivery_tambon."',
+	              zip_code = '".$request->delivery_zipcode."',
+	              tel = '".$request->delivery_tel."',
+                tel_home = '".$request->delivery_tel_home."',
 	              updated_at = now() where frontstore_id_fk=".$request->customers_addr_frontstore_id."
-	            ");    
+	            ");
 
-            }   
+            }
 
             // ค่าขนส่ง
 
@@ -380,19 +380,19 @@ class FrontstorelistController extends Controller
               $sRow->delivery_location    = '3';
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
-              $sRow->save(); 
+              $sRow->save();
 
-                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");  
+                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");
 
                 $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
                       from customers_addr_frontstore
                       Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                       where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
 
-                DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, district, district_sub, province, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') "); 
+                DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode,amphures_id_fk, district_sub, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') ");
 
 
         }
@@ -437,7 +437,7 @@ class FrontstorelistController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
-            for ($i=0; $i < count($request->product_id_fk) ; $i++) { 
+            for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
                 // echo $Check_stock->product_id_fk;
                   $sProducts = DB::select("
@@ -448,7 +448,7 @@ class FrontstorelistController extends Controller
                       FROM
                       dataset_product_unit
                       WHERE id = products.id AND lang_id=1 LIMIT 1
-                    ) as product_unit,                     
+                    ) as product_unit,
                     products.category_id ,categories.category_name,
                     (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
                     (
@@ -464,14 +464,14 @@ class FrontstorelistController extends Controller
                     products_units
                     LEFT JOIN dataset_product_unit on dataset_product_unit.id=products_units.product_unit_id_fk
                     WHERE products_units.product_id_fk=products.id
-                    ) as product_unit,                    
+                    ) as product_unit,
                     products_cost.selling_price,
                     products_cost.pv
                     FROM
                     products
                     LEFT JOIN categories on products.category_id=categories.id
                     LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1 
+                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
                 ");
                   // echo ($sProducts[0]->selling_price);
                   // echo request('product_id_fk_this');
@@ -498,13 +498,13 @@ class FrontstorelistController extends Controller
                                 // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk ,
                                 // 'product_unit_id_fk' => @$sProducts[0]->product_unit,
                               ]
-                          ); 
+                          );
 
 
                          DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
 
                   }
-       
+
               }
 
 
@@ -562,23 +562,23 @@ class FrontstorelistController extends Controller
          $sTable = DB::select("
             SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=1 UNION
             SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
-            ORDER BY add_from,id 
-        ");        
-    
+            ORDER BY add_from,id
+        ");
+
       }else{
          $sTable = DB::select("
-            SELECT * from db_frontstore_products_list 
+            SELECT * from db_frontstore_products_list
         ");
       }
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
         if(!empty($row->product_id_fk) && $row->add_from==1){
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -604,13 +604,13 @@ class FrontstorelistController extends Controller
               FROM
               promotions_products
               WHERE
-              promotions_products.promotion_id_fk='".$row->promotion_id_fk."'  
+              promotions_products.promotion_id_fk='".$row->promotion_id_fk."'
             ");
 
             $pn = '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-             $pn .=     
+             $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
                   <div class="divTableCell"><center>'.$value->product_amt.' x '.$row->amt.' = </div>
@@ -620,7 +620,7 @@ class FrontstorelistController extends Controller
                   ';
              }
 
-              $pn .= '</div></div>';  
+              $pn .= '</div></div>';
 
             $sD = '';
 
@@ -632,7 +632,7 @@ class FrontstorelistController extends Controller
                 $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . "</br>";
             }
 
-            
+
             $sD .=  $pn;
             return $sD;
 
@@ -655,7 +655,7 @@ class FrontstorelistController extends Controller
           $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
           $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
           return $purchase_type[0]->orders_type;
-      }) 
+      })
       ->addColumn('pv', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
         //    // ต้องดึงจากตารางโปรโมชั่น promotions_cost
@@ -665,7 +665,7 @@ class FrontstorelistController extends Controller
           // ดึงจาก db_frontstore_products_list
             return @$row->pv;
         // }
-      })     
+      })
       ->addColumn('selling_price', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
         //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
@@ -675,7 +675,7 @@ class FrontstorelistController extends Controller
           // ดึงจาก db_frontstore_products_list
            return @$row->selling_price;
         // }
-      })  
+      })
       ->addColumn('total_pv', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
         //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
@@ -685,7 +685,7 @@ class FrontstorelistController extends Controller
           // ดึงจาก db_frontstore_products_list
            return @$row->total_pv;
         // }
-      })    
+      })
       ->addColumn('total_price', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){
         //   // ต้องดึงจากตารางโปรโมชั่น promotions_cost
@@ -695,11 +695,11 @@ class FrontstorelistController extends Controller
           // ดึงจาก db_frontstore_products_list
            return @$row->total_price;
         // }
-      })  
+      })
       ->addColumn('sum_price_desc', function($row) {
           $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".$row->frontstore_id_fk." GROUP BY frontstore_id_fk ");
           return @$total_price[0]->total;
-      })                   
+      })
       ->make(true);
     }
 
@@ -710,16 +710,16 @@ class FrontstorelistController extends Controller
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
           (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,'". $req->frontstore_id_fk."' as frontstore_id_fk
           from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
-           AND 
+           AND
             (
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
             )
       ");
- 
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
   ->addColumn('product_name', function($row) {
@@ -738,13 +738,13 @@ class FrontstorelistController extends Controller
               FROM
               promotions_products
               WHERE
-              promotions_products.promotion_id_fk='".$row->id."' 
+              promotions_products.promotion_id_fk='".$row->id."'
             ");
 
             $pn = '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-             $pn .=     
+             $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
                   <div class="divTableCell"><center>'.$value->product_amt.'</div>
@@ -753,7 +753,7 @@ class FrontstorelistController extends Controller
                   ';
              }
 
-              $pn .= '</div></div>';  
+              $pn .= '</div></div>';
 
             $sD = '';
 
@@ -762,35 +762,35 @@ class FrontstorelistController extends Controller
                 $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " <br> รหัสโปร : ".$row->pcode."</br>";
             }
 
-            
+
             $sD .=  $pn;
             return $sD;
           }
 
       })
-      ->escapeColumns('product_name')      
+      ->escapeColumns('product_name')
       ->addColumn('pv', function($row) {
           $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->id)->get();
           return @$Promotions_cost[0]->pv;
-      })     
+      })
       ->addColumn('selling_price', function($row) {
           $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->id)->get();
-          return @$Promotions_cost[0]->selling_price;        
-      }) 
+          return @$Promotions_cost[0]->selling_price;
+      })
       ->addColumn('select_amt', function($row) {
-          return $row->id.":".$row->limited_amt_person;        
-      })   
+          return $row->id.":".$row->limited_amt_person;
+      })
       ->addColumn('p_img', function($row) {
         if($row->p_img!=""){
-          return $row->p_img;        
+          return $row->p_img;
         }else{
           return 'local/public/images/example_img.png';
         }
-      }) 
+      })
       ->addColumn('approve_status', function($row) {
           $d = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
-          return $d[0]->approve_status;        
-      })  
+          return $d[0]->approve_status;
+      })
       ->make(true);
     }
 

@@ -126,8 +126,8 @@
      <table width="100%" style="width:100%;border-collapse: collapse;" border="1" cellspacing="0">
          <tr style="text-align: left;    background-color: aliceblue;">
              <th style="text-align: center;">Description</th>
-             @if($order->orders_type_id_fk == 6)<th style="text-align: left;">Ticket Number</th>@endif
-             @if($order->orders_type_id_fk == 7)@else <th style="text-align: center;">Quantity</th> @endif
+             @if($order->purchase_type_id_fk == 6)<th style="text-align: left;">Ticket Number</th>@endif
+             @if($order->purchase_type_id_fk == 7)@else <th style="text-align: center;">Quantity</th> @endif
              <th style="text-align: center;">Amount</th>
              <th style="text-align: center;">PV</th>
              <th style="text-align: center;">Total</th>
@@ -184,16 +184,16 @@
                  @endif
              </td>
 
-             @if($order->orders_type_id_fk == 6)
+             @if($order->purchase_type_id_fk == 6)
              <td style="text-align: center;"><b>{{ $value->ticket_number }}</b></td>
              @endif
-             @if($order->orders_type_id_fk == 7)
+             @if($order->purchase_type_id_fk == 7)
              @else
              <td style="text-align: center;">{{ $value->amt }}</td>
              @endif
              <td style="text-align: center;">{{ number_format($value->selling_price,2) }}</td>
              <td style="text-align: center;"><b>{{ $value->pv }}</b></td>
-             @if($order->orders_type_id_fk == 7)
+             @if($order->purchase_type_id_fk == 7)
              <td style="text-align: center;">{{ number_format($value->selling_price,2) }}</td>
              @else
              <td style="text-align: center;">{{ number_format($value->amt * $value->selling_price,2) }}</td>
@@ -221,7 +221,7 @@
              <th style="text-align: right;font-size: 16px">รวม : </th>
              <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($order->sum_price,2) }}</th>
          </tr>
-         @if($order->orders_type_id_fk != 6 and $order->orders_type_id_fk != 7)
+         @if($order->purchase_type_id_fk != 6 and $order->purchase_type_id_fk != 7)
 
          <tr>
              <th style="text-align: right;"> @if($order->shipping_cost_detail)<span style="color:#607d8b">( {{ $order->shipping_cost_detail }} )</span> @endif  <b>ค่าจัดส่ง : </b></th>
@@ -233,7 +233,7 @@
              <th  style="text-align: left;padding-left:10px;font-size: 18px"><b> {{ $order->pv_total }} PV </b> </th>
          </tr>
 
-         @if($order->orders_type_id_fk == 5)
+         @if($order->purchase_type_id_fk == 5)
 
          <tr>
              <th  style="text-align: right;font-size: 18px"><strong>ยอดรวม : </strong></th>
@@ -255,7 +255,7 @@
              </th>
          </tr>
 
-         @elseif($order->orders_type_id_fk == 6 || $order->orders_type_id_fk == 7)
+         @elseif($order->purchase_type_id_fk == 6 || $order->purchase_type_id_fk == 7)
          <tr>
              <th  style="text-align: right;font-size: 20px"><strong>ยอดชำระ</strong></th>
              <th  style="text-align: left;padding-left:10px;font-size: 20px"><strong> <u>{{ number_format($order->sum_price,2) }}</u></strong>

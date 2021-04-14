@@ -10,6 +10,7 @@ class CancelOrderController extends Controller
 
     public static function cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
     {
+      DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
@@ -19,29 +20,44 @@ class CancelOrderController extends Controller
         }
 
         try {
-            DB::BeginTransaction();
-            $type_id = $order_data->orders_type_id_fk;
+          $update_order = DB::table('db_orders') //update บิล
+          ->where('id', $order_id)
+          ->update([
+              'cancel_by_user_id_fk' => $customer_or_admin,
+              'order_status_id_fk' => 8, //Status  8 = Cancel
+              'approve_status' => 2, //status = Cancel
+              'type_user_cancel' => 1, //Customer
+              'cancel_action_date' => date('Y-m-d H:i:s'),
+          ]);
+
+            $type_id = $order_data->purchase_type_id_fk;
 
             if ($order_data->approve_status != 1) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ
 
                 if ($type_id == 1 || $type_id == 2 || $type_id == 3 || $type_id == 4 || $type_id == 5) { //1 ทำคุณสมบัติ , 2 รักษาคุณสมบัติ ,3 รักษาคุณสมบัตรท่องเที่ยว ,4 เติม Aistockist
                     $update_order = DB::table('db_orders') //update บิล
                         ->where('id', $order_id)
-                        ->update(['cancel_by_user_id_fk' => $customer_or_admin,
+                        ->update([
+                            'cancel_by_user_id_fk' => $customer_or_admin,
                             'order_status_id_fk' => 8, //Status  8 = Cancel
                             'approve_status' => 2, //status = Cancel
                             'type_user_cancel' => 1, //Customer
-                            'cancel_action_date' => date('Y-m-d H:i:s')]);
+                            'cancel_action_date' => date('Y-m-d H:i:s'),
+                        ]);
 
                     $update_products_lis = DB::table('db_order_products_list')
                         ->where('order_id_fk', $order_id)
-                        ->update(['approve_status' => 2,
-                            'approve_date' => date('Y-m-d H:i:s')]);
+                        ->update([
+                            'approve_status' => 2,
+                            'approve_date' => date('Y-m-d H:i:s'),
+                        ]);
 
                     $update_products_lis = DB::table('db_order_products_list_giveaway')
                         ->where('order_id_fk', $order_id)
-                        ->update(['approve_status' => 2,
-                            'approve_date' => date('Y-m-d H:i:s')]);
+                        ->update([
+                            'approve_status' => 2,
+                            'approve_date' => date('Y-m-d H:i:s'),
+                        ]);
 
                     if ($type_id == 5) { //GivtVoucher
                         $giv_log = DB::table('log_gift_voucher')
@@ -56,16 +72,17 @@ class CancelOrderController extends Controller
 
                         $update_log_gift_voucher = DB::table('log_gift_voucher')
                             ->where('order_id_fk', $order_id)
-                            ->update(['status' => 'cancel',
+                            ->update([
+                                'status' => 'cancel',
                                 'action_user_id_fk' => $customer_or_admin,
                                 'action_type' => $action_type,
-                                'cancel_date' => date('Y-m-d H:i:s')]);
+                                'cancel_date' => date('Y-m-d H:i:s'),
+                            ]);
 
                         $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
                     } else {
                         $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
                     }
-
                 } elseif ($type_id == 6) { //Course
 
                 } else {
@@ -73,28 +90,35 @@ class CancelOrderController extends Controller
                     DB::rollback();
                     return $resule;
                 }
-
-            } else { //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
+            } elseif($order_data->approve_status == 1) { //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
 
                 $update_order = DB::table('db_orders') //update บิล
                     ->where('id', $order_id)
-                    ->update(['cancel_by_user_id_fk' => $customer_or_admin,
+                    ->update([
+                        'cancel_by_user_id_fk' => $customer_or_admin,
                         'order_status_id_fk' => 8, //Status  8 = Cancel
                         'approve_status' => 2, //status = Cancel
                         'type_user_cancel' => 1, //Customer
-                        'cancel_action_date' => date('Y-m-d H:i:s')]);
+                        'cancel_action_date' => date('Y-m-d H:i:s'),
+                    ]);
 
                 $update_products_lis = DB::table('db_order_products_list')
                     ->where('order_id_fk', $order_id)
-                    ->update(['approve_status' => 2,
-                        'approve_date' => date('Y-m-d H:i:s')]);
+                    ->update([
+                        'approve_status' => 2,
+                        'approve_date' => date('Y-m-d H:i:s'),
+                    ]);
 
                 $update_products_lis = DB::table('db_order_products_list_giveaway')
                     ->where('order_id_fk', $order_id)
-                    ->update(['approve_status' => 2,
-                        'approve_date' => date('Y-m-d H:i:s')]);
+                    ->update([
+                        'approve_status' => 2,
+                        'approve_date' => date('Y-m-d H:i:s'),
+                    ]);
+                    DB::rollback();
 
                 if ($type_id == 5) { //GivtVoucher
+
                     $giv_log = DB::table('log_gift_voucher')
                         ->where('order_id_fk', '=', $order_id)
                         ->get();
@@ -107,64 +131,181 @@ class CancelOrderController extends Controller
 
                     $update_log_gift_voucher = DB::table('log_gift_voucher')
                         ->where('order_id_fk', $order_id)
-                        ->update(['status' => 'cancel',
+                        ->update([
+                            'status' => 'cancel',
                             'action_user_id_fk' => $customer_or_admin,
                             'action_type' => $action_type,
-                            'cancel_date' => date('Y-m-d H:i:s')]);
+                            'cancel_date' => date('Y-m-d H:i:s'),
+                        ]);
 
                     $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
-                    DB::commit();
+                    DB::rollback();
                     return $resule;
                 } else {
                     $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
-                    DB::commit();
+                    DB::rollback();
                     return $resule;
                 }
 
                 //เริ่มลบค่า pv
 
                 $pv_total = $order_data->pv_total;
-                if($pv_total>0){
-                  dd('status 2');
 
-                }else{
-                  $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
+                if ($pv_total > 0) {
+
+                    if ($order_data->status_payment_sent_other == 1) {
+                        $customer_id = $order_data->address_sent_id_fk;
+                    } else {
+                        $customer_id = $order_data->customers_id_fk;
+                    }
+
+                    $customer_user = DB::table('customers') //อัพ Pv ของตัวเอง
+                        ->select('*')
+                        ->where('id', '=', $customer_id)
+                        ->first();
+
+                    $pay_type =  $order_data->pay_type_id_fk;
+
+                    if ($type_id == 1) {
+                      if($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11){//ชำระด้วย Ai-cash
+
+                      }
+
+                        $add_pv = $customer_user->pv - $pv_total;
+
+                        $update_pv = DB::table('customers')
+                            ->where('id', $customer_user->id)
+                            ->update(['pv' => $add_pv]);
+
+                        $upline_type = $customer_user->line_type;
+                        $upline_id = $customer_user->upline_id;
+                        $customer_id = $upline_id;
+                        $last_upline_type = $upline_type;
+                    } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
+                    } elseif ($type_id == 3) { //รักษาคุณสมบัตรการท่องเที่ยว
+                    } elseif ($type_id == 4) { //เติม Aistockis
+                        $add_pv_aipocket = $customer_user->pv_aipocket - $pv_total;
+
+                        $update_pv = DB::table('customers')
+                            ->where('id', $customer_user->id)
+                            ->update(['pv_aipocket' => $add_pv_aipocket]);
+
+                        $update_ai_stockist = DB::table('ai_stockist')
+                            ->where('order_id_fk', $order_id)
+                            ->update(['status' => 'cancel']);
+
+                        $upline_type = $customer_user->line_type;
+                        $upline_id = $customer_user->upline_id;
+                        $customer_id = $upline_id;
+                        $last_upline_type = $upline_type;
+                    } elseif ($type_id == 6) { // Course
+                    } else {
+                        $resule = ['status' => 'fail', 'message' => 'Type Id is null'];
+                        DB::rollback();
+                        return $resule;
+
+                    }
+
+                    if ($customer_id != 'AA') {
+                        $j = 2;
+                        for ($i = 1; $i <= $j; $i++) {
+
+                            $data_user = DB::table('Customers')
+                                ->where('id', '=', $customer_id)
+                                ->first();
+
+                            $upline_type = $data_user->line_type;
+                            $upline_id = $data_user->upline_id;
+
+                            if ($upline_id == 'AA') {
+
+                                if ($last_upline_type == 'A') {
+
+                                    $add_pv = $data_user->pv_a - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_a' => $add_pv]);
+
+                                    $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
+                                    $j = 0;
+                                } elseif ($last_upline_type == 'B') {
+                                    $add_pv = $data_user->pv_b - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_b' => $add_pv]);
+
+                                    $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
+                                    $j = 0;
+                                } elseif ($last_upline_type == 'C'){
+                                    $add_pv = $data_user->pv_c - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_c' => $add_pv]);
+
+                                    $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
+                                    $j = 0;
+                                } else {
+                                    $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID Type AA'];
+                                    $j = 0;
+                                }
+                            } else {
+
+                                if ($last_upline_type == 'A') {
+
+                                    $add_pv = $data_user->pv_a - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_a' => $add_pv]);
+
+                                    $customer_id = $upline_id;
+                                    $last_upline_type = $upline_type;
+                                    $j = $j + 1;
+                                } elseif ($last_upline_type == 'B') {
+                                    $add_pv = $data_user->pv_b - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_b' => $add_pv]);
+
+                                    $customer_id = $upline_id;
+                                    $last_upline_type = $upline_type;
+                                    $j = $j + 1;
+                                } elseif ($last_upline_type == 'C') {
+                                    $add_pv = $data_user->pv_c - $pv_total;
+                                    $update_pv = DB::table('Customers')
+                                        ->where('id', $customer_id)
+                                        ->update(['pv_c' => $add_pv]);
+
+                                    $customer_id = $upline_id;
+                                    $last_upline_type = $upline_type;
+                                    $j = $j + 1;
+                                } else {
+                                    $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID'];
+                                    $j = 0;
+                                }
+                            }
+                        }
+                    } else {
+                        $resule = ['status' => 'success', 'message' => 'Pv add Type AA Success'];
+                    }
+                } else {
+                    $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
                 }
-
-                // if ($type_id == 1 ) { //ลบค่า pv ที่ถูกเติมเกินไป
-                //     $customer_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                //         ->select('*')
-                //         ->where('id', '=', $username)
-                //         ->first();
-                //     //dd($customer_user);
-
-                //     $add_pv = $customer_user->pv + $pv;
-                //     $update_pv = DB::table('customers')
-                //         ->where('id', $customer_user->id)
-                //         ->update(['pv' => $add_pv]);
-
-                // }
-
-
+            }else{
+              $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
             }
 
             if ($resule['status'] == 'success') {
-
-                DB::commit();
+              DB::rollback();
                 return $resule;
-
             } else {
 
                 DB::rollback();
                 return $resule;
             }
-
         } catch (Exception $e) {
             DB::rollback();
             return $e;
-
         }
-
     }
 
     public static function cancel_oder_run_pv($order_id) //ตีกลับ PV กรณียกเลิกบิล
@@ -200,7 +341,8 @@ class CancelOrderController extends Controller
 
                             $transection_code = RunNumberPayment::run_number_aistockis();
                             DB::table('ai_stockist')
-                                ->insert(['customer_id' => $id,
+                                ->insert([
+                                    'customer_id' => $id,
                                     'to_customer_id' => $to_customer_id->id,
                                     'transection_code' => $transection_code,
                                     'set_transection_code' => date('ym'),
@@ -227,7 +369,6 @@ class CancelOrderController extends Controller
                             $upline_id = $customer_user->upline_id;
                             $customer_id = $upline_id;
                             $last_upline_type = $upline_type;
-
                         } elseif ($type == 2) { //รักษาคุณสมบัติรายเดือน
                             $to_customer_id = DB::table('customers')
                                 ->where('user_name', '=', $username)
@@ -235,7 +376,8 @@ class CancelOrderController extends Controller
 
                             $transection_code = RunNumberPayment::run_number_aistockis();
                             DB::table('ai_stockist')
-                                ->insert(['customer_id' => $id,
+                                ->insert([
+                                    'customer_id' => $id,
                                     'to_customer_id' => $to_customer_id->id,
                                     'transection_code' => $transection_code,
                                     'set_transection_code' => date('ym'),
@@ -274,23 +416,25 @@ class CancelOrderController extends Controller
 
                                     $update_mt = DB::table('customers')
                                         ->where('id', $to_customer_id->id)
-                                        ->update(['pv_mt' => $pv_mt_total, 'pv_mt_active' => $mt_active,
-                                            'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s')]);
-
+                                        ->update([
+                                            'pv_mt' => $pv_mt_total, 'pv_mt_active' => $mt_active,
+                                            'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s'),
+                                        ]);
                                 } else {
                                     //dd('อัพเดท');
                                     $update_mt = DB::table('customers')
                                         ->where('id', $to_customer_id->id)
-                                        ->update(['pv_mt' => $pv_mt_all,
+                                        ->update([
+                                            'pv_mt' => $pv_mt_all,
                                             'pv_mt_active' => date('Y-m-t', strtotime($start_month)),
-                                            'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s')]);
+                                            'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s'),
+                                        ]);
                                 }
 
                                 $upline_type = $to_customer_id->line_type;
                                 $upline_id = $to_customer_id->upline_id;
                                 $customer_id = $upline_id;
                                 $last_upline_type = $upline_type;
-
                             } else {
                                 $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
                                     ->select('*')
@@ -308,10 +452,8 @@ class CancelOrderController extends Controller
                                     // $caltime = strtotime("+1 Month",$contract_date);
                                     // $start_month = date("Y-m", $caltime);
                                     $start_month = date('Y-m', $strtime_user);
-
                                 } else {
                                     $start_month = date("Y-m");
-
                                 }
 
                                 if ($pv_mt_all >= $pro_mt) {
@@ -328,7 +470,6 @@ class CancelOrderController extends Controller
                                     $update_mt = DB::table('customers')
                                         ->where('id', $to_customer_id->id)
                                         ->update(['pv_mt' => $pv_mt_total, 'pv_mt_active' => $mt_active]);
-
                                 } else {
                                     //dd('อัพเดท');
                                     $update_mt = DB::table('customers')
@@ -339,10 +480,8 @@ class CancelOrderController extends Controller
                                     $upline_id = $to_customer_id->upline_id;
                                     $customer_id = $upline_id;
                                     $last_upline_type = $upline_type;
-
                                 }
                             }
-
                         } elseif ($type == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
                             $to_customer_id = DB::table('customers')
@@ -351,7 +490,8 @@ class CancelOrderController extends Controller
 
                             $transection_code = RunNumberPayment::run_number_aistockis();
                             DB::table('ai_stockist')
-                                ->insert(['customer_id' => $id,
+                                ->insert([
+                                    'customer_id' => $id,
                                     'to_customer_id' => $to_customer_id->id,
                                     'transection_code' => $transection_code,
                                     'set_transection_code' => date('ym'),
@@ -377,7 +517,6 @@ class CancelOrderController extends Controller
                             if ($strtime_user > $strtime) {
 
                                 $start_month = date('Y-m', $strtime_user);
-
                             } else {
                                 $start_month = date("Y-m");
                             }
@@ -408,10 +547,8 @@ class CancelOrderController extends Controller
                             $upline_id = $to_customer_id->upline_id;
                             $customer_id = $upline_id;
                             $last_upline_type = $upline_type;
-
                         } else {
                             $resule = ['status' => 'fail', 'message' => 'ไม่มี Type ที่เลือก'];
-
                         }
 
                         if ($customer_id != 'AA') {
@@ -436,7 +573,6 @@ class CancelOrderController extends Controller
 
                                         $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
                                         $j = 0;
-
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
                                         $update_pv = DB::table('Customers')
@@ -445,7 +581,6 @@ class CancelOrderController extends Controller
 
                                         $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
                                         $j = 0;
-
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
                                         $update_pv = DB::table('Customers')
@@ -454,12 +589,10 @@ class CancelOrderController extends Controller
 
                                         $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
                                         $j = 0;
-
                                     } else {
                                         $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID Type AA'];
                                         $j = 0;
                                     }
-
                                 } else {
 
                                     if ($last_upline_type == 'A') {
@@ -472,7 +605,6 @@ class CancelOrderController extends Controller
                                         $customer_id = $upline_id;
                                         $last_upline_type = $upline_type;
                                         $j = $j + 1;
-
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
                                         $update_pv = DB::table('Customers')
@@ -482,7 +614,6 @@ class CancelOrderController extends Controller
                                         $customer_id = $upline_id;
                                         $last_upline_type = $upline_type;
                                         $j = $j + 1;
-
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
                                         $update_pv = DB::table('Customers')
@@ -492,23 +623,16 @@ class CancelOrderController extends Controller
                                         $customer_id = $upline_id;
                                         $last_upline_type = $upline_type;
                                         $j = $j + 1;
-
                                     } else {
                                         $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID'];
                                         $j = 0;
                                     }
-
                                 }
-
                             }
-
                         } else {
                             $resule = ['status' => 'success', 'message' => 'Pv add Type AA Success'];
-
                         }
-
                     }
-
                 }
                 if ($resule['status'] == 'success') {
                     DB::commit();
@@ -518,22 +642,17 @@ class CancelOrderController extends Controller
                     DB::rollback();
                     return $resule;
                 }
-
             } catch (Exception $e) {
                 DB::rollback();
                 $resule = ['status' => 'fail', 'message' => 'Update PvPayment Fail'];
                 return $resule;
-
             }
 
             $resule = ['status' => 'success', 'message' => 'Yess'];
-
         } else {
             $resule = ['status' => 'fail', 'message' => 'Data in Null'];
         }
 
         return $resule;
-
     }
-
 }

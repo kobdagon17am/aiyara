@@ -125,7 +125,7 @@ tr.border_bottom td {
     float: left;
     width: 36%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     font-size: 12px !important;
 }
 .column-2 {
@@ -150,7 +150,7 @@ tr.border_bottom td {
     float: left;
     width: 17%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     text-align: center;
 }
 
@@ -169,22 +169,22 @@ tr.border_bottom td {
 
 </style>
 
-<?php 
+<?php
 
 
-$delivery = DB::select(" 
-      SELECT * FROM `db_delivery` 
+$delivery = DB::select("
+      SELECT * FROM `db_delivery`
       WHERE
-      id = 
+      id =
       ".$data[0]."
  ");
 
 // print_r($delivery[0]->packing_code);
 // // print_r($delivery_packing_code);
-$delivery_packing = DB::select(" 
-      SELECT * FROM `db_delivery_packing` 
+$delivery_packing = DB::select("
+      SELECT * FROM `db_delivery_packing`
       WHERE
-      packing_code = 
+      packing_code =
       ".$delivery[0]->packing_code."
  ");
 
@@ -197,7 +197,7 @@ foreach ($delivery_packing as $k => $v) {
 // print_r($arr_delivery_id);
 $arr_delivery_id = implode(',',$arr_delivery_id);
 
-$value = DB::select(" 
+$value = DB::select("
           SELECT
           db_delivery.*,
           customers.prefix_name,
@@ -208,10 +208,10 @@ $value = DB::select("
           customers_detail.moo,
           customers_detail.zipcode,
           customers_detail.soi,
-          customers_detail.district,
-          customers_detail.district_sub,
+          customers_detail.amphures_id_fk,
+          customers_detail.district_id_fk,
           customers_detail.road,
-          customers_detail.province,
+          customers_detail.province_id_fk,
           customers.id as cus_id,
           orders.id as order_id,
           orders.shipping
@@ -239,18 +239,18 @@ $value = DB::select("
             (<?php echo sprintf("%04d",$data[0]); ?>)<br>
 2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
 แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-TEL : +66 (0) 2026 3555 
-FAX : +66 (0) 2514 3944 
+TEL : +66 (0) 2026 3555
+FAX : +66 (0) 2514 3944
 E-MAIL : info@aiyara.co.th
           </th>
         </tr>
-      
+
       </table>
     </div>
 
   <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
-        <tr> 
+        <tr>
           <th style="text-align: center;font-size: 30px;">
            <center> ใบเบิกสินค้าจากคลัง </center>
           </th>
@@ -264,7 +264,7 @@ E-MAIL : info@aiyara.co.th
   <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="width:30%;" > 
+        <td style="width:30%;" >
 
          <?php
 
@@ -276,7 +276,7 @@ E-MAIL : info@aiyara.co.th
                 $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
                 $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
                 $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
+                $addr .= $value[0]->amphures?", ต.".$value[0]->amphures:'';
                 $addr .= $value[0]->district?", อ.".$value[0]->district:'';
                 $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
@@ -291,13 +291,13 @@ E-MAIL : info@aiyara.co.th
       ?>
 
       </td>
-      <td style="width:10%;vertical-align: top;font-weight: bold;" > 
+      <td style="width:10%;vertical-align: top;font-weight: bold;" >
         วันที่ / Date
       </td>
-      <td style="width:10%;vertical-align: top;" > 
+      <td style="width:10%;vertical-align: top;" >
          <?php $d = strtotime($value[0]->delivery_date); echo date("d/m/", $d).(date("Y", $d)+543); ?>
       </td>
-        
+
       </tr>
     </table>
   </div>
@@ -316,7 +316,7 @@ Description </td>
 Quantity </td>
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
 Unit Price </td>
-        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV   
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV
         <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;">  ค่าจัดส่ง
         <td style="border-left: 1px solid #ccc;width:15%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
 Amount </td>
@@ -324,9 +324,9 @@ Amount </td>
       </tr>
 
 <!-- รายการสินค้า -->
-<?php 
+<?php
 
-     $P = DB::select(" 
+     $P = DB::select("
       SELECT
       order_items.id,
       order_items.order_id,
@@ -381,14 +381,14 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->quantity*$v->list_price,2)?>  </td>
           </tr>
 
-    <?php  
-    $i++; 
-    $Total += $v->quantity*$v->list_price;  
-    $shipping += $v->shipping ;  
+    <?php
+    $i++;
+    $Total += $v->quantity*$v->list_price;
+    $shipping += $v->shipping ;
 
-  } 
+  }
 
-  $n = 5 - $i; 
+  $n = 5 - $i;
 
   ?>
 
@@ -422,13 +422,13 @@ Amount </td>
               <!-- <center>  ตัวอักษร (ห้าพันหกร้อยบาทถ้วน) </center> -->
       </td>
 
-      <?php 
+      <?php
 
             $net_price = str_replace(',', '', $Total);
 
             // echo $net_price;
             // exit;
-            // ภาษีมูลค่าเพิ่ม ( VAT 7% )  
+            // ภาษีมูลค่าเพิ่ม ( VAT 7% )
             $vat = intval($net_price) - (intval($net_price)/1.07) ;
 
             // echo $net_price;
@@ -453,7 +453,7 @@ TOTAL </td>
 
 
       <tr>
-      
+
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ภาษีมูลค่าเพิ่ม  <br>
 ( VAT 7% ) </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$vat?> </td>
@@ -465,7 +465,7 @@ TOTAL </td>
 
       </tr>
       <tr>
-  
+
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ยอดเงินสุทธิ  <br>
 NET AMOUNT </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$total_price?> </td>
@@ -481,7 +481,7 @@ NET AMOUNT </td>
 
   <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
-      
+
       <tr>
 
         <td  style="border-left: 1px solid #ccc;"> ผู้รับเงิน
@@ -511,4 +511,3 @@ NET AMOUNT </td>
 </div>
 
 
- 

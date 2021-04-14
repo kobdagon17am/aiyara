@@ -31,7 +31,7 @@ class LogOrderController extends Controller
         'status_pv_mt'=>'',
         'business_location_id_fk'=>'',
         'distribution_channel_id_fk'=>$distribution_channel,
-        'orders_type_id_fk'=>'',
+        'purchase_type_id_fk'=>'',
         'pay_type_id_fk'=>'',
         'action_user_id_fk'=>'',//id คนยกเลิกบิล หรือ ยืนยันบิล สามารถเป็นได้ทั้ง Admin id และ Customer id ขึ้นอยู่กับ action_type
         'action_type'=>'',//Type ของผู้ดำเนินการ 'admin','customer'

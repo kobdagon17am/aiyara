@@ -37,7 +37,7 @@
                  @endif
                  @if($order->status_payment_sent_other == 1)
                  <?php
-                 $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->sent_to_customer_id_fk);
+                 $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->address_sent_id_fk);
 
   //                dd($sent_to_customer_data);
   //                +"prefix_name": "คุณ"
@@ -135,8 +135,8 @@
                          <thead>
                              <tr class="thead-default">
                                  <th>Description</th>
-                                 @if($order->orders_type_id_fk == 6)<th>Ticket Number</th>@endif
-                                 @if($order->orders_type_id_fk == 7)@else <th>Quantity</th> @endif
+                                 @if($order->purchase_type_id_fk == 6)<th>Ticket Number</th>@endif
+                                 @if($order->purchase_type_id_fk == 7)@else <th>Quantity</th> @endif
                                  <th>Amount</th>
                                  <th>PV</th>
                                  <th>Total</th>
@@ -204,16 +204,16 @@ $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->id, $location
                                      @endif
                                  </td>
 
-                                 @if($order->orders_type_id_fk == 6)
+                                 @if($order->purchase_type_id_fk == 6)
                                  <td><b class="text-primary">{{ $value->ticket_number }}</b></td>
                                  @endif
-                                 @if($order->orders_type_id_fk == 7)
+                                 @if($order->purchase_type_id_fk == 7)
                                  @else
                                  <td>{{ $value->amt }}</td>
                                  @endif
                                  <td>{{ number_format($value->selling_price,2) }}</td>
                                  <td class="text-success"><b>{{ $value->pv }}</b></td>
-                                 @if($order->orders_type_id_fk == 7)
+                                 @if($order->purchase_type_id_fk == 7)
                                  <td>{{ number_format($value->selling_price,2) }}</td>
                                  @else
                                  <td>{{ number_format($value->amt * $value->selling_price,2) }}</td>
@@ -250,7 +250,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                              <th>รวม : </th>
                              <td> {{ number_format($order->sum_price,2) }}</td>
                          </tr>
-                         @if($order->orders_type_id_fk != 6 and $order->orders_type_id_fk != 7)
+                         @if($order->purchase_type_id_fk != 6 and $order->purchase_type_id_fk != 7)
 
                          <tr>
                              <th> @if($order->shipping_cost_detail) <label class="label label-inverse-warning"><font id="shipping_detail" style="color: #000">{{ $order->shipping_cost_detail }}
@@ -266,7 +266,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                          </tr>
 
 
-                         @if($order->orders_type_id_fk == 5)
+                         @if($order->purchase_type_id_fk == 5)
 
                          <tr>
                              <td><strong>ยอดรวม : </strong></td>
@@ -288,7 +288,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                              </td>
                          </tr>
 
-                         @elseif($order->orders_type_id_fk == 6 || $order->orders_type_id_fk == 7)
+                         @elseif($order->purchase_type_id_fk == 6 || $order->purchase_type_id_fk == 7)
                          <tr>
                              <td><strong>ยอดชำระ</strong></td>
                              <td align="right"><strong> <u>{{ number_format($order->sum_price,2) }}</u></strong>

@@ -129,7 +129,7 @@ tr.border_bottom td {
     float: left;
     width: 36%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     font-size: 12px !important;
 }
 .column-2 {
@@ -154,7 +154,7 @@ tr.border_bottom td {
     float: left;
     width: 17%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     text-align: center;
 }
 
@@ -178,7 +178,7 @@ tr.border_bottom td {
   .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -235,10 +235,10 @@ tr.border_bottom td {
 
 
 </style>
-<?php 
+<?php
 
-$delivery = DB::select(" 
-                   SELECT * FROM `db_delivery`  WHERE packing_code = 
+$delivery = DB::select("
+                   SELECT * FROM `db_delivery`  WHERE packing_code =
                     ".$data[0]."
 
      ");
@@ -251,7 +251,7 @@ foreach($delivery as $deli){
 $arr01 = implode(",",$arr01);
 
 
-$frontstore = DB::select(" 
+$frontstore = DB::select("
                    SELECT * FROM `db_frontstore`  WHERE invoice_code in ($arr01)
 
      ");
@@ -263,7 +263,7 @@ foreach($frontstore as $front_db){
 // }
 
 
-$value = DB::select(" 
+$value = DB::select("
                     SELECT
                     db_frontstore_products_list.*,
                     customers.prefix_name,
@@ -274,10 +274,10 @@ $value = DB::select("
                     customers_detail.moo,
                     customers_detail.zipcode,
                     customers_detail.soi,
-                    customers_detail.district,
-                    customers_detail.district_sub,
+                    customers_detail.amphures_id_fk,
+                    customers_detail.district_id_fk,
                     customers_detail.road,
-                    customers_detail.province,
+                    customers_detail.province_id_fk,
                     customers.id as cus_id,
                     orders_frontstore.id as order_id,
                     orders_frontstore.shipping
@@ -289,7 +289,7 @@ $value = DB::select("
                     Left Join customers ON customers_detail.customer_id = customers.id
                     Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk = 
+                    db_frontstore_products_list.frontstore_id_fk =
                     ".$front_db->id."
 
      ");
@@ -308,18 +308,18 @@ $value = DB::select("
             (<?php echo sprintf("%04d",$data[0]); ?>)<br>
               2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
               แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-              TEL : +66 (0) 2026 3555 
-              FAX : +66 (0) 2514 3944 
+              TEL : +66 (0) 2026 3555
+              FAX : +66 (0) 2514 3944
               E-MAIL : info@aiyara.co.th
           </th>
         </tr>
-      
+
       </table>
     </div>
 
   <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
-        <tr> 
+        <tr>
           <th style="text-align: center;font-size: 30px;">
            <center> ต้นฉบับใบกำกับภาษี/ใบส่งสินค้า </center>
           </th>
@@ -333,7 +333,7 @@ $value = DB::select("
   <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="width:30%;" > 
+        <td style="width:30%;" >
 
          <?php
 
@@ -365,10 +365,10 @@ $value = DB::select("
                                       customers_address_card.card_moo,
                                       customers_address_card.card_zipcode,
                                       customers_address_card.card_soi,
-                                      customers_address_card.card_district,
-                                      customers_address_card.card_district_sub,
-                                      customers_address_card.card_road,
-                                      customers_address_card.card_province,
+                                      customers_detail.amphures_id_fk,
+                                      customers_detail.district_id_fk,
+                                      customers_detail.road,
+                                      customers_detail.province_id_fk,
                                       customers_address_card.created_at,
                                       customers_address_card.updated_at,
                                       dataset_provinces.name_th AS provname,
@@ -379,9 +379,9 @@ $value = DB::select("
                                       customers.last_name
                                       FROM
                                       customers_address_card
-                                      Left Join dataset_provinces ON customers_address_card.card_province = dataset_provinces.id
-                                      Left Join dataset_amphures ON customers_address_card.card_district = dataset_amphures.id
-                                      Left Join dataset_districts ON customers_address_card.card_district_sub = dataset_districts.id
+                                      Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
                                       where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
@@ -391,17 +391,17 @@ $value = DB::select("
                           if(@$addr[0]->provname!=''){
 
                               @$address = "";
-                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ; 
-                              @$address .=  " ต. ". @$addr[0]->tamname; 
+                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ;
+                              @$address .=  " ต. ". @$addr[0]->tamname;
                               @$address .=  " อ. ". @$addr[0]->ampname;
-                              @$address .=  " จ. ". @$addr[0]->provname; 
+                              @$address .=  " จ. ". @$addr[0]->provname;
                               @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
 
 
                               echo @$address;
 
                           }else{
-                                
+
                                 $addr = DB::select(" SELECT
                                     customers_address_card.id,
                                     customers_address_card.customer_id,
@@ -410,10 +410,10 @@ $value = DB::select("
                                     customers_address_card.card_moo,
                                     customers_address_card.card_zipcode,
                                     customers_address_card.card_soi,
-                                    customers_address_card.card_district,
-                                    customers_address_card.card_district_sub,
-                                    customers_address_card.card_road,
-                                    customers_address_card.card_province,
+                                    customers_detail.amphures_id_fk,
+                                    customers_detail.district_id_fk,
+                                    customers_detail.road,
+                                    customers_detail.province_id_fk,
                                     customers_address_card.created_at,
                                     customers_address_card.updated_at,
                                     customers.prefix_name,
@@ -428,13 +428,13 @@ $value = DB::select("
 
                               if($addr){
                                   @$address = "";
-                                  @$address .=  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name.""; 
-                                  @$address .=  " หมู่ ". @$addr[0]->card_moo; 
-                                  @$address .=  " ซอย ". @$addr[0]->card_soi; 
-                                  @$address .=  " ถนน ". @$addr[0]->card_road; 
-                                  @$address .=  " ต. ". @$addr[0]->card_district_sub; 
+                                  @$address .=  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name."";
+                                  @$address .=  " หมู่ ". @$addr[0]->card_moo;
+                                  @$address .=  " ซอย ". @$addr[0]->card_soi;
+                                  @$address .=  " ถนน ". @$addr[0]->card_road;
+                                  @$address .=  " ต. ". @$addr[0]->card_district_sub;
                                   @$address .=  " อ. ". @$addr[0]->card_district;
-                                  @$address .=  " จ. ". @$addr[0]->card_province; 
+                                  @$address .=  " จ. ". @$addr[0]->card_province;
                                   @$address .=  " <br> รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
 
                                   echo @$address;
@@ -456,10 +456,10 @@ $value = DB::select("
                                       customers_detail.moo,
                                       customers_detail.zipcode,
                                       customers_detail.soi,
-                                      customers_detail.district,
-                                      customers_detail.district_sub,
+                                      customers_detail.amphures_id_fk,
+                                      customers_detail.district_id_fk,
                                       customers_detail.road,
-                                      customers_detail.province,
+                                      customers_detail.province_id_fk,
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name,
@@ -469,16 +469,16 @@ $value = DB::select("
                                       FROM
                                       customers_detail
                                       Left Join customers ON customers_detail.customer_id = customers.id
-                                      Left Join dataset_provinces ON customers_detail.province = dataset_provinces.id
-                                      Left Join dataset_amphures ON customers_detail.district = dataset_amphures.id
-                                      Left Join dataset_districts ON customers_detail.district_sub = dataset_districts.id
-                                      WHERE customers_detail.customer_id = 
+                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                      WHERE customers_detail.customer_id =
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
                                 // print_r(@$addr);
                                 @$address = " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. " ";
-                                @$address .= " ต. ". @$addr[0]->tamname; 
-                                @$address .= " อ. ". @$addr[0]->ampname; 
-                                @$address .= " จ. ". @$addr[0]->provname; 
+                                @$address .= " ต. ". @$addr[0]->tamname;
+                                @$address .= " อ. ". @$addr[0]->ampname;
+                                @$address .= " จ. ". @$addr[0]->provname;
                                 @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
 
                                 echo @$address;
@@ -490,18 +490,18 @@ $value = DB::select("
                         if(@$sRow->delivery_location==3){
 
                                 @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                                      dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
                                       from customers_addr_frontstore
                                       Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
                                 // print_r(@$addr);
-                                @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
+                                @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name;
                                 @$address .= "ที่อยู่ : ". @$addr[0]->addr_no ;
-                                @$address .= " ต. ". @$addr[0]->tamname; 
-                                @$address .= " อ. ". @$addr[0]->ampname; 
-                                @$address .= " จ. ". @$addr[0]->provname; 
+                                @$address .= " ต. ". @$addr[0]->tamname;
+                                @$address .= " อ. ". @$addr[0]->ampname;
+                                @$address .= " จ. ". @$addr[0]->provname;
                                 @$address .= " รหัส ปณ. ". @$addr[0]->zip_code ;
 
                                 echo @$address;
@@ -512,14 +512,14 @@ $value = DB::select("
 
                      ?>
       </td>
-      <td style="width:10%;vertical-align: top;font-weight: bold;" > 
+      <td style="width:10%;vertical-align: top;font-weight: bold;" >
         เลขที่ / No. <?=@$front_db->invoice_code?> <br>
-        วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
+        วันที่ / Date <?=ThDate01(@$sRow->action_date)?>
       </td>
-      <td style="width:10%;vertical-align: top;" > 
+      <td style="width:10%;vertical-align: top;" >
           <br>
       </td>
-        
+
       </tr>
     </table>
   </div>
@@ -538,16 +538,16 @@ Description </td>
 amt </td>
         <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> ราคา/หน่วย <br>
 Unit Price </td>
-        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV   
+        <td style="border-left: 1px solid #ccc;width:5%;border-bottom: 1px solid #ccc;text-align: center;"> PV
         <td style="border-left: 1px solid #ccc;width:10%;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนเงิน <br>
 Amount </td>
 
       </tr>
 
 <!-- รายการสินค้า -->
-<?php 
+<?php
 
-     $P = DB::select(" 
+     $P = DB::select("
                     SELECT
                     db_frontstore_products_list.*,
                     customers.prefix_name,
@@ -558,10 +558,10 @@ Amount </td>
                     customers_detail.moo,
                     customers_detail.zipcode,
                     customers_detail.soi,
-                    customers_detail.district,
-                    customers_detail.district_sub,
+                    customers_detail.amphures_id_fk,
+                    customers_detail.district_id_fk,
                     customers_detail.road,
-                    customers_detail.province,
+                    customers_detail.province_id_fk,
                     customers.id as cus_id,
                     orders_frontstore.id as order_id,
                     orders_frontstore.shipping
@@ -573,7 +573,7 @@ Amount </td>
                     Left Join customers ON customers_detail.customer_id = customers.id
                     Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk = 
+                    db_frontstore_products_list.frontstore_id_fk =
                     ".$front_db->id."  AND add_from=1
 
      ");
@@ -590,7 +590,7 @@ Amount </td>
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -609,22 +609,22 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
-<?php  
+<?php
 
-    $i++; 
-    $Total += $v->amt*$v->selling_price;  
-    $shipping += $v->shipping ;  
+    $i++;
+    $Total += $v->amt*$v->selling_price;
+    $shipping += $v->shipping ;
 
-  } 
+  }
 
-  $n = 4 - $i; 
+  $n = 4 - $i;
 
   ?>
 
 <!-- รายการสินค้า -->
-<?php 
+<?php
 
-     $P = DB::select(" 
+     $P = DB::select("
          SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$front_db->id." and add_from=2 GROUP BY promotion_id_fk,promotion_code
      ");
 
@@ -655,13 +655,13 @@ Amount </td>
               FROM
               promotions_products
               WHERE
-              promotions_products.promotion_id_fk='".$v->promotion_id_fk."'  
+              promotions_products.promotion_id_fk='".$v->promotion_id_fk."'
             ");
 
             $pn .= '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-             $pn .=     
+             $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
                   <div class="divTableCell"><center>'.$value->product_amt.' x '.$v->amt.'= '.($value->product_amt*$v->amt).'</div>
@@ -670,7 +670,7 @@ Amount </td>
                   ';
              }
 
-              $pn .= '</div></div>';  
+              $pn .= '</div></div>';
 
 
      ?>
@@ -684,13 +684,13 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;vertical-align: top;"> <?=number_format($v->amt*$v->selling_price,2)?>  </td>
           </tr>
 
-<?php  
+<?php
 
-    $i++; 
+    $i++;
 
-    } 
+    }
 
-    $n = 3 - $i; 
+    $n = 3 - $i;
 
 ?>
 
@@ -710,7 +710,7 @@ Amount </td>
 
 <br>
 
-      <?php 
+      <?php
 
       // echo $front_db->id;
 
@@ -731,7 +731,7 @@ Amount </td>
       <tr>
         <td rowspan="4"  style="width:55%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;">
 
-       
+
 <br>
 <br>
 <br>
@@ -747,7 +747,7 @@ TOTAL </td>
       </tr>
 
       <tr>
-      
+
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ภาษีมูลค่าเพิ่ม  <br>
 ( VAT 7% ) </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> {{number_format(@$vat,2)}} </td>
@@ -759,7 +759,7 @@ TOTAL </td>
 
       </tr>
       <tr>
-  
+
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ยอดเงินสุทธิ  <br>
 NET AMOUNT </td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> {{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}} </td>
@@ -772,7 +772,7 @@ NET AMOUNT </td>
    <br>
   <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
-   
+
       <tr>
 
         <td  style="border-left: 1px solid #ccc;"> ผู้รับเงิน

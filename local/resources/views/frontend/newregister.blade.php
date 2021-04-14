@@ -172,15 +172,15 @@
 
   <div class="col-sm-3">
     <label>เขต/อำเภอ <font class="text-danger">*</font></label>
-    <select class="js-example-basic-single col-sm-12" name="card_district" id="card_district" required="">
+    <select class="js-example-basic-single col-sm-12" name="card_amphures" id="card_amphures" required="">
       <option value="" >Select</option>
     </select>
-    {{--  <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="card_district" name="card_district" value="{{ old('card_district') }}"> --}}
+    {{--  <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="card_amphures" name="card_amphures" value="{{ old('card_amphures') }}"> --}}
   </div>
   <div class="col-sm-3">
     <label>แขวง/ตำบล <font class="text-danger">*</font></label>
-    {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="card_district_sub" name="card_district_sub" value="{{ old('district_sub') }}"> --}}
-    <select class="js-example-basic-single col-sm-12" name="card_district_sub" id="card_district_sub" required="">
+    {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="card_district" name="card_district" value="{{ old('district') }}"> --}}
+    <select class="js-example-basic-single col-sm-12" name="card_district" id="card_district" required="">
       <option value="">Select</option>
     </select>
   </div>
@@ -252,17 +252,17 @@
 
   <div class="col-sm-3">
     <label>เขต/อำเภอ <font class="text-danger">*</font></label>
-    <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
+    <select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
       <option value="">Select</option>
     </select>
-    {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
+    {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="amphures" name="amphures" value="{{ old('amphures') }}"> --}}
   </div>
 
   <div class="col-sm-3">
     <label>แขวง/ตำบล <font class="text-danger">*</font></label>
-    <select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required="">
+    <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
       <option value="">Select</option>
-      {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
+      {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district" name="district" value="{{ old('district') }}"> --}}
     </select>
   </div>
 
@@ -439,8 +439,8 @@
       card_house_name = $('#card_house_name').val();
       card_moo = $('#card_moo').val();
       card_soi = $('#card_soi').val();
+      card_amphures = $('#card_amphures').val();
       card_district = $('#card_district').val();
-      card_district_sub = $('#card_district_sub').val();
       card_province = $('#card_province').val();
       card_road = $('#card_road').val();
       card_zipcode = $('#card_zipcode').val();
@@ -452,8 +452,8 @@
       road = $('#road').val(card_road);
       zipcode = $('#zipcode').val(card_zipcode);
 
+      // amphures = $('#amphures').val(amphures);
       // district = $('#district').val(card_district);
-      // district_sub = $('#district_sub').val(card_district_sub);
       // province = $('#province').val(card_province);
 
 
@@ -465,8 +465,8 @@
       house_name = $('#house_name').val('');
       moo = $('#moo').val('');
       soi = $('#soi').val('');
+      amphures = $('#amphures').val('');
       district = $('#district').val('');
-      district_sub = $('#district_sub').val('');
       province = $('#province').val('');
       road = $('#road').val('');
       zipcode = $('#zipcode').val('');
@@ -568,33 +568,33 @@
       url: "{{ route('location') }}",
       data: {id:id_province,function:'provinces'},
       success: function(data){
-        $('#card_district').html(data);
-        $('#card_district_sub').val('');
+        $('#card_amphures').html(data);
+        $('#card_district').val('');
         $('#card_zipcode').val('');
       }
     });
   });
 
-  $('#card_district').change(function() {
-    var id_district = $(this).val();
+  $('#card_amphures').change(function() {
+    var amphures = $(this).val();
     $.ajax({
       type: "get",
       url: "{{ route('location') }}",
-      data: {id:id_district,function:'district'},
+      data: {id:amphures,function:'amphures'},
       success: function(data){
-        $('#card_district_sub').html(data);
+        $('#card_district').html(data);
 
       }
     });
   });
 
 
-  $('#card_district_sub').change(function() {
-    var id_district_sub = $(this).val();
+  $('#card_district').change(function() {
+    var district = $(this).val();
     $.ajax({
       type: "get",
       url: "{{ route('location') }}",
-      data: {id:id_district_sub,function:'district_sub'},
+      data: {id:district,function:'district'},
       success: function(data){
         $('#card_zipcode').val(data);
       }
@@ -611,43 +611,43 @@
      url: "{{ route('location') }}",
      data: {id:id_province,function:'provinces'},
      success: function(data){
-      $('#district').html(data);
-      $('#district_sub').val('');
+      $('#amphures').html(data);
+      $('#district').val('');
         // $('#zipcode').val('');
       }
     });
+    if (ckeck_address.checked == true){
+      var card_amphures = $('#card_amphures').val();
+      $('#amphures').val(card_amphures).change();
+    }
+  });
+
+  $('#amphures').change(function() {
+    var amphures = $(this).val();
+    var ckeck_address = document.getElementById("copy_card_address");
+    $.ajax({
+      async : false,
+      type: "get",
+      url: "{{ route('location') }}",
+      data: {id:amphures,function:'amphures'},
+      success: function(data){
+        $('#district').html(data);
+      }
+    });
+
     if (ckeck_address.checked == true){
       var card_district = $('#card_district').val();
       $('#district').val(card_district).change();
     }
   });
 
+
   $('#district').change(function() {
-    var id_district = $(this).val();
-    var ckeck_address = document.getElementById("copy_card_address");
-    $.ajax({
-      async : false,
-      type: "get",
-      url: "{{ route('location') }}",
-      data: {id:id_district,function:'district'},
-      success: function(data){
-        $('#district_sub').html(data);
-      }
-    });
-
-    if (ckeck_address.checked == true){
-      var card_district_sub = $('#card_district_sub').val();
-      $('#district_sub').val(card_district_sub).change();
-    }
-  });
-
-
-  $('#district_sub').change(function() {
-    var id_district_sub = $(this).val();
+    var district = $(this).val();
     $.ajax({
       type: "get",
       url: "{{ route('location') }}",
-      data: {id:id_district_sub,function:'district_sub'},
+      data: {id:district,function:'district'},
       success: function(data){
         $('#zipcode').val(data);
       }

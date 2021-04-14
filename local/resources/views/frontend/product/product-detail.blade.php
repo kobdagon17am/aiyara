@@ -17,10 +17,8 @@
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/notification/notification.css')}}">
  <!-- Animate.css -->
  <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/animate.css/css/animate.css')}}">
-
  @endsection
  @section('conten')
-
  <div class="row">
 
   <div class="col-md-12">
@@ -223,19 +221,23 @@ if($data['type'] == 6 ){
 <script  src="{{asset('frontend/assets/pages/product-detail/product-detail.js')}}"></script>
 <script type="text/javascript">
   function addcart(id) {
-    var type = {{ $data['type'] }};
+    var type = '{{ $data['type'] }}';
     if(type == 6 ){
-     var type = {{ $data['type'] }};
+     var type = '{{ $data['type'] }}';
      var quantity = $('#quant').val();
      var name = '{{@$data['product_data']->ce_name}}';
      var title = '{{@$data['product_data']->ce_place}}';
      var price = '{{@$data['product_data']->ce_ticket_price}}';
+
 
    }else{
     var quantity = $('#quant').val();
     var name = '{{@$data['product_data']->product_name}}';
     var price = '{{@$data['product_data']->member_price}}';
     var title = '{{@$data['product_data']->title}}';
+    var product_unit_id = '{{@$data['product_data']->product_unit_id_fk}}';
+    var product_unit_name = '{{@$data['product_data']->product_unit_name}}';
+
   }
 
 
@@ -255,7 +257,7 @@ if($data['type'] == 6 ){
     type: 'get',
             // dataType: 'json',
             data: {id:id,quantity:quantity,name:name,price:price,pv:pv,img:img,title:title,
-              promotion:promotion,type:type,category_id:category_id},
+              promotion:promotion,type:type,category_id:category_id,product_unit_id:product_unit_id,product_unit_name:product_unit_name},
           })
   .done(function(data) {
    $('#count_cart').html(data);

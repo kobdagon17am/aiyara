@@ -48,11 +48,11 @@ class CartPaymentController extends Controller
 		$price = Cart::session($type)->getTotal();
 
 		$province_data = DB::table('customers_detail')
-		->select('province')
+		->select('province_id_fk')
 		->where('customer_id','=',$customer_id)
 		->first();
 
-		$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$province_data->province,$price);
+		$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$province_data->province_id_fk,$price);
 
 		$vat = DB::table('dataset_vat')
 		->where('business_location_id_fk','=', $business_location_id)
@@ -114,17 +114,17 @@ class CartPaymentController extends Controller
 
 		$address = DB::table('customers_detail')
 		->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
-		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province')
-		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.district')
-		->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_sub')
+		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province_id_fk')
+		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.amphures_id_fk')
+		->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_id_fk')
 		->where('customer_id','=',$customer_id)
 		->first();
 
 		$address_card = DB::table('customers_address_card')
 		->select('customers_address_card.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as card_provinces_name','dataset_amphures.name_th as card_amphures_name','dataset_amphures.id as card_amphures_id','dataset_districts.id as card_district_id','dataset_districts.name_th as card_district_name')
-		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_address_card.card_province')
-		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_address_card.card_district')
-		->leftjoin('dataset_districts','dataset_districts.id','=','customers_address_card.card_district_sub')
+		->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_address_card.card_province_id_fk')
+		->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_address_card.card_amphures_id_fk')
+		->leftjoin('dataset_districts','dataset_districts.id','=','customers_address_card.card_district_id_fk')
 		->where('customer_id','=',$customer_id)
 		->first();
 
@@ -137,8 +137,6 @@ class CartPaymentController extends Controller
 	}
 
 	public function payment_submit(Request $request){
-
-		dd('form1');
 
 		if($request->submit == 'upload'){
 			if($request->type == '6'){
@@ -153,7 +151,6 @@ class CartPaymentController extends Controller
 				}else{
 					return redirect('ai-cash'.$request->type)->withError('Data is Null');
 				}
-
 			}else{
 				$resule = Payment::payment_uploadfile($request);
 			}

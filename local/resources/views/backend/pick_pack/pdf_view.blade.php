@@ -44,7 +44,7 @@ body{
 
     <?php
 
-              $value = DB::select(" 
+              $value = DB::select("
                     SELECT
                     db_delivery.id,
                     customers.prefix_name,
@@ -55,17 +55,17 @@ body{
                     customers_detail.moo,
                     customers_detail.zipcode,
                     customers_detail.soi,
-                    customers_detail.district,
-                    customers_detail.district_sub,
+                    customers_detail.amphures_id_fk,
+                    customers_detail.district_id_fk,
                     customers_detail.road,
-                    customers_detail.province,
+                    customers_detail.province_id_fk,
                     customers.id as cus_id
                     FROM
                     db_delivery
                     Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
                     WHERE
-                    db_delivery.id = 
+                    db_delivery.id =
                     ".$data[0]."
 
                ");
@@ -77,7 +77,7 @@ body{
                 $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
                 $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
                 $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
+                $addr .= $value[0]->amphures?", ต.".$value[0]->amphures:'';
                 $addr .= $value[0]->district?", อ.".$value[0]->district:'';
                 $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 

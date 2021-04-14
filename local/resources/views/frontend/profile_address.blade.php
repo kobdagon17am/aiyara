@@ -51,7 +51,7 @@
  				<div class="col-sm-3">
  					<label>จังหวัด <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
- 						<option value="{{ $customer->provinces_id }}" >{{ $customer->provinces_name }}</option> 
+ 						<option value="{{ $customer->provinces_id }}" >{{ $customer->provinces_name }}</option>
  						@foreach($provinces as $value_provinces)
  						<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
  						@endforeach
@@ -59,17 +59,17 @@
  				</div>
  				<div class="col-sm-3">
  					<label>เขต/อำเภอ <font class="text-danger">*</font></label>
- 					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
- 						<option value="{{ $customer->amphures_id }}">{{ $customer->amphures_name }}</option>
+ 					<select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
+ 						<option value="{{ $customer->amphures_id_fk }}">{{ $customer->amphures_name }}</option>
  					</select>
  					{{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
  				</div>
 
  				<div class="col-sm-3">
  					<label>แขวง/ตำบล <font class="text-danger">*</font></label>
- 					<select class="js-example-basic-single col-sm-12" name="district_sub" id="district_sub" required=""> 
+ 					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
  						<option value="{{ $customer->district_name }}">{{ $customer->district_name }}</option>
- 						{{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district_sub" name="district_sub" value="{{ old('district_sub') }}"> --}}
+ 						{{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district" name="district" value="{{ old('district') }}"> --}}
  					</select>
  				</div>
 
@@ -85,7 +85,7 @@
  				</div>
  			</div>
 
- 			
+
 
  			<div class="form-group row text-right">
  				<label class="col-sm-2"></label>
@@ -105,7 +105,7 @@
  						</div>
  						<div class="modal-body">
  							<div class="row text-center">
- 								<div class="col-sm-2"> 
+ 								<div class="col-sm-2">
  								</div>
  								<div class="col-sm-8">
  									<div class="input-group input-group-primary">
@@ -126,10 +126,10 @@
  					</div>
  				</div>
  			</div>
- 		</form> 
+ 		</form>
  	</div>
- 	
- 	
+
+
  </div>
 </div>
 @endsection
@@ -145,42 +145,42 @@
 <script  src="{{asset('frontend/assets/pages/advance-elements/select2-custom.js')}}"></script>
 <script type="text/javascript">
   $('#province').change(function() {
-    var id_province = $(this).val();
-     
+    var province = $(this).val();
+
     $.ajax({
      async : false,
      type: "get",
      url: "{{ route('location') }}",
-     data: {id:id_province,function:'provinces'},
+     data: {id:province,function:'provinces'},
      success: function(data){
-      $('#district').html(data); 
-      $('#district_sub').val('');  
-        // $('#zipcode').val(''); 
+      $('#amphures').html(data);
+      $('#district').val('');
+        // $('#zipcode').val('');
       }
     });
 
   });
 
-  $('#district').change(function() {
-    var id_district = $(this).val();
-    
+  $('#amphures').change(function() {
+    var amphures = $(this).val();
+
     $.ajax({
       async : false,
       type: "get",
       url: "{{ route('location') }}",
-      data: {id:id_district,function:'district'},
+      data: {id:amphures,function:'amphures'},
       success: function(data){
-        $('#district_sub').html(data);  
+        $('#district').html(data);
       }
     });
   });
 
-  $('#district_sub').change(function() {
-    var id_district_sub = $(this).val();
+  $('#district').change(function() {
+    var district = $(this).val();
     $.ajax({
       type: "get",
       url: "{{ route('location') }}",
-      data: {id:id_district_sub,function:'district_sub'},
+      data: {id:district,function:'district'},
       success: function(data){
         $('#zipcode').val(data);
       }

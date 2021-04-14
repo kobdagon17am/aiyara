@@ -16,11 +16,11 @@ class DeleteOrderController extends Controller
         $order_id  = $delete_order_id;
 
         $order_data = DB::table('db_orders')
-        ->select('code_order','orders_type_id_fk')
+        ->select('code_order','purchase_type_id_fk')
         ->where('id','=',$order_id)
         ->first();
 
-        if($order_data->orders_type_id_fk == 5){
+        if($order_data->purchase_type_id_fk == 5){
         $giv_log = DB::table('log_gift_voucher')
         ->where('order_id_fk','=',$order_id)
         ->get();

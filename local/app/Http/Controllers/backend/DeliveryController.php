@@ -14,13 +14,13 @@ class DeliveryController extends Controller
 
     public function index(Request $request)
     {
-      // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น 
+      // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
       $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
       // ขายหน้าร้าน (หลังบ้าน)
-      DB::select(" 
-          INSERT IGNORE INTO db_delivery 
+      DB::select("
+          INSERT IGNORE INTO db_delivery
           ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
           SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_frontstore where invoice_code<>'' AND sum_price>0  ; ");
 
@@ -35,7 +35,7 @@ class DeliveryController extends Controller
         // DB::select(" TRUNCATE customers_addr_sent; ");
 
         // 1=ที่อยู่ตามบัตร ปชช.>customers_address_card
-        $address_card = DB::select(" 
+        $address_card = DB::select("
 
                 SELECT
                 customers_address_card.*,
@@ -47,9 +47,9 @@ class DeliveryController extends Controller
                 customers.last_name
                 FROM
                 customers_address_card
-                Left Join dataset_provinces ON customers_address_card.card_province = dataset_provinces.id
-                Left Join dataset_amphures ON customers_address_card.card_district = dataset_amphures.id
-                Left Join dataset_districts ON customers_address_card.card_district_sub = dataset_districts.id
+                Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                 Left Join customers ON customers_address_card.customer_id = customers.id
 
                ");
@@ -64,11 +64,11 @@ class DeliveryController extends Controller
                  "moo"=>@$value->moo,
                  "road"=>@$value->road,
                  "soi"=>@$value->soi,
-                 "district_id"=>@$value->card_district,
-                 "district"=>@$value->ampname,
-                 "district_sub_id"=>@$value->card_district_sub,
-                 "district_sub"=>@$value->tamname,
-                 "province_id"=>@$value->card_province,
+                 "amphures_id"=>@$value->card_amphures_id_fk,
+                 "amphures"=>@$value->ampname,
+                 "district_id"=>@$value->card_district_id_fk,
+                 "district"=>@$value->tamname,
+                 "province_id"=>@$value->card_province_id_fk,
                  "province"=>@$value->provname,
                  "zipcode"=>@$value->card_zipcode,
                  "from_table"=>'customers_address_card',
@@ -85,15 +85,15 @@ class DeliveryController extends Controller
                   customers_detail.*,
                   dataset_provinces.name_th AS provname,
                   dataset_amphures.name_th AS ampname,
-                  dataset_districts.name_th AS tamname,                  
+                  dataset_districts.name_th AS tamname,
                   customers.prefix_name,
                   customers.first_name,
                   customers.last_name
                   FROM
                   customers_detail
-                  Left Join dataset_provinces ON customers_detail.province = dataset_provinces.id
-                  Left Join dataset_amphures ON customers_detail.district = dataset_amphures.id
-                  Left Join dataset_districts ON customers_detail.district_sub = dataset_districts.id                  
+                  Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                  Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                  Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
                   Left Join customers ON customers_detail.customer_id = customers.id
                    ");
 
@@ -107,11 +107,11 @@ class DeliveryController extends Controller
                  "moo"=>@$value->moo,
                  "road"=>@$value->road,
                  "soi"=>@$value->soi,
-                 "district_id"=>@$value->district,
-                 "district"=>@$value->ampname,
-                 "district_sub_id"=>@$value->district_sub,
-                 "district_sub"=>@$value->tamname,
-                 "province_id"=>@$value->province,
+                 "amphures_id"=>@$value->amphures_id_fk,
+                 "amphures"=>@$value->ampname,
+                 "district_id"=>@$value->district_id_fk,
+                 "district"=>@$value->tamname,
+                 "province_id"=>@$value->province_id_fk,
                  "province"=>@$value->provname,
                  "zipcode"=>@$value->zipcode,
                  "from_table"=>'customers_detail',
@@ -138,8 +138,8 @@ class DeliveryController extends Controller
                  "house_no"=>@$value->addr_no,
                  "district_id"=>@$value->amphur_code,
                  "district"=>@$district[0]->name_th,
-                 "district_sub_id"=>@$value->tambon_code,
-                 "district_sub"=>@$district_sub[0]->name_th,
+                 "district_id"=>@$value->tambon_code,
+                 "district"=>@$district_sub[0]->name_th,
                  "province_id"=>@$value->province_id_fk,
                  "province"=>@$province[0]->name_th,
                  "zipcode"=>@$value->zip_code,
@@ -169,7 +169,7 @@ class DeliveryController extends Controller
           customers.user_name
           FROM
           db_delivery
-          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
+          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id
            ");
 
       return View('backend.delivery.index')->with(
@@ -183,7 +183,7 @@ class DeliveryController extends Controller
            'sPacking'=>$sPacking,
         ) );
 
-      
+
     }
 
 
@@ -203,7 +203,7 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
       // dd($request->all());
-      
+
       if(isset($request->save_to_packing)){
 
       	$arr = implode(',', $request->row_id);
@@ -212,7 +212,7 @@ class DeliveryController extends Controller
 
         $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
 
-        $rsDeliveryAddr = DB::select(" 
+        $rsDeliveryAddr = DB::select("
 
           SELECT
           db_frontstore.address_sent_id_fk as addr
@@ -262,7 +262,7 @@ class DeliveryController extends Controller
       		// $DeliveryPackingCode->addr_id = $request->addr;
       		// $DeliveryPackingCode->save();
 
-          // DB::select(" INSERT INTO `customers_addr_sent` (`customer_id`, `prefix_name`, `first_name`, `last_name`, `house_no`, `house_name`, `moo`, `zipcode`, `soi`, `district`, `district_sub`, `road`, `province`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1') ");
+          // DB::select(" INSERT INTO `customers_addr_sent` (`customer_id`, `prefix_name`, `first_name`, `last_name`, `house_no`, `house_name`, `moo`, `zipcode`, `soi`, `amphures_id_fk`, `district_id_fk`, `road`, `province_id_fk`, `from_table`, `from_table_id`, `receipt_no`) VALUES ('1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1') ");
 
           // $rs = DB::select(" SELECT packing_code FROM customers_addr_sent WHERE id=".$request->id." ");
 
@@ -272,7 +272,7 @@ class DeliveryController extends Controller
 
           $receipt_no = explode(",",$request->receipt_no);
           $arr = [];
-          for ($i=0; $i < sizeof($receipt_no); $i++) { 
+          for ($i=0; $i < sizeof($receipt_no); $i++) {
               array_push($arr, "'".$receipt_no[$i]."'");
           }
           $arr = implode(",",$arr);
@@ -293,15 +293,15 @@ class DeliveryController extends Controller
           }
 
       		return redirect()->to(url("backend/delivery"));
-      
-      }elseif(isset($request->save_select_addr_edit)){     
+
+      }elseif(isset($request->save_select_addr_edit)){
 
           // dd($request->all());
           // dd($request->id);
 
           $receipt_no = explode(",",$request->receipt_no);
           $arr = [];
-          for ($i=0; $i < sizeof($receipt_no); $i++) { 
+          for ($i=0; $i < sizeof($receipt_no); $i++) {
               array_push($arr, "'".$receipt_no[$i]."'");
           }
           $arr = implode(",",$arr);
@@ -321,12 +321,12 @@ class DeliveryController extends Controller
             DB::select(" UPDATE customers_addr_sent SET id_choose=1 WHERE id='".$request->id."' ");
           }
 
-      		return redirect()->to(url("backend/delivery"));      			
+      		return redirect()->to(url("backend/delivery"));
 
       }else{
         return $this->form();
       }
-      
+
     }
 
     public function edit($id)
@@ -362,14 +362,14 @@ class DeliveryController extends Controller
           $sRow->tel    = request('tel');
           $sRow->province_id_fk    = request('province_id_fk');
           $sRow->delivery_date    = request('delivery_date');
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
           \DB::commit();
 
            return redirect()->to(url("backend/delivery/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();

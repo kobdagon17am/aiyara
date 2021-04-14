@@ -27,7 +27,7 @@ class ProfileController extends Controller
     public function index()
     {
 
-    
+
 
       return view('frontend/profile');
     }
@@ -43,11 +43,11 @@ class ProfileController extends Controller
       $customer = DB::table('customers_detail')
       ->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
 
-      ->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province') 
-      ->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.district') 
-      ->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_sub')
-      ->where('customer_id','=',Auth::guard('c_user')->user()->id) 
-      ->first(); 
+      ->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province_id_fk')
+      ->leftjoin('dataset_amphures','dataset_amphures.id','=','customers_detail.amphures_id_fk')
+      ->leftjoin('dataset_districts','dataset_districts.id','=','customers_detail.district_id_fk')
+      ->where('customer_id','=',Auth::guard('c_user')->user()->id)
+      ->first();
 
 
       $provinces = DB::table('dataset_provinces')
@@ -67,8 +67,8 @@ class ProfileController extends Controller
         'house_name' => trim($request->house_name),
         'moo' => trim($request->moo),
         'soi' => trim($request->soi),
-        'district' => trim($request->district),
-        'district_sub' => trim($request->district_sub),
+        'amphures_id_fk' => trim($request->amphures_id_fk),
+        'district_id_fk' => trim($request->district_id_fk),
         'road' => trim($request->road),
         'province' => trim($request->province),
         'zipcode' => trim($request->zipcode)

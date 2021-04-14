@@ -30,7 +30,7 @@ class PaymentCourse extends Model
 					'sum_price' => $rs->price,
 
 					'pv_total'  => $rs->pv_total,
-					'orders_type_id_fk'  => $rs->type,
+					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
@@ -104,7 +104,7 @@ class PaymentCourse extends Model
 					'sum_price' => $rs->price,
 
 					'pv_total'  => $rs->pv_total,
-					'orders_type_id_fk'  => $rs->type,
+					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
@@ -170,7 +170,7 @@ class PaymentCourse extends Model
 					'sum_price' => $rs->price,
 
 					'pv_total'  => $rs->pv_total,
-					'orders_type_id_fk'  => $rs->type,
+					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
 					'order_status_id_fk' => '2'
@@ -247,7 +247,7 @@ public static function ai_cash($rs){
 				'sum_price' => $rs->price,
 
 				'pv_total'  => $rs->pv_total,
-				'orders_type_id_fk'  => $rs->type,
+				'purchase_type_id_fk'  => $rs->type,
 				'pay_type_id_fk'  => $rs->pay_type,
 				'business_location_id_fk' => $business_location_id,
 				'order_status_id_fk' => '2'

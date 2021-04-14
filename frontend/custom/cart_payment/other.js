@@ -4,8 +4,8 @@ function next() {
     var sent_type_other = document.getElementById("sent_type_other").checked;//จัดส่งให้คนอื่น
     
     if(sent_type_other){
-        sent_to_customer_id_fk = document.getElementById("sent_to_customer_id_fk").value;
-        if(sent_to_customer_id_fk == ''){
+        address_sent_id_fk = document.getElementById("address_sent_id_fk").value;
+        if(address_sent_id_fk == ''){
             Swal.fire({
                 icon: 'error',
                 title: 'เลือกผู้รับไม่ถูกต้อง',
@@ -61,13 +61,13 @@ function next() {
                 title: 'กรุณาใส่ข้อมูล จังหวัด',
             })
 
-        } else if (district == '') {
+        } else if (amphures == '') {
             Swal.fire({
                 icon: 'error',
                 title: 'กรุณาใส่ข้อมูล เขต/อำเภอ *',
             })
 
-        } else if (district_sub == '') {
+        } else if (amphures == '') {
             Swal.fire({
                 icon: 'error',
                 title: 'กรุณาใส่ข้อมูล แขวง/ตำบล',
@@ -160,7 +160,7 @@ function data_direct_confirm(sent_to_customer_username){
             document.getElementById("c_qualification_name").innerHTML = data['data']['data']['qualification_name'];
             
             var sent_to_customer_id =  data['data']['data']['id'];
-            document.getElementById("sent_to_customer_id_fk").value = sent_to_customer_id;
+            document.getElementById("address_sent_id_fk").value = sent_to_customer_id;
 
             $('#large-Modal').modal('hide')
             document.getElementById("data_direct").style.display = "block";

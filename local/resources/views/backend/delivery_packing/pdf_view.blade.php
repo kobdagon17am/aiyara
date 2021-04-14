@@ -44,12 +44,12 @@ body{
 
     <?php
 
-              $value = DB::select(" 
+              $value = DB::select("
                                     SELECT
                 *
                 FROM
                 customers_addr_sent
-                WHERE packing_code = 
+                WHERE packing_code =
                     ".$data[0]." AND id_choose=1
 
                ");
@@ -61,8 +61,8 @@ body{
                 $addr .= @$value[0]->moo?", หมู่ ".@$value[0]->moo:'';
                 $addr .= @$value[0]->soi?", ซอย".@$value[0]->soi:'';
                 $addr .= @$value[0]->road?", ถนน".@$value[0]->road:'';
-                $addr .= @$value[0]->district_sub?", ต.".@$value[0]->district_sub:'';
-                $addr .= @$value[0]->district?", อ.".@$value[0]->district:'';
+                $addr .= @$value[0]->district?", ต.".@$value[0]->district:'';
+                $addr .= @$value[0]->amphures?", อ.".@$value[0]->amphures:'';
                 $addr .= @$value[0]->province?", จ.".@$value[0]->province:'';
 
                 if(@$value[0]->id!=''){

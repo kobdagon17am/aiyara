@@ -10,9 +10,9 @@ class Couse_Event extends Model
 
         $couse_event = DB::table('course_event')
         ->select('course_event.*','course_event_images.img_url','course_event_images.img_name')
-        ->leftjoin('course_event_images', 'course_event_images.course_event_id_fk', '=','course_event.id') 
-        ->where('course_event_images.img_default', '=', 1) 
-        ->whereDate('course_event.ce_edate', '>=',date('Y-m-d')) 
+        ->leftjoin('course_event_images', 'course_event_images.course_event_id_fk', '=','course_event.id')
+        ->where('course_event_images.img_default', '=', 1)
+        ->whereDate('course_event.ce_edate', '>=',date('Y-m-d'))
         ->orderby('course_event.ce_edate')
         ->get();
 
@@ -20,9 +20,9 @@ class Couse_Event extends Model
         ->where('lang_id', '=', 1)
         ->where('group_id', '=',$type)
         //->orderby('order')
-        ->first();  
+        ->first();
 
-        
+
         $data = array(
             'couse_event' => $couse_event,
             'type'=> $data_type
@@ -35,15 +35,15 @@ class Couse_Event extends Model
         $order_data = DB::table('db_orders')
         ->where('id','=',$order_id)
         ->first();
- 
-        if($order_data->orders_type_id_fk != '6'){
+
+        if($order_data->purchase_type_id_fk != '6'){
          $resule = ['status'=>'fail','message'=>'Type ID not course or event'];
          return $resule;
      }
- 
+
      $order_items = DB::table('db_order_products_list')
      ->select('db_order_products_list.*','dataset_ce_type.txt_desc','dataset_ce_type.id as type_ce_id')
-     ->leftjoin('course_event', 'course_event.id', '=','db_order_products_list.course_id_fk') 
+     ->leftjoin('course_event', 'course_event.id', '=','db_order_products_list.course_id_fk')
      ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
      ->where('db_order_products_list.order_id_fk','=',$order_id)
      // ->where('order_items.status','=',null)
@@ -51,7 +51,7 @@ class Couse_Event extends Model
      ->get();
 
 
-     if(count($order_items) <= 0){ 
+     if(count($order_items) <= 0){
         $resule = ['status'=>'fail','message'=>'Items not course or event || Items Empty'];
         return $resule;
     }
@@ -116,14 +116,14 @@ class Couse_Event extends Model
             ]);
 
         }else{
-             
+
             DB::rollback();
             $resule = ['status'=>'fail','message'=>'Items not course or event'];
             return $resule;
         }
 
 
-        $update_items = DB::table('db_order_products_list') 
+        $update_items = DB::table('db_order_products_list')
         ->where('id',$value->id)
         ->update(['approve_status' => '1']);
 
@@ -135,9 +135,9 @@ class Couse_Event extends Model
             'order_item_id'=>$value->id,
             'regis_date'=>date('Y-m-d'),
         ]);
-        
+
         $resule = ['status'=>'success','message'=>'Register Course Success'];
-    } 
+    }
 
     if($resule['status'] == 'success'){
         DB::commit();

@@ -72,7 +72,7 @@ class RegisterController extends Controller
 
 
 
-    if (isset($request->function) && $request->function == 'district') {
+    if (isset($request->function) && $request->function == 'amphures') {
       $id = $request->id;
       $district = DB::table('dataset_districts')
       ->select('*')
@@ -88,7 +88,7 @@ class RegisterController extends Controller
     }
 
 
-    if (isset($request->function) && $request->function == 'district_sub') {
+    if (isset($request->function) && $request->function == 'district') {
       $id = $request->id;
       $district = DB::table('dataset_districts')
       ->select('*')

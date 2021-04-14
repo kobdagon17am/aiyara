@@ -25,9 +25,10 @@
         <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
         <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
         <input type="hidden" name="errorUrl" value="http://www.yourwebsite.com/pError.jsp">
-        <input type="hidden" name="lang" VALUE="E">
+        <input type="hidden" name="lang" VALUE="T">
         <input type="hidden" name="remark" value="-">
     </form>
+
 
      <div class="row">
          <div class="col-md-8 col-sm-12">
@@ -158,7 +159,7 @@
                                                              <div class="col-md-12">
                                                                  <h5 id="c_text_username" style="color: #000;font-size: 16px"></h5>
                                                                  <h6 class="m-b-0" id="c_name" style="color: #000"></h6>
-                                                                 <input type="hidden" name="sent_to_customer_id_fk" id="sent_to_customer_id_fk" value="">
+                                                                 <input type="hidden" name="address_sent_id_fk" id="address_sent_id_fk" value="">
 
                                                              </div>
 
@@ -313,24 +314,21 @@
                                          <div class="col-sm-4">
                                              <label>จังหวัด <b class="text-danger">*</b></label>
                                              <input type="text" id="provinces_address"
-                                                 class="form-control form-control-bold" placeholder="จังหวัด"
-                                                 name="province" value="{{ $address->provinces_name }}" readonly="">
-                                             {{-- <input type="hidden" name="province" value="{{ $address->provinces_id }}"> --}}
+                                                 class="form-control form-control-bold" placeholder="จังหวัด" value="{{ $address->provinces_name }}" readonly="">
+                                             <input type="hidden" name="province" value="{{ $address->province_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
                                              <label>เขต/อำเภอ <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="เขต/อำเภอ" name="district"
-                                                 value="{{ $address->amphures_name }}" readonly="">
-                                             {{-- <input type="hidden" name="district" value="{{ $address->amphures_id }}"> --}}
+                                                 placeholder="เขต/อำเภอ" value="{{ $address->amphures_name }}" readonly="">
+                                             <input type="hidden" name="amphures" value="{{ $address->amphures_id_fk }}">
                                          </div>
                                          <div class="col-sm-4">
                                              <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="แขวง/ตำบล" name="district_sub"
-                                                 value="{{ $address->district_name }}" readonly="">
-                                             {{-- <input type="hidden" name="district_sub" value="{{ $address->district_id }}"> --}}
+                                                 placeholder="แขวง/ตำบล" value="{{ $address->district_name }}" readonly="">
+                                             <input type="hidden" name="district" value="{{ $address->district_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
@@ -405,22 +403,23 @@
                                          <div class="col-sm-4">
                                              <label>จังหวัด <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold" placeholder="จังหวัด"
-                                                 name="card_province" value="{{ $address_card->card_provinces_name }}"
+                                                 value="{{ $address_card->card_provinces_name }}"
                                                  readonly="">
+                                              <input type="hidden" name="card_province" value="{{ $address_card->card_province_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
                                              <label>เขต/อำเภอ <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="เขต/อำเภอ" name="card_district"
+                                                 placeholder="เขต/อำเภอ" name="card_amphures"
                                                  value="{{ $address_card->card_amphures_name }}" readonly="">
-                                             {{-- <input type="hidden" name="card_district" value="{{ $address->amphures_id }}"> --}}
+                                                 <input type="hidden" name="card_amphures" value="{{ $address_card->card_amphures_id_fk }}">
                                          </div>
                                          <div class="col-sm-4">
                                              <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="แขวง/ตำบล" name="card_district_sub"
-                                                 value="{{ $address_card->card_district_name }}" readonly="">
+                                                 placeholder="แขวง/ตำบล" value="{{ $address_card->card_district_name }}" readonly="">
+                                                 <input type="hidden" name="card_district" value="{{ $address_card->card_district_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
@@ -544,7 +543,7 @@
                                          <div class="col-sm-4">
                                              <label>เขต/อำเภอ <font class="text-danger">*</font></label>
                                              <select class="js-example-basic-single col-sm-12 sent_address_other"
-                                                 name="other_district" id="district">
+                                                 name="other_amphures" id="amphures">
                                                  <option value=""> Select </option>
                                              </select>
                                          </div>
@@ -552,7 +551,7 @@
                                          <div class="col-sm-4">
                                              <label>แขวง/ตำบล <font class="text-danger">*</font></label>
                                              <select class="js-example-basic-single col-sm-12 sent_address_other"
-                                                 name="other_district_sub" id="district_sub">
+                                                 name="other_district" id="district">
                                                  <option value=""> Select </option>
 
                                              </select>
@@ -1146,7 +1145,7 @@
                  '</div>' +
                  '</div>' +
                  '</div>';
-    
+
             var conten_2 = `
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -1236,19 +1235,19 @@
 
      <script type="text/javascript">
          $('#province').change(function() {
-             var id_province = $(this).val();
-             check_shipping(id_province);
+             var province = $(this).val();
+             check_shipping(province);
              $.ajax({
                  async: false,
                  type: "get",
                  url: "{{ route('location') }}",
                  data: {
-                     id: id_province,
+                     id: province,
                      function: 'provinces'
                  },
                  success: function(data) {
-                     $('#district').html(data);
-                     $('#district_sub').val('');
+                     $('#amphures').html(data);
+                     $('#district').val('');
                      // $('#zipcode').val('');
                  }
              });
@@ -1256,22 +1255,22 @@
          });
 
 
-         $('#district').change(function() {
-             var id_district = $(this).val();
+         $('#amphures').change(function() {
+             var amphures = $(this).val();
              $('#province').change(function() {
-                 var id_province = $(this).val();
+                 var province = $(this).val();
 
                  $.ajax({
                      async: false,
                      type: "get",
                      url: "{{ route('location') }}",
                      data: {
-                         id: id_province,
+                         id: province,
                          function: 'provinces'
                      },
                      success: function(data) {
-                         $('#district').html(data);
-                         $('#district_sub').val('');
+                         $('#amphures').html(data);
+                         $('#district').val('');
                          // $('#zipcode').val('');
                      }
                  });
@@ -1282,23 +1281,23 @@
                  type: "get",
                  url: "{{ route('location') }}",
                  data: {
-                     id: id_district,
-                     function: 'district'
+                     id: amphures,
+                     function: 'amphures'
                  },
                  success: function(data) {
-                     $('#district_sub').html(data);
+                     $('#district').html(data);
                  }
              });
          });
 
-         $('#district_sub').change(function() {
-             var id_district_sub = $(this).val();
+         $('#district').change(function() {
+             var district = $(this).val();
              $.ajax({
                  type: "get",
                  url: "{{ route('location') }}",
                  data: {
-                     id: id_district_sub,
-                     function: 'district_sub'
+                     id: district,
+                     function: 'district'
                  },
                  success: function(data) {
                      $('#other_zipcode').val(data);

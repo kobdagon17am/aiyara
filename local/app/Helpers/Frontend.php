@@ -58,7 +58,7 @@ class Frontend{
 	// 	$customer = DB::table('customers_detail')
 	// 	->select('customers_detail.*','dataset_provinces.id as provinces_id','dataset_provinces.name_th as provinces_name','dataset_amphures.name_th as amphures_name','dataset_amphures.id as amphures_id','dataset_districts.id as district_id','dataset_districts.name_th as district_name')
 	// 	->where('customer_id','=',$id)
-	// 	->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province')
+	// 	->leftjoin('dataset_provinces','dataset_provinces.id','=','customers_detail.province_id_fk')
 	// 	->leftjoin('dataset_amphures','dataset_amphures.province_id','=','dataset_provinces.id')
 	// 	->leftjoin('dataset_districts','dataset_districts.amphure_id','=','dataset_amphures.id')
 	// 	->first();

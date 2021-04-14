@@ -47,7 +47,7 @@ class General {
 		}
 		return $return;
 	}
-	
+
 	static function gen_route($route,$name,$id) {
 		$new_route = '';
         if(@$route) {
@@ -83,7 +83,7 @@ class General {
 	//คำนวนส่วนต่างเปอเซ็น
 	static function cal_between_percent_discount($price,$discount_price) {
 		$pecent = 0;
-		
+
 		if($price > $discount_price) {
 			//ส่วนลดเท่าไหร่
 			$range = $price - $discount_price;
@@ -100,7 +100,7 @@ class General {
 	//คำนวนส่วนต่างเปอเซ็น ไม่ปัด
 	static function cal_between_percent_discount_real($price,$discount_price) {
 		$pecent = 0;
-		
+
 		if($price > $discount_price) {
 			//ส่วนลดเท่าไหร่
 			$range = $price - $discount_price;
@@ -231,7 +231,7 @@ class General {
 					<div class="tagFree tagFree-green">
 						<div>ซื้อ '.@$first->get.'<span>แถม</span></div><div>'.@$first->free.'</div>
 					</div>';
-				}		
+				}
 
 			} else {
 				$return = '';
@@ -271,7 +271,7 @@ class General {
 	    }
 	}
 
-	
+
 	static function merge_address($data = []) { //ไว้เชื่อมที่อยู่
 
 		$example = [
@@ -279,7 +279,7 @@ class General {
 			'soi'			=> '', //ซอย
 			'street'		=> '', //ถนน
 			'sub_district'	=> '', //ตำบล/แขวง
-			'district'		=> '', //อำเภอ/เขต
+			'amphures'		=> '', //อำเภอ/เขต
 			'province'		=> '', //จังหวัด,
 			'postcode'		=> '', //รหัสไปรษณีย์
 			'country'		=> '' //ประเทศ
@@ -290,7 +290,7 @@ class General {
 			'soi'			=> '', //ซอย
 			'street'		=> '', //ถนน
 			'sub_district'	=> '', //ตำบล/แขวง
-			'district'		=> '', //อำเภอ/เขต
+			'amphures'		=> '', //อำเภอ/เขต
 			'province'		=> '', //จังหวัด
 			'postcode'		=> '', //รหัสไปรษณีย์
 			'country'		=> ''  //ประเทศ
@@ -314,7 +314,7 @@ class General {
 
 							if(in_array($key,['address','soi','street'])) {
 								$return['address_1'] .= $text;
-							} else if(in_array($key,['sub_district','district','postcode'])) {
+							} else if(in_array($key,['sub_district','amphures','postcode'])) {
 								$return['address_2'] .= $text;
 							} else if(in_array($key,['province','country'])) {
 								$return['address_3'] .= $text;
@@ -324,7 +324,7 @@ class General {
 				}
 			}
 		}
-		
+
 		return $return;//Array
 
 	}
@@ -341,7 +341,7 @@ class General {
 		} else {
 			$return = '';
 		}
-		
+
 		return $return;
 
 	}
@@ -349,7 +349,7 @@ class General {
 	static function date_add_or_del( $date, $symbol = '+', $day = 0) {
 
 		if($date) {
-			$date = date('d/m/Y', strtotime($symbol." ".$day." days", strtotime($date))); 
+			$date = date('d/m/Y', strtotime($symbol." ".$day." days", strtotime($date)));
 		}
 		return $date;
 	}
@@ -361,9 +361,9 @@ class General {
 
        if(@$dt_menor && @$dt_maior) {
 	       $diff = date_diff( $dt_menor, $dt_maior, ! $relative);
-	       
+
 	       switch( $str_interval){
-	           case "y": 
+	           case "y":
 	               $total = $diff->y + $diff->m / 12 + $diff->d / 365.25; break;
 	           case "m":
 	               $total= $diff->y * 12 + $diff->m + $diff->d/30 + $diff->h / 24;
@@ -371,13 +371,13 @@ class General {
 	           case "d":
 	               $total = $diff->y * 365.25 + $diff->m * 30 + $diff->d + $diff->h/24 + $diff->i / 60;
 	               break;
-	           case "h": 
+	           case "h":
 	               $total = ($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h + $diff->i/60;
 	               break;
-	           case "i": 
+	           case "i":
 	               $total = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
 	               break;
-	           case "s": 
+	           case "s":
 	               $total = ((($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i)*60 + $diff->s;
 	               break;
 	          }
@@ -392,7 +392,7 @@ class General {
 	            return $op.(-1 * $total).'<span>';
 	        } else {
 	        	return $op.$total.'<span>';
-	        } 
+	        }
 	    }
     }
 
@@ -402,9 +402,9 @@ class General {
        if( is_string( $dt_maior)) $dt_maior = date_create( $dt_maior);
 
        $diff = date_diff( $dt_menor, $dt_maior, ! $relative);
-       
+
        switch( $str_interval){
-           case "y": 
+           case "y":
                $total = $diff->y + $diff->m / 12 + $diff->d / 365.25; break;
            case "m":
                $total= $diff->y * 12 + $diff->m + $diff->d/30 + $diff->h / 24;
@@ -412,13 +412,13 @@ class General {
            case "d":
                $total = $diff->y * 365.25 + $diff->m * 30 + $diff->d + $diff->h/24 + $diff->i / 60;
                break;
-           case "h": 
+           case "h":
                $total = ($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h + $diff->i/60;
                break;
-           case "i": 
+           case "i":
                $total = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
                break;
-           case "s": 
+           case "s":
                $total = ((($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i)*60 + $diff->s;
                break;
           }
@@ -427,7 +427,7 @@ class General {
             return (-1 * $total);
         } else {
         	return $total;
-        } 
+        }
     }
 
 	static function time_elapsed_string_show($datetime, $datetime_end = '', $sum_min = '0', $full = false) {
@@ -508,13 +508,13 @@ class General {
 	    return $string ? implode(', ', $string) . 'ที่แล้ว' : 'เมื่อครู่นี้';
 	}
 
-	
+
 	static function check_image($mime_type) {
 		$allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
 		$return = '';
 
 		if(@in_array($mime_type, $allowedMimeTypes) ){
-			$return = true;	
+			$return = true;
 		} else {
 			$return = false;
 		}
@@ -525,19 +525,19 @@ class General {
 		$return = '';
 
 		if($reviselast) {
-			$return = $reviselast+1;	
+			$return = $reviselast+1;
 		} else {
 			$return = '00';
 		}
 		return General::str_pad_num($return,2);
 	}
 
-	static function gencode_lot($codelast) { //62/1 
+	static function gencode_lot($codelast) { //62/1
 		$return = '';
 
-		$year_current = General::mb_substr_((date('Y')+543),2,2); //2 Digit พศ. 2562  = 62 
+		$year_current = General::mb_substr_((date('Y')+543),2,2); //2 Digit พศ. 2562  = 62
 
-		//62/1  //โชว์ 62/1 
+		//62/1  //โชว์ 62/1
 		if($codelast) {
 			$ex = explode('-',$codelast);
 			$year = @$ex[0];
@@ -561,14 +561,14 @@ class General {
 			$length = General::mb_strlen_($codelast);
 			$minus = $run_digit + 4;
 			$prefix_code   = General::mb_substr_($codelast,0,($length-$minus));
-			$prefix_ym   = General::mb_substr_($codelast,General::mb_strlen_($prefix_code),4); 
+			$prefix_ym   = General::mb_substr_($codelast,General::mb_strlen_($prefix_code),4);
 			if($prefix_ym == date('ym')) {
 				$prefix = General::mb_substr_($codelast,0,($length-$run_digit));
 				$no     = General::mb_substr_($codelast,($length-$run_digit),$length)+1;
 				$return = $prefix.General::str_pad_num($no,$run_digit);
 			} else {
 				$return = $prefix_code.date('ym').General::str_pad_num('1',$run_digit);
-			}		
+			}
 		} else {
 			$return = $prefix.date('ym').General::str_pad_num('1',$run_digit);
 		}
@@ -721,7 +721,7 @@ class General {
 
 	static function stock_check_return($qty = 0) { //เช็คว่าถ้าเป็นลบจำนวนสินค้า แปลงด้านหน้าเป็น + และกรณีเป็น + ให้นำไป -
 		$q = explode('-',$qty);
-		
+
 		$qty_gen = [];
 		if(count($q) == 2) {
 			$qty_gen['operation'] = '+';
@@ -733,7 +733,7 @@ class General {
 			$qty_gen['operation'] = '';
 			$qty_gen['qty'] = $qty;
 		}
-    	
+
     	return $qty_gen;
     }
 
@@ -756,7 +756,7 @@ class General {
 		} else {
 			$qty_gen = $qty;
 		}
-    	
+
     	return $qty_gen;
     }
 
@@ -787,7 +787,7 @@ class General {
     		$m = $ex[1];
     		$d = $ex[0];
 
-    		$date = $y.'-'.$m.'-'.$d.' '.$time; 
+    		$date = $y.'-'.$m.'-'.$d.' '.$time;
     	}
 
     	return $date;
@@ -804,8 +804,8 @@ class General {
     		$m = $ex[1];
     		$d = $ex[2];
 
-    		$date = $d.'/'.$m.'/'.$y.' '.$time; 
-    	} 
+    		$date = $d.'/'.$m.'/'.$y.' '.$time;
+    	}
 
     	return $date;
     }
@@ -889,7 +889,7 @@ class General {
 	}
 
     static function preg_img($data) {
-    	preg_match_all('/<img[^>]+>/i',$data, $result); 
+    	preg_match_all('/<img[^>]+>/i',$data, $result);
     	return $result;
     }
 
@@ -1078,13 +1078,13 @@ class General {
 	static function show_null($num) {
 		if($num == 0) {
 			$num = '';
-		} 
+		}
 		return $num;
 	}
 
 	static function isNumeric($str) {
 		return (!is_numeric($str)) ? FALSE : TRUE;
-	} 
+	}
 
 	static function number_format_($str,$limit=2,$show=0) {
 		if(!General::isNumeric($str) || $str == 0){
@@ -1112,7 +1112,7 @@ class General {
 				return $str;
 			}
 		}
-	} 
+	}
 
 	static function number_format_show($str,$limit=2,$show=0) {
 		if(!General::isNumeric($str) || $str == 0){
@@ -1131,7 +1131,7 @@ class General {
 			$ex = @explode('.',$num);
 			if(count($ex) == 2) {
 				if($ex[1] == '00') {
-					$return = $ex[0];	
+					$return = $ex[0];
 				} else {
 					$return = $num;
 				}
@@ -1140,13 +1140,13 @@ class General {
 			}
 			return $return;
 		}
-	} 
+	}
 
 	static function clear_digit($str) {
 		$ex = @explode('.',$str);
 		if(count($ex) == 2) {
 			if($ex[1] == '00') {
-				$return = $ex[0];	
+				$return = $ex[0];
 			} else {
 				$return = $str;
 			}
@@ -1154,7 +1154,7 @@ class General {
 			$return = $str;
 		}
 		return $return;
-	} 
+	}
 
 	static function mb_substr_($str,$a,$b) {
 		return mb_substr($str,$a,$b,'UTF-8');
@@ -1207,7 +1207,7 @@ class General {
 			return '';
 		}
 	}
-	
+
 	static function CountDay($start,$end) {
 		if($start && $end) {
 			return round((strtotime($end)-strtotime($start))/(24*60*60),0);
@@ -1227,7 +1227,7 @@ class General {
 
 	static function Last_Days_Month($month, $year) {
 		if($month && $year) {
-			return cal_days_in_month(CAL_GREGORIAN, $month, $year); 
+			return cal_days_in_month(CAL_GREGORIAN, $month, $year);
 		} else {
 			return 0;
 		}
@@ -1312,14 +1312,14 @@ class General {
 	static function str_pad_num($num, $position) {
 		if($num) {
 			$num = str_pad($num,$position,"0",STR_PAD_LEFT);
-		} 
+		}
         return $num;
 	}
 
 	static function str_pad_num_zero($num, $position) {
 		if($num || $num == '0') {
 			$num = str_pad($num,$position,"0",STR_PAD_LEFT);
-		} 
+		}
         return $num;
 	}
 
@@ -1345,7 +1345,7 @@ class General {
 	static function strtoupper_($str) { //ตัวใหญ่ทั้งหมด
 		if($str) {
 			$str = strtoupper($str);
-		} 
+		}
         return $str;
 	}
 
@@ -1367,10 +1367,10 @@ class General {
 		$urlWithoutProtocol = "http://ipinfo.io/".$ip."?token=89331599924263";
 	    $request         = "";
 	    $isRequestHeader = false;
-	 
+
 	    $exHeaderInfoArr   = array();
 	    $exHeaderInfoArr[] = "Content-type: application/json";
-	 
+
 	    $ch = curl_init();
 	    curl_setopt($ch, CURLOPT_URL, $urlWithoutProtocol);
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1380,9 +1380,9 @@ class General {
 	    if($response) {
 	    	$response = json_decode($response);
 	    	if(@$response->ip == '127.0.0.1') {
-	    		return 'TH';	
+	    		return 'TH';
 	    	} else {
-	    		return @$response->country; //US, TH 
+	    		return @$response->country; //US, TH
 	    	}
 	    } else {
 	  		return 'TH';
@@ -1446,7 +1446,7 @@ class General {
 		    curl_setopt ($ch, CURLOPT_HTTPHEADER,array('api-key: U9G1L457H6DCugT7VmBaEacbHV9RX0PySO05cYaGsm'));
 		    $rawdata = curl_exec($ch);
 		    curl_close($ch);
-		    if($rawdata) { 
+		    if($rawdata) {
 		    	$raw = json_decode($rawdata);
 			    $thb = $raw->result->data->data_detail[0]->selling;
 			} else {
@@ -1477,7 +1477,7 @@ class General {
 	    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 	    $rawdata = curl_exec($ch);
 	    curl_close($ch);
-	    if($rawdata) { 
+	    if($rawdata) {
 		    $data = explode('bld>', $rawdata);
 		    $data = explode($to_Currency, $data[1]);
 		} else {
@@ -1499,22 +1499,22 @@ class General {
 	    curl_setopt ($ch, CURLOPT_URL, $url);
 
 	    $data = array("amount" => $amount, "currency1" => $from_Currency, "currency2" => $to_Currency);
-	    $data_string = json_encode($data);                
+	    $data_string = json_encode($data);
 
-	    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string); 
+	    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 	    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-	    curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                         
-	        'Content-Type: application/json; charset=UTF-8',                                                    
-	        'Content-Length: ' . strlen($data_string))                                
-	    );     
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	        'Content-Type: application/json; charset=UTF-8',
+	        'Content-Length: ' . strlen($data_string))
+	    );
 
 	    curl_setopt ($ch, CURLOPT_USERAGENT,
 	                 "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
 	    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 	    $rawdata = curl_exec($ch);
 	    curl_close($ch);
-	    
+
 	    $return = json_decode($rawdata, true);
 	    return $return['d'];
 	}
@@ -1530,7 +1530,7 @@ class General {
 		return General::clear_comma(General::number_format_($show_price,2));
 	}
 
-	static function using_http($link,$mode = 'http') { 
+	static function using_http($link,$mode = 'http') {
 		$return = $link;
 		if($link) {
 			if(count(explode('http',$link)) == 1) {

@@ -9,7 +9,7 @@
   .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -62,7 +62,7 @@
     background: #f2f2f2;
   }
 
-  .bx-check-circle { font-size: 20px;color: #00994d;font-weight: bold;} 
+  .bx-check-circle { font-size: 20px;color: #00994d;font-weight: bold;}
 
   .btnAddAiCashModal02 {
     cursor: pointer;
@@ -108,7 +108,7 @@
 
                     <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ url("backend/frontstore") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                    </a> 
+                    </a>
 
         </div>
 
@@ -116,7 +116,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
     $menu_id = @$_REQUEST['menu_id'];
     $role_group_id = @$_REQUEST['role_group_id'];
@@ -133,7 +133,7 @@
 
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;  
+      // echo $menu_id;
 
    ?>
 
@@ -244,15 +244,15 @@
                                             @foreach(@$sDistribution_channel AS $r)
                                               @if(empty(@$sRow->distribution_channel_id_fk))
                                                     <option value="{{$r->id}}" {{ (@$r->id==1)?'selected':'' }} >
-                                                      {{$r->txt_desc}} 
+                                                      {{$r->txt_desc}}
                                                     </option>
-                                              @else 
-                                                    <option value="{{$r->id}}" 
-                                                      {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}} 
+                                              @else
+                                                    <option value="{{$r->id}}"
+                                                      {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
                                                     </option>
                                               @endif
                                             @endforeach
-                                          @endif                                
+                                          @endif
                                     </select>
                                   </div>
                                 </div>
@@ -275,7 +275,7 @@
                                             @if(@$sPurchase_type)
                                               @foreach(@$sPurchase_type AS $r)
                                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                                                  {{$r->orders_type}} 
+                                                  {{$r->orders_type}}
                                                 </option>
                                               @endforeach
                                             @endif
@@ -287,7 +287,7 @@
                                 </div>
                               </div>
                             </div>
-                
+
                         <div class="row">
                               <div class="col-md-6">
                                 <div class="form-group row">
@@ -303,7 +303,7 @@
                                             </option>
                                           @endforeach
                                         @endif
-                                      </select>   
+                                      </select>
 
                                   </div>
                                 </div>
@@ -336,19 +336,19 @@
                                             </option>
                                           @endforeach
                                         @endif
-                                      </select> 
+                                      </select>
 
                                   </div>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                   <div class="form-group row">
-                                 
+
                                 </div>
                               </div>
                             </div>
 
-            @if( empty(@$sRow) )   
+            @if( empty(@$sRow) )
 
                       <div class="row">
 
@@ -402,7 +402,7 @@
 
 
                           <div class="form-group  row " style="display: none;" >
-                            
+
                             <label for="tracking_type" class="col-md-3 col-form-label">  การแจ้งชำระ :  </label>
                             <div class="col-md-3 d-flex ">
                                <input type="text" class="form-control" value="รอชำระเงิน" disabled="" >
@@ -420,14 +420,14 @@
 
 <br>
 
-<?php 
+<?php
 // echo @$sRow;
   if(!empty(@$sRow)){
  ?>
 <div class="row"  >
   <div class="col-12">
 
-          
+
           <div class="page-title-box d-flex justify-content-between ">
             <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
 
@@ -468,7 +468,7 @@
                   </div>
                 </div>
 
-<?php 
+<?php
   // dd(@$sFrontstoreDataTotal);
   if(empty(@$sFrontstoreDataTotal)){
     $div_cost = "display:none;";
@@ -480,7 +480,7 @@
           <div class="col-lg-6">
             <div class="card">
               <div class="card-body">
-                
+
                 <div class="table-responsive">
                   <table class="table table-striped mb-0">
 
@@ -489,7 +489,7 @@
                     <?php $bg_02 = @$sRow->delivery_location==2?'background-color: #00e673;color:black;':''; ?>
                     <?php $bg_03 = @$sRow->delivery_location==3?'background-color: #00e673;color:black;':''; ?>
                     <?php $bg_04 = @$sRow->delivery_location==4?'background-color: #00e673;color:black;':''; ?>
-                    
+
                     <thead>
                       <tr style="background-color: #f2f2f2;">
                         <th>ระบุที่อยู่ในการจัดส่ง</th>
@@ -509,7 +509,7 @@
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
                             <div class="col-md-6">
-                             <select id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " >
+                             <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$r->id==@$sRow->branch_id_fk)
@@ -521,7 +521,7 @@
                                     {{$r->b_name}}
                                   </option>
                                   @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
                                   @endif
@@ -542,10 +542,10 @@
                                       customers_address_card.card_moo,
                                       customers_address_card.card_zipcode,
                                       customers_address_card.card_soi,
-                                      customers_address_card.card_district,
-                                      customers_address_card.card_district_sub,
-                                      customers_address_card.card_road,
-                                      customers_address_card.card_province,
+                                      customers_detail.amphures_id_fk,
+                                      customers_detail.district_id_fk,
+                                      customers_detail.road,
+                                      customers_detail.province_id_fk,
                                       customers_address_card.created_at,
                                       customers_address_card.updated_at,
                                       dataset_provinces.name_th AS provname,
@@ -556,9 +556,9 @@
                                       customers.last_name
                                       FROM
                                       customers_address_card
-                                      Left Join dataset_provinces ON customers_address_card.card_province = dataset_provinces.id
-                                      Left Join dataset_amphures ON customers_address_card.card_district = dataset_amphures.id
-                                      Left Join dataset_districts ON customers_address_card.card_district_sub = dataset_districts.id
+                                      Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
                                       where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
@@ -566,10 +566,10 @@
                             if(@$addr[0]->provname!=''){
                               @$address = "";
                               @$address .=  "ชื่อผู้รับ : ". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
-                              @$address .=  "<br>ที่อยู่ : ". @$addr[0]->card_house_no; 
-                              @$address .=  " ต. ". @$addr[0]->tamname; 
+                              @$address .=  "<br>ที่อยู่ : ". @$addr[0]->card_house_no;
+                              @$address .=  " ต. ". @$addr[0]->tamname;
                               @$address .=  " อ. ". @$addr[0]->ampname;
-                              @$address .=  " จ. ". @$addr[0]->provname; 
+                              @$address .=  " จ. ". @$addr[0]->provname;
                               @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode;
                             }else{
                               @$address = '-ไม่พบข้อมูล-';
@@ -584,7 +584,7 @@
                         </th>
                       </tr>
 
-                    <?php 
+                    <?php
 
                               @$addr = DB::select("SELECT
                                       customers_detail.customer_id,
@@ -593,10 +593,10 @@
                                       customers_detail.moo,
                                       customers_detail.zipcode,
                                       customers_detail.soi,
-                                      customers_detail.district,
-                                      customers_detail.district_sub,
+                                      customers_detail.amphures_id_fk,
+                                      customers_detail.district_id_fk,
                                       customers_detail.road,
-                                      customers_detail.province,
+                                      customers_detail.province_id_fk,
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name,
@@ -606,10 +606,10 @@
                                       FROM
                                       customers_detail
                                       Left Join customers ON customers_detail.customer_id = customers.id
-                                      Left Join dataset_provinces ON customers_detail.province = dataset_provinces.id
-                                      Left Join dataset_amphures ON customers_detail.district = dataset_amphures.id
-                                      Left Join dataset_districts ON customers_detail.district_sub = dataset_districts.id
-                                      WHERE customers_detail.customer_id = 
+                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                      WHERE customers_detail.customer_id =
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
 
                               // print_r(sizeof(@$addr));
@@ -618,9 +618,9 @@
                                 @$address = "";
                                 @$address .= "ชื่อผู้รับ : ". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
                                 @$address .= "<br>ที่อยู่ : ". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
-                                @$address .= " ต. ". @$addr[0]->tamname; 
-                                @$address .= " อ. ". @$addr[0]->ampname; 
-                                @$address .= " จ. ". @$addr[0]->provname; 
+                                @$address .= " ต. ". @$addr[0]->tamname;
+                                @$address .= " อ. ". @$addr[0]->ampname;
+                                @$address .= " จ. ". @$addr[0]->provname;
                                 @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
 
                               }else{
@@ -637,9 +637,9 @@
                         </th>
                       </tr>
 
-                    <?php 
+                    <?php
                          @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname 
+                                dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
                                 from customers_addr_frontstore
                                 Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
                                 Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
@@ -648,11 +648,11 @@
 
                          if(sizeof(@$addr)>0){
 
-                              @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name; 
+                              @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name;
                               @$address .= "<br> ที่อยู่ : ". @$addr[0]->addr_no ;
-                              @$address .= " ต. ". @$addr[0]->tamname; 
-                              @$address .= " อ. ". @$addr[0]->ampname; 
-                              @$address .= " จ. ". @$addr[0]->provname; 
+                              @$address .= " ต. ". @$addr[0]->tamname;
+                              @$address .= " อ. ". @$addr[0]->ampname;
+                              @$address .= " จ. ". @$addr[0]->provname;
                               @$address .= " รหัส ปณ. ". @$addr[0]->zip_code ;
 
                           }else{
@@ -669,7 +669,7 @@
                         </th>
                       </tr>
 
-				
+
 				@IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
 				 	@if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
                       <tr>
@@ -691,7 +691,7 @@
                     </tbody>
                   </table>
                 </div>
-                
+
               </div>
             </div>
           </div>
@@ -699,7 +699,7 @@
       <div class="col-lg-6">
         <div class="card">
           <div class="card-body">
-            
+
 
 
 <!--         dataset_orders_type
@@ -743,8 +743,8 @@
                         <label for="" >มูลค่าสินค้า : </label>
                       </div>
                       <div class="divTableCell">
-                        <input id="product_value" name="product_value" class="form-control f-ainumber-18 input-aireadonly" 
-                        value="{{@$sRow->product_value>0?number_format(@$sRow->product_value,2):''}}" 
+                        <input id="product_value" name="product_value" class="form-control f-ainumber-18 input-aireadonly"
+                        value="{{@$sRow->product_value>0?number_format(@$sRow->product_value,2):''}}"
                         readonly="" />
                       </div>
                       <div class="divTableCell">
@@ -763,7 +763,7 @@
                       </div>
                     </div>
 
-         
+
 					<div class="divTableRow " >
 						<div class="divTableCell" >
 							<span style="color: red;">
@@ -810,7 +810,7 @@
 
 
 @if(@$sRow->purchase_type_id_fk==5)
-  
+
                 <div class="divTableRow " style=""  >
                     <div class="divTableCell" >
                     </div>
@@ -825,7 +825,7 @@
                     </div>
                   </div>
 
-@ENDIF 
+@ENDIF
 
 
                     <div class="divTableRow">
@@ -833,22 +833,22 @@
                       <div class="divTH">
                         @if(@$sRow->purchase_type_id_fk==5)
                         <label for="" > รูปแบบการชำระเงินอื่นๆ  : </label>
-                        @ELSE 
+                        @ELSE
                         <label for="" > รูปแบบการชำระเงิน : </label>
-                        @ENDIF 
+                        @ENDIF
                       </div>
                       <div class="divTableCell">
-                            
+
                             <select id="pay_type_id" name="pay_type_id" class="form-control select2-templating " required="" >
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
                                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id)?'selected':'' }}  >
-                                          {{$r->detail}} 
+                                          {{$r->detail}}
                                         </option>
                                       @endforeach
-                                    @endif                                
-                              </select>   
+                                    @endif
+                              </select>
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -915,7 +915,7 @@
                       <div class="divTableCell">
                           <input class="form-control f-ainumber-18 input-aireadonly " id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt,2)}}" readonly />
                       </div>
-                  
+
                     </div>
 
                    <?php $show_div_credit = @$sRow->credit_price==0?"display: none;":''; ?>
@@ -927,7 +927,7 @@
                       <div class="divTableCell">
        						     <input class="form-control f-ainumber-18-b input-aireadonly " id="sum_credit_price" name="sum_credit_price" value="{{number_format(@$sRow->sum_credit_price,2)}}" readonly />
                       </div>
-                  
+
                   	  <div class="divTableCell">
                   	  	<i class="bx bx-check-circle" title="ยอดชำระ"></i>
                       </div>
@@ -945,7 +945,7 @@
                               @foreach(@$sAccount_bank AS $r)
                                   <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
-                            @endif      
+                            @endif
 
                           <div class="d-flex">
                            <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
@@ -956,7 +956,7 @@
                               $ds_m = $ds[1];
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>           
+                            }else{$ds='';} ?>
                               <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
@@ -965,16 +965,16 @@
 
                          <span width="100" class="span_file_slip" >
                                 @IF(!empty(@$sRow->file_slip))
-                                  <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" > 
+                                  <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
                                   <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
-                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" > 
+                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
                          </span>
 
 
                       </div>
-                      <div class="divTableCell">  
+                      <div class="divTableCell">
                       </div>
                     </div>
 
@@ -992,7 +992,7 @@
 							@ELSE
 							<input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
 							@ENDIF
-                            
+
 
                         </div>
                          <div class="divTableCell">
@@ -1016,13 +1016,13 @@
                                   @if(@$Customer)
                                     @foreach(@$Customer AS $r)
                                       <option value="{{$r->id}}" {{ (@$r->id==@$sRow->member_id_aicash)?'selected':'' }} >
-                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
+                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}}
                                         {{$r->last_name}}
                                       </option>
                                     @endforeach
                                   @endif
                              </select>
-                          
+
                       </div>
                        <div class="divTableCell">
                       	</div>
@@ -1043,7 +1043,7 @@
                         <div class="divTableCell">
                           <button type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;display: none;">ดำเนินการ</button>
                       	</div>
-                       
+
                       </div>
 
 
@@ -1061,7 +1061,7 @@
 						@ELSE
 							<input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 						@ENDIF
-                          
+
                       </div>
                        <div class="divTableCell">
                   	  		<i class="bx bx-check-circle" title="ยอดชำระ"></i>
@@ -1090,33 +1090,33 @@
                           <label for="" class="label_cash_pay" >ยอดเงินสดที่ต้องชำระ : </label>
                         </div>
                         <div class="divTableCell">
-                        	<?php 
+                        	<?php
 
                         	// echo @$gift_voucher;
                             	if(@$gift_voucher>0){
                             		if(@$sRow->sum_price>@$gift_voucher){
-                            			$cash_pay = @$sRow->sum_price-@$gift_voucher+@$sRow->shipping_price; 
+                            			$cash_pay = @$sRow->sum_price-@$gift_voucher+@$sRow->shipping_price;
                             		}else{
-                            			$cash_pay = @$gift_voucher-@$sRow->sum_price+@$sRow->shipping_price; 
+                            			$cash_pay = @$gift_voucher-@$sRow->sum_price+@$sRow->shipping_price;
                             		}
                             		?>
                             		<input class="form-control f-ainumber-18 input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
                             		<?php
                             	}else{
-                            		$cash_pay = @$sRow->cash_pay ; 
+                            		$cash_pay = @$sRow->cash_pay ;
                             		?>
                             		<input class="form-control f-ainumber-18-b input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
                             		<?php
                             	}
 
                         	?>
-                            
+
                         </div>
 
                         <div class="divTableCell">
                   	  		<i class="bx bx-check-circle" title="ยอดชำระ"></i>
                       	</div>
-                       
+
                       </div>
 
 
@@ -1153,8 +1153,8 @@
             </div>
           </div>
           <!-- DivTable.com -->
- 
-          
+
+
         </form>
       </div>
 
@@ -1195,13 +1195,13 @@
         </button>
       </div>
 
-     
+
    <form  id="frmAddPro" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
       <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
       <input name="product_plus_pro" type="hidden" value="1">
       <input id="promotion_id_fk" name="promotion_id_fk" type="hidden" >
       <input id="limited_amt_person" name="limited_amt_person" type="hidden" placeholder="จำนวนจำกัดต่อคน" >
-    
+
       {{ csrf_field() }}
 
       <div class="modal-body">
@@ -1211,7 +1211,7 @@
               <div class="card-body" >
 
                 <div class="page-title-box d-flex">
-                  <label for="" class="col-2" ><b>รหัสคูปอง : </b></label> 
+                  <label for="" class="col-2" ><b>รหัสคูปอง : </b></label>
                   <input class="col-4 form-control " type="text" name="txtSearchPro" id="txtSearchPro" > &nbsp; &nbsp;
                   <button class="btn btn-success btnCheckProCode " >ตรวจสอบ</button>
                 </div>
@@ -1254,7 +1254,7 @@
         </div>
 
       </div>
-           
+
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary btnSavePro " style="display: none;"><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1278,7 +1278,7 @@
         </button>
       </div>
 
-     
+
       <div class="modal-body">
         <div class="row">
           <div class="col-12">
@@ -1305,7 +1305,7 @@
                   <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
                   {{ csrf_field() }}
                           <div class="form-group row div-data-table-list-pro " style="display: none;">
-                            <div class="col-md-12"> 
+                            <div class="col-md-12">
                               @IF(@$sRow->id)
                                  <table id="data-table-list-pro" class="table table-bordered " style="width: 100%;"></table>
                               @ENDIF
@@ -1318,9 +1318,9 @@
           </div>
         </div>
 
-       
+
       </div>
-           
+
 <!--         <div class="modal-footer">
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1343,12 +1343,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-     
+
       <div class="modal-body">
 
 
      @if( empty(@$CusAddrFrontstore) )
-     
+
         <form  id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
           <input name="add_delivery_custom" type="hidden" value="1">
 
@@ -1363,9 +1363,9 @@
 
 
           <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
-          
+
           <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
-          
+
           {{ csrf_field() }}
 
           <div class="col-12">
@@ -1383,7 +1383,7 @@
                     <textarea name="delivery_addr" class="form-control" rows="3"  required >{{@$CusAddrFrontstore[0]->addr_no}}</textarea>
                   </div>
                 </div>
- 
+
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
                   <div class="col-md-7">
@@ -1497,10 +1497,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-     
+
       <div class="modal-body">
 
-        
+
               <div class="card-body" >
 
 
@@ -1546,7 +1546,7 @@
                   <div class="col-md-8">
                     <input type="number" name="quantity[]" id="amt" class="form-control" value="" required="">
                   </div>
-                </div>  
+                </div>
 
                  <div class="form-group row">
                   <label for="" class="col-md-3 col-form-label"> </label>
@@ -1554,7 +1554,7 @@
                     <button type="submit" class="btn btn-primary btnSaveAddlist "><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
-                </div>  
+                </div>
 
            </form>
 
@@ -1562,7 +1562,7 @@
               </div>
 
       </div>
-           
+
     </div>
   </div>
 </div>
@@ -1579,7 +1579,7 @@
         </button>
       </div>
 
-     
+
    <form  id="frmAddAiCash" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
       <!-- <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}"> -->
       <input name="add_ai_cash" type="hidden" value="add_ai_cash">
@@ -1587,11 +1587,11 @@
       {{ csrf_field() }}
 
       <div class="modal-body">
-       
+
        <iframe id="iframe" src="{{url('backend/add_ai_cash/1/edit')}}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe>
- 
+
       </div>
-           
+
       <div class="modal-footer">
         <!-- <button type="submit" class="btn btn-primary " style="display: none;"><i class="bx bx-save font-size-16 align-middle "></i> Save</button> -->
         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
@@ -1615,7 +1615,7 @@
 
 
             $.fn.dataTable.ext.errMode = 'throw';
-  
+
             var frontstore_id_fk = $("#frontstore_id_fk").val(); //alert(frontstore_id_fk);
             var oTable;
 
@@ -1652,7 +1652,7 @@
                         {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-                        
+
                         {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-center'},
 
                         {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
@@ -1667,7 +1667,7 @@
                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                      'columnDefs': [
                      {
@@ -1681,7 +1681,7 @@
                          'style': 'multi'
                       },
                     rowCallback: function(nRow, aData, dataIndex){
-                                                
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
@@ -1700,7 +1700,7 @@
                 });
 
             });
-              
+
 
 </script>
 
@@ -1711,9 +1711,9 @@
 
 // xxxxxxxxxxxx
             $.fn.dataTable.ext.errMode = 'throw';
-  
+
             var frontstore_id_fk = $("#frontstore_id_fk").val(); //alert(frontstore_id_fk);
-            var order_type = $("input[name=purchase_type_id_fk]").val(); 
+            var order_type = $("input[name=purchase_type_id_fk]").val();
 
             $(function() {
               $('#data-table-list-pro').DataTable({
@@ -1777,19 +1777,19 @@
                                 +'     <i class="fa fa-plus"></i> '
                                 +'    </button> '
                                 +'  </div> '
-                                +' </div> ' 
+                                +' </div> '
                                 );
 
                           }
 
 
-                        
-                      }                    
-          
+
+                      }
+
                 });
 
             });
-              
+
 
 </script>
 
@@ -1799,7 +1799,7 @@
 
 
             $.fn.dataTable.ext.errMode = 'throw';
-  
+
             var oTable;
 
             $(function() {
@@ -1835,7 +1835,7 @@
                         {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-                        
+
                         {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-center'},
 
                         {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
@@ -1850,8 +1850,8 @@
                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-    
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                      'columnDefs': [
                      {
@@ -1865,7 +1865,7 @@
                          'style': 'multi'
                       },
                     rowCallback: function(nRow, aData, dataIndex){
-                                                
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
@@ -1884,7 +1884,7 @@
                 });
 
             });
-              
+
 
 </script>
 
@@ -1902,8 +1902,8 @@
 
           $.fn.dataTable.ext.errMode = 'throw';
 
-          var frontstore_id_fk = $("#frontstore_id_fk").val(); 
-          var order_type = $("input[name=purchase_type_id_fk]").val(); 
+          var frontstore_id_fk = $("#frontstore_id_fk").val();
+          var order_type = $("input[name=purchase_type_id_fk]").val();
           // alert(order_type);
 
             $("#spinner_frame").show();
@@ -1921,7 +1921,7 @@
                     searching: false,
                     paging: true,
                     scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 25,                    
+                    iDisplayLength: 25,
                     ajax: {
                       url: '{{ route('backend.productsList.datatable') }}',
                       data :{
@@ -1975,16 +1975,16 @@
                                 );
 
                           }
-                        
+
                       }
 
 
                 });
-              
+
             });
 
                   $('#modalAddFromProductsList').modal('show');
-          
+
         });
 
 
@@ -2006,11 +2006,11 @@
 
             $('#modalAddList').on('shown.bs.modal', function () {
                 $('#txtSearch').focus();
-            })  
+            })
 
             $('#modalAddFromProductsList').on('shown.bs.modal', function () {
                 $('.btnProductAll1').trigger('click');
-            })  
+            })
 
             // $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
             //     $("#spinner_frame").show();
@@ -2023,7 +2023,7 @@
               if(v==3){
                 $('#modalDelivery').modal('show');
               }
-       
+
             });
 
 
@@ -2095,7 +2095,7 @@
 			var id = $(this).val();
             $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxGetVoucher') }} ", 
+                 url: " {{ url('backend/ajaxGetVoucher') }} ",
                  data:{ _token: '{{csrf_token()}}',id:id },
                   success:function(data){
                       // console.log(data);
@@ -2105,7 +2105,7 @@
                        });
                        $(".myloading").hide();
                     },
-                  error: function(jqXHR, textStatus, errorThrown) { 
+                  error: function(jqXHR, textStatus, errorThrown) {
                       // console.log(JSON.stringify(jqXHR));
                       // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                       $(".myloading").hide();
@@ -2117,11 +2117,11 @@
 
 
 
-        $(document).on('change', '#sentto_branch_id', function(event) {
+        $(document).on('change', '#branch_id_fk', function(event) {
               $("#addr_00").prop("checked", true);
         });
 
-   
+
 
         $('#note').change(function() {
             localStorage.setItem('note', this.value);
@@ -2133,7 +2133,7 @@
 
         $(document).on('click', '.btn-plus', function(e) {
           // event.preventDefault();
-        
+
           const input = $(e.target).closest('.input-group').find('input');
           if (input.is('input')) {
              // alert(input.val());
@@ -2149,12 +2149,12 @@
            // return false;
             $.ajax({
                type:'POST',
-               url: " {{ url('backend/frontstorelist/plus') }} ", 
+               url: " {{ url('backend/frontstorelist/plus') }} ",
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       // console.log(response); 
-                       // console.log(frontstore_id_fk); 
+                       // console.log(response);
+                       // console.log(frontstore_id_fk);
                        // return false;
                         var oTable;
 
@@ -2208,9 +2208,9 @@
                                       {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                          return d;
                                       }},
-                  
-                                      
-                                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+
+                                      {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],
                                    'columnDefs': [
                                    {
@@ -2233,7 +2233,7 @@
                                       $("td:eq(4)", nRow).html("ชุด");
                                     }
 
-            
+
                                     $('td:last-child', nRow).html(''
                                       + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                     ).addClass('input');
@@ -2252,7 +2252,7 @@
                               });
 
                           });
-                            
+
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -2287,11 +2287,11 @@
 
             $.ajax({
                type:'POST',
-               url: " {{ url('backend/frontstorelist/minus') }} ", 
+               url: " {{ url('backend/frontstorelist/minus') }} ",
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       // console.log(response); 
+                       // console.log(response);
 
                         var oTable;
 
@@ -2323,7 +2323,7 @@
                                         {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                            return d;
                                         }},
-                                 
+
                                         {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                            return d;
                                         }},
@@ -2345,8 +2345,8 @@
                                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                            return d;
                                         }},
-                    
-                                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                                        {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -2387,7 +2387,7 @@
                                 });
 
                             });
-                   
+
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -2398,7 +2398,7 @@
 
           }
 
-  
+
 
         });
 
@@ -2426,12 +2426,12 @@
 
               $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/frontstorelist/plusPromotion') }} ", 
+                 url: " {{ url('backend/frontstorelist/plusPromotion') }} ",
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                         // console.log(response); 
-                         // console.log(frontstore_id_fk); 
+                         // console.log(response);
+                         // console.log(frontstore_id_fk);
                          // return false;
 
                           var oTable;
@@ -2485,8 +2485,8 @@
                                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                            return d;
                                         }},
-                    
-                                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                                        {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -2519,7 +2519,7 @@
                                 });
 
                             });
-                              
+
 
                   },
                   error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -2558,12 +2558,12 @@
 
               $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/frontstorelist/minusPromotion') }} ", 
+                 url: " {{ url('backend/frontstorelist/minusPromotion') }} ",
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                         // console.log(response); 
-                         // console.log(frontstore_id_fk); 
+                         // console.log(response);
+                         // console.log(frontstore_id_fk);
                          // return false;
 
                           var oTable;
@@ -2617,8 +2617,8 @@
                                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                            return d;
                                         }},
-                    
-                                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                                        {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -2651,7 +2651,7 @@
                                 });
 
                             });
-                              
+
 
                   },
                   error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
@@ -2684,8 +2684,8 @@
 
           $("#spinner_frame").show();
 
-          var frontstore_id_fk = $("#frontstore_id_fk").val(); 
-          var order_type = $("input[name=purchase_type_id_fk]").val(); 
+          var frontstore_id_fk = $("#frontstore_id_fk").val();
+          var order_type = $("input[name=purchase_type_id_fk]").val();
           // alert(order_type);
 
             /*
@@ -2718,7 +2718,7 @@
                     scrollX: false,
                     scrollCollapse: false,
                     scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 25,                    
+                    iDisplayLength: 25,
                     ajax: {
                       url: '{{ route('backend.productsList.datatable') }}',
                       data :{
@@ -2773,20 +2773,20 @@
                                 );
 
                           }
-                        
+
                       }
 
 
                 });
-           
+
                 setTimeout(function(){
                    $('#modalAddFromProductsList').focus();
-                }, 500);  
+                }, 500);
 
                 $('#modalAddFromProductsList').on('focus', function () {
                     $("#spinner_frame").hide();
                 });
-          
+
             });
 
         });
@@ -2806,9 +2806,9 @@
           $("#spinner_frame").show();
 
            $.fn.dataTable.ext.errMode = 'throw';
-  
+
             var frontstore_id_fk = $("#frontstore_id_fk").val(); //alert(frontstore_id_fk);
-            var order_type = $("input[name=purchase_type_id_fk]").val(); 
+            var order_type = $("input[name=purchase_type_id_fk]").val();
             // alert(order_type);
 
             $(function() {
@@ -2874,15 +2874,15 @@
                                 +'     <i class="fa fa-plus"></i> '
                                 +'    </button> '
                                 +'  </div> '
-                                +' </div> ' 
+                                +' </div> '
                                 );
 
                           }
 
 
-                        
-                      }                    
-          
+
+                      }
+
                 });
 
             });
@@ -2909,7 +2909,7 @@
           // pro_status => 1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code
            $.ajax({
                type:'POST',
-               url: " {{ url('backend/ajaxCheckCouponUsed') }} ", 
+               url: " {{ url('backend/ajaxCheckCouponUsed') }} ",
                data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                 success:function(msg){
                      // console.log(msg);
@@ -2929,7 +2929,7 @@
 
                            $.ajax({
                              type:'POST',
-                             url: " {{ url('backend/ajaxGetPromotionCode') }} ", 
+                             url: " {{ url('backend/ajaxGetPromotionCode') }} ",
                              data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                               success:function(data){
                                    // console.log(data);
@@ -2971,13 +2971,13 @@
                                                         {data: 'member_price', title :'<center>ราคาสมาชิก</center>', className: 'text-center'},
                                                         {data: 'pv', title :'<center>PV</center>', className: 'text-center'},
                                                     ],
-                                            
+
                                                 });
-                                      
+
                                             });
 
                                 },
-                              error: function(jqXHR, textStatus, errorThrown) { 
+                              error: function(jqXHR, textStatus, errorThrown) {
                                   // console.log(JSON.stringify(jqXHR));
                                   // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               }
@@ -2986,7 +2986,7 @@
 
                           $.ajax({
                              type:'POST',
-                             url: " {{ url('backend/ajaxGetPromotionName') }} ", 
+                             url: " {{ url('backend/ajaxGetPromotionName') }} ",
                              data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                               success:function(data){
                                    // console.log(data);
@@ -2995,16 +2995,16 @@
                                       $("#limited_amt_person").val(value.limited_amt_person);
                                       $(".plus-pro").attr('max',value.limited_amt_person);
                                      });
-                                    
+
                                     $("#pro_name").show();
                                     if(data==''){
                                       $("#pro_name").hide();
                                       $('.btnSavePro').hide();
                                       $('.show_add_coupon').hide();
                                     }
-                                   
+
                                 },
-                              error: function(jqXHR, textStatus, errorThrown) { 
+                              error: function(jqXHR, textStatus, errorThrown) {
                                   // console.log(JSON.stringify(jqXHR));
                                   // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                   $("#pro_name").hide();
@@ -3046,7 +3046,7 @@
                                     }
 
                               });
-              
+
                        });
 
        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3075,19 +3075,19 @@ $(document).ready(function() {
 
                       $.ajax({
                        type:'POST',
-                       url: " {{ url('backend/ajaxGetProduct') }} ", 
+                       url: " {{ url('backend/ajaxGetProduct') }} ",
                        data:{ _token: '{{csrf_token()}}',product_id_fk:product_id_fk,frontstore_id:frontstore_id },
                         success:function(data){
-                             // console.log(data); 
+                             // console.log(data);
                              // location.reload();
                              $('#show_product').html(data);
                              // $('#modalAddList').modal('show');
-                              
+
                               $('#amt').val($('#p_amt').val());
                               $('#amt').focus().select();
 
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             // console.log(JSON.stringify(jqXHR));
                             // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                             $(".myloading").hide();
@@ -3133,11 +3133,11 @@ $(document).ready(function() {
 
                      $.ajax({
                          type:'POST',
-                         url: " {{ url('backend/frontstorelist/plus') }} ", 
+                         url: " {{ url('backend/frontstorelist/plus') }} ",
                          // data:{ d:d , _token: '{{csrf_token()}}' },
                           data: $("#frmFrontstoreAddList").serialize(),
                           success: function(response){ // What to do if we succeed
-                                 // console.log(response); 
+                                 // console.log(response);
                                   var oTable;
 
                                     $(function() {
@@ -3169,7 +3169,7 @@ $(document).ready(function() {
                                                 {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
                                                    return d;
                                                 }},
-                                    
+
                                                 {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
                                                    return d;
                                                 }},
@@ -3191,8 +3191,8 @@ $(document).ready(function() {
                                                 {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                                    return d;
                                                 }},
-                            
-                                                {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                                                {data: 'id', title :'Tools', className: 'text-center w60'},
                                             ],
                                              'columnDefs': [
                                              {
@@ -3221,7 +3221,7 @@ $(document).ready(function() {
                                               }
                                         });
                                     });
-                                      
+
                               },
                               error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
                                   // console.log(JSON.stringify(jqXHR));
@@ -3236,10 +3236,10 @@ $(document).ready(function() {
           <script type="text/javascript">
             $(document).ready(function() {
 
-          
+
                    $(document).on('click', '.cDelete', function(event) {
                        event.preventDefault();
-                    
+
                         var table = $('#data-table-list').DataTable();
                         table.clear().draw();
 
@@ -3306,8 +3306,8 @@ $(document).ready(function() {
                                                 {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                                                    return d;
                                                 }},
-                            
-                                                {data: 'id', title :'Tools', className: 'text-center w60'}, 
+
+                                                {data: 'id', title :'Tools', className: 'text-center w60'},
                                             ],
                                              'columnDefs': [
                                              {
@@ -3341,7 +3341,7 @@ $(document).ready(function() {
 
                         												fnCheckDBfrontstore();
 
-                        												$(".myloading").hide();                                     
+                        												$(".myloading").hide();
 
                                                 $('td:last-child', nRow).html(''
                                                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
@@ -3350,9 +3350,9 @@ $(document).ready(function() {
                                         });
                                     });
                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                         
+
                         }, 1500);
-						
+
 
             						$('#cash_pay').val("");
             				  		fnCheckDBfrontstore();
@@ -3368,7 +3368,7 @@ $(document).ready(function() {
                 });
 
 
-            }); 
+            });
 
 
              $('#delivery_province').change(function(){
@@ -3378,14 +3378,14 @@ $(document).ready(function() {
 
                  if(province_id != ''){
                    $.ajax({
-                         url: " {{ url('backend/ajaxGetAmphur') }} ", 
+                         url: " {{ url('backend/ajaxGetAmphur') }} ",
                         method: "post",
                         data: {
                           province_id:province_id,
-                          "_token": "{{ csrf_token() }}", 
+                          "_token": "{{ csrf_token() }}",
                         },
                         success:function(data)
-                        { 
+                        {
                          if(data == ''){
                              alert('ไม่พบข้อมูลอำเภอ !!.');
                          }else{
@@ -3399,7 +3399,7 @@ $(document).ready(function() {
                         }
                       })
                  }
-       
+
             });
 
 
@@ -3410,17 +3410,17 @@ $(document).ready(function() {
 
                  if(amphur_id != ''){
                    $.ajax({
-                         url: " {{ url('backend/ajaxGetTambon') }} ", 
+                         url: " {{ url('backend/ajaxGetTambon') }} ",
                         method: "post",
                         data: {
                           amphur_id:amphur_id,
-                          "_token": "{{ csrf_token() }}", 
+                          "_token": "{{ csrf_token() }}",
                         },
                         success:function(data)
-                        { 
+                        {
 
                          $('#delivery_zipcode').val('');
-                         
+
                          if(data == ''){
                              alert('ไม่พบข้อมูลตำบล !!.');
                          }else{
@@ -3433,7 +3433,7 @@ $(document).ready(function() {
                         }
                       })
                  }
-       
+
             });
 
 
@@ -3444,14 +3444,14 @@ $(document).ready(function() {
 
                  if(tambon_id != ''){
                    $.ajax({
-                         url: " {{ url('backend/ajaxGetZipcode') }} ", 
+                         url: " {{ url('backend/ajaxGetZipcode') }} ",
                         method: "post",
                         data: {
                           tambon_id:tambon_id,
-                          "_token": "{{ csrf_token() }}", 
+                          "_token": "{{ csrf_token() }}",
                         },
                         success:function(data)
-                        { 
+                        {
                           // console.log(data);
                          if(data == ''){
                              alert('ไม่พบข้อมูลรหัส ปณ. !!.');
@@ -3459,12 +3459,12 @@ $(document).ready(function() {
                              $.each(data,function(key,value){
                                 $('#delivery_zipcode').val(value.zip_code);
                              });
-                             
+
                          }
                         }
                       })
                  }
-       
+
             });
 
 
@@ -3484,8 +3484,8 @@ $(document).ready(function() {
                     if(v!=5){
 
           						$(".myloading").show();
-          						$(".bg_addr").css("background-color", ""); 
-          						$(this).closest('.bg_addr').css("background-color", "#00e673"); 
+          						$(".bg_addr").css("background-color", "");
+          						$(this).closest('.bg_addr').css("background-color", "#00e673");
 
                     }
 
@@ -3516,16 +3516,16 @@ $(document).ready(function() {
     	$(document).ready(function() {
 
     			  // $(".ShippingCalculate02").trigger('click');
-    	
+
 	              $('.btnUpSlip').on('click', function(e) {
 	                    $("#image01").trigger('click');
 	              });
 
                  $('#modalAddFromPromotion,#modalAddFromProductsList,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
                  		$(".myloading").show();
-                 	   
+
                  		fnCheckDBfrontstore();
-                 		
+
                     setTimeout(function(){
       								$(".ShippingCalculate02").trigger('click');
       							}, 1000);
@@ -3539,7 +3539,7 @@ $(document).ready(function() {
 
           <script type="text/javascript">
 
-   
+
 
 
       		  function fnCheckDBfrontstore() {
@@ -3547,14 +3547,14 @@ $(document).ready(function() {
       			      var frontstore_id_fk = $("#frontstore_id_fk").val();
 
 		              $.ajax({
-		                    url: " {{ url('backend/ajaxCheckDBfrontstore') }} ", 
+		                    url: " {{ url('backend/ajaxCheckDBfrontstore') }} ",
 		                    method: "post",
 		                    data: {
 		                      frontstore_id_fk:frontstore_id_fk,
-		                      "_token": "{{ csrf_token() }}", 
+		                      "_token": "{{ csrf_token() }}",
 		                    },
 		                    success:function(data)
-		                    { 
+		                    {
 		                     // alert(data);
 		                     if(data == 0 ){
 		                       $('.div_cost').hide();
@@ -3570,7 +3570,7 @@ $(document).ready(function() {
                       $.ajax({
                          type:'POST',
                          dataType:'JSON',
-                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ", 
+                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ",
                          data:{ _token: '{{csrf_token()}}',
                              frontstore_id_fk:frontstore_id_fk,
                             },
@@ -3578,7 +3578,7 @@ $(document).ready(function() {
                           	 console.log(d);
                             if(d){
                               $.each(d,function(key,value){
-                                  
+
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
 
@@ -3589,20 +3589,20 @@ $(document).ready(function() {
                               $(".myloading").hide();
 
                             },
-                          error: function(jqXHR, textStatus, errorThrown) { 
+                          error: function(jqXHR, textStatus, errorThrown) {
                               $(".myloading").hide();
                           }
                       });
-              
+
 
       			}
-	
+
 
       		function formatNumber(num) {
       			  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
       		}
-	
-   
+
+
 
 		    function fnShippingCalculate($province_id){
 
@@ -3612,10 +3612,10 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxShippingCalculate') }} ", 
+                       url: " {{ url('backend/ajaxShippingCalculate') }} ",
                        data: $("#frm-main").serialize()+"&province_id="+$province_id,
                         success:function(data){
-							console.log(data); 
+							console.log(data);
 							// return false;
 
 							$("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
@@ -3623,7 +3623,7 @@ $(document).ready(function() {
 							$("input[name=_method]").val('PUT');
 							$(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -3692,10 +3692,10 @@ $(document).ready(function() {
                           if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
                               return false;
                           }else{
-                          
+
                               $.ajax({
                                   type: "POST",
-                                  url: " {{ url('backend/ajaxDelFileSlip') }} ", 
+                                  url: " {{ url('backend/ajaxDelFileSlip') }} ",
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     console.log(data);
@@ -3729,7 +3729,7 @@ $(document).ready(function() {
 	              // $(".show_div_transfer_price").hide();
 	              // $(".div_account_bank_id").hide();
 	              // $(".show_div_aicash_price").hide();
-                  
+
           // ####################################
 
           		$(document).on('change', '#fee', function(event) {
@@ -3768,9 +3768,9 @@ $(document).ready(function() {
 
                         event.preventDefault();
                         $(".myloading").show();
-                       
+
                         var pay_type_id = $("#pay_type_id").val();
-                        var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}"; 
+                        var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
                         var gift_voucher_price = $("#gift_voucher_price").val();
 
                         // alert(purchase_type_id_fk);
@@ -3808,7 +3808,7 @@ $(document).ready(function() {
                         $.ajax({
                            type:'POST',
                            dataType:'JSON',
-                           url: " {{ url('backend/ajaxCearCostFrontstore') }} ", 
+                           url: " {{ url('backend/ajaxCearCostFrontstore') }} ",
                            data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
                            success:function(data){
                            },
@@ -3823,17 +3823,17 @@ $(document).ready(function() {
                         $.ajax({
                          type:'POST',
                          dataType:'JSON',
-                         url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ", 
+                         url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
                          data: $("#frm-main").serialize(),
                           success:function(data){
-                                console.log(data); 
+                                console.log(data);
 
                                 // return false;
 
                                 $.each(data,function(key,value){
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
-                                  $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));  
+                                  $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   $(".transfer_money_datetime").val(value.transfer_money_datetime);
                                 });
@@ -3853,10 +3853,10 @@ $(document).ready(function() {
 							       // 1	เงินสด
                           if(pay_type_id==5){
 		                          $(".show_div_cash_pay").show();
-		                        }else 
+		                        }else
 		                    // 2	เงินสด + Ai-Cash
 		                        if(pay_type_id==6){
-		                          
+
                                 $("#aicash_price").val('');
                                 $("#aicash_price").removeAttr('readonly');
                                 $('#aicash_price').attr('required', true);
@@ -3917,7 +3917,7 @@ $(document).ready(function() {
             									$('#fee').val("").select2();
             									$('#fee').attr('required', true);
             									$('#charger_type:first-child').attr('checked',true);
-            							
+
             									// Ai-Cash
             									$(".show_div_aicash_price").show();
             									$("#aicash_price").removeClass('input-aifill').addClass('input-aireadonly');
@@ -3933,8 +3933,8 @@ $(document).ready(function() {
             									$("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
             									$('#member_id_aicash').attr('required', true);
-                        								
-              							}else 
+
+              							}else
               								// 6	เงินโอน + เงินสด
               								if(pay_type_id==10){
 
@@ -3952,8 +3952,8 @@ $(document).ready(function() {
               									$('#fee').removeAttr('required');
               									$('#aicash_price').removeAttr('required');
               									$("#cash_pay").val('');
-              								
-              								}else 
+
+              								}else
                 								// 7	เงินโอน + Ai-Cash
                 								if(pay_type_id==11){
 
@@ -3989,11 +3989,11 @@ $(document).ready(function() {
 				                        	$(".div_account_bank_id").hide();
 
 			                        }
-		                     
+
                                 $(".myloading").hide();
 
                             },
-                          error: function(jqXHR, textStatus, errorThrown) { 
+                          error: function(jqXHR, textStatus, errorThrown) {
                               // console.log(JSON.stringify(jqXHR));
                               // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               $(".myloading").hide();
@@ -4018,16 +4018,16 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalPriceFrontstore03') }} ", 
+                       url: " {{ url('backend/ajaxCalPriceFrontstore03') }} ",
                        data: $("#frm-main").serialize()+"&this_element="+this_element,
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                // return false;
                                fnGetDBfrontstore();
                               $("input[name=_method]").val('PUT');
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -4050,10 +4050,10 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalGiftVoucherPrice') }} ", 
+                       url: " {{ url('backend/ajaxCalGiftVoucherPrice') }} ",
                        data: $("#frm-main").serialize()+"&this_element="+this_element,
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                // fnGetDBfrontstore();
                                $.each(data,function(key,value){
                                    $("#gift_voucher_price").val(value.gift_voucher_price);
@@ -4062,7 +4062,7 @@ $(document).ready(function() {
                               $("input[name=_method]").val('PUT');
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -4079,7 +4079,7 @@ $(document).ready(function() {
 
                     $("#credit_price").val('');
                     $("#fee_amt").val('');
-                    $("#sum_credit_price").val('');  
+                    $("#sum_credit_price").val('');
                     $("#aicash_price").val('');
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
@@ -4087,11 +4087,11 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        // dataType:'JSON',
-                       url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ", 
+                       url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ",
                        data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
                         success:function(data){
-                               console.log(data); 
-                               
+                               console.log(data);
+
                                // $.each(data,function(key,value){
                                //    if(value.ai_cash==0){
                                //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
@@ -4105,7 +4105,7 @@ $(document).ready(function() {
 
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -4116,7 +4116,7 @@ $(document).ready(function() {
 
 	        $(document).on('change', '#member_id_aicash', function(event) {
 	            event.preventDefault();
-	            
+
 	            $("#aicash_price").val('');
              	$("#cash_pay").val('');
              	$("#aicash_remain").val('');
@@ -4145,10 +4145,10 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalAicash') }} ", 
+                       url: " {{ url('backend/ajaxCalAicash') }} ",
                        data: { _token: '{{csrf_token()}}',customer_id:customer_id },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                $.each(data,function(key,value){
                                		// $("#aicash_remain").val(value.ai_cash);
                                		$("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
@@ -4167,7 +4167,7 @@ $(document).ready(function() {
 
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -4188,15 +4188,15 @@ $(document).ready(function() {
                        $.ajax({
                          type:'POST',
                          dataType:'JSON',
-                         url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ", 
+                         url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
                          data: $("#frm-main").serialize()+"&this_element="+this_element,
                           success:function(data){
-                                 console.log(data); 
+                                 console.log(data);
                                  fnGetDBfrontstore();
                                 $("input[name=_method]").val('PUT');
                                 $(".myloading").hide();
                             },
-                          error: function(jqXHR, textStatus, errorThrown) { 
+                          error: function(jqXHR, textStatus, errorThrown) {
                               $(".myloading").hide();
                           }
                       });
@@ -4214,7 +4214,7 @@ $(document).ready(function() {
                     $.ajax({
                          type:'POST',
                          dataType:'JSON',
-                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ", 
+                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ",
                          data:{ _token: '{{csrf_token()}}',
                              frontstore_id_fk:frontstore_id_fk,
                             },
@@ -4253,7 +4253,7 @@ $(document).ready(function() {
 
                                 // alert(value.sum_price);
                                 // alert(value.product_value);
-                                  
+
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
@@ -4261,17 +4261,17 @@ $(document).ready(function() {
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
 
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
                                   if(pay_type_id==''){
-                                  	 $("#cash_pay").val('');    
+                                  	 $("#cash_pay").val('');
                                   }else{
-                                  	 $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                  	 $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
-                                  
+
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -4310,14 +4310,14 @@ $(document).ready(function() {
                               $(".myloading").hide();
 
                             },
-                            error: function(jqXHR, textStatus, errorThrown) { 
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 // console.log(JSON.stringify(jqXHR));
                                 // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                 $(".myloading").hide();
                             }
                       });
-              
-                    
+
+
                 }
 
 
@@ -4330,7 +4330,7 @@ $(document).ready(function() {
                     $.ajax({
                          type:'POST',
                          dataType:'JSON',
-                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ", 
+                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ",
                          data:{ _token: '{{csrf_token()}}',
                              frontstore_id_fk:frontstore_id_fk,
                             },
@@ -4366,7 +4366,7 @@ $(document).ready(function() {
                               }
 
                               $.each(d,function(key,value){
-                                  
+
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
@@ -4374,17 +4374,17 @@ $(document).ready(function() {
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
 
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
                                   if(pay_type_id==''){
-                                     $("#cash_pay").val('');    
+                                     $("#cash_pay").val('');
                                   }else{
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
-                                  
+
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -4423,14 +4423,14 @@ $(document).ready(function() {
                               $(".myloading").hide();
 
                             },
-                            error: function(jqXHR, textStatus, errorThrown) { 
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 // console.log(JSON.stringify(jqXHR));
                                 // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                 $(".myloading").hide();
                             }
                       });
-              
-                    
+
+
                 }
 
         </script>
@@ -4483,7 +4483,7 @@ $(document).ready(function() {
             var sum_price = $("#sum_price").val();
             var shipping_price = $("#shipping_price").val();
 
-            
+
 
             // alert(pay_type_id+":"+aicash_remain+":"+aicash_price);
             if(pay_type_id==6||pay_type_id==9||pay_type_id==11){
@@ -4507,14 +4507,14 @@ $(document).ready(function() {
             	}else{
             		$('#pay_type_id').attr('required', true);
             	}
-            	
+
             }
 
 
          });
 
          $(document).ready(function() {
-         	  
+
          	        var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
          	        // alert(fromAddAiCash);
          	        if(fromAddAiCash==1){
@@ -4528,14 +4528,14 @@ $(document).ready(function() {
 
 	                   		  $.ajax({
 			                       type:'POST',
-			                       url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ", 
+			                       url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ",
 			                       data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
 			                        success:function(data){
-			                               console.log(data); 
+			                               console.log(data);
 			                               // alert("Test");
 			                              $(".myloading").hide();
 			                          },
-			                   
+
 			                    });
 
 	                   			$('#pay_type_id').val("").select2();
@@ -4551,7 +4551,7 @@ $(document).ready(function() {
           								$("#cash_pay").val('');
           								$(".myloading").hide();
           								$(".show_div_cash_pay").hide();
-          								
+
           								$('#member_id_aicash').attr('required', false);
           								$('#member_id_aicash').val("").select2();
 
@@ -4571,7 +4571,7 @@ $(document).ready(function() {
         											var clean_uri = uri.substring(0, uri.indexOf("?"));
         											window.history.replaceState({}, document.title, clean_uri);
         										}
-        				         },3000); 
+        				         },3000);
 
                     }
 
