@@ -104,7 +104,7 @@
                         <td> {{ number_format($order->price,2) }}</td>
                  </tr>
                  <tr>
-                     <th>VAT({{ $order->vat }}%) : </th>
+                     <th>VAT({{ $order->tax }}%) : </th>
                      <td> {{ $order->p_vat }}</td>
                  </tr>
                  <tr>
@@ -237,13 +237,13 @@ $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->id, $location
 
                              <?php
 
-$price_vat = $order->sum_price * ($order->vat / 100);
+$price_vat = $order->sum_price * ($order->tax / 100);
 $price_vat_sum = $order->sum_price - $price_vat;
 ?>
                              <td> {{ number_format($price_vat_sum,2) }}</td>
                          </tr>
                          <tr>
-                             <th>VAT({{ $order->vat }}%) : </th>
+                             <th>VAT({{ $order->tax }}%) : </th>
                              <td> {{ number_format($price_vat,2) }}</td>
                          </tr>
                          <tr>
@@ -271,19 +271,20 @@ $price_vat_sum = $order->sum_price - $price_vat;
                          <tr>
                              <td><strong>ยอดรวม : </strong></td>
                              <td align="right"><strong>
-                                     {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
+                                     {{ number_format($order->total_price,2) }}</strong>
                              </td>
                          </tr>
                          <tr>
                              <td><strong class="text-primary">Gift Voucher : </strong></td>
                              <td align="right"><strong class="text-primary">
-                                     {{  number_format($order->gift_voucher,2) }}</strong>
+                                     {{  number_format($order->gift_voucher_price,2) }}</strong>
                              </td>
                          </tr>
 
                          <tr>
                              <td><strong>ยอดที่ต้องชำระเพิ่ม : </strong></td>
-                             <td align="right"><strong> {{  number_format($order->price_remove_gv,2) }}</strong>
+                             <?php $price_remove_gv= $order->total_price - $order->gift_voucher_price; ?>
+                             <td align="right"><strong> {{  number_format($price_remove_gv,2) }}</strong>
 
                              </td>
                          </tr>
@@ -298,7 +299,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                          <tr>
                              <td><strong>ยอดชำระ</strong></td>
                              <td align="right"><strong>
-                                     <u>{{ number_format($order->sum_price + $order->shipping_price,2) }}</u></strong>
+                                     <u>{{ number_format($order->total_price,2) }}</u></strong>
                              </td>
                          </tr>
                          @endif

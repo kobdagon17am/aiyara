@@ -54,36 +54,36 @@ class HistoryController extends Controller
     public function export_pdf_history($code_order)
     {
 
-        $order = DB::table('db_orders')
-            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
-                'dataset_business_major.name as office_name',
-                'dataset_business_major.house_no as office_house_no',
-                'dataset_business_major.name as office_house_name',
-                'dataset_business_major.moo as office_moo',
-                'dataset_business_major.soi as office_soi',
-                'dataset_business_major.amphures_id_fk as office_amphures',
-                'dataset_business_major.district_id_fk as office_district',
-                'dataset_business_major.road as office_road',
-                'dataset_business_major.province as office_province',
-                'dataset_business_major.zipcode as office_zipcode',
-                'dataset_business_major.tel as office_tel',
-                'dataset_business_major.email as office_email',
-                'db_invoice_code.order_payment_code',
-                'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
-            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
-            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
-            ->leftjoin('dataset_business_major', 'dataset_business_major.location_id', '=', 'db_orders.branch_id_fk')
-            ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
-            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+      $order = DB::table('db_orders')
+      ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
+          'branchs.b_name as office_name',
+          'branchs.house_no as office_house_no',
+          'branchs.b_name as office_house_name',
+          'branchs.moo as office_moo',
+          'branchs.soi as office_soi',
+          'branchs.amphures_id_fk as office_amphures',
+          'branchs.district_id_fk as office_district',
+          'branchs.road as office_road',
+          'branchs.province_id_fk as office_province',
+          'branchs.zipcode as office_zipcode',
+          'branchs.tel as office_tel',
+          'branchs.email as office_email',
+          'db_invoice_code.order_payment_code',
+          'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
+      ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+      ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+      ->leftjoin('branchs', 'branchs.business_location_id_fk', '=', 'db_orders.branch_id_fk')
+      ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
+      ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
 
-            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
-            ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
-            ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
+      ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
+      ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
+      ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
-            ->where('dataset_order_status.lang_id', '=', '1')
-            ->where('dataset_orders_type.lang_id', '=', '1')
-            ->where('db_orders.code_order', '=', $code_order)
-            ->first();
+      ->where('dataset_order_status.lang_id', '=', '1')
+      ->where('dataset_orders_type.lang_id', '=', '1')
+      ->where('db_orders.code_order', '=', $code_order)
+      ->first();
 
         if ($order->delivery_location_frontend == 'sent_address') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->province_id_fk, $order->amphures_id_fk, $order->district_id_fk, $order->zipcode);
@@ -93,7 +93,7 @@ class HistoryController extends Controller
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->province_id_fk, $order->amphures_id_fk, $order->district_id_fk, $order->zipcode);
 
         } elseif ($order->delivery_location_frontend == 'sent_office') {
-            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province_id_fk, $order->office_amphures_id_fk, $order->office_district_id_fk, $order->office_zipcode);
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province, $order->office_amphures, $order->office_district, $order->office_zipcode);
 
         } elseif ($order->delivery_location_frontend == 'sent_address_other') {
 
@@ -105,13 +105,13 @@ class HistoryController extends Controller
         if ($order->purchase_type_id_fk == 6) {
             $order_items = DB::table('db_order_products_list')
                 ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
-                ->where('order_id_fk', '=', $order->id)
+                ->where('frontstore_id_fk', '=', $order->id)
                 ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
                 ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=', 'course_event_regis.ticket_id')
                 ->get();
         } else {
             $order_items = DB::table('db_order_products_list')
-                ->where('order_id_fk', '=', $order->id)
+                ->where('frontstore_id_fk', '=', $order->id)
                 ->orderby('id', 'ASC')
                 ->get();
         }
@@ -173,7 +173,9 @@ class HistoryController extends Controller
     {
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $orders = DB::table('db_orders')
-            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon', 'dataset_pay_type.detail as pay_type_name')
+            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class',
+            'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
+            'dataset_pay_type.detail as pay_type_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
@@ -188,6 +190,7 @@ class HistoryController extends Controller
             ->orwhere('db_orders.address_sent_id_fk', '=', Auth::guard('c_user')->user()->id)
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();
+            //dd($orders);
 
         $sQuery = Datatables::of($orders);
         return $sQuery
@@ -336,29 +339,30 @@ class HistoryController extends Controller
 
     public function cart_payment_history($code_order)
     {
+
         $order = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
-                'dataset_business_major.name as office_name',
-                'dataset_business_major.house_no as office_house_no',
-                'dataset_business_major.name as office_house_name',
-                'dataset_business_major.moo as office_moo',
-                'dataset_business_major.soi as office_soi',
-                'dataset_business_major.amphures_id_fk as office_district',
-                'dataset_business_major.district_id_fk as office_district_sub',
-                'dataset_business_major.road as office_road',
-                'dataset_business_major.province as office_province',
-                'dataset_business_major.zipcode as office_zipcode',
-                'dataset_business_major.tel as office_tel',
-                'dataset_business_major.email as office_email',
+                'branchs.b_name as office_name',
+                'branchs.house_no as office_house_no',
+                'branchs.b_name as office_house_name',
+                'branchs.moo as office_moo',
+                'branchs.soi as office_soi',
+                'branchs.amphures_id_fk as office_amphures',
+                'branchs.district_id_fk as office_district',
+                'branchs.road as office_road',
+                'branchs.province_id_fk as office_province',
+                'branchs.zipcode as office_zipcode',
+                'branchs.tel as office_tel',
+                'branchs.email as office_email',
                 'db_invoice_code.order_payment_code',
                 'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
-            ->leftjoin('dataset_business_major', 'dataset_business_major.location_id', '=', 'db_orders.branch_id_fk')
+            ->leftjoin('branchs', 'branchs.business_location_id_fk', '=', 'db_orders.branch_id_fk')
             ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
 
-            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province')
+            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
@@ -377,7 +381,7 @@ class HistoryController extends Controller
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
 
         } elseif ($order->delivery_location_frontend == 'sent_office') {
-            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province_id_fk, $order->office_amphures_id_fk, $order->office_district_id_fk, $order->office_zipcode);
+            $address = HistoryController::address($order->name, $order->tel, $order->email, $order->office_house_no, $order->office_moo, $order->office_name, $order->office_soi, $order->office_road, $order->office_province, $order->office_amphures, $order->office_district, $order->office_zipcode);
 
         } elseif ($order->delivery_location_frontend == 'sent_address_other') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
@@ -389,13 +393,13 @@ class HistoryController extends Controller
         if ($order->purchase_type_id_fk == 6) {
             $order_items = DB::table('db_order_products_list')
                 ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
-                ->where('order_id_fk', '=', $order->id)
+                ->where('frontstore_id_fk', '=', $order->id)
                 ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
                 ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=', 'course_event_regis.ticket_id')
                 ->get();
         } else {
             $order_items = DB::table('db_order_products_list')
-                ->where('order_id_fk', '=', $order->id)
+                ->where('frontstore_id_fk', '=', $order->id)
                 ->orderby('id', 'ASC')
                 ->get();
         }

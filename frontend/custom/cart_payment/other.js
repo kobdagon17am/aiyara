@@ -1,3 +1,7 @@
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function next() {
     var check_sent_other = document.getElementById("sent_other").checked;
     var check_office_check = document.getElementById("sent_office_check").checked;

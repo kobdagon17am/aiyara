@@ -45,7 +45,7 @@ class Couse_Event extends Model
      ->select('db_order_products_list.*','dataset_ce_type.txt_desc','dataset_ce_type.id as type_ce_id')
      ->leftjoin('course_event', 'course_event.id', '=','db_order_products_list.course_id_fk')
      ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
-     ->where('db_order_products_list.order_id_fk','=',$order_id)
+     ->where('db_order_products_list.frontstore_id_fk','=',$order_id)
      // ->where('order_items.status','=',null)
      // ->orwhere('order_items.status','=','order')
      ->get();

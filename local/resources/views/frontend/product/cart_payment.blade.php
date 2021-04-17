@@ -42,9 +42,11 @@
                  <input type="hidden" name="price_vat" value="{{ $bill['price_vat'] }}">
                  <input type="hidden" name="price" value="{{ $bill['price'] }}">
                  <input type="hidden" name="p_vat" value="{{ $bill['p_vat'] }}">
-                 <input type="hidden" name="price_total" value="{{ $bill['price_total'] }}">
                  <input type="hidden" name="pv_total" value="{{ $bill['pv_total'] }}">
-                 <input type="hidden" name="price_total_type5" value="{{ $bill['price_total_type5'] }}">
+
+                 <input type="hidden" name="price_total" id="price_total" value="{{ $bill['price_total'] }}">
+                 <input type="hidden" name="price_total_type5" id="price_total_type5" value="{{ $bill['price_total_type5'] }}">
+                 <input type="hidden" name="gift_voucher_price" id="gift_voucher_price" value="{{ $bill['gift_voucher_price'] }}">
 
                  <!-- Choose Your Payment Method start -->
                  <div class="card card-border-success">
@@ -614,7 +616,7 @@
                                                  </div>
                                              </div>
 
-                                             {{-- <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p> --}}
+
                                              <hr>
 
                                              <div class="row">
@@ -624,7 +626,7 @@
                                                  </div>
                                                  <div class="col-md-4 col-sx-4 col-4">
 
-                                                     <h3 class="text-right"> <span>
+                                                     <h3 class="text-right"> <span class="price_total">
                                                              {{ number_format($bill['price_total']) }} </span></h3>
                                                  </div>
                                              </div>
@@ -637,7 +639,7 @@
                                                  </div>
                                                  <div class="col-md-4 col-sx-4 col-4">
 
-                                                     <h3 class="text-right"> <span>
+                                                     <h3 class="text-right"> <span class="gv_remove_price">
                                                              {{ number_format($bill['gv_total'], 2) }} </span></h3>
                                                  </div>
                                              </div>
@@ -791,7 +793,7 @@
                              \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
                              <tr>
                                  <td><strong>ยอดรวม</strong></td>
-                                 <td align="right"><strong> {{ number_format($bill['price_total'], 2) }}</strong>
+                                 <td align="right"><strong class="price_total"> {{ number_format($bill['price_total'], 2) }}</strong>
                                  </td>
                              </tr>
                              <tr>
@@ -801,13 +803,13 @@
                              </tr>
                              <tr>
                                  <td><strong class="text-primary" style="font-size: 13px">Gift Voucher คงเหลือ</strong></td>
-                                 <td align="right"><strong class="text-primary"> {{ $bill['gv_total'] }}</strong>
+                                 <td align="right"><strong class="text-primary gv_remove_price" > {{ $bill['gv_total'] }}</strong>
                                  </td>
                              </tr>
 
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระเพิ่ม</strong></td>
-                                 <td align="right"><strong> {{ number_format($bill['price_total_type5'], 2) }}</strong>
+                                 <td align="right"><strong class="price_total_type5" > {{ number_format($bill['price_total_type5'], 2) }}</strong>
 
                                  </td>
                              </tr>
@@ -821,7 +823,7 @@
                          @else
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                 <td align="right"><u><strong class="price_total">2</strong></u>
+                                 <td align="right"><u><strong class="price_total"></strong></u>
                                  </td>
                              </tr>
                          @endif
@@ -988,13 +990,9 @@
      </script>
     @endif
 
-
      <script type="text/javascript">
-
       var address_provinces_id = {{ $address->provinces_id }};
-
          check_shipping({{$address->provinces_id}});
-
          var premium = document.getElementById('checkbox13').checked;
          if (premium) {
              document.getElementById('shipping_premium').value = true;
@@ -1007,8 +1005,8 @@
              var sent_address = document.getElementById('sent_address_check').checked;
              var sent_address_card = document.getElementById('sent_address_card_check').checked;
              var sent_other = document.getElementById('sent_other').checked;
-
              var premium = document.getElementById('checkbox13').checked;
+
              if (premium) {
                  document.getElementById('shipping_premium').value = true;
              } else {
@@ -1031,10 +1029,16 @@
              }
          }
 
-         function check_shipping(provinces_id) {
+         function check_shipping(provinces_id,type_sent='') {
              var location_id = '{{ $bill['location_id'] }}';
              var price = '{{ $bill['price'] }}';
              var shipping_premium = document.getElementById('checkbox13').checked;
+             var type ='{{ $bill['type'] }}';
+             if(type == 5){
+             var sum_gv= '{{ @$gv->sum_gv }}';
+             }else{
+            var sum_gv = null;
+             }
 
              $.ajax({
                  type: "POST",
@@ -1044,26 +1048,34 @@
                      location_id: location_id,
                      provinces_id: provinces_id,
                      price: price,
-                     shipping_premium: shipping_premium
+                     shipping_premium: shipping_premium,
+                     type:type,
+                     sum_gv:sum_gv,
+                     type_sent:type_sent,
                  },
                  success: function(data) {
-
                      document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
-                     document.getElementById('shipping').textContent = shipping_cost;
-                     $('.price_total').html(price_total);
+                     if(type == 5){
+                       var price_total_type5 = numberWithCommas(data['price_total_type5']);
+                     $('.price_total_type5').html(price_total_type5);
+
+                     $('#price_total_type5').val(data['price_total_type5']);
+                     }
+                      document.getElementById('shipping').textContent = shipping_cost;
+                      var price_total_view = numberWithCommas(price_total);
+                     $('.price_total').html(price_total_view);
+                     $('#price_total').val(price_total);
+                     $('#gift_voucher_price').val(data['gift_voucher_price']);
+                     $('.gv_remove_price').html(data['gv_remove_price']);
+
                      //document.getElementsByClassName('.price_total').textContent = price_total;
                      //console.log(data);
                  }
              });
-
-
-
          }
-
-
 
          function sent_address(type_sent, provinces_id) {
 
@@ -1089,23 +1101,24 @@
                  document.getElementById("html_shipping_premium").style.display = 'block';
 
              } else if (type_sent == 'sent_office') {
+                 check_shipping(provinces_id='',type_sent);
+                 var price = numberWithCommas('{{ $bill['price'] }}');
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'block';
                  $('.sent_address_other').prop('required', false);
-                 document.getElementById('shipping_detail').textContent = 'รับที่สาขา';
+
                  document.getElementById('shipping').textContent = 0;
                  document.getElementById("html_shipping_premium").style.display = 'none';
                  document.getElementById("checkbox13").checked = false;
-
 
              } else if (type_sent == 'sent_other') {
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'block';
                  document.getElementById("sent_office").style.display = 'none';
-                 document.getElementById('shipping_detail').textContent = 'อื่นๆ';
+
                  document.getElementById('shipping').textContent = 0;
                  document.getElementById("html_shipping_premium").style.display = 'block';
                  $('.sent_address_other').prop('required', true);
@@ -1124,8 +1137,6 @@
 
 
          }
-
-
          function open_input(data) {
              var conten_1 = '<div class="form-group row">' +
                  '<div class="col-sm-12">' +
@@ -1198,7 +1209,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 text-right">
-                    <button class="btn btn-success btn-block" name="submit" form="form1" value="credit_card"  type="submit">ชำระเงิน</button>
+                    <button class="btn btn-success btn-block" name="submit"  value="credit_card"  type="submit">ชำระเงิน</button>
                 </div>
             `;
              var conten_3 =
@@ -1378,9 +1389,9 @@
     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
     <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
 
-     <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
+     {{-- <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
-     <script src="{{ asset('frontend/assets/pages/payment-card/e-payment.js') }}"></script>
+     <script src="{{ asset('frontend/assets/pages/payment-card/e-payment.js') }}"></script> --}}
 
 
 

@@ -208,13 +208,13 @@
      <table align="right" border="0" cellspacing="0" style="border-spacing: 0px">
          <tr>
              <th  style="text-align: right;font-size: 16px">มูลค่าสินค้า : </th>
-             <?php $price_vat = $order->sum_price * ($order->vat / 100);
+             <?php $price_vat = $order->sum_price * ($order->tax / 100);
              $price_vat_sum = $order->sum_price - $price_vat;
              ?>
              <th  style="text-align: left;padding-left:10px;font-size: 16px" width="28%"> {{ number_format($price_vat_sum,2) }}</th>
          </tr>
          <tr>
-             <th style="text-align: right;font-size: 16px"> VAT({{ $order->vat }}%) : </th>
+             <th style="text-align: right;font-size: 16px"> VAT({{ $order->tax }}%) : </th>
              <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($price_vat,2) }}</th>
          </tr>
          <tr>
@@ -238,21 +238,21 @@
          <tr>
              <th  style="text-align: right;font-size: 18px"><strong>ยอดรวม : </strong></th>
              <th  style="text-align: left;padding-left:10px;font-size: 18px"><strong>
-                     {{ number_format($order->sum_price + $order->shipping_price,2) }}</strong>
+              {{ number_format($order->total_price,2) }}</strong>
              </th>
          </tr>
-         <tr>
+         <tr style="margin-bottom: 0px;padding-bottom: 0px">
              <th  style="text-align: right;font-size: 16px"><strong class="text-primary">Gift Voucher : </strong></th>
              <th  style="text-align: left;padding-left:10px;font-size: 16px"><strong class="text-primary">
-                     {{  number_format($order->gift_voucher,2) }}</strong>
+              {{  number_format($order->gift_voucher_price,2) }}</strong>
              </th>
          </tr>
 
-         <tr>
+         <tr style="margin-top: 0px;padding-top: 0px">
+          <?php $price_remove_gv= $order->total_price - $order->gift_voucher_price; ?>
              <th  style="text-align: right;font-size: 20px"><strong>ยอดที่ต้องชำระเพิ่ม : </strong></th>
-             <th  style="text-align: left;padding-left:10px;font-size: 20px"><strong> {{  number_format($order->price_remove_gv,2) }}</strong>
+             <th style="text-align: left;padding-left:10px;font-size: 20px;"><strong> {{  number_format($price_remove_gv,2) }}</strong></th>
 
-             </th>
          </tr>
 
          @elseif($order->purchase_type_id_fk == 6 || $order->purchase_type_id_fk == 7)

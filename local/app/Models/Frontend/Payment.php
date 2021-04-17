@@ -31,15 +31,12 @@ class Payment extends Model
             if ($rs->type == 5) {
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
-
+                $gv = $gv_customer;
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
 
                 if ($gv_total < 0) {
-                    $gv = $gv_customer;
                     $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
-
                 } else {
-                    $gv = $rs->price + $rs->shipping;
                     $price_remove_gv = 0;
                 }
             } else {
@@ -73,6 +70,7 @@ class Payment extends Model
             }
 
             if ($rs->type == 5) {
+
                 $price_total = ($rs->price + $rs->shipping);
                 $rs_log_gift = GiftVoucher::log_gift($price_total, $customer_id, $id);
 
@@ -126,22 +124,18 @@ class Payment extends Model
             $data = $cartCollection->toArray();
             $total = Cart::session($rs->type)->getTotal();
 
-
-
             if ($rs->type == 5) {
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
-
+                $gv = $gv_customer;
                 if ($gv_total < 0) {
-                    $gv = $gv_customer;
                     $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
-
                 } else {
-                    $gv = $rs->price + $rs->shipping;
                     $price_remove_gv = 0;
                 }
+
             } else {
                 $gv = null;
                 $price_remove_gv = null;
@@ -206,6 +200,7 @@ class Payment extends Model
     public static function credit_card($rs)
     {
 
+
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $customer_id = Auth::guard('c_user')->user()->id;
@@ -220,15 +215,12 @@ class Payment extends Model
             if ($rs->type == 5) {
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
+                $gv = $gv_customer;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
-
                 if ($gv_total < 0) {
-                    $gv = $gv_customer;
                     $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
-
                 } else {
-                    $gv = $rs->price + $rs->shipping;
                     $price_remove_gv = 0;
                 }
             } else {
@@ -274,7 +266,7 @@ class Payment extends Model
 
             }
 
-            $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
+            $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id,$rs->pv_total);
 
             if ($resule['status'] == 'success') {
                 $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
@@ -315,15 +307,13 @@ class Payment extends Model
             if ($rs->type == 5) {
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->id);
                 $gv_customer = $data_gv->sum_gv;
+                $gv = $gv_customer;
 
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
 
                 if ($gv_total < 0) {
-                    $gv = $gv_customer;
                     $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
-
                 } else {
-                    $gv = $rs->price + $rs->shipping;
                     $price_remove_gv = 0;
                 }
             } else {
@@ -413,13 +403,12 @@ class Payment extends Model
             $total = Cart::session($rs->type)->getTotal();
 
             $gv_total = $gv_customer - ($rs->price + $rs->shipping);
+            $gv = $gv_customer;
 
             if ($gv_total < 0) {
-                $gv = $gv_customer;
                 $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
 
             } else {
-                $gv = $rs->price + $rs->shipping;
                 $price_remove_gv = 0;
             }
 

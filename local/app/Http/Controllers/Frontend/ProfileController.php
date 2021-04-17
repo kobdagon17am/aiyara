@@ -58,6 +58,7 @@ class ProfileController extends Controller
 
     public function edit_address(Request $request)
     {
+
       $checkpass = DB::table('customers')
       ->where('id','=',Auth::guard('c_user')->user()->id)
       ->where('password','=',md5($request->password))
@@ -67,10 +68,10 @@ class ProfileController extends Controller
         'house_name' => trim($request->house_name),
         'moo' => trim($request->moo),
         'soi' => trim($request->soi),
-        'amphures_id_fk' => trim($request->amphures_id_fk),
-        'district_id_fk' => trim($request->district_id_fk),
+        'amphures_id_fk' => trim($request->amphures),
+        'district_id_fk' => trim($request->district),
         'road' => trim($request->road),
-        'province' => trim($request->province),
+        'province_id_fk' => trim($request->province),
         'zipcode' => trim($request->zipcode)
       );
 

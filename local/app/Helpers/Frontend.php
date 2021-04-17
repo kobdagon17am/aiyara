@@ -132,7 +132,7 @@ class Frontend{
 
 
 		$orders = DB::table('db_order_products_list')
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk')
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
 		->where('db_order_products_list.course_id_fk','=',$ce_id)
 		->where('db_orders.customers_id_fk','=',$customer_id)
 		->whereDate('db_orders.created_at','=',$date_now)
@@ -153,7 +153,7 @@ class Frontend{
 	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อวัน
 
 		$orders = DB::table('db_order_products_list')
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.order_id_fk')
+		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
 		->where('db_order_products_list.course_id_fk','=',$ce_id)
 		->where('db_orders.customers_id_fk','=',$customer_id)
 		->where('db_orders.approve_status','=',0)

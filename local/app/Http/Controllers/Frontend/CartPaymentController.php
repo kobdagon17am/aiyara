@@ -74,16 +74,20 @@ class CartPaymentController extends Controller
 			$gv = $data_gv->sum_gv;
 			$gv_total = $gv - $price_total;
 
+
 			if($gv_total < 0){
 				$gv_total = 0;
 				$price_total_type5 = abs($gv - $price_total);
+        $gift_voucher_price =  $gv;
 
 			}else{
+        $gift_voucher_price =  $price_total;
 				$gv_total = $gv_total;
 				$price_total_type5 = 0;
 			}
 
 		}else{
+      $gift_voucher_price = null;
 			$gv_total = null;
 			$price_total_type5 = null;
     }
@@ -102,6 +106,7 @@ class CartPaymentController extends Controller
 			'quantity'=>$quantity,
 			'gv_total'=>$gv_total,
 			'price_total_type5'=>$price_total_type5,
+      'gift_voucher_price'=>$gift_voucher_price,
 			'type'=>$type,
       'location_id'=> $business_location_id,
 			'status'=>'success'
