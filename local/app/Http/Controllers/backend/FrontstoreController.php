@@ -656,12 +656,12 @@ class FrontstoreController extends Controller
            if( @$request->delivery_location!=3){
               DB::select(" UPDATE
                   customers_addr_sent
-                  Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
-                  left Join dataset_districts ON customers_addr_sent.district_sub_id = dataset_districts.id
-                  LEFT Join dataset_provinces ON customers_addr_sent.province_id = dataset_provinces.id
+                  Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
+                  left Join dataset_districts ON customers_addr_sent.district_id_fk = dataset_districts.id
+                  LEFT Join dataset_provinces ON customers_addr_sent.province_id_fk = dataset_provinces.id
                   SET
-                  customers_addr_sent.district=dataset_amphures.name_th,
-                  customers_addr_sent.district_sub=dataset_districts.name_th,
+                  customers_addr_sent.amphures=dataset_amphures.name_th,
+                  customers_addr_sent.district=dataset_districts.name_th,
                   customers_addr_sent.province=dataset_provinces.name_th
                   WHERE
                   customers_addr_sent.id='".($r_addr[0]->address_sent_id_fk)."' ");

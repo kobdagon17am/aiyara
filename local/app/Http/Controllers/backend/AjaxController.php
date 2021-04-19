@@ -2727,8 +2727,8 @@ class AjaxController extends Controller
               customers_addr_sent.moo,
               customers_addr_sent.road,
               customers_addr_sent.soi,
+              customers_addr_sent.amphures,
               customers_addr_sent.district,
-              customers_addr_sent.district_sub,
               customers_addr_sent.province,
               customers_addr_sent.zipcode,
               customers_addr_sent.tel,
@@ -2737,7 +2737,7 @@ class AjaxController extends Controller
               FROM
               db_orders
               Left Join customers_addr_sent ON db_orders.address_sent_id_fk = customers_addr_sent.id
-              Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
+              Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
                ");
 
             foreach ($data_addr as $key => $v) {
@@ -2747,7 +2747,7 @@ class AjaxController extends Controller
                  $addr .= $v->moo." ";
                  $addr .= $v->road." ";
                  $addr .= $v->soi." ";
-                 $addr .= $v->district_sub." ";
+                 $addr .= $v->amphures." ";
                  $addr .= $v->district." ";
                  $addr .= $v->province." ";
                  $addr .= $v->zipcode." ";
