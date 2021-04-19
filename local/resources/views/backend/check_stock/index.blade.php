@@ -80,9 +80,15 @@
                               <option value="">-Business Location-</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
+                                @IF(empty(@$sRow->condition_business_location))
+                                <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
+                                  {{$r->txt_desc}}
+                                </option>
+                                @ELSE 
                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
                                   {{$r->txt_desc}}
                                 </option>
+                                @ENDIF 
                                 @endforeach
                               @endif
                             </select>
@@ -107,7 +113,14 @@
                                   </select>
                               <?php }else{ ?>
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " >
-                                     <option disabled selected>กรุณาเลือก Business Location ก่อน</option>
+                                     <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
+                                     @if(@$sBranchs)
+                                        @foreach(@$sBranchs AS $r)
+                                          <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
+                                            {{$r->b_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
                                   </select>
                               <?php } ?>
 
@@ -260,6 +273,35 @@
                       </div>
                     </div>
 
+                  </div>
+
+
+      <div class="row" >
+                    <div class="col-md-6 " >
+                       <div class="form-group row">
+                            <label for="ref_code" class="col-md-3 col-form-label"> เริ่ม-สิ้นสุด : </label>
+                            <div class="col-md-9 d-flex">
+                              <?php
+                                $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
+                                $last_day_this_month  = date('Y-m-t');
+                               ?>
+                               <input id="start_date"  autocomplete="off" placeholder="Begin" value="<?=$first_day_this_month?>" style="border: 1px solid grey;"  />
+                               <input id="end_date"  autocomplete="off" placeholder="End" value="<?=$last_day_this_month?>" style="border: 1px solid grey;"  />
+
+                            </div>
+                          </div>
+                    </div>
+
+                    <div class="col-md-6 " >
+                        <div class="form-group row">
+                          <label for="ref_code" class="col-md-2 col-form-label">  </label>
+                            <div class="col-md-10">
+                          <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
+                            <i class="bx bx-search align-middle "></i> SEARCH
+                          </a>
+                         </div>
+                       </div>
+                    </div>
 
                   </div>
 
@@ -267,12 +309,7 @@
                   <div class="row" >
                     <div class="col-md-12" >
                        <div class="form-group row">
-                        <div class="col-md-12">
-                        <center>
-                          <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
-                            <i class="bx bx-search align-middle "></i> SEARCH
-                          </a>
-                        </div>
+                        
                         </div>
                     </div>
                   </div>
@@ -304,10 +341,13 @@
 
 <script type="text/javascript">
 
+var start_date = "{{@$first_day_this_month}}"; //alert(start_date);
+var end_date = "{{@$last_day_this_month}}"; //alert(end_date);
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
+var groupColumn = 2;
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -318,83 +358,101 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        // scrollY: ''+($(window).height()-370)+'px',
+        // iDisplayLength: 25,
         ajax: {
-          // url: '{{ route('backend.check_stock_account.datatable') }}',
           url: '{{ route('backend.check_stock.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
+           data: function ( d ) {
+            d.myWhereStock={};
+            d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
             oData = d;
           },
-          method: 'POST'
-        },
+           method: 'POST',
+         },
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'product_id_fk', title :'<center>รหัสสินค้า </center>', className: 'text-left'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
             {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-            // {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
             {data: 'amt',defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
                      return d;
             }},
-
             {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-            {data: 'id', title :'STOCK CARD', className: 'text-center w100'},
+            // {data: 'lot_number', title :'STOCK CARD', className: 'text-center w200'},
         ],
-        order: [[1, 'asc']],
+        // order: [[1, 'asc']],
+        // columnDefs: [
+        //               { "visible": false, "targets": 6 }
+        //           ],
         rowGroup: {
             startRender: null,
             endRender: function ( rows, group  ) {
-                // var product_id_fk = data('product_id_fk') ;
                 var sTotal = rows
                    .data()
                    .pluck('amt')
                    .reduce( function (a, b) {
                        return a + b*1;
+                       // return a + b;
                    }, 0);
-                    sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
+                    sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ').display( sTotal );
 
-                return $('<tr>')
-                    .append( '<td colspan="4" style="text-align:center;background-color:#f2f2f2 !important;font-weight: bold;">Total for '+group+'</td>' )
-                    .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' );
-                    // .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold;color:#50a5f1;"><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+rows+'" style="padding: initial;padding-left: inherit;padding-right: inherit;"> STOCK CARD </a> </td>' );
+                var product_id_fk = rows.data().pluck('product_id_fk').toArray();
+                var product_id_fk = product_id_fk[0] ;
+
+                var lot_number = rows.data().pluck('lot_number').toArray();
+                var lot_number = lot_number[0];
+
+
+                // if ( group.search("LOT") ) {  
+                if ( group==lot_number ) {  
+                   
+
+                    return $('<tr>')
+                    .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
+                    .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                    .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a> </td>' );
+                    
+                }else{
+                     return $('<tr>')
+                    .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
+                    .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                    .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
+                }
+                
             },
-            dataSrc: "product_name"
+            // dataSrc: "product_name"
+            dataSrc: [  "product_name", "lot_number" ]
         },
+   
            rowCallback: function(nRow, aData, dataIndex){
 
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{
-                      $('td:last-child', nRow).html(''
-                        + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"> STOCK CARD </a>  '
+           //      if(sU!=''&&sD!=''){
+           //          $('td:last-child', nRow).html('-');
+           //      }else{
+           //            $('td:last-child', nRow).html(''
+           //              + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a>  '
 
-                      ).addClass('input');
-                } 
-
+           //            ).addClass('input');
+           //      } 
 
 
            },
+
+            // drawCallback: function ( settings ) {
+            //         var api = this.api();
+            //         var rows = api.rows( {page:'current'} ).nodes();
+            //         var last=null;
+            //         api.column(groupColumn, {page:'current'} ).data().each( function ( group, i  ) {
+            //             if ( last !== group ) {
+            //                 $(rows).eq( i ).before(
+            //                   '<tr><td colspan=6 ></td><td rowspan=2 width=100 >STOCK CARD</td></tr>'
+            //                 );
+            //                 last = group;
+            //             }
+            //         } );
+            //     },
+
     });
 
 });
@@ -415,6 +473,8 @@ $(function() {
 
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
+                  var start_date = $('#start_date').val();
+                  var end_date = $('#end_date').val();
 
                    if(business_location_id_fk==''){
                       $("#business_location_id_fk").select2('open');
@@ -427,6 +487,18 @@ $(function() {
                        return false;
                     }
 
+                  if(start_date==''){
+                      $("#start_date").focus();
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+
+                    if(end_date==''){
+                      $("#end_date").focus();
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+
                   var product = $('#product').val();
                   var lot_number = $('#lot_number').val();
                   var warehouse_id_fk = $('#warehouse_id_fk').val();
@@ -435,95 +507,124 @@ $(function() {
                   var shelf_floor = $('#shelf_floor').val();
 
                   // return false;
-
                         var oTable;
                         $(function() {
                                 oTable = $('#data-table').DataTable({
                                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                    processing: true,
-                                    serverSide: true,
-                                    scroller: true,
-                                    scrollCollapse: true,
-                                    scrollX: true,
-                                    ordering: false,
-                                    destroy: true,
-                                    scrollY: ''+($(window).height()-370)+'px',
-                                    iDisplayLength: 25,
-                                    ajax: {
+                                      processing: true,
+                                      serverSide: true,
+                                      scroller: true,
+                                      scrollCollapse: true,
+                                      scrollX: true,
+                                      ordering: false,
+                                      destroy:true,
+                                      // scrollY: ''+($(window).height()-370)+'px',
+                                      // iDisplayLength: 25,
+                                      ajax: {
                                       url: '{{ route('backend.check_stock.datatable') }}',
                                       data: function ( d ) {
-                                          d.Where={};
-                                          d.Where['business_location_id_fk'] = business_location_id_fk ;
-                                          d.Where['product_id_fk'] = product ;
-                                          d.Where['lot_number'] = lot_number ;
-                                          d.Where['branch_id_fk'] = branch_id_fk ;
-                                          d.Where['warehouse_id_fk'] = warehouse_id_fk ;
-                                          d.Where['zone_id_fk'] = zone_id_fk ;
-                                          d.Where['shelf_id_fk'] = shelf_id_fk ;
-                                          d.Where['shelf_floor'] = shelf_floor ;
+                                          d.myWhereStock={};
+                                          d.myWhereStock['business_location_id_fk'] = business_location_id_fk ;
+                                          d.myWhereStock['product_id_fk'] = product ;
+                                          d.myWhereStock['lot_number'] = lot_number ;
+                                          d.myWhereStock['branch_id_fk'] = branch_id_fk ;
+                                          d.myWhereStock['warehouse_id_fk'] = warehouse_id_fk ;
+                                          d.myWhereStock['zone_id_fk'] = zone_id_fk ;
+                                          d.myWhereStock['shelf_id_fk'] = shelf_id_fk ;
+                                          d.myWhereStock['shelf_floor'] = shelf_floor ;
+                                          d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
                                           oData = d;
-                                          // $("#spinner_frame").hide();
                                         },
                                          method: 'POST',
                                        },
-                                        columns: [
-                                          {data: 'id', title :'ID', className: 'text-center w50'},
-                                          // {data: 'product_id_fk', title :'<center>รหัสสินค้า </center>', className: 'text-left'},
-                                          {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},
-                                          {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-                                          {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                                          // {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
-                                          {data: 'amt',
-                                               defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                          }},
+                                       columns: [
+                                              {data: 'id', title :'ID', className: 'text-center w50'},
+                                              {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},
+                                              {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+                                              {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                                              {data: 'amt',defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                                                       return d;
+                                              }},
+                                              {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
+                                              // {data: 'lot_number', title :'STOCK CARD', className: 'text-center w200'},
+                                          ],
+                                          // order: [[1, 'asc']],
+                                          // columnDefs: [
+                                          //               { "visible": false, "targets": 6 }
+                                          //           ],
+                                          rowGroup: {
+                                          startRender: null,
+                                          endRender: function ( rows, group  ) {
+                                              var sTotal = rows
+                                                 .data()
+                                                 .pluck('amt')
+                                                 .reduce( function (a, b) {
+                                                     return a + b*1;
+                                                     // return a + b;
+                                                 }, 0);
+                                                  sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ').display( sTotal );
 
-                                          {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-                                          {data: 'id', title :'STOCK CARD', className: 'text-center w100'},
-                                      ],
-                                    order: [[1, 'asc']],
-                                    rowGroup: {
-                                        startRender: null,
-                                        endRender: function ( rows, group ) {
-                                            var sTotal = rows
-                                               .data()
-                                               .pluck('amt')
-                                               .reduce( function (a, b) {
-                                                   return a + b*1;
-                                               }, 0);
-                                                sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
-                                            // sTotal = 2;
+                                              var product_id_fk = rows.data().pluck('product_id_fk').toArray();
+                                              var product_id_fk = product_id_fk[0] ;
 
-                                            return $('<tr>')
-                                            .append( '<td colspan="4" style="text-align:center;background-color:#f2f2f2 !important;font-weight: bold;">Total for '+group+'</td>' )
-                                            .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' );
-                                        },
-                                        dataSrc: "product_name"
-                                    },
-
-                                     rowCallback: function(nRow, aData, dataIndex){
-                                           // setTimeout(function(){
-                                            $("#spinner_frame").hide();
-                                          // },2000);
-
-                                            if(sU!=''&&sD!=''){
-                                                $('td:last-child', nRow).html('-');
-                                            }else{
-                                                  $('td:last-child', nRow).html(''
-                                                    + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"> STOCK CARD </a>  '
-
-                                                  ).addClass('input');
-                                            }
-
-                                     },
+                                              var lot_number = rows.data().pluck('lot_number').toArray();
+                                              var lot_number = lot_number[0];
 
 
-                                });
+                                              if ( group.search("LOT") ) {  
+                                                  return $('<tr>')
+                                                  .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
+                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
+                                              }else{
+                                                  return $('<tr>')
+                                                  .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
+                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a> </td>' );
+                                              }
+                                              
+                                          },
+                                          // dataSrc: "product_name"
+                                          dataSrc: [  "product_name", "lot_number" ]
+                                      },
+                                 
+                                         rowCallback: function(nRow, aData, dataIndex){
+
+                                         //      if(sU!=''&&sD!=''){
+                                         //          $('td:last-child', nRow).html('-');
+                                         //      }else{
+                                         //            $('td:last-child', nRow).html(''
+                                         //              + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a>  '
+
+                                         //            ).addClass('input');
+                                         //      } 
+
+
+                                         },
+
+                                          // drawCallback: function ( settings ) {
+                                          //         var api = this.api();
+                                          //         var rows = api.rows( {page:'current'} ).nodes();
+                                          //         var last=null;
+                                          //         api.column(groupColumn, {page:'current'} ).data().each( function ( group, i  ) {
+                                          //             if ( last !== group ) {
+                                          //                 $(rows).eq( i ).before(
+                                          //                   '<tr><td colspan=6 ></td><td rowspan=2 width=100 >STOCK CARD</td></tr>'
+                                          //                 );
+                                          //                 last = group;
+                                          //             }
+                                          //         } );
+                                          //     },
+
+                                  });
+
 
                             });
 
 
-
+                  setTimeout(function(){
+                    $("#spinner_frame").hide();
+                  },2000);
 
             });
 
@@ -664,7 +765,71 @@ $(function() {
 
       });
 
+
+       $('#product').change(function(){
+
+          var product_id_fk = this.value;
+          // alert(zone_id_fk);
+
+           if(product_id_fk != ''){
+             $.ajax({
+                   url: " {{ url('backend/ajaxGetLotnumber') }} ",
+                  method: "post",
+                  data: {
+                    product_id_fk:product_id_fk,
+                    "_token": "{{ csrf_token() }}",
+                  },
+                  success:function(data)
+                  {
+                   if(data == ''){
+                       alert('ไม่พบข้อมูล Lot number !!.');
+                       var layout = '<option value="" selected>- เลือก Lot number -</option>';
+                       $('#lot_number').html(layout);
+                   }else{
+                       var layout = '<option value="" selected>- เลือก Lot number -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.lot_number+'>'+value.lot_number+'</option>';
+                       });
+                       $('#lot_number').html(layout);
+                   }
+                  }
+                })
+           }
+
+      });
+
+
 </script>
 
 
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#start_date').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // minDate: today,
+            // maxDate: function () {
+            //     return $('#end_date').val();
+            // }
+        });
+        $('#end_date').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                return $('#start_date').val();
+            }
+        });
+
+         $('#start_date').change(function(event) {
+           $('#end_date').val($(this).val());
+         });
+
+  </script>   
 @endsection

@@ -103,6 +103,9 @@
                           <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>สาขา :</label>
                           <div class="col-md-9">
 
+                            <input type="hidden" name="business_location_id_fk" value="{{@$business_location_id_fk}}">
+
+
                             <?php //echo $User_branch_id; ?>
                            
                             @if(@$User_branch_id==0)

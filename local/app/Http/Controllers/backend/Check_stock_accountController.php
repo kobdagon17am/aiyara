@@ -74,6 +74,7 @@ class Check_stock_accountController extends Controller
           $db_stocks =DB::select(" select * from db_stocks where id in($arr_row_id)  ");
           $branchs = DB::select("SELECT * FROM branchs where id=".@$db_stocks[0]->business_location_id_fk."");
     
+    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
           $REF_CODE = DB::select(" SELECT REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
           if($REF_CODE){
               $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
@@ -86,7 +87,7 @@ class Check_stock_accountController extends Controller
           if( $stocks_account_code ){
             $stocks_account_code->business_location_id_fk = @$db_stocks[0]->business_location_id_fk;
             $stocks_account_code->branch_id_fk = @$branchs[0]->id;
-            $stocks_account_code->ref_code = $ref_code;
+            // $stocks_account_code->ref_code = $ref_code;
             $stocks_account_code->action_user = (\Auth::user()->id);
                         
 
@@ -119,7 +120,9 @@ class Check_stock_accountController extends Controller
          $i=1;
          foreach ($db_stocks as $key => $value) {
 
-             $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+           //  $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+          // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+             $run_code = ''; 
 
              DB::select(" INSERT INTO db_stocks_account 
               (
@@ -316,32 +319,19 @@ class Check_stock_accountController extends Controller
     public function ScanQr($id)
     {
       // dd($id);
-      $r = DB::select(" Select * from db_pick_warehouse_tmp where id=$id ");
-      $warehouse_qrcode = DB::select(" Select * from db_pick_warehouse_qrcode where pick_warehouse_tmp_id_fk=$id ");
+      $r = DB::select(" Select * from db_pick_warehouse_tmp where invoice_code='$id' ");
+      // $rSumAmt = DB::select(" Select sum(amt) as amt  from db_pick_warehouse_tmp where invoice_code='$id' ");
+      $warehouse_qrcode = DB::select(" Select * from db_pick_warehouse_qrcode where invoice_code='$id' ");
       // dd($r);
+      // dd($rSumAmt[0]->amt);
       // dd($warehouse_qrcode);
-      /*
-      0 => {#2931 ▼
-        +"id": 1
-        +"invoice_code": "P1210300017"
-        +"product_code": "00002"
-        +"product_name": "MATCHA GREEN TEA LATTE"
-        +"amt": 1
-        +"product_unit": "กล่อง"
-        +"amt_get": 1
-        +"status": 0
-        +"product_id_fk": 2
-      }
-  */
-      $product_name = $r[0]->product_code." : ".$r[0]->product_name;
-      $amt = $r[0]->amt;
+      
       return View('backend.pay_product_receipt.scan_qr')->with(
         array(
            'id'=>$id,
            'sRow'=>$r,
-           'product_name'=>$product_name,
-           'amt'=>$amt,
            'warehouse_qrcode'=>$warehouse_qrcode,
+           // 'rSumAmt'=>$rSumAmt,
         ));
     }
 
@@ -375,6 +365,8 @@ class Check_stock_accountController extends Controller
       }else{
           $status_accepted = 'NEW';
       }
+
+      Session::put('session_status_accepted_id', @$sRow->status_accepted);  
 
       if(empty($sRow)){
         return redirect()->to(url("backend/check_stock_account/"));
@@ -489,7 +481,47 @@ class Check_stock_accountController extends Controller
             $sRow->save();
 
             if($amt!=0){
+
+
+        // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+              $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
+              if($REF_CODE){
+                  $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
+              }else{
+                  $ref_code = 'ADJ'.sprintf("%05d",1);
+              }
+
+              $business_location_id_fk =  @$REF_CODE[0]->business_location_id_fk;
+
               DB::update(" UPDATE db_stocks_account_code SET status_accepted=1 where id=".$sRow->stocks_account_code_id_fk."");
+              DB::select(" UPDATE  db_stocks_account_code SET ref_code='$ref_code' where id=".$sRow->stocks_account_code_id_fk." AND (ref_code='' or ref_code is null) ; ");
+
+
+              $branchs = DB::select("SELECT * FROM branchs where id=$business_location_id_fk ");
+
+              $db_stocks_account =DB::select(" select * from db_stocks_account where stocks_account_code_id_fk =".$sRow->stocks_account_code_id_fk." AND (run_code='' or run_code is null) ; ");
+
+              $inv = DB::select(" SELECT run_code,SUBSTR(run_code,-5) AS REF_NO FROM DB_STOCKS_ACCOUNT ORDER BY run_code DESC LIMIT 1 ");
+              if($inv){
+                    $REF_CODE = 'A'.$business_location_id_fk.date("ymd");
+                    $REF_NO = intval(@$inv[0]->REF_NO);
+              }else{
+                    $REF_CODE = 'A'.$business_location_id_fk.date("ymd");
+                    $REF_NO = 0;
+              }
+
+              $i=1;
+              foreach ($db_stocks_account as $key => $value) {
+
+                 $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+
+                 DB::select(" UPDATE db_stocks_account SET run_code = '$run_code' where stocks_account_code_id_fk =".$sRow->stocks_account_code_id_fk." AND id=".$value->id." AND (run_code='' or run_code is null) ");
+
+                 $i++;
+             }
+
+
+
             }
 
             return redirect()->to(url("backend/check_stock_account/adjust/".request('id')."?from_id=".request('from_id')));
@@ -513,7 +545,7 @@ class Check_stock_accountController extends Controller
         if(!empty(request('approved'))){
 
           $sRow = \App\Models\Backend\Stocks_account_code::find(request('id'));
-          DB::select(' UPDATE db_stocks_account SET status_accepted='.request('approve_status').',action_date=CURDATE() where stocks_account_code_id_fk='.request('id').' ');
+          DB::select(' UPDATE db_stocks_account SET status_accepted='.request('approve_status').',action_date=CURDATE(),approver='.request('approver').',approve_date=CURDATE() where stocks_account_code_id_fk='.request('id').' ');
 
           $stocks_account = DB::select(' SELECT * from db_stocks_account WHERE stocks_account_code_id_fk='.request('id').' AND amt_diff<>0 ');
 
@@ -523,7 +555,10 @@ class Check_stock_accountController extends Controller
               // echo $value->amt_diff;
               // echo $value->product_id_fk;
               // echo $value->lot_number;
+            if(request('approve_status')==3){ // อนุมัติ 
                DB::update(' UPDATE db_stocks SET amt = ( amt + ('.$value->amt_diff.') ) where product_id_fk = "'.$value->product_id_fk.'" AND lot_number="'.$value->lot_number.'" ');
+             }
+
           } 
           // dd();
 
@@ -554,8 +589,20 @@ class Check_stock_accountController extends Controller
       if( $sRow ){
         // $sRow->forceDelete();
          // 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
-        DB::select("UPDATE db_stocks_account_code SET status_accepted='5' WHERE status_accepted in(1,2) AND id=$id ");
-        DB::select("DELETE FROM db_stocks_account_code  WHERE status_accepted=0 AND id=$id ");
+        DB::select(" UPDATE db_stocks_account_code SET status_accepted='5' WHERE status_accepted in(1,2) AND id=$id ");
+        DB::select(" UPDATE
+            db_stocks_account
+            Left Join db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk = db_stocks_account_code.id
+            SET 
+            db_stocks_account.status_accepted=
+            db_stocks_account_code.status_accepted
+            WHERE db_stocks_account.stocks_account_code_id_fk=$id ");
+        DB::select(" DELETE
+            FROM
+            db_stocks_account
+            WHERE db_stocks_account.stocks_account_code_id_fk=
+            (SELECT id FROM db_stocks_account_code WHERE status_accepted=0 AND id =$id ) ");
+        DB::select(" DELETE FROM db_stocks_account_code  WHERE status_accepted=0 AND id=$id ");
 
       }
       return response()->json(\App\Models\Alert::Msg('success'));

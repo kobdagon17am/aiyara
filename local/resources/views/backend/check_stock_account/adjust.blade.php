@@ -220,7 +220,7 @@ $(function() {
                    .reduce( function (a, b) {
                        return a + b*1;
                    }, 0);
-                    sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
+                    sTotal = $.fn.dataTable.render.number(',', '.', 0, ' ').display( sTotal );
                 // sTotal = 2;
  
                 return $('<tr/ style=" background-color:#f2f2f2 !important;">')

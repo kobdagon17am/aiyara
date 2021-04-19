@@ -50,7 +50,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_takeout.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_takeout.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
                   </div>
@@ -126,7 +126,7 @@ $(function() {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
               }else{
-                  return '';
+                  return '* รออนุมัติ';
               }
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -137,7 +137,7 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 

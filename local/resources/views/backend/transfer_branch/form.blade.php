@@ -93,9 +93,9 @@
                     <div class="col-md-3 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1"  >
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" required  >
                         @else
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" required {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
                         @endif
                           <label for="customSwitch1">อนุมัติ / Aproved</label>
                       </div>
@@ -103,9 +103,9 @@
                      <div class="col-md-6 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3"  >
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" required >
                         @else
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" required {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
                         @endif
                           <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                       </div>
@@ -116,7 +116,7 @@
                         <div class="form-group row">
                           <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>หมายเหตุ (ถ้ามี) :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
                           </div>
                         </div>
 

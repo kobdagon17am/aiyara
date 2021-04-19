@@ -28,16 +28,26 @@ class General_takeoutController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
 
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+
+
       // dd($Products);
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
+      $Check_stock = \App\Models\Backend\Check_stock::get();
+
       return View('backend.general_takeout.form')->with(
         array(
            'Product_out_cause'=>$Product_out_cause,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
+           'Check_stock'=>$Check_stock,
+           'sBusiness_location'=>$sBusiness_location,
+           'sBranchs'=>$sBranchs,
+
         ) );
     }
     public function store(Request $request)
@@ -57,17 +67,26 @@ class General_takeoutController extends Controller
             products_details
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+
+
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();       
+      $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
-      $Shelf = \App\Models\Backend\Shelf::get();      
+      $Shelf = \App\Models\Backend\Shelf::get();
+      $Check_stock = \App\Models\Backend\Check_stock::get();
       return View('backend.general_takeout.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id,
            'Product_out_cause'=>$Product_out_cause,
            'Recipient'=>$Recipient,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf
+           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
+           'Check_stock'=>$Check_stock,
+           'sBusiness_location'=>$sBusiness_location,
+           'sBranchs'=>$sBranchs,
+
         ) );
     }
 
@@ -87,15 +106,20 @@ class General_takeoutController extends Controller
             $sRow = new \App\Models\Backend\General_takeout;
           }
 
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_out_cause_id_fk    = request('product_out_cause_id_fk');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
           $sRow->amt    = request('amt');
           $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+
+          $sRow->branch_id_fk    = request('branch_id_fk');
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
           $sRow->zone_id_fk    = request('zone_id_fk');
           $sRow->shelf_id_fk    = request('shelf_id_fk');
+          $sRow->shelf_floor    = request('shelf_floor');
+          
           $sRow->receive_person    = request('receive_person');
           
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');
@@ -105,6 +129,14 @@ class General_takeoutController extends Controller
                     
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
+
+          if(request('approve_status')=='1'){
+              DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE product_id_fk = ".request('product_id_fk')." AND lot_number='".request('lot_number')."' AND lot_expired_date='".request('lot_expired_date')."' ");
+              
+              return redirect()->to(url("backend/general_takeout"));
+
+          }
+
 
           \DB::commit();
 

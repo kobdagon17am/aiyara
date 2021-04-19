@@ -55,61 +55,104 @@
    ?>
 
 <div class="row">
-  <div class="col-12">
+  <div class="col-8">
     <div class="card">
       <div class="card-body">
 
-        <div class="myBorder">
-
-          <div class="form-group row ">
-            <div class="col-md-12" style="font-size: 16px;color: black;font-weight: bold;">
-             <i class="bx bx-play"></i> สินค้า : {{@$product_name}}  > จำนวน {{@$amt}} รายการ
-          </div>
-          </div>
+        <div class="myBorder" style="background-color: #f2f2f2;">
 
 
-          <form id="frm-example" action="{{ route('backend.pay_product_receipt.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_to_qrscan" value="1" >
-            <input type="hidden" name="product_id_fk" value="{{@$sRow[0]->product_id_fk}}" >
-            <input type="hidden" name="pick_warehouse_tmp_id_fk" value="{{@$id}}" >
+            <form id="frm-example" action="{{ route('backend.pay_product_receipt.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
 
-            {{ csrf_field() }}
+              <input type="hidden" name="save_to_qrscan" value="1" >
+              <input type="hidden" name="invoice_code" value="{{@$id}}" >
 
+              {{ csrf_field() }}
 
-<?php 
-for ($i=1; $i <= @$amt ; $i++) { 
+              <?php  //echo "<pre>"; print_r($warehouse_qrcode); echo "</pre>"; ?>
+              <?php  //echo($warehouse_qrcode[3]->pick_warehouse_tmp_id_fk); ?>
+              <?php  //echo($warehouse_qrcode[3]->product_id_fk); ?>
+              <?php  //echo($warehouse_qrcode[3]->qr_code);  ?>
+              <?php  
+                  if(date("Y-m-d",strtotime(@$warehouse_qrcode[0]->updated_at))==date("Y-m-d")){
+                    // echo "Y";
+                    $dis_Del = "";
+                  }else{
+                    // echo "N";
+                    $dis_Del = "display:none;";
+                  }  
+              ?>
 
-?>
-          <div class="form-group row ">
-            <div class="col-md-10 d-flex  ">
-              <label class="col-5" > ({{$i}}) </label>
-              <div class="col-md-5">
-
-                <input type="text" class="form-control" name="txtScan[]" style="font-size: 16px !important;color: blue;" >
-
-              </div>
-
-            </div>
-          </div>
-<?php 
-}
-?>
+              @IF($sRow)
 
 
-          <div class="form-group row ">
-            <div class="col-md-10 d-flex  ">
-              <label class="col-5" ></label>
-              <div class="col-md-5" >
-    
-                <button type="submit" class="btn btn-primary btn-sm waves-effect btnScan " style="font-size: 16px !important;">
-                   <i class="bx bx-search align-middle "></i> SCAN
-                    </button>
+              @php($j = 0)
 
-            </div>
-            </div>
-          </div>
+              @foreach(@$sRow AS $k => $r)
 
-</form>
+                <div class="form-group row ">
+                  <div class="col-md-12" style="font-size: 16px;color: black;font-weight: bold;">
+                   <i class="bx bx-play"></i> สินค้า : {{$r->product_code." : ".$r->product_name}}  > จำนวน {{@$r->amt}} รายการ
+                  </div>
+                </div>
+
+                      <?php 
+
+                      $amt = @$r->amt;
+                      
+                      for ($i=0; $i < $amt ; $i++) { 
+                        
+                        @$qr_code = !empty($warehouse_qrcode[$j]->qr_code)?$warehouse_qrcode[$j]->qr_code:'';
+
+
+                        ?>
+                            <div class="form-group row " >
+                              <div class="col-md-10 d-flex " >
+                                <label class="col-5" style="margin: auto;text-align:right;" > <?=$amt>1?"(".($i+1).")":""?>  </label>
+                                <div class="col-md-5" style="margin: auto;text-align:left;">
+
+                                  <input type="hidden" name="warehouse_qrcode_id[]" value="{{@$warehouse_qrcode[$j]->id}}" >
+                                  <input type="hidden" name="pick_warehouse_tmp_id_fk[]" value="{{@$r->id}}" >
+                                  <input type="hidden" name="product_id_fk[]" value="{{@$r->product_id_fk}}" >
+
+                                  <input type="text" class="form-control" name="txtScan[]" style="font-size: 16px !important;color: blue;"  value="{{@$qr_code}}">
+
+                                  <input type="hidden" name="qr_code[]" value="{{@$qr_code}}" >
+
+                                </div>
+                                <div class="col-md-2" style="margin: auto;text-align:left;">
+                                  <i class="far fa-window-close font-size-18 btnDelete " warehouse_qrcode_id="{{@$warehouse_qrcode[$j]->id}}" style="color: red;cursor: pointer;<?=$dis_Del?>" ></i>
+                                </div>
+
+                              </div>
+                            </div>
+
+                        <?php 
+                        $j++;
+                      }
+
+                      ?>
+
+
+              @ENDFOREACH 
+              @ENDIF 
+
+                      <div class="form-group row ">
+                        <div class="col-md-10 d-flex  ">
+                          <label class="col-5" ></label>
+                          <div class="col-md-5" >
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect btnScan " style="font-size: 16px !important;">
+                               <i class="bx bx-barcode align-middle font-size-22 "></i> SCAN
+                            </button>
+                        </div>
+                        <div class="col-md-5" style="padding-top: 14px;">Last Update : {{@$warehouse_qrcode[0]->updated_at}} 
+                        </div>
+                        </div>
+                      </div>
+
+
+                </form>
+
 
         </div>
         
@@ -121,8 +164,44 @@ for ($i=1; $i <= @$amt ; $i++) {
 @endsection
 
 @section('script')
-
  
+  <script> 
+
+          $(document).ready(function() {
+
+                $(document).on('click', '.btnDelete', function(event) {
+
+                        if (!confirm("ยืนยัน ! เพื่อลบ ? ")){
+                              return false;
+                        }else{
+
+                          $(".myloading").show();
+
+                          var warehouse_qrcode_id = $(this).attr('warehouse_qrcode_id');
+                          // alert(warehouse_qrcode_id);
+                           $.ajax({
+                             type:'POST',
+                             url: " {{ url('backend/ajaxDeleteQrcodeProduct') }} ", 
+                             data:{ _token: '{{csrf_token()}}',id:warehouse_qrcode_id },
+                              success:function(data){
+                                   // console.log(data); 
+                                   location.reload();
+                            
+                                },
+                              error: function(jqXHR, textStatus, errorThrown) { 
+                                  console.log(JSON.stringify(jqXHR));
+                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  $(".myloading").hide();
+                              }
+                          });
+
+                        }
+
+                }); 
+
+          });
+
+    </script> 
 
 @endsection
 

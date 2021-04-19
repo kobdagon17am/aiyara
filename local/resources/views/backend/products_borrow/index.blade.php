@@ -1042,6 +1042,7 @@ $(document).ready(function() {
                 rowCallback: function(nRow, aData, dataIndex){
 
                       $('td:last-child', nRow).html(''
+                        + '<input type="hidden" name="business_location_id_fk[]" value="'+aData['business_location_id_fk']+'"> '
                         + '<input type="hidden" name="products_borrow_choose_id[]" value="'+aData['id']+'"> '
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.products_borrow_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');

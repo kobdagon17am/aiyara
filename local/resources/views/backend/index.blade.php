@@ -238,6 +238,39 @@
                             </div>
                         </div>
                         <!-- end row -->
+
+<div class="myBorder">   
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4"> Check Notify </h4>
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap">
+                                    <thead class="thead-light">
+                                        <div class="col-12 text-right" >
+                                            <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.stock_notify.index') }}">
+                                              View Details
+                                            </a>
+                                          </div>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <table id="data-table-notify" class="table table-bordered dt-responsive" style="width: 100%;">
+                                        </table>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table-responsive -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>          
+
+
 <div class="myBorder">   
 
             <div class="row">
@@ -600,6 +633,94 @@
 @section('script')
 
 <script>
+
+        var sU = "{{@$sU}}"; //alert(sU);
+        var sD = "{{@$sD}}"; //alert(sD);
+        var oTableNotify;
+        $(function() {
+            oTableNotify = $('#data-table-notify').DataTable({
+            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                scrollY: ''+($(window).height()-370)+'px',
+                iDisplayLength: 15,
+                ajax: {
+                  url: '{{ route('backend.stock_notify_dashboard.datatable') }}',
+                   data: function ( d ) {
+                    oData = d;
+                  },
+                   method: 'POST',
+                 },
+
+                columns: [
+                    {data: 'id', title :'ID', className: 'text-center w50'},
+                    {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
+                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center'},
+                    {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
+                    {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
+                      if(d==0){
+                        return '* ยังไม่ได้กำหนด';
+                      }else{
+                        return d;
+                      }
+                    }},
+                    {data: 'id', title :'<center>Note 1</center>', className: 'text-center ',render: function(d) {
+                      // if(d==0){
+                      //   return '* ยังไม่ได้กำหนด';
+                      // }else{
+                        return d;
+                      // }
+                    }},
+                    {data: 'amt_day_before_expired', title :'<center>แจ้งเตือนก่อนวันหมดอายุ (วัน)</center>', className: 'text-center w100 ',render: function(d) {
+                      if(d==0){
+                        return '* ยังไม่ได้กำหนด';
+                      }else{
+                        return d;
+                      }
+                    }},   
+                    {data: 'id', title :'<center>Note 2</center>', className: 'text-center ',render: function(d) {
+                      // if(d==0){
+                      //   return '* ยังไม่ได้กำหนด';
+                      // }else{
+                        return d;
+                      // }
+                    }},         
+                    // {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
+                    // {data: 'diff_d', title :'<center>Last updated </center>', className: 'text-center '},
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
+
+                  var info = $(this).DataTable().page.info();
+                  $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                  $('td:eq(2)', nRow).html(aData['lot_expired_date']+" ("+aData['diff_d']+")");
+
+                  if(aData['amt_less']){
+                    $('td:eq(6)', nRow).html(aData['amt']-aData['amt_less']);
+                    $('td:eq(6)', nRow).html(aData[6]).css({'color':'red'});
+                  }
+                  if(aData['amt_day_before_expired']){
+                    // var start = new Date(aData['lot_expired_date']),  
+                    //     end   = new Date(),
+                    //     diff  = new Date(start - end),
+                    //     days  = diff/1000/60/60/24;
+                    //     dd  =  (days) - aData['amt_day_before_expired'];
+                    $('td:eq(8)', nRow).html(Math.trunc(aData['diff_d02']));
+                    $('td:eq(8)', nRow).html(aData[6]).css({'color':'red'});
+                  }
+
+             
+
+                }
+            });
+
+        });
+
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(role_group_id);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var oTable;

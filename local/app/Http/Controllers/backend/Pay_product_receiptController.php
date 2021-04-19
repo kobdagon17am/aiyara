@@ -70,36 +70,130 @@ class Pay_product_receiptController extends Controller
 
         DB::update(" 
 	        UPDATE
-			db_pick_warehouse_packing_code
-			Inner Join db_pick_warehouse ON db_pick_warehouse_packing_code.id = db_pick_warehouse.packing_code
-			SET
-			db_pick_warehouse.status_pick_warehouse=db_pick_warehouse_packing_code.status_pick_warehouse
-			WHERE
-			db_pick_warehouse_packing_code.status_pick_warehouse=1
-		 ");
+    			db_pick_warehouse_packing_code
+    			Inner Join db_pick_warehouse ON db_pick_warehouse_packing_code.id = db_pick_warehouse.packing_code
+    			SET
+    			db_pick_warehouse.status_pick_warehouse=db_pick_warehouse_packing_code.status_pick_warehouse
+    			WHERE
+    			db_pick_warehouse_packing_code.status_pick_warehouse=1
+    		 ");
 
 
         return redirect()->to(url("backend/pick_warehouse"));
 
       }else if(isset($request->save_to_qrscan)){
 
-        DB::select(" DELETE from db_pick_warehouse_qrcode 
-              where pick_warehouse_tmp_id_fk=".$request->pick_warehouse_tmp_id_fk." and product_id_fk=".$request->product_id_fk."
-               ");
         // dd($request->all());
-        if($request->txtScan){
-          foreach ($request->txtScan as $key => $value) {
-              DB::select(" INSERT IGNORE INTO db_pick_warehouse_qrcode (pick_warehouse_tmp_id_fk,product_id_fk,qr_code) 
-              values (".$request->pick_warehouse_tmp_id_fk.",".$request->product_id_fk.",'".$value."')
-               ");
-          }
+        for ($i=0; $i < count($request->warehouse_qrcode_id) ; $i++) { 
+
+                $value=DB::table('db_pick_warehouse_qrcode')
+                // ->where('invoice_code', $request->invoice_code)
+                // ->where('pick_warehouse_tmp_id_fk', $request->pick_warehouse_tmp_id_fk[$i])
+                // ->where('product_id_fk', $request->product_id_fk[$i])
+                // ->where('qr_code', $request->qr_code[$i])
+                ->where('id', $request->warehouse_qrcode_id[$i])
+                ->get();
+                if($value->count() == 0){
+                  // if($request->txtScan[$i]!=''){
+                      DB::table('db_pick_warehouse_qrcode')->insert(array(
+                        'invoice_code' => $request->invoice_code,
+                        'pick_warehouse_tmp_id_fk' => $request->pick_warehouse_tmp_id_fk[$i],
+                        'product_id_fk' => $request->product_id_fk[$i],
+                        'qr_code' => $request->txtScan[$i],
+                        'created_at' => date("Y-m-d H:i:s"),
+                      ));
+                    // }
+                }else{
+                      DB::table('db_pick_warehouse_qrcode')
+                      // ->where('invoice_code', $request->invoice_code)
+                      // ->where('pick_warehouse_tmp_id_fk', $request->pick_warehouse_tmp_id_fk[$i])
+                      // ->where('product_id_fk', $request->product_id_fk[$i])
+                      // ->where('qr_code', $request->qr_code[$i])
+                      ->where('id', $request->warehouse_qrcode_id[$i])
+                      ->update(array(
+                        'invoice_code' => $request->invoice_code,
+                        'pick_warehouse_tmp_id_fk' => $request->pick_warehouse_tmp_id_fk[$i],
+                        'product_id_fk' => $request->product_id_fk[$i],
+                        'qr_code' => $request->txtScan[$i],
+                      ));
+                }
+
+
+                   DB::update(" 
+                        UPDATE db_pick_warehouse_tmp SET db_pick_warehouse_tmp.cnt_this=(
+                        SELECT 
+                        count(*) as cnt
+                        FROM
+                        db_pick_warehouse_qrcode
+                        WHERE
+                        db_pick_warehouse_qrcode.invoice_code='".$request->invoice_code."' AND db_pick_warehouse_qrcode.product_id_fk='".$request->product_id_fk[$i]."'
+                        )
+                        WHERE
+                        db_pick_warehouse_tmp.invoice_code='".$request->invoice_code."' AND db_pick_warehouse_tmp.product_id_fk='".$request->product_id_fk[$i]."'
+                   ");
+
+
+                   DB::update(" 
+                        UPDATE db_pick_warehouse_tmp SET cnt_qr_code=(
+                        SELECT 
+                        count(*) as cnt
+                        FROM
+                        db_pick_warehouse_qrcode
+                        WHERE invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' AND qr_code is not NULL ) 
+                        WHERE invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'
+
+
+                   ");
+
+ 
+                  DB::update(" 
+                        UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=0 WHERE cnt_qr_code=0
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                  ");
+
+                  DB::update(" 
+                        UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=1 WHERE cnt_qr_code>0 AND cnt_qr_code<cnt_this
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                  ");
+
+                  DB::update(" 
+                        UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=2 WHERE cnt_qr_code>0 AND cnt_qr_code=cnt_this
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                  ");
+
+                  //  DB::update(" 
+                  //       UPDATE
+                  //       db_frontstore_products_list
+                  //       Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+                  //       Left Join db_pick_warehouse_qrcode ON db_frontstore.invoice_code = db_pick_warehouse_qrcode.invoice_code AND db_frontstore_products_list.product_id_fk = db_pick_warehouse_qrcode.product_id_fk
+                  //       SET
+                  //       db_frontstore_products_list.qr_code=
+                  //       db_pick_warehouse_qrcode.qr_code
+                  // ");
+
+               $rs_db_pick_warehouse_qrcode =   DB::select(" select * from db_pick_warehouse_qrcode where invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'  ");
+               $arr = [];
+               foreach ($rs_db_pick_warehouse_qrcode as $key => $value) {
+                   array_push($arr,$value->qr_code);
+               }
+               $imp_arr = implode(',',$arr);
+               // dd($imp_arr);
+                DB::update(" 
+                        UPDATE
+                        db_frontstore_products_list
+                        Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+                        SET
+                        db_frontstore_products_list.qr_code='$imp_arr'
+                        WHERE
+                        db_frontstore.invoice_code='".$request->invoice_code."' AND
+                        db_frontstore_products_list.product_id_fk='".$request->product_id_fk[$i]."'
+                ");
+
+
+
         }
 
-        DB::select(" UPDATE db_pick_warehouse_tmp  set status=1
-              where id=".$request->pick_warehouse_tmp_id_fk."
-               ");
-
-        return redirect()->to(url("backend/pay_product_receipt"));
+        return redirect()->to(url("backend/pay_product_receipt/scan_qr/".$request->invoice_code));
 
       }else{
         // dd($request->all());
@@ -110,7 +204,9 @@ class Pay_product_receiptController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
+       // $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
+       $sRow = \App\Models\Backend\Consignments::find($id);
+       // dd($sRow);
        $Province = DB::select(" select * from dataset_provinces ");
 
        $Customer = DB::select(" select * from customers ");
@@ -132,22 +228,32 @@ class Pay_product_receiptController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
+            // $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
+            $sRow = \App\Models\Backend\Consignments::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Pay_product_receipt;
+            // $sRow = new \App\Models\Backend\Pay_product_receipt;
+            $sRow = new \App\Models\Backend\Consignments;
           }
 
-          $sRow->receipt    = request('receipt');
-          $sRow->customer_id    = request('customer_id');
-          $sRow->province_id_fk    = request('province_id_fk');
-          $sRow->pick_warehouse_date    = request('pick_warehouse_date');
+          // $sRow->receipt    = request('receipt');
+          // $sRow->customer_id    = request('customer_id');
+          // $sRow->province_id_fk    = request('province_id_fk');
+          // $sRow->pick_warehouse_date    = request('pick_warehouse_date');
+
+  //           "mobile" => "sfsdf"
+  // "sent_date" => "2021-04-19"
+  // "status_sent" => "true"
                     
+          $sRow->mobile = request('mobile');
+          $sRow->sent_date = request('sent_date');
+          $sRow->status_sent = request('status_sent')==1?1:0;
+          $sRow->approver = \Auth::user()->id;
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
           \DB::commit();
 
-          return redirect()->to(url("backend/pick_warehouse"));
+          return redirect()->to(url("backend/pay_product_receipt"));
 
            // return redirect()->to(url("backend/pick_warehouse/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
            

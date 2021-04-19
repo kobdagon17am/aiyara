@@ -41,7 +41,7 @@ class Check_stockController extends Controller
     public function stock_card(Request $request,$id)
     {
         // dd($request->lot_number);
-        // dd($request);
+        // dd($request->date);
         // dd($id);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -53,7 +53,7 @@ class Check_stockController extends Controller
 
             $lot_number = $request->lot_number;
 
-         $sBalance = DB::select(" SELECT amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' ");
+         $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' ");
 
          // dd($sBalance);
 
@@ -62,6 +62,7 @@ class Check_stockController extends Controller
            'Products'=>$Products,
            'lot_number'=>$lot_number,
            'sBalance'=>$sBalance,
+           'date_s_e'=>$request->date,
          ));
 
     }
@@ -92,9 +93,9 @@ class Check_stockController extends Controller
     public function Datatable(Request $req){
 
       if(isset($req->id)){
-        $sTable = \App\Models\Backend\Check_stock::where('id',$req->id);
+        $sTable = \App\Models\Backend\Check_stock::where('id',$req->id)->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
       }else{
-        $sTable = \App\Models\Backend\Check_stock::search()->orderBy('id', 'asc');
+        $sTable = \App\Models\Backend\Check_stock::search()->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
       }
       
       $sQuery = \DataTables::of($sTable);

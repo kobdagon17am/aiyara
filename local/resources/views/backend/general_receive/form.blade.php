@@ -3,7 +3,14 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style type="text/css">
+  input[type=text] {
+    font-weight: bold;
+  }
+  input[type=number] {
+    font-weight: bold;
+  }  
+</style>
 @endsection
 
 @section('content')
@@ -56,8 +63,25 @@
 
                       <div class="myBorder">
 
+                      	<div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
+                            <div class="col-md-8">
+                               <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                              <option value="">-Business Location-</option>
+                              @if(@$sBusiness_location)
+                                @foreach(@$sBusiness_location AS $r)
+                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >
+                                  {{$r->txt_desc}}
+                                </option>
+                                @endforeach
+                              @endif
+                            </select>
+                            </div>
+                          </div>
+
+
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> สาเหตุที่รับเข้า : * </label>
+                            <label for="" class="col-md-3 col-form-label"> สาเหตุที่รับเข้า : * </label>
                             <div class="col-md-8">
                               <select name="product_in_cause_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
@@ -72,10 +96,19 @@
                             </div>
                           </div>
 
+
                           <div class="form-group row">
-                            <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : *</label>
+                            <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
                             <div class="col-md-8">
-                              <select name="supplier_id_fk" class="form-control select2-templating " required >
+                              <input class="form-control" type="text" value="{{ @$sRow->po_invoice_no }}" name="po_invoice_no"  >
+                            </div>
+                          </div>
+
+
+                          <div class="form-group row">
+                            <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : </label>
+                            <div class="col-md-8">
+                              <select name="supplier_id_fk" class="form-control select2-templating "  >
                                 <option value="">Select</option>
                                   @if(@$sSupplier)
                                     @foreach(@$sSupplier AS $r)
@@ -97,10 +130,10 @@
 
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> รหัสสินค้า : ชื่อสินค้า : * </label>
+                            <label for="" class="col-md-3 col-form-label"> รหัสสินค้า : ชื่อสินค้า : * </label>
                             <div class="col-md-8">
 
-                              <select name="product_id_fk" class="form-control select2-templating " required >
+                              <select id="product_id_fk" name="product_id_fk" class="form-control select2-templating " required >
 
                                 <option value="">Select</option>
                                   @if(@$Products)
@@ -114,11 +147,23 @@
                             </div>
                           </div>
 
-
                           <div class="form-group row">
                             <label for="lot_number" class="col-md-3 col-form-label">Lot Number : * </label>
                             <div class="col-md-8">
-                              <input class="form-control" type="text" value="{{ @$sRow->lot_number }}" name="lot_number" required >
+                     <!--           <select name="lot_number" id="lot_number" class="form-control select2-templating lot_number_select " required >
+                                <option value="">-Lot Number-</option>
+                                   @if(@$Check_stock)
+                                      @foreach(@$Check_stock AS $r)
+                                        <option value="{{@$r->lot_number}}" {{ (@$r->lot_number==@$sRow->lot_number)?'selected':'' }} >
+                                          {{@$r->lot_number}}
+                                        </option>
+                                      @endforeach
+                                    @endif
+                              </select> -->
+
+                              <!-- <input class="form-control lot_number_input " name="lot_number" required style="display: none;" > -->
+                              <input type="text" class="form-control lot_number_auto " id="lot_number_auto" name="lot_number" required value="{{@$sRow->lot_number}}" >
+
                             </div>
                           </div>
 
@@ -138,7 +183,7 @@
                           </div>
 
                         <div class="form-group row">
-                          <label for="example-text-input" class="col-md-3 col-form-label">หน่วยนับ : * </label>
+                          <label for="" class="col-md-3 col-form-label">หน่วยนับ : * </label>
                           <div class="col-md-3">
                             <select name="product_unit_id_fk" class="form-control select2-templating " required >
                               <option value="">Select</option>
@@ -153,29 +198,25 @@
 
 
 
-
-
-
                     @if( empty(@$sRow) )
 
-
-
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขา : </label>
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                             <div class="col-md-8">
-                                <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
-                                 <option value="">Select</option>
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
-                                  <option value="{{$r->id}}" >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @endforeach
-                                  @endif
-                              </select>
+                    
+                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " >
+                                     <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
+                                     @if(@$sBranchs)
+                                        @foreach(@$sBranchs AS $r)
+                                          <option value="{{$r->id}}" >
+                                            {{$r->b_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                  </select>
+
                             </div>
                           </div>
-
 
                         <div class="form-group row">
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
@@ -187,7 +228,7 @@
                           </div>
                           
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> Zone : * </label>
+                            <label for="" class="col-md-3 col-form-label"> Zone : * </label>
                             <div class="col-md-8">
                               <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating " required >
                                 <option disabled selected>กรุณาเลือกคลังย่อยก่อน</option>
@@ -196,7 +237,7 @@
                           </div>
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> Shelf : * </label>
+                            <label for="" class="col-md-3 col-form-label"> Shelf : * </label>
                             <div class="col-md-8">
                               <select id="shelf_id_fk"  name="shelf_id_fk" class="form-control select2-templating " required >
                                  <option disabled selected>กรุณาเลือกโซนก่อน</option>
@@ -253,7 +294,7 @@
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> Zone : * </label>
+                            <label for="" class="col-md-3 col-form-label"> Zone : * </label>
                             <div class="col-md-8">
                               <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating " required >
                                 <!-- <option value="">กรุณาเลือกคลังย่อยก่อน</option> -->
@@ -271,7 +312,7 @@
                           </div>
 
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> Shelf : * </label>
+                            <label for="" class="col-md-3 col-form-label"> Shelf : * </label>
                             <div class="col-md-8">
                               <select id="shelf_id_fk"  name="shelf_id_fk" class="form-control select2-templating " required >
                                  <!-- <option value="">กรุณาเลือกโซนก่อน</option> -->
@@ -301,9 +342,9 @@
 
                           <div class="form-group row">
                                 @if( empty(@$sRow) )
-                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ (User Login) :</label>
+                                <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ (User Login) :</label>
                                 @else
-                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้ดำเนินการ  :</label>
+                                <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ  :</label>
                                 @endif
                                 <div class="col-md-8">
                                   @if( empty(@$sRow) )
@@ -318,7 +359,7 @@
                             </div>
 
                            <div class="form-group row">
-                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                                <label for="" class="col-md-3 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
                                 <div class="col-md-8">
                                   @if( empty(@$sRow) )
                                     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -358,9 +399,13 @@
                       <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
                       <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
 
+                    @if( @$sRow->approve_status!='1' )
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                     </button>
+                    @endif
+
+
                   </div>
                 </div>
 
@@ -381,8 +426,48 @@
 
 
 
+       $('#business_location_id_fk').change(function(){
+          $(".myloading").show();
+          var business_location_id_fk = this.value;
+          // alert(warehouse_id_fk);
+
+           if(business_location_id_fk != ''){
+             $.ajax({
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
+                  method: "post",
+                  data: {
+                    business_location_id_fk:business_location_id_fk,
+                    "_token": "{{ csrf_token() }}",
+                  },
+                  success:function(data)
+                  {
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลสาขา !!.');
+                       $(".myloading").hide();
+                   }else{
+                       var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.b_name+'</option>';
+                       });
+                       $('#branch_id_fk').html(layout);
+                       $('#warehouse_id_fk').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
+                       $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                       $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                       $(".myloading").hide();
+                   }
+                  }
+                })
+           }else{
+            $(".myloading").hide();
+           }
+
+      });
+
+
+
  $('#branch_id_fk').change(function(){
 
+          $(".myloading").show();
           var branch_id_fk = this.value;
           // alert(branch_id_fk);
 
@@ -398,6 +483,7 @@
                   { 
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
+                       $(".myloading").hide();
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
                        $.each(data,function(key,value){
@@ -407,6 +493,7 @@
                        $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                        $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
                        $('#shelf_floor').val(1);
+                       $(".myloading").hide();
                    }
                   }
                 })
@@ -415,6 +502,7 @@
                $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
                $('#shelf_floor').val(1);
+               $(".myloading").hide();
            }
  
       });
@@ -422,6 +510,7 @@
        
        $('#warehouse_id_fk').change(function(){
 
+          $(".myloading").show();
           var warehouse_id_fk = this.value;
           // alert(warehouse_id_fk);
 
@@ -437,6 +526,7 @@
                   { 
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
+                       $(".myloading").hide();
                    }else{
                        var layout = '<option value="" selected>- เลือก Zone -</option>';
                        $.each(data,function(key,value){
@@ -444,9 +534,12 @@
                        });
                        $('#zone_id_fk').html(layout);
                        $('#shelf_id_fk').html('กรุณาเลือกโซนก่อน');
+                       $(".myloading").hide();
                    }
                   }
                 })
+           }else{
+            $(".myloading").hide();
            }
  
       });
@@ -454,7 +547,7 @@
 
      
        $('#zone_id_fk').change(function(){
-
+          $(".myloading").show();
           var zone_id_fk = this.value;
           // alert(zone_id_fk);
 
@@ -470,22 +563,126 @@
                   { 
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
+                       $(".myloading").hide();
                    }else{
                        var layout = '<option value="" selected>- เลือก Shelf -</option>';
                        $.each(data,function(key,value){
                         layout += '<option value='+value.id+'>'+value.s_name+'</option>';
                        });
                        $('#shelf_id_fk').html(layout);
+                       $(".myloading").hide();
                    }
                   }
                 })
+           }else{
+            $(".myloading").hide();
            }
  
       });
 
 
+       $('#product_id_fk').change(function(){
+        $(".myloading").show();
 
+      //     var product_id_fk = this.value;
+      //     // alert(zone_id_fk);
+
+      //      if(product_id_fk != ''){
+      //        $.ajax({
+      //             url: " {{ url('backend/ajaxGetLotnumber') }} ",
+      //             method: "post",
+      //             data: {
+      //               product_id_fk:product_id_fk,
+      //               "_token": "{{ csrf_token() }}",
+      //             },
+      //             success:function(data)
+      //             {
+      //              if(data == ''){
+      //                  // alert('ไม่พบข้อมูล Lot number !!.');
+      //                  // var layout = '<option value="" selected>- เลือก Lot number -</option>';
+      //                  // $('#lot_number').html(layout);
+      //                  $('.lot_number_select').prop('required',false);
+      //                  $('.lot_number_select').attr("disabled", true);
+      //                  $('.lot_number_select').select2().next().hide();
+      //                  $('.lot_number_input').val('');
+      //                  $('.lot_number_input').show();
+      //                  $('.lot_number_input').prop('required',true);
+      //                  $('.lot_number_input').focus();
+      //              }else{
+      //                  var layout = '<option value="" selected>- เลือก Lot number -</option>';
+      //                  $.each(data,function(key,value){
+      //                   layout += '<option value='+value.lot_number+'>'+value.lot_number+'</option>';
+      //                  });
+      //                  $('#lot_number').html(layout);
+      //                  $('.lot_number_input').prop('required',false);
+      //                  $('.lot_number_input').hide();
+      //              }
+      //             }
+      //           })
+      //      }
+
+         $('#lot_number_auto').val('');
+          setTimeout(function(){
+             $('#lot_number_auto').focus();
+              $(".myloading").hide();
+          },1000);
+
+      });
+       
 </script>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+      // var product_id_fk =$('#product_id_fk').val();
+      // var lot_number = "{{@$sRow->lot_number}}";
+      // if(product_id_fk != ''){
+      //      $('.lot_number_input').show();
+      //      $('.lot_number_input').val(lot_number);
+      //      $('.lot_number_select').prop('required',false);
+      //      $('.lot_number_select').attr("disabled", true);
+      //      $('.lot_number_select').select2().next().hide();
+      // }
+  });
+</script>
+<!-- Script -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- jQuery UI -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+$( function() {
+
+ // Single Select
+ $( "#lot_number_auto" ).autocomplete({
+  source: function( request, response ) {
+   // Fetch data
+         var product_id_fk =$('#product_id_fk').val();
+         $.ajax({
+          url: " {{ url('backend/ajaxGetLotnumber2') }} ",
+          method: "post",
+          dataType: "json",
+          data: {
+            product_id_fk:product_id_fk,
+            "_token": "{{ csrf_token() }}",
+          },
+          success:function(data){
+             console.log(data);
+             response( data );
+          }
+         });
+        },
+        // select: function (event, ui) {
+        //    console.log(ui.item);
+        //    $('#lot_number_auto').val(ui.item.value); 
+        //    return false;
+        // },
+        // focus: function(event, ui){
+        //    $( "#lot_number_auto" ).val( ui.item.value );
+        //    return false;
+        //  },
+       });
+ });
+</script>
 @endsection
 
