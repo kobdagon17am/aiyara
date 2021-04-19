@@ -406,9 +406,36 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
           $query = \App\Models\Backend\Shelf::where('zone_id_fk',$request->zone_id_fk)->get()->toArray();
-          return response()->json($query);
+          return response()->json($query);      
         }
-    }
+    }    
+
+    public function ajaxGetLotnumber(Request $request)
+    {
+        if($request->ajax()){
+          $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
+          return response()->json($query);      
+        }
+    }    
+
+
+    public function ajaxGetLotnumber2(Request $request)
+    {
+        if($request->ajax()){
+       
+           $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get();
+          // return response()->json($query);      
+
+            $response = array();
+            
+            foreach ($query as $key => $value) {
+             $response[] = array("value"=>$value->lot_number,"label"=>$value->lot_number);
+            }
+
+            return json_encode($response);
+
+           }
+    }    
 
 
     public function ajaxGetAmphur(Request $request)
@@ -2180,25 +2207,31 @@ class AjaxController extends Controller
 
           // $sTable = DB::select(" SELECT * from db_products_fifo_bill where recipient_code in ($c) ");
 
-          DB::select(" TRUNCATE TABLE db_pick_warehouse_tmp; ");
-          DB::select(" INSERT INTO db_pick_warehouse_tmp
+        DB::select(" TRUNCATE TABLE db_pick_warehouse_tmp; ");
+          DB::select(" 
+
+          INSERT INTO db_pick_warehouse_tmp (invoice_code, product_code, product_name, amt, product_unit, amt_get, status, status_scan_qrcode, product_id_fk, created_at, updated_at) 
           SELECT
-          NULL,
           db_frontstore.invoice_code,
           (SELECT product_code FROM products WHERE id=db_frontstore_products_list.product_id_fk limit 1) as product_code,
           (SELECT product_name FROM products_details WHERE product_id_fk=db_frontstore_products_list.product_id_fk and lang_id=1 limit 1) as product_name,
           db_frontstore_products_list.amt,
-          dataset_product_unit.product_unit,0,0,db_frontstore_products_list.product_id_fk
+          dataset_product_unit.product_unit,
+          0,0,0,
+          db_frontstore_products_list.product_id_fk,
+          now(),
+          now()
           FROM
           db_frontstore_products_list
           Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
           Left Join dataset_product_unit ON db_frontstore_products_list.product_unit_id_fk = dataset_product_unit.id
-          WHERE db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked)
+          WHERE db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked) 
           AND db_frontstore.invoice_code<>'' ");
 
 
         }
     }
+
 
 
     public function ajaxSetProductToBil(Request $request)
@@ -2214,13 +2247,20 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
 
-            DB::select(" TRUNCATE `db_pick_warehouse_consignments` ; ");
-            DB::select(" INSERT IGNORE INTO db_pick_warehouse_consignments(invoice_code) SELECT invoice_code FROM db_pick_warehouse_tmp ; ");
+            // DB::select(" TRUNCATE db_pick_warehouse_consignments ; ");
+            // DB::select(" INSERT IGNORE INTO db_pick_warehouse_consignments(invoice_code) SELECT invoice_code FROM db_pick_warehouse_tmp ; ");
+            // DB::select(" UPDATE
+            //   db_pick_warehouse_consignments
+            //   Inner Join db_consignments_import ON db_pick_warehouse_consignments.invoice_code = db_consignments_import.recipient_code
+            //   SET
+            //   db_pick_warehouse_consignments.consignments=
+            //   db_consignments_import.consignment_no ");
+
             DB::select(" UPDATE
-              db_pick_warehouse_consignments
-              Inner Join db_consignments_import ON db_pick_warehouse_consignments.invoice_code = db_consignments_import.recipient_code
+              db_consignments
+              Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
               SET
-              db_pick_warehouse_consignments.consignments=
+              db_consignments.consignment_no=
               db_consignments_import.consignment_no ");
         }
     }
@@ -2244,41 +2284,486 @@ class AjaxController extends Controller
     public function ajaxProcessStockcard(Request $request)
     {
         // return  $request->product_id_fk ;
-        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj"
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
         // dd();
         if($request->ajax()){
+
+              DB::select(" TRUNCATE db_stock_card_tmp; ");
               DB::select(" TRUNCATE db_stock_card; ");
-              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_test
-                where
-                product_id_fk =".$request->product_id_fk."
-                 AND action_date <= '".$request->start_date."' LIMIT 1
 
-                ; ");
-              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_test
-                where
-                product_id_fk =".$request->product_id_fk."
-                 AND action_date >= '".$request->start_date."' AND action_date <= '".$request->end_date."'
+              DB::select(" INSERT INTO db_stock_card_tmp (details) VALUES ('ยอดคงเหลือยกมา') ") ;
 
-                ; ");
+           if($request->product_id_fk){
+          // ดึงจากตารางรับเข้า > db_general_receive
+               $value=DB::table('db_general_receive')
+                ->where('product_id_fk', $request->product_id_fk)
+                ->where('lot_number', $request->lot_number)
+                ->where('approve_status', '1')
+                ->whereBetween('pickup_firstdate', [$request->start_date, $request->end_date])
+                ->get();
+                if($value->count() > 0){
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                  SELECT
+                  db_general_receive.product_id_fk, db_general_receive.lot_number, concat('รับเข้า > ',dataset_product_in_cause.txt_desc), db_general_receive.id, db_general_receive.amt,db_general_receive.recipient,db_general_receive.approver, db_general_receive.created_at
+                  FROM
+                  db_general_receive 
+                  left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
+                  WHERE product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' AND approve_status=1 AND pickup_firstdate between '".$request->start_date."' AND '".$request->end_date."' ") ;
+                }
+            }
+
+            if($request->product_id_fk){
+          // ดึงจากตารางนำออก > db_general_takeout
+               $value=DB::table('db_general_takeout')
+                ->where('product_id_fk', $request->product_id_fk)
+                ->where('lot_number', $request->lot_number)
+                ->where('approve_status', '1')
+                ->whereBetween('pickup_firstdate', [$request->start_date, $request->end_date])
+                ->get();
+                if($value->count() > 0){
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                  SELECT
+                  db_general_takeout.product_id_fk, db_general_takeout.lot_number, concat('นำออก > ',dataset_product_out_cause.txt_desc), db_general_takeout.id, db_general_takeout.amt,db_general_takeout.recipient,db_general_takeout.approver, db_general_takeout.created_at
+                  FROM
+                  db_general_takeout 
+                  Left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
+                  WHERE product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' AND approve_status=1 AND pickup_firstdate between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+                }              
+              
+            }
+
+            if($request->product_id_fk){
+          // ดึงจากตารางกาปรับยอดคลัง > db_stocks_account_code , db_stocks_account
+
+              $value=DB::select("
+                SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (ลด)', db_stocks_account_code.id,
+                  (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END)
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff<0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."'
+                ");
+
+              if(count($value) > 0){
+                  DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                  SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (ลด)', db_stocks_account_code.id,
+                  (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END)
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff<0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+                }
+              
+            }
+
+            if($request->product_id_fk){     
+
+                $value=DB::select("
+                SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (เพิ่ม)', db_stocks_account_code.id,
+                  db_stocks_account.amt_diff
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff>0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."'
+                ");
+
+                if(count($value) > 0){
+                  
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                  SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (เพิ่ม)', db_stocks_account_code.id,
+                  db_stocks_account.amt_diff
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff>0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+
+              }
+
+            }
+
+          if($request->product_id_fk){
+          // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
+            $value=DB::select("
+              SELECT
+              db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number, 'เบิก/ยืม', db_products_borrow_code.borrow_number,
+              db_products_borrow_details.amt
+              ,db_products_borrow_code.action_user,db_products_borrow_code.approver, db_products_borrow_code.created_at
+              FROM
+              db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+              WHERE
+              db_products_borrow_code.approve_status=1 AND 
+              db_products_borrow_code.created_at BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+              db_products_borrow_details.product_id_fk='".$request->product_id_fk."' AND db_products_borrow_details.lot_number='".$request->lot_number."'
+                ");
+
+                if(count($value) > 0){
+
+                     DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                      SELECT
+                        db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number, 'เบิก/ยืม', db_products_borrow_code.borrow_number,
+                        db_products_borrow_details.amt
+                        ,db_products_borrow_code.action_user,db_products_borrow_code.approver, db_products_borrow_code.created_at
+                        FROM
+                        db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+                        WHERE
+                        db_products_borrow_code.approve_status=1 AND 
+                        db_products_borrow_code.created_at BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                        db_products_borrow_details.product_id_fk='".$request->product_id_fk."' AND db_products_borrow_details.lot_number='".$request->lot_number."' ") ; 
+                }                
+          } 
+
+          if($request->product_id_fk){
+           // ดึงจาก การโอนภายในสาขา > db_transfer_warehouses_code > db_transfer_warehouses_details
+            $value=DB::select("
+              SELECT
+              db_transfer_warehouses_details.product_id_fk,
+              db_transfer_warehouses_details.lot_number
+              ,'โอนภายในสาขา',
+              db_transfer_warehouses_details.id,
+              db_transfer_warehouses_details.amt,
+              db_transfer_warehouses_details.action_user,
+              db_transfer_warehouses_details.approver,
+              db_transfer_warehouses_details.updated_at
+              FROM
+              db_transfer_warehouses_details
+              Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+              WHERE
+              db_transfer_warehouses_code.approve_status=1 AND 
+              db_transfer_warehouses_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+              db_transfer_warehouses_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_warehouses_details.lot_number='".$request->lot_number."'
+                ");
+
+                if(count($value) > 0){
+                      
+                      DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                      SELECT
+                      db_transfer_warehouses_details.product_id_fk,
+                      db_transfer_warehouses_details.lot_number
+                      ,'โอนภายในสาขา',
+                      db_transfer_warehouses_code.id,
+                      db_transfer_warehouses_details.amt,
+                      db_transfer_warehouses_details.action_user,
+                      db_transfer_warehouses_code.approver,
+                      db_transfer_warehouses_code.updated_at
+                      FROM
+                      db_transfer_warehouses_details
+                      Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                      WHERE
+                      db_transfer_warehouses_code.approve_status=1 AND 
+                      db_transfer_warehouses_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                      db_transfer_warehouses_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_warehouses_details.lot_number='".$request->lot_number."' 
+
+                      ") ; 
+
+                }                
+
+          }               
+              
+         if($request->product_id_fk){
+           // ดึงจาก การโอนระหว่างสาขา > db_transfer_branch_code > db_transfer_branch_details
+             $value=DB::select("
+                    SELECT
+                    db_transfer_branch_details.product_id_fk,
+                    db_transfer_branch_details.lot_number
+                    ,'โอนระหว่างสาขา',
+                    db_transfer_branch_code.id,
+                    db_transfer_branch_details.amt,
+                    db_transfer_branch_details.action_user,
+                    db_transfer_branch_code.approver,
+                    db_transfer_branch_code.updated_at
+                    FROM
+                    db_transfer_branch_details
+                    Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
+                    WHERE
+                    db_transfer_branch_code.approve_status=1 AND
+                    db_transfer_branch_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                      db_transfer_branch_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_details.lot_number='".$request->lot_number."' 
+                ");
+
+                if(count($value) > 0){
+                       DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                        SELECT
+                        db_transfer_branch_details.product_id_fk,
+                        db_transfer_branch_details.lot_number
+                        ,'โอนระหว่างสาขา',
+                        db_transfer_branch_code.id,
+                        db_transfer_branch_details.amt,
+                        db_transfer_branch_details.action_user,
+                        db_transfer_branch_code.approver,
+                        db_transfer_branch_code.updated_at
+                        FROM
+                        db_transfer_branch_details
+                        Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
+                        WHERE
+                        db_transfer_branch_code.approve_status=1 AND
+                        db_transfer_branch_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                          db_transfer_branch_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_details.lot_number='".$request->lot_number."' 
+
+                      ") ; 
+                      
+                }                
+
+          } 
+
+         if($request->product_id_fk){
+           // ดึงจาก จ่ายสินค้าตามใบเสร็จ
+             $value=DB::select("
+                   SELECT
+                          db_frontstore_products_list.product_id_fk,
+                          db_pick_warehouse_fifo_topicked.lot_number,
+                          'จ่ายสินค้าตามใบเสร็จ',
+                          db_frontstore.invoice_code,
+                          db_frontstore_products_list.amt,
+                          db_frontstore.action_user,
+                          db_consignments.approver,
+                          db_consignments.sent_date
+                          FROM
+                          db_frontstore_products_list
+                          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+                          Left Join db_consignments ON db_frontstore.invoice_code = db_consignments.recipient_code
+                          Left Join db_pick_warehouse_fifo_topicked ON db_frontstore_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_frontstore_products_list.amt = db_pick_warehouse_fifo_topicked.amt
+                          WHERE
+                          db_consignments.status_sent=1
+                          AND
+                          db_frontstore_products_list.product_id_fk=1 AND
+                          db_consignments.sent_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                          db_frontstore_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
+                ");
+
+                if(count($value) > 0){
+                       DB::select(" 
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                        SELECT
+                          db_frontstore_products_list.product_id_fk,
+                          db_pick_warehouse_fifo_topicked.lot_number,
+                          'จ่ายสินค้าตามใบเสร็จ',
+                          db_frontstore.invoice_code,
+                          db_frontstore_products_list.amt,
+                          db_frontstore.action_user,
+                          db_consignments.approver,
+                          db_consignments.sent_date
+                          FROM
+                          db_frontstore_products_list
+                          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+                          Left Join db_consignments ON db_frontstore.invoice_code = db_consignments.recipient_code
+                          Left Join db_pick_warehouse_fifo_topicked ON db_frontstore_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_frontstore_products_list.amt = db_pick_warehouse_fifo_topicked.amt
+                          WHERE
+                          db_consignments.status_sent=1
+                          AND
+                          db_frontstore_products_list.product_id_fk=1 AND
+                          db_consignments.sent_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                          db_frontstore_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
+                      ") ; 
+                      
+                }                
+
+          } 
+
+
+          // ยอดยกมา
+
+              $x = DB::select(" SELECT sum(amt) as amt  FROM db_stocks_in WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc ; ");
+
+              $d_x = DB::select(" SELECT action_date FROM db_stocks_in WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc LIMIT 1; ");
+
+              $y = DB::select(" SELECT sum(amt) as amt  FROM db_stocks_out WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc ; ");
+
+              $d_y = DB::select(" SELECT action_date FROM db_stocks_out WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc LIMIT 1; ");
+
+              $r = $x[0]->amt - $y[0]->amt ;
+
+              $d = @$d_x[0]->action_date > @$d_y[0]->action_date ? @$d_x[0]->action_date : @$d_y[0]->action_date;
+
+              if(!empty($d)){
+                DB::select(" UPDATE db_stock_card_tmp SET action_date='$d' ,amt_in='$r' WHERE (id='1') ; ");
+              }else{
+                DB::select(" UPDATE db_stock_card_tmp SET action_date=NULL ,amt_in='$r' WHERE (id='1') ; ");
+              }
+
+           // final > นำเข้าตารางจริง   
+              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_tmp order by action_date ; ");
+
         }
     }
+
 
 
 
     public function ajaxOfferToApprove(Request $request)
     {
         // return  $request->product_id_fk ;
-        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj"
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
         // dd();
         if($request->ajax()){
+
+
+    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+          $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
+          if($REF_CODE){
+              $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
+          }else{
+              $ref_code = 'ADJ'.sprintf("%05d",1);
+          }
+
+          $business_location_id_fk =  @$REF_CODE[0]->business_location_id_fk;
+
           //0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED
-            DB::select(" UPDATE  db_stocks_account_code SET status_accepted=2,cuase_desc='".$request->cuase_desc."' where id=".$request->id." ; ");
+          DB::select(" UPDATE  db_stocks_account_code SET status_accepted=2,cuase_desc='".$request->cuase_desc."' where id=".$request->id." ; ");
+          DB::select(" UPDATE  db_stocks_account_code SET ref_code='$ref_code' where id=".$request->id." AND (ref_code='' or ref_code is null) ; ");
+
+          $branchs = DB::select("SELECT * FROM branchs where id=$business_location_id_fk ");
+
+          $db_stocks_account =DB::select(" select * from db_stocks_account where stocks_account_code_id_fk =".$request->id." AND (run_code='' or run_code is null) ; ");
+
+          $inv = DB::select(" SELECT run_code,SUBSTR(run_code,-5) AS REF_NO FROM DB_STOCKS_ACCOUNT ORDER BY run_code DESC LIMIT 1 ");
+          if($inv){
+                $REF_CODE = 'A'.$business_location_id_fk.date("ymd");
+                $REF_NO = intval(@$inv[0]->REF_NO);
+          }else{
+                $REF_CODE = 'A'.$business_location_id_fk.date("ymd");
+                $REF_NO = 0;
+          }
+
+          $i=1;
+          foreach ($db_stocks_account as $key => $value) {
+
+             $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+
+             DB::select(" UPDATE db_stocks_account SET run_code = '$run_code' where stocks_account_code_id_fk =".$request->id." AND id=".$value->id." AND (run_code='' or run_code is null) ");
+
+             $i++;
+         }
+
         }
+    }
+    public function ajaxDeleteQrcodeProduct(Request $request)
+    {
+
+      if($request->ajax()){
+        DB::select(" UPDATE db_pick_warehouse_qrcode SET qr_code = '' where id = $request->id ");
+      }
+
+    }
+
+
+
+
+    public function ajaxGetAmtInStock(Request $request)
+    {
+
+      if($request->ajax()){
+         // $r= DB::select(" SELECT amt FROM db_stocks where product_id_fk = $request->product_id_fk AND id = $request->id ");
+         // return @$r[0]->amt;
+          $rs = DB::select(" 
+            SELECT db_stocks.*,dataset_product_unit.product_unit,
+            dataset_business_location.txt_desc AS business_location,
+            branchs.b_name AS branch,
+            warehouse.w_name,
+            zone.z_name,
+            shelf.s_name
+             FROM db_stocks 
+            Left Join dataset_product_unit ON db_stocks.product_unit_id_fk = dataset_product_unit.id 
+            Left Join dataset_business_location ON db_stocks.business_location_id_fk = dataset_business_location.id
+            Left Join branchs ON db_stocks.branch_id_fk = branchs.id
+            Left Join warehouse ON db_stocks.warehouse_id_fk = warehouse.id
+            Left Join zone ON db_stocks.zone_id_fk = zone.id
+            Left Join shelf ON db_stocks.shelf_id_fk = shelf.id
+            WHERE db_stocks.id=$request->id ");
+          return response()->json($rs);  
+
+      }
+
+    }
+
+
+    public function ajaxGentoExportConsignments(Request $request)
+    {
+
+      if($request->ajax()){
+         
+            DB::select(" TRUNCATE db_consignments; ");
+
+            $data = DB::select(" SELECT invoice_code from db_pick_warehouse_tmp GROUP BY invoice_code ");
+
+            foreach ($data as $key => $value) {
+
+                      $d=DB::table('db_consignments')
+                      ->where('recipient_code', $value->invoice_code)
+                      ->get();
+
+                    if($d->count() == 0){
+
+                         DB::table('db_consignments')->insert(array(
+                        'recipient_code' => $value->invoice_code,
+                      ));
+
+                    }
+
+            }
+
+
+
+            $data_addr = DB::select(" SELECT
+              db_frontstore.invoice_code,
+              customers_addr_sent.recipient_name,
+              customers_addr_sent.house_no,
+              customers_addr_sent.house_name,
+              customers_addr_sent.moo,
+              customers_addr_sent.road,
+              customers_addr_sent.soi,
+              customers_addr_sent.district,
+              customers_addr_sent.district_sub,
+              customers_addr_sent.province,
+              customers_addr_sent.zipcode,
+              customers_addr_sent.tel,
+              customers_addr_sent.tel_home,
+              customers_addr_sent.id_choose
+              FROM
+              db_frontstore
+              Left Join customers_addr_sent ON db_frontstore.address_sent_id_fk = customers_addr_sent.id
+              Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
+               ");
+
+            foreach ($data_addr as $key => $v) {
+              if($v->recipient_name!='' && $v->invoice_code!=''){
+                 $addr = $v->house_no." ";
+                 $addr .= $v->house_name." ";
+                 $addr .= $v->moo." ";
+                 $addr .= $v->road." ";
+                 $addr .= $v->soi." ";
+                 $addr .= $v->district_sub." ";
+                 $addr .= $v->district." ";
+                 $addr .= $v->province." ";
+                 $addr .= $v->zipcode." ";
+                 $addr .= $v->tel." ";
+                 $addr .= $v->tel_home." ";
+                 DB::select(" UPDATE db_consignments set recipient_name='".$v->recipient_name."',address='$addr' WHERE recipient_code='".$v->invoice_code."'  ");
+               }
+             
+            }
+
+            DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
+
+
+      }
+
     }
 
 
 }
-
-
-
-

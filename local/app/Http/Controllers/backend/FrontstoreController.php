@@ -352,7 +352,7 @@ class FrontstoreController extends Controller
             WHERE
             customers.id = ".$sRow->customers_id_fk."
             AND
-            curdate() BETWEEN pro_sdate and pro_edate
+            curdate() BETWEEN db_giftvoucher_code.pro_sdate and db_giftvoucher_code.pro_edate
             AND
             db_giftvoucher_code.status = 1  "); //AND expiry_date>=now()
       // dd($giftvoucher_this);
@@ -501,7 +501,7 @@ class FrontstoreController extends Controller
 
 
              if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
-                  $sRow->branch_id_fk    = request('branch_id_fk');
+                  $sRow->sentto_branch_id    = request('sentto_branch_id');
                    DB::select("UPDATE db_frontstore SET address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }
 
@@ -641,6 +641,24 @@ class FrontstoreController extends Controller
                       DB::select(" UPDATE customers SET ai_cash=($x) where id=".$ch_aicash_02[0]->member_id_aicash." ");
                  }
                }
+
+
+               $r_addr = DB::select("select address_sent_id_fk from db_frontstore WHERE (id='".$request->frontstore_id."')");
+
+           if( @$request->delivery_location!=3){
+              DB::select(" UPDATE
+                  customers_addr_sent
+                  Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
+                  left Join dataset_districts ON customers_addr_sent.district_sub_id = dataset_districts.id
+                  LEFT Join dataset_provinces ON customers_addr_sent.province_id = dataset_provinces.id
+                  SET
+                  customers_addr_sent.district=dataset_amphures.name_th,
+                  customers_addr_sent.district_sub=dataset_districts.name_th,
+                  customers_addr_sent.province=dataset_provinces.name_th
+                  WHERE
+                  customers_addr_sent.id='".($r_addr[0]->address_sent_id_fk)."' ");
+            }
+        
 
              // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));

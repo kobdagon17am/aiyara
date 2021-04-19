@@ -29,6 +29,7 @@ class Transfer_branch_codeController extends Controller
         $User_branch_id = \Auth::user()->branch_id_fk;
         $sBranchs = \App\Models\Backend\Branchs::get();      
 
+
         return View('backend.transfer_branch_code.index')->with(
         array(
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
@@ -58,6 +59,7 @@ class Transfer_branch_codeController extends Controller
               
    
                       $Transfer_branch_code = new \App\Models\Backend\Transfer_branch_code;
+                      $Transfer_branch_code->business_location_id_fk = request('business_location_id_fk');
                       $Transfer_branch_code->branch_id_fk = request('branch_id_fk');
                       $Transfer_branch_code->note = request('note');
                       $Transfer_branch_code->action_date = date("Y-m-d");
@@ -115,6 +117,7 @@ class Transfer_branch_codeController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Transfer_branch_code::find($id);
+
         $receive_id = \App\Models\Backend\General_receive::get();
         $Products = \App\Models\Backend\Products::get();
         $ProductsUnit = \App\Models\Backend\Product_unit::get();

@@ -58,6 +58,7 @@ class Transfer_warehouses_codeController extends Controller
         if(isset($request->transfer_choose_id)){
                 // dd($request->all());
                 $Transfer_warehouses_code = new \App\Models\Backend\Transfer_warehouses_code;
+                $Transfer_warehouses_code->business_location_id_fk = request('business_location_id_fk');
                 $Transfer_warehouses_code->branch_id_fk = request('branch_id_fk');
                 $Transfer_warehouses_code->note = request('note');
                 $Transfer_warehouses_code->action_date = date("Y-m-d");
@@ -82,6 +83,7 @@ class Transfer_warehouses_codeController extends Controller
                        ,warehouse_id_fk=? 
                        ,zone_id_fk=? 
                        ,shelf_id_fk=? 
+                       ,shelf_floor=? 
                        ,action_user=? 
                        ,action_date=? 
                        ",
@@ -97,6 +99,7 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->warehouse_id_fk
                         ,$Transfer_choose->zone_id_fk
                         ,$Transfer_choose->shelf_id_fk
+                        ,$Transfer_choose->shelf_floor
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
                       ]);
@@ -154,6 +157,7 @@ class Transfer_warehouses_codeController extends Controller
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
           $sRow->zone_id_fk    = request('zone_id_fk');
           $sRow->shelf_id_fk    = request('shelf_id_fk');
+          $sRow->shelf_floor    = request('shelf_floor');
           $sRow->recipient    = request('recipient');
           $sRow->approver    = request('approver');
           $sRow->approve_status    = request('approve_status');

@@ -1466,34 +1466,6 @@ $(function() {
       		      });
 
 
-
-                $(".btnExportElsx").click(function(event) {
-                    /* Act on the event */
-                    $(".myloading").show();
-                    $.ajax({
-
-                           type:'POST',
-                           url: " {{ url('backend/excelExportConsignment') }} ", 
-                           data:{ _token: '{{csrf_token()}}' },
-                            success:function(data){
-                                 console.log(data); 
-                                 // location.reload();
-                                 setTimeout(function(){
-                                    var url='local/public/excel_files/consignments.xlsx';
-                                    window.open(url, 'Download');  
-                                    $(".myloading").hide();
-                                },3000);
-
-                              },
-                            error: function(jqXHR, textStatus, errorThrown) { 
-                                console.log(JSON.stringify(jqXHR));
-                                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                                $(".myloading").hide();
-                            }
-                        });
-                });
-
-
                $(".btnImXlsx").click(function(event) {
                       /* Act on the event */
                       var v = $("input[name=fileXLS]").val();

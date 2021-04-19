@@ -211,6 +211,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pm_broadcast', 'Pm_broadcastController');
     Route::post('pm_broadcast/datatable', 'Pm_broadcastController@Datatable')->name('pm_broadcast.datatable');
 
+    Route::resource('consignments', 'ConsignmentsController');
+    Route::post('consignments/datatable', 'ConsignmentsController@Datatable')->name('consignments.datatable');
+
+    Route::post('consignments_map/datatable', 'ConsignmentsController@DatatableMap')->name('consignments_map.datatable');
+    
+    Route::post('consignments_sent/datatable', 'ConsignmentsController@DatatableSent')->name('consignments_sent.datatable');
+
+
+    Route::post('excelExportConsignment', 'ExcelController@excelExportConsignment');
+
+    Route::post('ajaxGentoExportConsignments', 'AjaxController@ajaxGentoExportConsignments');
 
     Route::resource('consignments_import', 'Consignments_importController');
     Route::post('consignments_import/datatable', 'Consignments_importController@Datatable')->name('consignments_import.datatable');
@@ -232,7 +243,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('csvExport', 'ExcelController@csvExport');
     Route::post('excelExport', 'ExcelController@excelExport');
-    Route::post('excelExportConsignment', 'ExcelController@excelExportConsignment');
     Route::post('excelExportPromotionCus', 'ExcelController@excelExportPromotionCus');
     Route::post('excelExportGiftvoucherCus', 'ExcelController@excelExportGiftvoucherCus');
     Route::post('excelExportCe_regis', 'ExcelController@excelExportCe_regis');
@@ -258,6 +268,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetWarehouse', 'AjaxController@ajaxGetWarehouse');
     Route::post('ajaxGetZone', 'AjaxController@ajaxGetZone');
     Route::post('ajaxGetShelf', 'AjaxController@ajaxGetShelf');
+    Route::post('ajaxGetLotnumber', 'AjaxController@ajaxGetLotnumber');
+    Route::post('ajaxGetLotnumber2', 'AjaxController@ajaxGetLotnumber2');
 
     Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
     Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
@@ -327,9 +339,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxProcessStockcard', 'AjaxController@ajaxProcessStockcard');
     Route::post('ajaxOfferToApprove', 'AjaxController@ajaxOfferToApprove');
 
+    Route::post('ajaxDeleteQrcodeProduct', 'AjaxController@ajaxDeleteQrcodeProduct');
+    Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
+
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+
+    Route::resource('stock_notify', 'Stock_notifyController');
+    Route::post('stock_notify/datatable', 'Stock_notifyController@Datatable')->name('stock_notify.datatable');
+    Route::post('stock_notify_dashboard/datatable', 'Stock_notifyController@DatatableDashboard')->name('stock_notify_dashboard.datatable');
+
 
     Route::resource('pick_pack', 'Pick_packController');
     Route::post('pick_pack/datatable', 'Pick_packController@Datatable')->name('pick_pack.datatable');
@@ -462,8 +482,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
-    Route::post('check_stock/stock_card/{id}/{lot_number}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{lot_number}', 'Check_stockController@stock_card');
+    Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
 
 
     Route::resource('check_stock_check', 'Check_stock_checkController');
@@ -479,6 +499,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
     Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');
+
+    Route::resource('supplier', 'SupplierController');
+    Route::post('supplier/datatable', 'SupplierController@Datatable')->name('supplier.datatable');
 
 
     Route::resource('pick_warehouse_fifo', 'Pick_warehouse_fifoController');

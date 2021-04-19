@@ -73,29 +73,28 @@
                         </div>
                       </div>
 
-                      <div class="col-md-5" >
-                        <div class="form-group row" style="float: right;" > 
-                          <!-- <button type="button" class="btn btn-info btn-sm waves-effect btnPrint " style="font-size: 14px !important;display: none;" >
-                          <i class="bx bx-printer font-size-16 align-middle mr-1"></i> พิมพ์
-                          </button> -->
-
-                           <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;" target="_blank" >
-                            <i class="bx bx-printer align-middle "></i> พิมพ์ / Print-Out
-                          </a>
-
-                        </div>
+                    <div class="col-md-4">
+                      <div style="float: right;font-size: 18px !important;font-weight: bold;">
+                        ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
                       </div>
+                    </div>
 
 
                     </div>
                   </div>
 
-
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-                <div class="row div_balance " style="float: right;font-size: 18px !important;margin-right: 5%;font-weight: bold;text-decoration: underline;text-decoration-style: double;display: none;margin-top: 1%;">
-                  ยอดคงเหลือ = {{@$sBalance[0]->amt}}
+                <div class="row">
+                  <div class="col-12 ">
+                    <center>
+                    <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;margin-right: 15%;margin-top: 2%;" target="_blank" >
+                      <i class="bx bx-printer align-middle "></i> พิมพ์ / Print-Out
+                    </a>
+                    </center>
+                  </div>
                 </div>
+
 
             </div>
         </div>
@@ -111,14 +110,18 @@
 </script>
 
 <script>
+
 $(document).ready(function() {
 
+      function formatNumber(num) {
+          return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      }
 
 
       $(document).on('click', '.btnProcess', function(event) {
-
            
               var product_id_fk =  "{{@$Products[0]->product_id}}";
+              var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
 
               var start_date =  $('#start_date').val();
               if(start_date==''){
@@ -137,20 +140,18 @@ $(document).ready(function() {
                setTimeout(function(){
 
                       $.ajax({
-                           url: " {{ url('backend/ajaxProcessStockcard') }} ", 
+                          url: " {{ url('backend/ajaxProcessStockcard') }} ", 
                           method: "post",
                           data: {
                             product_id_fk:product_id_fk,
+                            lot_number:lot_number,
                             start_date:start_date,
                             end_date:end_date,
                             "_token": "{{ csrf_token() }}", 
                           },
                           success:function(data)
                           { 
-
                             console.log(data);
-                      
-                          
                                 /* datatables */
                                   var oTable;
                                   $(function() {
@@ -194,41 +195,50 @@ $(document).ready(function() {
                                             method: 'POST'
                                           },
                                           columns: [
-                                              {data: 'id', title :'ID', className: 'text-center w50'},
-                                              // {data: 'action_date', title :'<center>วันที่ : เวลา ดำเนินการ </center>', className: 'text-left'},
-                                              {data: 'action_date', title :'<center>Date-time : Processing  </center>', className: 'text-left'},
-                                              // {data: 'details', title :'<center>ประเภทรายการ </center>', className: 'text-left'},
+                                              {data: 'id', title :'Row(s)', className: 'text-center w50'},
+                                              {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
                                               {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
-                                              // {data: 'ref_inv', title :'<center>รหัสอ้างอิง </center>', className: 'text-center'},
                                               {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
-                                              // {data: 'action_user', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
-                                              // {data: 'approver', title :'<center>ผู้อนมุัติ </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
-                                              {data: 'id', title :'<center>รับเข้า/Import </center>', className: 'text-right'},
-                                              {data: 'id', title :'<center>จ่ายออก/Export </center>', className: 'text-right'},
-                                              {data: 'amt_remain', title :'<center>ยอดคงเหลือ/Balance </center>', className: 'text-right'},
+                                              {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
+                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              }},
+                                              {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
+                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              }},
+                                              {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
+                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              }},
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
                                             var info = $(this).DataTable().page.info();
                                             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                              var decreased = parseInt(aData['amt']);
+                                            if(aData['id']=='1'){
+                                              $("td:eq(6)", nRow).html('');
+                                              $("td:eq(7)", nRow).html('');
+                                              // $("td:eq(8)", nRow).html(aData['amt_in']);
+                                            }
 
-                                              if(isNaN(decreased) || decreased > 0) {
-                                                $("td:eq(6)", nRow).html(aData['amt']);
-                                              }else{
-                                                $("td:eq(6)", nRow).html('');
-                                              }
+                                            $('td:last-child', nRow).html(formatNumber(parseFloat(aData['remain']).toFixed(0)));
+
+                                              // var decreased = parseInt(aData['amt']);
+
+                                              // if(isNaN(decreased) || decreased > 0) {
+                                              //   $("td:eq(6)", nRow).html(aData['amt_in']);
+                                              // }else{
+                                              //   $("td:eq(6)", nRow).html('');
+                                              // }
 
 
-                                              var increased = parseInt(aData['amt']);
+                                              // var increased = parseInt(aData['amt']);
 
-                                              if(isNaN(increased) || increased <= 0) {
-                                                $("td:eq(7)", nRow).html(aData['amt']);
-                                              }else{
-                                                $("td:eq(7)", nRow).html('');
-                                              }
+                                              // if(isNaN(increased) || increased <= 0) {
+                                              //   $("td:eq(7)", nRow).html(aData['amt_out']);
+                                              // }else{
+                                              //   $("td:eq(7)", nRow).html('');
+                                              // }
 
                                             $(".btnPrint").show();
 
@@ -246,9 +256,6 @@ $(document).ready(function() {
                           }
                         })
 
-                setTimeout(function(){
-                  $(".div_balance").show();
-                }, 1000);
 
                 $(".myloading").hide();
 
@@ -267,7 +274,6 @@ $(document).ready(function() {
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script>
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-        var firstday = new Date(new Date().getFullYear(), new Date().getMonth(),'01');
         $('#start_date').datepicker({
             // format: 'dd/mm/yyyy',
             format: 'yyyy-mm-dd',
@@ -291,6 +297,18 @@ $(document).ready(function() {
          $('#start_date').change(function(event) {
            $('#end_date').val($(this).val());
          });
+
+
+      $(document).ready(function() {
+          var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
+          var res = date_s_e.split(":");
+          var start_date = res[0]; //alert(start_date);
+          var end_date = res[1]; //alert(end_date);
+          $('#start_date').val(start_date);
+          $('#end_date').val(end_date);
+
+      });
+
 
   </script>   
 

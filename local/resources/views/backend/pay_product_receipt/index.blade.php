@@ -98,6 +98,12 @@
       .divTH {text-align: right;}
 
 
+      tr.group,
+      tr.group:hover {
+          background-color: #ddd !important;
+      }
+
+
 </style>
 @endsection
 
@@ -135,12 +141,7 @@
         $can_packing_list = @$menu_permit->can_packing_list==1?'1':'0';
         $can_payproduct = @$menu_permit->can_payproduct==1?'1':'0';
       }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;     
-      // echo  @$menu_permit->can_packing_list;     
-      // echo  @$menu_permit->can_payproduct;     
-      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+
    ?>
 
 <div class="row">
@@ -149,122 +150,56 @@
             <div class="card-body">
 
 
-
-        <div class="myBorder" style="display: none;">
-
-          <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_to_packing" value="1" >
-
-            {{ csrf_field() }}
-         
-         <!--        <div class="myBorder">
-                  <div class="form-group row ">
-                    <div class="col-md-10 d-flex  ">
-                      <label class="col-5" ><i class="bx bx-play"></i> ค้นสินค้า > ค้นด้วย : QR-CODE : </label>
-                      <div class="col-md-5">
-                        <input type="text" class="form-control" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus >
-                      </div>
-                      <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%" >
-                        <i class="bx bx-search align-middle "></i> &nbsp;&nbsp;&nbsp;SEARCH&nbsp;&nbsp;&nbsp;
-                      </a>
-                    </div>
-                  </div>
-                </div> -->
-
-
-      <!--           <div class="row">
-                  <div class="col-8">
-
-
-                  	<div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจ่ายสินค้าให้กับลูกค้า </span>
-                          </div>
-                        </div>
-                  </div>
-
-                </div>
- -->
-
-              <?php if($can_packing_list=='1'){ ?>
-
-                    <!-- <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
-
-              <?php }else{ ?>
-
-                    <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
-              
-              <?php }?>
-<!-- 
-                 <div class="col-md-6 text-right divBtnSave " style="display: none;">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิล Packing List
-                    </button>
-                  </div>
-
-              <div id="last_form"></div> -->
-
-              </form>
-
- </div>
-
-
-<!-- 
-                <div class="myBorder">
-                  <div class="form-group row ">
-                    <div class="col-md-10 d-flex  ">
-                      <label class="col-5" ><i class="bx bx-play"></i> สแกนสินค้ารายชิ้น บันทึก QR-CODE : </label>
-                      <div class="col-md-5">
-                        <input type="text" class="form-control" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus >
-                      </div>
-                      <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%" >
-                        <i class="bx bx-search align-middle "></i> &nbsp;&nbsp;&nbsp;SCAN&nbsp;&nbsp;&nbsp;
-                      </a>
-                    </div>
-                  </div>
-                </div>
- -->
-
                   <div class="myBorder">
                     <div class="form-group row">
                       <div class="col-md-12">
-                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า </span>
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า (Scan QR-code) </span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <div class="col-md-12">
                       <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+
+                       <center><input type='button' class="btn btn-primary btnGentoExport " value='แจงลงตาราง Export ให้ KERRY' > 
+
+
+                    </div>
+                  </div>
+                  </div>
+
+
+
+                  <div class="myBorder">
+
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า (Export ให้ KERRY) </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="col-md-12">
+
+                      <table id="data-table-list-bill-to-kerry" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+
+                       <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' > 
+
+
                     </div>
                   </div>
                   </div>
 
 
    <div class="myBorder"  >
-        <div class="container">
-          
 
-              <div class=""  >
-                <div class="container">
-                  
-                  <div class="col-12">
-                    <div class="panel panel-default">
-                      <div class="panel-body">
-                        <div class="form-group row">
-                          <label for="receipt" class="col-md-3 col-form-label">ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY :</label>
-                          <div class="col-md-3" style="" >
-                            <input type='button' name="submit" class="btn btn-primary btnExportElsx " value='&nbsp;&nbsp;&nbsp;EXPORT EXCEL&nbsp;&nbsp;&nbsp;'>
-                          </div>
-                        </div>
+               <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า (Import จาก KERRY) </span>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
 
-
+          
           <div class="col-12">
-            <div class="panel panel-default">
-              <div class="panel-body">
       
           <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
           {{ csrf_field() }}
@@ -296,15 +231,15 @@
           
           </form>
 
-                  <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
+                <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
 
                 <center><input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code' > 
 
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
+
+
 
                   <div class="myBorder">
                     <div class="form-group row">
@@ -323,7 +258,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลที่จ่ายสินค้าแล้ว </span>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลการจ่ายสินค้า </span>
                           </div>
                         </div>
                         <div class="form-group row">
@@ -332,7 +267,7 @@
 
               <?php if($can_payproduct=='1'){ ?>
 
-                    <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                    <table id="data-table-sent" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
               <?php }else{ ?>
 
@@ -357,71 +292,6 @@
 
 
 
-
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดเบิก</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดเบิก</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr_edit" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result_edit"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
 
 @endsection
 
@@ -681,53 +551,11 @@ $(function() {
 
             } );
 
-           // Handle form submission event 
-           $('#frm-example').on('submit', function(e){
-              var form = this;
-
-              console.log(form);
-              
-              var rows_selected = oTable.column(0).checkboxes.selected();
-
-              console.log(rows_selected);
-
-               // return false;
-
-              // Iterate over all selected checkboxes
-              $.each(rows_selected, function(index, rowId){
-
-                console.log(rowId);
-                // $("#last_form").after("<input type='text' name='row_id[]' value='"+rowId+"' >");
-                 // Create a hidden element 
-                $('#last_form').after(
-                     $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', 'row_id[]')
-                        .val(rowId)
-                 );
-              });
-
-              // FOR DEMONSTRATION ONLY
-              // The code below is not needed in production
-              
-              // Output form data to a console     
-              // $('#example-console-rows').text(rows_selected.join(","));
-              
-              // Output form data to a console     
-              // $('#example-console-form').text($(form).serialize());
-               
-              // Remove added elements
-              // $('input[name="id\[\]"]', form).remove();
-               
-              // Prevent actual form submission
-              // e.preventDefault();
-
-               });
 
 
           var oTable2;
           $(function() {
-              oTable2 = $('#data-table-packing').DataTable({
+              oTable2 = $('#data-table-sent').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
                   serverSide: true,
@@ -739,7 +567,7 @@ $(function() {
                   iDisplayLength: 10,
                   stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.delivery_packing_code.datatable') }}',
+                    url: '{{ route('backend.consignments_sent.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -765,43 +593,38 @@ $(function() {
                   },
                   columns: [
                       {data: 'id', title :'<center>no. </center>', className: 'text-center'},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                      {data: 'recipient_code',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '-';
                           }
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                      {data: 'recipient_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '-';
                           }
                       }},
-                      // {data: 'addr_to_send', title :'<center>ที่อยู่ในการจัดเบิก </center>', className: 'text-center w250 '},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดเบิก</center>', className: 'text-center w250 ',render: function(d) {
-	                  	if(d=='0'){
-	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-	                  	}else{
-	                  	  	return '90/16 ถ.ศรีอยุธยา บ.ออเร้นจ์ เทคโนโลยี โซลูชั่น จำกัด แขวงวชิรพยาบาล, เขตดุสิต, กทม. 10300' ;
-	                  	}
+                      {data: 'address',   title :'<center>ที่อยู่ในการจัดเบิก</center>', className: 'text-center w250 ',render: function(d) {
+	                        return d ;
+	                  	
 	                  }},
-                      // {data: 'id', title :'<center>เปลี่ยนที่อยู่เบิก', className: 'text-center'}, 
-                      {data: 'id',   title :'ใบจ่าหน้ากล่องเบิก', className: 'text-center ',render: function(d) {
+                      {data: 'id',   title :'ใบจ่าหน้ากล่อง', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/delivery/pdf02') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
-	                  	if(d=='1'){
+                      {data: 'status_sent',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
+	                  	if(d=='0'){
 	                        return '<span style="color:red">อยู่ระหว่างการจ่ายสินค้า</span>';
 	                  	}else{
 	                  		return 'อนุมัติ/จ่ายสินค้าแล้ว';
 	                  	}
 	                  }},
-                      // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -824,21 +647,15 @@ $(function() {
                         $('td:last-child', nRow).html('-');
                     }else{ 
 
-                  //   	if (aData['status_delivery'] != "1") {
-                  //   		$('td:last-child', nRow).html(''
-                  //           + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                          
-	                 //          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-	                 //        ).addClass('input');
-                		// }
+                    		$('td:last-child', nRow).html(''
+                            + '<a href="{{ route('backend.pay_product_receipt.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+	                        ).addClass('input');
 
                     }
                   }
               });
 
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable2.draw();
-              });
+             
           });
 
 
@@ -918,6 +735,7 @@ $(function() {
 
 
           $.fn.dataTable.ext.errMode = 'throw';
+          var groupColumn = 0;
           var oTableListBill;
           $(function() {
               oTableListBill = $('#data-table-list-bill').DataTable({
@@ -928,8 +746,8 @@ $(function() {
                   scrollCollapse: true,
                   scrollX: true,
                   ordering: false,
-                  scrollY: ''+($(window).height()-370)+'px',
-                  iDisplayLength: 10,
+                  // scrollY: ''+($(window).height()-370)+'px',
+                  iDisplayLength: -1,
                   // stateSave: true,
                   ajax: {
                     url: '{{ route('backend.products_fifo_bill_send.datatable') }}',
@@ -968,25 +786,45 @@ $(function() {
                           return 'จ่ายแล้ว';
                         }
                       }},  
-                      {data: 'status',title :'<center>สถานะสแกนคิวอาร์</center>',className: 'text-center ',render: function(d) {
-                        if(d==0){
-                          return '* รอสแกน';
-                        }else{
-                          return 'สแกนแล้ว';
-                        }
-                      }},    
-                      {data: 'status',title :'<center> Scan QR-Code </center>',className: 'text-center ',render: function(d) {
-                          return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">CLICK</span>';
-                      }},                                                           
+                      {data: 'created_at', title :'<center> วันวเลาที่สร้าง </center>', className: 'text-center '},
+                      {data: 'status_scan_qrcode', title :'<center> Scan QR-Code </center>', className: 'text-left '},
+                                                                            
+                  ],
+                  columnDefs: [
+                      { "visible": false, "targets": groupColumn }
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                    $('td:last-child', nRow).html(''
-                          +'<a href="{{ url('backend/pay_product_receipt/scan_qr') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="" ><span class="" >CLICK</span></a>'
-                        ).addClass('input');
+                    if(aData['status_scan_qrcode']==0){
+                        $('td:last-child', nRow).html('<center>* รอสแกน</center>');
+                    }else if(aData['status_scan_qrcode']==1){
+                        $('td:last-child', nRow).html('<center>* สแกนบางรายการ </center>');
+                    }else if(aData['status_scan_qrcode']==2){
+                        $('td:last-child', nRow).html('<center> สแกนครบแล้ว </center>');
+                    }else{
+                        $('td:last-child', nRow).html('');
+                    }
+                    
 
 
-                  }
+                  },
+
+                  drawCallback: function ( settings ) {
+                    var api = this.api();
+                    var rows = api.rows( {page:'current'} ).nodes();
+                    var last=null;
+         
+                    api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                        if ( last !== group ) {
+                            $(rows).eq( i ).before(
+                              '<tr class="group"><td colspan="5">'+group+'</td><td style="text-align:center;"><a href="{{ url('backend/pay_product_receipt/scan_qr') }}/'+group+'" class="btn btn-sm btn-primary" >Scan QR</a></td></tr>'
+                            );
+                            last = group;
+                        }
+                    } );
+                },
+
+
               });
 
         
@@ -994,13 +832,71 @@ $(function() {
 
 
 
+
       $.fn.dataTable.ext.errMode = 'throw';
 
       var sU = "{{@$sU}}"; //alert(sU);
       var sD = "{{@$sD}}"; //alert(sD);
-      var oTable;
+      var oTableEx;
       $(function() {
-          oTable = $('#data-table-import').DataTable({
+          oTableEx = $('#data-table-list-bill-to-kerry').DataTable({
+          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+              processing: true,
+              serverSide: true,
+              scroller: true,
+              scrollCollapse: true,
+              scrollX: true,
+              ordering: false,
+              scrollY: ''+($(window).height()-370)+'px',
+              iDisplayLength: 10,
+              stateSave: true,
+              ajax: {
+                url: '{{ route('backend.consignments.datatable') }}',
+                data: function ( d ) {
+                  d.Where={};
+                  $('.myWhere').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Like={};
+                  $('.myLike').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Custom={};
+                  $('.myCustom').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  oData = d;
+                },
+                method: 'POST'
+              },
+              columns: [
+                  {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                  {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                  {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+              ],
+              rowCallback: function(nRow, aData, dataIndex){
+       
+              }
+            });
+     
+          });
+
+
+
+
+      $.fn.dataTable.ext.errMode = 'throw';
+
+      var sU = "{{@$sU}}"; //alert(sU);
+      var sD = "{{@$sD}}"; //alert(sD);
+      var oTableIm;
+      $(function() {
+          oTableIm = $('#data-table-import').DataTable({
           "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
               processing: true,
               serverSide: true,
@@ -1051,10 +947,9 @@ $(function() {
 
 
 
-      $.fn.dataTable.ext.errMode = 'throw';
-      var oTableC;
+      var oTableMap;
       $(function() {
-          oTableC = $('#data-table-map-consignments').DataTable({
+          oTableMap = $('#data-table-map-consignments').DataTable({
           "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
               processing: true,
               serverSide: true,
@@ -1066,33 +961,17 @@ $(function() {
               iDisplayLength: 10,
               stateSave: true,
               ajax: {
-                url: '{{ route('backend.warehouse_consignments.datatable') }}',
+                url: '{{ route('backend.consignments_map.datatable') }}',
                 data: function ( d ) {
-                  d.Where={};
-                  $('.myWhere').each(function() {
-                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                      d.Where[$(this).attr('name')] = $.trim($(this).val());
-                    }
-                  });
-                  d.Like={};
-                  $('.myLike').each(function() {
-                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                      d.Like[$(this).attr('name')] = $.trim($(this).val());
-                    }
-                  });
-                  d.Custom={};
-                  $('.myCustom').each(function() {
-                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                    }
-                  });
                   oData = d;
                 },
                 method: 'POST'
               },
               columns: [
-                  {data: 'invoice_code', title :'<center>รหัสใบเเสร็จ</center>', className: 'text-center'},
-                  {data: 'consignments', title :'<center> Consignments Code </center>', className: 'text-center'},
+                  {data: 'consignment_no', title :'<center>Consignment No </center>', className: 'text-center'},
+                  {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                  {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                  {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
               ],
               rowCallback: function(nRow, aData, dataIndex){
        
@@ -1102,13 +981,18 @@ $(function() {
           });
 
 
+
+
 </script>
 
   <script> 
 
-        
-
           $(document).ready(function() {
+
+             setTimeout(function(){
+                  $('#data-table-map-consignments').DataTable().draw();
+              }, 2000);
+              
 
           		$('input[type=checkbox]').click(function(event) {
           	
@@ -1207,6 +1091,56 @@ $(function() {
 
 
 
+                $(".btnGentoExport").click(function(event) {
+                    /* Act on the event */
+                    $(".myloading").show();
+                    $.ajax({
+
+                           type:'POST',
+                           url: " {{ url('backend/ajaxGentoExportConsignments') }} ", 
+                           data:{ _token: '{{csrf_token()}}' },
+                            success:function(data){
+                                 console.log(data); 
+                                 location.reload();
+                                 $(".myloading").hide();
+                              },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                $(".myloading").hide();
+                            }
+                        });
+                });
+
+
+                $(".btnExportElsx").click(function(event) {
+                    /* Act on the event */
+                    $(".myloading").show();
+                    $.ajax({
+
+                           type:'POST',
+                           url: " {{ url('backend/excelExportConsignment') }} ", 
+                           data:{ _token: '{{csrf_token()}}' },
+                            success:function(data){
+                                 console.log(data); 
+                                 // location.reload();
+                                 setTimeout(function(){
+                                    var url='local/public/excel_files/consignments.xlsx';
+                                    window.open(url, 'Download');  
+                                    $(".myloading").hide();
+                                },3000);
+
+                              },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                $(".myloading").hide();
+                            }
+                        });
+                });
+
+
+
                $(".btnImXlsx").click(function(event) {
                       /* Act on the event */
                       var v = $("input[name=fileXLS]").val();
@@ -1285,8 +1219,8 @@ $(function() {
 	                     // location.reload();
 	                     $('#select_addr_result').html(data);
 	                     setTimeout(function(){
-							$('#exampleModalCenter').modal('show');
-						 }, 1500);
+          							$('#exampleModalCenter').modal('show');
+          						 }, 1500);
 	                  },
 	                error: function(jqXHR, textStatus, errorThrown) { 
 	                    console.log(JSON.stringify(jqXHR));

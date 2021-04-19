@@ -129,7 +129,7 @@ $(function() {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
               }else{
-                  return '';
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkgreen">รออนุมัติ</span>';
               }
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 

@@ -204,7 +204,8 @@ tr.border_bottom td {
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
           <td style="width:50%;vertical-align: top;font-weight: bold;" > 
-            สินค้า / Product : {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$data['lot_number'][0]}}
+            <!-- สินค้า / Product : {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$data['lot_number'][0]}} -->
+            สินค้า / Product : {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} 
           </td> 
           <td style="width:50%;vertical-align: top;font-weight: bold;text-align: right;padding-right: 2%;" > 
             วันที่ / Date : <?=$d?>  
@@ -232,7 +233,13 @@ tr.border_bottom td {
 
 <?php 
 
-  $P = DB::select(" SELECT * FROM db_stock_card where lot_number='".$data['lot_number'][0]."' AND product_id_fk = ".$data['id'][0]." "); 
+//  $P = DB::select(" SELECT * FROM db_stock_card where lot_number='".$data['lot_number'][0]."' AND product_id_fk = ".$data['id'][0]." OR id=1 "); 
+  // $P = DB::select(" SELECT * FROM db_stock_card where  product_id_fk = ".$data['id'][0]." OR id=1 "); 
+
+  DB::select(" SET @csum := 0; ");
+  $P = DB::select(" 
+          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card where  product_id_fk = ".$data['id'][0]." OR id=1 ORDER BY action_date ;
+          ");
 
   $i=1;
   foreach ($P as $key => $v) {
@@ -251,8 +258,8 @@ tr.border_bottom td {
            $approver = '';
         }
 
-        if(intval($v->amt)>0){$amt01 = $v->amt;}else{$amt01 ='';}
-        if(intval($v->amt)<0){$amt02 = $v->amt;}else{$amt02 ='';}
+        if(intval($v->amt_in)>0){$amt01 = $v->amt_in;}else{$amt01 ='';}
+        if(intval($v->amt_out)<0){$amt02 = $v->amt_out;}else{$amt02 ='';}
 
      ?>
       <tr>
@@ -264,7 +271,7 @@ tr.border_bottom td {
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"><?=@$approver?></td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=$amt01?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=$amt02?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=@$v->amt_remain?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;"><?=@$v->remain?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
       </tr>
 
 <?php $i++; } ?>

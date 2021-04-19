@@ -36,6 +36,10 @@ class Transfer_warehousesController extends Controller
       $sTransfer_chooseAll = \App\Models\Backend\Transfer_choose::where('action_user','=',(\Auth::user()->id))->get();
       // dd(\Auth::user()->id);
       // dd(count($sTransfer_chooseAll));
+        $b_l = \App\Models\Backend\Branchs::where('id',$User_branch_id)->get();
+
+        $business_location_id_fk = $b_l[0]->business_location_id_fk;
+      
      
       // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
@@ -43,7 +47,8 @@ class Transfer_warehousesController extends Controller
 
         return View('backend.transfer_warehouses.index')->with(
         array(
-           'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+           'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
+           'business_location_id_fk'=>$business_location_id_fk
         ) );
       
     }

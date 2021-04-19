@@ -16,7 +16,7 @@ class Consignments_import extends Model {
       if($value->count() == 0){
          DB::table('db_consignments_import')->insert($data);
       }else{
-		 DB::table('db_consignments_import')
+		        DB::table('db_consignments_import')
             ->where('recipient_code', $data['recipient_code'])
             ->update(array(
             	'consignment_no' => $data['consignment_no'],

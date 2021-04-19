@@ -86,7 +86,11 @@ class Products_borrow_codeController extends Controller
                 $Products_borrow_code->created_at = date("Y-m-d H:i:s");
                 $Products_borrow_code->save();
 
-                DB::update(" update db_products_borrow_code set borrow_number=? where id=? ",["BR".sprintf("%05d",$Products_borrow_code->id),$Products_borrow_code->id]);
+                DB::update(" update db_products_borrow_code set business_location_id_fk=?, borrow_number=? where id=? ",[
+                  $request->business_location_id_fk[0],
+                  "BR".sprintf("%05d",$Products_borrow_code->id),
+                  $Products_borrow_code->id
+                ]);
 
                 for ($i=0; $i < count($request->products_borrow_choose_id) ; $i++) { 
                     $Products_borrow_choose = \App\Models\Backend\Products_borrow_choose::find($request->products_borrow_choose_id[$i]);
@@ -209,6 +213,12 @@ class Products_borrow_codeController extends Controller
 		2) ระบุ สาขา จะเห็น ในสาขา นั้น    =>  1 Or 2
 		3) ถ้ามีสิทธิ์อนุมัติ แสดงปุ่มอนุมัติ  (0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ)
       */
+      if($req->id>0){
+        $id = " id = ".$req->id." AND ";
+      }else{
+        $id = "";
+      }
+
       $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
       if($branch_id>0){
         $branch_id2 = " branch_id_fk = ".$req->branch_id." AND ";
@@ -241,6 +251,7 @@ class Products_borrow_codeController extends Controller
       
       $sTable = DB::select(" SELECT * FROM db_products_borrow_code 
           WHERE 
+          ".$id." 
           ".$branch_id2." 
           ".$approve_status." 
           (action_user LIKE ".(\Auth::user()->id)." OR 

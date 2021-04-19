@@ -298,7 +298,7 @@ $(function() {
             {data: 'amt_diff', title :'<center> Note </center>', className: 'text-center'},
             {data: 'approver', title :'<center> Approval </center>', className: 'text-center'},
             {data: 'approve_date', title :'<center> Approval date  </center>', className: 'text-center'},            
-            {data: 'id', title :'Tools', className: 'text-center w100'}, 
+            {data: 'id', title :'Tools ', className: 'text-center w100'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -593,6 +593,7 @@ $(function() {
     </script>
 
 
+
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
@@ -652,7 +653,12 @@ $(function() {
       });
 
 
+
 </script>
+
+
+
+
 
 @endsection
 

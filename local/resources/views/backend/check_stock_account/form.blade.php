@@ -75,8 +75,23 @@
 
    // echo $Approved;
 
+    // echo @Session::get('session_status_accepted_id');
 
    ?>
+
+
+
+<?php
+
+  // echo @Session::get('session_status_accepted_id');
+
+   if(@Session::get('session_status_accepted_id')==3||@Session::get('session_status_accepted_id')==4||@Session::get('session_status_accepted_id')==5){
+      @$dis_btnSave = "disabled";
+   }else{
+      @$dis_btnSave = "";
+   }
+
+  ?>
 
 
 @IF(!empty(@$sRow))
@@ -360,11 +375,11 @@
                               <div class="col-md-12" style="">
                               <center>
             
-                      <form id="basic-form" action="" method="post">
+                       <form id="basic-form" action="" method="post">
                                  <div class="form-group row">
                                   <label for="cuase_desc" class="col-md-3 col-form-label">หมายเหตุ * :</label>
                                   <div class="col-md-6">
-                                    <textarea class="form-control" rows="3" id="cuase_desc" name="cuase_desc" required  minlength="5" >{{@$sRow->cuase_desc}}</textarea>
+                                    <textarea class="form-control" rows="3" id="cuase_desc" name="cuase_desc" required  minlength="5" <?=@$dis_btnSave?> >{{@$sRow->cuase_desc}}</textarea>
                                   </div>
                                 </div>
                         </form>                             
@@ -412,6 +427,7 @@
 
     @ENDIF 
 
+<?php //echo @Session::get('session_status_accepted_id'); echo @$sRow->status_accepted; ?>
 
 @IF( ( isset($_REQUEST['Approve']) || @$sRow->status_accepted==3 || @$sRow->status_accepted==4 ) && @$sRow->status_accepted!=0 && @$sRow->status_accepted!=1 && @$sRow->status_accepted!=5 )
           
@@ -446,7 +462,7 @@
                             @if( empty($sRow) )
                               <input type="radio" class="" id="customSwitch1" name="approve_status" value="3" required >
                             @else
-                              <input type="radio" class="" id="customSwitch1" name="approve_status" required value="3" {{ ( @$sRow->status_accepted=='3')?'checked':'' }}>
+                              <input type="radio" class="" id="customSwitch1" name="approve_status" required value="3" {{ ( @$sRow->status_accepted=='3')?'checked':'' }} <?=@$dis_btnSave?> >
                             @endif
                               <label for="customSwitch1">อนุมัติ / Aproved</label>
                           </div>
@@ -456,7 +472,7 @@
                             @if( empty($sRow) )
                               <input type="radio" class="" id="customSwitch2" name="approve_status" value="4" required >
                             @else
-                              <input type="radio" class="" id="customSwitch2" name="approve_status" required value="4" {{ ( @$sRow->status_accepted=='4')?'checked':'' }}>
+                              <input type="radio" class="" id="customSwitch2" name="approve_status" required value="4" {{ ( @$sRow->status_accepted=='4')?'checked':'' }} <?=@$dis_btnSave?> >
                             @endif
                               <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                           </div>
@@ -464,14 +480,18 @@
 
                     </div>
 
+
+
                     <div class="form-group row">
                       <label for="note" class="col-md-3 col-form-label">หมายเหตุ / Note :</label>
                       <div class="col-md-6">
-                        <textarea class="form-control" rows="3" id="note" name="note" required  minlength="5" >{{ @$sRow->note }}</textarea>
+                        <textarea class="form-control" rows="3" id="note" name="note" required  minlength="5" <?=@$dis_btnSave?>  >{{ @$sRow->note }}</textarea>
                       </div>
                     </div>
 
                     <br>
+
+
 
                     @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
@@ -741,7 +761,7 @@ $(function() {
                                                .reduce( function (a, b) {
                                                    return a + b*1;
                                                }, 0);
-                                                sTotal = $.fn.dataTable.render.number(',', '.', 0, '<span>&#3647;</span> ').display( sTotal );
+                                                sTotal = $.fn.dataTable.render.number(',', '.', 0, ' ').display( sTotal );
                                             // sTotal = 2;
                              
                                             return $('<tr/ style=" background-color:#f2f2f2 !important;">')

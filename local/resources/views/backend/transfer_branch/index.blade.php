@@ -101,6 +101,8 @@
                           <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>สาขาต้นทาง :</label>
                           <div class="col-md-9">
 
+                            <input type="hidden" name="business_location_id_fk" value="{{@$business_location_id_fk}}">
+
                             @if($User_branch_id==0)
                              <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required="" >
                               <option value="">Select</option>
@@ -288,6 +290,7 @@
          <form action="{{ route('backend.transfer_branch.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_select_to_transfer" value="1" >
             <input type="hidden" id="branch_id_select_to_transfer" name="branch_id_select_to_transfer" >
+            <input type="hidden" id="branch_id_select_to_transfer_to" name="branch_id_select_to_transfer_to" >
             {{ csrf_field() }}
 
 			<div class="modal-body">
@@ -851,10 +854,12 @@
           event.preventDefault();
 
           var branch_id_fk = $("#branch_id_fk").val();
+          var branch_id_fk_to = $("#branch_id_fk_to").val();
           var product_id = $("#product").val();
           var product_id = product_id?product_id:0;
 
           $("#branch_id_select_to_transfer").val(branch_id_fk);
+          $("#branch_id_select_to_transfer_to").val(branch_id_fk_to);
           
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
@@ -1010,6 +1015,14 @@
        });
     });
 
+    $(document).ready(function() {
+       $(document).on('change', '#branch_id_fk_to', function(event) {
+           event.preventDefault();
+           var v = $(this).val();
+           $("#branch_id_select_to_transfer_to").val(v);
+        
+       });
+    });
 
 </script>
 <script type="text/javascript">

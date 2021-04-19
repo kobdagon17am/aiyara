@@ -37,6 +37,7 @@ class General_receiveController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
 
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -48,8 +49,8 @@ class General_receiveController extends Controller
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
       $sSupplier = \App\Models\Backend\Supplier::get();
-
-
+      $Check_stock = \App\Models\Backend\Check_stock::get();
+      
       return View('backend.general_receive.form')->with(
         array(
            'Product_in_cause'=>$Product_in_cause,
@@ -58,6 +59,9 @@ class General_receiveController extends Controller
            'sBranchs'=>$sBranchs,
            'User_branch_id'=>$User_branch_id,
            'sSupplier'=>$sSupplier,
+           'sBusiness_location'=>$sBusiness_location,
+           'Check_stock'=>$Check_stock,
+
         ) );
     }
     public function store(Request $request)
@@ -77,17 +81,18 @@ class General_receiveController extends Controller
             products_details
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
+
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();       
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();      
-
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
-
       $sSupplier = \App\Models\Backend\Supplier::get();
-
-      // dd($sBranchs);
+      $Check_stock = \App\Models\Backend\Check_stock::get();
+      // dd($Check_stock);
 
       return View('backend.general_receive.form')->with(
         array(
@@ -99,9 +104,11 @@ class General_receiveController extends Controller
            'Warehouse'=>$Warehouse,
            'Zone'=>$Zone,
            'Shelf'=>$Shelf,
+           'sSupplier'=>$sSupplier,
            'sBranchs'=>$sBranchs,
            'User_branch_id'=>$User_branch_id,
-           'sSupplier'=>$sSupplier,
+           'sBusiness_location'=>$sBusiness_location,
+           'Check_stock'=>$Check_stock,
         ) );
     }
 
@@ -121,12 +128,15 @@ class General_receiveController extends Controller
             $sRow = new \App\Models\Backend\General_receive;
           }
 
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_in_cause_id_fk    = request('product_in_cause_id_fk');
           $sRow->product_id_fk    = request('product_id_fk');
+          $sRow->po_invoice_no    = request('po_invoice_no');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
           $sRow->amt    = request('amt');
           $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+          $sRow->supplier_id_fk    = request('supplier_id_fk');
           $sRow->branch_id_fk    = request('branch_id_fk');
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
           $sRow->zone_id_fk    = request('zone_id_fk');
@@ -137,10 +147,73 @@ class General_receiveController extends Controller
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');
           $sRow->recipient    = request('recipient');
           $sRow->approver    = request('approver');
-          $sRow->approve_status    = request('approve_status');
+          $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
                     
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
+
+          // if(request('approve_status')=='1'){
+          //   DB::select(" INSERT IGNORE INTO db_stocks (business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, date_in_stock, warehouse_id_fk, zone_id_fk, shelf_id_fk, created_at) 
+
+          //     SELECT 
+          //     business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, now(), warehouse_id_fk, zone_id_fk, shelf_id_fk, created_at
+          //     FROM db_general_receive
+          //     WHERE approve_status=1 AND lot_expired_date>=now() AND id=$id ");
+
+          //     return redirect()->to(url("backend/general_receive"));
+
+          // }
+
+        if(request('approve_status')=='1'){
+
+                $value=DB::table('db_stocks')
+                ->where('business_location_id_fk', request('business_location_id_fk'))
+                ->where('branch_id_fk', request('branch_id_fk'))
+                ->where('product_id_fk', request('product_id_fk'))
+                ->where('lot_number', request('lot_number'))
+                ->where('lot_expired_date', request('lot_expired_date'))
+                ->where('warehouse_id_fk', request('warehouse_id_fk'))
+                ->where('zone_id_fk', request('zone_id_fk'))
+                ->where('shelf_id_fk', request('shelf_id_fk'))
+                ->where('shelf_floor', request('shelf_floor'))
+                ->get();
+
+                if($value->count() == 0){
+           
+                      DB::table('db_stocks')->insert(array(
+                        'business_location_id_fk' => request('business_location_id_fk'),
+                        'branch_id_fk' => request('branch_id_fk'),
+                        'product_id_fk' => request('product_id_fk'),
+                        'lot_number' => request('lot_number'),
+                        'lot_expired_date' => request('lot_expired_date'),
+                        'amt' => request('amt'),
+                        'product_unit_id_fk' => request('product_unit_id_fk'),
+                        'date_in_stock' => date("Y-m-d H:i:s"),
+                        'warehouse_id_fk' => request('warehouse_id_fk'),
+                        'zone_id_fk' => request('zone_id_fk'),
+                        'shelf_id_fk' => request('shelf_id_fk'),
+                        'created_at' => date("Y-m-d H:i:s"),
+                      ));
+
+                }else{
+
+                    DB::table('db_stocks')
+                    ->where('business_location_id_fk', request('business_location_id_fk'))
+                    ->where('branch_id_fk', request('branch_id_fk'))
+                    ->where('product_id_fk', request('product_id_fk'))
+                    ->where('lot_number', request('lot_number'))
+                    ->where('lot_expired_date', request('lot_expired_date'))
+                    ->where('warehouse_id_fk', request('warehouse_id_fk'))
+                    ->where('zone_id_fk', request('zone_id_fk'))
+                    ->where('shelf_id_fk', request('shelf_id_fk'))
+                    ->where('shelf_floor', request('shelf_floor'))
+                      ->update(array(
+                        'amt' => $value[0]->amt + request('amt'),
+                      ));
+                }
+
+        }
+
 
           \DB::commit();
 

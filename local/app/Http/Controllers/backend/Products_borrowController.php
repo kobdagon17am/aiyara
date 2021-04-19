@@ -72,6 +72,7 @@ class Products_borrowController extends Controller
             $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
             $sRow = new \App\Models\Backend\Products_borrow_choose;
+            $sRow->business_location_id_fk    = $Check_stock->business_location_id_fk;
             $sRow->branch_id_fk    = request('branch_id_select_to_products_borrow');
             $sRow->stocks_id_fk    = $Check_stock->id;
             $sRow->product_id_fk    = $Check_stock->product_id_fk;

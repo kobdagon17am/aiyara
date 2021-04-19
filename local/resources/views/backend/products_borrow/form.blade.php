@@ -94,9 +94,9 @@
                     <div class="col-md-3 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1"  >
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" required  >
                         @else
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
                         @endif
                           <label for="customSwitch1">อนุมัติ / Aproved</label>
                       </div>
@@ -104,9 +104,9 @@
                      <div class="col-md-6 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3"  >
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" required >
                         @else
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }} required >
                         @endif
                           <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                       </div>
@@ -117,7 +117,7 @@
                         <div class="form-group row">
                           <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>หมายเหตุ (ถ้ามี) :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
                           </div>
                         </div>
 
@@ -172,9 +172,8 @@
 <script type="text/javascript">
 
 
-    var list_id = "{{@$_REQUEST['list_id']}}";
+    var list_id = "{{@$_REQUEST['list_id']}}"; //alert(list_id);
 
-  
     var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
     var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
     var sU = "{{@$sU}}"; //alert(sU);
@@ -210,13 +209,14 @@
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                   {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
                   {data: 'amt', title :'<center>จำนวนที่ต้องการเบิก/ยืม </center>', className: 'text-center'},
-                  {data: 'warehouses',   title :'<center>เบิก/ยืมไปที่คลัง</center>', className: 'text-center',render: function(d) {
-                      if(d!='0'){
-                         return d;
-                       }else{
-                          return  "<span style='color:red;'>* รอเลือกคลังปลายทาง </span>";
-                       }
-                  }},
+                  // {data: 'borrow_cause_id_fk', title :'<center>เหตุผลการเบิก </center>', className: 'text-center'},
+                  // {data: 'warehouses',   title :'<center>เบิก/ยืมไปที่คลัง</center>', className: 'text-center',render: function(d) {
+                  //     if(d!='0'){
+                  //        return d;
+                  //      }else{
+                  //         return  "<span style='color:red;'>* รอเลือกคลังปลายทาง </span>";
+                  //      }
+                  // }},
                 ],
                 rowCallback: function (nRow, aData, iDisplayIndex) {
                  var info = $(this).DataTable().page.info();
@@ -249,13 +249,11 @@
                 scrollY: ''+($(window).height()-370)+'px',
                 ajax: {
                 url: '{{ route('backend.products_borrow_code.datatable') }}',
-                data: function ( d ) {
-                  d.Where={};
-                  d.Where['id'] = list_id ;
-                  oData = d;
+                data :{
+                      id:list_id,
+                    },
+                  method: 'POST',
                 },
-                 method: 'POST',
-               },
 
               columns: [
                   {data: 'borrow_number', title :'รหัสใบโอน', className: 'text-center w80'},
@@ -275,9 +273,7 @@
                   }},
                   {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
                   {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
-                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/products_borrow/print_products_borrow') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
+                  {data: 'borrow_cause', title :'<center>เหตุผลการเบิก/ยืม </center>', className: 'text-center'},
                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                       return d ;
                   }},

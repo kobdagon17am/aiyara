@@ -32,9 +32,16 @@ class Transfer_branchController extends Controller
 
         $sTransfer_choose = \App\Models\Backend\Transfer_choose_branch::where('branch_id_fk_to','0')->where('action_user','=',\Auth::user()->id)->get();
         // dd(count($sTransfer_choose));
+        // dd($User_branch_id);
+        // dd($sTransfer_chooseAll);
+        $b_l = \App\Models\Backend\Branchs::where('id',$User_branch_id)->get();
+        // dd($b_l[0]->business_location_id_fk);
+        $business_location_id_fk = $b_l[0]->business_location_id_fk;
+
         return View('backend.transfer_branch.index')->with(
         array(
-           'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+           'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
+           'business_location_id_fk'=>$business_location_id_fk
         ) );
       
     }
@@ -63,6 +70,7 @@ class Transfer_branchController extends Controller
             // echo $Check_stock->product_id_fk;
             $sRow = new \App\Models\Backend\Transfer_choose_branch;
             $sRow->branch_id_fk    = request('branch_id_select_to_transfer');
+            $sRow->branch_id_fk_to    = request('branch_id_select_to_transfer_to');
             $sRow->stocks_id_fk    = $Check_stock->id;
             $sRow->product_id_fk    = $Check_stock->product_id_fk;
             $sRow->lot_number    = $Check_stock->lot_number;
@@ -153,7 +161,6 @@ class Transfer_branchController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
-            // dd($request->all());
       if(!empty($request->approve_status) && $request->approve_status==1){
           // dd($request->approve_status);
 
