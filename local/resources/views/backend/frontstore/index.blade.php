@@ -617,7 +617,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
      
             {data: 'id', title :'Tools', className: 'text-center w70'}, 
         ],
-           "order": [ [ 1, 'desc' ] ],
+           // "order": [ [ 1, 'desc' ] ],
            "columnDefs": [ {
             // { targets: 'no-sort', orderable: false }
               "targets": [0,2,6,7,8,9] ,

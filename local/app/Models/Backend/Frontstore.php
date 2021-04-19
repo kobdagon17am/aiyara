@@ -6,7 +6,7 @@ use App\Models\InitModel;
 
 class Frontstore extends InitModel
 {
-    protected $table = 'db_frontstore';
+    protected $table = 'db_orders';
 
 }
 

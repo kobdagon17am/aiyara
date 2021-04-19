@@ -207,49 +207,49 @@ class Check_money_dailyController extends Controller
 
           $sTable = DB::select("
                     SELECT
-                    db_frontstore.id ,
-                    db_frontstore.action_user,
+                    db_orders.id ,
+                    db_orders.action_user,
                     ck_users_admin.`name` as action_user_name,
-                    db_frontstore.pay_type_id,
+                    db_orders.pay_type_id,
                     dataset_pay_type.detail AS pay_type,
-                    date(db_frontstore.action_date) AS action_date,
-                    db_frontstore.cash_pay,
-                    db_frontstore.credit_price,
-                    db_frontstore.transfer_price,
-                    db_frontstore.aicash_price,
-                    db_frontstore.shipping_price,
-                    db_frontstore.fee_amt,
-                    db_frontstore.total_price,
-                    db_frontstore.approve_status
+                    date(db_orders.action_date) AS action_date,
+                    db_orders.cash_pay,
+                    db_orders.credit_price,
+                    db_orders.transfer_price,
+                    db_orders.aicash_price,
+                    db_orders.shipping_price,
+                    db_orders.fee_amt,
+                    db_orders.total_price,
+                    db_orders.approve_status
                     FROM
-                    db_frontstore
-                    Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
-                    Left Join ck_users_admin ON db_frontstore.action_user = ck_users_admin.id
-                    WHERE db_frontstore.pay_type_id<>0 AND db_frontstore.id=".$req->id."
+                    db_orders
+                    Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+                    Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                    WHERE db_orders.pay_type_id<>0 AND db_orders.id=".$req->id."
             ");
       }else{
 
           $sTable = DB::select("
                     SELECT
-                    db_frontstore.id ,
-                    db_frontstore.action_user,
+                    db_orders.id ,
+                    db_orders.action_user,
                     ck_users_admin.`name` as action_user_name,
-                    db_frontstore.pay_type_id,
+                    db_orders.pay_type_id,
                     dataset_pay_type.detail AS pay_type,
-                    date(db_frontstore.action_date) AS action_date,
-                    db_frontstore.cash_pay,
-                    db_frontstore.credit_price,
-                    db_frontstore.transfer_price,
-                    db_frontstore.aicash_price,
-                    db_frontstore.shipping_price,
-                    db_frontstore.fee_amt,
-                    db_frontstore.total_price,
-                    db_frontstore.approve_status
+                    date(db_orders.action_date) AS action_date,
+                    db_orders.cash_pay,
+                    db_orders.credit_price,
+                    db_orders.transfer_price,
+                    db_orders.aicash_price,
+                    db_orders.shipping_price,
+                    db_orders.fee_amt,
+                    db_orders.total_price,
+                    db_orders.approve_status
                     FROM
-                    db_frontstore
-                    Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
-                    Left Join ck_users_admin ON db_frontstore.action_user = ck_users_admin.id
-                    WHERE db_frontstore.pay_type_id<>0 
+                    db_orders
+                    Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+                    Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                    WHERE db_orders.pay_type_id<>0 
             ");
 
       }

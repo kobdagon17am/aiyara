@@ -239,7 +239,7 @@ tr.border_bottom td {
 
 $value = DB::select("
                     SELECT
-                    db_frontstore_products_list.*,
+                    db_order_products_list.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -257,13 +257,13 @@ $value = DB::select("
                     orders_frontstore.shipping
 
                     FROM
-                    db_frontstore_products_list
-                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
-                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
+                    db_order_products_list
+                    Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
+                    Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk =
+                    db_order_products_list.frontstore_id_fk =
                     ".$data[0]."
 
      ");
@@ -359,6 +359,7 @@ $value = DB::select("
                                       Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
                                       Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
+                                      Left Join customers_detail ON customers.id = customers_detail.customer_id
                                       where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
                                      ");
@@ -394,10 +395,18 @@ $value = DB::select("
                                     customers_address_card.updated_at,
                                     customers.prefix_name,
                                     customers.first_name,
-                                    customers.last_name
+                                    customers.last_name,
+                                    dataset_amphures.name_th AS amp_name,
+									dataset_districts.name_th AS tambon_name,
+									dataset_provinces.name_th AS province_name
                                     FROM
                                     customers_address_card
                                     Left Join customers ON customers_address_card.customer_id = customers.id
+                                    Left Join customers_detail ON customers.id = customers_detail.customer_id
+                                    Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+									Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+									Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+
                                     Where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
                                      ");
@@ -408,9 +417,9 @@ $value = DB::select("
                                   @$address .=  " หมู่ ". @$addr[0]->card_moo;
                                   @$address .=  " ซอย ". @$addr[0]->card_soi;
                                   @$address .=  " ถนน ". @$addr[0]->card_road;
-                                  @$address .=  " ต. ". @$addr[0]->card_district_sub;
-                                  @$address .=  " อ. ". @$addr[0]->card_district;
-                                  @$address .=  " จ. ". @$addr[0]->card_province;
+                                  @$address .=  " ต. ". @$addr[0]->tambon_name;
+                                  @$address .=  " อ. ". @$addr[0]->amp_name;
+                                  @$address .=  " จ. ". @$addr[0]->province_name;
                                   @$address .=  " <br> รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
 
                                   echo @$address;
@@ -525,7 +534,7 @@ Amount </td>
 
      $P = DB::select("
                     SELECT
-                    db_frontstore_products_list.*,
+                    db_order_products_list.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -543,13 +552,13 @@ Amount </td>
                     orders_frontstore.shipping
 
                     FROM
-                    db_frontstore_products_list
-                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
-                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
+                    db_order_products_list
+                    Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
+                    Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk =
+                    db_order_products_list.frontstore_id_fk =
                     ".$data[0]."  AND add_from=1
 
      ");
@@ -601,7 +610,7 @@ Amount </td>
 <?php
 
      $P = DB::select("
-         SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$data[0]." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+         SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$data[0]." and add_from=2 GROUP BY promotion_id_fk,promotion_code
      ");
 
     $i= $i ;
@@ -688,8 +697,8 @@ Amount </td>
 
       <?php
 
-        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=1 GROUP BY frontstore_id_fk ");
-        $sFrontstoreData = DB::select(" select * from db_frontstore_products_list ");
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=1 GROUP BY frontstore_id_fk ");
+        $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
         $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
 

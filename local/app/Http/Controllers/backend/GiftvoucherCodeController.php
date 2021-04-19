@@ -150,7 +150,7 @@ class GiftvoucherCodeController extends Controller
               if(isset($request->product_plus_addlist)){
                   // return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
                  if($request->quantity[0]==0){
-                    DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
+                    DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
                  }
               }
 

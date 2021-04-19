@@ -43,8 +43,8 @@ class Pick_warehouse_fifoController extends Controller
       // dd();
       // $row_id = explode(',', $request->picking_id);
 
-      DB::select('TRUNCATE db_frontstore_tmp');
-      DB::select('TRUNCATE db_frontstore_products_list_tmp');
+      DB::select('TRUNCATE db_orders_tmp');
+      DB::select('TRUNCATE db_order_products_list_tmp');
       DB::select('TRUNCATE db_pick_warehouse_fifo');
 
       DB::select('TRUNCATE db_pick_warehouse_fifo_topicked');
@@ -56,7 +56,7 @@ class Pick_warehouse_fifoController extends Controller
       if(!empty($request->picking_id)){
 
               DB::select(' 
-                  insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code in(
+                  insert ignore into db_orders_tmp select * from db_orders where invoice_code in(
                   SELECT
                   db_delivery.receipt
                   FROM
@@ -68,7 +68,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
               DB::select(' 
-                 insert ignore into db_frontstore_tmp select * from db_frontstore where invoice_code in
+                 insert ignore into db_orders_tmp select * from db_orders where invoice_code in
                   (
                   SELECT receipt FROM db_delivery WHERE packing_code in 
                   (
@@ -84,14 +84,14 @@ class Pick_warehouse_fifoController extends Controller
 
 
               DB::select(' 
-                insert ignore into db_frontstore_products_list_tmp select * from db_frontstore_products_list where product_id_fk in 
+                insert ignore into db_order_products_list_tmp select * from db_order_products_list where product_id_fk in 
                 (
                 SELECT
-                db_frontstore_products_list.product_id_fk
+                db_order_products_list.product_id_fk
                 FROM
-                db_frontstore_products_list
-                INNER Join db_frontstore_tmp ON db_frontstore_products_list.frontstore_id_fk = db_frontstore_tmp.id
-                GROUP BY db_frontstore_products_list.product_id_fk
+                db_order_products_list
+                INNER Join db_orders_tmp ON db_order_products_list.frontstore_id_fk = db_orders_tmp.id
+                GROUP BY db_order_products_list.product_id_fk
                 )
               ');
 
@@ -102,7 +102,7 @@ class Pick_warehouse_fifoController extends Controller
 
         //  ได้รหัสสินค้ามาแล้ว 
 
-              $product = DB::select('select product_id_fk from db_frontstore_products_list_tmp');
+              $product = DB::select('select product_id_fk from db_order_products_list_tmp');
               $product_id = [];
               foreach ($product as $key => $value) {
                  array_push($product_id,$value->product_id_fk);
@@ -146,12 +146,12 @@ class Pick_warehouse_fifoController extends Controller
 
                     UPDATE
                     db_pick_warehouse_fifo
-                    Left Join db_frontstore_products_list_tmp ON db_pick_warehouse_fifo.product_id_fk = db_frontstore_products_list_tmp.product_id_fk
+                    Left Join db_order_products_list_tmp ON db_pick_warehouse_fifo.product_id_fk = db_order_products_list_tmp.product_id_fk
                     SET
                     db_pick_warehouse_fifo.amt_get=
-                    db_frontstore_products_list_tmp.amt,
+                    db_order_products_list_tmp.amt,
                     db_pick_warehouse_fifo.product_unit_id_fk=
-                    db_frontstore_products_list_tmp.product_unit_id_fk
+                    db_order_products_list_tmp.product_unit_id_fk
 
                 ");
 

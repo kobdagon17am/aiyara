@@ -560,6 +560,7 @@
                                       Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
                                       Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
+                                      Left Join customers_detail ON customers.id = customers_detail.customer_id
                                       where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
                                      ");
@@ -664,7 +665,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -1892,6 +1893,8 @@
 
     $(document).ready(function() {
 
+        fnGetDBfrontstore();
+
         $(document).on('click', '.btnAddFromPromotion', function(event) {
           event.preventDefault();
             $('#modalAddFromPromotion').modal('show');
@@ -2437,6 +2440,7 @@
                           var oTable;
 
                             $(function() {
+                              $.fn.dataTable.ext.errMode = 'throw';
                                 oTable = $('#data-table-list').DataTable({
                                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                                     processing: true,
@@ -2512,6 +2516,12 @@
                                       $('td:last-child', nRow).html(''
                                         + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                       ).addClass('input');
+
+                                      fnGetDBfrontstore();
+                                      setTimeout(function(){
+                                        $(".ShippingCalculate02").trigger('click');
+                                      }, 1000);
+
                                     }
                                 });
                                 $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -2905,7 +2915,7 @@
             return false;
           }
 
-          // ตรวจสอบดูก่อนว่า ในตาราง `db_frontstore_products_list` เคยใช้รหัสนี้หรือไม่ และ มีสถานะ =  1=ใช้งานได้ หรือไม่
+          // ตรวจสอบดูก่อนว่า ในตาราง `db_order_products_list` เคยใช้รหัสนี้หรือไม่ และ มีสถานะ =  1=ใช้งานได้ หรือไม่
           // pro_status => 1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code
            $.ajax({
                type:'POST',
@@ -3237,6 +3247,7 @@ $(document).ready(function() {
             $(document).ready(function() {
 
 
+                   
                    $(document).on('click', '.cDelete', function(event) {
                        event.preventDefault();
 
@@ -3247,121 +3258,113 @@ $(document).ready(function() {
 
                         $(".myloading").show();
 
-                        $.fn.dataTable.ext.errMode = 'throw';
+  setTimeout(function(){
 
-                        setTimeout(function(){
-                          // $(".myloading").hide();
-                          // $(this).closest("tr").hide();
-                          // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                          var frontstore_id_fk = $("#frontstore_id_fk").val(); //alert(frontstore_id_fk);
-                          var oTable;
+                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                    var frontstore_id_fk = $("#frontstore_id_fk").val();
+                    $("input[name=_method]").val('');
 
-                                    $(function() {
-                                        oTable = $('#data-table-list').DataTable({
-                                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                            processing: true,
-                                            serverSide: true,
-                                            scroller: true,
-                                            scrollCollapse: true,
-                                            scrollX: true,
-                                            ordering: false,
-                                            "info":     false,
-                                            "paging":   false,
-                                            destroy: true,
-                                            scrollY: ''+($(window).height()-370)+'px',
-                                            iDisplayLength: 5,
-                                            ajax: {
-                                                url: '{{ route('backend.frontstorelist.datatable') }}',
-                                                data :{
-                                                      frontstore_id_fk:frontstore_id_fk,
-                                                      frontstore_id:frontstore_id_fk,
-                                                    },
-                                                  method: 'POST',
-                                                },
-                                            columns: [
-                                                {data: 'id',   title :'<center>#</center>', className: 'text-center w50 ',render: function(d) {
-                                                   return d ;
-                                                }},
-                                                {data: 'purchase_type',   title :'<center>ประเภท</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'product_name',   title :'<center>ชื่อสินค้า/บริการ</center>', className: 'text-left',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'amt',   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'product_unit',   title :'<center>หน่วย</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'pv',   title :'<center>PV</center>', className: 'text-center w50 ',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'selling_price',   title :'<center>ราคาขาย</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'total_pv',   title :'<center>รวม PV</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
-                                                {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
-                                                   return d;
-                                                }},
+                    $.ajax({
+                         type:'POST',
+                         dataType:'JSON',
+                         url: " {{ url('backend/ajaxGetDBfrontstore') }} ",
+                         data:{ _token: '{{csrf_token()}}',
+                             frontstore_id_fk:frontstore_id_fk,
+                            },
+                          success:function(d){
 
-                                                {data: 'id', title :'Tools', className: 'text-center w60'},
-                                            ],
-                                             'columnDefs': [
-                                             {
-                                                    'targets': 0,
-                                                    'checkboxes': {
-                                                       'selectRow': true
-                                                    }
-                                                 }
-                                              ],
-                                              'select': {
-                                                 'style': 'multi'
-                                              },
-                                              rowCallback: function(nRow, aData, dataIndex){
+                            if(d){
+                      
+                              var pay_type_id = $("#pay_type_id").val();
+                              if(pay_type_id==''){
+                                $("#cash_price").val('');
+                                $("#cash_pay").val('');
+                              }
 
-                                                var info = $(this).DataTable().page.info();
-                                                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                              if(pay_type_id==5){
+                                $("#aicash_price").val(formatNumber(parseFloat(0).toFixed(2)));
+                              }
 
-                                                if(aData['add_from']==2){
-                                                  $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
-                                                  $("td:eq(4)", nRow).html("ชุด");
-                                                }
+                              if(pay_type_id==6){
+                                $("#aicash_price").focus();
+                                $("#cash_price").val('');
+                                $("#cash_pay").val('');
+                              }
 
+                              $.each(d,function(key,value){
 
-                                                fnGetDBfrontstore();
+                                  $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
+                                  $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
+                                  $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
 
-                        												$(".ShippingCalculate02").trigger('click');
+                                  $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
+                                  $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
+                                  $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
 
-                        												$('#pay_type_id').val("").select2();
-                        												$('#cash_price').val("");
-                        												$('#cash_pay').val("");
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
 
-                        												fnCheckDBfrontstore();
+                                  $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
-                        												$(".myloading").hide();
+                                  if(pay_type_id==''){
+                                     $("#cash_pay").val('');
+                                  }else{
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
+                                  }
 
-                                                $('td:last-child', nRow).html(''
-                                                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                                                ).addClass('input');
-                                              }
-                                        });
-                                    });
-                          // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
-                        }, 1500);
+                                  if(value.shipping_free==1){
+                                      $('.input_shipping_free').show();
+                                      $('.input_shipping_nofree').hide();
+                                  }else{
+                                      $('#shipping_price').val(formatNumber(parseFloat(value.shipping_price).toFixed(2)));
+                                      $('.input_shipping_free').hide();
+                                      $('.input_shipping_nofree').show();
+                                  }
+
+                                  if(pay_type_id==6||pay_type_id==11){
+                                    if(value.aicash_price>0){
+                                      $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
+                                    }else{
+                                      $("#aicash_price").val('');
+                                      $('#aicash_price').attr('required', true);
+                                    }
+                                  }
+
+                                  if(pay_type_id==9){
+                                    if(value.aicash_price>0){
+                                      $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
+                                    }else{
+                                      $("#aicash_price").val(formatNumber(parseFloat(0).toFixed(2)));
+                                    }
+                                  }
+
+                                });
+
+                               }
+
+                              $("input[name=_method]").val('PUT');
+                              // alert("A");
+                              // $(".myloading").hide();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $(".myloading").hide();
+                            }
+                      });
+
+                      var table = $('#data-table-list').DataTable();
+                      table.clear().draw();
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                    // alert("B");
+                    location.reload();
+
+                    }, 3000);
 
 
-            						$('#cash_pay').val("");
-            				  		fnCheckDBfrontstore();
-					               	// return false;
-                          setTimeout(function(){
-                            $(".ShippingCalculate02").trigger('click');
-                          }, 1000);
 
-                   });
+                 });
+
 
                 $('#data-table-list').on('focus', function () {
                     $(".myloading").hide();
@@ -3369,6 +3372,7 @@ $(document).ready(function() {
 
 
             });
+
 
 
              $('#delivery_province').change(function(){
@@ -3521,16 +3525,28 @@ $(document).ready(function() {
 	                    $("#image01").trigger('click');
 	              });
 
-                 $('#modalAddFromPromotion,#modalAddFromProductsList,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
+                 $('#modalAddFromPromotion,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
                  		$(".myloading").show();
-
                  		fnCheckDBfrontstore();
-
                     setTimeout(function(){
-      								$(".ShippingCalculate02").trigger('click');
+                      $(".ShippingCalculate02").trigger('click');
       							}, 1000);
 
-    				});
+    				    });
+
+
+                 $('#modalAddFromProductsList').on('hidden.bs.modal', function () {
+                    $(".myloading").show();
+                    fnCheckDBfrontstore();
+                    setTimeout(function(){
+                      $(".ShippingCalculate02").trigger('click');
+                    }, 1000);
+
+                    setTimeout(function(){
+                      location.reload();
+                    }, 2000);
+
+                });
 
     			});
 
@@ -4208,6 +4224,7 @@ $(document).ready(function() {
 
             function fnGetDBfrontstore(){
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     var frontstore_id_fk = $("#frontstore_id_fk").val();
                     $("input[name=_method]").val('');
 
@@ -4221,18 +4238,7 @@ $(document).ready(function() {
                           success:function(d){
 
                           	if(d){
-                              // console.log(d);
-                              /*
-
-                              1 เงินสด
-                              2 เงินสด + Ai-Cash
-                              3 เครดิต + เงินสด
-                              4 เครดิต + เงินโอน
-                              5 เครดิต + Ai-Cash
-                              6 เงินโอน + เงินสด
-                              7 เงินโอน + Ai-Cash
-
-                              */
+                      
                               var pay_type_id = $("#pay_type_id").val();
                               if(pay_type_id==''){
                                 $("#cash_price").val('');
@@ -4251,9 +4257,6 @@ $(document).ready(function() {
 
                               $.each(d,function(key,value){
 
-                                // alert(value.sum_price);
-                                // alert(value.product_value);
-
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
@@ -4271,7 +4274,6 @@ $(document).ready(function() {
                                   }else{
                                   	 $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
-
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -4306,16 +4308,13 @@ $(document).ready(function() {
                                }
 
                               $("input[name=_method]").val('PUT');
-
                               $(".myloading").hide();
-
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                // console.log(JSON.stringify(jqXHR));
-                                // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                 $(".myloading").hide();
                             }
                       });
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
                 }

@@ -6,6 +6,6 @@ use App\Models\InitModel;
 
 class Frontstorelist extends InitModel
 {
-    protected $table = 'db_frontstore_products_list';
+    protected $table = 'db_order_products_list';
 
 }

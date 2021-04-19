@@ -105,7 +105,7 @@ class ProductsListController extends Controller
             ) as product_unit,
             products_cost.selling_price as price,
             products_cost.pv,
-            (SELECT amt from db_frontstore_products_list WHERE product_id_fk = products.id AND frontstore_id_fk=".$req->frontstore_id_fk.") as frontstore_products_list
+            (SELECT amt from db_order_products_list WHERE product_id_fk = products.id AND frontstore_id_fk=".$req->frontstore_id_fk.") as frontstore_products_list
             FROM
             products
             LEFT JOIN categories on products.category_id=categories.id

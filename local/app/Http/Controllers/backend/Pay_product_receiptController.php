@@ -163,11 +163,11 @@ class Pay_product_receiptController extends Controller
 
                   //  DB::update(" 
                   //       UPDATE
-                  //       db_frontstore_products_list
-                  //       Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-                  //       Left Join db_pick_warehouse_qrcode ON db_frontstore.invoice_code = db_pick_warehouse_qrcode.invoice_code AND db_frontstore_products_list.product_id_fk = db_pick_warehouse_qrcode.product_id_fk
+                  //       db_order_products_list
+                  //       Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+                  //       Left Join db_pick_warehouse_qrcode ON db_orders.invoice_code = db_pick_warehouse_qrcode.invoice_code AND db_order_products_list.product_id_fk = db_pick_warehouse_qrcode.product_id_fk
                   //       SET
-                  //       db_frontstore_products_list.qr_code=
+                  //       db_order_products_list.qr_code=
                   //       db_pick_warehouse_qrcode.qr_code
                   // ");
 
@@ -180,13 +180,13 @@ class Pay_product_receiptController extends Controller
                // dd($imp_arr);
                 DB::update(" 
                         UPDATE
-                        db_frontstore_products_list
-                        Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
+                        db_order_products_list
+                        Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
                         SET
-                        db_frontstore_products_list.qr_code='$imp_arr'
+                        db_order_products_list.qr_code='$imp_arr'
                         WHERE
-                        db_frontstore.invoice_code='".$request->invoice_code."' AND
-                        db_frontstore_products_list.product_id_fk='".$request->product_id_fk[$i]."'
+                        db_orders.invoice_code='".$request->invoice_code."' AND
+                        db_order_products_list.product_id_fk='".$request->product_id_fk[$i]."'
                 ");
 
 
