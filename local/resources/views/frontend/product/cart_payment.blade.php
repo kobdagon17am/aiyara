@@ -10,24 +10,24 @@
  @section('conten')
 
      <form name="payForm" action="https://ipay.bangkokbank.com/b2c/eng/dPayment/payComp.jsp" method="post" id="form1">
-        @csrf
-        <input type="hidden" name="merchantId" value="6845">
-        <input type="hidden" name="amount" value="1" >
-        <input type="hidden" name="orderRef" value="OR-0001">
-        <input type="hidden" name="currCode" value="764" >
-        <input type="hidden" name="pMethod" value="VISA" >
-        <input type="hidden" name="cardNo" value="4918914107195005" >
-        <input type="hidden" name="securityCode" value="123" >
-        <input type="hidden" name="cardHolder" value="CardHolder" >
-        <input type="hidden" name="epMonth" value="07" >
-        <input type="hidden" name="epYear" value="2021" >
-        <input type="hidden" name="payType" value="N" >
-        <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
-        <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
-        <input type="hidden" name="errorUrl" value="http://www.yourwebsite.com/pError.jsp">
-        <input type="hidden" name="lang" VALUE="T">
-        <input type="hidden" name="remark" value="-">
-    </form>
+         @csrf
+         <input type="hidden" name="merchantId" value="6845">
+         <input type="hidden" name="amount" value="1">
+         <input type="hidden" name="orderRef" value="OR-0001">
+         <input type="hidden" name="currCode" value="764">
+         <input type="hidden" name="pMethod" value="VISA">
+         <input type="hidden" name="cardNo" value="4918914107195005">
+         <input type="hidden" name="securityCode" value="123">
+         <input type="hidden" name="cardHolder" value="CardHolder">
+         <input type="hidden" name="epMonth" value="07">
+         <input type="hidden" name="epYear" value="2021">
+         <input type="hidden" name="payType" value="N">
+         <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
+         <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
+         <input type="hidden" name="errorUrl" value="http://www.yourwebsite.com/pError.jsp">
+         <input type="hidden" name="lang" VALUE="T">
+         <input type="hidden" name="remark" value="-">
+     </form>
 
 
      <div class="row">
@@ -45,8 +45,10 @@
                  <input type="hidden" name="pv_total" value="{{ $bill['pv_total'] }}">
 
                  <input type="hidden" name="price_total" id="price_total" value="{{ $bill['price_total'] }}">
-                 <input type="hidden" name="price_total_type5" id="price_total_type5" value="{{ $bill['price_total_type5'] }}">
-                 <input type="hidden" name="gift_voucher_price" id="gift_voucher_price" value="{{ $bill['gift_voucher_price'] }}">
+                 <input type="hidden" name="price_total_type5" id="price_total_type5"
+                     value="{{ $bill['price_total_type5'] }}">
+                 <input type="hidden" name="gift_voucher_price" id="gift_voucher_price"
+                     value="{{ $bill['gift_voucher_price'] }}">
 
                  <!-- Choose Your Payment Method start -->
                  <div class="card card-border-success">
@@ -114,14 +116,17 @@
                                          <div class="form-radio">
                                              <div class="radio radio-inline">
                                                  <label>
-                                                     <input type="radio" name="sent_type_to_customer" value="sent_type_customer" id="sent_type_customer" onclick="sent_type('customer')"
-                                                         checked="checked">
+                                                     <input type="radio" name="sent_type_to_customer"
+                                                         value="sent_type_customer" id="sent_type_customer"
+                                                         onclick="sent_type('customer')" checked="checked">
                                                      <i class="helper"></i><b>จัดส่งให้ตัวเอง</b>
                                                  </label>
                                              </div>
                                              <div class="radio radio-inline">
                                                  <label>
-                                                     <input type="radio" name="sent_type_to_customer" value="sent_type_other" id="sent_type_other" onclick="sent_type('other')">
+                                                     <input type="radio" name="sent_type_to_customer"
+                                                         value="sent_type_other" id="sent_type_other"
+                                                         onclick="sent_type('other')">
                                                      <i class="helper"></i><b>จัดส่งให้ลูกทีม</b>
                                                  </label>
                                              </div>
@@ -146,7 +151,8 @@
                                                                          <span class="">ทำรายการ</span>
                                                                      </span>
                                                                  </div>
-                                                                 <span style="font-size: 12px">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
+                                                                 <span
+                                                                     style="font-size: 12px">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
                                                              </div>
 
                                                          </div>
@@ -159,16 +165,19 @@
                                                      <div class="card-block" style="padding: 10px;">
                                                          <div class="row">
                                                              <div class="col-md-12">
-                                                                 <h5 id="c_text_username" style="color: #000;font-size: 16px"></h5>
+                                                                 <h5 id="c_text_username"
+                                                                     style="color: #000;font-size: 16px"></h5>
                                                                  <h6 class="m-b-0" id="c_name" style="color: #000"></h6>
-                                                                 <input type="hidden" name="address_sent_id_fk" id="address_sent_id_fk" value="">
+                                                                 <input type="hidden" name="address_sent_id_fk"
+                                                                     id="address_sent_id_fk" value="">
 
                                                              </div>
 
                                                          </div>
                                                          <div class="row">
                                                              <div class="col-md-12">
-                                                                 <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
+                                                                 <h6 class="m-b-0" style="color: #000"><i
+                                                                         class="fa fa-star p-2 m-b-0"></i>
                                                                      <b id="c_qualification_name"></b>
                                                                  </h6>
                                                              </div>
@@ -187,7 +196,8 @@
                                                          <div class="row">
                                                              <div class="col-md-6">
                                                                  <p class="m-b-0" style="color: #000">
-                                                                     <b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
+                                                                     <b>สถานะรักษาคุณสมบัติรายเดือน</b>
+                                                                 </p>
                                                              </div>
                                                              <div class="col-md-6 text-right">
                                                                  <div id="c_pv_tv_active"></div>
@@ -198,7 +208,8 @@
                                                          <div class="row">
                                                              <div class="col-md-6">
                                                                  <p class="m-b-0" style="color: #000">
-                                                                     <b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
+                                                                     <b>สถานะรักษาคุณสมบัติท่องเที่ยว</b>
+                                                                 </p>
                                                              </div>
                                                              <div class="col-md-6 text-right">
                                                                  <div id="c_pv_mt_active"></div>
@@ -316,20 +327,23 @@
                                          <div class="col-sm-4">
                                              <label>จังหวัด <b class="text-danger">*</b></label>
                                              <input type="text" id="provinces_address"
-                                                 class="form-control form-control-bold" placeholder="จังหวัด" value="{{ $address->provinces_name }}" readonly="">
+                                                 class="form-control form-control-bold" placeholder="จังหวัด"
+                                                 value="{{ $address->provinces_name }}" readonly="">
                                              <input type="hidden" name="province" value="{{ $address->province_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
                                              <label>เขต/อำเภอ <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="เขต/อำเภอ" value="{{ $address->amphures_name }}" readonly="">
+                                                 placeholder="เขต/อำเภอ" value="{{ $address->amphures_name }}"
+                                                 readonly="">
                                              <input type="hidden" name="amphures" value="{{ $address->amphures_id_fk }}">
                                          </div>
                                          <div class="col-sm-4">
                                              <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="แขวง/ตำบล" value="{{ $address->district_name }}" readonly="">
+                                                 placeholder="แขวง/ตำบล" value="{{ $address->district_name }}"
+                                                 readonly="">
                                              <input type="hidden" name="district" value="{{ $address->district_id_fk }}">
                                          </div>
 
@@ -405,9 +419,9 @@
                                          <div class="col-sm-4">
                                              <label>จังหวัด <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold" placeholder="จังหวัด"
-                                                 value="{{ $address_card->card_provinces_name }}"
-                                                 readonly="">
-                                              <input type="hidden" name="card_province" value="{{ $address_card->card_province_id_fk }}">
+                                                 value="{{ $address_card->card_provinces_name }}" readonly="">
+                                             <input type="hidden" name="card_province"
+                                                 value="{{ $address_card->card_province_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
@@ -415,13 +429,16 @@
                                              <input type="text" class="form-control form-control-bold"
                                                  placeholder="เขต/อำเภอ" name="card_amphures"
                                                  value="{{ $address_card->card_amphures_name }}" readonly="">
-                                                 <input type="hidden" name="card_amphures" value="{{ $address_card->card_amphures_id_fk }}">
+                                             <input type="hidden" name="card_amphures"
+                                                 value="{{ $address_card->card_amphures_id_fk }}">
                                          </div>
                                          <div class="col-sm-4">
                                              <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
                                              <input type="text" class="form-control form-control-bold"
-                                                 placeholder="แขวง/ตำบล" value="{{ $address_card->card_district_name }}" readonly="">
-                                                 <input type="hidden" name="card_district" value="{{ $address_card->card_district_id_fk }}">
+                                                 placeholder="แขวง/ตำบล" value="{{ $address_card->card_district_name }}"
+                                                 readonly="">
+                                             <input type="hidden" name="card_district"
+                                                 value="{{ $address_card->card_district_id_fk }}">
                                          </div>
 
                                          <div class="col-sm-4">
@@ -793,7 +810,8 @@
                              \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
                              <tr>
                                  <td><strong>ยอดรวม</strong></td>
-                                 <td align="right"><strong class="price_total"> {{ number_format($bill['price_total'], 2) }}</strong>
+                                 <td align="right"><strong class="price_total">
+                                         {{ number_format($bill['price_total'], 2) }}</strong>
                                  </td>
                              </tr>
                              <tr>
@@ -803,13 +821,15 @@
                              </tr>
                              <tr>
                                  <td><strong class="text-primary" style="font-size: 13px">Gift Voucher คงเหลือ</strong></td>
-                                 <td align="right"><strong class="text-primary gv_remove_price" > {{ $bill['gv_total'] }}</strong>
+                                 <td align="right"><strong class="text-primary gv_remove_price">
+                                         {{ $bill['gv_total'] }}</strong>
                                  </td>
                              </tr>
 
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระเพิ่ม</strong></td>
-                                 <td align="right"><strong class="price_total_type5" > {{ number_format($bill['price_total_type5'], 2) }}</strong>
+                                 <td align="right"><strong class="price_total_type5">
+                                         {{ number_format($bill['price_total_type5'], 2) }}</strong>
 
                                  </td>
                              </tr>
@@ -978,21 +998,23 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-    @if ($bill['price_total_type5'] > 0 and $bill['type'] == 5)
-     <script type="text/javascript">
-        document.getElementById("submit_upload").disabled = true;
-        document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
-     </script>
-    @elseif($bill['type'] != 5)
-      <script type="text/javascript">
-        document.getElementById("submit_upload").disabled = true;
-        document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
-     </script>
-    @endif
+     @if ($bill['price_total_type5'] > 0 and $bill['type'] == 5)
+         <script type="text/javascript">
+             document.getElementById("submit_upload").disabled = true;
+             document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
+
+         </script>
+     @elseif($bill['type'] != 5)
+         <script type="text/javascript">
+             document.getElementById("submit_upload").disabled = true;
+             document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
+
+         </script>
+     @endif
 
      <script type="text/javascript">
-      var address_provinces_id = {{ $address->provinces_id }};
-         check_shipping({{$address->provinces_id}});
+         var address_provinces_id = {{ $address->provinces_id }};
+         check_shipping({{ $address->provinces_id }});
          var premium = document.getElementById('checkbox13').checked;
          if (premium) {
              document.getElementById('shipping_premium').value = true;
@@ -1029,15 +1051,15 @@
              }
          }
 
-         function check_shipping(provinces_id,type_sent='') {
+         function check_shipping(provinces_id, type_sent = '') {
              var location_id = '{{ $bill['location_id'] }}';
              var price = '{{ $bill['price'] }}';
              var shipping_premium = document.getElementById('checkbox13').checked;
-             var type ='{{ $bill['type'] }}';
-             if(type == 5){
-             var sum_gv= '{{ @$gv->sum_gv }}';
-             }else{
-            var sum_gv = null;
+             var type = '{{ $bill['type'] }}';
+             if (type == 5) {
+                 var sum_gv = '{{ @$gv->sum_gv }}';
+             } else {
+                 var sum_gv = null;
              }
 
              $.ajax({
@@ -1049,23 +1071,23 @@
                      provinces_id: provinces_id,
                      price: price,
                      shipping_premium: shipping_premium,
-                     type:type,
-                     sum_gv:sum_gv,
-                     type_sent:type_sent,
+                     type: type,
+                     sum_gv: sum_gv,
+                     type_sent: type_sent,
                  },
                  success: function(data) {
                      document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
-                     if(type == 5){
-                       var price_total_type5 = numberWithCommas(data['price_total_type5']);
-                     $('.price_total_type5').html(price_total_type5);
+                     if (type == 5) {
+                         var price_total_type5 = numberWithCommas(data['price_total_type5']);
+                         $('.price_total_type5').html(price_total_type5);
 
-                     $('#price_total_type5').val(data['price_total_type5']);
+                         $('#price_total_type5').val(data['price_total_type5']);
                      }
-                      document.getElementById('shipping').textContent = shipping_cost;
-                      var price_total_view = numberWithCommas(price_total);
+                     document.getElementById('shipping').textContent = shipping_cost;
+                     var price_total_view = numberWithCommas(price_total);
                      $('.price_total').html(price_total_view);
                      $('#price_total').val(price_total);
                      $('#gift_voucher_price').val(data['gift_voucher_price']);
@@ -1101,7 +1123,7 @@
                  document.getElementById("html_shipping_premium").style.display = 'block';
 
              } else if (type_sent == 'sent_office') {
-                 check_shipping(provinces_id='',type_sent);
+                 check_shipping(provinces_id = '', type_sent);
                  var price = numberWithCommas('{{ $bill['price'] }}');
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'none';
@@ -1137,6 +1159,7 @@
 
 
          }
+
          function open_input(data) {
              var conten_1 = '<div class="form-group row">' +
                  '<div class="col-sm-12">' +
@@ -1157,63 +1180,116 @@
                  '</div>' +
                  '</div>';
 
-            var conten_2 = `
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Type your Full Name" value="John Doe">
-                    </div>
-                    <div class="form-group CVV">
-                        <input type="text" class="form-control" id="cvv" placeholder="CVV" value="999">
-                    </div>
-                    <div class="form-group" id="card-number-field">
-                        <input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number" value="1111-1111-1111-1111">
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group" id="expiration-date">
-                        <label>Expiration Date</label>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <select class="form-control m-b-10">
-                                    <option>Select Month</option>
-                                    <option value="01" selected>01</option>
-                                    <option value="02">02 </option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <select class="form-control m-b-10">
-                                    <option><b>Select Year</b></option>
-                                    <option value="16"> 2016</option>
-                                    <option value="17"> 2017</option>
-                                    <option value="18" selected> 2018</option>
-                                    <option value="19"> 2019</option>
-                                    <option value="20"> 2020</option>
-                                    <option value="21"> 2021</option>
-                                </select>
-                            </div>
+             var conten_2 = `
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Type your Full Name" value="John Doe">
+                        </div>
+                        <div class="form-group CVV">
+                            <input type="text" class="form-control" id="cvv" placeholder="CVV" value="999">
+                        </div>
+                        <div class="form-group" id="card-number-field">
+                            <input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number" value="1111-1111-1111-1111">
                         </div>
                     </div>
-                    <div class="form-group" id="debit-cards">
-                        <img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">
-                        <img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">
+                    <div class="col-sm-6">
+                        <div class="form-group" id="expiration-date">
+                            <label>Expiration Date</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <select class="form-control m-b-10">
+                                        <option>Select Month</option>
+                                        <option value="01" selected>01</option>
+                                        <option value="02">02 </option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control m-b-10">
+                                        <option><b>Select Year</b></option>
+                                        <option value="16"> 2016</option>
+                                        <option value="17"> 2017</option>
+                                        <option value="18" selected> 2018</option>
+                                        <option value="19"> 2019</option>
+                                        <option value="20"> 2020</option>
+                                        <option value="21"> 2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="debit-cards">
+                            <img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">
+                            <img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-12 text-right">
-                    <button class="btn btn-success btn-block" name="submit"  value="credit_card"  type="submit">ชำระเงิน</button>
-                </div>
-            `;
-             var conten_3 =
-                 '<button class="btn btn-success btn-block" type="submit" name="submit" value="ai_cash">ชำระเงิน</button>';
+                    <div class="col-sm-12 text-right">
+                        <button class="btn btn-success btn-block" name="submit"  value="credit_card"  type="submit">ชำระเงิน</button>
+                    </div>
+                `;
+             var conten_3 = `<div class="row">
+                                     <div class="col-md-12 col-xl-12">
+                                         <div class="card bg-c-green order-card m-b-0">
+                                             <div class="card-block">
+                                                 <div class="row">
+                                                     <div class="col-md-8 col-sx-8 col-8">
+                                                         <h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+                                                     </div>
+                                                     <div class="col-md-4 col-sx-4 col-4"><span>225</span></h3>
+                                                     </div>
+                                                 </div>
+
+
+                                                 <hr>
+
+                                                 <div class="row">
+                                                     <div class="col-md-8 col-sx-8 col-8">
+                                                         <h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
+
+                                                     </div>
+                                                     <div class="col-md-4 col-sx-4 col-4">
+
+                                                         <h3 class="text-right"> <span class="price_total">175</span></h3>
+                                                     </div>
+                                                 </div>
+
+                                                 <hr>
+                                                 <div class="row">
+                                                     <div class="col-md-8 col-sx-8 col-8">
+                                                         <h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
+
+                                                     </div>
+                                                     <div class="col-md-4 col-sx-4 col-4">
+
+                                                         <h3 class="text-right"> <span class="gv_remove_price">50</span></h3>
+                                                     </div>
+                                                 </div>
+                                             </div>
+
+                                         </div>
+
+                                         <div class="row m-t-5">
+                                             <div class="col-sm-6">
+                                             </div>
+                                             <div class="col-sm-6 text-right">
+                                                 <button class="btn btn-success btn-block" type="submit" name="submit" value="gift_voucher">ชำระเงิน</button>
+                                             </div>
+                                         </div>
+
+
+
+                                     </div>
+
+                                 </div>`;
+
              var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
              if (data == '1') {
@@ -1333,7 +1409,8 @@
                      console.log(data['data']);
                      if (data['status'] == 'success') {
                          document.getElementById("modal_text_username").innerHTML = data['data']['data'][
-                                 'business_name'] +
+                                 'business_name'
+                             ] +
                              ' (' + data['data']['data']['user_name'] + ')';
 
                          document.getElementById("modal_name").innerHTML = data['data']['data']['prefix_name'] + ' ' +
@@ -1346,10 +1423,14 @@
                          document.getElementById("modal_pv_tv_active").innerHTML = data['pv_tv_active'];
                          document.getElementById("modal_pv_mt_active").innerHTML = data['pv_mt_active'];
 
-                         document.getElementById("m_qualification_name").innerHTML = data['data']['data']['qualification_name'];
+                         document.getElementById("m_qualification_name").innerHTML = data['data']['data'][
+                             'qualification_name'
+                         ];
 
-                         var sent_to_customer_username =  data['data']['data']['user_name'];
-                         document.getElementById("confirm_pay_sent_customer").innerHTML = '<button  class="btn btn-success" onclick="data_direct_confirm(\''+sent_to_customer_username+'\')">Confirm</button>';
+                         var sent_to_customer_username = data['data']['data']['user_name'];
+                         document.getElementById("confirm_pay_sent_customer").innerHTML =
+                             '<button  class="btn btn-success" onclick="data_direct_confirm(\'' +
+                             sent_to_customer_username + '\')">Confirm</button>';
 
                          $("#large-Modal").modal();
                          //alert(data['status']);
@@ -1385,9 +1466,9 @@
                  })
          }
 
-    </script>
-    <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
-    <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
+     </script>
+     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
+     <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
 
      {{-- <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
