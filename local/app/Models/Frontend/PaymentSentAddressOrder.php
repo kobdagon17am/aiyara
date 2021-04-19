@@ -56,7 +56,7 @@ class PaymentSentAddressOrder extends Model
                 }
 
             }
-            //dd($rs->all());
+            // dd($rs->all());
             // //gift_voucher_price
 
             if ($rs->sent_type_to_customer == 'sent_type_other') {
@@ -80,7 +80,7 @@ class PaymentSentAddressOrder extends Model
             }
 
             if ($rs->receive == 'sent_address') {
-                $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->card_province,$rs->price,$rs->shipping_premium,$rs->receive);
+                $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
 
                 if ($data_shipping['data']->shipping_type_id == 1) {

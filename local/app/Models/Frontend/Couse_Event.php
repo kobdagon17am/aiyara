@@ -128,10 +128,12 @@ class Couse_Event extends Model
         ->update(['approve_status' => '1']);
 
         DB::table('course_event_regis')->insert([
+
             'ce_id_fk'=>$value->course_id_fk,
             'customers_id_fk'=>$order_data->customers_id_fk,
             'ticket_id'=>$course_ticket_id,
             'subject_recipient'=>1,
+            'order_id_fk'=>$order_id,
             'order_item_id'=>$value->id,
             'regis_date'=>date('Y-m-d'),
         ]);

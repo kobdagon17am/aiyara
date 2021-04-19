@@ -23,13 +23,13 @@ class Runpv extends Model
                 if (empty($user)) {
                     $resule = ['status' => 'fail', 'message' => 'ไม่มี User นี้ในระบบ'];
                 } else {
-                    $pv_total = $user[0]->pv_aipocket - $pv;
+                    $pv_total = $user[0]->pv_aistockist - $pv;
                     if ($pv_total < 0) {
                         $resule = ['status' => 'fail', 'message' => 'ค่า Pv ไม่พอสำหรับการใช้งาน'];
                     } else {
                         $update_pv = DB::table('customers') //update PV
                             ->where('id', $id)
-                            ->update(['pv_aipocket' => $pv_total]);
+                            ->update(['pv_aistockist' => $pv_total]);
 
                         //run slot
                         if ($type == 1) { //ทำคุณสมบติ

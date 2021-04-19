@@ -58,7 +58,7 @@ public function form($id=NULL)
 
       $sRow->status_slip  = 'true' ;
       $sRow->order_status_id_fk  = '5' ;
-      $sRow->date_action_pv  = now();
+      //$sRow->date_action_pv  = now();
     }
 
     if(@request('no_approved') != null ){

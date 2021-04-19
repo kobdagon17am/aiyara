@@ -116,8 +116,11 @@ function fetch_data(order_type = '') {
 
             columns: [{
                     "data": "id"
-                }, {
-                    "data": "sdate}, {
+                    },
+                    {
+                    "data": "sdate"
+                    },
+                    {
                         "data": "edate"
                     },
                     {

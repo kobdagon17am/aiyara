@@ -69,6 +69,7 @@ class ShippingCosController extends Controller
 			}
 
 		}else{
+      $gv_remove_price = null;
 			$price_total_type5 = null;
       $gift_voucher_price = null;
     }

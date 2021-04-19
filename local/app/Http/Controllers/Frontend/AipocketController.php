@@ -231,7 +231,7 @@ class AipocketController extends Controller
         $pv = str_replace(',', '', $request->pv);
         $username = $request->username;
 
-        if ($pv > Auth::guard('c_user')->user()->pv_aipocket) {
+        if ($pv > Auth::guard('c_user')->user()->pv_aistockist) {
             return redirect('ai-stockist')->withError('PV Ai-Stockist ของคุณมีไม่เพียงพอ ');
 
         } else {

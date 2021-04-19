@@ -816,7 +816,7 @@
                          @elseif($bill['type'] == 6)
                              <tr>
                                  <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                 <td align="right"><strong class="price_total"></strong>
+                                 <td align="right"><strong> {{ $bill['price'] }} </strong>
                                  </td>
                              </tr>
 

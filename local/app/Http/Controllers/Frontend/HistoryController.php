@@ -22,6 +22,8 @@ class HistoryController extends Controller
 
     public function index()
     {
+
+
         $orders_type = DB::table('dataset_orders_type')
             ->where('status', '=', '1')
             ->where('lang_id', '=', '1')
@@ -234,8 +236,14 @@ class HistoryController extends Controller
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
                     $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>
                     <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-trash"></i></a>';
-                } elseif($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5) {
+                } elseif($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
+
+                  if($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date)) ){
+                    $upload = '';
+                  }else{
                     $upload = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                  }
+
                 }else{
                     $upload ='';
                 }
@@ -324,6 +332,15 @@ class HistoryController extends Controller
 
       if($rs->cancel_order_id){
         $customer_id = Auth::guard('c_user')->user()->id;
+        $order = DB::table('db_orders')
+        ->select('cancel_expiry_date')
+        ->where('id','=',$rs->cancel_order_id)
+        ->first();
+
+        if($order->cancel_expiry_date == '' || $order->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($order->cancel_expiry_date)) ){
+          return redirect('product-history')->withError('Cancel Oder Fail : Cancel Time Out !');
+        }
+
         $resule = CancelOrderController::cancel_order($rs->cancel_order_id,$customer_id,1,'customer');
         if($resule['status']== 'success'){
           return redirect('product-history')->withSuccess($resule['message']);

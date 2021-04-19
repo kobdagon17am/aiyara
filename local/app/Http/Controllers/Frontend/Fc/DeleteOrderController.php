@@ -28,17 +28,18 @@ class DeleteOrderController extends Controller
         foreach($giv_log as $value){
           $update_giftvoucher = DB::table('db_giftvoucher_cus')
           ->where('id',$value->giftvoucher_cus_id_fk)
-          ->update(['giftvoucher_banlance' => $value->giftvoucher_banlance]);
+          ->update(['giftvoucher_banlance' => $value->giftvoucher_value_use]);
          }
 
           DB::table('log_gift_voucher')->where('order_id_fk', '=', $order_id)->delete();
           DB::table('db_orders')->where('id', '=', $order_id)->delete();
-          DB::table('db_order_products_list')->where('order_id_fk', '=', $order_id)->delete();
+          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
           DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
 
         }else{
+
           DB::table('db_orders')->where('id', '=', $order_id)->delete();
-          DB::table('db_order_products_list')->where('order_id_fk', '=', $order_id)->delete();
+          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
           DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
 
         }

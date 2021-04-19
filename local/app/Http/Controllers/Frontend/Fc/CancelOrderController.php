@@ -10,7 +10,7 @@ class CancelOrderController extends Controller
 
     public static function cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
     {
-      DB::BeginTransaction();
+        DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
@@ -20,19 +20,19 @@ class CancelOrderController extends Controller
         }
 
         try {
-          $update_order = DB::table('db_orders') //update บิล
-          ->where('id', $order_id)
-          ->update([
-              'cancel_by_user_id_fk' => $customer_or_admin,
-              'order_status_id_fk' => 8, //Status  8 = Cancel
-              'approve_status' => 2, //status = Cancel
-              'type_user_cancel' => 1, //Customer
-              'cancel_action_date' => date('Y-m-d H:i:s'),
-          ]);
+            $update_order = DB::table('db_orders') //update บิล
+                ->where('id', $order_id)
+                ->update([
+                    'cancel_by_user_id_fk' => $customer_or_admin,
+                    'order_status_id_fk' => 8, //Status  8 = Cancel
+                    'approve_status' => 4, //status = Cancel
+                    'type_user_cancel' => $type_user_cancel, //Customer
+                    'cancel_action_date' => date('Y-m-d H:i:s'),
+                ]);
 
             $type_id = $order_data->purchase_type_id_fk;
 
-            if ($order_data->approve_status != 1) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ
+            if ($order_data->approve_status == 0 || $order_data->approve_status == 2) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
 
                 if ($type_id == 1 || $type_id == 2 || $type_id == 3 || $type_id == 4 || $type_id == 5) { //1 ทำคุณสมบัติ , 2 รักษาคุณสมบัติ ,3 รักษาคุณสมบัตรท่องเที่ยว ,4 เติม Aistockist
                     $update_order = DB::table('db_orders') //update บิล
@@ -40,13 +40,13 @@ class CancelOrderController extends Controller
                         ->update([
                             'cancel_by_user_id_fk' => $customer_or_admin,
                             'order_status_id_fk' => 8, //Status  8 = Cancel
-                            'approve_status' => 2, //status = Cancel
-                            'type_user_cancel' => 1, //Customer
+                            'approve_status' => 4, //status = Cancel
+                            'type_user_cancel' => $type_user_cancel, //Customer
                             'cancel_action_date' => date('Y-m-d H:i:s'),
                         ]);
 
                     $update_products_lis = DB::table('db_order_products_list')
-                        ->where('order_id_fk', $order_id)
+                        ->where('frontstore_id_fk', $order_id)
                         ->update([
                             'approve_status' => 2,
                             'approve_date' => date('Y-m-d H:i:s'),
@@ -55,7 +55,7 @@ class CancelOrderController extends Controller
                     $update_products_lis = DB::table('db_order_products_list_giveaway')
                         ->where('order_id_fk', $order_id)
                         ->update([
-                            'approve_status' => 2,
+                            'approve_status' => 4,
                             'approve_date' => date('Y-m-d H:i:s'),
                         ]);
 
@@ -90,20 +90,20 @@ class CancelOrderController extends Controller
                     DB::rollback();
                     return $resule;
                 }
-            } elseif($order_data->approve_status == 1) { //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
+            } elseif ($order_data->approve_status == 1) { //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
 
                 $update_order = DB::table('db_orders') //update บิล
                     ->where('id', $order_id)
                     ->update([
                         'cancel_by_user_id_fk' => $customer_or_admin,
                         'order_status_id_fk' => 8, //Status  8 = Cancel
-                        'approve_status' => 2, //status = Cancel
-                        'type_user_cancel' => 1, //Customer
+                        'approve_status' => 4, //status = Cancel
+                        'type_user_cancel' => $type_user_cancel, //Customer
                         'cancel_action_date' => date('Y-m-d H:i:s'),
                     ]);
 
                 $update_products_lis = DB::table('db_order_products_list')
-                    ->where('order_id_fk', $order_id)
+                    ->where('frontstore_id_fk', $order_id)
                     ->update([
                         'approve_status' => 2,
                         'approve_date' => date('Y-m-d H:i:s'),
@@ -115,7 +115,7 @@ class CancelOrderController extends Controller
                         'approve_status' => 2,
                         'approve_date' => date('Y-m-d H:i:s'),
                     ]);
-                    DB::rollback();
+                DB::rollback();
 
                 if ($type_id == 5) { //GivtVoucher
 
@@ -137,14 +137,6 @@ class CancelOrderController extends Controller
                             'action_type' => $action_type,
                             'cancel_date' => date('Y-m-d H:i:s'),
                         ]);
-
-                    $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
-                    DB::rollback();
-                    return $resule;
-                } else {
-                    $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
-                    DB::rollback();
-                    return $resule;
                 }
 
                 //เริ่มลบค่า pv
@@ -164,12 +156,33 @@ class CancelOrderController extends Controller
                         ->where('id', '=', $customer_id)
                         ->first();
 
-                    $pay_type =  $order_data->pay_type_id_fk;
+                    $pay_type = $order_data->pay_type_id_fk;
+                    // 1 เงินโอน
+                    // 2 บัตรเครดิต
+                    // 3 Ai-Cash
+                    // 4 Gift Voucher
+                    // 5 เงินสด
+                    // 6 เงินสด + Ai-Cash
+                    // 7 เครดิต + เงินสด
+                    // 8 เครดิต + เงินโอน
+                    // 9 เครดิต + Ai-Cash
+                    // 10 เงินโอน + เงินสด
+                    // 11 เงินโอน + Ai-Cash
+                    // 12 Gift Voucher + เงินโอน
+                    // 13 Gift Voucher + บัตรเครดิต
+                    // 14 Gift Voucher + Ai-Cash
+
+                    // if ($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11) {
+                    //     dd('1');
+
+                    // }
+
+                    // if ($pay_type == 14) {
+                    //     dd('2');
+
+                    // }
 
                     if ($type_id == 1) {
-                      if($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11){//ชำระด้วย Ai-cash
-
-                      }
 
                         $add_pv = $customer_user->pv - $pv_total;
 
@@ -182,13 +195,32 @@ class CancelOrderController extends Controller
                         $customer_id = $upline_id;
                         $last_upline_type = $upline_type;
                     } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
+                        $update_tv = DB::table('customers')
+                            ->where('id', $customer_user->id)
+                            ->update(['pv_mt' => $order_data->pv_mt_old, 'pv_mt_active' => $order_data->active_mt_old_date, 'status_pv_mt' => $order_data->status_pv_mt_old]);
+
+                        $upline_type = $customer_user->line_type;
+                        $upline_id = $customer_user->upline_id;
+                        $customer_id = $upline_id;
+                        $last_upline_type = $upline_type;
+
                     } elseif ($type_id == 3) { //รักษาคุณสมบัตรการท่องเที่ยว
+
+                        $update_tv = DB::table('customers')
+                            ->where('id', $customer_user->id)
+                            ->update(['pv_tv' => $order_data->pv_tv_old, 'pv_tv_active' => $order_data->active_tv_old_date]);
+
+                        $upline_type = $customer_user->line_type;
+                        $upline_id = $customer_user->upline_id;
+                        $customer_id = $upline_id;
+                        $last_upline_type = $upline_type;
+
                     } elseif ($type_id == 4) { //เติม Aistockis
-                        $add_pv_aipocket = $customer_user->pv_aipocket - $pv_total;
+                        $add_pv_aistockist = $customer_user->pv_aistockist - $pv_total;
 
                         $update_pv = DB::table('customers')
                             ->where('id', $customer_user->id)
-                            ->update(['pv_aipocket' => $add_pv_aipocket]);
+                            ->update(['pv_aistockist' => $add_pv_aistockist]);
 
                         $update_ai_stockist = DB::table('ai_stockist')
                             ->where('order_id_fk', $order_id)
@@ -199,6 +231,15 @@ class CancelOrderController extends Controller
                         $customer_id = $upline_id;
                         $last_upline_type = $upline_type;
                     } elseif ($type_id == 6) { // Course
+                        $update_ai_stockist = DB::table('course_event_regis')
+                            ->where('order_id_fk', $order_id)
+                            ->update(['status_register' => 'cancel']);
+
+                        $upline_type = $customer_user->line_type;
+                        $upline_id = $customer_user->upline_id;
+                        $customer_id = $upline_id;
+                        $last_upline_type = $upline_type;
+
                     } else {
                         $resule = ['status' => 'fail', 'message' => 'Type Id is null'];
                         DB::rollback();
@@ -236,7 +277,7 @@ class CancelOrderController extends Controller
 
                                     $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
                                     $j = 0;
-                                } elseif ($last_upline_type == 'C'){
+                                } elseif ($last_upline_type == 'C') {
                                     $add_pv = $data_user->pv_c - $pv_total;
                                     $update_pv = DB::table('Customers')
                                         ->where('id', $customer_id)
@@ -290,12 +331,12 @@ class CancelOrderController extends Controller
                 } else {
                     $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
                 }
-            }else{
-              $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
+            } else {
+                $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
             }
 
             if ($resule['status'] == 'success') {
-              DB::rollback();
+                DB::rollback();
                 return $resule;
             } else {
 
@@ -324,13 +365,13 @@ class CancelOrderController extends Controller
                 if (empty($user)) {
                     $resule = ['status' => 'fail', 'message' => 'ไม่มี User นี้ในระบบ'];
                 } else {
-                    $pv_total = $user[0]->pv_aipocket - $pv;
+                    $pv_total = $user[0]->pv_aistockist - $pv;
                     if ($pv_total < 0) {
                         $resule = ['status' => 'fail', 'message' => 'ค่า Pv ไม่พอสำหรับการใช้งาน'];
                     } else {
                         $update_pv = DB::table('customers') //update PV
                             ->where('id', $id)
-                            ->update(['pv_aipocket' => $pv_total]);
+                            ->update(['pv_aistockist' => $pv_total]);
 
                         //run slot
                         if ($type == 1) { //ทำคุณสมบติ

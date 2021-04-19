@@ -12,7 +12,7 @@ class PaymentCourse extends Model
 	public static function payment_uploadfile($rs){
 
 		DB::BeginTransaction();
-		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
@@ -22,20 +22,26 @@ class PaymentCourse extends Model
 
 			$total = Cart::session($rs->type)->getTotal();
 
+
 			$id = DB::table('db_orders')->insertGetId(
 				[
 					'code_order' => $code_order,
 					'customers_id_fk' => $customer_id,
-					'vat'  => $rs->vat,
+					'tax'  => $rs->vat,
 					'sum_price' => $rs->price,
-
+          'total_price'=> $rs->price,
+          'product_value'=>$rs->price,
+          'date_setting_code' => date('ym'),
+          'action_date' => date('Y-m-d'),
 					'pv_total'  => $rs->pv_total,
 					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
+          'distribution_channel_id_fk'=>2,
 					'order_status_id_fk' => '2'
 				]
 			);
+
 
 
 			$file_slip = $rs->file_slip;
@@ -54,7 +60,7 @@ class PaymentCourse extends Model
 				for ($i=1; $i <= $j ; $i++){
 
 					DB::table('db_order_products_list')->insert([
-						'order_id_fk'=>$id,
+						'frontstore_id_fk'=>$id,
 						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
 						'amt'=>'1',
@@ -84,9 +90,9 @@ class PaymentCourse extends Model
 	}
 
 	public static function payment_not_uploadfile($rs){
-		$business_location_id = '1';
+
 		DB::BeginTransaction();
-		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
@@ -100,14 +106,17 @@ class PaymentCourse extends Model
 				[
 					'code_order' => $code_order,
 					'customers_id_fk' => $customer_id,
-					'vat'  => $rs->vat,
+					'tax'  => $rs->vat,
 					'sum_price' => $rs->price,
-
+          'product_value'=>$rs->price,
+          'date_setting_code' => date('ym'),
+          'action_date' => date('Y-m-d'),
 					'pv_total'  => $rs->pv_total,
 					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
-					'order_status_id_fk' => '2'
+          'distribution_channel_id_fk'=>2,
+					'order_status_id_fk' => '1'
 				]
 			);
 
@@ -115,7 +124,7 @@ class PaymentCourse extends Model
 				$j = $value['quantity'];
 				for ($i=1; $i <= $j ; $i++){
 					DB::table('db_order_products_list')->insert([
-						'order_id_fk'=>$id,
+						'frontstore_id_fk'=>$id,
 						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
 						'amt'=>'1',
@@ -147,12 +156,10 @@ class PaymentCourse extends Model
 
 	public static function credit_card($rs){
 
-		$business_location_id = '1';
-
 		DB::BeginTransaction();
 		$customer_id = Auth::guard('c_user')->user()->id;
 
-		$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
+		$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 		$customer_id = Auth::guard('c_user')->user()->id;
 		$code_order = RunNumberPayment::run_number_order($business_location_id);
 
@@ -166,13 +173,16 @@ class PaymentCourse extends Model
 				[
 					'code_order' => $code_order,
 					'customers_id_fk' => $customer_id,
-					'vat'  => $rs->vat,
+					'tax'  => $rs->vat,
 					'sum_price' => $rs->price,
-
+          'product_value'=>$rs->price,
+          'date_setting_code' => date('ym'),
+          'action_date' => date('Y-m-d'),
 					'pv_total'  => $rs->pv_total,
 					'purchase_type_id_fk'  => $rs->type,
 					'pay_type_id_fk'  => $rs->pay_type,
 					'business_location_id_fk' => $business_location_id,
+          'distribution_channel_id_fk'=>2,
 					'order_status_id_fk' => '2'
 				]
 			);
@@ -181,7 +191,7 @@ class PaymentCourse extends Model
 				$j = $value['quantity'];
 				for ($i=1; $i <= $j ; $i++){
 					DB::table('db_order_products_list')->insert([
-						'order_id_fk'=>$id,
+						'frontstore_id_fk'=>$id,
 						'course_id_fk'=>$value['id'],
 						'product_name'=>$value['name'],
 						'amt'=>'1',
@@ -229,7 +239,7 @@ public static function ai_cash($rs){
 
 	DB::BeginTransaction();
 
-	$business_location_id = Auth::guard('c_user')->user()->business_location_id;;
+	$business_location_id = Auth::guard('c_user')->user()->business_location_id;
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$code_order = RunNumberPayment::run_number_order($business_location_id);
 
@@ -243,13 +253,16 @@ public static function ai_cash($rs){
 			[
 				'code_order' => $code_order,
 				'customers_id_fk' => $customer_id,
-				'vat'  => $rs->vat,
+				'tax'  => $rs->vat,
 				'sum_price' => $rs->price,
-
+        'product_value'=>$rs->price,
+        'date_setting_code' => date('ym'),
+        'action_date' => date('Y-m-d'),
 				'pv_total'  => $rs->pv_total,
 				'purchase_type_id_fk'  => $rs->type,
 				'pay_type_id_fk'  => $rs->pay_type,
 				'business_location_id_fk' => $business_location_id,
+        'distribution_channel_id_fk'=>2,
 				'order_status_id_fk' => '2'
 			]
 		);
@@ -258,7 +271,7 @@ public static function ai_cash($rs){
 			$j = $value['quantity'];
 			for ($i=1; $i <= $j ; $i++){
 				DB::table('db_order_products_list')->insert([
-					'order_id_fk'=>$id,
+					'frontstore_id_fk'=>$id,
 					'course_id_fk'=>$value['id'],
 					'product_name'=>$value['name'],
 					'amt'=>'1',

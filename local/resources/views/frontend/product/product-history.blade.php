@@ -83,6 +83,9 @@
                             <code style="color: #000">{!! $value->icon !!} {{ $value->orders_type }} </code>
                         @endforeach
                     </div>
+                    <div class="row">
+                      <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น. ของวันที่ทำรายการเท่านั้น</code>
+                  </div>
                 </div>
 
                 <div id="modal_qr_recive"></div>
