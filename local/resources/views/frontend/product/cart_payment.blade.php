@@ -9,6 +9,7 @@
  @endsection
  @section('conten')
 
+
      <form name="payForm" action="https://ipay.bangkokbank.com/b2c/eng/dPayment/payComp.jsp" method="post" id="form1">
          @csrf
          <input type="hidden" name="merchantId" value="6845">
@@ -24,15 +25,37 @@
          <input type="hidden" name="payType" value="N">
          <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
          <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
-         <input type="hidden" name="errorUrl" value="http://www.yourwebsite.com/pError.jsp">
+         <input type="hidden" name="errorUrl" value="{{ route('payment.fail') }}">
          <input type="hidden" name="lang" VALUE="T">
          <input type="hidden" name="remark" value="-">
+     </form>
+
+     <form name="payFormCcard" method="post" action="https://ipay.bangkokbank.com/b2c/eng/payment/payForm.jsp" id="form2">
+         <input type="hidden" name="merchantId" value="6845">
+         <input type="hidden" name="amount" value="100">
+         <input type="hidden" name="orderRef" value="20010207">
+         <input type="hidden" name="currCode" value="764">
+         <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
+         <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
+         <input type="hidden" name="errorUrl" value="{{ route('payment.fail') }}">
+         <input type="hidden" name="payType" value="N">
+         <input type="hidden" name="lang" value="E">
+         <input type="hidden" name="remark" value="-">
+
+         <!-- พารามิเตอร์เสริม (ตัวเลือก)
+    <input type="hidden" name="redirect" value="30">
+    <input type="hidden" name="orderRef1" value="add-ref-00001">
+    <input type="hidden" name="orderRef2" value="add-ref-00002">
+    <input type="hidden" name="orderRef3" value="add-ref-00003">
+    <input type="hidden" name="orderRef4" value="add-ref-00004">
+    <input type="hidden" name="orderRef5" value="add-ref-00005">
+    -->
      </form>
 
 
      <div class="row">
          <div class="col-md-8 col-sm-12">
-             <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data" id="form2">
+             <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data">
                  @csrf
                  <input type="hidden" id="url_check_user" name="url_check_user" value="{{ route('check_customer_id') }}">
                  <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
@@ -706,7 +729,7 @@
 
                                              <div class="radio radio-inline">
                                                  <label>
-                                                     <input type="radio" onchange="open_input(3)" id="ai_cast"
+                                                     <input type="radio" onchange="open_input(3)" id="ai_cash"
                                                          name="pay_type" value="3">
                                                      <i class="helper"></i><b>Ai-Cash</b>
                                                  </label>
@@ -723,7 +746,7 @@
                                      </div>
                                  </div>
 
-                                 <div class="row" id="cart_pament">
+                                 <div class="row" id="cart_pament_tranfer">
 
                                      <div class="form-group row">
                                          <div class="col-sm-12">
@@ -749,6 +772,81 @@
                                          </div>
                                      </div>
 
+                                 </div>
+
+                                 <div class="row" id="cart_pament_credit_card" style="display: none">
+
+                                     <div class="col-sm-12 col-md-12">
+                                         <div class="card card-border-success">
+
+                                             <div class="card-block" style="padding: 10px">
+                                                 <div class="col-md-12">
+
+                                                     <div class="row mt-2">
+                                                         <div class="col-md-8 col-sx-8 col-8">
+                                                             <h4 class="m-b-10"> ยอดที่ต้องชำระ </h4>
+                                                         </div>
+                                                         <div class="col-md-4 col-sx-4 col-4">
+                                                             <h3 class="text-right">
+                                                                 <u><span class="price_total"> </span></u>
+                                                             </h3>
+                                                         </div>
+                                                     </div>
+                                                     <hr>
+                                                 </div>
+                                             </div>
+                                             <div class="card-footer">
+                                                 <div class="text-right">
+                                                     <button class="btn btn-success" form="form2" name="submit"
+                                                         value="credit_card" type="submit">ชำระเงินด้วยบัตรเครดิต</button>
+                                                 </div>
+
+                                                 <!-- end of card-footer -->
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div class="row" id="cart_pament_aicash" style="display: none;">
+                                     <div class="col-sm-12 col-md-12">
+                                         <div class="card card-border-success">
+
+                                             <div class="card-block" style="padding: 10px">
+                                                 <div class="col-md-12">
+                                                     <div class="row">
+                                                         <div class="col-md-8 col-sx-8 col-8">
+                                                             <h4 class="m-b-10">Ai-Cash</h4>
+                                                         </div>
+                                                         <div class="col-md-4 col-sx-4 col-4">
+                                                             <h3 class="text-right">
+                                                                 <span id="ai_cash_p"> {{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span>
+                                                             </h3>
+                                                         </div>
+                                                     </div>
+                                                     <hr>
+                                                     <div class="row">
+                                                         <div class="col-md-8 col-sx-8 col-8">
+                                                             <h4 class="m-b-10"> ยอดรวมที่ใช้ </h4>
+                                                         </div>
+                                                         <div class="col-md-4 col-sx-4 col-4">
+                                                             <h3 class="text-right">
+                                                                 <u><span class="price_total"> </span></u>
+                                                             </h3>
+                                                         </div>
+                                                     </div>
+                                                     <hr>
+                                                 </div>
+                                             </div>
+                                             <div class="card-footer">
+                                               <div id="error_aicash" class="text-right"></div>
+                                                 <div class="text-right">
+                                                     <button class="btn btn-success" name="submit" id="ai_cash_submit" value="ai_cash"
+                                                         type="submit">ชำระเงินด้วย Ai-Cash</button>
+                                                 </div>
+                                             </div>
+                                             <!-- end of card-footer -->
+                                         </div>
+                                     </div>
                                  </div>
 
                              </div>
@@ -986,6 +1084,7 @@
          </div>
      </div>
 
+
  @endsection
  @section('js')
      <!-- Select 2 js -->
@@ -1161,140 +1260,15 @@
          }
 
          function open_input(data) {
-             var conten_1 = '<div class="form-group row">' +
-                 '<div class="col-sm-12">' +
-                 '<div class="form-group row">' +
-                 '<div class="col-sm-6">' +
-                 '<label>อัพโหลดหลักฐานการชำระเงิน</label>' +
-                 '<input type="file" id="upload" name="file_slip" class="form-control">' +
-                 '</div>' +
-                 '</div>' +
-                 '</div>' +
-                 '<div class="row">' +
-                 '<div class="col-xs-6 p-1">' +
-                 '<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>' +
-                 '</div>' +
-                 '<div class="col-xs-6 p-1">' +
-                 '<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>' +
-                 '</div>' +
-                 '</div>' +
-                 '</div>';
-
-             var conten_2 = `
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Type your Full Name" value="John Doe">
-                        </div>
-                        <div class="form-group CVV">
-                            <input type="text" class="form-control" id="cvv" placeholder="CVV" value="999">
-                        </div>
-                        <div class="form-group" id="card-number-field">
-                            <input type="text" name="name" class="form-control" id="cardNumber" placeholder="Card Number" value="1111-1111-1111-1111">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group" id="expiration-date">
-                            <label>Expiration Date</label>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <select class="form-control m-b-10">
-                                        <option>Select Month</option>
-                                        <option value="01" selected>01</option>
-                                        <option value="02">02 </option>
-                                        <option value="03">03</option>
-                                        <option value="04">04</option
-                                        <option value="05">05</option>
-                                        <option value="06">06</option>
-                                        <option value="07">07</option>
-                                        <option value="08">08</option>
-                                        <option value="09">09</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control m-b-10">
-                                        <option><b>Select Year</b></option>
-                                        <option value="16"> 2016</option>
-                                        <option value="17"> 2017</option>
-                                        <option value="18" selected> 2018</option>
-                                        <option value="19"> 2019</option>
-                                        <option value="20"> 2020</option>
-                                        <option value="21"> 2021</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" id="debit-cards">
-                            <img src="{{ asset('frontend/assets/images/e-payment/card/visa.jpg') }}" id="visa" alt="visa.jpg">
-                            <img src="{{ asset('frontend/assets/images/e-payment/card/mastercard.jpg') }}" id="mastercard" alt="mastercard.jpg">
-                        </div>
-                    </div>
-                    <div class="col-sm-12 text-right">
-                        <button class="btn btn-success btn-block" name="submit"  value="credit_card"  type="submit">ชำระเงิน</button>
-                    </div>
-                `;
-             var conten_3 = `<div class="row">
-                                     <div class="col-md-12 col-xl-12">
-                                         <div class="card bg-c-green order-card m-b-0">
-                                             <div class="card-block">
-                                                 <div class="row">
-                                                     <div class="col-md-8 col-sx-8 col-8">
-                                                         <h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
-                                                     </div>
-                                                     <div class="col-md-4 col-sx-4 col-4"><span>225</span></h3>
-                                                     </div>
-                                                 </div>
-
-
-                                                 <hr>
-
-                                                 <div class="row">
-                                                     <div class="col-md-8 col-sx-8 col-8">
-                                                         <h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
-
-                                                     </div>
-                                                     <div class="col-md-4 col-sx-4 col-4">
-
-                                                         <h3 class="text-right"> <span class="price_total">175</span></h3>
-                                                     </div>
-                                                 </div>
-
-                                                 <hr>
-                                                 <div class="row">
-                                                     <div class="col-md-8 col-sx-8 col-8">
-                                                         <h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
-
-                                                     </div>
-                                                     <div class="col-md-4 col-sx-4 col-4">
-
-                                                         <h3 class="text-right"> <span class="gv_remove_price">50</span></h3>
-                                                     </div>
-                                                 </div>
-                                             </div>
-
-                                         </div>
-
-                                         <div class="row m-t-5">
-                                             <div class="col-sm-6">
-                                             </div>
-                                             <div class="col-sm-6 text-right">
-                                                 <button class="btn btn-success btn-block" type="submit" name="submit" value="gift_voucher">ชำระเงิน</button>
-                                             </div>
-                                         </div>
-
-
-
-                                     </div>
-
-                                 </div>`;
-
              var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
              if (data == '1') {
                  check_shipping({{ $address->provinces_id }});
-                 document.getElementById("cart_pament").innerHTML = (conten_1);
+                 document.getElementById("cart_pament_tranfer").style.display = "block";
+                 document.getElementById("cart_pament_credit_card").style.display = "none";
+                 document.getElementById("cart_pament_aicash").style.display = "none";
+
+
                  document.getElementById("submit_upload").disabled = true;
                  document.getElementById("submit_upload").className = "btn btn-success";
                  $('#upload').change(function() {
@@ -1308,9 +1282,24 @@
                      }
                  });
              } else if (data == '2') {
-                 document.getElementById("cart_pament").innerHTML = (conten_2);
+                 document.getElementById("cart_pament_tranfer").style.display = "none";
+                 document.getElementById("cart_pament_credit_card").style.display = "block";
+                 document.getElementById("cart_pament_aicash").style.display = "none";
              } else if (data == '3') {
-                 document.getElementById("cart_pament").innerHTML = (conten_3);
+
+
+               var ai_cash = {{ Auth::guard('c_user')->user()->ai_cash }};
+               var price_total = $('#price_total').val();
+
+               if(ai_cash < price_total){
+                document.getElementById("ai_cash_submit").style.display = "none";
+                $('#error_aicash').html('<label class="label label-inverse-danger text-right">Ai-Cash ไม่พอสำหรับการชำระเงิน</label>');
+               }
+
+                 document.getElementById("cart_pament_tranfer").style.display = "none";
+                 document.getElementById("cart_pament_credit_card").style.display = "none";
+                 document.getElementById("cart_pament_aicash").style.display = "block";
+
              } else if (data == '4') {
                  document.getElementById("cart_pament").innerHTML = (conten_4);
              } else {

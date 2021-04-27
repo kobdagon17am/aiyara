@@ -7,6 +7,7 @@ use Auth;
 use Illuminate\Http\Request;
 use DB;
 use DataTables;
+use Carbon\Carbon;
 class GiftVoucherController extends Controller
 {
     public function __construct()
@@ -43,7 +44,8 @@ class GiftVoucherController extends Controller
         //     ->get();
 
             $gift_voucher = DB::table('db_giftvoucher_cus')
-            ->select('db_giftvoucher_cus.*','db_giftvoucher_code.descriptions','db_giftvoucher_code.status as status_cancel_active')
+            ->select('db_giftvoucher_cus.*','db_giftvoucher_code.descriptions'
+            ,'db_giftvoucher_code.status as status_cancel_active')
             ->leftjoin('db_giftvoucher_code', 'db_giftvoucher_code.id', '=', 'db_giftvoucher_cus.giftvoucher_code_id_fk')
             ->where('db_giftvoucher_cus.customer_code', '=', Auth::guard('c_user')->user()->user_name)
             ->whereraw('(db_giftvoucher_cus.pro_status = 1 || db_giftvoucher_cus.pro_status = 2)')
@@ -98,7 +100,19 @@ class GiftVoucherController extends Controller
                 return $banlance;
             })
 
-            ->rawColumns(['pro_sdate','pro_edate','expiry_date','giftvoucher_value','banlance'])
+            ->addColumn('expri', function ($row) {
+
+              if(strtotime(date('Y-m-d')) <= strtotime($row->pro_edate)){
+               $expri_date  = '<label class="label label-inverse-success"><b>'.Carbon::createFromFormat('Y-m-d',$row->pro_edate)->diffForHumans().'</b></label>';
+              //   $expri_date  = '1';
+               }else{
+                $expri_date  = '<label class="label label-inverse-danger"><b?>Expri</b></label>';
+              }
+
+              return $expri_date;
+          })
+
+            ->rawColumns(['pro_sdate','pro_edate','expiry_date','giftvoucher_value','banlance','expri'])
             ->make(true);
     }
 

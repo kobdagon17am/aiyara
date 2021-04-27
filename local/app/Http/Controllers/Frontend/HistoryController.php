@@ -234,20 +234,26 @@ class HistoryController extends Controller
 
             ->addColumn('action', function ($row) {
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
-                    $upload = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>
+                    $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>
                     <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-trash"></i></a>';
                 } elseif($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
 
                   if($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date)) ){
-                    $upload = '';
+                    $action = '';
                   }else{
-                    $upload = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                    if($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 12 )
+                    {
+                      $action = '';
+                    }else{
+                      $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                    }
+
                   }
 
                 }else{
-                    $upload ='';
+                    $action ='';
                 }
-                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $upload;
+                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
             })
 
             ->addColumn('banlance', function ($row) {

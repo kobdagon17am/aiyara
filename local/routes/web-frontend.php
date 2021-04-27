@@ -156,8 +156,7 @@ Route::get('dt_giftvoucher_history','Frontend\GiftVoucherController@dt_giftvouch
 
 Route::get('gift_order_history','Frontend\GiftVoucherController@gift_order_history')->name('gift_order_history');
 Route::get('dt_gift_order_history','Frontend\GiftVoucherController@dt_gift_order_history')->name('dt_gift_order_history');
-
-
+Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 
 Route::get('ai-stockist','Frontend\AipocketController@index')->name('ai-stockist');
 Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');
@@ -166,6 +165,11 @@ Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_a
 
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');
+Route::post('delete_aicash','Frontend\AiCashController@delete_aicash')->name('delete_aicash');
+Route::post('cancel_aicash','Frontend\AiCashController@cancel_aicash')->name('cancel_aicash');
+Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
+Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
+Route::get('datatable_order_aicash','Frontend\AiCashController@datatable_order_aicash')->name('datatable_order_aicash');
 Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash')->name('cart_payment_aicash');
 
 

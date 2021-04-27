@@ -100,6 +100,12 @@
                     },
 
                     {
+                        data: 'expri',
+                        title: 'วัน',
+                        className: 'text-center'
+                    },
+
+                    {
                         data: 'detail',
                         title: '<center>รายละเอียด</center>',
                         className: 'text-right'

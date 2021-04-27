@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use App\Models\Db_orders;
+use App\Models\Db_Add_ai_cash;
 use App\Models\DbInvoiceCode;
 
 class RunNumberPayment extends Model
@@ -36,6 +37,30 @@ class RunNumberPayment extends Model
 			$last_code = 1;
 			$num_code = substr("00000".$last_code, -5);
 			$code_order = 'O'.$business_location_id_fk.date('ymd').''.$num_code;
+		}
+
+		return  $code_order;
+	}
+  public static function run_number_aicash($business_location_id_fk){
+
+		$id = Db_Add_ai_cash::where('business_location_id_fk','=',$business_location_id_fk)
+		->where('date_setting_code','=',date('ym'))
+		->orderby('id','desc')
+		->first();
+
+
+		if(@$id->code_order){
+			$last_code = $id->code_order;
+			$code = substr($last_code,-5);
+			$last_code = $code + 1;
+
+			$num_code = substr("00000".$last_code, -5);
+			$code_order = 'W'.$business_location_id_fk.date('ymd').''.$num_code;
+
+		}else{
+			$last_code = 1;
+			$num_code = substr("00000".$last_code, -5);
+			$code_order = 'W'.$business_location_id_fk.date('ymd').''.$num_code;
 		}
 
 		return  $code_order;

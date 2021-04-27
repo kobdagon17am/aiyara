@@ -123,13 +123,9 @@ class Frontend{
 
 	}
 
-
-
 	public static function get_ce_register_per_customer_perday($ce_id,$customer_id){//ต่อวัน
-
 		$date_now = date('Y-m-d');
 		//$date_now = '2021-01-13';
-
 
 		$orders = DB::table('db_order_products_list')
 		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
@@ -147,11 +143,9 @@ class Frontend{
 
 		$sum = $orders + $course_event_regis;
 		return $sum;
-
 	}
 
 	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อวัน
-
 		$orders = DB::table('db_order_products_list')
 		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
 		->where('db_order_products_list.course_id_fk','=',$ce_id)
@@ -283,6 +277,20 @@ class Frontend{
 		return $data;
 
 	}
+
+  public static function check_count_expri_giv($customer_user){
+
+// SELECT DATEDIFF(pro_edate,'2021-04-21') AS DateDiff FROM `db_giftvoucher_cus`
+// where DATEDIFF(pro_edate,'2021-04-21') = 8
+
+		$data = DB::table('db_giftvoucher_cus')
+    ->select('*')
+		->where('customer_code','=',$customer_user)
+    ->wheredate('pro_edate','>=',now())
+    ->whereraw("DATEDIFF(pro_edate,now()) <= 10 ")
+		->count();
+    return $data;
+  }
 
 }
 ?>

@@ -34,6 +34,8 @@ class PvPayment extends Model
 
         if (empty($order_id) || empty($admin_id)) {
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
+            DB::rollback();
+            return $resule;
 
         } else {
 
@@ -47,6 +49,35 @@ class PvPayment extends Model
                     $orderstatus_id = 5;
 
                 }
+
+
+
+                if($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk  == 6 || $order_data->pay_type_id_fk == 9
+                 || $order_data->pay_type_id_fk ==  11 || $order_data->pay_type_id_fk ==  14){//Aicash
+
+
+                  $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
+                  ->select('ai_cash')
+                  ->where('id', '=', $customer_id)
+                  ->first();
+
+                  $update_icash =  $check_aicash->ai_cash - $order_data->aicash_price;
+
+                  if($update_icash >= 0){
+                    $update_aicash = DB::table('customers')
+                                    ->where('id', $customer_id)
+                                    ->update(['ai_cash' => $update_icash]);
+
+                  }else{
+
+                    $resule = ['status' => 'fail', 'message' => 'Ai Cash ไม่พอสำหรับการการชำระ'];
+                    DB::rollback();
+                    return $resule;
+
+                  }
+
+                }
+
 
                 if ($type_id == 6) { //course
 
@@ -479,6 +510,8 @@ class PvPayment extends Model
                     DB::rollback();
                     return $resule;
                 }
+
+
 
                 $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)

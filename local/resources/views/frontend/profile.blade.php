@@ -3,6 +3,7 @@ use App\Helpers\Frontend;
 $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
 
 ?>
+
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 @section('css')
@@ -109,10 +110,17 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
      </div>
      <div class="panel-body">
       <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
-      <?php
-      $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
-      ?>
-      <h4>{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }} </span></h4>
+      <?php $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
+      <div class="row">
+        <div class="col-md-6 col-5"><h4><span>{{ number_format($gv->sum_gv) }} </span></h4></div>
+        <?php $count_expli = Frontend::check_count_expri_giv(Auth::guard('c_user')->user()->user_name); ?>
+        <div class="col-md-6 col-7 text-right">
+          @if($count_expli>0)
+          <a href="{{ route('giftvoucher_history') }}"> <span class="label label-warning" style="font-size: 14px;"><font style="color: rgb(29, 26, 26)"> มี {{ $count_expli }} รายการจะหมดอายุ </font></span> </a>
+          @endif
+        </div>
+      </div>
+
     </div>
     <div class="panel-footer text-danger">
       {{-- Panel Footer --}}
