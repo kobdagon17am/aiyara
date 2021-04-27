@@ -22,7 +22,7 @@ class DeliveryController extends Controller
       DB::select("
           INSERT IGNORE INTO db_delivery
           ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
-          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_frontstore where invoice_code<>'' AND sum_price>0  ; ");
+          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_orders where invoice_code<>'' AND sum_price>0  ; ");
 
       // AND delivery_location<>0
 
@@ -64,11 +64,11 @@ class DeliveryController extends Controller
                  "moo"=>@$value->moo,
                  "road"=>@$value->road,
                  "soi"=>@$value->soi,
-                 "amphures_id"=>@$value->card_amphures_id_fk,
+                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
                  "amphures"=>@$value->ampname,
-                 "district_id"=>@$value->card_district_id_fk,
+                 "district_id_fk"=>@$value->card_district_id_fk,
                  "district"=>@$value->tamname,
-                 "province_id"=>@$value->card_province_id_fk,
+                 "province_id_fk"=>@$value->card_province_id_fk,
                  "province"=>@$value->provname,
                  "zipcode"=>@$value->card_zipcode,
                  "from_table"=>'customers_address_card',
@@ -107,11 +107,11 @@ class DeliveryController extends Controller
                  "moo"=>@$value->moo,
                  "road"=>@$value->road,
                  "soi"=>@$value->soi,
-                 "amphures_id"=>@$value->amphures_id_fk,
+                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
                  "amphures"=>@$value->ampname,
-                 "district_id"=>@$value->district_id_fk,
+                 "district_id_fk"=>@$value->card_district_id_fk,
                  "district"=>@$value->tamname,
-                 "province_id"=>@$value->province_id_fk,
+                 "province_id_fk"=>@$value->card_province_id_fk,
                  "province"=>@$value->provname,
                  "zipcode"=>@$value->zipcode,
                  "from_table"=>'customers_detail',
@@ -124,7 +124,7 @@ class DeliveryController extends Controller
 
 
         // 3>ที่อยู่กำหนดเอง>customers_addr_frontstore',
-        $addr_frontstore = DB::select(" SELECT customers_addr_frontstore.*,db_frontstore.invoice_code from customers_addr_frontstore Left Join db_frontstore ON customers_addr_frontstore.frontstore_id_fk = db_frontstore.id ");
+        $addr_frontstore = DB::select(" SELECT customers_addr_frontstore.*,db_orders.invoice_code from customers_addr_frontstore Left Join db_orders ON customers_addr_frontstore.frontstore_id_fk = db_orders.id ");
 
         foreach ($addr_frontstore as $key => $value) {
 
@@ -136,12 +136,12 @@ class DeliveryController extends Controller
                  "customer_id"=>@$value->customers_id_fk,
                  "recipient_name"=>@$value->recipient_name,
                  "house_no"=>@$value->addr_no,
-                 "district_id"=>@$value->amphur_code,
-                 "district"=>@$district[0]->name_th,
-                 "district_id"=>@$value->tambon_code,
-                 "district"=>@$district_sub[0]->name_th,
-                 "province_id"=>@$value->province_id_fk,
-                 "province"=>@$province[0]->name_th,
+                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
+                 "amphures"=>@$value->ampname,
+                 "district_id_fk"=>@$value->card_district_id_fk,
+                 "district"=>@$value->tamname,
+                 "province_id_fk"=>@$value->card_province_id_fk,
+                 "province"=>@$value->provname,
                  "zipcode"=>@$value->zip_code,
                  "tel"=>@$value->tel,
                  "from_table"=>'customers_addr_frontstore',
@@ -215,10 +215,10 @@ class DeliveryController extends Controller
         $rsDeliveryAddr = DB::select("
 
           SELECT
-          db_frontstore.address_sent_id_fk as addr
+          db_orders.address_sent_id_fk as addr
           FROM
           db_delivery
-          Inner Join db_frontstore ON db_delivery.receipt = db_frontstore.invoice_code
+          Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
           WHERE db_delivery.id in ($arr) limit 1  ");
 
   	      $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;

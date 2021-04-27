@@ -29,9 +29,9 @@ class FrontstoreController extends Controller
 
           $sDBFrontstoreApproveStatus = DB::select("
 
-              SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type,pay_type_id,action_user
-              FROM db_frontstore
-              Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
+              SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,pay_type_id,action_user
+              FROM db_orders
+              Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
               WHERE 1
               $w1
 
@@ -116,23 +116,23 @@ class FrontstoreController extends Controller
 
         $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
-                db_frontstore.action_user,
+                db_orders.action_user,
                 ck_users_admin.`name` as action_user_name,
-                db_frontstore.pay_type_id,
+                db_orders.pay_type_id,
                 dataset_pay_type.detail AS pay_type,
-                date(db_frontstore.action_date) AS action_date,
-                sum(db_frontstore.cash_pay) as cash_pay,
-                sum(db_frontstore.credit_price) as credit_price,
-                sum(db_frontstore.transfer_price) as transfer_price,
-                sum(db_frontstore.aicash_price) as aicash_price,
-                sum(db_frontstore.shipping_price) as shipping_price,
-                sum(db_frontstore.fee_amt) as fee_amt,
-                sum(db_frontstore.total_price) as total_price
+                date(db_orders.action_date) AS action_date,
+                sum(db_orders.cash_pay) as cash_pay,
+                sum(db_orders.credit_price) as credit_price,
+                sum(db_orders.transfer_price) as transfer_price,
+                sum(db_orders.aicash_price) as aicash_price,
+                sum(db_orders.shipping_price) as shipping_price,
+                sum(db_orders.fee_amt) as fee_amt,
+                sum(db_orders.total_price) as total_price
                 FROM
-                db_frontstore
-                Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
-                Left Join ck_users_admin ON db_frontstore.action_user = ck_users_admin.id
-                WHERE db_frontstore.pay_type_id<>0 $w1
+                db_orders
+                Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                WHERE db_orders.pay_type_id<>0 $w1
                 GROUP BY action_user
         ");
 
@@ -358,20 +358,20 @@ class FrontstoreController extends Controller
       // dd($giftvoucher_this);
       $giftvoucher_this = @$giftvoucher_this[0]->giftvoucher_value;
 
-      $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk=$id ");
-      if($rs[0]->cnt==0){
-        DB::select(" UPDATE db_frontstore SET pay_type_id_fk_1='0', pay_type_id_fk_2='0' WHERE (id=$id) ");
-      }
+      $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
+      // if($rs[0]->cnt==0){
+      //   DB::select(" UPDATE db_orders SET pay_type_id_fk_1='0', pay_type_id_fk_2='0' WHERE (id=$id) ");
+      // }
 
 
-       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
         }else{
-          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+          DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
 
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
@@ -427,7 +427,7 @@ class FrontstoreController extends Controller
                 $sRow->approve_status = 2  ;
               }else{
 
-                  $table = 'db_frontstore';
+                  $table = 'db_orders';
                   $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
                   $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
                     WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
@@ -476,7 +476,9 @@ class FrontstoreController extends Controller
               if(empty(request('shipping_price'))){
                 $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('fee_amt'));
               }else{
+                if(request('sum_price')>0){
                 $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
+                }
               }
 
 
@@ -502,7 +504,7 @@ class FrontstoreController extends Controller
 
              if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
                   $sRow->sentto_branch_id    = request('sentto_branch_id');
-                   DB::select("UPDATE db_frontstore SET address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
+                   DB::select("UPDATE db_orders SET address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }
 
              if(@$request->delivery_location==1){
@@ -539,10 +541,10 @@ class FrontstoreController extends Controller
                                  ");
 
 
-                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_district."', '".@$addr[0]->card_district_sub."', '".@$addr[0]->card_province."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') ");
+                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_amphures_id_fk."', '".@$addr[0]->card_district_id_fk."', '".@$addr[0]->card_province_id_fk."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') ");
 
 
-                            DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
+                            DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
 
 
@@ -567,10 +569,16 @@ class FrontstoreController extends Controller
                           customers_detail.province_id_fk,
                           customers.prefix_name,
                           customers.first_name,
-                          customers.last_name
+                          customers.last_name,
+                          dataset_amphures.name_th AS amp_name,
+						dataset_districts.name_th AS tambon_name,
+						dataset_provinces.name_th AS province_name
                           FROM
                           customers_detail
                           Left Join customers ON customers_detail.customer_id = customers.id
+                          Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+							Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+							Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
                           WHERE customers_detail.customer_id =
                            ".@$request->customers_id_fk." ");
 
@@ -588,7 +596,7 @@ class FrontstoreController extends Controller
                           '".@$addr[0]->district."', '".@$addr[0]->district_sub."', '".@$addr[0]->province."',
                           'customers_detail', '".@$addr[0]->id."','".@$request->invoice_code."') ");
 
-                      DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
+                      DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
 
               }
@@ -608,7 +616,7 @@ class FrontstoreController extends Controller
 
                         $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, recipient_name, house_no, zipcode,amphures_id_fk,district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') ");
 
-                       DB::select("UPDATE db_frontstore SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
+                       DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
 
              }
@@ -617,14 +625,14 @@ class FrontstoreController extends Controller
                   db_delivery_packing_code
                   Inner Join db_delivery_packing ON db_delivery_packing_code.id = db_delivery_packing.packing_code
                   Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                  Inner Join db_frontstore ON db_delivery.receipt = db_frontstore.invoice_code
+                  Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
                   SET
-                  db_delivery_packing_code.address_sent_id_fk=db_frontstore.address_sent_id_fk
+                  db_delivery_packing_code.address_sent_id_fk=db_orders.address_sent_id_fk
                   WHERE
-                  db_frontstore.invoice_code='".@$request->invoice_code."' ");
+                  db_orders.invoice_code='".@$request->invoice_code."' ");
 
                 // dd($request);
-               $ch_aicash_02 = DB::select(" select * from db_frontstore where id=".$request->frontstore_id." ");
+               $ch_aicash_02 = DB::select(" select * from db_orders where id=".$request->frontstore_id." ");
 
                // dd($ch_aicash_02[0]->member_id_aicash);
 
@@ -643,17 +651,17 @@ class FrontstoreController extends Controller
                }
 
 
-               $r_addr = DB::select("select address_sent_id_fk from db_frontstore WHERE (id='".$request->frontstore_id."')");
+               $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='".$request->frontstore_id."')");
 
            if( @$request->delivery_location!=3){
               DB::select(" UPDATE
                   customers_addr_sent
-                  Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
-                  left Join dataset_districts ON customers_addr_sent.district_sub_id = dataset_districts.id
-                  LEFT Join dataset_provinces ON customers_addr_sent.province_id = dataset_provinces.id
+                  Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
+                  left Join dataset_districts ON customers_addr_sent.district_id_fk = dataset_districts.id
+                  LEFT Join dataset_provinces ON customers_addr_sent.province_id_fk = dataset_provinces.id
                   SET
-                  customers_addr_sent.district=dataset_amphures.name_th,
-                  customers_addr_sent.district_sub=dataset_districts.name_th,
+                  customers_addr_sent.amphures=dataset_amphures.name_th,
+                  customers_addr_sent.district=dataset_districts.name_th,
                   customers_addr_sent.province=dataset_provinces.name_th
                   WHERE
                   customers_addr_sent.id='".($r_addr[0]->address_sent_id_fk)."' ");
@@ -696,7 +704,7 @@ class FrontstoreController extends Controller
             00001=running no.
             P2102100001
             */
-            // $inv = DB::select(" select invoice_code from db_frontstore order by invoice_code desc limit 1 ");
+            // $inv = DB::select(" select invoice_code from db_orders order by invoice_code desc limit 1 ");
             // $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
 
             // $sRow->cash_price    = 0 ;
@@ -706,11 +714,11 @@ class FrontstoreController extends Controller
 
           }
           // 5=เงินสด,2=บัตรเครดิต
-          if( request('pay_type_id_fk_1')!=2 && request('pay_type_id_fk_2')!=2 ){
-            $fee = 0;
-          }else{
+          // if( request('pay_type_id_fk_1')!=2 && request('pay_type_id_fk_2')!=2 ){
+          //   $fee = 0;
+          // }else{
             $fee = request('fee');
-          }
+          // }
 
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
           // $sRow->invoice_code    = $invoice_code ;
@@ -722,8 +730,8 @@ class FrontstoreController extends Controller
           $sRow->customers_id_fk    = request('customers_id_fk');
           $sRow->distribution_channel_id_fk    = request('distribution_channel_id_fk');
           $sRow->purchase_type_id_fk    = request('purchase_type_id_fk');
-          $sRow->pay_type_id_fk_1    = request('pay_type_id_fk_1');
-          $sRow->pay_type_id_fk_2    = request('pay_type_id_fk_2');
+          // $sRow->pay_type_id_fk_1    = request('pay_type_id_fk_1');
+          // $sRow->pay_type_id_fk_2    = request('pay_type_id_fk_2');
           // $sRow->gift_voucher_cost    = request('gift_voucher_cost');
           // $sRow->gift_voucher_id    = request('gift_voucher_id');
           $sRow->fee    = $fee;
@@ -751,23 +759,23 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
-      $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+      $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
         }else{
-          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0,cash_pay='0', cash_price='0', shipping_price='0', total_price='0' WHERE id=$id  ");
+          DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0,cash_pay='0', cash_price='0', shipping_price='0', total_price='0' WHERE id=$id  ");
         }
 
-      DB::select(" DELETE FROM db_frontstore_products_list where frontstore_id_fk=$id ");
+      DB::select(" DELETE FROM db_order_products_list where frontstore_id_fk=$id ");
 
-      $r = DB::select(" SELECT * FROM db_frontstore where id=$id ");
+      $r = DB::select(" SELECT * FROM db_orders where id=$id ");
 
       DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".$r[0]->aicash_price.") WHERE (id='".$r[0]->member_id_aicash."') ");
 
-      DB::select(" UPDATE db_frontstore SET approve_status=4 where id=$id ");
+      DB::select(" UPDATE db_orders SET approve_status=4 where id=$id ");
 
       // $sRow = \App\Models\Backend\Frontstore::find($id);
       // if( $sRow ){
@@ -791,9 +799,9 @@ class FrontstoreController extends Controller
 
             $sTable = DB::select("
 
-                SELECT db_frontstore.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_frontstore.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price
-                FROM db_frontstore
-                Left Join dataset_pay_type ON db_frontstore.pay_type_id = dataset_pay_type.id
+                SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price
+                FROM db_orders
+                Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
                 WHERE 1
                 $w1
 

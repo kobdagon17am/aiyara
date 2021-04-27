@@ -450,7 +450,7 @@ $(function() {
                   //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   //     ).addClass('input');
 
-                if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
                         '<span class="tooltip_shipping badge badge-info font-size-14">S</span>');
                  }else{
@@ -459,14 +459,14 @@ $(function() {
                 
 
                  $("td:eq(1)", nRow).hide();
-                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
+                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
 
-                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(8)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');
                  }
-                 else{ //2=db_frontstore จากการขายหลังบ้าน
+                 else{ //2=db_orders จากการขายหลังบ้าน
                       $('td:eq(8)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');

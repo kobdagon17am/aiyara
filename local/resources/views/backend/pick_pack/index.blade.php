@@ -383,7 +383,7 @@ $(function() {
 
               rowCallback: function(nRow, aData, dataIndex){
  
-                 if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                 if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
                         '<span class="tooltip_packing badge badge-danger font-size-14">P</span>');
 
@@ -400,14 +400,14 @@ $(function() {
 
    
                  $("td:eq(1)", nRow).hide();
-                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน',
+                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
 
-                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_frontstore จากการขายหลังบ้าน
+                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(8)', nRow).html(''
                         + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
                       ).addClass('input');
                  }
-                 else{ //2=db_frontstore จากการขายหลังบ้าน
+                 else{ //2=db_orders จากการขายหลังบ้าน
 
                       if(aData['status_pack']==1){
                           $('td:eq(8)', nRow).html(''

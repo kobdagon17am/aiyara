@@ -133,7 +133,7 @@ class FrontstorelistController extends Controller
 
           }
 
-           DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
+           DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -245,26 +245,26 @@ class FrontstorelistController extends Controller
 
        $id=   @$request->frontstore_id;
 
-       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
         }else{
-          DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+          DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
 
 
 
-          // $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
-          // DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+          // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+          // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
 
 
           if(isset($request->product_plus_addlist)){
               // return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
              if($request->quantity[0]==0){
-                DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
+                DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
              }
           }
 
@@ -348,13 +348,13 @@ class FrontstorelistController extends Controller
 
             // ค่าขนส่ง
 
-             $frontstore = DB::select("SELECT * FROM db_frontstore WHERE id=".$request->frontstore_id." ");
+             $frontstore = DB::select("SELECT * FROM db_orders WHERE id=".$request->frontstore_id." ");
              $branchs = DB::select("SELECT * FROM branchs WHERE id=".$frontstore[0]->branch_id_fk." ");
              // dd($frontstore[0]->branch_id_fk);
              // dd($branchs[0]->province_id_fk);
              // dd($request->delivery_province);
                 if($request->delivery_province==$branchs[0]->province_id_fk){
-                    DB::select("UPDATE db_frontstore SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+                    DB::select("UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
                 }else{
                      // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
                     $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
@@ -362,12 +362,12 @@ class FrontstorelistController extends Controller
                     $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".($request->delivery_province?$request->delivery_province:0)." ");
                     if(count($shipping_vicinity)>0){
 
-                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        DB::select("UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
                         // return $shipping_cost[0]->shipping_cost;
                     }else{
                         $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
 
-                        DB::select("UPDATE db_frontstore SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        DB::select("UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
                         // return $shipping_cost[0]->shipping_cost;
 
                     }
@@ -501,7 +501,7 @@ class FrontstorelistController extends Controller
                           );
 
 
-                         DB::delete(" DELETE FROM db_frontstore_products_list WHERE amt=0 ;");
+                         DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
 
                   }
 
@@ -511,19 +511,19 @@ class FrontstorelistController extends Controller
 
            $id=   @$request->frontstore_id;
 
-           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
            // dd($sFrontstoreDataTotal);
            if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
               $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-              DB::select(" UPDATE db_frontstore SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
             }else{
-              DB::select(" UPDATE db_frontstore SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+              DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
             }
 
 
-              // $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
-              // DB::select(" UPDATE db_frontstore SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+              // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+              // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
 
 
           }
@@ -560,14 +560,14 @@ class FrontstorelistController extends Controller
 
       if(@$req->frontstore_id_fk){
          $sTable = DB::select("
-            SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=1 UNION
-            SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+            SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=1 UNION
+            SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
             ORDER BY add_from,id
         ");
 
       }else{
          $sTable = DB::select("
-            SELECT * from db_frontstore_products_list
+            SELECT * from db_order_products_list
         ");
       }
 
@@ -590,7 +590,7 @@ class FrontstorelistController extends Controller
           // return $row->promotion_id_fk;
 
           // if(!empty($row->product_id_fk) && $row->add_from==2 && $row->promotion_code!=''){
-          //   // SELECT * from db_frontstore_products_list WHERE promotion_code='B1D3JVM59'
+          //   // SELECT * from db_order_products_list WHERE promotion_code='B1D3JVM59'
 
             $Products = DB::select("
               SELECT
@@ -662,7 +662,7 @@ class FrontstorelistController extends Controller
         //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
         //     return @$Promotions_cost[0]->pv;
         // }else{
-          // ดึงจาก db_frontstore_products_list
+          // ดึงจาก db_order_products_list
             return @$row->pv;
         // }
       })
@@ -672,7 +672,7 @@ class FrontstorelistController extends Controller
         //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
         //     return @$Promotions_cost[0]->selling_price;
         // }else{
-          // ดึงจาก db_frontstore_products_list
+          // ดึงจาก db_order_products_list
            return @$row->selling_price;
         // }
       })
@@ -682,7 +682,7 @@ class FrontstorelistController extends Controller
         //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
         //     return @$Promotions_cost[0]->pv;
         // }else{
-          // ดึงจาก db_frontstore_products_list
+          // ดึงจาก db_order_products_list
            return @$row->total_pv;
         // }
       })
@@ -692,12 +692,12 @@ class FrontstorelistController extends Controller
         //     $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->promotion_id_fk)->get();
         //     return @$Promotions_cost[0]->selling_price;
         // }else{
-          // ดึงจาก db_frontstore_products_list
+          // ดึงจาก db_order_products_list
            return @$row->total_price;
         // }
       })
       ->addColumn('sum_price_desc', function($row) {
-          $total_price = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".$row->frontstore_id_fk." GROUP BY frontstore_id_fk ");
+          $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$row->frontstore_id_fk." GROUP BY frontstore_id_fk ");
           return @$total_price[0]->total;
       })
       ->make(true);
@@ -708,7 +708,7 @@ class FrontstorelistController extends Controller
 
        $sTable = DB::select("
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
-          (SELECT amt from db_frontstore_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,'". $req->frontstore_id_fk."' as frontstore_id_fk
+          (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,'". $req->frontstore_id_fk."' as frontstore_id_fk
           from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
            AND
             (

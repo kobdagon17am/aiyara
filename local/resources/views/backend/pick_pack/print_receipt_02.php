@@ -306,18 +306,18 @@ Amount </td>
      $P = DB::select("
 
           SELECT
-          db_frontstore_products_list.id,
-          db_frontstore_products_list.frontstore_id_fk,
-          db_frontstore_products_list.product_id_fk,
-          db_frontstore_products_list.amt,
-          db_frontstore_products_list.selling_price,
-          db_frontstore_products_list.pv,
-          db_frontstore_products_list.created_at,
-          db_frontstore_products_list.updated_at,
-          db_frontstore.invoice_code
-          FROM db_frontstore_products_list
-          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-          WHERE db_frontstore_products_list.add_from = 1 and invoice_code='".$value[0]->receipt."'
+          db_order_products_list.id,
+          db_order_products_list.frontstore_id_fk,
+          db_order_products_list.product_id_fk,
+          db_order_products_list.amt,
+          db_order_products_list.selling_price,
+          db_order_products_list.pv,
+          db_order_products_list.created_at,
+          db_order_products_list.updated_at,
+          db_orders.invoice_code
+          FROM db_order_products_list
+          Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+          WHERE db_order_products_list.add_from = 1 and invoice_code='".$value[0]->receipt."'
 
      ");
 

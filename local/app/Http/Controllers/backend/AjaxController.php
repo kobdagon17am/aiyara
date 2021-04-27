@@ -594,7 +594,7 @@ class AjaxController extends Controller
             $p_amt = DB::select("
               SELECT amt
               FROM
-              db_frontstore_products_list
+              db_order_products_list
               WHERE product_id_fk = ".$request->product_id_fk." AND frontstore_id_fk=".$request->frontstore_id." ");
             $p_amt =  @$p_amt[0]->amt;
 
@@ -631,14 +631,14 @@ class AjaxController extends Controller
    public function ajaxGetDBfrontstore(Request $request)
     {
             $id = $request->frontstore_id_fk;
-            $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$id ");
+            $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
             return response()->json($rs);
     }
 
 
    public function ajaxCheckDBfrontstore(Request $request)
     {
-        $rs = DB::select(" SELECT count(*) as cnt FROM db_frontstore_products_list WHERE frontstore_id_fk='".$request->frontstore_id_fk."' ");
+        $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk='".$request->frontstore_id_fk."' ");
         return $rs[0]->cnt;
     }
 
@@ -651,7 +651,7 @@ class AjaxController extends Controller
         $sum_price = str_replace(',','',$request->sum_price);
         $frontstore_id = $request->frontstore_id;
         $delivery_location = $request->delivery_location;
-        $frontstore = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         /*
             1   ส่งฟรี / Shipping Free
             2   กรุงเทพฯ และปริมณฑล / Metropolitan area
@@ -677,14 +677,14 @@ class AjaxController extends Controller
             // dd();
 
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=4 ");
-            DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1 WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1 WHERE id=$frontstore_id ");
 
             return $shipping[0]->shipping_cost;
             // dd();
 
         }else{
 
-            DB::select(" UPDATE db_frontstore SET shipping_special=0  WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
 
             // return $province_id;
             // dd();
@@ -693,11 +693,11 @@ class AjaxController extends Controller
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
-                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+                DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 return 0 ;
             }else{
 
-                DB::select(" UPDATE db_frontstore SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
+                DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
 
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
                     // รับสินค้าด้วยตัวเอง จะรับที่สาขาใด ก็ไม่มีค่าใช้จ่าย
@@ -711,7 +711,7 @@ class AjaxController extends Controller
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
 
                         if($province_id==$branchs[0]->province_id_fk){
-                            DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=0  WHERE id=$frontstore_id ");
+                            DB::select(" UPDATE db_orders SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=0  WHERE id=$frontstore_id ");
                             return 0;
                         }else{
                              // ต่าง จ. กัน เช็คดูว่า อยู่ในเขตปริมณทฑลหรือไม่
@@ -721,7 +721,7 @@ class AjaxController extends Controller
 
                             if(count($shipping_vicinity)>0){
 
-                                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
+                                DB::select(" UPDATE db_orders SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
 
                                 return $shipping_cost[0]->shipping_cost;
 
@@ -729,7 +729,7 @@ class AjaxController extends Controller
 
                                 $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=3 ");
 
-                                DB::select(" UPDATE db_frontstore SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
+                                DB::select(" UPDATE db_orders SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=$frontstore_id ");
 
                                 return $shipping_cost[0]->shipping_cost;
 
@@ -754,7 +754,7 @@ class AjaxController extends Controller
     {
         // return $request;
 
-        DB::select(" UPDATE db_frontstore SET
+        DB::select(" UPDATE db_orders SET
             aicash_price='0',
             member_id_aicash='0',
             transfer_price='0',
@@ -771,7 +771,7 @@ class AjaxController extends Controller
             cash_pay='0'
             WHERE id=".$request->frontstore_id_fk." ");
 
-        // $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=".$request->frontstore_id_fk." ");
+        // $rs = DB::select(" SELECT * FROM db_orders WHERE id=".$request->frontstore_id_fk." ");
         // return response()->json($rs);
 
     }
@@ -818,7 +818,7 @@ class AjaxController extends Controller
         $sum_price = ($sum_price+$shipping_price) ;
 
 
-        DB::select(" UPDATE db_frontstore SET
+        DB::select(" UPDATE db_orders SET
             aicash_price='0',
             member_id_aicash='0',
             transfer_price='0',
@@ -836,19 +836,19 @@ class AjaxController extends Controller
             WHERE id=$frontstore_id ");
 
         if($pay_type_id==5){
-            DB::select(" UPDATE db_frontstore SET cash_price=($sum_price-$shipping_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
         if($pay_type_id==6){
             $aicash_price = $aicash_price>$sum_price?$sum_price:$aicash_price;
-            DB::select(" UPDATE db_frontstore SET aicash_price=$aicash_price,cash_price=($sum_price-$aicash_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET aicash_price=$aicash_price,cash_price=($sum_price-$aicash_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
         if($pay_type_id == '') {
-            DB::select(" UPDATE db_frontstore SET pay_type_id=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET pay_type_id=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
         }
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -889,7 +889,7 @@ class AjaxController extends Controller
         }
 
 
-        DB::select(" UPDATE db_frontstore SET
+        DB::select(" UPDATE db_orders SET
 
             aicash_price='0',
             member_id_aicash='0',
@@ -911,13 +911,13 @@ class AjaxController extends Controller
             WHERE id=$frontstore_id ");
 
 
-        DB::select(" UPDATE db_frontstore SET pay_type_id=($pay_type_id) WHERE id=$frontstore_id ");
+        DB::select(" UPDATE db_orders SET pay_type_id=($pay_type_id) WHERE id=$frontstore_id ");
 
         if($pay_type_id==5){
-            DB::select(" UPDATE db_frontstore SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -926,7 +926,7 @@ class AjaxController extends Controller
     {
           $frontstore_id_fk =  $request->frontstore_id_fk ;
 
-          DB::select(" UPDATE db_frontstore SET
+          DB::select(" UPDATE db_orders SET
 
             aicash_price='0',
             member_id_aicash='0',
@@ -986,7 +986,7 @@ class AjaxController extends Controller
 
 
         if($pay_type_id==5){
-            DB::select(" UPDATE db_frontstore SET member_id_aicash='0',aicash_price='0',cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET member_id_aicash='0',aicash_price='0',cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
         if($pay_type_id==6){
@@ -1000,7 +1000,7 @@ class AjaxController extends Controller
             }
 
             $cash_pay = is_numeric(@$sum_price) - is_numeric($aicash_price) ;
-            DB::select(" UPDATE db_frontstore SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
         if($pay_type_id==7){
@@ -1011,7 +1011,7 @@ class AjaxController extends Controller
 
             $credit_price = str_replace(',','',$request->credit_price);
             $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
-            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET credit_price=$credit_price WHERE id=$frontstore_id ");
 
             if(!empty($request->fee)){
                 $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
@@ -1039,14 +1039,14 @@ class AjaxController extends Controller
                 if($charger_type==1){
 
                     if($credit_price==$sum_price){
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
                     }else{
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
                     }
 
                 }else{
 
-                    DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,cash_price=($sum_price-$credit_price),cash_pay=(($sum_price-$credit_price)+$fee_amt) WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,cash_price=($sum_price-$credit_price),cash_pay=(($sum_price-$credit_price)+$fee_amt) WHERE id=$frontstore_id ");
 
                 }
 
@@ -1064,7 +1064,7 @@ class AjaxController extends Controller
             $transfer_price = str_replace(',','',$request->transfer_price);
             $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
             $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
-            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET credit_price=$credit_price WHERE id=$frontstore_id ");
 
             if(!empty($request->fee)){
                 $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
@@ -1093,14 +1093,14 @@ class AjaxController extends Controller
                 if($charger_type==1){
 
                     if($credit_price==$sum_price){
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
                     }else{
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,transfer_price=($sum_price-$credit_price),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,transfer_price=($sum_price-$credit_price),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
                     }
 
                 }else{
 
-                    DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,transfer_price=(($sum_price-$credit_price)+$fee_amt),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,transfer_price=(($sum_price-$credit_price)+$fee_amt),transfer_money_datetime='$transfer_money_datetime',cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
                 }
 
@@ -1118,7 +1118,7 @@ class AjaxController extends Controller
             $credit_price = str_replace(',','',$request->credit_price);
             $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
 
-            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price,file_slip=NULL WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET credit_price=$credit_price,file_slip=NULL WHERE id=$frontstore_id ");
 
             if(!empty($request->fee)){
                 $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
@@ -1147,7 +1147,7 @@ class AjaxController extends Controller
                 if($charger_type==1){
 
                     if($credit_price==$sum_price){
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,aicash_price=0 WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,aicash_price=0 WHERE id=$frontstore_id ");
                     }else{
 
                         // ถ้ายอดเครดิต ลบ ราคาสินค้ารวม แล้ว มากกว่า ยอด ai-cash ที่มี ให้ ยอด ai-cash = ยอด ai-cash ที่มี แล้ว ส่วนเอาที่เหลือ เอาไปรวมกับยอด เครดิต อีกรอบ
@@ -1163,7 +1163,7 @@ class AjaxController extends Controller
                             $credit_price = $credit_price ;
                         }
 
-                        DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
                     }
 
                 }else{
@@ -1183,10 +1183,10 @@ class AjaxController extends Controller
 
 
                         if($credit_price==$sum_price){
-                            DB::select(" UPDATE db_frontstore SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,member_id_aicash=".$request->member_id_aicash.",aicash_price=$fee_amt WHERE id=$frontstore_id ");
+                            DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,member_id_aicash=".$request->member_id_aicash.",aicash_price=$fee_amt WHERE id=$frontstore_id ");
                         }else{
 
-                           DB::select(" UPDATE db_frontstore SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                           DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
                         }
 
@@ -1207,7 +1207,7 @@ class AjaxController extends Controller
                     $transfer_price = str_replace(',','',$request->transfer_price);
                     $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
                     $transfer_money_datetime = $request->transfer_money_datetime;
-                    DB::select(" UPDATE db_frontstore SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
 
          }
 
@@ -1220,7 +1220,7 @@ class AjaxController extends Controller
                     $transfer_price = str_replace(',','',$request->transfer_price);
                     $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
                     $transfer_money_datetime = $request->transfer_money_datetime;
-                    DB::select(" UPDATE db_frontstore SET transfer_price=$transfer_price,aicash_price=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',member_id_aicash=".$request->member_id_aicash.",cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,aicash_price=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',member_id_aicash=".$request->member_id_aicash.",cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
          }
 
@@ -1243,9 +1243,9 @@ class AjaxController extends Controller
 
                 if($aicash_price>$sum_price){
 
-                    DB::select(" UPDATE db_frontstore SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
                 }else{
-                    DB::select(" UPDATE db_frontstore SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+                    DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
                 }
 
 
@@ -1254,7 +1254,7 @@ class AjaxController extends Controller
 
 
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -1287,7 +1287,7 @@ class AjaxController extends Controller
             // return $aicash_price;
             // dd();
 
-            DB::select(" UPDATE db_frontstore SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
         // if(!empty($request->this_element)){
@@ -1309,9 +1309,9 @@ class AjaxController extends Controller
 
         //         if($aicash_price>$sum_price){
 
-        //             DB::select(" UPDATE db_frontstore SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
+        //             DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
         //         }else{
-        //             DB::select(" UPDATE db_frontstore SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+        //             DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         //         }
 
 
@@ -1319,7 +1319,7 @@ class AjaxController extends Controller
         // }
 
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -1348,11 +1348,11 @@ class AjaxController extends Controller
 
             $cash_pay = @$sum_price - $aicash_price ;
 
-            DB::select(" UPDATE db_frontstore SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+            DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -1595,7 +1595,7 @@ class AjaxController extends Controller
                 return "InActive";
             }else{
 
-                    $rs = DB::select(" select count(*) as cnt from db_frontstore_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
+                    $rs = DB::select(" select count(*) as cnt from db_order_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
                     // return $rs[0]->cnt;
                     // dd();
 
@@ -1791,9 +1791,9 @@ class AjaxController extends Controller
 
         if($request->ajax()){
             if($request->id){
-              $sRow = DB::select(" select * from db_frontstore where id=".$request->id."  ");
+              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
               @UNLINK(@$sRow[0]->file_slip);
-              DB::select(" UPDATE db_frontstore SET file_slip='' where id=".$request->id."  ");
+              DB::select(" UPDATE db_orders SET file_slip='' where id=".$request->id."  ");
             }
         }
     }
@@ -1914,7 +1914,7 @@ class AjaxController extends Controller
                    //  $("#transfer_price").val('');
                    //  $("#cash_pay").val('');
 
-            DB::select(" UPDATE db_frontstore SET
+            DB::select(" UPDATE db_orders SET
                 credit_price='0.00',
                 fee_amt='0.00',
                 sum_credit_price='0.00',
@@ -1977,12 +1977,12 @@ class AjaxController extends Controller
 
 
             if($gift_voucher_price>0){
-                DB::select(" UPDATE db_frontstore SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
+                DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
             }
 
         }
 
-        $rs = DB::select(" SELECT * FROM db_frontstore WHERE id=$frontstore_id ");
+        $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
 
     }
@@ -2200,10 +2200,10 @@ class AjaxController extends Controller
             // }
 
 
-          // $c = "SELECT db_frontstore.invoice_code FROM
-          //   db_frontstore_products_list
-          //   Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-          //   WHERE  db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked where status=1)";
+          // $c = "SELECT db_orders.invoice_code FROM
+          //   db_order_products_list
+          //   Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+          //   WHERE  db_order_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked where status=1)";
 
           // $sTable = DB::select(" SELECT * from db_products_fifo_bill where recipient_code in ($c) ");
 
@@ -2212,21 +2212,21 @@ class AjaxController extends Controller
 
           INSERT INTO db_pick_warehouse_tmp (invoice_code, product_code, product_name, amt, product_unit, amt_get, status, status_scan_qrcode, product_id_fk, created_at, updated_at) 
           SELECT
-          db_frontstore.invoice_code,
-          (SELECT product_code FROM products WHERE id=db_frontstore_products_list.product_id_fk limit 1) as product_code,
-          (SELECT product_name FROM products_details WHERE product_id_fk=db_frontstore_products_list.product_id_fk and lang_id=1 limit 1) as product_name,
-          db_frontstore_products_list.amt,
+          db_orders.invoice_code,
+          (SELECT product_code FROM products WHERE id=db_order_products_list.product_id_fk limit 1) as product_code,
+          (SELECT product_name FROM products_details WHERE product_id_fk=db_order_products_list.product_id_fk and lang_id=1 limit 1) as product_name,
+          db_order_products_list.amt,
           dataset_product_unit.product_unit,
           0,0,0,
-          db_frontstore_products_list.product_id_fk,
+          db_order_products_list.product_id_fk,
           now(),
           now()
           FROM
-          db_frontstore_products_list
-          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-          Left Join dataset_product_unit ON db_frontstore_products_list.product_unit_id_fk = dataset_product_unit.id
-          WHERE db_frontstore_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked) 
-          AND db_frontstore.invoice_code<>'' ");
+          db_order_products_list
+          Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+          Left Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id
+          WHERE db_order_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked) 
+          AND db_orders.invoice_code<>'' ");
 
 
         }
@@ -2525,50 +2525,50 @@ class AjaxController extends Controller
            // ดึงจาก จ่ายสินค้าตามใบเสร็จ
              $value=DB::select("
                    SELECT
-                          db_frontstore_products_list.product_id_fk,
+                          db_order_products_list.product_id_fk,
                           db_pick_warehouse_fifo_topicked.lot_number,
                           'จ่ายสินค้าตามใบเสร็จ',
-                          db_frontstore.invoice_code,
-                          db_frontstore_products_list.amt,
-                          db_frontstore.action_user,
+                          db_orders.invoice_code,
+                          db_order_products_list.amt,
+                          db_orders.action_user,
                           db_consignments.approver,
                           db_consignments.sent_date
                           FROM
-                          db_frontstore_products_list
-                          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-                          Left Join db_consignments ON db_frontstore.invoice_code = db_consignments.recipient_code
-                          Left Join db_pick_warehouse_fifo_topicked ON db_frontstore_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_frontstore_products_list.amt = db_pick_warehouse_fifo_topicked.amt
+                          db_order_products_list
+                          Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+                          Left Join db_consignments ON db_orders.invoice_code = db_consignments.recipient_code
+                          Left Join db_pick_warehouse_fifo_topicked ON db_order_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_order_products_list.amt = db_pick_warehouse_fifo_topicked.amt
                           WHERE
                           db_consignments.status_sent=1
                           AND
-                          db_frontstore_products_list.product_id_fk=1 AND
+                          db_order_products_list.product_id_fk=1 AND
                           db_consignments.sent_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
-                          db_frontstore_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
+                          db_order_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
                 ");
 
                 if(count($value) > 0){
                        DB::select(" 
                         INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
                         SELECT
-                          db_frontstore_products_list.product_id_fk,
+                          db_order_products_list.product_id_fk,
                           db_pick_warehouse_fifo_topicked.lot_number,
                           'จ่ายสินค้าตามใบเสร็จ',
-                          db_frontstore.invoice_code,
-                          db_frontstore_products_list.amt,
-                          db_frontstore.action_user,
+                          db_orders.invoice_code,
+                          db_order_products_list.amt,
+                          db_orders.action_user,
                           db_consignments.approver,
                           db_consignments.sent_date
                           FROM
-                          db_frontstore_products_list
-                          Left Join db_frontstore ON db_frontstore_products_list.frontstore_id_fk = db_frontstore.id
-                          Left Join db_consignments ON db_frontstore.invoice_code = db_consignments.recipient_code
-                          Left Join db_pick_warehouse_fifo_topicked ON db_frontstore_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_frontstore_products_list.amt = db_pick_warehouse_fifo_topicked.amt
+                          db_order_products_list
+                          Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+                          Left Join db_consignments ON db_orders.invoice_code = db_consignments.recipient_code
+                          Left Join db_pick_warehouse_fifo_topicked ON db_order_products_list.product_id_fk = db_pick_warehouse_fifo_topicked.product_id_fk AND db_order_products_list.amt = db_pick_warehouse_fifo_topicked.amt
                           WHERE
                           db_consignments.status_sent=1
                           AND
-                          db_frontstore_products_list.product_id_fk=1 AND
+                          db_order_products_list.product_id_fk=1 AND
                           db_consignments.sent_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
-                          db_frontstore_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
+                          db_order_products_list.product_id_fk='".$request->product_id_fk."' AND db_pick_warehouse_fifo_topicked.lot_number='".$request->lot_number."'
                       ") ; 
                       
                 }                
@@ -2720,24 +2720,24 @@ class AjaxController extends Controller
 
 
             $data_addr = DB::select(" SELECT
-              db_frontstore.invoice_code,
+              db_orders.invoice_code,
               customers_addr_sent.recipient_name,
               customers_addr_sent.house_no,
               customers_addr_sent.house_name,
               customers_addr_sent.moo,
               customers_addr_sent.road,
               customers_addr_sent.soi,
+              customers_addr_sent.amphures,
               customers_addr_sent.district,
-              customers_addr_sent.district_sub,
               customers_addr_sent.province,
               customers_addr_sent.zipcode,
               customers_addr_sent.tel,
               customers_addr_sent.tel_home,
               customers_addr_sent.id_choose
               FROM
-              db_frontstore
-              Left Join customers_addr_sent ON db_frontstore.address_sent_id_fk = customers_addr_sent.id
-              Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
+              db_orders
+              Left Join customers_addr_sent ON db_orders.address_sent_id_fk = customers_addr_sent.id
+              Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
                ");
 
             foreach ($data_addr as $key => $v) {
@@ -2747,7 +2747,7 @@ class AjaxController extends Controller
                  $addr .= $v->moo." ";
                  $addr .= $v->road." ";
                  $addr .= $v->soi." ";
-                 $addr .= $v->district_sub." ";
+                 $addr .= $v->amphures." ";
                  $addr .= $v->district." ";
                  $addr .= $v->province." ";
                  $addr .= $v->zipcode." ";

@@ -114,9 +114,9 @@ class DeliveryPackingCodeController extends Controller
                 customers_addr_sent.tel_home
                 FROM
                 customers_addr_sent
-                Left Join dataset_provinces ON customers_addr_sent.province_id = dataset_provinces.id
-                Left Join dataset_amphures ON customers_addr_sent.district_id = dataset_amphures.id
-                Left Join dataset_districts ON customers_addr_sent.district_sub_id = dataset_districts.id
+                Left Join dataset_provinces ON customers_addr_sent.province_id_fk = dataset_provinces.id
+                Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
+                Left Join dataset_districts ON customers_addr_sent.district_id_fk = dataset_districts.id
                 WHERE customers_addr_sent.id=".$row->address_sent_id_fk."
             ");
                 $addr = @$rs[0]->recipient_name?"ชื่อผู้รับ : ". @$rs[0]->recipient_name.", ":'';

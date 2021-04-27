@@ -252,7 +252,7 @@ $arr01 = implode(",",$arr01);
 
 
 $frontstore = DB::select("
-                   SELECT * FROM `db_frontstore`  WHERE invoice_code in ($arr01)
+                   SELECT * FROM `db_orders`  WHERE invoice_code in ($arr01)
 
      ");
 
@@ -265,7 +265,7 @@ foreach($frontstore as $front_db){
 
 $value = DB::select("
                     SELECT
-                    db_frontstore_products_list.*,
+                    db_order_products_list.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -283,13 +283,13 @@ $value = DB::select("
                     orders_frontstore.shipping
 
                     FROM
-                    db_frontstore_products_list
-                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
-                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
+                    db_order_products_list
+                    Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
+                    Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk =
+                    db_order_products_list.frontstore_id_fk =
                     ".$front_db->id."
 
      ");
@@ -549,7 +549,7 @@ Amount </td>
 
      $P = DB::select("
                     SELECT
-                    db_frontstore_products_list.*,
+                    db_order_products_list.*,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name,
@@ -567,13 +567,13 @@ Amount </td>
                     orders_frontstore.shipping
 
                     FROM
-                    db_frontstore_products_list
-                    Left Join db_frontstore ON db_frontstore.id = db_frontstore_products_list.frontstore_id_fk
-                    Left Join customers_detail ON db_frontstore.customers_id_fk = customers_detail.customer_id
+                    db_order_products_list
+                    Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
+                    Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders_frontstore ON db_frontstore.code_order = orders_frontstore.code_order
+                    Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
                     WHERE
-                    db_frontstore_products_list.frontstore_id_fk =
+                    db_order_products_list.frontstore_id_fk =
                     ".$front_db->id."  AND add_from=1
 
      ");
@@ -625,7 +625,7 @@ Amount </td>
 <?php
 
      $P = DB::select("
-         SELECT * from db_frontstore_products_list WHERE frontstore_id_fk = ".$front_db->id." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+         SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$front_db->id." and add_from=2 GROUP BY promotion_id_fk,promotion_code
      ");
 
     $i= $i ;
@@ -714,8 +714,8 @@ Amount </td>
 
       // echo $front_db->id;
 
-        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_frontstore_products_list WHERE frontstore_id_fk=".$front_db->id." GROUP BY frontstore_id_fk ");
-        $sFrontstoreData = DB::select(" select * from db_frontstore_products_list ");
+        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$front_db->id." GROUP BY frontstore_id_fk ");
+        $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
         $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
 
