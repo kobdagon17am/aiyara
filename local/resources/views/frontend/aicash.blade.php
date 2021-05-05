@@ -91,7 +91,7 @@
                                         <td>
 
                                             @if ($value->order_status_id_fk == 1 || $value->order_status_id_fk == 3)
-                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip_aicash({{ $value->id }},'{{ $value->code_order }}')"><i class="fa fa-upload"></i> Upload </button>
+                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#upload_slip_aicash" onclick="upload_slip_aicash({{ $value->id }},'{{ $value->code_order }}')"><i class="fa fa-upload"></i> Upload </button>
 
                                                 <button class="btn btn-sm btn-danger" data-toggle="modal"
                                                     data-target="#delete"
@@ -100,7 +100,7 @@
                                             @elseif($value->order_status_id_fk == 7 )
 
                                               @if( strtotime('now') < strtotime($value->cancel_expiry_date) )
-                                                <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#cancel" onclick="cancel_aicash({{ $value->id }},'{{ $value->code_order }}')">
+                                                <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#cancel_aicash" onclick="cancel_aicash({{ $value->id }},'{{ $value->code_order }}')">
                                                   <i class="fa fa-reply-all"></i> Cancel</button>
                                               @endif
 
@@ -129,13 +129,13 @@
                     </div>
 
 
-                    <div class="modal fade" id="delete" tabindex="-1" role="dialog">
+                    <div class="modal fade" id="delete_aicash" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-md" role="document">
                             <form action="{{ route('delete_aicash') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title" id="delete_title">ยืนยันการลบรายการ </h4>
+                                        <h5 class="modal-title" id="delete_title_aicash" st>ยืนยันการลบรายการ  Ai-Cash</h5>
                                     </div>
 
                                     <div class="modal-body">
@@ -162,13 +162,13 @@
                     </div>
 
 
-                    <div class="modal fade" id="cancel" tabindex="-1" role="dialog">
+                    <div class="modal fade" id="cancel_aicash" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-md" role="document">
                             <form action="{{ route('cancel_aicash') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h4>
+                                        <h5 class="modal-title" id="cancel_title_aicash">ยืนยันการยกเลิกรายการ Ai-Cash</h5>
                                     </div>
 
                                     <div class="modal-body">
@@ -194,13 +194,13 @@
                     </div>
 
 
-                    <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
+                    <div class="modal fade" id="upload_slip_aicash" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-md" role="document">
                             <form action="{{ route('upload_slip_aicash') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title" id="upload_title">Upload File Slip</h4>
+                                        <h5 class="modal-title" id="upload_title_aicash">Upload File Slip  Ai-Cash</h5>
                                     </div>
 
                                     <div class="modal-body">
@@ -237,7 +237,6 @@
 
     <div class="row">
       <div class="col-md-12">
-
           <div class="card">
             <div class="card-header">
               <h5>ประวัติการชำระด้วย Ai-Cash</h5>
@@ -252,8 +251,9 @@
                                   <th>TRACKING</th>
                                   <th>ยอดชำระ</th>
                                   <th>PV</th>
-                                    {{-- <th>คงเหลือ</th>
-                                  <th>Active</th> --}}
+                                  <th>Ai-Cash เดิม</th>
+                                  <th>ถูกใช้ไป</th>
+                                  <th>Banlance</th>
                                   <th>Type</th>
                                   <th>ชำระโดย</th>
                                   <th>สถานะ</th>
@@ -281,7 +281,7 @@
                           @csrf
                           <div class="modal-content">
                               <div class="modal-header">
-                                  <h4 class="modal-title">Upload File Slip</h4>
+                                  <h5 class="modal-title">Upload File Slip Order</h5>
                               </div>
 
                               <div class="modal-body">
@@ -350,7 +350,7 @@
                       @csrf
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h4 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h4>
+                              <h5 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h5>
                           </div>
 
                           <div class="modal-body">
@@ -427,43 +427,90 @@
 
         function delete_aicash(aicash_id, code) {
             $('#delete_aicash_id').val(aicash_id);
-            $('#delete_title').html('ยืนยันการลบรายการ (' + code + ')');
+            $('#delete_title_aicash').html('ยืนยันการลบรายการ Ai-Cash (' + code + ')');
         }
 
         function cancel_aicash(aicash_id, code) {
             $('#cancel_aicash_id').val(aicash_id);
-            $('#cancel_title').html('ยืนยันการยกเลิกรายการ (' + code + ')');
+            $('#cancel_title_aicash').html('ยืนยันการยกเลิกรายการ Ai-Cash (' + code + ')');
         }
 
         function upload_slip_aicash(aicash_id,code) {
             $('#aicash_id').val(aicash_id);
-            $('#upload_title').html('Upload File Slip (' + code + ')');
+            $('#upload_title_aicash').html('Upload File Slip Ai-Cash (' + code + ')');
         }
 
     </script>
 
 
 <script type="text/javascript">
-  function qrcode(id) {
-      $.ajax({
-              url: '{{ route('modal_qr_recive_product') }}',
-              type: 'GET',
-              data: {
-                  id: id
-              },
-          })
-          .done(function(data) {
-              console.log("success");
-              $('#modal_qr_recive').html(data);
-              $('#show_qr').modal('show');
-              // var fiveMinutes = 60 * 30,
-              // display = document.querySelector('#time');
-              // startTimer(fiveMinutes, display);
-          })
-          .fail(function() {
-              console.log("error");
-          })
-  }
+
+
+  function qrcode(id,type='') {
+
+$.ajax({
+        url: '{{ route('modal_qr_recive_product') }}',
+        type: 'GET',
+        data: {
+            id: id,'type':type
+        },
+    })
+    .done(function(data) {
+        $('#modal_qr_recive').html(data);
+        var countdown = document.getElementById("time");
+        var close_modal = document.getElementById("close_modal");
+        $('#show_qr').modal('show');
+          //var i = $('#i').val();
+          var s = $('#s').val();
+          var id = $('#id').val();
+          var type_qr_modal = $('#type_qr_modal').val();
+          var timerId = '';
+          if(type_qr_modal == 'non'){
+            countdown.innerHTML = '00:00 <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\')"> <i class="icofont icofont-refresh"></i> </button>';
+          }else{
+            var time = s; // 30 minutes converted to 1800 seconds
+            timerId = setInterval(function() {
+              //var countdown = i *  s * 1000;
+              time = time - 1;
+              var minute = Math.floor(parseInt(time / 60));
+              //console.log(minute);
+              var second = parseInt(time % 60);
+                minutes = minute < 10 ? "0" + minute : minute;
+                seconds = second < 10 ? "0" + second : second;
+                countdown.innerHTML = minutes + ' : ' + seconds +' <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\','+timerId+')"> <i class="icofont icofont-refresh"></i> </button>';
+
+                if (second < 0) {
+                  countdown.innerHTML = '00:00 <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\','+timerId+')"> <i class="icofont icofont-refresh"></i> </button>';
+                }
+
+            }, 1000);
+
+          }
+
+          var close_modal_html = '<button type="button" class="btn btn-default waves-effect" onclick="time_stop('+timerId+')" >Close</button>';
+          close_modal.innerHTML = close_modal_html;
+
+    })
+
+    .fail(function() {
+        console.log("error");
+    })
+}
+
+function refresh_time(id,type,timerId){
+clearInterval(timerId);
+$('#show_qr').modal('hide');
+qrcode(id,type);
+}
+
+
+function time_stop(timerId) {
+if(timerId){
+clearInterval(timerId);
+}
+$('#show_qr').modal('hide');
+}
+
 
   function upload_slip(order_id) {
       $('#order_id').val(order_id);
@@ -471,13 +518,14 @@
 
   function delete_order(order_id,code){
       $('#delete_order_id').val(order_id);
-      $('#delete_title').html('ยืนยันการลบรายการ ('+code+')');
+      $('#delete_title').html('ยืนยันการลบรายการ Order ('+code+')');
 
   }
 
   function cancel_order(order_id,code){
+
       $('#cancel_order_id').val(order_id);
-      $('#cancel_title').html('ยืนยันการยกเลิกรายการ ('+code+')');
+      $('#cancel_title').html('ยืนยันการยกเลิกรายการ Order ('+code+')');
   }
 
   $('#file_slip').change(function() {
@@ -505,7 +553,7 @@
                   d.e_date = $('#e_date').val();
               }
           },
-          // type: "POST",
+
           columns: [{
                   data: 'date'
               },
@@ -516,17 +564,25 @@
                   data: 'tracking'
               },
               {
-                  data: 'price'
+                  data: 'price',
+                  className: 'text-right'
               },
               {
-                  data: 'pv_total'
+                  data: 'pv_total',
+                  className: 'text-right'
               },
-              // {
-              //     data: 'banlance'
-              // },
-              // {
-              //     data: 'date_active'
-              // },
+              {
+                  data: 'aicash_old',
+                  className: 'text-right'
+              },
+              {
+                  data: 'aicash_price',
+                  className: 'text-right'
+              },
+              {
+                  data: 'aicash_banlance',
+                  className: 'text-right'
+              },
               {
                   data: 'type',
                   className: 'text-center'
