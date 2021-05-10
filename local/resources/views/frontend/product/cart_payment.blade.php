@@ -786,9 +786,10 @@
                                                          <div class="col-md-8 col-sx-8 col-8">
                                                              <h4 class="m-b-10"> ยอดที่ต้องชำระ </h4>
                                                          </div>
+
                                                          <div class="col-md-4 col-sx-4 col-4">
                                                              <h3 class="text-right">
-                                                                 <u><span class="price_total"> </span></u>
+                                                                 <u><span class="price_total">  </span></u>
                                                              </h3>
                                                          </div>
                                                      </div>
@@ -797,7 +798,7 @@
                                              </div>
                                              <div class="card-footer">
                                                  <div class="text-right">
-                                                     <button class="btn btn-success" form="form2" name="submit"
+                                                     <button class="btn btn-success" name="submit"
                                                          value="credit_card" type="submit">ชำระเงินด้วยบัตรเครดิต</button>
                                                  </div>
 
@@ -989,16 +990,19 @@
 
                          </table>
                      @endif
+                     @if($bill['type'] != 6)
                      <div class="row" align="center">
-                         <div class="form-control bootstrap-tagsinput" id="html_shipping_premium">
-                             <div class="checkbox-color checkbox-success">
-                                 <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true">
-                                 <label for="checkbox13"> ส่งแบบพิเศษ / Premium
-                                 </label>
-                             </div>
-                         </div>
+                      <div class="form-control bootstrap-tagsinput" id="html_shipping_premium">
+                          <div class="checkbox-color checkbox-success">
+                              <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true">
+                              <label for="checkbox13"> ส่งแบบพิเศษ / Premium
+                              </label>
+                          </div>
+                      </div>
 
-                     </div>
+                  </div>
+                  @endif
+
 
                  </div>
 
@@ -1114,12 +1118,18 @@
      <script type="text/javascript">
          var address_provinces_id = {{ $address->provinces_id }};
          check_shipping({{ $address->provinces_id }});
-         var premium = document.getElementById('checkbox13').checked;
-         if (premium) {
-             document.getElementById('shipping_premium').value = true;
-         } else {
-             document.getElementById('shipping_premium').value = false;
+         var type = '{{ $bill['type'] }}';
+         if( type == 6){
+          document.getElementById('shipping_premium').value = false;
+         }else{
+          var premium = document.getElementById('checkbox13').checked;
+              if (premium) {
+                  document.getElementById('shipping_premium').value = true;
+              } else {
+                document.getElementById('shipping_premium').value = false;
+              }
          }
+
 
          //console.log(data_1);
          function check_premium() {
@@ -1153,8 +1163,12 @@
          function check_shipping(provinces_id, type_sent = '') {
              var location_id = '{{ $bill['location_id'] }}';
              var price = '{{ $bill['price'] }}';
-             var shipping_premium = document.getElementById('checkbox13').checked;
+
              var type = '{{ $bill['type'] }}';
+             if (type != 6) {
+             var shipping_premium = document.getElementById('checkbox13').checked;
+             }
+
              if (type == 5) {
                  var sum_gv = '{{ @$gv->sum_gv }}';
              } else {
@@ -1175,7 +1189,9 @@
                      type_sent: type_sent,
                  },
                  success: function(data) {
+                  if (type != 6) {
                      document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
+                  }
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
@@ -1185,10 +1201,17 @@
 
                          $('#price_total_type5').val(data['price_total_type5']);
                      }
+
+                     if (type != 6) {
                      document.getElementById('shipping').textContent = shipping_cost;
+                     }
+
                      var price_total_view = numberWithCommas(price_total);
+
                      $('.price_total').html(price_total_view);
+
                      $('#price_total').val(price_total);
+
                      $('#gift_voucher_price').val(data['gift_voucher_price']);
                      $('.gv_remove_price').html(data['gv_remove_price']);
 
@@ -1263,6 +1286,7 @@
              var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
              if (data == '1') {
+
                  check_shipping({{ $address->provinces_id }});
                  document.getElementById("cart_pament_tranfer").style.display = "block";
                  document.getElementById("cart_pament_credit_card").style.display = "none";

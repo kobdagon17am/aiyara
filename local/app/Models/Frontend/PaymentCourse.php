@@ -18,6 +18,7 @@ class PaymentCourse extends Model
 
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
+
 			$data=$cartCollection->toArray();
 
 			$total = Cart::session($rs->type)->getTotal();
@@ -98,6 +99,7 @@ class PaymentCourse extends Model
 
 		try{
 			$cartCollection = Cart::session($rs->type)->getContent();
+
 			$data=$cartCollection->toArray();
 
 			$total = Cart::session($rs->type)->getTotal();
@@ -108,6 +110,7 @@ class PaymentCourse extends Model
 					'customers_id_fk' => $customer_id,
 					'tax'  => $rs->vat,
 					'sum_price' => $rs->price,
+          'total_price' => $rs->price,
           'product_value'=>$rs->price,
           'date_setting_code' => date('ym'),
           'action_date' => date('Y-m-d'),
@@ -175,6 +178,7 @@ class PaymentCourse extends Model
 					'customers_id_fk' => $customer_id,
 					'tax'  => $rs->vat,
 					'sum_price' => $rs->price,
+          'total_price' => $rs->price,
           'product_value'=>$rs->price,
           'date_setting_code' => date('ym'),
           'action_date' => date('Y-m-d'),
@@ -255,7 +259,9 @@ public static function ai_cash($rs){
 				'customers_id_fk' => $customer_id,
 				'tax'  => $rs->vat,
 				'sum_price' => $rs->price,
+        'total_price' => $rs->price,
         'product_value'=>$rs->price,
+        'aicash_price' => $rs->price,
         'date_setting_code' => date('ym'),
         'action_date' => date('Y-m-d'),
 				'pv_total'  => $rs->pv_total,

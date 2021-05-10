@@ -9,6 +9,7 @@ class PvPayment extends Model
 {
 
     public static function PvPayment_type_confirme($order_id,$admin_id,$distribution_channel,$action_type)
+
     //distribution_channel 1 ติดต่อหน้าร้าน , 2 ช่องทางการจำหน่ายอื่นๆ
     // $action_type Type ของผู้ดำเนินการ 'admin','customer'
 
@@ -62,11 +63,42 @@ class PvPayment extends Model
                   ->first();
 
                   $update_icash =  $check_aicash->ai_cash - $order_data->aicash_price;
-
+                  //$check_aicash->ai_cash;//Ai-Cash เดิม
+                  //$update_icash; //Bicash_banlance
                   if($update_icash >= 0){
-                    $update_aicash = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['ai_cash' => $update_icash]);
+
+                    $update_aicash = DB::table('db_orders') //update บิล
+                    ->where('id', $order_id)
+                    ->update(['aicash_old'=>$check_aicash->ai_cash,'aicash_banlance' => $update_icash]);
+
+                    if ($type_id == 6) { //course
+                      $movement_type = 'buy_course';
+                      $movement_detail = 'Buy Course';
+                    }else{
+                      $movement_type = 'buy_product';
+                      $movement_detail = 'Buy Product';
+
+                    }
+
+                    $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
+                      'customer_id_fk' => $customer_id,
+                      'order_id_fk' =>$order_id,
+                      //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
+                      'business_location_id_fk' => $order_data->business_location_id_fk,
+                      'price_total' => $order_data->total_price,
+                      'aicash_old' => $check_aicash->ai_cash,
+                      'aicash_price' => $order_data->aicash_price,
+                      'aicash_banlance' => $update_icash,
+                      'order_code' => $order_data->code_order,
+                      'order_type_id_fk' => $order_data->purchase_type_id_fk,
+                      'pay_type_id_fk' =>$order_data->pay_type_id_fk,
+                      'type' => $movement_type,
+                      'detail'=> $movement_detail,
+                  ]);
+
+                  $update_aicash = DB::table('customers')
+                  ->where('id', $customer_id)
+                  ->update(['ai_cash' => $update_icash]);
 
                   }else{
 

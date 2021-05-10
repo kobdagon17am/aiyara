@@ -24,6 +24,7 @@ class PaymentAiCash extends Model
                   'business_location_id_fk' => $business_location_id,
                   'aicash_amt' => $price,
                   'action_user' => $customer_id,
+                  'order_type_id_fk' => 7,
                   'pay_type_id' => $rs->pay_type,
                   'code_order' => $code_order,
                   'date_setting_code' => date('ym'),
@@ -75,6 +76,7 @@ class PaymentAiCash extends Model
                     'business_location_id_fk' => $business_location_id,
                     'aicash_amt' => $price,
                     'action_user' => $customer_id,
+                    'order_type_id_fk' => 7,
                     'pay_type_id' => $rs->pay_type,
                     'code_order' => $code_order,
                     'date_setting_code' => date('ym'),
@@ -87,6 +89,7 @@ class PaymentAiCash extends Model
                     'note' => 'Add Ai-Cash',
                 ]
             );
+
 
             $resule = ['status' => 'success', 'message' => 'Add Ai-Cash Success'];
             DB::commit();
@@ -102,7 +105,7 @@ class PaymentAiCash extends Model
     {
 
         DB::BeginTransaction();
-        $price = str_replace(',', '', $rs->price);
+        $price = str_replace(',','', $rs->price);
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $customer_id = Auth::guard('c_user')->user()->id;
@@ -128,11 +131,13 @@ class PaymentAiCash extends Model
 
                 }
 
-            $id = DB::table('db_add_ai_cash')->insertGetId(
+            $id_add_ai_cash = DB::table('db_add_ai_cash')->insertGetId(
               [
                   'customer_id_fk' => $customer_id,
                   'business_location_id_fk' => $business_location_id,
                   'aicash_amt' => $price,
+                  'aicash_old' =>$customer_data->ai_cash,
+                  'aicash_banlance' =>$banlance,
                   'action_user' => $customer_id,
                   'pay_type_id' => $rs->pay_type,
                   'code_order' => $code_order,
@@ -140,12 +145,29 @@ class PaymentAiCash extends Model
                   'credit_price' => $price,
                   'total_amt' => $price,
                   'approve_status' => 1,
+                  'order_type_id_fk' => 7,
                   'order_status_id_fk' => 7,
                   'upto_customer_status' => 1,
                   'cancel_expiry_date'=>$cancel_expiry_date,
                   'note' => 'Add Ai-Cash',
               ]
           );
+
+          $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
+            'customer_id_fk' => $customer_id,
+            //'order_id_fk' =>$order_id,
+            'add_ai_cash_id_fk' => $id_add_ai_cash, //กรณีเติม Aicash
+            'business_location_id_fk' => $business_location_id,
+            'price_total' => $price,
+            'aicash_old' => $customer_data->ai_cash,
+            'aicash_price' => $price,
+            'aicash_banlance' => $banlance,
+            'order_code' =>  $code_order,
+            'order_type_id_fk' => 7,
+            'pay_type_id_fk' => $rs->pay_type,
+            'type' => 'add_aicash',
+            'detail'=>'Add Ai-Cash',
+        ]);
 
             $customers_update = DB::table('customers')
                 ->where('id', $customer_id)

@@ -170,6 +170,7 @@ Route::post('cancel_aicash','Frontend\AiCashController@cancel_aicash')->name('ca
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 Route::get('datatable_order_aicash','Frontend\AiCashController@datatable_order_aicash')->name('datatable_order_aicash');
+Route::get('datatable_add_aicash','Frontend\AiCashController@datatable_add_aicash')->name('datatable_add_aicash');
 Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash')->name('cart_payment_aicash');
 
 

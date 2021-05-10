@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
 use App\Models\Frontend\Random_code;
 use Auth;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
-use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
-use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+use Illuminate\Support\Carbon;
 
 class HistoryController extends Controller
 {
@@ -24,18 +25,19 @@ class HistoryController extends Controller
     {
 
 
+
         $orders_type = DB::table('dataset_orders_type')
             ->where('status', '=', '1')
             ->where('lang_id', '=', '1')
             ->orderby('order')
             ->get();
 
-          $pay_type = DB::table('dataset_pay_type')
+        $pay_type = DB::table('dataset_pay_type')
             ->where('status', '=', '1')
             ->orderby('id')
             ->get();
 
-            $data = ['orders_type'=> $orders_type,'pay_type'=>$pay_type];
+        $data = ['orders_type' => $orders_type, 'pay_type' => $pay_type];
 
         return view('frontend/product/product-history', compact('data'));
     }
@@ -56,36 +58,36 @@ class HistoryController extends Controller
     public function export_pdf_history($code_order)
     {
 
-      $order = DB::table('db_orders')
-      ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
-          'branchs.b_name as office_name',
-          'branchs.house_no as office_house_no',
-          'branchs.b_name as office_house_name',
-          'branchs.moo as office_moo',
-          'branchs.soi as office_soi',
-          'branchs.amphures_id_fk as office_amphures',
-          'branchs.district_id_fk as office_district',
-          'branchs.road as office_road',
-          'branchs.province_id_fk as office_province',
-          'branchs.zipcode as office_zipcode',
-          'branchs.tel as office_tel',
-          'branchs.email as office_email',
-          'db_invoice_code.order_payment_code',
-          'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
-      ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
-      ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
-      ->leftjoin('branchs', 'branchs.business_location_id_fk', '=', 'db_orders.branch_id_fk')
-      ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
-      ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+        $order = DB::table('db_orders')
+            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
+                'branchs.b_name as office_name',
+                'branchs.house_no as office_house_no',
+                'branchs.b_name as office_house_name',
+                'branchs.moo as office_moo',
+                'branchs.soi as office_soi',
+                'branchs.amphures_id_fk as office_amphures',
+                'branchs.district_id_fk as office_district',
+                'branchs.road as office_road',
+                'branchs.province_id_fk as office_province',
+                'branchs.zipcode as office_zipcode',
+                'branchs.tel as office_tel',
+                'branchs.email as office_email',
+                'db_invoice_code.order_payment_code',
+                'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
+            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('branchs', 'branchs.business_location_id_fk', '=', 'db_orders.branch_id_fk')
+            ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
 
-      ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
-      ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
-      ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
+            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
+            ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
+            ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
-      ->where('dataset_order_status.lang_id', '=', '1')
-      ->where('dataset_orders_type.lang_id', '=', '1')
-      ->where('db_orders.code_order', '=', $code_order)
-      ->first();
+            ->where('dataset_order_status.lang_id', '=', '1')
+            ->where('dataset_orders_type.lang_id', '=', '1')
+            ->where('db_orders.code_order', '=', $code_order)
+            ->first();
 
         if ($order->delivery_location_frontend == 'sent_address') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->province_id_fk, $order->amphures_id_fk, $order->district_id_fk, $order->zipcode);
@@ -132,29 +134,16 @@ class HistoryController extends Controller
 
     public function modal_qr_recive_product(Request $request)
     {
-
         $id = $request->id;
+        $type = $request->type;
 
         $data_order = DB::table('db_orders')
             ->where('id', '=', $id)
             ->first();
 
-        if ($data_order->qr_code) {
-            $qr_endate = strtotime($data_order->qr_endate);
-            if ($qr_endate < strtotime(now())) {
+        if ($type == 'refresh_time') {
 
-                $random = Random_code::random_code('8');
-                $qr = $id . '' . $random;
-
-                $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
-                $updated_qrcode = DB::table('db_orders')
-                    ->where('id', $id)
-                    ->update(['qr_code' => $qr, 'qr_endate' => $endata]);
-
-            }
-
-        } else {
-
+            $type_qr_modal = 'update';
             $random = Random_code::random_code('8');
             $qr = $id . '' . $random;
 
@@ -162,22 +151,44 @@ class HistoryController extends Controller
             $updated_qrcode = DB::table('db_orders')
                 ->where('id', $id)
                 ->update(['qr_code' => $qr, 'qr_endate' => $endata]);
+
+        } else {
+            if ($data_order->qr_code) {
+              $type_qr_modal = 'non';
+
+                $qr_endate = strtotime($data_order->qr_endate);
+                if ($qr_endate < strtotime(now())) {
+                  $type_qr_modal = 'non';
+                }else{
+                  $type_qr_modal = 'update';
+                }
+            } else {
+                $type_qr_modal = 'update';
+                $random = Random_code::random_code('8');
+                $qr = $id . '' . $random;
+
+                $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
+                $updated_qrcode = DB::table('db_orders')
+                    ->where('id', $id)
+                    ->update(['qr_code' => $qr, 'qr_endate' => $endata]);
+            }
+
         }
 
-        $data = DB::table('orders')
+        $data_order = DB::table('db_orders')
             ->where('id', '=', $id)
             ->first();
 
-        return view('frontend/modal/modal_qr_recive_product', compact('data'));
+        return view('frontend/modal/modal_qr_recive_product', compact('data_order','type_qr_modal'));
     }
 
     public function datatable(Request $request)
     {
-      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $orders = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class',
-            'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
-            'dataset_pay_type.detail as pay_type_name')
+                'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
+                'dataset_pay_type.detail as pay_type_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
@@ -192,7 +203,7 @@ class HistoryController extends Controller
             ->orwhere('db_orders.address_sent_id_fk', '=', Auth::guard('c_user')->user()->id)
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();
-            //dd($orders);
+        //dd($orders);
 
         $sQuery = Datatables::of($orders);
         return $sQuery
@@ -224,7 +235,7 @@ class HistoryController extends Controller
             })
 
             ->addColumn('status', function ($row) {
-                if ($row->delivery_location_frontend == 'sent_office' and $row->type == 4) {
+                if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode(' . $row->id . ')" ><i class="fa fa-qrcode"></i> <b style="color: #000">' . $row->detail . '</b></button>';
                 } else {
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" > <b style="color: #000">' . $row->detail . '</b></button>';
@@ -235,23 +246,22 @@ class HistoryController extends Controller
             ->addColumn('action', function ($row) {
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
                     $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip(' . $row->id . ')"><i class="fa fa-upload"></i> Upload </button>
-                    <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-trash"></i></a>';
-                } elseif($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
+                    <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';
+                } elseif ($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
 
-                  if($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date)) ){
-                    $action = '';
-                  }else{
-                    if($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 12 )
-                    {
-                      $action = '';
-                    }else{
-                      $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order('.$row->id.',\''.$row->code_order.'\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                    if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
+                        $action = '';
+                    } else {
+                        if ($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 12) {
+                            $action = '';
+                        } else {
+                            $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                        }
+
                     }
 
-                  }
-
-                }else{
-                    $action ='';
+                } else {
+                    $action = '';
                 }
                 return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
             })
@@ -278,14 +288,13 @@ class HistoryController extends Controller
             })
 
             ->addColumn('type', function ($row) {
-            return $row->type_icon;
-          })
+                return $row->type_icon;
+            })
 
-            ->rawColumns(['pv_total', 'status', 'action', 'banlance', 'pay_type_name','type'])
+            ->rawColumns(['pv_total', 'status', 'action', 'banlance', 'pay_type_name', 'type'])
 
             ->make(true);
     }
-
 
     public function upload_slip(Request $request)
     {
@@ -319,46 +328,47 @@ class HistoryController extends Controller
         }
     }
 
-    public function delete_order(Request $rs){
-      if($rs->delete_order_id){
-        $rs = DeleteOrderController::delete_order($rs->delete_order_id);
-        if($rs['status'] == 'success'){
-          return redirect('product-history')->withSuccess('Delete Oder Success');
-        }else{
-          return redirect('product-history')->withError('Delete Oder Fail : Data is null');
-        }
+    public function delete_order(Request $rs)
+    {
+        if ($rs->delete_order_id) {
+            $rs = DeleteOrderController::delete_order($rs->delete_order_id);
+            if ($rs['status'] == 'success') {
+                return redirect('product-history')->withSuccess('Delete Oder Success');
+            } else {
+                return redirect('product-history')->withError('Delete Oder Fail : Data is null');
+            }
 
-      }else{
-        return redirect('product-history')->withError('Delete Oder Fail : Data is null');
-      }
+        } else {
+            return redirect('product-history')->withError('Delete Oder Fail : Data is null');
+        }
 
     }
 
-    public function cancel_order(Request $rs){
+    public function cancel_order(Request $rs)
+    {
 
-      if($rs->cancel_order_id){
-        $customer_id = Auth::guard('c_user')->user()->id;
-        $order = DB::table('db_orders')
-        ->select('cancel_expiry_date')
-        ->where('id','=',$rs->cancel_order_id)
-        ->first();
+        if ($rs->cancel_order_id) {
+            $customer_id = Auth::guard('c_user')->user()->id;
+            $order = DB::table('db_orders')
+                ->select('cancel_expiry_date')
+                ->where('id', '=', $rs->cancel_order_id)
+                ->first();
 
-        if($order->cancel_expiry_date == '' || $order->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($order->cancel_expiry_date)) ){
-          return redirect('product-history')->withError('Cancel Oder Fail : Cancel Time Out !');
+            if ($order->cancel_expiry_date == '' || $order->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($order->cancel_expiry_date))) {
+                return redirect('product-history')->withError('Cancel Oder Fail : Cancel Time Out !');
+            }
+
+            $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
+            if ($resule['status'] == 'success') {
+                return redirect('product-history')->withSuccess($resule['message']);
+            } else {
+                return redirect('product-history')->withError($resule['message']);
+            }
+
+        } else {
+            return redirect('product-history')->withSuccess('Cancel Oder Fail : Data is null');
         }
-
-        $resule = CancelOrderController::cancel_order($rs->cancel_order_id,$customer_id,1,'customer');
-        if($resule['status']== 'success'){
-          return redirect('product-history')->withSuccess($resule['message']);
-        }else{
-          return redirect('product-history')->withError($resule['message']);
-        }
-
-      }else{
-        return redirect('product-history')->withSuccess('Cancel Oder Fail : Data is null');
-      }
     }
-
 
     public function cart_payment_history($code_order)
     {
@@ -393,8 +403,6 @@ class HistoryController extends Controller
             ->where('dataset_orders_type.lang_id', '=', '1')
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
-
-
 
         if ($order->delivery_location_frontend == 'sent_address') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);

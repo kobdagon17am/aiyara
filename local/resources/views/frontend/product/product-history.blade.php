@@ -14,47 +14,46 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-
                 <div class="card-header p-4">
 
 
-                        <div class="col-md-12 col-lg-12">
-                            <div class="row">
-                                <div class="col-lg-3 col-md-3 p-1">
-                                    <div class="form-group">
-                                        <select class="form-control" id="dt_order_type">
-                                            <option value="">จุดประสงค์การสั่งซื้อ(Type)</option>
-                                            @foreach ($data['orders_type'] as $value)
-                                                <option value="{{ $value->group_id }}">{{ $value->orders_type }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-2 col-md-2 p-1">
-                                    <div class="form-group">
-                                        <select class="form-control" id="dt_pay_type">
-                                            <option value="">ชำระโดย(All)</option>
-                                            @foreach ($data['pay_type'] as $value)
-                                                <option value="{{ $value->id }}">{{ $value->detail }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-3 p-1">
-                                    <input class="form-control" type="date" id="s_date">
-                                </div>
-                                <div class="col-lg-3 col-md-3  p-1">
-                                    <input class="form-control" type="date" id="e_date">
-                                </div>
-                                <div class="col-lg-1 col-md-1 p-1">
-                                    <button id="search-form" class="btn btn-primary btn-block"> Seart </button>
+                    <div class="col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 p-1">
+                                <div class="form-group">
+                                    <select class="form-control" id="dt_order_type">
+                                        <option value="">จุดประสงค์การสั่งซื้อ(Type)</option>
+                                        @foreach ($data['orders_type'] as $value)
+                                            <option value="{{ $value->group_id }}">{{ $value->orders_type }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+
+                            <div class="col-lg-2 col-md-2 p-1">
+                                <div class="form-group">
+                                    <select class="form-control" id="dt_pay_type">
+                                        <option value="">ชำระโดย(All)</option>
+                                        @foreach ($data['pay_type'] as $value)
+                                            <option value="{{ $value->id }}">{{ $value->detail }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 p-1">
+                                <input class="form-control" type="date" id="s_date">
+                            </div>
+                            <div class="col-lg-3 col-md-3  p-1">
+                                <input class="form-control" type="date" id="e_date">
+                            </div>
+                            <div class="col-lg-1 col-md-1 p-1">
+                                <button id="search-form" class="btn btn-primary btn-block"> Seart </button>
+                            </div>
                         </div>
+                    </div>
 
                 </div>
                 <div class="card-block">
@@ -67,7 +66,7 @@
                                     <th>TRACKING</th>
                                     <th>ยอดชำระ</th>
                                     <th>PV</th>
-                                    <th>คงเหลือ</th>
+                                    {{-- <th>คงเหลือ</th> --}}
                                     <th>Active</th>
                                     <th>Type</th>
                                     <th>ชำระโดย</th>
@@ -84,8 +83,9 @@
                         @endforeach
                     </div>
                     <div class="row">
-                      <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น. ของวันที่ทำรายการเท่านั้น</code>
-                  </div>
+                        <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น.
+                            ของวันที่ทำรายการเท่านั้น</code>
+                    </div>
                 </div>
 
                 <div id="modal_qr_recive"></div>
@@ -128,67 +128,67 @@
                 </div>
 
                 <div class="modal fade" id="delete" tabindex="-1" role="dialog">
-                  <div class="modal-dialog modal-md" role="document">
-                      <form action="{{ route('delete_order') }}" method="POST" enctype="multipart/form-data">
-                          @csrf
-                          <div class="modal-content">
-                              <div class="modal-header">
-                                  <h4 class="modal-title" id="delete_title">ยืนยันการลบรายการ </h4>
-                              </div>
+                    <div class="modal-dialog modal-md" role="document">
+                        <form action="{{ route('delete_order') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="delete_title">ยืนยันการลบรายการ </h4>
+                                </div>
 
-                              <div class="modal-body">
-                                  <div class="form-group row">
-                                      <div class="col-sm-12 text-center">
-                                        <button type="button" class="btn btn-default waves-effect "
-                                      data-dismiss="modal">Close</button>
-                                      <button class="btn btn-primary" type="submit" name="submit" >Confirm</button>
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12 text-center">
+                                            <button type="button" class="btn btn-default waves-effect "
+                                                data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
 
-                                        <input type="hidden" name="delete_order_id" id="delete_order_id" value="">
-                                      </div>
+                                            <input type="hidden" name="delete_order_id" id="delete_order_id" value="">
+                                        </div>
 
-                                  </div>
-                              </div>
+                                    </div>
+                                </div>
 
-                              {{-- <div class="modal-footer">
+                                {{-- <div class="modal-footer">
                                   <button type="button" class="btn btn-default waves-effect "
                                       data-dismiss="modal">Close</button>
 
                               </div> --}}
-                          </div>
-                      </form>
-                  </div>
-              </div>
-
-              <div class="modal fade" id="cancel" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-md" role="document">
-                    <form action="{{ route('cancel_order') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h4>
                             </div>
+                        </form>
+                    </div>
+                </div>
 
-                            <div class="modal-body">
-                                <div class="form-group row">
-                                    <div class="col-sm-12 text-center">
-                                      <button type="button" class="btn btn-default waves-effect "
-                                    data-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="submit" name="submit" >Confirm</button>
-                                      <input type="hidden" name="cancel_order_id" id="cancel_order_id" value="">
-                                    </div>
-
+                <div class="modal fade" id="cancel" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-md" role="document">
+                        <form action="{{ route('cancel_order') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="cancel_title">ยืนยันการยกเลิกรายการ </h4>
                                 </div>
-                            </div>
 
-                            {{-- <div class="modal-footer">
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12 text-center">
+                                            <button type="button" class="btn btn-default waves-effect "
+                                                data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+                                            <input type="hidden" name="cancel_order_id" id="cancel_order_id" value="">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {{-- <div class="modal-footer">
                                 <button type="button" class="btn btn-default waves-effect "
                                     data-dismiss="modal">Close</button>
 
                             </div> --}}
-                        </div>
-                    </form>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
 
 
@@ -213,40 +213,87 @@
     </script>
 
     <script type="text/javascript">
-        function qrcode(id) {
+
+function qrcode(id,type='') {
+
             $.ajax({
                     url: '{{ route('modal_qr_recive_product') }}',
                     type: 'GET',
                     data: {
-                        id: id
+                        id: id,'type':type
                     },
                 })
                 .done(function(data) {
-                    console.log("success");
                     $('#modal_qr_recive').html(data);
+                    var countdown = document.getElementById("time");
+                    var close_modal = document.getElementById("close_modal");
                     $('#show_qr').modal('show');
-                    // var fiveMinutes = 60 * 30,
-                    // display = document.querySelector('#time');
-                    // startTimer(fiveMinutes, display);
+                      //var i = $('#i').val();
+                      var s = $('#s').val();
+                      var id = $('#id').val();
+                      var type_qr_modal = $('#type_qr_modal').val();
+                      var timerId = '';
+                      if(type_qr_modal == 'non'){
+                        countdown.innerHTML = '00:00 <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\')"> <i class="icofont icofont-refresh"></i> </button>';
+                      }else{
+                        var time = s; // 30 minutes converted to 1800 seconds
+                        timerId = setInterval(function() {
+                          //var countdown = i *  s * 1000;
+                          time = time - 1;
+                          var minute = Math.floor(parseInt(time / 60));
+                          //console.log(minute);
+                          var second = parseInt(time % 60);
+                            minutes = minute < 10 ? "0" + minute : minute;
+                            seconds = second < 10 ? "0" + second : second;
+                            countdown.innerHTML = minutes + ' : ' + seconds +' <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\','+timerId+')"> <i class="icofont icofont-refresh"></i> </button>';
+
+                            if (second < 0) {
+                              countdown.innerHTML = '00:00 <button class="btn btn-sm btn btn-success btn-outline-success btn-icon" onclick="refresh_time('+id+',\'refresh_time\','+timerId+')"> <i class="icofont icofont-refresh"></i> </button>';
+                            }
+
+                        }, 1000);
+
+                      }
+
+                      var close_modal_html = '<button type="button" class="btn btn-default waves-effect" onclick="time_stop('+timerId+')" >Close</button>';
+                      close_modal.innerHTML = close_modal_html;
+
                 })
+
                 .fail(function() {
                     console.log("error");
                 })
         }
 
+        function refresh_time(id,type,timerId){
+          clearInterval(timerId);
+          $('#show_qr').modal('hide');
+            qrcode(id,type);
+        }
+
+
+        function time_stop(timerId) {
+          if(timerId){
+            clearInterval(timerId);
+          }
+          $('#show_qr').modal('hide');
+        }
+
+
+
         function upload_slip(order_id) {
             $('#order_id').val(order_id);
         }
 
-        function delete_order(order_id,code){
+        function delete_order(order_id, code) {
             $('#delete_order_id').val(order_id);
-            $('#delete_title').html('ยืนยันการลบรายการ ('+code+')');
+            $('#delete_title').html('ยืนยันการลบรายการ (' + code + ')');
 
         }
 
-        function cancel_order(order_id,code){
+        function cancel_order(order_id, code) {
             $('#cancel_order_id').val(order_id);
-            $('#cancel_title').html('ยืนยันการยกเลิกรายการ ('+code+')');
+            $('#cancel_title').html('ยืนยันการยกเลิกรายการ (' + code + ')');
         }
 
         $('#file_slip').change(function() {
@@ -290,9 +337,9 @@
                     {
                         data: 'pv_total'
                     },
-                    {
-                        data: 'banlance'
-                    },
+                    // {
+                    //     data: 'banlance'
+                    // },
                     {
                         data: 'date_active'
                     },

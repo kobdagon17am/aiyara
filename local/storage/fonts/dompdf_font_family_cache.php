@@ -78,10 +78,10 @@
     'normal' => $rootDir . '/lib/fonts/DejaVuSerif',
   ),
   'thsarabunnew' => array(
-    'normal' => $fontDir . '/thsarabunnew-normal_1df21894e858eb30b230a0123f779d48',
-    'bold' => $fontDir . '/thsarabunnew-bold_271e604406ab71513327f6554d14c81e',
-    'italic' => $fontDir . '/thsarabunnew-italic_8aa7445c95a5ba6794e3a2bd9f79ec1d',
-    'bold_italic' => $fontDir . '/thsarabunnew-bold-italic_1964d963fe18928d6cb54b3662c43ac5',
+    'normal' => $fontDir . '/thsarabunnew-normal_bf352139bf0b1338c41099cec9711a91',
+    'bold' => $fontDir . '/thsarabunnew-bold_6a91dd65c7c930875834b34fe5b4e46c',
+    'italic' => $fontDir . '/thsarabunnew-italic_c0402ba6fe2e128765f4eb232e9e85a7',
+    'bold_italic' => $fontDir . '/thsarabunnew-bold-italic_a92095bf69724993724228773ab8bb9a',
   ),
   'material design icons' => array(
     'normal' => $fontDir . '/material-design-icons-normal_b3632bd330ca4b2012afd2c5a5eec244',

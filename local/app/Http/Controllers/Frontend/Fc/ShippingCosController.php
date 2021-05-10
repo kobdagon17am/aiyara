@@ -51,7 +51,12 @@ class ShippingCosController extends Controller
   	}
 
     $shipping_cost = $data->shipping_cost;
-    $price_total = $request->price + $data->shipping_cost;
+
+    if($request->type == 6){
+      $price_total = $request->price;
+    }else{
+      $price_total = $request->price + $data->shipping_cost;
+    }
 
     if($request->type == 5){
 

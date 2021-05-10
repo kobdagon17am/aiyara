@@ -172,15 +172,40 @@ class CancelOrderController extends Controller
                     // 13 Gift Voucher + บัตรเครดิต
                     // 14 Gift Voucher + Ai-Cash
 
-                    // if ($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11) {
-                    //     dd('1');
+                    if($pay_type== 3 || $pay_type == 6 || $pay_type== 9 || $pay_type==  11 || $pay_type==  14){//Aicash
 
-                    // }
+                  $update_icash =  $customer_user->ai_cash + $order_data->aicash_price;
+                  //$customer_user->ai_cash;//Ai-Cash เดิม
+                  //$update_icash; //Bicash_banlance
 
-                    // if ($pay_type == 14) {
-                    //     dd('2');
+                    $update_aicash = DB::table('db_orders') //update บิล
+                    ->where('id', $order_id)
+                    ->update(['aicash_old'=>$customer_user->ai_cash,'aicash_banlance' => $update_icash]);
 
-                    // }
+
+                    $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
+                      'customer_id_fk' => $customer_id,
+                      'order_id_fk' =>$order_id,
+                      //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
+                      'business_location_id_fk' => $order_data->business_location_id_fk,
+                      'price_total' => $order_data->total_price,
+                      'aicash_old' => $customer_user->ai_cash,
+                      'aicash_price' => $order_data->aicash_price,
+                      'aicash_banlance' => $update_icash,
+                      'order_code' => $order_data->code_order,
+                      'order_type_id_fk' => $order_data->purchase_type_id_fk,
+                      'pay_type_id_fk' =>$order_data->pay_type_id_fk,
+                      'type' => 'cancel',
+                      'detail'=>'Cancel Oder',
+                  ]);
+
+                  $update_aicash = DB::table('customers')
+                  ->where('id', $customer_id)
+                  ->update(['ai_cash' => $update_icash]);
+
+
+                }
+
 
                     if ($type_id == 1) {
 

@@ -31,46 +31,56 @@ class CourseEventController extends Controller
     return view('frontend/course');
   }
 
-  public static function modal_qr_ce(Request $request){
+  public function modal_qr_ce(Request $request)
+{
+    $id = $request->id;
+    $type = $request->type;
 
-    $course_event_regis_id = $request->id;
+    $course_event_regis_id = DB::table('course_event_regis')
+        ->where('id', '=', $id)
+        ->first();
 
-    $data_course_event_regis = DB::table('course_event_regis')
-    ->where('id',$course_event_regis_id)
+    if ($type == 'refresh_time') {
+
+        $type_qr_modal = 'update';
+        $random = Random_code::random_code('8');
+        $qr = $id . '' . $random;
+
+        $endata = date('Y-m-d H:i:s', strtotime("+60 minutes"));
+        $updated_qrcode = DB::table('course_event_regis')
+            ->where('id', $id)
+            ->update(['qr_code' => $qr, 'qr_endate' => $endata]);
+
+    } else {
+        if ($course_event_regis_id->qr_code) {
+          $type_qr_modal = 'non';
+
+            $qr_endate = strtotime($course_event_regis_id->qr_endate);
+            if ($qr_endate < strtotime(now())) {
+              $type_qr_modal = 'non';
+            }else{
+              $type_qr_modal = 'update';
+            }
+        } else {
+            $type_qr_modal = 'update';
+            $random = Random_code::random_code('8');
+            $qr = $id . '' . $random;
+
+            $endata = date('Y-m-d H:i:s', strtotime("+60 minutes"));
+            $updated_qrcode = DB::table('course_event_regis')
+                ->where('id', $id)
+                ->update(['qr_code' => $qr, 'qr_endate' => $endata]);
+        }
+
+    }
+
+    $data =  DB::table('course_event_regis')
+    ->select('course_event_regis.*','course_ticket_number.ticket_number')
+    ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=','course_event_regis.ticket_id')
+    ->where('course_event_regis.id','=',$id)
     ->first();
 
-    if($data_course_event_regis->qr_code){
-      $qr_endate = strtotime($data_course_event_regis->qr_endate);
-      if( $qr_endate < strtotime(now()) ){
-
-       $random = Random_code::random_code('8');
-       $qr = $course_event_regis_id.''.$random;
-
-       $endata = date('Y-m-d H:i:s',strtotime("+1 day"));
-       $updated_qrcode = DB::table('course_event_regis')
-       ->where('id',$course_event_regis_id)
-       ->update(['qr_code' => $qr,'qr_endate' => $endata ]);
-
-     }
-
-   }else{
-
-    $random = Random_code::random_code('8');
-    $qr = $course_event_regis_id.''.$random;
-
-    $edata = date('Y-m-d H:i:s',strtotime("+1 day"));
-    $updated_qrcode = DB::table('course_event_regis')
-    ->where('id',$course_event_regis_id)
-    ->update(['qr_code' => $qr,'qr_endate' => $edata ]);
-  }
-
-  $data =  DB::table('course_event_regis')
-  ->select('course_event_regis.*','course_ticket_number.ticket_number')
-  ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=','course_event_regis.ticket_id')
-  ->where('course_event_regis.id','=',$course_event_regis_id)
-  ->first();
-
-  return view('frontend/modal/modal_qr_ce',compact('data'));
+    return view('frontend/modal/modal_qr_ce', compact('data','type_qr_modal'));
 }
 
 public function dt_course(Request $request){

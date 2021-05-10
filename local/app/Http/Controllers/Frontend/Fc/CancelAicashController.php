@@ -8,7 +8,7 @@ class CancelAicashController extends Controller
 {
 
     public static function cancel_aicash($cancel_aicash_id,$customer_or_admin,$type_user_cancel){
-
+      DB::BeginTransaction();
 
       $aicash = DB::table('db_add_ai_cash')
       ->select('*')
@@ -16,25 +16,20 @@ class CancelAicashController extends Controller
       ->first();
 
 
-
-        DB::BeginTransaction();
         if($aicash->deleted_status == 1){
           $resule = ['status' => 'fail', 'message' => 'Oder Aicash Status Delete'];
-          DB::rollback();
           return $resule;
 
         }
 
         if($aicash->order_status_id_fk == 8){
           $resule = ['status' => 'fail', 'message' => 'Oder Aicash Status Cancel'];
-          DB::rollback();
           return $resule;
 
         }
 
         if($aicash->upto_customer_status == 0){
           $resule = ['status' => 'fail', 'message' => 'Oder Aicash นี้ยังไม่ถูก Add Ai-Cash ให้ User ไม่สามารถยกเลิกบิลได้'];
-          DB::rollback();
           return $resule;
         }
 
@@ -46,7 +41,6 @@ class CancelAicashController extends Controller
 
         if($customer_user->ai_cash < $aicash->aicash_amt){
             $resule = ['status' => 'fail', 'message' => 'ยอด Ai-Cash ไม่พอสำหรับการยกเลิก'];
-            DB::rollback();
           return $resule;
         }
 
@@ -55,9 +49,8 @@ class CancelAicashController extends Controller
         try {
 
           $update_aicash = $customer_user->ai_cash - $aicash->aicash_amt;
-
           $update_ai_cash = DB::table('customers')
-              ->where('id',  $aicash->customer_id_fk)
+              ->where('id',$customer_user->id)
               ->update(['ai_cash' => $update_aicash]);
 
           $update = DB::table('db_add_ai_cash') //update บิล
@@ -68,17 +61,36 @@ class CancelAicashController extends Controller
               'order_status_id_fk' => 8,
               'type_user' => $type_user_cancel, //customer || Admin
           ]);
+          // DB::rollback();
+          // $resule = ['status' => 'success', 'message' => 'Cancle Ai-Cash Success'];
+          // return $resule;
+
+              $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
+                'customer_id_fk' => $customer_user->id,
+                //'order_id_fk' =>$order_id,
+                'add_ai_cash_id_fk' =>  $cancel_aicash_id,//กรณีเติม Aicash
+                'business_location_id_fk' => $customer_user->business_location_id,
+                'price_total' => $aicash->aicash_amt,
+                'aicash_old' => $customer_user->ai_cash,
+                'aicash_price' => $aicash->aicash_amt,
+                'aicash_banlance' => $update_aicash,
+                'order_code' => $aicash->code_order,
+                'order_type_id_fk' => $aicash->order_type_id_fk,
+                'pay_type_id_fk' =>$aicash->pay_type_id,
+                'type' => 'cancel',
+                'detail'=>'Cancel Oder',
+            ]);
+
 
           $resule = ['status' => 'success', 'message' => 'Cancle Ai-Cash Success'];
             if ($resule['status'] == 'success') {
                 DB::commit();
                 return $resule;
             } else {
-
                 DB::rollback();
                 return $resule;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return $e;
         }
