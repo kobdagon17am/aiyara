@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Frontend\Fc\CancelAicashController;
 use App\Http\Controllers\Frontend\Fc\DeleteAicashController;
+use App\Http\Controllers\Frontend\Fc\AicashConfirmeController;
 use Auth;
 use DataTables;
 use Illuminate\Http\Request;
@@ -20,18 +21,8 @@ class AiCashController extends Controller
 
     public function index()
     {
-
-  //     $movement_ai_cash = DB::table('db_movement_ai_cash')
-  //     ->select('db_movement_ai_cash.*', 'dataset_pay_type.detail as pay_type',
-  //     'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon')
-  //     ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_movement_ai_cash.pay_type_id_fk')
-  //     ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_movement_ai_cash.order_type_id_fk')
-  //     //->where('dataset_orders_type.lang_id', '=', 1)
-  //     ->where('db_movement_ai_cash.customer_id_fk', '=', 8)
-  //     ->orderby('db_movement_ai_cash.created_at', 'desc')
-  //     ->get();
-  // dd($movement_ai_cash);
-
+      // $rs= AicashConfirmeController::aicash_confirme($aicash_id='41',$customer_or_admin_id='99',$type_user_confirme='admin');//$type_user_confirme = "'customer','admin'"
+      // dd($rs);
 
         $type = DB::table('dataset_orders_type')
             ->where('status', '=', 1)
