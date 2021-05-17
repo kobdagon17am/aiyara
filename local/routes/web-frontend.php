@@ -92,8 +92,13 @@ Route::get('docs','Frontend\DocsController@index')->name('docs');
 Route::post('docs_upload','Frontend\DocsController@docs_upload')->name('docs_upload');
 
 Route::get('chage_password','Frontend\EditPasswordController@index')->name('chage_password');
-
 Route::post('edit_password_submit','Frontend\EditPasswordController@edit_password_submit')->name('edit_password_submit');
+
+Route::get('chage_password_aicash','Frontend\EditPasswordAicashController@index')->name('chage_password_aicash');
+Route::post('add_password_aicash_submit','Frontend\EditPasswordAicashController@add_password_aicash_submit')->name('add_password_aicash_submit');
+Route::post('edit_password_aicash_submit','Frontend\EditPasswordAicashController@edit_password_aicash_submit')->name('edit_password_aicash_submit');
+Route::post('check_pass_aicash','Frontend\EditPasswordAicashController@check_pass_aicash')->name('check_pass_aicash');
+
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
 
@@ -172,6 +177,7 @@ Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')
 Route::get('datatable_order_aicash','Frontend\AiCashController@datatable_order_aicash')->name('datatable_order_aicash');
 Route::get('datatable_add_aicash','Frontend\AiCashController@datatable_add_aicash')->name('datatable_add_aicash');
 Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash')->name('cart_payment_aicash');
+Route::get('view_aicash','Frontend\AiCashController@view_aicash')->name('view_aicash');
 
 
 Route::get('course','Frontend\CourseEventController@index')->name('course');

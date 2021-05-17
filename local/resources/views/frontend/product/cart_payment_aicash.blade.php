@@ -3,8 +3,8 @@
  @endsection
  @section('conten')
  <?php //dd($customer); ?>
- 
- <div class="row"> 
+
+ <div class="row">
  	<div class="col-md-8 col-sm-12">
  		<form action="{{route('payment_submit')}}" method="POST" enctype="multipart/form-data">
  			@csrf
@@ -50,6 +50,21 @@
  								</div>
 
  								<div class="row" id="cart_pament">
+
+                  <div class="row col-md-12 col-lg-12">
+                    <div class="col-md-6 col-lg-6">
+                      <div class="card">
+                          <div class="card-block text-center">
+                              {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                              <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
+                              <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
+                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                              {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
+                          </div>
+                      </div>
+                  </div>
+
+                  </div>
 
  									<div class="form-group row">
  										<div class="col-sm-12">
@@ -134,7 +149,7 @@
 		}
 	});
 
-	
+
 	function next(){
 		document.getElementById("address").classList.remove('active');
 		document.getElementById("nav_address").classList.remove('active');
@@ -144,16 +159,29 @@
 	}
 	function sent_address(){
 		document.getElementById("sent").style.display = 'block';
-		document.getElementById("receive").style.display = 'none'; 
+		document.getElementById("receive").style.display = 'none';
 	}
 
 	function receive_office(){
 		document.getElementById("sent").style.display = 'none';
-		document.getElementById("receive").style.display = 'block'; 
+		document.getElementById("receive").style.display = 'block';
 	}
 
 	function open_input(data){
-		var conten_1 = '<div class="form-group row">'+
+		var conten_1 = `<div class="row col-md-12 col-lg-12">
+                    <div class="col-md-6 col-lg-6">
+                      <div class="card">
+                          <div class="card-block text-center">
+                              {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                              <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
+                              <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
+                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                              {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
+                          </div>
+                      </div>
+                  </div>
+                  </div>`+
+    '<div class="form-group row">'+
 		'<div class="col-sm-12">'+
 		'<div class="form-group row">'+
 		'<div class="col-sm-6">'+

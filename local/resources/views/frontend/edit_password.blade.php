@@ -6,14 +6,14 @@
     <div class="card user-card">
       <div class="card-block">
         <div class="usre-image">
-          <img src="{{ asset('local/public/images/ex.png') }}" class="img-radius" width="100"> 
+          <img src="{{ asset('local/public/images/ex.png') }}" class="img-radius" width="100">
         </div>
 
-        <h5 class="f-w-600 m-t-10 m-b-10 text-primary">{{ Auth::guard('c_user')->user()->user_name }}</h5> 
-
+        <h5 class="f-w-600 m-t-10 m-b-10 text-primary">{{ Auth::guard('c_user')->user()->user_name }}</h5>
+        <p class="m-t-15 text-muted"><b class="text-success" >Change your password</b></p>
         <ul class="list-unstyled activity-leval m-b-10">
           <li class="active"></li>
-          <li class="active"></li> 
+          <li class="active"></li>
           <li class="active"></li>
           <li class="active"></li>
           <li class="active"></li>
@@ -37,12 +37,12 @@
         <div class="input-group input-group-primary">
           <span class="input-group-addon">
             <i class="fa fa-key"></i>
-          </span> 
+          </span>
           <input type="password" id="confirm_edit_password" name="confirm_edit_password" placeholder="Confirm Change Password" class="form-control"  style="font-size: 18px;color: #000;font-weight: bold;" required="">
         </div>
       </form>
 
-      <p class="m-t-15 text-muted"><b class="text-success" >Change your password</b></p>
+
       <hr>
       <div class="row">
         <div class="col-md-12 text-center">

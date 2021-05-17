@@ -3,7 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/magnific-popup/magnific-popup.min.css')}}">
 @endsection
 
 @section('content')
@@ -72,15 +72,86 @@
                           </div>
                           <div class="col-md-6 text-right">
 
-                            <button type="submit" name="approved" class="btn btn-primary btn-sm waves-effect font-size-16 " value='approved'>
+                            {{-- <button type="submit" name="approved" class="btn btn-primary btn-sm waves-effect font-size-16 " value='approved'>
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
                             </button>
                             &nbsp;
                             &nbsp;
-                            &nbsp;
+                            &nbsp; --}}
+
+                            <button type="button" class="btn btn-primary waves-effect waves-light" data-toggle="modal" data-target="#cancel">อนุมัติ</button>
+
                             <button type="submit" name="no_approved" class="btn btn-success btn-sm waves-effect font-size-16 " value='no_approved'>
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                             </button>
+
+                            <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-scrollable">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title mt-0" id="confirm">ยกเลิกบิลชำระ</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+
+                                        @IF(!empty(@$slip[0]->file))
+                                        <img src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}" class="img-fluid" alt="Responsive image">
+                                        @ELSE
+                                        <img src="{{ asset('local/public/images/example_img.png') }}" class="img-fluid" alt="Responsive image">
+                                        @ENDIF
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          <button type="submit"  type="submit" name="approved" value='approved' class="btn btn-primary">อนุมัติ</button>
+                                          </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+
+                            <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-scrollable">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title mt-0" id="confirm">ยืนยันการอนุมัติใบสั่งซื้อ</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+
+                                        <div class="col-md-12 mt-2 text-left" >
+                                          <h5 class="font-size-14">ธนาคารที่โอนชำระ</h5>
+                                          <select class="form-control" name="bank_name" required>
+                                            <option value="">Select</option>
+                                            <option value="ธนาคารกรุงเทพ">ธนาคารกรุงเทพ</option>
+                                            <option value="ธนาคารกรุงไทย">ธนาคารกรุงไทย</option>
+                                            <option value="ธนาคารกรุงศรีอยุธยา">ธนาคารกรุงศรีอยุธยา</option>
+                                            <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
+                                            <option value="ธนาคารทหารไทยธนชาต">ธนาคารทหารไทยธนชาต</option>
+                                            <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
+                                        </select>
+                                      </div>
+
+                                      <div class="col-md-12 mt-2 mb-2 text-left" >
+                                          <h5 class="font-size-14">วันที่สั่งซื้อในสลิป</h5>
+                                          <input class="form-control" type="datetime-local" name="slip_date" id="example-datetime-local-input" required>
+                                      </div>
+
+                                        @IF(!empty(@$slip[0]->file))
+                                        <img src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}" class="img-fluid" alt="Responsive image">
+                                        @ELSE
+                                        <img src="{{ asset('local/public/images/example_img.png') }}" class="img-fluid" alt="Responsive image">
+                                        @ENDIF
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          <button type="submit"  type="submit" name="approved" value='approved' class="btn btn-primary">อนุมัติ</button>
+                                          </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
 
                           </div>
                         </div>
@@ -98,6 +169,10 @@
 @endsection
 
 @section('script')
+<script src="{{ URL::asset('backend/libs/magnific-popup/magnific-popup.min.js')}}"></script>
+
+<!-- Lightbox init js -->
+<script src="{{ URL::asset('backend/js/pages/lightbox.init.js')}}"></script>
 
 <script>
 var sU = "{{@$sU}}";

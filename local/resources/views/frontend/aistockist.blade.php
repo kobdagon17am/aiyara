@@ -21,14 +21,30 @@
                 <div class="card-block">
                     <h6>ใช้ Ai-Stockist</h6>
                     <div class="form-group row">
+                      @if(Auth::guard('c_user')->user()->aistockist_status == 1)
                         <div class="col-md-6 m-t-5">
-                            <div class="input-group input-group-button">
-                                <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้">
-                                <span class="input-group-addon btn btn-primary" onclick="check()">
-                                    <span class="">ทำรายการ</span>
-                                </span>
-                            </div>
+                          <div class="input-group input-group-button">
+                              <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้">
+                              <span class="input-group-addon btn btn-primary" onclick="check()">
+                                  <span class="">ทำรายการ</span>
+                              </span>
+                          </div>
+                      </div>
+                      @else
+
+                      <div class="col-md-6 m-t-5">
+                        <span class="text-danger">คุณยังไม่ได้รับสิทธิ์ Ai-Stockit ไม่สามารถใช้งานฟังก์ชั่นนี้ได้</span>
+                        <div class="input-group input-group-button">
+                            <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้" disabled>
+                            <span class="input-group-addon btn btn-primary" onclick="check()">
+                                <span class="">ทำรายการ</span>
+                            </span>
                         </div>
+                    </div>
+
+                      @endif
+
+
                     </div>
 
                 </div>
@@ -41,6 +57,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
+
                     <h5>ประวัติการสั่งซื้อ</h5>
                     {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
                 </div>
@@ -183,8 +200,6 @@
         </div>
     </div>
 
-
-
 @endsection
 @section('js')
     <!-- Masking js -->
@@ -260,8 +275,9 @@
 
         }
 
-    </script>
 
+
+    </script>
     <script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>

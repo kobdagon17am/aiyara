@@ -4,16 +4,16 @@ namespace App\Models\Frontend;
 use App\Models\Frontend\RunNumberPayment;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-
+use  App\Models\Frontend\Customer;
 class PvPayment extends Model
 {
 
     public static function PvPayment_type_confirme($order_id,$admin_id,$distribution_channel,$action_type)
+    {
 
-    //distribution_channel 1 ติดต่อหน้าร้าน , 2 ช่องทางการจำหน่ายอื่นๆ
-    // $action_type Type ของผู้ดำเนินการ 'admin','customer'
 
-    { //1 ทำคุณสมบัติ //2 รักษาคุณสมบัตรรายเดือน
+      DB::BeginTransaction();
+
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
@@ -30,6 +30,8 @@ class PvPayment extends Model
             $customer_id = $order_data->customers_id_fk;
         }
 
+        $customer_update = Customer::find($customer_id);
+
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
 
@@ -41,7 +43,6 @@ class PvPayment extends Model
         } else {
 
             try {
-                DB::BeginTransaction();
 
                 if ($order_data->delivery_location_frontend == 'sent_office') {
                     $orderstatus_id = 4;
@@ -50,8 +51,6 @@ class PvPayment extends Model
                     $orderstatus_id = 5;
 
                 }
-
-
 
                 if($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk  == 6 || $order_data->pay_type_id_fk == 9
                  || $order_data->pay_type_id_fk ==  11 || $order_data->pay_type_id_fk ==  14){//Aicash
@@ -96,9 +95,8 @@ class PvPayment extends Model
                       'detail'=> $movement_detail,
                   ]);
 
-                  $update_aicash = DB::table('customers')
-                  ->where('id', $customer_id)
-                  ->update(['ai_cash' => $update_icash]);
+                  $customer_update->ai_cash = $update_icash;
+
 
                   }else{
 
@@ -253,10 +251,7 @@ class PvPayment extends Model
 
 
                     $add_pv = $data_user->pv + $pv;
-
-                    $update_pv = DB::table('customers')
-                        ->where('id', $customer_id)
-                        ->update(['pv' => $add_pv]);
+                    $customer_update->pv = $add_pv;
 
                     $update_order_type_1 = DB::table('db_orders') //update บิล
                         ->where('id', $order_id)
@@ -320,10 +315,11 @@ class PvPayment extends Model
                             $mt_active = strtotime("+$mt_mount Month", strtotime($start_month));
                             $mt_active = date('Y-m-t', $mt_active); //วันที่ mt_active
 
-                            $update_mt = DB::table('customers')
-                                ->where('id', $customer_id)
-                                ->update(['pv_mt' => $pv_mt_total, 'pv_mt_active' => $mt_active,
-                                    'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s')]);
+                            $customer_update->pv_mt = $pv_mt_total;
+                            $customer_update->pv_mt_active = $mt_active;
+                            $customer_update->status_pv_mt = 'not';
+                            $customer_update->date_mt_first =  date('Y-m-d h:i:s');
+
 
                             $update_order_type_2 = DB::table('db_orders') //update บิล
                                 ->where('id', $order_id)
@@ -331,11 +327,11 @@ class PvPayment extends Model
 
                         } else {
                             //dd('อัพเดท');
-                            $update_mt = DB::table('customers')
-                                ->where('id', $customer_id)
-                                ->update(['pv_mt' => $pv_mt_all,
-                                    'pv_mt_active' => date('Y-m-t', strtotime($start_month)),
-                                    'status_pv_mt' => 'not', 'date_mt_first' => date('Y-m-d h:i:s')]);
+
+                            $customer_update->pv_mt = $pv_mt_all;
+                            $customer_update->pv_mt_active =date('Y-m-t', strtotime($start_month));
+                            $customer_update->status_pv_mt = 'not';
+                            $customer_update->date_mt_first =  date('Y-m-d h:i:s');
 
                             $update_order_type_2 = DB::table('db_orders') //update บิล
                                 ->where('id', $order_id)
@@ -381,9 +377,9 @@ class PvPayment extends Model
                             $mt_active = strtotime("+$mt_mount Month", $strtime);
                             $mt_active = date('Y-m-t', $mt_active); //วันที่ mt_active
 
-                            $update_mt = DB::table('customers')
-                                ->where('id', $customer_id)
-                                ->update(['pv_mt' => $pv_mt_total, 'pv_mt_active' => $mt_active]);
+
+                            $customer_update->pv_mt = $pv_mt_total;
+                            $customer_update->pv_mt_active = $mt_active;
                             //dd($mt_active);
 
                             $update_order_type_2 = DB::table('db_orders') //update บิล
@@ -392,9 +388,7 @@ class PvPayment extends Model
 
                         } else {
                             //dd('อัพเดท');
-                            $update_mt = DB::table('customers')
-                                ->where('id', $customer_id)
-                                ->update(['pv_mt' => $pv_mt_all]);
+                            $customer_update->pv_mt = $pv_mt_all;
 
                             $update_order_type_2 = DB::table('db_orders') //update บิล
                                 ->where('id', $order_id)
@@ -448,9 +442,9 @@ class PvPayment extends Model
                         $tv_active = strtotime("+$add_mount Month", $strtime);
                         $tv_active = date('Y-m-t', $tv_active); //วันที่ tv_active
 
-                        $update_mt = DB::table('customers')
-                            ->where('id', $customer_id)
-                            ->update(['pv_tv' => $pv_tv_total, 'pv_tv_active' => $tv_active]);
+                        $customer_update->pv_tv = $pv_tv_total;
+                        $customer_update->pv_tv_active = $tv_active;
+
                         //dd($tv_active);
 
                         $update_order_type_3 = DB::table('db_orders') //update บิล
@@ -459,9 +453,8 @@ class PvPayment extends Model
 
                     } else {
                         //dd('อัพเดท');
-                        $update_mt = DB::table('customers')
-                            ->where('id', $customer_id)
-                            ->update(['pv_tv' => $pv_tv_all]);
+
+                          $customer_update->pv_tv = $pv_tv_all;
 
                         $update_order_type_3 = DB::table('db_orders') //update บิล
                             ->where('id', $order_id)
@@ -481,10 +474,7 @@ class PvPayment extends Model
                     //dd($data_user);
 
                     $add_pv_aipocket = $data_user->pv_aistockist + $pv;
-
-                    $update_pv = DB::table('customers')
-                        ->where('id', $customer_id)
-                        ->update(['pv_aistockist' => $add_pv_aipocket]);
+                    $customer_update->pv_aistockist = $add_pv_aipocket;
 
                     $update_ai_stockist = DB::table('ai_stockist')
                         ->where('order_id_fk', $order_id)
@@ -521,11 +511,8 @@ class PvPayment extends Model
                         ->where('id', '=', $customer_id)
                         ->first();
 
-                    $add_pv = $data_user->pv + $pv;
-
-                    $update_pv = DB::table('customers')
-                        ->where('id', $customer_id)
-                        ->update(['pv' => $add_pv]);
+                    $add_pv = $data_user->pv + $pv;;
+                    $customer_update->pv = $add_pv;
 
                     $update_order_type_6 = DB::table('db_orders') //update บิล
                         ->where('id', $order_id)
@@ -543,11 +530,12 @@ class PvPayment extends Model
                     return $resule;
                 }
 
+                //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
+                if($order_data->total_price > 10000){
 
-
-                $order_data = DB::table('db_orders')
-            ->where('id', '=', $order_id)
-            ->first();
+                  $customer_update->aistockist_status = 1;
+                  $customer_update->aistockist_date =  date('Y-m-d h:i:s');
+                }
 
                 if ($customer_id != 'AA' and $pv > 0) {
                     $j = 2;
@@ -643,6 +631,7 @@ class PvPayment extends Model
                 }
 
                 if ($resule['status'] == 'success') {
+                  $customer_update->save();
 
                     DB::commit();
                     //DB::rollback();

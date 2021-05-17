@@ -18,15 +18,15 @@ class HomeController extends Controller
   {
     $this->middleware('customer');
   }
-  
+
   public function index(Request $request){
 
   	if($request->id){
-  		$id = $request->id; 
+  		$id = $request->id;
   	}else{
-  		$id = Auth::guard('c_user')->user()->id; 
+  		$id = Auth::guard('c_user')->user()->id;
   	}
-  	
+
   	$data = LineModel::line_all($id);
     return view('frontend/home',compact('data'));
   }
@@ -41,8 +41,8 @@ class HomeController extends Controller
     $id = $request->id;
 
     $data = DB::table('customers')
-    ->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','q_max.code_name as max_code_name','q_max.business_qualifications as max_q_name') 
-    ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id') 
+    ->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','q_max.code_name as max_code_name','q_max.business_qualifications as max_q_name')
+    ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
     ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
     ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=','customers.qualification_max_id')
     ->where('customers.id','=',$id)
@@ -59,16 +59,16 @@ class HomeController extends Controller
     ->limit(1)
     ->first();
     return view('frontend/modal/modal_add',['data'=>$data,'type'=>$type]);
-  } 
+  }
 
   public function home_type_tree(Request $request){
 
     if($request->id){
-      $id = $request->id; 
+      $id = $request->id;
     }else{
-      $id = Auth::guard('c_user')->user()->id; 
+      $id = Auth::guard('c_user')->user()->id;
     }
-    
+
     $data = LineModel::line_all($id);
     return view('frontend/home_type_tree',compact('data'));
   }
@@ -85,7 +85,7 @@ class HomeController extends Controller
 
   public function under_b(Request $request){
     $id = $request->id;
-    
+
     $las_a_id = LineModel::under_b($id);
 
     $data = LineModel::line_all($las_a_id);
@@ -95,7 +95,7 @@ class HomeController extends Controller
 
   public function under_c(Request $request){
     $id = $request->id;
-    
+
     $las_a_id = LineModel::under_c($id);
 
     $data = LineModel::line_all($las_a_id);

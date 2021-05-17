@@ -71,6 +71,12 @@ class AiCashController extends Controller
                 return '<span class="label label-inverse-' . $row->css_class . '"><b style="color: #000">' . $row->order_status . '</b></span>';
             })
 
+            ->addColumn('code_order', function ($row) {
+              if($row->code_order){
+                return '<label class="label label-inverse-info-border" onclick="view_aicash('.$row->id.')"><a href="#!">'.$row->code_order.'</a></label>';
+              }
+            })
+
             ->addColumn('total_amt', function ($row) {
               if($row->order_status_id_fk == 8 ){
                 return '<b class="text-danger"> -'. number_format($row->total_amt, 2) . '</b>';
@@ -104,7 +110,7 @@ class AiCashController extends Controller
                 }
                 return $button;
             })
-            ->rawColumns(['created_at', 'order_status', 'total_amt', 'aicash_banlance', 'action'])
+            ->rawColumns(['created_at', 'order_status', 'total_amt', 'aicash_banlance','code_order','action'])
             ->make(true);
     }
 
@@ -150,11 +156,24 @@ class AiCashController extends Controller
                 return '<span style="font-size: 13px">' . date('Y/m/d H:i:s', strtotime($row->created_at)) . '</span>';
             })
 
+            ->addColumn('created_at', function ($row) {
+              return '<span style="font-size: 13px">' . date('Y/m/d H:i:s', strtotime($row->created_at)) . '</span>';
+          })
+
+          ->addColumn('code_order', function ($row) {
+            if($row->order_id_fk){
+
+              return '<label class="label label-inverse-info-border" ><a href="'.route('cart-payment-history',['code_order' => $row->order_code]).'">'.$row->order_code.'</a></label>';
+            }else{
+              return '<label class="label label-inverse-info-border" onclick="view_aicash('.$row->add_ai_cash_id_fk.')"><a href="#!">'.$row->order_code.'</a></label>';
+            }
+          })
+
+
             ->addColumn('price_total', function ($row) {
                 //return '<b class="text-primary">' . number_format($row->price_total, 2) . '</b>';
                 return '<b>' . number_format($row->price_total, 2) . '</b>';
             })
-
             ->addColumn('aicash_old', function ($row) {
                 return '<b>' . number_format($row->aicash_old, 2) . '</b>';
             })
@@ -171,7 +190,7 @@ class AiCashController extends Controller
 
             })
 
-            ->rawColumns(['created_at', 'price_total', 'aicash_old', 'aicash_price', 'aicash_banlance'])
+            ->rawColumns(['created_at', 'price_total', 'aicash_price', 'aicash_banlance','code_order'])
             ->make(true);
     }
 
@@ -245,5 +264,23 @@ class AiCashController extends Controller
             $data = ['type' => 7, 'price' => $request->price];
             return view('frontend/product/cart_payment_aicash', compact('data'));
         }
+    }
+
+    public function view_aicash(Request $request)
+    {
+      $data = DB::table('db_add_ai_cash')
+      ->select('db_add_ai_cash.*', 'dataset_pay_type.detail as pay_type', 'dataset_order_status.detail as order_status', 'dataset_order_status.css_class')
+      ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_add_ai_cash.pay_type_id')
+      ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_add_ai_cash.order_status_id_fk')
+      ->where('db_add_ai_cash.id', '=', $request->id)
+      ->orderby('db_add_ai_cash.created_at', 'desc')
+      ->first();
+
+      $date = date('d/m/Y H:i:s',strtotime($data->created_at));
+      $data = ['status'=>'success','data'=>$data ,'price'=>number_format($data->aicash_amt,2),'date_aicash'=>$date];
+
+      // dd($data);
+
+      return $data;
     }
 }

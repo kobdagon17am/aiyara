@@ -63,7 +63,6 @@
                         </table>
                     </div>
 
-
                     <div class="modal fade" id="delete_aicash" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-md" role="document">
                             <form action="{{ route('delete_aicash') }}" method="POST" enctype="multipart/form-data">
@@ -180,8 +179,8 @@
                 </div>
                 <div class="card-block">
                     <div class="table-responsive dt-responsive">
-                      <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
-                      </table>
+                        <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
+                        </table>
 
                     </div>
 
@@ -200,6 +199,32 @@
         </div>
     </div>
 
+    <div class="modal fade" id="view_aicash" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Oder Code : <b id="code_order_aicash"></b></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="card bg-c-green order-card">
+                        <div class="card-block">
+                            <h6 class="m-b-20">เติม Ai-Cash</h6>
+                            <h2 class="text-right"><i class="ti-wallet f-left"></i><span id="price_add_aicash"></span></h2>
+
+
+                           <p id="status"></p>
+                            {{-- <p class="m-b-0">Stattus<span class="f-right" id="status">Success</span></p> --}}
+                            <p class="m-b-0" style="margin-top: 31px;">Action Date <span class="f-right" id="date_aicash"> </span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect"  data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 @section('js')
@@ -208,10 +233,6 @@
     <script src="{{ asset('frontend/assets/pages/form-masking/jquery.inputmask.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/form-masking/autoNumeric.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/form-masking/form-mask.js') }}"></script>
-
-
-
-
     <script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>
@@ -260,9 +281,6 @@
         }
 
     </script>
-
-
-
 
     <script type="text/javascript">
         $(function() {
@@ -353,8 +371,9 @@
                         title: 'Date'
                     },
                     {
-                        data: 'order_code',
-                        title: 'CODE'
+                        data: 'code_order',
+                        title: 'CODE',
+                        className: 'text-center'
                     },
                     // {
                     //     data: 'price_total',
@@ -374,15 +393,17 @@
                     // },
                     {
                         data: 'aicash_banlance',
-                        title: 'Banlance',className: 'text-right'
+                        title: 'Banlance',
+                        className: 'text-right'
                     },
                     {
-                        data: 'pay_type'
-                        ,title: 'ชำระโดย'
+                        data: 'pay_type',
+                        title: 'ชำระโดย'
                     },
 
                     {
-                        data: 'detail',title: 'Detail'
+                        data: 'detail',
+                        title: 'Detail'
                     },
 
                 ],
@@ -397,6 +418,34 @@
             // });
 
         });
+
+        function view_aicash(id) {
+            $.ajax({
+                    url: '{{ route('view_aicash') }}',
+                    type: 'GET',
+                    data: {
+                        id
+                    }
+                })
+                .done(function(data) {
+                    //console.log(data['data']['css_class']);
+                    $("#view_aicash").modal();
+                    $('#code_order_aicash').html(data['data']['code_order']);
+                    $('#price_add_aicash').html(data['price']);
+
+                    if(data['data']['order_status_id_fk'] == '7'){
+                      var status = 'Success';
+                    }else{
+                      var status = data['data']['order_status'];
+                    }
+
+                    $("#status").html('<span class="label f-right m-b-0 label-'+data['data']['css_class']+'" id="status" style="font-size: 14px">'+status+'</span>');
+                    $('#date_aicash').html(data['date_aicash']);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+        }
 
     </script>
 

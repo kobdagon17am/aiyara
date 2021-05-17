@@ -8,8 +8,6 @@
          href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
  @endsection
  @section('conten')
-
-
      <form name="payForm" action="https://ipay.bangkokbank.com/b2c/eng/dPayment/payComp.jsp" method="post" id="form1">
          @csrf
          <input type="hidden" name="merchantId" value="6845">
@@ -55,7 +53,7 @@
 
      <div class="row">
          <div class="col-md-8 col-sm-12">
-             <form action="{{ route('payment_submit') }}" method="POST" enctype="multipart/form-data">
+             <form action="{{ route('payment_submit') }}"  method="POST" enctype="multipart/form-data">
                  @csrf
                  <input type="hidden" id="url_check_user" name="url_check_user" value="{{ route('check_customer_id') }}">
                  <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
@@ -695,19 +693,10 @@
                                                  value="gift_voucher">ชำระเงิน</button>
                                          </div>
                                      </div>
-
-
-
                                  </div>
-
                              </div>
-
-
-
                          @else
-
                              <div class="demo-container card-block">
-
                                  <div class="row">
                                      <div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
 
@@ -748,7 +737,32 @@
 
                                  <div class="row" id="cart_pament_tranfer">
 
+                                <div class="row col-md-12 col-lg-12">
+                                  <div class="col-md-6 col-lg-6">
+                                    <div class="card">
+                                        <div class="card-block text-center">
+                                            {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                                            <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
+                                            <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
+                                            <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                                            {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-6 col-lg-6">
+                                  <div class="card">
+                                      <div class="card-block text-center">
+                                        <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
+                                        <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
+                                        <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                                        <button class="btn btn-primary btn-sm btn-round">Manage List</button>
+                                      </div>
+                                  </div>
+                              </div> --}}
+                                </div>
+
                                      <div class="form-group row">
+
                                          <div class="col-sm-12">
 
                                              <div class="form-group row">
@@ -820,7 +834,7 @@
                                                          </div>
                                                          <div class="col-md-4 col-sx-4 col-4">
                                                              <h3 class="text-right">
-                                                                 <span id="ai_cash_p"> {{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span>
+                                                                 <span id="ai_cash_p" class="text-success"> {{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span>
                                                              </h3>
                                                          </div>
                                                      </div>
@@ -841,14 +855,64 @@
                                              <div class="card-footer">
                                                <div id="error_aicash" class="text-right"></div>
                                                  <div class="text-right">
-                                                     <button class="btn btn-success" name="submit" id="ai_cash_submit" value="ai_cash"
-                                                         type="submit">ชำระเงินด้วย Ai-Cash</button>
+                                                     {{-- <button class="btn btn-success" name="submit" id="ai_cash_submit" value="ai_cash"
+                                                         type="submit">ชำระเงินด้วย Ai-Cash</button> --}}
+
+                                                      <a class="btn btn-success"
+                                                      data-toggle="modal" data-target="#default-Modal" >ชำระเงินด้วย Ai-Cash</a>
                                                  </div>
                                              </div>
                                              <!-- end of card-footer -->
                                          </div>
                                      </div>
                                  </div>
+
+                                 <div class="modal fade" id="default-Modal" tabindex="-1" role="dialog">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title">กรุณายืนยันรหัสผ่าน Ai-Cash ก่อนทำการชำระเงิน</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="row text-center">
+                                          <div class="col-md-1">
+                                          </div>
+                                          <div class="col-md-10">
+                                            <div id="status_check_pass_aicash"></div>
+
+                                            <div class="input-group input-group-primary">
+                                              <span class="input-group-addon">
+                                                <i class="fa fa-lock"></i>
+                                              </span>
+                                              <input type="password" name="password_aicash" id="password_aicash" class="form-control" placeholder="Password AiCash" >
+                                              <span class="input-group-addon btn btn-primary" id="basic-addon10">
+                                                <span class="" onclick="check_pass_aicash()">Check</span>
+                                            </span>
+                                            </div>
+
+
+                                          </div>
+                                          <div class="col-md-1">
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+
+                                        <a href="{{ route('chage_password_aicash') }}" id="chage_password_aicash" class="btn btn-warning waves-effect waves-light">ตั้งค่า PassWord  Ai-cash</a>
+                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                        <button class="btn btn-success md-auto" name="submit" id="ai_cash_submit" value="ai_cash" style="display: none"
+                                        type="submit">ชำระเงินด้วย Ai-Cash</button>
+
+
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
 
                              </div>
                          @endif
@@ -1130,6 +1194,29 @@
               }
          }
 
+
+         function check_pass_aicash(){
+         var password_aicash = $('#password_aicash').val();
+
+          $.ajax({
+                 type: "POST",
+                 url: "{{ route('check_pass_aicash') }}",
+                 data: {
+                     _token: '{{ csrf_token() }}',
+                     password_aicash: password_aicash,
+                 },
+                 success: function(data) {
+                   if(data['status'] == 'fail'){
+                    $('#status_check_pass_aicash').html('<b class="text-danger m-b-0"> '+data['message']+' </b>');
+                   }else{
+                    $('#status_check_pass_aicash').html('<b class="text-success m-b-0"> '+data['message']+' </b>');
+                    document.getElementById("ai_cash_submit").style.display = 'block';
+                    document.getElementById("chage_password_aicash").style.display = 'none';
+                   }
+
+                 }
+             });
+         }
 
          //console.log(data_1);
          function check_premium() {
@@ -1479,14 +1566,12 @@
                  })
          }
 
+
      </script>
      <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
      <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
-
      {{-- <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/e-payment.js') }}"></script> --}}
-
-
 
  @endsection
