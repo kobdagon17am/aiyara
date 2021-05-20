@@ -83,8 +83,8 @@ AIMMURA
 
           <div class="container bg_product mt-2">
             <!-- Three columns of text below the carousel -->
-            <p style="margin-bottom: -3px;"><span style="color:#28a745;font-size:4.5rem;font-weight: 600;">เริ่มต้น</span> <span  style="color:#3a3939;font-size:2.5rem;font-weight: 600;">สุขภาพดี</span>
-            <h1 style="color:#3a3939;font-weight: 600;">ผลิตภัณฑ์ของแท้จากบริษัท</h1></p>
+            <p style="margin-bottom: -3px;"><span style="color:#28a745;font-size:3.5rem;font-weight: 600;">เริ่มต้น</span> <span  style="color:#3a3939;font-size:2rem;font-weight: 600;">สุขภาพดี</span>
+            <h2 style="color:#3a3939;font-weight: 600;">ผลิตภัณฑ์ของแท้จากบริษัท</h2></p>
 
             <div class="row text-center mt-2 mb-5">
               <div class="col-6 col-sm-6 col-lg-3">
