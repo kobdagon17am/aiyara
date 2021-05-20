@@ -284,9 +284,9 @@
 				<div class="pcoded-wrapper">
 					<nav class="pcoded-navbar">
 						<div class="sidebar_toggle"><a href="#"><i class="icon-close icons text-success"></i></a></div>
-						<div class="pcoded-inner-navbar main-menu" style="padding-bottom: 50px">
-<!--
-	<div class="pcoded-navigation-label">สมาชิก</div> -->
+						<div class="pcoded-inner-navbar main-menu">
+
+	<div class="pcoded-navigation-label"> </div>
 
 	<ul class="pcoded-item pcoded-left-item" item-border="true" item-border-style="none" subitem-border="true">
 
@@ -611,32 +611,32 @@
 			<ul class="pcoded-submenu">
 				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
 
-				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
+					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale page 1</span>
+						<span class="pcoded-mtext">Page Aimmura</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
+					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 2</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
+					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 3</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('salepage/page-1*') ) ? 'active' : '' }}">
-					<a href="{{route('salepage/page-1',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
+					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Sale page 4</span>
 						<span class="pcoded-mcaret"></span>
@@ -662,7 +662,7 @@
 			</a>
 		</li>
 
-
+    <div class="pcoded-navigation-label"> </div>
 
 	</ul>
 

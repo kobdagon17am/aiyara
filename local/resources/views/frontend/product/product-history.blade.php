@@ -113,6 +113,12 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-sm-12">
+                                          <h5>Note</h5>
+                                          <p>
+                                            <code id="not"> </code></p>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -281,8 +287,9 @@ function qrcode(id,type='') {
 
 
 
-        function upload_slip(order_id) {
+        function upload_slip(order_id,not) {
             $('#order_id').val(order_id);
+            $('#not').html(not);
         }
 
         function delete_order(order_id, code) {

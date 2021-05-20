@@ -81,12 +81,12 @@
                   <input type="hidden" name="id" value="{{$data['lv3_b_b']->id}}">
                   @csrf
                 </form>
-                @endif 
+                @endif
 
                 @if(empty($data['lv2_c']) || empty($data['lv3_c_c']))
                 <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
 
-                @else 
+                @else
                 <a href="#" onclick="event.preventDefault();
                 document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
 
@@ -206,8 +206,8 @@
                             }else{
                               $data_lv3 = null;
                               $model_lv3 = null;
-                              $line_lv3 = null; 
-                            } 
+                              $line_lv3 = null;
+                            }
 
                             ?>
                             @if($data_lv3)
@@ -245,11 +245,11 @@
 
             <div class="tab-pane bg-tree" id="board" role="tabpanel">
               <div class="row" align="center">
-                <div class="col-lg-4"> 
+                <div class="col-lg-4">
                 </div>
                 @if($data['lv1'])
 
-                <div class="col-lg-4"> 
+                <div class="col-lg-4">
                   <div class="card widget-statstic-card borderless-card">
                     <div class="card-block">
                       @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
@@ -260,7 +260,7 @@
                       <div class="usre-image">
                         @if($data['lv1']->profile_img)
                         <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
-                        </span> 
+                        </span>
                         @else
                         <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
                         </span>
@@ -277,7 +277,7 @@
 
                 @else
                 <!-- กรณีไม่มีข้อมูล -->
-                <div class="col-lg-4"> 
+                <div class="col-lg-4">
                   <div class="card widget-statstic-card borderless-card">
                     <div class="card-block">
                       <i class="fa fa-line-chart st-icon btn-warning"></i>
@@ -291,7 +291,7 @@
 
                         </div>
                         @endif
-                        <div class="col-lg-4"> 
+                        <div class="col-lg-4">
                         </div>
                       </div>
 
@@ -365,7 +365,7 @@
                           }else{
                             $data_lv3 = null;
                             $model_lv3 = null;
-                            $line_lv3 = null; 
+                            $line_lv3 = null;
                           }
 
                           ?>
@@ -406,13 +406,13 @@
 
                         </div>
                         @endif
-                        @endif 
+                        @endif
                         @endfor
                       </div>
                     </div>
                   </div>
                   <br>
-                </div> 
+                </div>
                 @else
                 <div class="col-lg-4">
                   <div class="card widget-statstic-card borderless-card">
@@ -428,7 +428,7 @@
                   <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
                   <p class="text-muted">ภายใต้ : @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif </p>
 
-                  <hr> 
+                  <hr>
                   <div class="row ml-auto text-center"  align="center">
                    <div class="col-sm-4 col-4 text-center">
                     <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
@@ -484,11 +484,11 @@
      $(document).ready(function() {
 
       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
-        $('#tree_tab').addClass('active'); 
-        $('#tree').addClass('active'); 
+        $('#tree_tab').addClass('active');
+        $('#tree').addClass('active');
       }else{
-        $('#board_tab').addClass('active'); 
-        $('#board').addClass('active'); 
+        $('#board_tab').addClass('active');
+        $('#board').addClass('active');
 
       }
 
@@ -522,7 +522,7 @@
       lv3_3_1.closest('a').find('.icofont-file-alt').removeClass('icofont icofont-file-alt').addClass('fa fa-a');
       lv3_3_2.closest('a').find('.icofont-file-alt').removeClass('icofont icofont-file-alt').addClass('fa fa-b');
       lv3_3_3.closest('a').find('.icofont-file-alt').removeClass('icofont icofont-file-alt').addClass('fa fa-c');
-      
+
     });
 
      function modal_tree(id){
@@ -543,7 +543,7 @@
       .always(function() {
         console.log("complete");
       });
-      
+
     }
 
     function modal_add(id,type){
@@ -563,7 +563,7 @@
       .always(function() {
         console.log("complete");
       });
-      
+
     }
 
     function search_user(){
@@ -596,7 +596,7 @@
       .always(function() {
         console.log("complete");
       });
-      
+
     }
 
   </script>

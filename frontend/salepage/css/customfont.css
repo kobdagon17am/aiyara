@@ -1,0 +1,9 @@
+@font-face {
+  font-family: sukhumvitset-text;
+  src: url('../../assets/fonts/sukhumvitset-text-webfont.woff2') format('woff2'),
+  url('../../assets/fonts/sukhumvitset-text-webfont.woff') format('woff');
+}
+
+body {
+  font-family: sukhumvitset-text;
+}

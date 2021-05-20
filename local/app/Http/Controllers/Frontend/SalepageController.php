@@ -21,9 +21,8 @@ class SalepageController extends Controller
 
 			$rs = ['stattus'=>'success','data'=>$data];
 
-  
-		return view('frontend/salepage/salepage_1',compact('rs'));
-	} 
+		return view('frontend/salepage/aimmura',compact('rs'));
+	}
 
 	public static function setting(){
 
@@ -50,24 +49,24 @@ class SalepageController extends Controller
 				->update(['url_fb'=>$req->fb,'url_ig'=>$req->ig,'url_line'=>$req->line,'tel_number'=>$req->tel_number]);
 
 			}else{
-				
+
 				DB::table('db_salepage_setting')->insert([
-					'customers_id_fk'=>$customer_id, 
-					'url_fb'=>$req->fb, 
-					'url_ig'=>$req->ig, 
+					'customers_id_fk'=>$customer_id,
+					'url_fb'=>$req->fb,
+					'url_ig'=>$req->ig,
 					'url_line'=>$req->line,
-					'tel_number'=>$req->tel_number, 
+					'tel_number'=>$req->tel_number,
 				]);
 			}
 
 			$resule = ['status'=>'success','message'=>'Save Contact Success'];
-			
+
 		}catch(Exception $e) {
 
 			$resule = ['status'=>'fail','message'=>$e];
-			
+
 		}
-		
+
 		return $resule;
 	}
 
@@ -91,7 +90,7 @@ class SalepageController extends Controller
 				->update(['js_page_1'=>$req->js_page_1,'js_page_2'=>$req->js_page_2,'js_page_3'=>$req->js_page_3,'js_page_4'=>$req->js_page_4]);
 
 			}else{
-				
+
 				DB::table('db_salepage_setting')->insert([
 					'customers_id_fk'=>$req->customer_id,
 					'js_page_1'=>$req->js_page_1,
@@ -102,16 +101,16 @@ class SalepageController extends Controller
 			}
 
 			$resule = ['status'=>'success','message'=>'Save JS Success'];
-			
+
 		}catch(Exception $e) {
 
 			$resule = ['status'=>'fail','message'=>$e];
-			
+
 		}
-		
+
 		return $resule;
 	}
 
-	
+
 
 }

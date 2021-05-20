@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>Sale Page 1</title>
+    <title>@yield('title')</title>
     <link href="{{ asset('frontend/salepage/css/custom.css') }}" rel="stylesheet">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/carousel/">
     <link rel="icon" href="{{ asset('frontend/assets/icon/logo_icon.png') }}" type="image/x-icon">
@@ -16,8 +16,15 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('frontend/salepage/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/salepage/carousel.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontend/salepage/css/customfont.css') }}" rel="stylesheet">
+    <style>
+    .btn{
+    padding: 0.375rem 1.75rem;
+    border-radius: 21px;
+  }
+    </style>
 
-    @yield('heard_js')
+    @yield('css')
 </head>
 
 <body>
