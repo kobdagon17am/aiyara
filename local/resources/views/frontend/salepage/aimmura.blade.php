@@ -249,7 +249,7 @@ AIMMURA
                 </a>
             @endif
 
-            <a href="#" class="buttons main-button" title="Contact" data-toggle="tooltip" data-placement="left">
+            <a href="javascript:void(0)" class="buttons main-button" title="Contact" data-toggle="tooltip" data-placement="left">
                 <i class="fa fa-times" style="color: #fff;"></i>
                 <i class="fa fa-phone-volume"></i>
             </a>

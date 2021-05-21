@@ -5,18 +5,20 @@ use App\Models\Frontend\RunNumberPayment;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use  App\Models\Frontend\Customer;
+use  App\Models\Frontend\Order;
 class PvPayment extends Model
 {
 
     public static function PvPayment_type_confirme($order_id,$admin_id,$distribution_channel,$action_type)
     {
 
-
       DB::BeginTransaction();
-
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
+
+        $order_update = Order::find($order_id);
+
 
         if (empty($order_data)) {
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
@@ -66,9 +68,8 @@ class PvPayment extends Model
                   //$update_icash; //Bicash_banlance
                   if($update_icash >= 0){
 
-                    $update_aicash = DB::table('db_orders') //update บิล
-                    ->where('id', $order_id)
-                    ->update(['aicash_old'=>$check_aicash->ai_cash,'aicash_banlance' => $update_icash]);
+                    $order_update->aicash_old = $check_aicash->ai_cash;
+                    $order_update->aicash_banlance = $update_icash;
 
                     if ($type_id == 6) { //course
                       $movement_type = 'buy_course';
@@ -136,6 +137,9 @@ class PvPayment extends Model
                     $code_order = $run_pament_code['code_order'];
                 }
 
+
+
+
                 $strtotime_date_now_30 = strtotime("+30 minutes");
                 $strtotime_date_now_23 = strtotime(date('Y-m-d 23:00:00'));
 
@@ -145,17 +149,13 @@ class PvPayment extends Model
                 }else{
                   //$x= 'น้อยกว่า : '.date('Y-m-d H:i:s',$strtotime_date_now_30).'||'.date('Y-m-d H:i:s',$strtotime_date_now_23);
                   $cancel_expiry_date =date('Y-m-d H:i:s',$strtotime_date_now_30);
-
                 }
 
-                $update_order = DB::table('db_orders') //update บิล
-                    ->where('id', $order_id)
-                    ->update(['approver' => $admin_id,
-                        'order_status_id_fk' => $orderstatus_id,
-                        'cancel_expiry_date' => $cancel_expiry_date,
-                        'approve_status' => 1,
-                        'approve_date' => date('Y-m-d H:i:s')]);
-
+                $order_update->approver = $admin_id;
+                $order_update->order_status_id_fk = $orderstatus_id;
+                $order_update->cancel_expiry_date = $cancel_expiry_date;
+                $order_update->approve_status = 1;
+                $order_update->approve_date = date('Y-m-d H:i:s');
 
                 $product_list = DB::table('db_order_products_list')
                     ->where('frontstore_id_fk', '=', $order_id)
@@ -253,9 +253,9 @@ class PvPayment extends Model
                     $add_pv = $data_user->pv + $pv;
                     $customer_update->pv = $add_pv;
 
-                    $update_order_type_1 = DB::table('db_orders') //update บิล
-                        ->where('id', $order_id)
-                        ->update(['pv_old'=>$data_user->pv,'pv_banlance' => $add_pv,'approve_date' => date('Y-m-d H:i:s')]);
+                    $order_update->pv_old = $data_user->pv;
+                    $order_update->pv_banlance = $add_pv;
+                    $order_update->approve_date =  date('Y-m-d H:i:s');
 
                     //ทำคุณสมบัติตัวเอง
                     $upline_type = $data_user->line_type;
@@ -273,10 +273,10 @@ class PvPayment extends Model
                     $active_mt_old_date = $data_user->pv_mt_active;
                     $status_pv_mt_old = $data_user->status_pv_mt;
 
-                    DB::table('db_orders') //update บิล
-                    ->where('id', $order_id)
-                    ->update(['pv_mt_old'=>$data_user->pv_mt,'active_mt_old_date' => $active_mt_old_date,'status_pv_mt_old'=>$status_pv_mt_old
-                    ,'approve_date' => date('Y-m-d H:i:s')]);
+                    $order_update->pv_mt_old = $data_user->pv_mt;
+                    $order_update->active_mt_old_date =  $active_mt_old_date;
+                    $order_update->status_pv_mt_old =  $status_pv_mt_old;
+                    $order_update->approve_date =  date('Y-m-d H:i:s');
 
                     $strtime_user = strtotime($data_user->pv_mt_active);
                     $strtime = strtotime(date("Y-m-d"));
@@ -320,10 +320,8 @@ class PvPayment extends Model
                             $customer_update->status_pv_mt = 'not';
                             $customer_update->date_mt_first =  date('Y-m-d h:i:s');
 
-
-                            $update_order_type_2 = DB::table('db_orders') //update บิล
-                                ->where('id', $order_id)
-                                ->update(['pv_banlance' => $pv_mt_total, 'active_mt_date' => date('Y-m-t', strtotime($mt_active))]);
+                            $order_update->pv_banlance = $pv_mt_total;
+                            $order_update->active_mt_date =  date('Y-m-t', strtotime($mt_active));
 
                         } else {
                             //dd('อัพเดท');
@@ -333,9 +331,8 @@ class PvPayment extends Model
                             $customer_update->status_pv_mt = 'not';
                             $customer_update->date_mt_first =  date('Y-m-d h:i:s');
 
-                            $update_order_type_2 = DB::table('db_orders') //update บิล
-                                ->where('id', $order_id)
-                                ->update(['pv_banlance' => $pv_mt_all, 'active_mt_date' => date('Y-m-t', strtotime($start_month))]);
+                            $order_update->pv_banlance = $pv_mt_all;
+                            $order_update->active_mt_date =  date('Y-m-t', strtotime($start_month));
                         }
 
                         $upline_type = $data_user->line_type;
@@ -380,19 +377,17 @@ class PvPayment extends Model
 
                             $customer_update->pv_mt = $pv_mt_total;
                             $customer_update->pv_mt_active = $mt_active;
-                            //dd($mt_active);
 
-                            $update_order_type_2 = DB::table('db_orders') //update บิล
-                                ->where('id', $order_id)
-                                ->update(['pv_banlance' => $pv_mt_total, 'active_mt_date' => $mt_active]);
+                            $order_update->pv_banlance = $pv_mt_total;
+                            $order_update->active_mt_date =  date('Y-m-t', strtotime($mt_active));
 
                         } else {
                             //dd('อัพเดท');
                             $customer_update->pv_mt = $pv_mt_all;
 
-                            $update_order_type_2 = DB::table('db_orders') //update บิล
-                                ->where('id', $order_id)
-                                ->update(['pv_banlance' => $pv_mt_all, 'active_mt_date' => $data_user->pv_mt_active]);
+                            $order_update->pv_banlance = $pv_mt_all;
+                            $order_update->active_mt_date = $data_user->pv_mt_active;
+
                         }
 
                         $upline_type = $data_user->line_type;
@@ -445,27 +440,29 @@ class PvPayment extends Model
                         $customer_update->pv_tv = $pv_tv_total;
                         $customer_update->pv_tv_active = $tv_active;
 
-                        //dd($tv_active);
-
-                        $update_order_type_3 = DB::table('db_orders') //update บิล
-                            ->where('id', $order_id)
-                            ->update(['pv_tv_old'=>$data_user->pv_tv,'pv_banlance' => $pv_tv_total,'active_tv_old_date'=>$active_tv_old_date, 'active_tv_date' => $tv_active]);
+                        $order_update->pv_tv_old = $data_user->pv_tv;
+                        $order_update->pv_banlance = $pv_tv_total;
+                        $order_update->active_tv_old_date = $active_tv_old_date;
+                        $order_update->active_tv_date = $tv_active;
 
                     } else {
                         //dd('อัพเดท');
+                    $customer_update->pv_tv = $pv_tv_all;
 
-                          $customer_update->pv_tv = $pv_tv_all;
+                    $order_update->pv_tv_old = $data_user->pv_tv;
+                    $order_update->pv_banlance =  $pv_tv_all;
+                    $order_update->active_tv_old_date = $active_tv_old_date;
+                    $order_update->active_tv_date = $data_user->pv_tv_active;
 
-                        $update_order_type_3 = DB::table('db_orders') //update บิล
-                            ->where('id', $order_id)
-                            ->update(['pv_tv_old'=>$data_user->pv_tv,'pv_banlance' => $pv_tv_all,'active_tv_old_date'=>$active_tv_old_date, 'active_tv_date' => $data_user->pv_tv_active]);
-                    }
+                  }
+
+
                     $upline_type = $data_user->line_type;
                     $upline_id = $data_user->upline_id;
                     $customer_id = $upline_id;
                     $last_upline_type = $upline_type;
 
-                } elseif ($type_id == 4) { //เติม Aipocket
+                }elseif($type_id == 4) { //เติม Aipocket
 
                     $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
                         ->select('*')
@@ -492,9 +489,8 @@ class PvPayment extends Model
                         ->where('id', $customer_id)
                         ->first();
 
-                    $update_order_type_5 = DB::table('db_orders') //update บิล
-                        ->where('id', $order_id)
-                        ->update(['pv_banlance' => $pv_banlance->pv]);
+                    $order_update->pv_banlance =$pv_banlance->pv;
+
 
                     //ไม่เข้าสถานะต้อง Approve
                 } elseif ($type_id == 6) { //couse อบรม
@@ -514,9 +510,9 @@ class PvPayment extends Model
                     $add_pv = $data_user->pv + $pv;;
                     $customer_update->pv = $add_pv;
 
-                    $update_order_type_6 = DB::table('db_orders') //update บิล
-                        ->where('id', $order_id)
-                        ->update(['pv_old'=>$data_user->pv,'pv_banlance' => $add_pv, 'action_date' => date('Y-m-d H:i:s')]);
+                    $order_update->pv_old = $data_user->pv;
+                    $order_update->pv_banlance =$add_pv;
+                    $order_update->action_date =date('Y-m-d H:i:s');
 
                     $upline_type = $data_user->line_type;
                     $upline_id = $data_user->upline_id;
@@ -531,8 +527,8 @@ class PvPayment extends Model
                 }
 
                 //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
-                if($order_data->total_price > 10000){
 
+                if($order_data->pv_total > 10000){
                   $customer_update->aistockist_status = 1;
                   $customer_update->aistockist_date =  date('Y-m-d h:i:s');
                 }
@@ -626,12 +622,13 @@ class PvPayment extends Model
                     }
 
                 } else {
-                    $resule = ['status' => 'success', 'message' => 'Pv add Type AA Success'];
+                    $resule = ['status' => 'success', 'message' => 'Payment Success'];
 
                 }
 
                 if ($resule['status'] == 'success') {
                   $customer_update->save();
+                  $order_update->save();
 
                     DB::commit();
                     //DB::rollback();

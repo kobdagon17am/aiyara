@@ -36,6 +36,7 @@ class Po_approveController extends Controller
     {
 
 
+
         \DB::beginTransaction();
         try {
 
@@ -65,7 +66,8 @@ class Po_approveController extends Controller
             }
 
             if (@request('approved') != null) {
-                \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+               $data =  \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+
             }
 
             $sRow->save();
