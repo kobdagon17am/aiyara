@@ -79,7 +79,7 @@ AIMMURA
                 alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
-          <div class="container mt-2">
+          <div class="container bg_product mt-2">
             <!-- Three columns of text below the carousel -->
             <p style="margin-bottom: -3px;"><span style="color:#28a745;font-size:3.5rem;font-weight: 600;">เริ่มต้น</span> <span  style="color:#3a3939;font-size:2rem;font-weight: 600;">สุขภาพดี</span>
             <h2 style="color:#3a3939;font-weight: 600;">ผลิตภัณฑ์ของแท้จากบริษัท</h2></p>
@@ -182,7 +182,7 @@ AIMMURA
 
 
         <!-- FOOTER -->
-        <footer class="container">
+        <footer class="container bg_product">
             {{-- <p class="float-right"><a href="#">Back to top</a></p>
     <p>&copy; 2017-2020 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> --}}
             <div class="row justify-content-center mt-2">
