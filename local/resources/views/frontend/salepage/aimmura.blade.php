@@ -6,9 +6,7 @@ AIMMURA
 @endsection
 
 @section('css')
-    {{-- @if ($rs['data']->js_page_1)
-        {!! $rs['data']->js_page_1 !!}
-    @endif --}}
+
 
     <style>
       .bg_product {
@@ -218,21 +216,21 @@ AIMMURA
             @if ($rs['data']->url_fb)
                 <a href="{{ $rs['data']->url_fb }}" class="buttons" title="Facebook" data-toggle="tooltip"
                     data-placement="left">
-                    <img src="http://localhost/aiyara/frontend/salepage/img/FB.png" style="margin-top: -16px;"
+                    <img src="{{ asset('frontend/salepage/img/FB.png')}}" style="margin-top: -16px;"
                         class="img-fluid" width="50" alt="...">
                 </a>
             @endif
             @if ($rs['data']->url_ig)
                 <a href="{{ $rs['data']->url_ig }}" class="buttons" title="IG" data-toggle="tooltip"
                     data-placement="left">
-                    <img src="http://localhost/aiyara/frontend/salepage/img/IG.png" style="margin-top: -16px;"
+                    <img src="{{ asset('frontend/salepage/img/IG.png')}}" style="margin-top: -16px;"
                         class="img-fluid" width="50" alt="...">
                 </a>
             @endif
             @if ($rs['data']->url_line)
                 <a href="{{ $rs['data']->url_line }}" class="buttons" title="line" data-toggle="tooltip"
                     data-placement="left">
-                    <img src="http://localhost/aiyara/frontend/salepage/img/line.png" style="margin-top: -16px;"
+                    <img src="{{ asset('frontend/salepage/img/line.png')}}" style="margin-top: -16px;"
                         class="img-fluid" width="50" alt="...">
                 </a>
             @endif
