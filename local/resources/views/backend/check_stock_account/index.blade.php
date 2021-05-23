@@ -158,8 +158,8 @@
                             <label for="ref_code" class="col-md-3 col-form-label">  </label>
                             <div class="col-md-9 d-flex">
 
-                                 <input id="startDate"  autocomplete="off" placeholder="Begin"  style="margin-left: 2%;border: 1px solid grey;" />
-                                 <input id="endDate"  autocomplete="off" placeholder="End"  style="border: 1px solid grey;" />
+                                 <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 2%;border: 1px solid grey;font-weight: bold;color: black" />
+                                 <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
 
                             </div>
                           </div>

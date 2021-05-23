@@ -95,5 +95,14 @@
 
         </script>
 
+        
+        <!-- Sweet Alerts js -->
+        <script src="{{ URL::asset('backend/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+        <!-- Sweet alert init js -->
+        <script src="{{ URL::asset('backend/js/pages/sweet-alerts.init.js')}}"></script> 
+        <script src="{{ URL::asset('backend/js/pages/jquery.idle.js')}}"></script> 
+
+
         @yield('script')
         @yield('script-bottom')

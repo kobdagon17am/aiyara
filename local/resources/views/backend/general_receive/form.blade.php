@@ -10,6 +10,7 @@
   input[type=number] {
     font-weight: bold;
   }  
+
 </style>
 @endsection
 
@@ -96,6 +97,21 @@
                             </div>
                           </div>
 
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> สภาพสินค้าที่รับเข้า : * </label>
+                            <div class="col-md-8">
+                              <select name="product_in_cause_id_fk" class="form-control select2-templating " required >
+                                <option value="">Select</option>
+                                  @if(@$Product_status)
+                                    @foreach(@$Product_status AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_status_id_fk)?'selected':'' }} >
+                                        {{$r->txt_desc}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                              </select>
+                            </div>
+                          </div>
 
                           <div class="form-group row">
                             <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
@@ -170,7 +186,11 @@
                           <div class="form-group row">
                             <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * </label>
                             <div class="col-md-3">
-                              <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" required >
+                               @IF(!empty(@$sRow->lot_expired_date))
+                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly > 
+                               @ELSE 
+                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required > 
+                               @ENDIF 
                             </div>
                           </div>
 
@@ -657,7 +677,7 @@ $( function() {
  $( "#lot_number_auto" ).autocomplete({
   source: function( request, response ) {
    // Fetch data
-         var product_id_fk =$('#product_id_fk').val();
+         var product_id_fk = $('#product_id_fk').val();
          $.ajax({
           url: " {{ url('backend/ajaxGetLotnumber2') }} ",
           method: "post",
@@ -682,6 +702,41 @@ $( function() {
         //    return false;
         //  },
        });
+
+
+        $(document).on('change', '#lot_number_auto', function(event) {
+            var this_v = $(this).val();
+            // alert(this_v);
+             var product_id_fk = $('#product_id_fk').val();
+             $.ajax({
+              url: " {{ url('backend/ajaxGetLotnumber2') }} ",
+              method: "post",
+              dataType: "json",
+              data: {
+                product_id_fk:product_id_fk,
+                "_token": "{{ csrf_token() }}",
+              },
+              success:function(data){
+                 console.log(data);
+                 $.each(data, function( index, value ) {
+                    if(this_v==value.value){
+                      $('#lot_expired_date').val(value.lot_expired_date);
+                      $('#lot_expired_date').prop('readonly',true);
+                      $('#lot_expired_date').prop('type','text');
+                    }else{
+                      $('#lot_expired_date').val('');
+                      $('#lot_expired_date').prop('readonly',false);
+                      $('#lot_expired_date').prop('required',true);
+                      $('#lot_expired_date').prop('type','date');
+                    }
+                 });
+              }
+             });
+        });
+
+   
+
+
  });
 </script>
 @endsection

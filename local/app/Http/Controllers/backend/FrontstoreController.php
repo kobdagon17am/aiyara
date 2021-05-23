@@ -417,6 +417,8 @@ class FrontstoreController extends Controller
               // return request('pay_type_id');
               // dd();
 
+
+
               // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
               if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
 
@@ -425,24 +427,51 @@ class FrontstoreController extends Controller
 
               }else if(request('pay_type_id')==5 || request('pay_type_id')==6 || request('pay_type_id')==7 || request('pay_type_id')==9){
                 $sRow->approve_status = 2  ;
+
+                  // $table = 'db_orders';
+                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
+                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
+                  //   order by invoice_code desc limit 1 ");
+                  // if($inv){
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+                  // }else{
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
+                  // }
+                  // // dd($invoice_code);
+                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
+                  //   $sRow->invoice_code = $invoice_code;
+                  // }
+
+                  // `status_delivery` int(1) DEFAULT '0' COMMENT '1=อยู่ระหว่างดำเนินการจัดส่งสินค้า',
+                  // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
+
+                  $sRow->status_delivery = 1 ;
+                  $sRow->approve_status = 3 ;
+
               }else{
 
-                  $table = 'db_orders';
-                  $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
-                    WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                    order by invoice_code desc limit 1 ");
-                  if($inv){
-                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-                  }else{
-                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-                  }
-                  // dd($invoice_code);
-                  if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                    $sRow->invoice_code = $invoice_code;
-                  }
+                  // $table = 'db_orders';
+                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
+                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
+                  //   order by invoice_code desc limit 1 ");
+                  // if($inv){
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+                  // }else{
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
+                  // }
+                  // // dd($invoice_code);
+                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
+                  //   $sRow->invoice_code = $invoice_code;
+                  // }
 
-                    $sRow->approve_status = 1 ;
+                  // `status_delivery` int(1) DEFAULT '0' COMMENT '1=อยู่ระหว่างดำเนินการจัดส่งสินค้า',
+                  // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
+
+                  $sRow->status_delivery = 1 ;
+                  $sRow->approve_status = 3 ;
+
 
               }
 
@@ -477,7 +506,7 @@ class FrontstoreController extends Controller
                 $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('fee_amt'));
               }else{
                 if(request('sum_price')>0){
-                $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
+                // $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
                 }
               }
 
@@ -501,10 +530,13 @@ class FrontstoreController extends Controller
 
               $sRow->save();
 
+// dd(request('sentto_branch_id'));
+// dd(request('branch_id_fk'));
+// dd($request->delivery_location);
 
              if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
-                  $sRow->sentto_branch_id    = request('sentto_branch_id');
-                   DB::select("UPDATE db_orders SET address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
+                   $sRow->sentto_branch_id    = request('branch_id_fk');
+                   DB::select("UPDATE db_orders SET sentto_branch_id=".request('branch_id_fk').", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }
 
              if(@$request->delivery_location==1){
@@ -541,7 +573,7 @@ class FrontstoreController extends Controller
                                  ");
 
 
-                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_amphures_id_fk."', '".@$addr[0]->card_district_id_fk."', '".@$addr[0]->card_province_id_fk."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') ");
+                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, recipient_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->first_name." ".@$addr[0]->last_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_amphures_id_fk."', '".@$addr[0]->card_district_id_fk."', '".@$addr[0]->card_province_id_fk."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') ");
 
 
                             DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
@@ -722,6 +754,12 @@ class FrontstoreController extends Controller
 
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
           // $sRow->invoice_code    = $invoice_code ;
+
+            // $inv = DB::select(" select invoice_code from db_orders order by invoice_code desc limit 1 ");
+            // $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+            // dd($invoice_code);
+            // $sRow->invoice_code    = $invoice_code ;
+
 
 
           $sRow->branch_id_fk    = request('branch_id_fk');

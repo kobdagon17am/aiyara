@@ -14,6 +14,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
   #=========================================================================================================================================================
   Route::group(['middleware' => ['auth:admin']], function () {
   #=========================================================================================================================================================
+  
+  	Route::post('testme', 'HomeController@testme');
+ 	Route::get('testme', 'HomeController@testme');
+
 
     Route::get('home', 'HomeController@index');
     Route::get('index', 'HomeController@index');
@@ -222,6 +226,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('excelExportConsignment', 'ExcelController@excelExportConsignment');
 
     Route::post('ajaxGentoExportConsignments', 'AjaxController@ajaxGentoExportConsignments');
+    
+    Route::post('ajaxCheckRemain_pay_product_receipt', 'AjaxController@ajaxCheckRemain_pay_product_receipt');
 
     Route::resource('consignments_import', 'Consignments_importController');
     Route::post('consignments_import/datatable', 'Consignments_importController@Datatable')->name('consignments_import.datatable');
@@ -306,6 +312,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetDBfrontstore', 'AjaxController@ajaxGetDBfrontstore');
     Route::post('ajaxCheckAddAiCash', 'AjaxController@ajaxCheckAddAiCash');
     Route::post('ajaxGetDBAddAiCash', 'AjaxController@ajaxGetDBAddAiCash');
+    Route::post('ajaxCheckAddAiCashStatus', 'AjaxController@ajaxCheckAddAiCashStatus');
 
     Route::post('ajaxCalPriceFrontstore01', 'AjaxController@ajaxCalPriceFrontstore01');
     Route::post('ajaxCalPriceFrontstore02', 'AjaxController@ajaxCalPriceFrontstore02');
@@ -339,8 +346,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxProcessStockcard', 'AjaxController@ajaxProcessStockcard');
     Route::post('ajaxOfferToApprove', 'AjaxController@ajaxOfferToApprove');
 
+    Route::post('ajaxScanQrcodeProduct', 'AjaxController@ajaxScanQrcodeProduct');
     Route::post('ajaxDeleteQrcodeProduct', 'AjaxController@ajaxDeleteQrcodeProduct');
     Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
+
+    Route::post('ajaxSyncStockToNotify', 'AjaxController@ajaxSyncStockToNotify');
+    
+    Route::post('ajaxGetCusToPayReceiptForSearch', 'AjaxController@ajaxGetCusToPayReceiptForSearch');
+    Route::post('ajaxGetCusToPayReceiptAfterSave', 'AjaxController@ajaxGetCusToPayReceiptAfterSave');
+    Route::post('ajaxGetCEUserRegis', 'AjaxController@ajaxGetCEUserRegis');
+    Route::post('ajaxGetCe_regis_gift', 'AjaxController@ajaxGetCe_regis_gift');
+    Route::post('ajaxGetCEQrcode', 'AjaxController@ajaxGetCEQrcode');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -364,8 +380,55 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
 
+// @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
+    // หน้าแรก
+    Route::resource('pay_product_receipt_001', 'Pay_product_receipt_001Controller');
+    Route::post('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
+    // Route::get('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
+
+    Route::post('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    
+    Route::get('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    
+
+    Route::post('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');    
+    Route::get('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');   
+
+    Route::post('cancel-pay_product_receipt_001', 'Pay_product_receipt_001Controller@destroy');
+    Route::post('ajaxApproveProductSent', 'Pay_product_receipt_001Controller@ajaxApproveProductSent');
+    
+    Route::post('ajaxSearch_bill_db_orders', 'Products_fifo_billController@ajaxSearch_bill_db_orders');
+    Route::post('ajaxSearch_bill_db_orders002', 'Products_fifo_billController@ajaxSearch_bill_db_orders002');
+    
+    Route::post('ajaxSavePay_product_receipt', 'Pay_product_receipt_001Controller@ajaxSavePay_product_receipt');
+    Route::post('ajaxCHECKPay_product_receipt', 'Pay_product_receipt_001Controller@ajaxCHECKPay_product_receipt');
+
     Route::resource('pay_product_receipt', 'Pay_product_receiptController');
     Route::post('pay_product_receipt/datatable', 'Pay_product_receiptController@Datatable')->name('pay_product_receipt.datatable');
+
+    Route::post('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
+    Route::get('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
+
+    Route::post('pay_product_receipt_send/datatable', 'Products_fifo_billController@DatatableToSend1')->name('pay_product_receipt_send.datatable');
+
+    Route::post('pay_product_receipt_tb4/datatable', 'Pay_product_receipt_001Controller@Datatable004')->name('pay_product_receipt_tb4.datatable');    
+    Route::post('pay_product_receipt_send3/datatable', 'Products_fifo_billController@DatatableToSend3')->name('pay_product_receipt_send3.datatable');
+    
+    Route::post('pay_product_receipt_tb5/datatable', 'Products_fifo_billController@DatatablePayReceiptFIFO')->name('pay_product_receipt_tb5.datatable');
+    Route::post('pay_product_receipt_tb6/datatable', 'Pay_product_receipt_001Controller@Datatable006')->name('pay_product_receipt_tb6.datatable');
+    
+    Route::post('pay_product_receipt_tb7/datatable', 'Pay_product_receipt_001Controller@Datatable007')->name('pay_product_receipt_tb7.datatable');    
+    Route::post('pay_product_receipt_tb8/datatable', 'Pay_product_receipt_001Controller@Datatable008')->name('pay_product_receipt_tb8.datatable');    
+    Route::post('pay_product_receipt_tb9FIFO/datatable', 'Products_fifo_billController@Datatable009FIFO')->name('pay_product_receipt_tb9FIFO.datatable');    
+
+// @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
+    // หน้าแรก
+    Route::resource('pay_product_packing_list', 'Pay_product_packing_listController');
+    Route::post('pay_product_packing_list/datatable', 'Pay_product_packing_listController@Datatable')->name('pay_product_packing_list.datatable');
+
+    Route::resource('pay_product_packing', 'Pay_product_packingController');
+    Route::post('pay_product_packing/datatable', 'Pay_product_packingController@Datatable')->name('pay_product_packing.datatable');
+
+
+// @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
 
     Route::get('delivery/pdf01/{id}', 'AjaxController@createPDFCoverSheet01');
     Route::post('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
@@ -399,8 +462,20 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('product_in_cause', 'Product_in_causeController');
     Route::post('product_in_cause/datatable', 'Product_in_causeController@Datatable')->name('product_in_cause.datatable');
 
+    Route::resource('product_status', 'Product_statusController');
+    Route::post('product_status/datatable', 'Product_statusController@Datatable')->name('product_status.datatable');
+
+    Route::resource('get_money_back', 'Get_money_backController');
+    Route::post('get_money_back/datatable', 'Get_money_backController@Datatable')->name('get_money_back.datatable');
+
+    Route::resource('get_money_back_type', 'Get_money_back_typeController');
+    Route::post('get_money_back_type/datatable', 'Get_money_back_typeController@Datatable')->name('get_money_back_type.datatable');
+
     Route::resource('product_out_cause', 'Product_out_causeController');
     Route::post('product_out_cause/datatable', 'Product_out_causeController@Datatable')->name('product_out_cause.datatable');
+
+    Route::resource('ce_regis_gift', 'Ce_regis_giftController');
+    Route::post('ce_regis_gift/datatable', 'Ce_regis_giftController@Datatable')->name('ce_regis_gift.datatable');
 
 
     Route::resource('delivery_packing', 'DeliveryPackingController');
@@ -520,8 +595,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('check_stock_account/adjust/{id}', 'Check_stock_accountController@Adjust');
 
 
-    Route::post('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
-    Route::get('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
+
 
     Route::resource('check_money_daily', 'Check_money_dailyController');
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
@@ -624,7 +698,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('scan_qrcode/datatable', 'Scan_qrcodeController@Datatable')->name('scan_qrcode.datatable');
 
 
-	#=======================================================================================================================================================
+	#===========================================================================================
 
     Route::get('qrcode', function () {
         return view('backend.delivery.qr_code');

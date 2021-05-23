@@ -36,8 +36,8 @@
 
                 
                 <div class="form-group row">
-                    <label for="" class="col-md-2 col-form-label">รหัสสาขา :</label>
-                    <div class="col-md-10">
+                    <label for="" class="col-md-3 col-form-label">รหัสสาขา :</label>
+                    <div class="col-md-9">
                           <select name="business_location_id_fk" class="form-control select2-templating " required >
                             <option value="">-Business Location-</option>
                             @if(@$sBusiness_location)
@@ -50,22 +50,22 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-2 col-form-label">รหัสสาขา :</label>
-                    <div class="col-md-10">
+                    <label for="" class="col-md-3 col-form-label">รหัสสาขา :</label>
+                    <div class="col-md-9">
                         <input class="form-control" type="text" value="{{ @$sRow->b_code }}" name="b_code" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-2 col-form-label">ชื่อสาขา :</label>
-                    <div class="col-md-10">
+                    <label for="" class="col-md-3 col-form-label">ชื่อสาขา :</label>
+                    <div class="col-md-9">
                         <input class="form-control" type="text" value="{{ @$sRow->b_name }}" name="b_name" required>
                     </div>
                 </div>
                 
                 <div class="form-group row">
-                    <label for="" class="col-md-2 col-form-label"> ที่ตั้งอยู่ในจังหวัด : * </label>
-                    <div class="col-md-10">
+                    <label for="" class="col-md-3 col-form-label"> ที่ตั้งอยู่ในจังหวัด : * </label>
+                    <div class="col-md-9">
                       <select name="province_id_fk" class="form-control select2-templating " >
                         <option value="0">Select</option>
                           @if(@$Province)
@@ -81,15 +81,45 @@
 
 
                 <div class="form-group row">
-                    <label for="" class="col-md-2 col-form-label">รายละเอียด :</label>
-                    <div class="col-md-10">
+                    <label for="" class="col-md-3 col-form-label">รายละเอียด :</label>
+                    <div class="col-md-9">
                         <input class="form-control" type="text" value="{{ @$sRow->b_details }}" name="b_details" required>
                     </div>
                 </div>
 
+@if( !empty($sRow) )
+ 				<div class="form-group row">
+                    <label for="warehouse_id_fk" class="col-md-3 col-form-label">คลังจ่ายสินค้าตามใบเสร็จ * :</label>
+                    <div class="col-md-9">
+                          <select name="warehouse_id_fk" class="form-control select2-templating " required >
+                            <option value="">-เลือกคลัง-</option>
+                            @if(@$sWarehouse)
+                            @foreach(@$sWarehouse AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->warehouse_id_fk)?'selected':'' }} >{{$r->w_name}}</option>
+                            @endforeach
+                            @endif
+                          </select>
+                    </div>
+                </div>
+
+ 				<div class="form-group row">
+                    <label for="warehouse_pack_id_fk" class="col-md-3 col-form-label">คลังจ่ายสินค้าตามใบเบิก * :</label>
+                    <div class="col-md-9">
+                          <select name="warehouse_pack_id_fk" class="form-control select2-templating " required >
+                            <option value="">-เลือกคลัง-</option>
+                            @if(@$sWarehouse)
+                            @foreach(@$sWarehouse AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->warehouse_pack_id_fk)?'selected':'' }} >{{$r->w_name}}</option>
+                            @endforeach
+                            @endif
+                          </select>
+                    </div>
+                </div>
+
+  @endif
                  <div class="form-group row">
-                      <label for="b_maker" class="col-md-2 col-form-label"> ผู้ทำรายการ : </label>
-                      <div class="col-md-10">
+                      <label for="b_maker" class="col-md-3 col-form-label"> ผู้ทำรายการ : </label>
+                      <div class="col-md-9">
 
                         @if( empty(@$sRow) )
                           <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -104,8 +134,8 @@
 
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-3 col-form-label">สถานะ :</label>
+                    <div class="col-md-9 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >

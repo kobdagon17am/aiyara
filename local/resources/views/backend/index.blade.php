@@ -659,35 +659,35 @@
                 columns: [
                     {data: 'id', title :'ID', className: 'text-center w50'},
                     {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
-                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                     {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center'},
                     {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
                     {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
-                      if(d==0){
-                        return '* ยังไม่ได้กำหนด';
-                      }else{
-                        return d;
-                      }
-                    }},
-                    {data: 'id', title :'<center>Note 1</center>', className: 'text-center ',render: function(d) {
                       // if(d==0){
                       //   return '* ยังไม่ได้กำหนด';
                       // }else{
                         return d;
                       // }
                     }},
+                    {data: 'id', title :'<center>Note 1</center>', className: 'text-center ',render: function(d) {
+                      // if(d==0){
+                      //   return '* ยังไม่ได้กำหนด';
+                      // }else{
+                        return '';
+                      // }
+                    }},
+                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                     {data: 'amt_day_before_expired', title :'<center>แจ้งเตือนก่อนวันหมดอายุ (วัน)</center>', className: 'text-center w100 ',render: function(d) {
-                      if(d==0){
-                        return '* ยังไม่ได้กำหนด';
-                      }else{
+                      // if(d==0){
+                      //   return '* ยังไม่ได้กำหนด';
+                      // }else{
                         return d;
-                      }
+                      // }
                     }},   
                     {data: 'id', title :'<center>Note 2</center>', className: 'text-center ',render: function(d) {
                       // if(d==0){
                       //   return '* ยังไม่ได้กำหนด';
                       // }else{
-                        return d;
+                        return '';
                       // }
                     }},         
                     // {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
@@ -698,11 +698,21 @@
                   var info = $(this).DataTable().page.info();
                   $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                  $('td:eq(2)', nRow).html(aData['lot_expired_date']+" ("+aData['diff_d']+")");
+                  $('td:eq(6)', nRow).html(aData['lot_expired_date']+" <span style='color:blue;'> ("+aData['diff_d']+") </span> ");
 
                   if(aData['amt_less']){
-                    $('td:eq(6)', nRow).html(aData['amt']-aData['amt_less']);
-                    $('td:eq(6)', nRow).html(aData[6]).css({'color':'red'});
+
+                    $('td:eq(5)', nRow).html(aData['amt']-aData['amt_less']);
+
+                    if( aData['amt']-aData['amt_less'] > 0){
+                       $('td:eq(5)', nRow).html('<span class="badge badge-pill badge-soft-success font-size-16">'+(aData['amt']-aData['amt_less'])+'</span>');
+                    }else if( aData['amt']-aData['amt_less'] == 0){
+                        $('td:eq(5)', nRow).html('');
+                    }else{
+                       $('td:eq(5)', nRow).html(aData[5]).css({'color':'red'});
+                    }
+
+
                   }
                   if(aData['amt_day_before_expired']){
                     // var start = new Date(aData['lot_expired_date']),  
@@ -711,7 +721,15 @@
                     //     days  = diff/1000/60/60/24;
                     //     dd  =  (days) - aData['amt_day_before_expired'];
                     $('td:eq(8)', nRow).html(Math.trunc(aData['diff_d02']));
-                    $('td:eq(8)', nRow).html(aData[6]).css({'color':'red'});
+
+                    if(aData['diff_d02']>0){
+                       $('td:eq(8)', nRow).html('<span class="badge badge-pill badge-soft-success font-size-16">'+aData['diff_d02']+'</span>');
+                    }else if(aData['diff_d02']==0){
+                        $('td:eq(8)', nRow).html('');
+                    }else{
+                       $('td:eq(8)', nRow).html(aData[6]).css({'color':'red'});
+                    }
+
                   }
 
              
@@ -860,5 +878,8 @@ $(function() {
 </script>
 
 
+
 @endsection
+
+
 

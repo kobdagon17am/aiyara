@@ -13,27 +13,39 @@ class Pay_product_receiptController extends Controller
 
     public function index(Request $request)
     {
-      $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
-      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
-      $Customer = DB::select(" SELECT
-          db_delivery.customer_id as id,
-          customers.prefix_name,
-          customers.first_name,
-          customers.last_name,
-          customers.user_name
-          FROM
-          db_delivery
-          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
-           ");
 
-      return View('backend.pay_product_receipt.index')->with(
-        array(
-           'sDelivery'=>$sDelivery,
-           'Customer'=>$Customer,
-           'sBusiness_location'=>$sBusiness_location,
-           'sPacking'=>$sPacking,
-        ) );
+      // dd($request);
+      return View('backend.pay_product_receipt.index');
+
+      // $sApprove = DB::select("
+      //   SELECT db_pick_warehouse_tmp.*,db_consignments.id as consignments_id,db_consignments.recipient_name,db_consignments.address,db_consignments.sent_date,db_consignments.approver,db_consignments.mobile,db_consignments.status_sent from db_pick_warehouse_tmp 
+      //   Left Join db_consignments ON db_consignments.recipient_code = db_pick_warehouse_tmp.invoice_code
+      //   group by invoice_code ORDER BY db_pick_warehouse_tmp.updated_at DESC LIMIT 1
+      //   ");
+      // // dd($sApprove);
+
+      // $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
+      // $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
+      // $sBusiness_location = \App\Models\Backend\Business_location::get();
+      // $Customer = DB::select(" SELECT
+      //     db_delivery.customer_id as id,
+      //     customers.prefix_name,
+      //     customers.first_name,
+      //     customers.last_name,
+      //     customers.user_name
+      //     FROM
+      //     db_delivery
+      //     Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
+      //      ");
+
+      // return View('backend.pay_product_receipt.index')->with(
+      //   array(
+      //      'sDelivery'=>$sDelivery,
+      //      'Customer'=>$Customer,
+      //      'sBusiness_location'=>$sBusiness_location,
+      //      'sPacking'=>$sPacking,
+      //      'sApprove'=>$sApprove,
+      //   ) );
 
       
     }
@@ -42,13 +54,13 @@ class Pay_product_receiptController extends Controller
  public function create()
     {
 
-      $Province = DB::select(" select * from dataset_provinces ");
+      // $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
-      return View('backend.pay_product_receipt.form')->with(
-        array(
-           'Customer'=>$Customer,'Province'=>$Province
-        ) );
+      // $Customer = DB::select(" select * from customers ");
+      // return View('backend.pay_product_receipt.form')->with(
+      //   array(
+      //      'Customer'=>$Customer,'Province'=>$Province
+      //   ) );
     }
 
 
@@ -204,16 +216,41 @@ class Pay_product_receiptController extends Controller
 
     public function edit($id)
     {
-       // $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
-       $sRow = \App\Models\Backend\Consignments::find($id);
-       // dd($sRow);
-       $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
-      return View('backend.pay_product_receipt.form')->with(
-        array(
-           'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
-        ) );
+            // dd($id);
+            $sRow = \App\Models\Backend\Pay_product_receipt_001::find($id);
+            if(!$sRow){
+              return redirect()->to(url("backend/pay_product_receipt"));
+            }
+
+            $sUser =  DB::select(" 
+            SELECT
+            db_pay_product_receipt_001.id,
+            db_pay_product_receipt_001.business_location_id_fk,
+            db_pay_product_receipt_001.branch_id_fk,
+            db_pay_product_receipt_001.invoice_code,
+            (select name from ck_users_admin where id=db_pay_product_receipt_001.action_user)  AS user_action,
+            db_pay_product_receipt_001.action_date,
+            (select name from ck_users_admin where id=db_pay_product_receipt_001.pay_user)  AS pay_user,
+            db_pay_product_receipt_001.pay_date,
+            db_pay_product_receipt_001.status_sent,
+            db_pay_product_receipt_001.customer_id_fk,
+            db_pay_product_receipt_001.address_send AS user_address,
+            db_pay_product_receipt_001.address_send_type,
+            customers.user_name AS user_code,
+            CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_product_receipt_001
+            Left Join customers ON db_pay_product_receipt_001.customer_id_fk = customers.id
+            Left Join dataset_pay_product_status ON db_pay_product_receipt_001.status_sent = dataset_pay_product_status.id
+            where db_pay_product_receipt_001.id = '$id'
+             ");
+
+            // dd($sUser);
+
+          return View('backend.pay_product_receipt.form')->with(array('sRow'=>$sRow,'sUser'=>$sUser) );
+
     }
 
     public function update(Request $request, $id)
@@ -229,27 +266,22 @@ class Pay_product_receiptController extends Controller
       try {
           if( $id ){
             // $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
-            $sRow = \App\Models\Backend\Consignments::find($id);
-          }else{
-            // $sRow = new \App\Models\Backend\Pay_product_receipt;
-            $sRow = new \App\Models\Backend\Consignments;
-          }
+            // $sRow = \App\Models\Backend\Consignments::find(request('consignments_id'));
+            // $db_pick_warehouse_tmp = DB::select(" select * from db_pick_warehouse_tmp where id = '$id' ");
+            // $sRow = \App\Models\Backend\Consignments::where('recipient_code',$db_pick_warehouse_tmp[0]->invoice_code);
 
-          // $sRow->receipt    = request('receipt');
-          // $sRow->customer_id    = request('customer_id');
-          // $sRow->province_id_fk    = request('province_id_fk');
-          // $sRow->pick_warehouse_date    = request('pick_warehouse_date');
+          // $sRow->mobile = request('mobile');
+          // $sRow->sent_date = request('sent_date');
+          // $sRow->status_sent = request('status_sent')==1?1:0;
+          // $sRow->approver = \Auth::user()->id;
+          // $sRow->created_at = date('Y-m-d H:i:s');
+          // $sRow->save();
 
-  //           "mobile" => "sfsdf"
-  // "sent_date" => "2021-04-19"
-  // "status_sent" => "true"
-                    
-          $sRow->mobile = request('mobile');
-          $sRow->sent_date = request('sent_date');
-          $sRow->status_sent = request('status_sent')==1?1:0;
-          $sRow->approver = \Auth::user()->id;
-          $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->save();
+          // if(request('status_sent')==1){
+          //    DB::select(" UPDATE db_pick_warehouse_tmp SET status=1 where db_pick_warehouse_tmp.id = '$id'  ");
+          // }
+
+        }
 
           \DB::commit();
 

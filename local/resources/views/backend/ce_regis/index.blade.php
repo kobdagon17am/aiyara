@@ -32,34 +32,60 @@
       $sD = @$menu_permit->d==1?'':'display:none;';
     }
    ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-          <!--           <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าแจ้ง" name="topics_reported">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator"> -->
+                     <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม Course/Event (รายกลุ่ม) </h4>
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}/?v=1">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD / Import / Export 
                     </a>
                   </div>
 
                 </div>
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-8">
+                     <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม Course/Event (รายบุคคล) </h4>
+                  </div>
+
+                  <div class="col-4 text-right" style="{{@$sC}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.ce_regis.create') }}/?v=2">
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD / Import / Export 
+                    </a>
+                  </div>
+
+                </div>
+
+                <table id="data-table-002" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+
 
 @endsection
 
@@ -72,7 +98,7 @@ var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
-    oTable = $('#data-table').DataTable({
+    oTable = $('#data-table-001').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
@@ -81,7 +107,7 @@ $(function() {
         scrollX: true,
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        iDisplayLength: 10,
         ajax: {
           url: '{{ route('backend.ce_regis.datatable') }}',
           data: function ( d ) {

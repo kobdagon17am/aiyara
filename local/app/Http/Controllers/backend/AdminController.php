@@ -62,10 +62,13 @@ class AdminController extends Controller
         }else{
           $sRow = new \App\Models\Backend\Permission\Admin;
         }
+        $branch_id_fk = \App\Models\Backend\Branchs::find(request('branch_id_fk'));
+
         $sRow->name    = request('name');
         $sRow->email    = request('email');
         $sRow->tel    = request('tel');
         $sRow->branch_id_fk    = request('branch_id_fk');
+        $sRow->business_location_id_fk    = $branch_id_fk->business_location_id_fk;
         $sRow->department    = request('department');
         $sRow->position    = request('position');
         
@@ -168,6 +171,14 @@ class AdminController extends Controller
         if(@$row->branch_id_fk!=''){
           $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
            return @$sD[0]->b_name;
+        }else{
+           return '';
+        }
+      }) 
+      ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+          $sD = DB::select(" select * from dataset_business_location where id=".$row->business_location_id_fk." ");
+           return @$sD[0]->txt_desc;
         }else{
            return '';
         }

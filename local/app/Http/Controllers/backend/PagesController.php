@@ -780,7 +780,7 @@ class PagesController extends Controller{
           // Redirect to index
           // return redirect()->action('PagesController@index');
           // return redirect()->to(url("backend/pick_warehouse"));
-          return redirect()->to(url("backend/pay_product_receipt"));
+          return redirect()->to(url("backend/pay_product_packing"));
 
         }
 

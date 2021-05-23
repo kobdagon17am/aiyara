@@ -109,7 +109,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จ่ายสินค้าตามใบเบิก </h4>
+            <h4 class="mb-0 font-size-18"> เบิกสินค้าออกจากคลัง </h4>
         </div>
     </div>
 </div>
@@ -438,6 +438,17 @@
                     <div class="form-group row">
                       <div class="col-md-12">
                       <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+
+                       <div class="form-group row  divBtnApprovedBill " >
+                          <div class="col-md-12">
+                              <center>
+                                <button type="submit" class="btn btn-primary font-size-16 btnApproveBill ">
+                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติจ่ายสินค้าตามใบเบิก
+                                </button>
+                               </center>
+                          </div>
+                        </div>
+
                     </div>
                   </div>
                   </div>
