@@ -29,9 +29,9 @@ class FrontstoreController extends Controller
 
           $sDBFrontstoreApproveStatus = DB::select("
 
-              SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,pay_type_id,action_user
+              SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,pay_type_id_fk,action_user
               FROM db_orders
-              Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+              Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
               WHERE 1
               $w1
 
@@ -118,7 +118,7 @@ class FrontstoreController extends Controller
                 SELECT
                 db_orders.action_user,
                 ck_users_admin.`name` as action_user_name,
-                db_orders.pay_type_id,
+                db_orders.pay_type_id_fk,
                 dataset_pay_type.detail AS pay_type,
                 date(db_orders.action_date) AS action_date,
                 sum(db_orders.cash_pay) as cash_pay,
@@ -130,9 +130,9 @@ class FrontstoreController extends Controller
                 sum(db_orders.total_price) as total_price
                 FROM
                 db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id<>0 $w1
+                WHERE db_orders.pay_type_id_fk<>0 $w1
                 GROUP BY action_user
         ");
 
@@ -359,9 +359,7 @@ class FrontstoreController extends Controller
       $giftvoucher_this = @$giftvoucher_this[0]->giftvoucher_value;
 
       $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
-      // if($rs[0]->cnt==0){
-      //   DB::select(" UPDATE db_orders SET pay_type_id_fk_1='0', pay_type_id_fk_2='0' WHERE (id=$id) ");
-      // }
+ 
 
 
        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
@@ -413,11 +411,6 @@ class FrontstoreController extends Controller
           // dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
-
-              // return request('pay_type_id');
-              // dd();
-
-
 
               // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
               if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
@@ -479,7 +472,7 @@ class FrontstoreController extends Controller
               $sRow->charger_type    = request('charger_type');
               $sRow->credit_price    = str_replace(',','',request('credit_price'));
               $sRow->sum_credit_price    = str_replace(',','',request('sum_credit_price'));
-              $sRow->pay_type_id    = request('pay_type_id')?request('pay_type_id'):0;
+              $sRow->pay_type_id_fk    = request('pay_type_id')?request('pay_type_id'):0;
               $sRow->gift_voucher_cost    = str_replace(',','',request('gift_voucher_cost'));
 
               $sRow->member_id_aicash    = str_replace(',','',request('member_id_aicash'));
@@ -755,23 +748,12 @@ class FrontstoreController extends Controller
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
           // $sRow->invoice_code    = $invoice_code ;
 
-            // $inv = DB::select(" select invoice_code from db_orders order by invoice_code desc limit 1 ");
-            // $invoice_code = substr($inv[0]->invoice_code,0,6).sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-            // dd($invoice_code);
-            // $sRow->invoice_code    = $invoice_code ;
-
-
-
           $sRow->branch_id_fk    = request('branch_id_fk');
           $Branchs = \App\Models\Backend\Branchs::find($sRow->branch_id_fk);
           $sRow->business_location_id_fk    = $Branchs->business_location_id_fk;
           $sRow->customers_id_fk    = request('customers_id_fk');
           $sRow->distribution_channel_id_fk    = request('distribution_channel_id_fk');
           $sRow->purchase_type_id_fk    = request('purchase_type_id_fk');
-          // $sRow->pay_type_id_fk_1    = request('pay_type_id_fk_1');
-          // $sRow->pay_type_id_fk_2    = request('pay_type_id_fk_2');
-          // $sRow->gift_voucher_cost    = request('gift_voucher_cost');
-          // $sRow->gift_voucher_id    = request('gift_voucher_id');
           $sRow->fee    = $fee;
           $sRow->aistockist    = request('aistockist');
           $sRow->agency    = request('agency');
@@ -839,7 +821,7 @@ class FrontstoreController extends Controller
 
                 SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price
                 FROM db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id = dataset_pay_type.id
+                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
                 $w1
 

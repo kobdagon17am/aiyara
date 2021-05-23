@@ -115,7 +115,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จ่ายสินค้าตามใบเสร็จ </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> จ่ายสินค้าตามใบเสร็จ </h4>
         </div>
     </div>
 </div>
@@ -1263,5 +1263,32 @@ $(function() {
       });        
 
     </script>
+
+        <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
+      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
+      ?>
+          <script>
+          location.replace( "{{ url('backend/pay_product_receipt_001') }}");
+          </script>
+          <?php
+      }
+    ?>
 @endsection
 
