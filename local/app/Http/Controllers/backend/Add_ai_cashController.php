@@ -71,14 +71,22 @@ class Add_ai_cashController extends Controller
        $Customer = DB::select(" select * from customers ");
        $sPay_type = DB::select(" select * from dataset_pay_type where id in(5,7,8,10); ");
 
-       $action_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->action_user)->get();
-       $action_user = @$action_user[0]->name;
+       if($sRow){
+         $action_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->action_user)->get();
+         $action_user = @$action_user[0]->name;
+
+        $CustomerAicash = DB::select(" select * from customers where id=".$sRow->customer_id_fk." ");
+
+       }else{
+         $action_user = NULL ;
+         $CustomerAicash = NULL ;
+       }
+
 
        $sAccount_bank = \App\Models\Backend\Account_bank::get();
        $sFee = \App\Models\Backend\Fee::get();
-
-       $CustomerAicash = DB::select(" select * from customers where id=".$sRow->customer_id_fk." ");
-
+     
+     
 
        return View('backend.add_ai_cash.form')->with(array(
           'sRow'=>$sRow,
@@ -137,18 +145,18 @@ class Add_ai_cashController extends Controller
 11  เงินโอน + Ai-Cash
 */
             // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
-            if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
+            if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                $sRow->approve_status = 0  ;
-            }else if(request('pay_type_id')==5 || request('pay_type_id')==6 || request('pay_type_id')==7 || request('pay_type_id')==9){
+            }else if(request('pay_type_id_fk')==5 || request('pay_type_id_fk')==6 || request('pay_type_id_fk')==7 || request('pay_type_id_fk')==9){
               $sRow->approve_status = 2  ;
             }else{
               $sRow->approve_status = 1 ;
             }
 
-           if(request('pay_type_id')!=''){
+           if(request('pay_type_id_fk')!=''){
               if(request('save_update')==1){
 
-                if(request('pay_type_id')==8 || request('pay_type_id')==10 || request('pay_type_id')==11){
+                if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   // เป็นการโอนจะยังไม่ทำต่อจนกว่าจะผ่านการอนุมัติก่อน
                 }else{
                    DB::select(" 
@@ -170,7 +178,7 @@ class Add_ai_cashController extends Controller
           $sRow->customer_id_fk    = request('customer_id_fk');
           $sRow->aicash_amt    = str_replace(',','',request('aicash_amt'));
           $sRow->action_user    = request('action_user');
-          $sRow->pay_type_id    = request('pay_type_id');
+          $sRow->pay_type_id_fk    = request('pay_type_id_fk');
           $sRow->fee_amt    = request('fee_amt')?str_replace(',','',request('fee_amt')):0;
           $sRow->total_amt    = str_replace(',','',request('aicash_amt'))+request('fee_amt')?str_replace(',','',request('fee_amt')):0 ;
 
@@ -346,9 +354,9 @@ class Add_ai_cashController extends Controller
           return '';
         }
       })    
-      ->addColumn('pay_type_id', function($row) {
-        if(@$row->pay_type_id!=''){
-          $sD = DB::select(" select * from dataset_pay_type where id=".$row->pay_type_id." ");
+      ->addColumn('pay_type_id_fk', function($row) {
+        if(@$row->pay_type_id_fk!=''){
+          $sD = DB::select(" select * from dataset_pay_type where id=".$row->pay_type_id_fk." ");
            return @$sD[0]->detail;
         }else{
           return '';

@@ -78,7 +78,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน   </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน   </h4>
         </div>
     </div>
 </div>
@@ -722,6 +722,33 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
 
 </script>
+
+      <script>
+// Clear data in View page  
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      DB::select("TRUNCATE `db_orders`;");
+      DB::select("TRUNCATE `db_orders_tmp`;");
+      DB::select("TRUNCATE `db_order_products_list`;");
+      DB::select("TRUNCATE `db_order_products_list_tmp`;");
+      ?>
+          <script>
+          location.replace( "{{ url('backend/frontstore') }}");
+          </script>
+          <?php
+      }
+    ?>
 
 
 @endsection

@@ -631,8 +631,11 @@ class AjaxController extends Controller
    public function ajaxGetDBfrontstore(Request $request)
     {
             $id = $request->frontstore_id_fk;
-            $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
-            return response()->json($rs);
+            if($id){
+              $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
+              return response()->json($rs);
+            }
+            
     }
 
 
@@ -782,7 +785,7 @@ class AjaxController extends Controller
 
 
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -810,7 +813,7 @@ class AjaxController extends Controller
 
         // return $request;
         // dd();
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $aicash_price = str_replace(',','',$request->aicash_price);
         $sum_price = str_replace(',','',$request->sum_price);
@@ -835,17 +838,17 @@ class AjaxController extends Controller
             cash_pay='0'
             WHERE id=$frontstore_id ");
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = $aicash_price>$sum_price?$sum_price:$aicash_price;
             DB::select(" UPDATE db_orders SET aicash_price=$aicash_price,cash_price=($sum_price-$aicash_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id == '') {
-            DB::select(" UPDATE db_orders SET pay_type_id=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+        if($pay_type_id_fk == '') {
+            DB::select(" UPDATE db_orders SET pay_type_id_fk=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
         }
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
@@ -859,7 +862,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -871,7 +874,7 @@ class AjaxController extends Controller
 
 
         $sum_price = str_replace(',','',$request->sum_price);
-        $pay_type_id = $request->pay_type_id?$request->pay_type_id:0;
+        $pay_type_id_fk = $request->pay_type_id_fk?$request->pay_type_id_fk:0;
         $frontstore_id =  $request->frontstore_id ;
         $shipping_price = str_replace(',','',$request->shipping_price);
 
@@ -911,9 +914,9 @@ class AjaxController extends Controller
             WHERE id=$frontstore_id ");
 
 
-        DB::select(" UPDATE db_orders SET pay_type_id=($pay_type_id) WHERE id=$frontstore_id ");
+        DB::select(" UPDATE db_orders SET pay_type_id_fk=($pay_type_id_fk) WHERE id=$frontstore_id ");
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
@@ -955,7 +958,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -967,7 +970,7 @@ class AjaxController extends Controller
           // return $request;
           // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
@@ -985,11 +988,11 @@ class AjaxController extends Controller
         }
 
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET member_id_aicash='0',aicash_price='0',cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             if(!empty($aicash_remain)){
@@ -1003,7 +1006,7 @@ class AjaxController extends Controller
             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==7){
+        if($pay_type_id_fk==7){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1054,7 +1057,7 @@ class AjaxController extends Controller
 
         }
 
-     if($pay_type_id==8){
+     if($pay_type_id_fk==8){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1109,7 +1112,7 @@ class AjaxController extends Controller
         }
 
 
-   if($pay_type_id==9){
+   if($pay_type_id_fk==9){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1199,7 +1202,7 @@ class AjaxController extends Controller
         }
 
 
-        if($pay_type_id==10){
+        if($pay_type_id_fk==10){
 
                     if(empty($request->transfer_price)){
                         exit;
@@ -1211,7 +1214,7 @@ class AjaxController extends Controller
 
          }
 
-        if($pay_type_id==11){
+        if($pay_type_id_fk==11){
 
                     if(empty($request->transfer_price)){
                         exit;
@@ -1267,15 +1270,15 @@ class AjaxController extends Controller
         // return $request;
         // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
         $sum_price = ($sum_price+$shipping_price) ;
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
 
-            // return $pay_type_id;
+            // return $pay_type_id_fk;
             // dd();
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
@@ -1330,13 +1333,13 @@ class AjaxController extends Controller
         // return $request;
         // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
         $sum_price = ($sum_price+$shipping_price) ;
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             if(!empty($aicash_remain)){
@@ -1823,7 +1826,7 @@ class AjaxController extends Controller
 
             if($id){
 
-                DB::select(" UPDATE db_add_ai_cash SET pay_type_id=0 , cash_price='0', cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_price=0 ,account_bank_id=0 ,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+                DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=0 , cash_price='0', cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_price=0 ,account_bank_id=0 ,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
 
                 $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$id ");
                 return response()->json($rs);
@@ -1960,7 +1963,7 @@ class AjaxController extends Controller
         // Gift Voucher
 
             /*
-                $pay_type_id
+                $pay_type_id_fk
                   1 เงินสด
                   2 เงินสด + Ai-Cash
                   3 เครดิต + เงินสด
@@ -1970,7 +1973,7 @@ class AjaxController extends Controller
                   7 เงินโอน + Ai-Cash
             */
 
-            $pay_type_id = $request->pay_type_id;
+            $pay_type_id_fk = $request->pay_type_id_fk;
             $frontstore_id =  $request->frontstore_id ;
             $sum_price = str_replace(',','',$request->sum_price);
             $shipping_price = str_replace(',','',$request->shipping_price);
@@ -2001,7 +2004,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -2011,18 +2014,18 @@ class AjaxController extends Controller
           7 เงินโอน + Ai-Cash
           */
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $id =  $request->id ;
 
-        // return $pay_type_id;
+        // return $pay_type_id_fk;
         // return $id;
         // dd();
-        // if($pay_type_id==''){
+        // if($pay_type_id_fk==''){
 
         // Clear ก่อน
- //        DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
- // $pay_type_id = request('pay_type_id');
-            DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',account_bank_id=0,transfer_price=0,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+ //        DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=$pay_type_id_fk , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+ // $pay_type_id_fk = request('pay_type_id_fk');
+            DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=$pay_type_id_fk , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',account_bank_id=0,transfer_price=0,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
         // }
 
         $sum_price = str_replace(',','',$request->aicash_amt);
@@ -2031,13 +2034,13 @@ class AjaxController extends Controller
         // dd();
 
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_add_ai_cash SET cash_price=($sum_price),cash_pay=($sum_price),total_amt=($sum_price) WHERE id=$id ");
         }
 
          // dd();
 
-        if($pay_type_id==7){
+        if($pay_type_id_fk==7){
 
 
                 if(empty($request->credit_price)){
@@ -2091,9 +2094,9 @@ class AjaxController extends Controller
         }
 
 
-        // return $pay_type_id;
+        // return $pay_type_id_fk;
         // dd();
-     if($pay_type_id==8){
+     if($pay_type_id_fk==8){
 
             if(empty($request->credit_price)){
                 exit;
@@ -2149,7 +2152,7 @@ class AjaxController extends Controller
 
 
 
-        if($pay_type_id==10){
+        if($pay_type_id_fk==10){
 
                     if(empty($request->transfer_price)){
                         exit;

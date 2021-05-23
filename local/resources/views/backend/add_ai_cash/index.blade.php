@@ -315,7 +315,7 @@ $(function() {
             {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
             {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
             {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'pay_type_id', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
+            {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
              {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
               if(d=="รออนุมัติ"){
@@ -540,7 +540,7 @@ $(function() {
                                     {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
                                     {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
                                     {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-                                    {data: 'pay_type_id', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
+                                    {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
                                     {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
                                      {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
                                       if(d=="รออนุมัติ"){
