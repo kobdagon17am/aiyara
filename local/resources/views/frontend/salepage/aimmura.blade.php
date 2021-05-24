@@ -253,7 +253,7 @@
             </a>
         @endif
 
-        <a href="javascript:void(0)" class="buttons main-button" title="Contact" data-toggle="tooltip"
+        <a href="javascript:void(0)" class="buttons main-button float-action-button_ho" title="Contact" data-toggle="tooltip"
             data-placement="left">
             <i class="fa fa-times" style="color: #fff;"></i>
             <i class="fa fa-phone-volume"></i>
