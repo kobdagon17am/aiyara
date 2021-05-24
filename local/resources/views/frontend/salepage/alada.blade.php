@@ -100,7 +100,7 @@
 
 
         <div class="row text-center">
-            <div class="col-6 col-sm-6 col-lg-4 col-md-4 mt-4">
+            <div class="col-12 col-sm-12 col-lg-4 col-md-4 mt-4">
                 <div class="card shadow-sm">
                     <img src="{{ asset('frontend/salepage/Alada/alada_product_1.png') }}" class="img-fluid"
                         alt="Responsive image">
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-sm-6 col-lg-4 col-md-4 mt-4">
+            <div class="col-12 col-sm-12 col-lg-4 col-md-4 mt-4">
                 <div class="card shadow-sm">
                     <img src="{{ asset('frontend/salepage/Alada/alada_product_2.png') }}" class="img-fluid"
                         alt="Responsive image">
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-sm-6 col-lg-4 col-md-4 mt-4">
+            <div class="col-12 col-sm-12 col-lg-4 col-md-4 mt-4">
                 <div class="card shadow-sm">
                     <img src="{{ asset('frontend/salepage/Alada/alada_product_3.png') }}" class="img-fluid"
                         alt="Responsive image">
@@ -155,7 +155,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-sm-6 col-lg-4 col-md-4 mt-4">
+            <div class="col-12 col-sm-12 col-lg-4 col-md-4 mt-4">
                 <div class="card shadow-sm">
                     <img src="{{ asset('frontend/salepage/Alada/alada_product_4.png') }}" class="img-fluid"
                         alt="Responsive image">
@@ -172,7 +172,7 @@
                 </div>
             </div>
 
-            <div class="col-6 col-sm-6 col-lg-4 col-md-4 mt-4">
+            <div class="col-12 col-sm-12 col-lg-4 col-md-4 mt-4">
                 <div class="card shadow-sm">
                     <img src="{{ asset('frontend/salepage/Alada/alada_product_5.png') }}" class="img-fluid"
                         alt="Responsive image">
