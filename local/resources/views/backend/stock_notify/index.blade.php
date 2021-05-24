@@ -16,6 +16,7 @@
 
 @section('content')
 
+<div class="myloading"></div>
 
 <div class="row">
     <div class="col-md-12" style="">
@@ -190,13 +191,25 @@
               </div>
 
 
+
+
+                <div class=" text-right" style="{{@$sC}}" >
+                	 <div class="col-8">
+                    <input type="text" class="form-control float-left text-center w300 myLikeLike " placeholder="รหัสสินค้า : ชื่อสินค้า" id="product_name">
+                  </div>
+                  <a class="btn btn-info btn-sm mt-1 btnSync " href="#">
+                    <i class="bx bx-plus font-size-20 align-middle mr-1"></i>Sync รายการสินค้าปัจจุบันมาจากคลัง
+                  </a>
+                </div>
+
+                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
+
             </div>
           </div>
         </div>
 
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
 
             </div>
         </div>
@@ -215,6 +228,7 @@
 
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+var product_name = $("#product_name").val(); //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
@@ -227,21 +241,22 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        destroy: true,
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.stock_notify.datatable') }}',
-           data: function ( d ) {
-            oData = d;
-          },
-           method: 'POST',
-         },
+            url: '{{ route('backend.stock_notify.datatable') }}',
+            data :{
+                  product_name:product_name,
+                },
+              method: 'POST',
+            },
 
         columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'id', title :'*', className: 'text-center w10'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
             {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center'},
+            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center w150 '},
             {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
             {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
               if(d==0){
@@ -258,7 +273,7 @@ $(function() {
               }
             }},            
             {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
-            {data: 'id', title :'Tools', className: 'text-center w40'},
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -277,6 +292,7 @@ $(function() {
 
           $('td:last-child', nRow).html(''
             + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            + '<a href="javascript: void(0);" data-url="{{ route('backend.stock_notify.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           ).addClass('input');
 
         }
@@ -285,6 +301,81 @@ $(function() {
     });
 
 });
+
+    $('.myLikeLike').on('change', function(e){
+    	var product_name = $("#product_name").val(); //alert(product_name);
+    	var oTable;
+			$(function() {
+			    oTable = $('#data-table').DataTable({
+			    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+			        processing: true,
+			        serverSide: true,
+			        scroller: true,
+			        scrollCollapse: true,
+			        scrollX: true,
+			        ordering: false,
+			        destroy: true,
+			        // scrollY: ''+($(window).height()-370)+'px',
+			        iDisplayLength: 25,
+			        ajax: {
+			            url: '{{ route('backend.stock_notify.datatable') }}',
+			            data :{
+			                  product_name:product_name,
+			                },
+			              method: 'POST',
+			            },
+
+			        columns: [
+			            {data: 'id', title :'*', className: 'text-center w10'},
+			            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
+			            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+			            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center w150 '},
+			            {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
+			            {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
+			              if(d==0){
+			                return '* ยังไม่ได้กำหนด';
+			              }else{
+			                return d;
+			              }
+			            }},
+			            {data: 'amt_day_before_expired', title :'<center>แจ้งเตือนก่อนวันหมดอายุ (วัน)</center>', className: 'text-center w100 ',render: function(d) {
+			              if(d==0){
+			                return '* ยังไม่ได้กำหนด';
+			              }else{
+			                return d;
+			              }
+			            }},            
+			            {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
+			            {data: 'id', title :'Tools', className: 'text-center w80'},
+			        ],
+			        rowCallback: function(nRow, aData, dataIndex){
+
+			          var info = $(this).DataTable().page.info();
+			          $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+			          if(aData['amt_less']==0){
+			            $('td:eq(5)', nRow).html(aData[5]).css({'color':'red','font-style':'italic'});
+			          }
+			          if(aData['amt_day_before_expired']==0){
+			            $('td:eq(6)', nRow).html(aData[6]).css({'color':'red','font-style':'italic'});
+			          }
+
+			          if(sU!=''&&sD!=''){
+			              $('td:last-child', nRow).html('-');
+			          }else{ 
+
+			          $('td:last-child', nRow).html(''
+			            + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+			            + '<a href="javascript: void(0);" data-url="{{ route('backend.stock_notify.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+			          ).addClass('input');
+
+			        }
+
+			        }
+			    });
+
+			});
+    });
+
 </script>
 
 
@@ -342,12 +433,11 @@ $(function() {
                                   },
                                    method: 'POST',
                                  },
-
                                 columns: [
-                                    {data: 'id', title :'ID', className: 'text-center w50'},
+                                    {data: 'id', title :'*', className: 'text-center w10'},
                                     {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
                                     {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center'},
+                                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center w150'},
                                     {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
                                     {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
                                       if(d==0){
@@ -364,7 +454,7 @@ $(function() {
                                       }
                                     }},            
                                     {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
-                                    {data: 'id', title :'Tools', className: 'text-center w40'},
+                                    {data: 'id', title :'Tools', className: 'text-center w80'},
                                 ],
                                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -383,6 +473,7 @@ $(function() {
 
                                   $('td:last-child', nRow).html(''
                                     + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                    + '<a href="javascript: void(0);" data-url="{{ route('backend.stock_notify.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                   ).addClass('input');
 
                                 }
@@ -505,6 +596,26 @@ $(function() {
       });
 
 
+
+       $('.btnSync').click(function(e){
+
+            e.preventDefault();
+
+            $(".myloading").show();
+
+             $.ajax({
+                  url: " {{ url('backend/ajaxSyncStockToNotify') }} ",
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}",
+                  },
+                  success:function(data)
+                  {
+                    location.reload();
+                  }
+                })
+
+      });
 
 
 </script>

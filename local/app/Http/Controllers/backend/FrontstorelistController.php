@@ -160,10 +160,10 @@ class FrontstorelistController extends Controller
                 SELECT
                 products.id,
                 (
-                  SELECT id
+                  SELECT product_unit_id_fk
                   FROM
-                  dataset_product_unit
-                  WHERE id = products.id AND lang_id=1 LIMIT 1
+                  products_units
+                  WHERE product_id_fk = products.id LIMIT 1
                 ) as product_unit,
                 products.category_id ,categories.category_name,
                 (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
@@ -239,6 +239,19 @@ class FrontstorelistController extends Controller
                 }
 
           }
+
+
+           $ProductsName = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".@$request->product_id_fk[$i]." AND lang_id=1");
+
+           foreach($ProductsName AS $r){
+              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id."  ");
+           }
 
 
           }
@@ -444,10 +457,10 @@ class FrontstorelistController extends Controller
                     SELECT
                     products.id,
                     (
-                      SELECT id
+                      SELECT product_unit_id_fk
                       FROM
-                      dataset_product_unit
-                      WHERE id = products.id AND lang_id=1 LIMIT 1
+                      products_units
+                      WHERE product_id_fk = products.id LIMIT 1
                     ) as product_unit,
                     products.category_id ,categories.category_name,
                     (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,

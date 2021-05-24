@@ -24,24 +24,17 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                    <!-- <input type="text" class="form-control float-left text-center w130 myLike" placeholder="" name="package_name"> -->
+                    <!--  <h4 class="mb-0 font-size-18"> ประวัติการลงทะเบียน Course/Event (รายกลุ่ม) </h4> -->
                   </div>
-
-       <!--            <div class="col-4 text-right">
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.course_history.create') }}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
-                    </a>
-                  </div>
- -->
                 </div>
-
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
+
 
 @endsection
 
@@ -50,7 +43,7 @@
 <script>
 var oTable;
 $(function() {
-    oTable = $('#data-table').DataTable({
+    oTable = $('#data-table-001').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
@@ -59,7 +52,7 @@ $(function() {
         scrollX: true,
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        iDisplayLength: 10,
         ajax: {
           url: '{{ route('backend.course_history.datatable') }}',
           data: function ( d ) {

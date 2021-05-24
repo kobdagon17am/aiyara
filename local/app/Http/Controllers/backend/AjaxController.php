@@ -429,7 +429,7 @@ class AjaxController extends Controller
             $response = array();
             
             foreach ($query as $key => $value) {
-             $response[] = array("value"=>$value->lot_number,"label"=>$value->lot_number);
+             $response[] = array("value"=>$value->lot_number,"lot_expired_date"=>$value->lot_expired_date);
             }
 
             return json_encode($response);
@@ -631,8 +631,11 @@ class AjaxController extends Controller
    public function ajaxGetDBfrontstore(Request $request)
     {
             $id = $request->frontstore_id_fk;
-            $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
-            return response()->json($rs);
+            if($id){
+              $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
+              return response()->json($rs);
+            }
+            
     }
 
 
@@ -782,7 +785,7 @@ class AjaxController extends Controller
 
 
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -810,7 +813,7 @@ class AjaxController extends Controller
 
         // return $request;
         // dd();
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $aicash_price = str_replace(',','',$request->aicash_price);
         $sum_price = str_replace(',','',$request->sum_price);
@@ -835,17 +838,17 @@ class AjaxController extends Controller
             cash_pay='0'
             WHERE id=$frontstore_id ");
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = $aicash_price>$sum_price?$sum_price:$aicash_price;
             DB::select(" UPDATE db_orders SET aicash_price=$aicash_price,cash_price=($sum_price-$aicash_price),cash_pay=$sum_price WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id == '') {
-            DB::select(" UPDATE db_orders SET pay_type_id=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+        if($pay_type_id_fk == '') {
+            DB::select(" UPDATE db_orders SET pay_type_id_fk=0,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
         }
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
@@ -859,7 +862,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -871,7 +874,7 @@ class AjaxController extends Controller
 
 
         $sum_price = str_replace(',','',$request->sum_price);
-        $pay_type_id = $request->pay_type_id?$request->pay_type_id:0;
+        $pay_type_id_fk = $request->pay_type_id_fk?$request->pay_type_id_fk:0;
         $frontstore_id =  $request->frontstore_id ;
         $shipping_price = str_replace(',','',$request->shipping_price);
 
@@ -911,9 +914,9 @@ class AjaxController extends Controller
             WHERE id=$frontstore_id ");
 
 
-        DB::select(" UPDATE db_orders SET pay_type_id=($pay_type_id) WHERE id=$frontstore_id ");
+        DB::select(" UPDATE db_orders SET pay_type_id_fk=($pay_type_id_fk) WHERE id=$frontstore_id ");
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
@@ -955,7 +958,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -967,7 +970,7 @@ class AjaxController extends Controller
           // return $request;
           // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
@@ -985,11 +988,11 @@ class AjaxController extends Controller
         }
 
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET member_id_aicash='0',aicash_price='0',cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             if(!empty($aicash_remain)){
@@ -1003,7 +1006,7 @@ class AjaxController extends Controller
             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
-        if($pay_type_id==7){
+        if($pay_type_id_fk==7){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1054,7 +1057,7 @@ class AjaxController extends Controller
 
         }
 
-     if($pay_type_id==8){
+     if($pay_type_id_fk==8){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1109,7 +1112,7 @@ class AjaxController extends Controller
         }
 
 
-   if($pay_type_id==9){
+   if($pay_type_id_fk==9){
 
             if(empty($request->credit_price)){
                 exit;
@@ -1199,7 +1202,7 @@ class AjaxController extends Controller
         }
 
 
-        if($pay_type_id==10){
+        if($pay_type_id_fk==10){
 
                     if(empty($request->transfer_price)){
                         exit;
@@ -1211,7 +1214,7 @@ class AjaxController extends Controller
 
          }
 
-        if($pay_type_id==11){
+        if($pay_type_id_fk==11){
 
                     if(empty($request->transfer_price)){
                         exit;
@@ -1267,15 +1270,15 @@ class AjaxController extends Controller
         // return $request;
         // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
         $sum_price = ($sum_price+$shipping_price) ;
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
 
-            // return $pay_type_id;
+            // return $pay_type_id_fk;
             // dd();
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
@@ -1330,13 +1333,13 @@ class AjaxController extends Controller
         // return $request;
         // dd();
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
         $sum_price = ($sum_price+$shipping_price) ;
 
-        if($pay_type_id==6){
+        if($pay_type_id_fk==6){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             if(!empty($aicash_remain)){
@@ -1823,7 +1826,7 @@ class AjaxController extends Controller
 
             if($id){
 
-                DB::select(" UPDATE db_add_ai_cash SET pay_type_id=0 , cash_price='0', cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_price=0 ,account_bank_id=0 ,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+                DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=0 , cash_price='0', cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_price=0 ,account_bank_id=0 ,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
 
                 $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE id=$id ");
                 return response()->json($rs);
@@ -1863,6 +1866,13 @@ class AjaxController extends Controller
         }
     }
 
+    public function ajaxCheckAddAiCashStatus(Request $request)
+    {
+        if($request->ajax()){
+                $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE bill_status=1 ");
+                return count($rs);
+        }
+    }
 
 
     public function ajaxSaveGiftvoucherCode(Request $request)
@@ -1953,7 +1963,7 @@ class AjaxController extends Controller
         // Gift Voucher
 
             /*
-                $pay_type_id
+                $pay_type_id_fk
                   1 เงินสด
                   2 เงินสด + Ai-Cash
                   3 เครดิต + เงินสด
@@ -1963,7 +1973,7 @@ class AjaxController extends Controller
                   7 เงินโอน + Ai-Cash
             */
 
-            $pay_type_id = $request->pay_type_id;
+            $pay_type_id_fk = $request->pay_type_id_fk;
             $frontstore_id =  $request->frontstore_id ;
             $sum_price = str_replace(',','',$request->sum_price);
             $shipping_price = str_replace(',','',$request->shipping_price);
@@ -1994,7 +2004,7 @@ class AjaxController extends Controller
         // return $request;
         // dd();
      /*
-        $pay_type_id
+        $pay_type_id_fk
           1 เงินสด
           2 เงินสด + Ai-Cash
           3 เครดิต + เงินสด
@@ -2004,18 +2014,18 @@ class AjaxController extends Controller
           7 เงินโอน + Ai-Cash
           */
 
-        $pay_type_id = $request->pay_type_id;
+        $pay_type_id_fk = $request->pay_type_id_fk;
         $id =  $request->id ;
 
-        // return $pay_type_id;
+        // return $pay_type_id_fk;
         // return $id;
         // dd();
-        // if($pay_type_id==''){
+        // if($pay_type_id_fk==''){
 
         // Clear ก่อน
- //        DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
- // $pay_type_id = request('pay_type_id');
-            DB::select(" UPDATE db_add_ai_cash SET pay_type_id=$pay_type_id , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',account_bank_id=0,transfer_price=0,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+ //        DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=$pay_type_id_fk , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
+ // $pay_type_id_fk = request('pay_type_id_fk');
+            DB::select(" UPDATE db_add_ai_cash SET pay_type_id_fk=$pay_type_id_fk , cash_pay='0', credit_price='0', fee='0', fee_amt='0', charger_type='0', sum_credit_price='0', total_amt='0',account_bank_id=0,transfer_price=0,transfer_money_datetime=null,file_slip=null WHERE (id='$id') ");
         // }
 
         $sum_price = str_replace(',','',$request->aicash_amt);
@@ -2024,13 +2034,13 @@ class AjaxController extends Controller
         // dd();
 
 
-        if($pay_type_id==5){
+        if($pay_type_id_fk==5){
             DB::select(" UPDATE db_add_ai_cash SET cash_price=($sum_price),cash_pay=($sum_price),total_amt=($sum_price) WHERE id=$id ");
         }
 
          // dd();
 
-        if($pay_type_id==7){
+        if($pay_type_id_fk==7){
 
 
                 if(empty($request->credit_price)){
@@ -2084,9 +2094,9 @@ class AjaxController extends Controller
         }
 
 
-        // return $pay_type_id;
+        // return $pay_type_id_fk;
         // dd();
-     if($pay_type_id==8){
+     if($pay_type_id_fk==8){
 
             if(empty($request->credit_price)){
                 exit;
@@ -2142,7 +2152,7 @@ class AjaxController extends Controller
 
 
 
-        if($pay_type_id==10){
+        if($pay_type_id_fk==10){
 
                     if(empty($request->transfer_price)){
                         exit;
@@ -2237,7 +2247,79 @@ class AjaxController extends Controller
     public function ajaxSetProductToBil(Request $request)
     {
         if($request->ajax()){
+
+          // return $request;
+          // dd();
+
             DB::select(" UPDATE db_pick_warehouse_tmp SET amt_get = db_pick_warehouse_tmp.amt ");
+
+            // $data = DB::select(" SELECT invoice_code from db_pick_warehouse_tmp GROUP BY invoice_code ");
+
+            // foreach ($data as $key => $value) {
+
+            //           $d=DB::table('db_consignments')
+            //           ->where('recipient_code', $value->invoice_code)
+            //           ->get();
+
+            //         if($d->count() == 0){
+
+            //              DB::table('db_consignments')->insert(array(
+            //             'recipient_code' => $value->invoice_code,
+            //           ));
+
+            //         }
+            // }
+
+
+            $data_addr = DB::select(" SELECT
+              db_orders.invoice_code,
+              customers_addr_sent.recipient_name,
+              customers_addr_sent.house_no,
+              customers_addr_sent.house_name,
+              customers_addr_sent.moo,
+              customers_addr_sent.road,
+              customers_addr_sent.soi,
+              customers_addr_sent.amphures,
+              customers_addr_sent.district,
+              customers_addr_sent.province,
+              customers_addr_sent.zipcode,
+              customers_addr_sent.tel,
+              customers_addr_sent.tel_home,
+              customers_addr_sent.id_choose
+              FROM
+              db_orders
+              Left Join customers_addr_sent ON db_orders.address_sent_id_fk = customers_addr_sent.id
+              Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
+               ");
+
+            // return $data_addr;
+            // dd();
+
+            foreach ($data_addr as $key => $v) {
+
+              // if($v->recipient_name!='' && $v->invoice_code!=''){
+                
+                 $addr = $v->house_no." ";
+                 $addr .= $v->house_name." ";
+                 $addr .= $v->moo." ";
+                 $addr .= $v->road." ";
+                 $addr .= $v->soi." ";
+                 $addr .= $v->amphures." ";
+                 $addr .= $v->district." ";
+                 $addr .= $v->province." ";
+                 $addr .= $v->zipcode." ";
+                 $addr .= $v->tel." ";
+                 $addr .= $v->tel_home." ";
+
+                 DB::select(" UPDATE db_consignments set recipient_name='".@$v->recipient_name."',address='".$addr."' WHERE recipient_code='".@$v->invoice_code."'  ");
+
+               // }
+             
+            }
+
+          //  DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
+          //  DB::select(" UPDATE db_consignments set address='' WHERE  address is null  ");
+
         }
     }
 
@@ -2652,12 +2734,56 @@ class AjaxController extends Controller
 
         }
     }
-    public function ajaxDeleteQrcodeProduct(Request $request)
+
+
+    public function ajaxScanQrcodeProduct(Request $request)
     {
 
       if($request->ajax()){
-        DB::select(" UPDATE db_pick_warehouse_qrcode SET qr_code = '' where id = $request->id ");
+        // return $request->all();
+        // dd();
+        // DB::select(" UPDATE db_pick_warehouse_qrcode SET qr_code = '' where id = $request->id ");
+                    $value=DB::table('db_pick_warehouse_qrcode')
+                    ->where('item_id', $request->item_id)
+                    ->where('invoice_code', $request->invoice_code)
+                    ->where('product_id_fk', $request->product_id_fk)
+                    ->get();
+                    if($value->count() == 0){
+                          DB::table('db_pick_warehouse_qrcode')->insert(array(
+                            'item_id' => $request->item_id,
+                            'invoice_code' => $request->invoice_code,
+                            'product_id_fk' => $request->product_id_fk,
+                            'qr_code' => $request->qr_code,
+                            'created_at' => date("Y-m-d H:i:s"),
+                          ));
+                    }else{
+                          DB::table('db_pick_warehouse_qrcode')
+                          ->where('item_id', $request->item_id)
+                          ->where('invoice_code', $request->invoice_code)
+                          ->where('product_id_fk', $request->product_id_fk)
+                          ->update(array(
+                            'qr_code' => $request->qr_code,
+                          ));
+                    }
+
       }
+
+    }
+
+
+    public function ajaxDeleteQrcodeProduct(Request $request)
+    {
+
+        if($request->ajax()){
+        //  DB::select(" UPDATE db_pick_warehouse_qrcode SET qr_code = '' where id = $request->id ");
+            DB::table('db_pick_warehouse_qrcode')
+            ->where('item_id', $request->item_id)
+            ->where('invoice_code', $request->invoice_code)
+            ->where('product_id_fk', $request->product_id_fk)
+            ->update(array(
+              'qr_code' => '',
+            ));
+        }
 
     }
 
@@ -2758,8 +2884,204 @@ class AjaxController extends Controller
              
             }
 
-            DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
+          //  DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
+            DB::select(" UPDATE db_consignments set address='' WHERE  address is null  ");
 
+
+      }
+
+    }
+
+
+    public function ajaxSyncStockToNotify(Request $request)
+    {
+
+      if($request->ajax()){
+
+          DB::select(" INSERT IGNORE INTO `db_stocks_notify` 
+          (`business_location_id_fk`, `branch_id_fk`, `warehouse_id_fk`, `product_id_fk`, `lot_number`, `lot_expired_date`, `amt`, `product_unit_id_fk`, `created_at`, `updated_at`) 
+
+          SELECT
+          `business_location_id_fk`, `branch_id_fk`, `warehouse_id_fk`, `product_id_fk`, `lot_number`, `lot_expired_date`, `amt`, `product_unit_id_fk`, `created_at`, `updated_at`
+          FROM
+          db_stocks
+          WHERE lot_expired_date >= CURDATE() ");
+
+      }
+
+    }
+
+// หน้าค้น
+    public function ajaxGetCusToPayReceiptForSearch(Request $request)
+    {
+
+      if($request->ajax()){
+
+          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+
+          $rs =  DB::select(" 
+             SELECT
+             $temp_ppr_003.id,
+             $temp_ppr_003.business_location_id_fk,
+             $temp_ppr_003.branch_id_fk,
+             $temp_ppr_003.invoice_code,
+             (select name from ck_users_admin where id=$temp_ppr_003.action_user)  AS user_action,
+             $temp_ppr_003.bill_date,
+             (select name from ck_users_admin where id=$temp_ppr_003.pay_user)  AS pay_user,
+             $temp_ppr_003.pay_date,
+             $temp_ppr_003.status_sent,
+             $temp_ppr_003.customer_id_fk,
+             $temp_ppr_003.address_send AS user_address,
+             $temp_ppr_003.address_send_type,
+             customers.user_name AS user_code,
+             CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+             dataset_pay_product_status.txt_desc as bill_status,
+             (SELECT sum(amt_lot) FROM $temp_ppr_004 WHERE invoice_code=$temp_ppr_003.invoice_code GROUP BY invoice_code) as sum_amt_lot 
+             FROM
+             $temp_ppr_003
+             Left Join customers ON $temp_ppr_003.customer_id_fk = customers.id
+             Left Join dataset_pay_product_status ON $temp_ppr_003.status_sent = dataset_pay_product_status.id
+            where $temp_ppr_003.invoice_code = '".$request->txtSearch."'
+             ");
+
+          return response()->json($rs); 
+
+      }
+
+    }
+
+// หลังเซฟลงตารางจริงแล้ว
+    public function ajaxGetCusToPayReceiptAfterSave(Request $request)
+    {
+
+      if($request->ajax()){
+
+          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+
+          $rs =  DB::select(" 
+             SELECT
+             $temp_ppr_003.id,
+             $temp_ppr_003.business_location_id_fk,
+             $temp_ppr_003.branch_id_fk,
+             $temp_ppr_003.invoice_code,
+             (select name from ck_users_admin where id=$temp_ppr_003.action_user)  AS user_action,
+             $temp_ppr_003.bill_date,
+             (select name from ck_users_admin where id=$temp_ppr_003.pay_user)  AS pay_user,
+             $temp_ppr_003.pay_date,
+             $temp_ppr_003.status_sent,
+             $temp_ppr_003.customer_id_fk,
+             $temp_ppr_003.address_send AS user_address,
+             $temp_ppr_003.address_send_type,
+             customers.user_name AS user_code,
+             CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+             dataset_pay_product_status.txt_desc as bill_status
+             FROM
+             $temp_ppr_003
+             Left Join customers ON $temp_ppr_003.customer_id_fk = customers.id
+             Left Join dataset_pay_product_status ON $temp_ppr_003.status_sent = dataset_pay_product_status.id
+            where $temp_ppr_003.invoice_code = '".$request->txtSearch."'
+             ");
+
+          return response()->json($rs); 
+
+      }
+
+    }
+
+
+
+  public function ajaxGetCEUserRegis(Request $request)
+    {
+
+      if($request->ajax()){
+
+          $rs =  DB::select(" 
+                SELECT
+                course_event_regis.id,
+                course_event_regis.customers_id_fk,
+                course_event_regis.status_in,
+                course_event_regis.note,
+                concat(
+                            customers.user_name,' : ',
+                            customers.prefix_name,
+                            customers.first_name,' ',
+                            customers.last_name) AS cus_name,
+                dataset_package.dt_package AS cus_package,
+                course_event_regis.ce_regis_gift AS ce_regis_gift,
+                course_event.ce_name
+                FROM
+                course_event_regis
+                Left Join customers ON course_event_regis.customers_id_fk = customers.id
+                Left Join dataset_package ON customers.package_id = dataset_package.id
+                Left  Join course_event ON course_event_regis.ce_id_fk = course_event.id
+                where course_event_regis.id = '".$request->id."'
+             ");
+          return response()->json($rs); 
+
+      }
+
+    }
+
+
+
+
+  public function ajaxGetCEQrcode(Request $request)
+    {
+
+      if($request->ajax()){
+
+          $rs =  DB::select(" 
+            SELECT
+            course_event_regis.id
+            FROM
+            course_event_regis
+            where course_event_regis.qr_code = '".$request->txtSearch."'
+             ");
+          return @$rs[0]->id; 
+
+      }
+
+    }
+
+
+  public function ajaxGetCe_regis_gift(Request $request)
+    {
+
+      if($request->ajax()){
+          // return $request->ce_regis_gift;
+          $rsCe = explode(",",$request->ce_regis_gift);
+          $Ce_regis_gift = DB::select(" select * from dataset_ce_regis_gift ");
+          $response ='';
+          foreach ($Ce_regis_gift as $key => $value) {
+
+              $checked = '';
+              foreach($rsCe as $v){
+                 if($value->id==$v) $checked = 'checked';
+              }
+
+            $response .= "<div class='checkbox-color checkbox-primary Ce_regis_gift '>
+            <input type='checkbox' id='regis_gift".$value->id."' name='regis_gift[]' value='".$value->id."' ".$checked." >
+            <label for='regis_gift".$value->id."'>".$value->txt_desc."</label>
+            </div>";
+          }
+          return $response; 
+
+      }
+
+    }
+
+
+
+
+
+  public function ajaxCheckRemain_pay_product_receipt(Request $request)
+    {
+
+      if($request->ajax()){
+        
+          $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$request->txtSearch."' AND status in (2) ");
+          return count($rs_pay_history); 
 
       }
 

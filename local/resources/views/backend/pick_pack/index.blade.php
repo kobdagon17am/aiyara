@@ -283,7 +283,7 @@
 
 <center>
                       <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}">
-                       ไปหน้าจ่ายสินค้าตามใบเบิก >
+                       ไปหน้า เบิกสินค้าออกจากคลัง >
                     </a>
 
             </div>

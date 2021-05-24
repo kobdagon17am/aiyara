@@ -112,10 +112,29 @@ class Stock_notifyController extends Controller
 
     public function destroy($id)
     {
+      $sRow = \App\Models\Backend\Stock_notify::find($id);
+      if( $sRow ){
+        $sRow->forceDelete();
+      }
+      return response()->json(\App\Models\Alert::Msg('success'));
     }
 
     public function Datatable(Request $req){
-      $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('product_id_fk', 'asc');
+      if(!empty($req->product_name) ){
+        // $sTable = \App\Models\Backend\Stock_notify::where('product_id_fk', 'like', '%' . $req->product_name . '%')->get();
+        $sTable = DB::select(" 
+          select db_stocks_notify.*,products_details.product_name from db_stocks_notify 
+          Left Join products_details ON products_details.product_id_fk = db_stocks_notify.product_id_fk
+          WHERE 
+          products_details.product_name LIKE '%".$req->product_name."%' OR
+          db_stocks_notify.product_id_fk LIKE '%".ltrim($req->product_name, '0')."%'
+          AND products_details.lang_id=1
+      ");
+        // $sTable = \App\Models\Backend\Stock_notify::where('product_id_fk', '1')->get();
+      }else{
+        $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('updated_at', 'desc');
+      }
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
@@ -141,7 +160,7 @@ class Stock_notifyController extends Controller
 
     public function DatatableDashboard(Request $req){
       // $sTable = \App\Models\Backend\Stock_notify::where('amt_less','!=',0)->orderBy('product_id_fk', 'asc');
-      $sTable = DB::select("SELECT *  FROM db_stocks_notify WHERE amt_less !=0 AND ( (amt_less - amt)>0  OR (timestampdiff(DAY,now(),lot_expired_date) - amt_day_before_expired > 0 ) ) ");
+      $sTable = DB::select(" SELECT *  FROM db_stocks_notify WHERE amt_less > 0 OR amt_day_before_expired > 0 order by updated_at desc ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('diff_d', function($row) {

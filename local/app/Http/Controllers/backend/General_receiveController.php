@@ -50,6 +50,7 @@ class General_receiveController extends Controller
       $Shelf = \App\Models\Backend\Shelf::get();
       $sSupplier = \App\Models\Backend\Supplier::get();
       $Check_stock = \App\Models\Backend\Check_stock::get();
+      $Product_status = \App\Models\Backend\Product_status::get();
       
       return View('backend.general_receive.form')->with(
         array(
@@ -61,6 +62,7 @@ class General_receiveController extends Controller
            'sSupplier'=>$sSupplier,
            'sBusiness_location'=>$sBusiness_location,
            'Check_stock'=>$Check_stock,
+           'Product_status'=>$Product_status,
 
         ) );
     }
@@ -92,6 +94,8 @@ class General_receiveController extends Controller
       $sBranchs = \App\Models\Backend\Branchs::get();
       $sSupplier = \App\Models\Backend\Supplier::get();
       $Check_stock = \App\Models\Backend\Check_stock::get();
+      $Product_status = \App\Models\Backend\Product_status::get();
+      
       // dd($Check_stock);
 
       return View('backend.general_receive.form')->with(
@@ -109,6 +113,7 @@ class General_receiveController extends Controller
            'User_branch_id'=>$User_branch_id,
            'sBusiness_location'=>$sBusiness_location,
            'Check_stock'=>$Check_stock,
+           'Product_status'=>$Product_status,
         ) );
     }
 
@@ -152,17 +157,6 @@ class General_receiveController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
-          // if(request('approve_status')=='1'){
-          //   DB::select(" INSERT IGNORE INTO db_stocks (business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, date_in_stock, warehouse_id_fk, zone_id_fk, shelf_id_fk, created_at) 
-
-          //     SELECT 
-          //     business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, now(), warehouse_id_fk, zone_id_fk, shelf_id_fk, created_at
-          //     FROM db_general_receive
-          //     WHERE approve_status=1 AND lot_expired_date>=now() AND id=$id ");
-
-          //     return redirect()->to(url("backend/general_receive"));
-
-          // }
 
         if(request('approve_status')=='1'){
 

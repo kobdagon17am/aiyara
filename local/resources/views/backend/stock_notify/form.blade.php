@@ -129,14 +129,14 @@
                              <div class="form-group row">
                                 <label for="amt_less" class="col-md-3 col-form-label">จำนวนไม่ต่ำกว่า (ชิ้น) :</label>
                                 <div class="col-md-9">
-                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->amt_less>0?@$sRow->amt_less:'' }}" name="amt_less" required="" >
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$sRow->amt_less>0?@$sRow->amt_less:'0' }}" name="amt_less" required="" >
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="amt_day_before_expired" class="col-md-3 col-form-label">แจ้งเตือนก่อนวันหมดอายุ (วัน):</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" value="{{ @$sRow->amt_day_before_expired>0?@$sRow->amt_day_before_expired:'' }}" name="amt_day_before_expired" required="" >
+                                    <input class="form-control" type="text" value="{{ @$sRow->amt_day_before_expired>0?@$sRow->amt_day_before_expired:'0' }}" name="amt_day_before_expired" required="" >
                                 </div>
                             </div>
 

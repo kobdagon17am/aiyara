@@ -91,5 +91,13 @@
 
     .select2-container--default .select2-selection--single{ font-weight: bold !important;}
 
+/*My Style new define */
+      input:read-only {
+        background-color: #defbde !important;
+        border: 1px solid #cccccc;
+      }
 
 </style>
+
+<!-- Sweet Alert -->
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/sweetalert2/sweetalert2.min.css')}}">

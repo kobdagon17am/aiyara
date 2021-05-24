@@ -187,14 +187,14 @@ $value = DB::select("
                     customers_detail.road,
                     customers_detail.province_id_fk,
                     customers.id as cus_id,
-                    orders.id as order_id,
-                    orders.shipping
+                    db_orders.id as order_id,
+                    db_orders.shipping_price
 
                     FROM
                     db_delivery
                     Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders ON db_delivery.receipt = orders.code_order
+                    Left Join db_orders ON db_delivery.receipt = db_orders.code_order
                     WHERE
                     db_delivery.id =
                     ".$data[0]."
@@ -252,9 +252,9 @@ E-MAIL : info@aiyara.co.th
                 $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
                 $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
                 $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
-                $addr .= $value[0]->district?", อ.".$value[0]->district:'';
-                $addr .= $value[0]->province?", จ.".$value[0]->province:'';
+                // $addr .= $value[0]->district_sub?", ต.".$value[0]->district_sub:'';
+                // $addr .= $value[0]->district?", อ.".$value[0]->district:'';
+                // $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
                 if($addr!=''){
                     $addr = $addr;
@@ -306,28 +306,28 @@ Amount </td>
 
      $P = DB::select("
         SELECT
-        order_items.id,
-        order_items.order_id,
-        order_items.product_id,
-        order_items.product_name,
-        order_items.quantity,
-        order_items.list_price,
-        order_items.pv,
-        order_items.discount,
-        order_items.create_at,
-        order_items.updated_at,
-        orders.shipping
-        FROM order_items
-        Left Join orders ON order_items.order_id = orders.id
+        db_order_products_list.id,
+        db_order_products_list.order_id,
+        db_order_products_list.product_id,
+        db_order_products_list.product_name,
+        db_order_products_list.quantity,
+        db_order_products_list.list_price,
+        db_order_products_list.pv,
+        db_order_products_list.discount,
+        db_order_products_list.create_at,
+        db_order_products_list.updated_at,
+        db_orders.shipping_price
+        FROM db_order_products_list
+        Left Join db_orders ON db_order_products_list.order_id = db_orders.id
         WHERE
-        order_items.order_id = ".$value[0]->order_id."
+        db_order_products_list.order_id = ".$value[0]->order_id."
 
      ");
 
     $i=1;
 
      $Total = 0;
-     $shipping = 0;
+     $shipping_price = 0;
 
      // echo count($P);
      // exit;
@@ -342,14 +342,14 @@ Amount </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->quantity?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->list_price?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->pv?>  </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->shipping?>  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->shipping_price?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=number_format($v->quantity*$v->list_price,2)?>  </td>
           </tr>
 
     <?php
     $i++;
     $Total += $v->quantity*$v->list_price;
-    $shipping += $v->shipping ;
+    $shipping_price += $v->shipping_price ;
 
   }
 
@@ -398,16 +398,16 @@ Amount </td>
             $vat = intval($net_price) - (intval($net_price)/1.07) ;
 
             // echo $net_price;
-            // echo $shipping;
+            // echo $shipping_price;
             // exit;
             // รวมเงิน
-            $total_price = $net_price + $shipping;
+            $total_price = $net_price + $shipping_price;
             $total_price = number_format($total_price,2) ;
             // echo $total_price;
             // exit;
             $net_price =  number_format($net_price,2) ;
             $vat =  number_format($vat,2) ;
-            $shipping =  number_format($shipping,2) ;
+            $shipping_price =  number_format($shipping_price,2) ;
 
          ?>
 
@@ -427,7 +427,7 @@ TOTAL </td>
       </tr>
           <tr>
         <td  style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> ค่าจัดส่ง  </td>
-        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$shipping?> </td>
+        <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;"> <?=$shipping_price?> </td>
 
       </tr>
       <tr>

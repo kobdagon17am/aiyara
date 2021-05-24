@@ -13,8 +13,7 @@ class BranchsController extends Controller
     public function index(Request $request)
     {
 
-      $dsWarehouse  = \App\Models\Backend\Branchs::get();
-      return view('backend.branchs.index')->with(['dsWarehouse'=>$dsWarehouse]);
+      return view('backend.branchs.index');
 
     }
 
@@ -22,7 +21,8 @@ class BranchsController extends Controller
     {
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $Province = DB::select(" select * from dataset_provinces ");
-      return View('backend.branchs.form')->with(array('sBusiness_location'=>$sBusiness_location,'Province'=>$Province,) );
+      $sWarehouse = \App\Models\Backend\Warehouse::get();
+      return View('backend.branchs.form')->with(array('sBusiness_location'=>$sBusiness_location,'Province'=>$Province,'sWarehouse'=>$sWarehouse,) );
     }
 
     public function store(Request $request)
@@ -33,10 +33,12 @@ class BranchsController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Branchs::find($id);
+       // dd($sRow->id);
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sMaker_name = DB::select(" select * from ck_users_admin where id=".$sRow->b_maker." ");
        $Province = DB::select(" select * from dataset_provinces ");
-       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name,'sBusiness_location'=>$sBusiness_location,'Province'=>$Province,) );
+       $sWarehouse = \App\Models\Backend\Warehouse::where('branch_id_fk',$sRow->id)->get();
+       return View('backend.branchs.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMaker_name'=>$sMaker_name,'sBusiness_location'=>$sBusiness_location,'Province'=>$Province,'sWarehouse'=>$sWarehouse,) );
     }
 
     public function update(Request $request, $id)
@@ -52,6 +54,8 @@ class BranchsController extends Controller
           if( $id ){
             $sRow = \App\Models\Backend\Branchs::find($id);
             $sRow->updated_at = date('Y-m-d H:i:s');
+            $sRow->warehouse_id_fk    = request('warehouse_id_fk');
+            $sRow->warehouse_pack_id_fk    = request('warehouse_pack_id_fk');
           }else{
             $sRow = new \App\Models\Backend\Branchs;
           }
