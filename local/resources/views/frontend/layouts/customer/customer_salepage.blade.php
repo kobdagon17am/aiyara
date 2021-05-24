@@ -22,6 +22,10 @@
     padding: 0.375rem 1.75rem;
     border-radius: 21px;
   }
+
+  .card {
+    border-radius: 1.25rem;
+}
     </style>
 
     @yield('css')

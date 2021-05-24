@@ -8,7 +8,7 @@ use Auth;
 
 class SalepageController extends Controller
 {
-	public function salepage($user_name=''){
+	public function aimmura($user_name=''){
 
 			$data = DB::table('customers')
 			->select('db_salepage_setting.*','customers_detail.tel_mobile')
@@ -16,13 +16,33 @@ class SalepageController extends Controller
 			->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
 			->where('customers.user_name','=',$user_name)
 			->first();
-
-
-
 			$rs = ['stattus'=>'success','data'=>$data];
-
 		return view('frontend/salepage/aimmura',compact('rs'));
 	}
+
+  public function cashewy($user_name=''){
+
+    $data = DB::table('customers')
+    ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+    ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
+    ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+    ->where('customers.user_name','=',$user_name)
+    ->first();
+    $rs = ['stattus'=>'success','data'=>$data];
+  return view('frontend/salepage/cashewy_drink',compact('rs'));
+}
+
+public function alada($user_name=''){
+
+  $data = DB::table('customers')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
+  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->where('customers.user_name','=',$user_name)
+  ->first();
+  $rs = ['stattus'=>'success','data'=>$data];
+return view('frontend/salepage/alada',compact('rs'));
+}
 
 	public static function setting(){
 

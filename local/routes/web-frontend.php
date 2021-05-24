@@ -225,7 +225,9 @@ Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
-Route::get('aimmura/{user_name?}','Frontend\SalepageController@salepage')->name('aimmura');
+Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
+Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
+Route::get('alada/{user_name?}','Frontend\SalepageController@alada')->name('alada');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');

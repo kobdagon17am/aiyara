@@ -220,7 +220,7 @@
 											<div class="media-body">
 												<h5 class="notification-user">มีข้อความตอบกลับจากใส่ใจคะ</h5>
 												<p class="notification-msg">{{ $noti_value->topics_question }}</p>
-												<span class="notification-time">30 minutes ago</span>
+												{{-- <span class="notification-time">30 minutes ago</span> --}}
 											</div>
 										</div>
 									</a>
@@ -614,34 +614,28 @@
 				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
 					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Page Aimmura</span>
+						<span class="pcoded-mtext">Aimmura</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
-					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('cashewy*') ) ? 'active' : '' }}">
+					<a href="{{route('cashewy',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale page 2</span>
+						<span class="pcoded-mtext">Cashewy Drink</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
-					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('alada*') ) ? 'active' : '' }}">
+					<a href="{{route('alada',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale page 3</span>
+						<span class="pcoded-mtext">Alada</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
-					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Sale page 4</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
+
 
 				<li class="{{ (request()->is('salepage/setting')) ? 'active' : '' }}">
 					<a href="{{route('salepage/setting')}}">
