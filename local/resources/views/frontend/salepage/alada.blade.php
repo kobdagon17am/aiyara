@@ -83,10 +83,7 @@
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-12.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
-        <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-13.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
-        </div>
+
 
     </div>
 
