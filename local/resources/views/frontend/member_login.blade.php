@@ -58,10 +58,9 @@
 								<div class="row m-b-20">
 									<div class="col-md-12">
 
-										<img src="http://website.aiyara.co.th/wp-content/themes/aiplanetfresh/images/logo.png" alt="logo.png">
+										<img src="{{asset('frontend/assets/images/logo_login.png')}}" alt="">
 									</div>
 								</div>
-
 
 								<hr/>
 								<div class="input-group">
