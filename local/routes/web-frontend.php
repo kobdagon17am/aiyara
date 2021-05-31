@@ -235,36 +235,22 @@ Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('sal
 
 Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
 
-Route::get('/reward-history', function () {
-  return view('frontend/reward-history');
-})->name('reward-history');
-
-
 Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
 
 Route::get('travel','Frontend\TravelController@index')->name('travel');
 Route::get('travel_detail/{id}','Frontend\TravelController@travel_detail')->name('travel_detail');
 
-
-Route::get('/comission', function () {
-  return view('frontend/comission');
-})->name('comission');
-
-
-Route::get('/comhistory', function () {
-  return view('frontend/comhistory');
-});
-
 // Tax Data
 Route::get('taxdata', 'Frontend\TaxController@index')->name('taxdata');
 
-
-Route::get('success', function() {
+Route::get('payment/success', function() {
   return view('frontend.payment.success');
-})->name('payment.success');
+})->name('payment/success');
 
-Route::get('fail', function() {
+Route::get('payment/fail', function() {
   return view('frontend.payment.fail');
-})->name('payment.fail');
+})->name('payment/fail');
 
+Route::get('ksher', 'Frontend\Ksher\KsherController@index')->name('ksher');
+Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->name('gateway_ksher');
 

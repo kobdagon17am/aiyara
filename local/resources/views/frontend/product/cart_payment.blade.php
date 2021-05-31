@@ -8,48 +8,6 @@
          href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
  @endsection
  @section('conten')
-     <form name="payForm" action="https://ipay.bangkokbank.com/b2c/eng/dPayment/payComp.jsp" method="post" id="form1">
-         @csrf
-         <input type="hidden" name="merchantId" value="6845">
-         <input type="hidden" name="amount" value="1">
-         <input type="hidden" name="orderRef" value="OR-0001">
-         <input type="hidden" name="currCode" value="764">
-         <input type="hidden" name="pMethod" value="VISA">
-         <input type="hidden" name="cardNo" value="4918914107195005">
-         <input type="hidden" name="securityCode" value="123">
-         <input type="hidden" name="cardHolder" value="CardHolder">
-         <input type="hidden" name="epMonth" value="07">
-         <input type="hidden" name="epYear" value="2021">
-         <input type="hidden" name="payType" value="N">
-         <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
-         <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
-         <input type="hidden" name="errorUrl" value="{{ route('payment.fail') }}">
-         <input type="hidden" name="lang" VALUE="T">
-         <input type="hidden" name="remark" value="-">
-     </form>
-
-     <form name="payFormCcard" method="post" action="https://ipay.bangkokbank.com/b2c/eng/payment/payForm.jsp" id="form2">
-         <input type="hidden" name="merchantId" value="6845">
-         <input type="hidden" name="amount" value="100">
-         <input type="hidden" name="orderRef" value="20010207">
-         <input type="hidden" name="currCode" value="764">
-         <input type="hidden" name="successUrl" value="{{ route('payment.success') }}">
-         <input type="hidden" name="failUrl" value="{{ route('payment.fail') }}">
-         <input type="hidden" name="errorUrl" value="{{ route('payment.fail') }}">
-         <input type="hidden" name="payType" value="N">
-         <input type="hidden" name="lang" value="E">
-         <input type="hidden" name="remark" value="-">
-
-         <!-- พารามิเตอร์เสริม (ตัวเลือก)
-    <input type="hidden" name="redirect" value="30">
-    <input type="hidden" name="orderRef1" value="add-ref-00001">
-    <input type="hidden" name="orderRef2" value="add-ref-00002">
-    <input type="hidden" name="orderRef3" value="add-ref-00003">
-    <input type="hidden" name="orderRef4" value="add-ref-00004">
-    <input type="hidden" name="orderRef5" value="add-ref-00005">
-    -->
-     </form>
-
 
      <div class="row">
          <div class="col-md-8 col-sm-12">

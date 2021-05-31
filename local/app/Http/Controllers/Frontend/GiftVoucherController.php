@@ -12,7 +12,7 @@ class GiftVoucherController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('customer');
+      $this->middleware('customer');
     }
 
     public function index()
