@@ -242,7 +242,7 @@
              </th>
          </tr>
          <tr style="margin-bottom: 0px;padding-bottom: 0px">
-             <th  style="text-align: right;font-size: 16px"><strong class="text-primary">Gift Voucher : </strong></th>
+             <th  style="text-align: right;font-size: 16px"><strong class="text-primary"> Ai Voucher : </strong></th>
              <th  style="text-align: left;padding-left:10px;font-size: 16px"><strong class="text-primary">
               {{  number_format($order->gift_voucher_price,2) }}</strong>
              </th>

@@ -275,7 +275,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                              </td>
                          </tr>
                          <tr>
-                             <td><strong class="text-primary">Gift Voucher : </strong></td>
+                             <td><strong class="text-primary">Ai Voucher : </strong></td>
                              <td align="right"><strong class="text-primary">
                                      {{  number_format($order->gift_voucher_price,2) }}</strong>
                              </td>

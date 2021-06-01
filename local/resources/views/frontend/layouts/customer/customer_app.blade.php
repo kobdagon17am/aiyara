@@ -386,7 +386,7 @@
 				<li class="{{ (request()->is('cart/5') || request()->is('product-list/5') || request()->is('product-detail/5/*') || request()->is('cart_payment/5') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>5])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Gift Voucher</span>
+						<span class="pcoded-mtext">Ai Voucher</span>
 						@if(Cart::session(5)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_5" style="top:8px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(5)->getTotalQuantity() }}</span>
 						@endif
@@ -453,8 +453,8 @@
 
 		<li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Gift Voucher</b></span>
-				<span class="pcoded-mtext">Gift Voucher</span>
+				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Ai Voucher</b></span>
+				<span class="pcoded-mtext"> Ai Voucher</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 

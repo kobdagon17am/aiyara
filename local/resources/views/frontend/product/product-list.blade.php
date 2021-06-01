@@ -203,7 +203,7 @@
   <div class="card-block">
     <div class="row">
       <div class="col-md-6">
-       <h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+       <h6 class="m-b-10" style="font-size: 16px"> Ai Voucher </h6>
 
      </div>
      <div class="col-md-6">
@@ -214,7 +214,7 @@
     </div>
   </div>
 
-  <p class="m-b-0">จำนวน Gift Voucher คงเหลือ</p>
+  <p class="m-b-0">จำนวน Ai Voucher คงเหลือ</p>
 </div>
 </div>
 @elseif($type==6)

@@ -14,13 +14,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> เพิ่ม Gift Voucher </h4>
+            <h4 class="mb-0 font-size-18"> เพิ่ม Ai Voucher </h4>
         </div>
     </div>
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = @$_REQUEST['menu_id'];
       if($sPermission==1){
@@ -45,17 +45,17 @@
   @endif
     {{ csrf_field() }}
 
-<!-- 
+<!--
  <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data" autocomplete="off">
     {{ csrf_field() }} -->
 
       <div class="myBorder" >
         <div class="container">
-          
+
           <div class="col-12">
             <div class="panel panel-default">
               <div class="panel-body">
-     
+
                   <div class="form-group row">
                     <label for="descriptions" class="col-md-3 col-form-label">Descriptions :</label>
                     <div class="col-md-6">
@@ -68,7 +68,7 @@
                   <div class="form-group row">
                     <label for="receipt" class="col-md-3 col-form-label">วันเริ่ม - วันสิ้นสุด</label>
                     <div class="col-md-6 d-flex  ">
-                      <?php 
+                      <?php
                          $sd = explode('-', @$sRow->pro_sdate);
                          $sd = @$sd[2].'/'.@$sd[1].'/'.@$sd[0];
                          $sd = !empty(@$sRow->pro_sdate)?$sd:'';
@@ -78,7 +78,7 @@
                       ?>
                          <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม" value="{{ @$sd }}" required />
                          <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="{{ @$ed }}" required />
-           
+
                       </div>
 
                       <div class="col-md-3">
@@ -100,13 +100,13 @@
 
       <div class="myBorder" style="background-color: #e6e6e6;" >
         <div class="container">
-          
+
           <div class="col-12">
             <div class="panel panel-default">
               <div class="panel-body">
-      
+
                   <div class="form-group row">
-                    
+
                     <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
                     <div class="col-md-3">
                       <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
@@ -118,9 +118,9 @@
                       &nbsp;
                       <input type='button' class="btn btn-outline-info waves-effect waves-light btnDLTemp " value='Download Template'>
                     </div>
-                    
+
                   </div>
-                  
+
                   @if(Session::has('message'))
                   <div class="form-group row ">
                     <label for="receipt" class="col-md-2 col-form-label"></label>
@@ -130,7 +130,7 @@
                   </div>
                   @endif
 
-               
+
               </div>
             </div>
           </div>
@@ -141,11 +141,11 @@
 
       <div class="myBorder" >
         <div class="container">
-          
+
           <div class="col-12">
             <div class="panel panel-default">
               <div class="panel-body">
-     
+
 
                     <div class="form-group row">
                       <label for="example-text-input" class="col-md-3 col-form-label"> ID สมาชิก : </label>
@@ -195,7 +195,7 @@
 
 
                 </div>
- 
+
                 <div class="col-6 " style="text-align: right;" >
                     <input type='button' class="btn btn-danger font-size-16 btnClearImport " value='Clear Data [รออนุมัติ]' >
                     &nbsp;
@@ -209,10 +209,10 @@
 
                 </div>
               </div>
-              
+
               <table id="data-table-coupon" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
-              
+
 
                  <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -240,9 +240,9 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              
+
               <div class="modal-body">
-                
+
                 <div class="card-body" >
                   <form action="{{ route('backend.giftvoucher_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                     <input type="hidden" name="giftvoucher_code_id_fk" value="{{@$sRow->id}}">
@@ -288,7 +288,7 @@
                                 @endif
                             </select>
                           </div>
-                        </div>                   
+                        </div>
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label"> </label>
                       <div class="col-md-8 text-right ">
@@ -299,7 +299,7 @@
                   </form>
                 </div>
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -352,7 +352,7 @@
                   }else{
                       return d;
                   }
-                }},  
+                }},
                 {data: 'giftvoucher_value', title :'<center>Values</center>', className: 'text-left'},
                 {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                         if(d==4){
@@ -375,13 +375,13 @@
 
                   if(sU!=''&&sD!=''){
                       $('td:last-child', nRow).html('-');
-                  }else{ 
+                  }else{
 
                     if(aData['pro_status']!=2){
 
                       $('td:last-child', nRow).html(''
                         + '<a href="javascript: void(0);" data-id="'+aData['id']+'"  class="btn btn-sm btn-danger cDeleteByCase " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                        
+
                       ).addClass('input');
 
                     }else{
@@ -414,13 +414,13 @@ $(document).ready(function() {
         $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxClearDataGiftvoucherCode') }} ", 
+               url: " {{ url('backend/ajaxClearDataGiftvoucherCode') }} ",
                data:{ _token: '{{csrf_token()}}' ,giftvoucher_code_id_fk:giftvoucher_code_id_fk,param:'Import' },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                     $(".myloading").hide();
@@ -446,13 +446,13 @@ $(document).ready(function() {
             $.ajax({
 
                    type:'POST',
-                   url: " {{ url('backend/ajaxClearDataPromotionCode') }} ", 
+                   url: " {{ url('backend/ajaxClearDataPromotionCode') }} ",
                    data:{ _token: '{{csrf_token()}}' ,giftvoucher_code_id_fk:giftvoucher_code_id_fk,param:'Gen' },
                     success:function(data){
-                         console.log(data); 
+                         console.log(data);
                          location.reload();
                       },
-                    error: function(jqXHR, textStatus, errorThrown) { 
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log(JSON.stringify(jqXHR));
                         console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         $(".myloading").hide();
@@ -481,7 +481,7 @@ $(document).ready(function() {
           if(pro_edate==''){
             $("#endDate").focus();
             return false;
-          }            
+          }
 
           var v = $("input[name=fileXLS]").val();
           if(v!=''){
@@ -500,7 +500,7 @@ $(document).ready(function() {
       $(".btnSaveByCase").click(function(event) {
           // var form = $( "#frmGen" );
           // form.validate();
-          var giftvoucher_code_id_fk = "{{@$sRow->id}}"; 
+          var giftvoucher_code_id_fk = "{{@$sRow->id}}";
           // alert(giftvoucher_code_id_fk);
           // return false;
 
@@ -520,30 +520,30 @@ $(document).ready(function() {
           if(pro_edate==''){
             $("#endDate").focus();
             return false;
-          }    
+          }
 
           var customer_code = $("#customer_code").val();
             if(customer_code==''){
             $("#customer_code").select2('open');
             return false;
-          } 
+          }
 
           var giftvoucher_value = $("#giftvoucher_value").val();
             if(giftvoucher_value==''){
             $("#giftvoucher_value").focus();
             return false;
-          } 
+          }
 
           $(".myloading").show();
 
           var frm = $("#frmGen").serialize()+"&giftvoucher_code_id_fk="+giftvoucher_code_id_fk;
-        
+
           $.ajax({
              type:'POST',
-             url: " {{ url('backend/ajaxSaveGiftvoucherCode') }} ", 
+             url: " {{ url('backend/ajaxSaveGiftvoucherCode') }} ",
              data: frm ,
               success:function(data){
-                   console.log(data); 
+                   console.log(data);
                    // return false;
                     setTimeout(function(){
                         location.replace("{{ url('backend/giftvoucher_code') }}"+"/"+data+"/edit");
@@ -552,7 +552,7 @@ $(document).ready(function() {
                    $(".myloading").hide();
                    // location.reload();
                 },
-              error: function(jqXHR, textStatus, errorThrown) { 
+              error: function(jqXHR, textStatus, errorThrown) {
                   console.log(JSON.stringify(jqXHR));
                   console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                   $(".myloading").hide();
@@ -586,26 +586,26 @@ $(document).ready(function() {
           if(pro_edate=='' || pro_edate==0){
             $("#endDate").focus();
             return false;
-          }        
+          }
 
         $(".myloading").show();
 
         $.ajax({
            type:'POST',
-           url: " {{ url('backend/ajaxGiftVoucherSaveDate') }} ", 
+           url: " {{ url('backend/ajaxGiftVoucherSaveDate') }} ",
            data:{ _token: '{{csrf_token()}}',
            id:id,
            pro_sdate:pro_sdate,
            pro_edate:pro_edate,
             },
             success:function(data){
-                 console.log(data); 
+                 console.log(data);
                  // return false;
 
                  $(".myloading").hide();
                  location.reload();
               },
-            error: function(jqXHR, textStatus, errorThrown) { 
+            error: function(jqXHR, textStatus, errorThrown) {
                 $(".myloading").hide();
             }
         });
@@ -620,27 +620,27 @@ $(document).ready(function() {
     $(".btnExportExls").click(function(event) {
         /* Act on the event */
 
-        var giftvoucher_code_id_fk = "{{@$sRow->id}}"; 
+        var giftvoucher_code_id_fk = "{{@$sRow->id}}";
 
 
         $(".myloading").show();
         $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/excelExportGiftvoucherCus') }} ", 
+               url: " {{ url('backend/excelExportGiftvoucherCus') }} ",
                data:{ _token: '{{csrf_token()}}',giftvoucher_code_id_fk:giftvoucher_code_id_fk },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      // location.reload();
 
                      setTimeout(function(){
                         var url='local/public/excel_files/giftvoucher_cus.xlsx';
-                        window.open(url, 'Download');  
+                        window.open(url, 'Download');
                         $(".myloading").hide();
                     },3000);
 
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                     $(".myloading").hide();
@@ -656,7 +656,7 @@ $(document).ready(function() {
         $(".myloading").show();
         setTimeout(function(){
             var url='local/public/excel_files/giftvoucher_template.xlsx';
-            window.open(url, 'Download');  
+            window.open(url, 'Download');
             $(".myloading").hide();
         },1000);
 
@@ -672,20 +672,20 @@ $(document).ready(function() {
     //     $.ajax({
 
     //            type:'POST',
-    //            url: " {{ url('backend/excelExportChart') }} ", 
+    //            url: " {{ url('backend/excelExportChart') }} ",
     //            data:{ _token: '{{csrf_token()}}' },
     //             success:function(data){
-    //                  console.log(data); 
+    //                  console.log(data);
     //                  // location.reload();
 
     //                  setTimeout(function(){
     //                     var url='local/public/excel_files/export_chart.xlsx';
-    //                     window.open(url, 'Download');  
+    //                     window.open(url, 'Download');
     //                     $(".myloading").hide();
     //                 },3000);
 
     //               },
-    //             error: function(jqXHR, textStatus, errorThrown) { 
+    //             error: function(jqXHR, textStatus, errorThrown) {
     //                 console.log(JSON.stringify(jqXHR));
     //                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
     //                 $(".myloading").hide();
@@ -702,16 +702,16 @@ $(document).ready(function() {
           }
 
         $(".myloading").show();
-        
+
         $.ajax({
            type:'POST',
-           url: " {{ url('backend/ajaxGenPromotionCodePrefixCoupon') }} ", 
+           url: " {{ url('backend/ajaxGenPromotionCodePrefixCoupon') }} ",
            data:{ _token: '{{csrf_token()}}' , prefix_coupon:v },
             success:function(data){
-                 console.log(data); 
+                 console.log(data);
                  location.reload();
               },
-            error: function(jqXHR, textStatus, errorThrown) { 
+            error: function(jqXHR, textStatus, errorThrown) {
                 console.log(JSON.stringify(jqXHR));
                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 $(".myloading").hide();
@@ -796,7 +796,7 @@ $(document).ready(function() {
 
                             $.ajax({
                              type:'POST',
-                             url: " {{ url('backend/ajaxGetProductPromotionCus') }} ", 
+                             url: " {{ url('backend/ajaxGetProductPromotionCus') }} ",
                              data:{ _token: '{{csrf_token()}}',product_id_fk:product_id_fk },
                               success:function(data){
 
@@ -805,7 +805,7 @@ $(document).ready(function() {
                                     $('#amt').focus().select();
 
                                 },
-                              error: function(jqXHR, textStatus, errorThrown) { 
+                              error: function(jqXHR, textStatus, errorThrown) {
                                   console.log(JSON.stringify(jqXHR));
                                   console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                   $(".myloading").hide();
@@ -856,7 +856,7 @@ $(document).ready(function() {
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         // {data: 'product_img',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
@@ -865,7 +865,7 @@ $(document).ready(function() {
                         {data: 'product_name', title :'<center>สินค้า</center>', className: 'text-center'},
                         {data: 'amt', title :'<center>จำนวน</center>', className: 'text-center'},
                         {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -874,13 +874,13 @@ $(document).ready(function() {
                       ).addClass('input');
                     }
                 });
-        
+
             });
 
        $(document).on('click', '.cDelete', function(event) {
               setTimeout(function(){
                 location.reload();
-              }, 1500);  
+              }, 1500);
         });
 
         $(document).on('change', '#giftvoucher_code_id_fk', function(event) {
@@ -906,18 +906,18 @@ $(document).ready(function() {
                // console.log(giftvoucher_code_id_fk);
                 $.ajax({
                    type:'POST',
-                   url: " {{ url('backend/ajaxApproveGiftvoucherCode') }} ", 
+                   url: " {{ url('backend/ajaxApproveGiftvoucherCode') }} ",
                    data:{ _token: '{{csrf_token()}}',giftvoucher_code_id_fk:giftvoucher_code_id_fk },
                     success:function(data){
                         location.reload();
                       },
-                    error: function(jqXHR, textStatus, errorThrown) { 
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log(JSON.stringify(jqXHR));
                         console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         $(".myloading").hide();
                     }
                 });
-            
+
             }
 
         });
@@ -936,14 +936,14 @@ $(document).ready(function() {
 
               $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxClearDataGiftvoucherCode') }} ", 
+                 url: " {{ url('backend/ajaxClearDataGiftvoucherCode') }} ",
                  data:{ _token: '{{csrf_token()}}',id:id,param:'ByCase' },
                   success:function(data){
 
                       location.reload();
 
                     },
-                  error: function(jqXHR, textStatus, errorThrown) { 
+                  error: function(jqXHR, textStatus, errorThrown) {
                       console.log(JSON.stringify(jqXHR));
                       console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                       $(".myloading").hide();

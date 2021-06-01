@@ -12,13 +12,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รายการ Gift Voucher (ที่เพิ่ม) </h4>
+            <h4 class="mb-0 font-size-18"> รายการ Ai Voucher (ที่เพิ่ม) </h4>
         </div>
     </div>
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = @$_REQUEST['menu_id'];
       if($sPermission==1){
@@ -42,9 +42,9 @@
               <div class="row">
                 <div class="col-10 d-flex " >
 
-                   <input type="text" class="form-control text-center w250 myLike" placeholder="ค้น : ชื่อ Gift Voucher" name="descriptions"> 
-                   <input type="text" class="form-control text-center w180 myLike" placeholder="ค้น : วันเริ่มต้น " name="pro_sdate" style="margin-left: 1%;" > 
-                   <input type="text" class="form-control text-center w180 myLike" placeholder="ค้น : วันสิ้นสุด " name="pro_edate" style="margin-left: 1%;" > 
+                   <input type="text" class="form-control text-center w250 myLike" placeholder="ค้น : ชื่อ Ai Voucher" name="descriptions">
+                   <input type="text" class="form-control text-center w180 myLike" placeholder="ค้น : วันเริ่มต้น " name="pro_sdate" style="margin-left: 1%;" >
+                   <input type="text" class="form-control text-center w180 myLike" placeholder="ค้น : วันสิ้นสุด " name="pro_edate" style="margin-left: 1%;" >
                 </div>
                 <div class="col-2 text-right" >
                   <a class="btn btn-info btn-sm mt-1 font-size-16 " href="{{ route('backend.giftvoucher_code.create') }}">
@@ -52,10 +52,10 @@
                   </a>
                 </div>
               </div>
-              
+
               <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
-              
+
             </div>
           </div>
           </div> <!-- end col -->
@@ -107,12 +107,12 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'descriptions', title :'<center>ชื่อ Gift Voucher</center>', className: 'text-left'},
+            {data: 'descriptions', title :'<center>ชื่อ  Ai Voucher</center>', className: 'text-left'},
             {data: 'amount', title :'<center>จำนวน</center>', className: 'text-center'},
             {data: 'pro_sdate', title :'<center>วันเริ่มต้น</center>', className: 'text-center'},
             {data: 'pro_edate', title :'<center>วันสิ้นสุด</center>', className: 'text-center'},
             {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w100'},         
+            {data: 'id', title :'Tools', className: 'text-center w100'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -129,7 +129,7 @@ $(function() {
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
           $('td:last-child', nRow).html(''
             + '<a href="{{ route('backend.giftvoucher_code.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -151,10 +151,10 @@ $(document).ready(function() {
 
     $(document).on('click', '.cDelete', function(event) {
       event.preventDefault();
- 
+
           setTimeout(function(){
             location.reload();
-          }, 1500);  
+          }, 1500);
 
     });
 
@@ -166,13 +166,13 @@ $(document).ready(function() {
         $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxClearDataPromotionCode') }} ", 
+               url: " {{ url('backend/ajaxClearDataPromotionCode') }} ",
                data:{ _token: '{{csrf_token()}}' },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                     $(".myloading").hide();
@@ -197,16 +197,16 @@ $(document).ready(function() {
           }
 
         $(".myloading").show();
-        
+
         $.ajax({
            type:'POST',
-           url: " {{ url('backend/ajaxGenPromotionCode') }} ", 
+           url: " {{ url('backend/ajaxGenPromotionCode') }} ",
            data:{ _token: '{{csrf_token()}}' , amt_gen:v },
             success:function(data){
-                 console.log(data); 
+                 console.log(data);
                  location.reload();
               },
-            error: function(jqXHR, textStatus, errorThrown) { 
+            error: function(jqXHR, textStatus, errorThrown) {
                 console.log(JSON.stringify(jqXHR));
                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 $(".myloading").hide();
@@ -224,20 +224,20 @@ $(document).ready(function() {
         $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/excelExportPromotionCus') }} ", 
+               url: " {{ url('backend/excelExportPromotionCus') }} ",
                data:{ _token: '{{csrf_token()}}' },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      // location.reload();
 
                      setTimeout(function(){
                         var url='local/public/excel_files/promotion_code.xlsx';
-                        window.open(url, 'Download');  
+                        window.open(url, 'Download');
                         $(".myloading").hide();
                     },3000);
 
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                     $(".myloading").hide();
@@ -254,16 +254,16 @@ $(document).ready(function() {
           }
 
         $(".myloading").show();
-        
+
         $.ajax({
            type:'POST',
-           url: " {{ url('backend/ajaxGenPromotionCodePrefixCoupon') }} ", 
+           url: " {{ url('backend/ajaxGenPromotionCodePrefixCoupon') }} ",
            data:{ _token: '{{csrf_token()}}' , prefix_coupon:v },
             success:function(data){
-                 console.log(data); 
+                 console.log(data);
                  location.reload();
               },
-            error: function(jqXHR, textStatus, errorThrown) { 
+            error: function(jqXHR, textStatus, errorThrown) {
                 console.log(JSON.stringify(jqXHR));
                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 $(".myloading").hide();

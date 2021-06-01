@@ -41,7 +41,7 @@
                          @elseif($bill['type'] == 4)
                              <h5>รายการสั่งซื้อเพื่อเติม Ai-Stockist</h5>
                          @elseif($bill['type'] == 5)
-                             <h5>Gift Voucher</h5>
+                             <h5> Ai Voucher</h5>
                          @elseif($bill['type'] == 6)
                              <h5>คอร์สอบรม</h5>
                          @else
@@ -600,7 +600,7 @@
                                          <div class="card-block">
                                              <div class="row">
                                                  <div class="col-md-8 col-sx-8 col-8">
-                                                     <h6 class="m-b-10" style="font-size: 16px">Gift Voucher </h6>
+                                                     <h6 class="m-b-10" style="font-size: 16px">Ai Voucher </h6>
                                                  </div>
                                                  <div class="col-md-4 col-sx-4 col-4">
                                                      <?php $gv =
@@ -630,7 +630,7 @@
                                              <hr>
                                              <div class="row">
                                                  <div class="col-md-8 col-sx-8 col-8">
-                                                     <h6 style="font-size: 16px">Gift Voucher คงเหลือ </h6>
+                                                     <h6 style="font-size: 16px"> Ai Voucher คงเหลือ </h6>
 
                                                  </div>
                                                  <div class="col-md-4 col-sx-4 col-4">
@@ -695,7 +695,7 @@
                                              {{-- <div class="radio radio-inline">
  											<label>
  												<input type="radio" onchange="open_input(4)" id="voucher" name="pay_type" value="Voucher">
- 												<i class="helper"></i><b>Gift Voucher</b>
+ 												<i class="helper"></i><b> Ai Voucher</b>
  											</label>
  										</div> --}}
                                          </div>
@@ -968,12 +968,12 @@
                                  </td>
                              </tr>
                              <tr>
-                                 <td><strong class="text-primary">Gift Voucher</strong></td>
+                                 <td><strong class="text-primary"> Ai Voucher</strong></td>
                                  <td align="right"><strong class="text-primary"> {{ $gv->sum_gv }}</strong>
                                  </td>
                              </tr>
                              <tr>
-                                 <td><strong class="text-primary" style="font-size: 13px">Gift Voucher คงเหลือ</strong></td>
+                                 <td><strong class="text-primary" style="font-size: 13px"> Ai Voucher คงเหลือ</strong></td>
                                  <td align="right"><strong class="text-primary gv_remove_price">
                                          {{ $bill['gv_total'] }}</strong>
                                  </td>

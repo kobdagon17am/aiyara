@@ -482,7 +482,7 @@ class PvPayment extends Model
                     $customer_id = $upline_id;
                     $last_upline_type = $upline_type;
 
-                } elseif ($type_id == 5) { //Gift Voucher
+                } elseif ($type_id == 5) { // Ai Voucher
 
                     $pv_banlance = DB::table('customers')
                         ->select('pv')

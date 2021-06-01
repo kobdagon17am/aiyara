@@ -46,17 +46,17 @@ class ProductsListController extends Controller
         2 รักษาคุณสมบัติรายเดือน
         3 รักษาคุณสมบัติท่องเที่ยว
         4 เติม Ai-Stockist
-        5 แลก Gift Voucher
+        5 แลก  Ai Voucher
         */
        // if($req->order_type){
        //  $order_type = $req->order_type;
-       //  $wh_order_type = " AND 
+       //  $wh_order_type = " AND
        //      (
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
        //      ) ";
        //  }else{
        //      $wh_order_type = ' ' ;
@@ -68,16 +68,16 @@ class ProductsListController extends Controller
           break;
          case '2':
           $category_id = ' AND products.category_id = 2 ';
-          break;    
+          break;
          case '3':
           $category_id = ' AND products.category_id = 3 ';
-          break;       
+          break;
          case '4':
           $category_id = ' AND products.category_id = 4 ';
-          break;    
+          break;
          case '8':
           $category_id = ' AND products.category_id = 8 ';
-          break;                           
+          break;
         default:
           # code...
           $category_id = '';
@@ -110,14 +110,14 @@ class ProductsListController extends Controller
             products
             LEFT JOIN categories on products.category_id=categories.id
             LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-            WHERE products_cost.business_location_id = 1  
-             AND 
+            WHERE products_cost.business_location_id = 1
+             AND
             (
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR 
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) 
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
             )
             ".$category_id."
             ORDER BY pn

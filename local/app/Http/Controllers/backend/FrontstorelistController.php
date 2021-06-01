@@ -38,7 +38,7 @@ class FrontstorelistController extends Controller
 
                  $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
 
-                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                     $pv = 0;
                   }else{
                     $pv = @$Promotions_cost[0]->pv  ;
@@ -63,7 +63,7 @@ class FrontstorelistController extends Controller
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
 
 
-                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                     $pv = 0;
                   }else{
                     $pv = @$Promotions_cost[0]->pv  ;
@@ -114,7 +114,7 @@ class FrontstorelistController extends Controller
          if(@$sRow[0]->promotion_id_fk == @$request->promotion_id_fk_pro[$i]){
 
                  $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
-                  if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                  if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                     $pv = 0;
                   }else{
                     $pv = @$Promotions_cost[0]->pv  ;
@@ -194,7 +194,7 @@ class FrontstorelistController extends Controller
               if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
 
                 // echo @$request->quantity[$i];
-                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
                   $pv = @$sProducts[0]->pv * @$request->quantity[$i] ;
@@ -415,7 +415,7 @@ class FrontstorelistController extends Controller
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
-                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
                   $pv = @$sProducts[0]->pv ;
@@ -493,7 +493,7 @@ class FrontstorelistController extends Controller
                $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
                // return count($sRow);
 
-                if(request('purchase_type_id_fk')==5){ // Gift Voucher
+                if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
                   $pv = @$sProducts[0]->pv ;

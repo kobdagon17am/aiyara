@@ -160,7 +160,7 @@ class CancelOrderController extends Controller
                     // 1 เงินโอน
                     // 2 บัตรเครดิต
                     // 3 Ai-Cash
-                    // 4 Gift Voucher
+                    // 4  Ai Voucher
                     // 5 เงินสด
                     // 6 เงินสด + Ai-Cash
                     // 7 เครดิต + เงินสด
@@ -168,9 +168,9 @@ class CancelOrderController extends Controller
                     // 9 เครดิต + Ai-Cash
                     // 10 เงินโอน + เงินสด
                     // 11 เงินโอน + Ai-Cash
-                    // 12 Gift Voucher + เงินโอน
-                    // 13 Gift Voucher + บัตรเครดิต
-                    // 14 Gift Voucher + Ai-Cash
+                    // 12  Ai Voucher + เงินโอน
+                    // 13  Ai Voucher + บัตรเครดิต
+                    // 14  Ai Voucher + Ai-Cash
 
                     if($pay_type== 3 || $pay_type == 6 || $pay_type== 9 || $pay_type==  11 || $pay_type==  14){//Aicash
 

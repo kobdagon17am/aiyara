@@ -106,7 +106,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
   <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
     <div class="panel panel-danger" >
       <div class="panel-heading bg-danger">
-       <b>Gift Voucher</b>
+       <b> Ai Voucher</b>
      </div>
      <div class="panel-body">
       <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>

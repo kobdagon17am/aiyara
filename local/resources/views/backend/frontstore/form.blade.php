@@ -438,7 +438,7 @@
             <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{@$sRow->id}}" target=_blank >
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
             </a>
-            <!-- แลก Gift Voucher -->
+            <!-- แลก  Ai Voucher -->
                  <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion " href="#" >
                   <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
                 </a>
@@ -708,13 +708,13 @@
         2 รักษาคุณสมบัติรายเดือน
         3 รักษาคุณสมบัติท่องเที่ยว
         4 เติม Ai-Stockist
-        5 แลก Gift Voucher
+        5 แลก  Ai Voucher
 
     dataset_pay_type
     1 โอนชำระ
     2 บัตรเครดิต
     3 Ai-Cash
-    4 Gift Voucher
+    4  Ai Voucher
     5 เงินสด -->
 
 
@@ -790,7 +790,7 @@
             <label for="" > รูปแบบการชำระเงิน : </label>
           </div>
           <div class="divTableCell">
-            <input class="form-control f-ainumber-18 input-aireadonly"  value="Gift Voucher" readonly="" >
+            <input class="form-control f-ainumber-18 input-aireadonly"  value=" Ai Voucher" readonly="" >
           </div>
         </div>
 
@@ -799,7 +799,7 @@
           <div class="divTableCell" >
           </div>
           <div class="divTH">
-            <label for="" > ยอด Gift Voucher ที่มี : </label>
+            <label for="" > ยอด Ai Voucherr ที่มี : </label>
           </div>
           <div class="divTableCell">
             <input class="form-control f-ainumber-18 input-aireadonly" id="gift_voucher_cost" name="gift_voucher_cost" value="{{number_format(@$giftvoucher_this,2)}}" readonly="" >
@@ -1588,7 +1588,7 @@
       {{ csrf_field() }}
 
       <div class="modal-body">
-<!-- 
+<!--
        <iframe id="iframe" src="{{url('backend/add_ai_cash/1/edit')}}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe> -->
 
       </div>
@@ -2703,7 +2703,7 @@
               2 รักษาคุณสมบัติรายเดือน
               3 รักษาคุณสมบัติท่องเที่ยว
               4 เติม Ai-Stockist
-              5 แลก Gift Voucher
+              5 แลก  Ai Voucher
             */
             // if(order_type==5){
             //   $(".btnPromotion8").hide();
@@ -3247,7 +3247,7 @@ $(document).ready(function() {
             $(document).ready(function() {
 
 
-                   
+
                    $(document).on('click', '.cDelete', function(event) {
                        event.preventDefault();
 
@@ -3276,7 +3276,7 @@ $(document).ready(function() {
                           success:function(d){
 
                             if(d){
-                      
+
                               var pay_type_id_fk = $("#pay_type_id_fk").val();
                               if(pay_type_id_fk==''){
                                 $("#cash_price").val('');
@@ -3793,11 +3793,11 @@ $(document).ready(function() {
                         var gift_voucher_price = $("#gift_voucher_price").val();
 
                         // alert(purchase_type_id_fk);
-                        // Gift Voucher
+                        //  Ai Voucher
                         if(purchase_type_id_fk==5){
 
                           if(gift_voucher_price==''){
-                            alert("! กรุณา กรอกยอด Gift Voucher ");
+                            alert("! กรุณา กรอกยอด Ai Voucher ");
                             $(this).val('').select2();
                             $(".myloading").hide();
                             $("#gift_voucher_price").focus();
@@ -4242,7 +4242,7 @@ $(document).ready(function() {
                           success:function(d){
 
                           	if(d){
-                      
+
                               var pay_type_id_fk = $("#pay_type_id_fk").val();
                               if(pay_type_id_fk==''){
                                 $("#cash_price").val('');

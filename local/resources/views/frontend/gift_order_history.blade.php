@@ -17,7 +17,7 @@
               <?php
               $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
               ?>
-              <h4 class="m-b-10">ประวัติการแลกสินค้าด้วย Gift Voucher [ คงเหลือ <b class="text-danger">{{ number_format($gv->sum_gv) }}</b> ]</h4>
+              <h4 class="m-b-10">ประวัติการแลกสินค้าด้วย Ai Voucher [ คงเหลือ <b class="text-danger">{{ number_format($gv->sum_gv) }}</b> ]</h4>
             </div>
 
               <div class="col-md-12">

@@ -15,7 +15,7 @@
 .divTable{
   display: table;
   width: 100%;
-  
+
 }
 .divTableRow {
   display: table-row;
@@ -44,7 +44,7 @@
 }
 .divTH {text-align: right;}
 
-  
+
   .tooltip_cost {
     position: relative ;
     cursor: pointer;
@@ -66,7 +66,7 @@
     /*z-index: 9999;*/
 }
 
-  
+
 </style>
 @endsection
 
@@ -83,7 +83,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -95,7 +95,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -103,7 +103,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 
 
@@ -117,7 +117,7 @@
               <div class="divTH">
                 <label for="startDate" >วันสร้างเริ่มต้น : </label>
               </div>
-                <?php 
+                <?php
                          $sd = date('d/m/Y');
                          // echo $sd;
                       ?>
@@ -145,7 +145,7 @@
                     @if(@$sPurchase_type)
                       @foreach(@$sPurchase_type AS $r)
                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                          {{$r->orders_type}} 
+                          {{$r->orders_type}}
                         </option>
                       @endforeach
                     @endif
@@ -205,7 +205,7 @@
                   @if(@$sUser)
                     @foreach(@$sUser AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->name}} 
+                        {{$r->name}}
                       </option>
                     @endforeach
                   @endif
@@ -223,7 +223,7 @@
                   @if(@$sApproveStatus)
                     @foreach(@$sApproveStatus AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->txt_desc}} 
+                        {{$r->txt_desc}}
                       </option>
                     @endforeach
                   @endif
@@ -232,29 +232,29 @@
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
-            
+
             </div>
             <div class="divTableRow">
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
-                
+
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-warning" style="color:black;float: right;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
@@ -271,7 +271,7 @@
   </div>
 </div>
 
-   
+
 
 <div class="row">
   <div class="col-12">
@@ -304,10 +304,10 @@
           <div class="col-lg-5">
             <div class="card">
               <div class="card-body">
-                
+
                 <div class="table-responsive">
                   <table class="table table-striped mb-0">
-                    
+
                     <thead>
                       <tr style="background-color: #f2f2f2;text-align: right;">
                         <th></th>
@@ -351,7 +351,7 @@
                     </tbody>
                   </table>
                 </div>
-                
+
               </div>
             </div>
           </div>
@@ -360,16 +360,16 @@
           <div class="col-lg-7">
             <div class="card">
               <div class="card-body">
-                
+
                 <div class="table-responsive">
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                      <?php 
+                      <?php
                          $sd = date('d/m/Y');
                          // echo $sd;
                       ?>
-                        รวมรายการชำระค่าสินค้า {{$sd}} - {{$sd}} 
+                        รวมรายการชำระค่าสินค้า {{$sd}} - {{$sd}}
                       </th></tr>
                       <tr>
                         <th>พนักงานขาย</th>
@@ -384,7 +384,7 @@
                     </thead>
 
                         <tbody>
-                          
+
                           @IF(@$sDBFrontstoreSumCostActionUser)
                               @foreach(@$sDBFrontstoreSumCostActionUser AS $r)
                               @php
@@ -421,10 +421,10 @@
                             <th class="text-right"> {{number_format(@$sum_total_price,2)}} </th>
                           </tr>
                           @ENDIF
-                          
+
                         </tbody>
                   </table>
-                  
+
                 </div>
                 <br>
 
@@ -432,7 +432,7 @@
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        รายการ เติม Ai-Cash {{$sd}} - {{$sd}} 
+                        รายการ เติม Ai-Cash {{$sd}} - {{$sd}}
                       </th></tr>
                       <tr>
                         <th>พนักงานขาย</th>
@@ -442,7 +442,7 @@
                     </thead>
 
                         <tbody>
-                          
+
                           @IF(@$sDBFrontstoreUserAddAiCash)
                               @foreach(@$sDBFrontstoreUserAddAiCash AS $r)
                               @php
@@ -465,10 +465,10 @@
                             <th class="text-right"> {{number_format(@$sum_sum,2)}} </th>
                           </tr>
                           @ENDIF
-                          
+
                         </tbody>
                   </table>
-                  
+
                 </div>
 
 
@@ -476,7 +476,7 @@
             </div>
           </div>
 
- <?php 
+ <?php
 
       for ($i=1;$i<=5;$i++){
         $x = $i."test";
@@ -515,8 +515,8 @@ $(function() {
 
       $(document).on('mouseout', '.tooltip_cost', function(event) {
             $('.ttt').hide();
-          
-      });      
+
+      });
 
 });
 
@@ -561,7 +561,7 @@ $(function() {
 รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
 รักษาคุณสมบัติท่องเที่ยว <i class="fa fa-bus"></i>
 เติม Ai-Stockist <i class="ti-wallet "></i>
-Gift Voucher  <i class="fa fa-gift"></i>
+Ai Voucher  <i class="fa fa-gift"></i>
 */
             {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
               if(d==1){
@@ -569,12 +569,12 @@ Gift Voucher  <i class="fa fa-gift"></i>
               }else if(d==2){
                 return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
               }else if(d==3){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';
               }else if(d==4){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';
               }else if(d==5){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
-              }else{ 
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';
+              }else{
                 return '';
               }
             }},
@@ -614,8 +614,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
                 return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
                 + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
-     
-            {data: 'id', title :'Tools', className: 'text-center w70'}, 
+
+            {data: 'id', title :'Tools', className: 'text-center w70'},
         ],
            // "order": [ [ 1, 'desc' ] ],
            "columnDefs": [ {
@@ -651,7 +651,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
 	          if(sU!=''&&sD!=''){
 	              $('td:last-child', nRow).html('-');
-	          }else{ 
+	          }else{
 
               if(aData['type']!='0'){ // เติม Ai-Cash
 
@@ -660,14 +660,14 @@ Gift Voucher  <i class="fa fa-gift"></i>
                 $('td:last-child', nRow).html(''
                   + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                  
+
                 ).addClass('input');
 
             }
 
              // $('td:last-child', nRow).html(aData['approve_status']);
 
-           
+
           }
           }
 
@@ -724,19 +724,19 @@ Gift Voucher  <i class="fa fa-gift"></i>
 </script>
 
       <script>
-// Clear data in View page  
+// Clear data in View page
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
               location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+
             });
-                
+
       });
 
     </script>
-   
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
       DB::select("TRUNCATE `db_orders`;");
       DB::select("TRUNCATE `db_orders_tmp`;");

@@ -299,7 +299,7 @@ class FrontstoreController extends Controller
         2 รักษาคุณสมบัติรายเดือน
         3 รักษาคุณสมบัติท่องเที่ยว
         4 เติม Ai-Stockist
-        5 แลก Gift Voucher
+        5 แลก  Ai Voucher
         */
 
       if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
@@ -359,7 +359,7 @@ class FrontstoreController extends Controller
       $giftvoucher_this = @$giftvoucher_this[0]->giftvoucher_value;
 
       $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
- 
+
 
 
        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
@@ -705,7 +705,7 @@ class FrontstoreController extends Controller
                   WHERE
                   customers_addr_sent.id='".($r_addr[0]->address_sent_id_fk)."' ");
             }
-        
+
 
              // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
@@ -753,7 +753,7 @@ class FrontstoreController extends Controller
 
           }
           // 5=เงินสด,2=บัตรเครดิต
- 
+
             $fee = request('fee');
 
           // clear ออกก่อน แล้วค่อยคำนวณใหม่

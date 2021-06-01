@@ -30,7 +30,7 @@
                         @elseif($type == 4)
                         <h4>รายการสั่งซื้อเพื่อเติม Ai-Stockist</h4>
                         @elseif($type == 5)
-                        <h4>Gift Voucher</h4>
+                        <h4> Ai Voucher</h4>
                         @elseif($type == 6)
                         <h4>Course</h4>
                         @else
@@ -127,7 +127,7 @@
                    <table class="table table-responsive" >
                     @if($type == 5)
                     <tr>
-                        <td><strong class="text-primary">Gift Voucher </td>
+                        <td><strong class="text-primary"> Ai Voucher </td>
                             <td align="right"><strong class="text-primary" id="gv"> {{ number_format($gv->sum_gv) }} </strong></td>
                         </tr>
                         @endif

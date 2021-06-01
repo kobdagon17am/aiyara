@@ -85,8 +85,8 @@ class Add_ai_cashController extends Controller
 
        $sAccount_bank = \App\Models\Backend\Account_bank::get();
        $sFee = \App\Models\Backend\Fee::get();
-     
-     
+
+
 
        return View('backend.add_ai_cash.form')->with(array(
           'sRow'=>$sRow,
@@ -118,7 +118,7 @@ class Add_ai_cashController extends Controller
       }else{
            return $this->form($id);
       }
-      
+
     }
 
    public function form($id=NULL)
@@ -135,7 +135,7 @@ class Add_ai_cashController extends Controller
 1 เงินโอน
 2 บัตรเครดิต
 3 Ai-Cash
-4 Gift Voucher
+4  Ai Voucher
 5 เงินสด
 6 เงินสด + Ai-Cash
 7 เครดิต + เงินสด
@@ -159,7 +159,7 @@ class Add_ai_cashController extends Controller
                 if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   // เป็นการโอนจะยังไม่ทำต่อจนกว่าจะผ่านการอนุมัติก่อน
                 }else{
-                   DB::select(" 
+                   DB::select("
                     UPDATE
                     customers
                     Inner Join db_add_ai_cash ON customers.id = db_add_ai_cash.customer_id_fk
@@ -170,7 +170,7 @@ class Add_ai_cashController extends Controller
                   DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".request('customer_id_fk')."' ");
                 }
 
-                 
+
               }
            }
           // dd(str_replace(',','',request('fee_amt')));
@@ -188,7 +188,7 @@ class Add_ai_cashController extends Controller
           if(!empty(request('account_bank_id'))){
             $sRow->transfer_money_datetime = request('transfer_money_datetime');
           }
-                    
+
           $request = app('request');
               if ($request->hasFile('image01')) {
                 @UNLINK(@$sRow->file_slip);
@@ -241,7 +241,7 @@ class Add_ai_cashController extends Controller
        // return($ch_aicash_02[0]->aicash_amt);
 
        if( $ch_aicash_01[0]->ai_cash < $sRow->aicash_amt ){
-           
+
        }else{
             DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
             DB::select(" UPDATE db_add_ai_cash SET approve_status=4 where id=$id ");
@@ -249,7 +249,7 @@ class Add_ai_cashController extends Controller
 
        return response()->json(\App\Models\Alert::Msg('success'));
 
-      
+
     }
 
     public function Datatable(Request $req){
@@ -275,7 +275,7 @@ class Add_ai_cashController extends Controller
          $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
       }else{
          $w01 = "";
-      }             
+      }
 
       if(!empty($req->branch_id_fk)){
          $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
@@ -310,13 +310,13 @@ class Add_ai_cashController extends Controller
            $w07 = " AND db_add_ai_cash.approver = ".$req->approver." " ;
         }else{
            $w07 = "";
-        }        
+        }
       // $sTable = \App\Models\Backend\Add_ai_cash::search()->orderBy('updated_at', 'desc');
-       $sTable = DB::select("  
+       $sTable = DB::select("
             SELECT db_add_ai_cash.*
             FROM
             db_add_ai_cash
-            WHERE 1 
+            WHERE 1
             ".$w01."
             ".$w02."
             ".$w03."
@@ -337,7 +337,7 @@ class Add_ai_cashController extends Controller
           return '';
         }
       })
-      ->escapeColumns('customer_name') 
+      ->escapeColumns('customer_name')
       ->addColumn('action_user', function($row) {
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
@@ -345,7 +345,7 @@ class Add_ai_cashController extends Controller
         }else{
           return '';
         }
-      })  
+      })
        ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
@@ -353,7 +353,7 @@ class Add_ai_cashController extends Controller
         }else{
           return '';
         }
-      })    
+      })
       ->addColumn('pay_type_id_fk', function($row) {
         if(@$row->pay_type_id_fk!=''){
           $sD = DB::select(" select * from dataset_pay_type where id=".$row->pay_type_id_fk." ");
@@ -361,7 +361,7 @@ class Add_ai_cashController extends Controller
         }else{
           return '';
         }
-      })  
+      })
       ->addColumn('aicash_remain', function($row) {
         if(@$row->customer_id_fk!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
@@ -369,7 +369,7 @@ class Add_ai_cashController extends Controller
         }else{
           return '';
         }
-      })   
+      })
 
       // ->addColumn('status', function($row) {
       //   // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ
@@ -388,7 +388,7 @@ class Add_ai_cashController extends Controller
       //     }else{
       //       return 'รออนุมัติ';
       //     }
-      // }) 
+      // })
 
       ->addColumn('status', function($row) {
           if($row->bill_status==1){
@@ -398,11 +398,11 @@ class Add_ai_cashController extends Controller
           }else if($row->bill_status==3){
             return 'ยกเลิก';
           }
-      })  
+      })
       // ->addColumn('action_date', function($row) {
       //     $d = strtotime($row->updated_at);
       //     return date("d/m/", $d).(date("Y", $d)+543);
-      // })      
+      // })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
