@@ -666,6 +666,15 @@
                                                      <i class="helper"></i><b>โอนชำระ</b>
                                                  </label>
                                              </div>
+
+                                             <div class="radio radio-inline">
+                                              <label>
+                                                  <input type="radio" id="mobile_banking" onchange="open_input(4)" name="pay_type"
+                                                      value="4" >
+                                                  <i class="helper"></i><b>Mobile Banking</b>
+                                              </label>
+                                            </div>
+
                                              <div class="radio radio-inline">
                                                  <label>
                                                      <input type="radio" onchange="open_input(2)" id="credit_cart"
@@ -693,7 +702,7 @@
                                      </div>
                                  </div>
 
-                                 <div class="row" id="cart_pament_tranfer">
+                                 <div class="row" id="cart_payment_tranfer">
 
                                 <div class="row col-md-12 col-lg-12">
                                   <div class="col-md-6 col-lg-6">
@@ -746,7 +755,30 @@
 
                                  </div>
 
-                                 <div class="row" id="cart_pament_credit_card" style="display: none">
+                                 <div class="row" id="cart_payment_mobile_banking" style="display: none">
+                                  <div class="row col-md-12 col-lg-12">
+                                    <div class="col-md-6 col-lg-6">
+                                      <div class="card">
+                                          <div class="card-block text-center">
+                                              {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                                              <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย">
+                                              <button class="btn btn-primary btn-md mt-2">ชำระด้วย PromptPay</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6 col-lg-6">
+                                    <div class="card">
+                                        <div class="card-block text-center">
+                                          <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="TrueMoney">
+                                          <button class="btn btn-primary btn-md mt-2"> ชำระด้วย TrueMoney </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                  </div>
+                                   </div>
+
+
+                                 <div class="row" id="cart_payment_credit_card" style="display: none">
 
                                      <div class="col-sm-12 col-md-12">
                                          <div class="card card-border-success">
@@ -780,7 +812,7 @@
                                      </div>
                                  </div>
 
-                                 <div class="row" id="cart_pament_aicash" style="display: none;">
+                                 <div class="row" id="cart_payment_aicash" style="display: none;">
                                      <div class="col-sm-12 col-md-12">
                                          <div class="card card-border-success">
 
@@ -1333,9 +1365,11 @@
              if (data == '1') {
 
                  check_shipping({{ $address->provinces_id }});
-                 document.getElementById("cart_pament_tranfer").style.display = "block";
-                 document.getElementById("cart_pament_credit_card").style.display = "none";
-                 document.getElementById("cart_pament_aicash").style.display = "none";
+                 document.getElementById("cart_payment_tranfer").style.display = "block";
+                 document.getElementById("cart_payment_credit_card").style.display = "none";
+                 document.getElementById("cart_payment_aicash").style.display = "none";
+                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
+
 
 
                  document.getElementById("submit_upload").disabled = true;
@@ -1351,9 +1385,10 @@
                      }
                  });
              } else if (data == '2') {
-                 document.getElementById("cart_pament_tranfer").style.display = "none";
-                 document.getElementById("cart_pament_credit_card").style.display = "block";
-                 document.getElementById("cart_pament_aicash").style.display = "none";
+                 document.getElementById("cart_payment_tranfer").style.display = "none";
+                 document.getElementById("cart_payment_credit_card").style.display = "block";
+                 document.getElementById("cart_payment_aicash").style.display = "none";
+                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
              } else if (data == '3') {
 
 
@@ -1365,14 +1400,19 @@
                 $('#error_aicash').html('<label class="label label-inverse-danger text-right">Ai-Cash ไม่พอสำหรับการชำระเงิน</label>');
                }
 
-                 document.getElementById("cart_pament_tranfer").style.display = "none";
-                 document.getElementById("cart_pament_credit_card").style.display = "none";
-                 document.getElementById("cart_pament_aicash").style.display = "block";
+                 document.getElementById("cart_payment_tranfer").style.display = "none";
+                 document.getElementById("cart_payment_credit_card").style.display = "none";
+                 document.getElementById("cart_payment_aicash").style.display = "block";
+                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
+
 
              } else if (data == '4') {
-                 document.getElementById("cart_pament").innerHTML = (conten_4);
+                 document.getElementById("cart_payment_tranfer").style.display = "none";
+                 document.getElementById("cart_payment_credit_card").style.display = "none";
+                 document.getElementById("cart_payment_aicash").style.display = "none";
+                 document.getElementById("cart_payment_mobile_banking").style.display = "block";
              } else {
-                 document.getElementById("cart_pament").innerHTML = (conten_1);
+               alert('ไม่มีช่องทางให้ชำระ (Data is Null)');
              }
          }
 
