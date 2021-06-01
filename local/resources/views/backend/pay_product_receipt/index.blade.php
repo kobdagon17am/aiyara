@@ -126,7 +126,7 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
 
           <div class="col-6">
-            <h4 class="font-size-18  "> จ่ายสินค้าตามใบเสร็จ  </h4>
+            <h4 class="font-size-18 test_clear_data "> จ่ายสินค้าตามใบเสร็จ  </h4>
           </div>
           
            <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">
@@ -188,7 +188,7 @@
                         <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label>
                         <div class="col-md-4">
                           <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value="P1210500001"  > 
- <!-- P1210400002  P1210500001 -->
+ <!-- P1210500002  P1210500001 -->
                         </div>
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%;display: none;" >
                           <i class="bx bx-search align-middle "></i> SEARCH
@@ -249,11 +249,10 @@
                           </div>
                         </div>
 
-<div class="div_datatables " style="display: none;" >
+                    <div class="div_datatables " style="display: none;" >
                        <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
                        <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-</div>
-
+                    </div>
 
                       <div class="form-group row div_btn_save " style="display: none;" >
                         <div class="col-md-12 text-center ">
@@ -264,8 +263,6 @@
 
                         </div>
                       </div>
-
-
 
                     </div>
                   </div>
@@ -388,7 +385,7 @@
 	                  },
 	                  success:function(data)
 	                  { 
-	                    console.log(data);
+	                    // console.log(data);
                       // return false;
                       
 	                    if(data==0){
@@ -411,7 +408,7 @@
 						                 url: " {{ url('backend/ajaxCHECKPay_product_receipt') }} ",
 						                 data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
 						                  success:function(data){
-						                       console.log(data);
+						                       // console.log(data);
 						                       if(data>0){
 						                       	  location.replace('{{ url("backend/pay_product_receipt") }}/'+data+'/edit');
 						                       }else{
@@ -441,14 +438,12 @@
 
                   $('#data-table-0001').hide();
                   $('#data-table-0002').hide();
+                  $(".div_btn_save").hide();
 
                   $(".div_customer").hide();
                   $(".div_customer").css('background-color','white');
-                  $(".div_btn_save").hide();
 
                   $(".myloading").show();
-                  // $('#data-table-0001').DataTable().clear();
-                  // $('#data-table-0002').DataTable().clear();
 
                   var txtSearch = $("input[name='txtSearch']").val();
                   // alert(txtSearch);
@@ -518,7 +513,18 @@
 				                                             
 				                    ],
 				                    rowCallback: function(nRow, aData, dataIndex){
-				                    }
+
+                                  $(".myloading").hide();
+                                  console.log(aData['ch_amt_lot_wh']);
+                                  setTimeout(function(){
+                                      if(aData['ch_amt_lot_wh']==0){
+                                        $(".div_btn_save").hide();
+                                      }else{
+                                          $(".div_btn_save").show();
+                                      }
+                                  }, 1500);
+
+                            }
 				                });
 				           
 				            });
@@ -529,8 +535,7 @@
                         // alert(count);
                         if (count == 0)
                         {
-                           // alert("Please enter the Data");
-                           $(".div_btn_save").hide();
+                 
                            $(".div_customer").hide();
                            // $(".myloading").hide();
                            setTimeout(function(){
@@ -547,7 +552,7 @@
                                url: " {{ url('backend/ajaxGetCusToPayReceiptForSearch') }} ",
                                data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                 success:function(data){
-                                     console.log(data);
+                                     // console.log(data);
                                      $.each(data,function(key,value){
                                         $("#id").val(value.id);
                                         $(".user_code").html(value.user_code);
@@ -564,7 +569,8 @@
                                         
                                         $(".user_action").html(value.user_action);
                                         $(".action_date").html(value.bill_date);
-                                        $(".bill_status").html(value.bill_status+value.sum_amt_lot);
+                                        // $(".bill_status").html(value.bill_status+value.sum_amt_lot);
+                                        $(".bill_status").html(value.bill_status);
                                         $(".pay_user").html(value.pay_user);
                                         $(".pay_date").html(value.pay_date);
 
@@ -575,21 +581,12 @@
                                           $("#operate").show();
                                           $("#pay").hide();
                                         }
-
-                                        if( (value.address_send_type==1 && value.status_sent!=3) && value.sum_amt_lot>0){
-                                          $(".div_customer").css('background-color','#ffeecc');
-                                            setTimeout(function(){
-                                              $(".div_btn_save").show();
-                                            }, 1000);
-
-                                        }else{
-                                          $(".div_customer").css('background-color','#ffe6ff');
-                                          $(".div_btn_save").hide();
-                                        }
-
-                                        if(value.sum_amt_lot==0){
-                                           $(".div_btn_save").hide();
-                                        }
+                                    
+                                        if(value.bill_status!=3){
+                                           $(".div_customer").css('background-color','#ffeecc');
+                                         }else{
+                                           $(".div_customer").css('background-color','#ffe6ff');
+                                         }
 
                                      });
 
@@ -645,7 +642,7 @@
                       },
                       success:function(data)
                       { 
-                          console.log(data);
+                          // console.log(data);
                           if(data==0){
                             Swal.fire({
                               position: 'top-end',
@@ -670,6 +667,7 @@
                                            data:{ _token: '{{csrf_token()}}' },
                                             success:function(data){
                                                  console.log(data);
+                                                 // return false;
                                                  // $(".myloading").hide();
                                                  if(data=="No_changed"){
                                                       $(".myloading").hide();
@@ -691,7 +689,7 @@
                                                                          url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
-                                                                               console.log(d2);
+                                                                               // console.log(d2);
                                                                        
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
@@ -726,7 +724,7 @@
                                                               },
                                                               success:function(data)
                                                               { 
-                                                                console.log(data);
+                                                                // console.log(data);
                                                                 $(".myloading").hide();
                                                               }
                                                        });
@@ -785,7 +783,7 @@
       $(document).ready(function() {
         $(".a_label_search").on('click',function(){
             $("#txtSearch").focus();
-            $("#txtSearch").val("P1210400002");
+            $("#txtSearch").val("P1210500002");
         });
         $(".b_label_search").on('click',function(){
             $("#txtSearch").focus();
@@ -799,6 +797,36 @@
 </script>
 
 
+    <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
+      DB::select("TRUNCATE `db_stocks_return`;");
+      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
+      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
+      ?>
+          <script>
+          location.replace( "{{ url('backend/pay_product_receipt') }}");
+          </script>
+          <?php
+    }
+?>
 
 @endsection
 

@@ -43,6 +43,7 @@ class Check_stockController extends Controller
         // dd($request->lot_number);
         // dd($request->date);
         // dd($id);
+        // dd($request);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
@@ -52,8 +53,9 @@ class Check_stockController extends Controller
             WHERE products.id=".$id." AND lang_id=1");
 
             $lot_number = $request->lot_number;
+            $d_ch = explode(":",$request->date);
 
-         $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' ");
+         $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' AND lot_expired_date <= '".$d_ch[1]."' ");
 
          // dd($sBalance);
 

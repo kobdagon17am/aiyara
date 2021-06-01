@@ -75,6 +75,7 @@ class General_receiveController extends Controller
     {
        $sRow = \App\Models\Backend\General_receive::find($id);
        $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
+       // dd($Product_in_cause);
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Products = DB::select("SELECT products.id as product_id,
             products.product_code,

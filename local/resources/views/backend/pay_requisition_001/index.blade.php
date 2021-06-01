@@ -115,7 +115,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> จ่ายสินค้าตามใบเสร็จ </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> จ่ายสินค้าตามใบเบิก </h4>
         </div>
     </div>
 </div>
@@ -344,8 +344,8 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pay_product_receipt') }}">
-                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการจ่ายสินค้า
+                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pick_warehouse') }}">
+                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการเบิกจ่ายสินค้า
                     </a>
                   </div>
 
@@ -363,8 +363,8 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pay_product_receipt') }}">
-                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการจ่ายสินค้า
+                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pick_warehouse') }}">
+                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการเบิกจ่ายสินค้า
                     </a>
                   </div>
 
@@ -384,8 +384,8 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pay_product_receipt') }}">
-                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการจ่ายสินค้า
+                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pick_warehouse') }}">
+                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการเบิกจ่ายสินค้า
                     </a>
                   </div>
 

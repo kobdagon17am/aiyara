@@ -570,18 +570,20 @@ $(function() {
                                               var lot_number = rows.data().pluck('lot_number').toArray();
                                               var lot_number = lot_number[0];
 
+                                              if ( group==lot_number ) {  
 
-                                              if ( group.search("LOT") ) {  
-                                                  return $('<tr>')
-                                                  .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
-                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
-                                              }else{
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a> </td>' );
+                                                  
+                                              }else{
+                                                   return $('<tr>')
+                                                  .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
+                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
                                               }
+                                                  
                                               
                                           },
                                           // dataSrc: "product_name"

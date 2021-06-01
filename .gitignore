@@ -1,0 +1,21 @@
+local/app/Http/Controllers/backend/AjaxController======.php
+local/app/Http/Controllers/backend/FrontstoreController====.php
+local/app/Http/Controllers/backend/Pay_product_receiptController - Copy.php
+local/app/Http/Controllers/backend/Pick_warehouse_fifoController - Copy (2).php
+local/app/Http/Controllers/backend/Pick_warehouse_fifoController - Copy (3).php
+local/app/Http/Controllers/backend/Pick_warehouse_fifoController - Copy.php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (2).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (3).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (4).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (5).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (6).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (7).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy (8).php
+local/app/Http/Controllers/backend/Products_fifo_billController - Copy.php
+local/resources/views/backend/check_stock/index.blade - Copy.php
+local/resources/views/backend/frontstore/index====.blade.php
+local/resources/views/backend/pay_product_receipt/form.blade - Copy (2).php
+local/resources/views/backend/pay_product_receipt/form.blade - Copy.php
+local/resources/views/backend/pick_warehouse/form.blade - Copy.php
+local/resources/views/backend/pick_warehouse/index.blade - Copy (2).php
+local/resources/views/backend/pick_warehouse/index.blade - Copy.php

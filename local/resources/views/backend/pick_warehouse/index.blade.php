@@ -109,7 +109,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> เบิกสินค้าออกจากคลัง </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> เบิกจ่ายสินค้าจากคลัง </h4>
         </div>
     </div>
 </div>
@@ -276,13 +276,7 @@
               
               <?php }?>
 
-                 <div class="col-md-6 text-right divBtnSave " style="display: none;">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิล Packing List
-                    </button>
-                  </div>
-
-                 <div id="last_form"></div>
+      
 
               </form>
 
@@ -298,44 +292,17 @@
 
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลังทั้งหมด (FIFO) </span>
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลังตามรหัสใบเบิก  </span>
             </div>
           </div>
-       
           
           <div class="form-group row  " >
             <div class="col-md-12 ">
-              <table id="data-table-fifo" class="table table-bordered dt-responsive" style="width: 100%;">
-              </table>
+              <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
             </div>
           </div>
 
          </div>
-   
-  
-      <form action="{{ route('backend.pick_warehouse_fifo_topicked.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input name="pick_warehouse_fifo_topicked" type="hidden" value="1">
-            {{ csrf_field() }}
-
-
-              <div class="form-group row  divBtn " style="display: none;">
-                <!-- <div class="col-md-2 "></div> -->
-                <div class="col-md-12">
-           <!--        <div class="  " style="">
-                    <button type="button" class="btn btn-primary btn-sm font-size-16  float-left ">
-                    <i class="bx bx-print font-size-16 align-middle mr-1"></i> พิมพ์รายการเบิก
-                    </button>
-                  </div> -->
-                  <div>
-                    <center>
-                    <button type="submit" class="btn btn-primary btn-sm font-size-16 ">
-                    <i class="bx bx-print font-size-16 align-middle mr-1"></i> บันทึกรายการลงใบเบิก
-                    </button>
-                  </div>
-                </div>
-              </div>
-    
-    </form>
 
 
       </div>
@@ -352,106 +319,41 @@
 
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่จำนวนไม่เพียงพอในการเบิก </span>
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลัง (FIFO) </span>
             </div>
           </div>
 
           <div class="form-group row  " >
             <div class="col-md-12 ">
-              <table id="data-table-fifo-no" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-  </div> <!-- end col -->
 
 
+                      <div class="form-group row div_btn_save " style="display: none;" >
+                        <div class="col-md-12 text-center ">
+                          <br>
+                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการเบิกสินค้า
+                          </button>
 
-<div class="myBorder" style="" >
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-
-          <div class="form-group row">
-            <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่รอหยิบออกจากคลัง (ใบเบิก) </span>
-            </div>
-          </div>
-
-          <div class="form-group row  " >
-            <div class="col-md-12 ">
-              <table id="data-table-fifo-topicked" class="table table-bordered dt-responsive" style="width: 100%;">
-              </table>
-            </div>
-          </div>
-<?php //echo count($Pick_warehouse_fifo_topicked) ?>
-@IF(!empty($Pick_warehouse_fifo_topicked) && count($Pick_warehouse_fifo_topicked)>0 )
-              <div class="form-group row  divBtnApproved " >
-                <!-- <div class="col-md-2 "></div> -->
-                <div class="col-md-12">
-                    <center>
-
-                      <button type="submit" class="btn btn-primary font-size-16 btnApprove ">
-                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติใบเบิก
-                      </button>
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
-                      <a class="btn btn-info  btnPrint " href="{{ URL::to('backend/pick_warehouse/print') }}/1" style="font-size: 16px !important;" target="_blank" >
-                        <i class="bx bx-printer align-middle "></i> พิมพ์ใบเบิก / Print-Out
-                      </a>
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
-                      <button type="button" class="btn btn-primary font-size-16 btnSetProductToBill ">
-                      <i class="bx bx-cog font-size-16 align-middle mr-1"></i> แจงสินค้าที่เบิกจากคลังลงบิล
-                      </button>
-
-                     </center>
-                </div>
-              </div>
-@ENDIF 
-
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-  </div> <!-- end col -->
-
-
-
-                
-                  <div class="myBorder">
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าตามบิล </span>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                      <table id="data-table-list-bill" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-
-                       <div class="form-group row  divBtnApprovedBill " >
-                          <div class="col-md-12">
-                              <center>
-                                <button type="submit" class="btn btn-primary font-size-16 btnApproveBill ">
-                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติจ่ายสินค้าตามใบเบิก
-                                </button>
-                               </center>
-                          </div>
                         </div>
+                      </div>
 
-                    </div>
-                  </div>
-                  </div>
+            </div>
+          </div>
+
+
+        
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div> <!-- end col -->
+
 
 
 
@@ -882,115 +784,105 @@ $(function() {
                         var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
                         // console.log(ids); 
 
-                       $.ajax({
-                             type:'POST',
-                             url: " {{ url('backend/pick_warehouse_fifo/fifo') }} ", 
-                             data: $("#frm-packing").serialize()+"&picking_id="+ids,
-                              success: function(response){ // What to do if we succeed
-                    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-                                      var oTablePickup;
-                                      $(function() {
-                                          oTablePickup = $('#data-table-fifo').DataTable({
-                                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                              processing: true,
-                                              serverSide: true,
-                                              scroller: true,
-                                              scrollCollapse: true,
-                                              scrollX: true,
-                                              ordering: false,
-                                              destroy:true,
-                                              // scrollY: ''+($(window).height()-370)+'px',
-                                              iDisplayLength: 25,
-                                              ajax: {
-                                                url: '{{ route('backend.pick_warehouse_fifo.datatable') }}',
-                                                data: function ( d ) {
-                                                  d.Where={};
-                                                  $('.myWhere').each(function() {
-                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                      d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                                    }
-                                                  });
-                                                  d.Like={};
-                                                  $('.myLike').each(function() {
-                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                      d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                                    }
-                                                  });
-                                                  d.Custom={};
-                                                  $('.myCustom').each(function() {
-                                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                                    }
-                                                  });
-                                                  oData = d;
+                        if(ids!=""){
+
+                             $.ajax({
+                                   type:'POST',
+                                   url: " {{ url('backend/pick_warehouse_fifo/fifo') }} ", 
+                                   data: $("#frm-packing").serialize()+"&picking_id="+ids,
+                                    success: function(response){ // What to do if we succeed
+                                      // console.log(response);
+                                      // console.log(ids[0]);
+                                      // return false;
+
+                                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+                                  $.fn.dataTable.ext.errMode = 'throw';
+                                  var oTable0001;
+                                  $(function() {
+                                      oTable0001 = $('#data-table-0001').DataTable({
+                                       "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                          processing: true,
+                                          serverSide: true,
+                                          scroller: true,
+                                          ordering: false,
+                                          "info":   false,
+                                          "paging": false,
+                                          destroy:true,
+                                                ajax: {
+                                                    url: '{{ route('backend.pick_warehouse_tb_0001.datatable') }}',
+                                                    type: "POST",
+                                                    data:{ _token: '{{csrf_token()}}',picking_id:ids },
                                                 },
-                                                method: 'POST'
-                                              },
-
-                                              columns: [
-                                                    {data: 'id', title :'ID', className: 'text-center w50'},
-                                                    {data: 'product_name',   title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left',render: function(d) {
-                                                      if(d){
-                                                        return d.replace(/\:/g, "<br>");
-                                                      }else{
-                                                        return '';
-                                                      }
-                                                    }},
-                                                    {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-                                                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                                                    {data: 'amt',
-                                                    defaultContent: "0",   title :'<center>จำนวนในคลัง</center>', className: 'text-center',render: function(d) {
-                                                      return d;
-                                                    }},
-                                                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-                                                     {data: 'amt_get',   title :'<center>จำนวนเบิก </center>', className: 'text-center',render: function(d) {
-                                                        return d ;
-                                                     }},
-                                                    {data: 'product_unit', title :'<center>หน่วย </center>', className: 'text-left'},
-
-                                              ],
-                                              fnRowCallback : function (nRow, aData, iDisplayIndex) {
-                                                     var info = $(this).DataTable().page.info();
-                                                     $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
-
-                                                     if(aData['amt_get']>aData['amt']){
-                                                        for (var i = 0; i < 8; i++) {
-                                                          $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'red','font-style':'italic'});
-                                                        }
-                                                     }
-
-                                                     $(".divBtn").show();
-
-                                                     $('#data-table-fifo-topicked').DataTable().clear().draw();
-                                                     $('#data-table-fifo-no').DataTable().clear().draw();
-                                                     $('#data-table-list-bill').DataTable().clear().draw();
-                                                     $('.divBtnApproved').hide();
-
-                                                    
-
-                                                  
-                                                 },
-                                         
-                                          });
-
-
+                                          columns: [
+                                              {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก </span> ', className: 'text-center w150'},
+                                              {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการสินค้าตามใบเบิก</span> ', className: 'text-left',render: function(d) {
+                                                return d;
+                                              }},
+                                          ],
+                                          rowCallback: function(nRow, aData, dataIndex){
+                                             $(".myloading").hide();
+                                          }
                                       });
+                                 
+                                       });
+                                  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+                    
+                                        $.fn.dataTable.ext.errMode = 'throw';
+                                        var oTable0002;
+                                        $(function() {
+                                            oTable0002 = $('#data-table-0002').DataTable({
+                                             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                                processing: true,
+                                                serverSide: true,
+                                                scroller: true,
+                                                // scrollCollapse: true,
+                                                // scrollX: true,
+                                                ordering: false,
+                                                "info":     false,
+                                                "paging":   false,
+                                                 destroy:true,
+                                                ajax: {
+                                                    url: '{{ route('backend.pick_warehouse_tb_0002.datatable') }}',
+                                                    type: "POST",
+                                                    data: { _token : "{{ csrf_token() }}", picking_id:ids },
+                                                },
+                                                columns: [
 
-                                    
-              // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-                              },
-                              error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                                  console.log(JSON.stringify(jqXHR));
-                                  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              }
-                          });
+                                                    {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center w300'},
+                                                    {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
+                                                                         
+                                                ],
+                                                rowCallback: function(nRow, aData, dataIndex){
 
+                                                      $(".myloading").hide();
+                                                      // console.log(aData['ch_amt_lot_wh']);
+                                                      setTimeout(function(){
+                                                          if(aData['ch_amt_lot_wh']==0){
+                                                            $(".div_btn_save").hide();
+                                                          }else{
+                                                              $(".div_btn_save").show();
+                                                          }
+                                                      }, 500);
 
+                                                }
+                                            });
+                                       
+                                        });
+                                        // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
-                  }, 1500);
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+                                        console.log(JSON.stringify(jqXHR));
+                                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                    }
+                                });
+                        }
+
+                     }, 1500);
 
                     setTimeout(function(){
                             $(".myloading").hide();
+
                     }, 9000);
 
 
@@ -1421,13 +1313,13 @@ $(function() {
                 	event.preventDefault();
                 	var id = $(this).data('id');
                   var receipt_no = $(this).data('receipt_no');
-                  console.log(id+":"+receipt_no); 
+                  // console.log(id+":"+receipt_no); 
                 	$.ajax({
 		               type:'POST',
 		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
 		               data:{ _token: '{{csrf_token()}}',id:id,receipt_no:receipt_no },
 		                success:function(data){
-		                     console.log(data); 
+		                     // console.log(data); 
 		                     // location.reload();
 		                     $('#select_addr_result_edit').html(data);
 		                     $('#exampleModalCenterEdit').modal('show');
@@ -1498,7 +1390,7 @@ $(function() {
                          url: " {{ url('backend/ajaxClearConsignment') }} ", 
                          data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
-                               console.log(data); 
+                               // console.log(data); 
                                location.reload();
                             },
                           error: function(jqXHR, textStatus, errorThrown) { 
@@ -1520,7 +1412,7 @@ $(function() {
                          url: " {{ url('backend/ajaxFifoApproved') }} ", 
                          data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
-                               console.log(data); 
+                               // console.log(data); 
                                // location.reload();
                                $('#data-table-fifo-topicked').DataTable().draw();
                                $('#data-table-list-bill').DataTable().draw();
@@ -1545,7 +1437,7 @@ $(function() {
                          url: " {{ url('backend/ajaxSetProductToBil') }} ", 
                          data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
-                               console.log(data); 
+                               // console.log(data); 
                                // location.reload();
                                $('#data-table-list-bill').DataTable().draw();
                                $(".myloading").hide();
@@ -1594,6 +1486,204 @@ $(function() {
 	</script>
 
 
+    <script>
+
+       $(document).on('click', '.btnSave', function(e) {
+
+                $(".myloading").show();
+      
+                  var rows_selected = oTable2.column(0).checkboxes.selected();
+                        $.each(rows_selected, function(index, rowId){
+                          // alert(rowId);
+                          
+                          $("#"+"row_id"+rowId).remove();
+
+                          $('#last_form').after(
+                               $('<input>')
+                                  .attr('type', 'hidden')
+                                  .attr('name', 'row_id[]')
+                                  .attr('id', 'row_id'+rowId)
+                                  .val(rowId)
+                           );
+                        });
+
+                var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+                // console.log(ids); 
+                // return false;
+
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                 $.ajax({
+
+                        type:'POST',
+                        url: " {{ url('backend/pick_warehouse_fifo/fifo') }} ", 
+                        data: $("#frm-packing").serialize()+"&picking_id="+ids,
+                        success: function(response){ // What to do if we succeed
+                          // console.log(response);
+
+                            // check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
+                            $('#data-table-0002').DataTable().clear().draw();
+
+                             setTimeout(function(){
+                                    
+                                      $.ajax({
+                                           type:'POST',
+                                           url: " {{ url('backend/ajaxSearch_requisition_db_orders002') }} ",
+                                           data:{ _token: '{{csrf_token()}}' },
+                                            success:function(data){
+                                                 // console.log(data);
+
+                                                 // return false;
+                                                 // $(".myloading").hide();
+                                                 if(data=="No_changed"){
+                                                      $(".myloading").hide();
+                                                      Swal.fire({
+                                                            title: 'ยืนยัน ! บันทึกการจ่ายสินค้า ',
+                                                            type: 'question',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#556ee6',
+                                                            cancelButtonColor: "#f46a6a"
+                                                            }).then(function (result) {
+                                                                if (result.value) {
+                                                                      
+                                                                    $(".myloading").show();
+
+                                                                      $.ajax({
+                                                                         type:'POST',
+                                                                         url: " {{ url('backend/ajaxSavePay_requisition') }} ",
+                                                                         data:{ _token: '{{csrf_token()}}',picking_id:ids },
+                                                                          success:function(d2){
+                                                                               console.log(d2);
+                                                                               // return false;
+                                                                       
+                                                                              location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
+ 
+                                                                             $(".myloading").hide();
+                                                                          },
+                                                                        error: function(jqXHR, textStatus, errorThrown) {
+                                                                            $(".myloading").hide();
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                          });
+
+                                                 }else{
+
+                                                      Swal.fire({
+                                                        position: 'top-end',
+                                                        title: '! ข้อมูลการจ่ายสินค้ามีการเปลี่ยนแปลง โปรดตรวจสอบอีกครั้ง',
+                                                        showConfirmButton: false,
+                                                        background: '#ffd9b3',
+                                                        timer: 4000
+                                                      })
+
+                                                      // var txtSearch = $("input[name='txtSearch']").val();
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                       // $.ajax({
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        method: "post",
+                                                       //        data: {
+                                                       //          txtSearch:txtSearch,
+                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //        },
+                                                       //        success:function(data)
+                                                       //        { 
+                                                       //          console.log(data);
+                                                       //          $(".myloading").hide();
+                                                       //        }
+                                                       // });
+
+                                                 } // ปิด if(data=="No_changed"){
+
+                                              }, // ปิด success:function(data){
+                                        
+                                        }); // ปิด $.ajax({
+
+                                  }, 500); // ปิด setTimeout(function(){
+                                          
+
+                      } // ปิด success:function(data)
+                
+                }); // ปิด $.ajax({
+
+         }); // ปิด $(document).on('click', '.btnSave'
+
+    </script>
+   
+   
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      $(document).on('change', '.qr_scan', function(e) {
+
+          var v = $(this).val();
+          var item_id = $(this).data('item_id');
+          var invoice_code = $(this).data('invoice_code');
+          var product_id_fk = $(this).data('product_id_fk');
+          // alert(v+":"+invoice_code+":"+product_id_fk);
+          if($(this).val()!=''){
+            $(this).css({ 'background-color' : '', 'opacity' : '' });
+          }
+
+             $(".myloading").show();
+
+             $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/ajaxScanQrcodeProduct') }} ",
+                 data:{ _token: '{{csrf_token()}}',item_id:item_id,qr_code:v,invoice_code:invoice_code,product_id_fk:product_id_fk },
+                  success:function(data){
+                       // console.log(data);
+                       $.each(data,function(key,value){
+                       });
+                       $(".myloading").hide();
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                      $(".myloading").hide();
+                  }
+              });
+
+        
+      });
+
+
+      $(document).on('click', '.btnDeleteQrcodeProduct', function(e) {
+
+          var item_id = $(this).data('item_id');
+          var invoice_code = $(this).data('invoice_code');
+          var product_id_fk = $(this).data('product_id_fk');
+          // alert(item_id+":"+invoice_code+":"+product_id_fk);
+
+             $(".myloading").show();
+             $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/ajaxDeleteQrcodeProduct') }} ",
+                 data:{ _token: '{{csrf_token()}}',item_id:item_id,invoice_code:invoice_code,product_id_fk:product_id_fk },
+                  success:function(data){
+                       // console.log(data);
+                       $.each(data,function(key,value){
+                       });
+
+                       $(".myloading").hide();
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                      $(".myloading").hide();
+                  }
+              });
+
+
+          $(this).prev().css({ 'background-color' : 'blanchedalmond'});
+          $(this).prev().val('');
+
+        
+      });
+
+
+
+    });
+
+  </script>
+
+
 
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -1624,6 +1714,35 @@ $(function() {
          });
          
 </script>
+
+
+    <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+      DB::select(" DELETE FROM `db_stocks_return` WHERE pick_pack_packing_code_id_fk is not null ;");
+      ?>
+          <script>
+          location.replace( "{{ url('backend/pick_warehouse') }}");
+          </script>
+          <?php
+    }
+?>
 
 @endsection
 

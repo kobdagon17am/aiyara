@@ -11,7 +11,7 @@ use Redirect;
 use Session;
 use PDO;
 
-class Pay_product_receipt_001Controller extends Controller
+class Pay_requisition_001Controller extends Controller
 {
 
     public function index(Request $request)
@@ -40,7 +40,7 @@ class Pay_product_receipt_001Controller extends Controller
 
       $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
 
-        return View('backend.pay_product_receipt_001.index')->with(
+        return View('backend.pay_requisition_001.index')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,
            'sBranchs'=>$sBranchs,
@@ -53,7 +53,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function create()
     {
-      return View('backend.pay_product_receipt_001.form');
+      return View('backend.pay_requisition_001.form');
     }
 
 
@@ -65,7 +65,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function edit($id)
     {
-      return View('backend.pay_product_receipt_001.form');
+      return View('backend.pay_requisition_001.form');
     }
 
     public function update(Request $request, $id)
@@ -280,7 +280,7 @@ class Pay_product_receipt_001Controller extends Controller
                   ->get();
                   if($_choose->count() == 0){
 
-                          DB::select(" INSERT IGNORE INTO `db_pay_product_receipt_002_cancel_log` (`time_pay`, `business_location_id_fk`, `branch_id_fk`, `orders_id_fk`, `customers_id_fk`, `invoice_code`, `product_id_fk`, `product_name`, `amt_need`, `amt_get`, `amt_lot`, `amt_remain`, `product_unit_id_fk`, `product_unit`, `lot_number`, `lot_expired_date`, `warehouse_id_fk`, `zone_id_fk`, `shelf_id_fk`, `shelf_floor`, `status_cancel`, `created_at`)  
+                          DB::select(" INSERT IGNORE INTO db_pay_product_receipt_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, orders_id_fk, customers_id_fk, invoice_code, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)  
                             VALUES
                            (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->orders_id_fk.", ".$v->customers_id_fk.", '".$v->invoice_code."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
 
@@ -290,9 +290,9 @@ class Pay_product_receipt_001Controller extends Controller
            }
 
 
-             $ch_status_cancel = DB::select(" SELECT * FROM `db_pay_product_receipt_002` WHERE invoice_code='".$request->invoice_code."' AND status_cancel in (0) ");
+             $ch_status_cancel = DB::select(" SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND status_cancel in (0) ");
              if(count(@$ch_status_cancel)==0 || empty(@$ch_status_cancel)){
-                DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=1 WHERE invoice_code='".$request->invoice_code."' ");
+                DB::select(" UPDATE db_pay_product_receipt_001 SET status_sent=1 WHERE invoice_code='".$request->invoice_code."' ");
              }
 
 
@@ -300,181 +300,6 @@ class Pay_product_receipt_001Controller extends Controller
     }
 
 
-    public function ajaxCHECKPay_product_receipt(Request $request)
-    {
-         $r =  DB::select(" select * from db_pay_product_receipt_001 WHERE invoice_code='".$request->txtSearch."' ");
-         if($r){
-            return  $r[0]->id;
-         }else{
-            return 0;
-         }
-    }
-
-    public function ajaxSavePay_product_receipt(Request $request)
-    {
-      // return $request->txtSearch;
-          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-          // $temp_ppr_005 = "temp_ppr_005".\Auth::user()->id; 
-
-          $invoice_code = $request->txtSearch;
-
-          // return $invoice_code;
-          // dd();
-        // หา time+pay ครั้งที่จ่าย
-          $rs_time_pay = DB::select(" SELECT * FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
-          if(count($rs_time_pay)>0){
-            $time_pay = $rs_time_pay[0]->time_pay + 1;
-          }else{
-            $time_pay = 1;
-          }
-
-          // return $time_pay;
-          // dd();
-
-// เก็บลงตารางจริง
-          $db_temp_ppr_003 = DB::select(" select * from $temp_ppr_003 ;");
-          $data_db_pay_product_receipt_001 = [];
-          foreach ($db_temp_ppr_003 as $key => $value) {
-                $data_db_pay_product_receipt_001 = array(
-                    "time_pay" =>  @$time_pay,
-                    "orders_id_fk" =>  @$value->orders_id_fk,
-                    "business_location_id_fk" =>  @$value->business_location_id_fk,
-                    "branch_id_fk" =>  @$value->branch_id_fk,
-                    "branch_id_fk_tosent" =>  @$value->branch_id_fk_tosent,
-                    "invoice_code" =>  @$value->invoice_code,
-                    "bill_date" =>  @$value->bill_date,
-                    "action_user" =>  @$value->action_user,
-                    "action_date" =>  @$value->action_date,
-                    "pay_user" =>  @$value->pay_user,
-                    "pay_date" =>  @$value->pay_date,
-                    "status_sent" =>  @$value->status_sent,
-                    "customer_id_fk" =>  @$value->customer_id_fk,
-                    "address_send" =>  @$value->address_send,
-                    "address_send_type" =>  @$value->address_send_type,
-                    "created_at" =>  @$value->created_at,
-                    );
-          }
-          if(@$data_db_pay_product_receipt_001){
-              DB::table('db_pay_product_receipt_001')->insertOrIgnore($data_db_pay_product_receipt_001);
-          }
-
-          $lastInsertId = DB::getPdo()->lastInsertId();
-
-          if($lastInsertId){
-
-               // เก็บรายการสินค้าที่จ่าย 
-                $db_temp_ppr_004 = DB::select(" select * from $temp_ppr_004 ;");
-                $data_db_pay_product_receipt_002 = [];
-                foreach ($db_temp_ppr_004 as $key => $value) {
-                      $data_db_pay_product_receipt_002 = array(
-                            "time_pay" =>  @$time_pay,
-                            "business_location_id_fk" =>  @$value->business_location_id_fk,
-                            "branch_id_fk" =>  @$value->branch_id_fk,
-                            "orders_id_fk" =>  @$value->orders_id_fk,
-                            "customers_id_fk" =>  @$value->customers_id_fk,
-                            "invoice_code" =>  @$value->invoice_code,
-                            "product_id_fk" =>  @$value->product_id_fk,
-                            "product_name" =>  @$value->product_name,
-                            "amt_need" =>  @$value->amt_need,
-                            "amt_get" =>  @$value->amt_get,
-                            "amt_lot" =>  @$value->amt_lot,
-                            "amt_remain" =>  @$value->amt_remain,
-                            "product_unit_id_fk" =>  @$value->product_unit_id_fk,
-                            "product_unit" =>  @$value->product_unit,
-                            "lot_number" =>  @$value->lot_number,
-                            "lot_expired_date" =>  @$value->lot_expired_date,
-                            "warehouse_id_fk" =>  @$value->warehouse_id_fk,
-                            "zone_id_fk" =>  @$value->zone_id_fk,
-                            "shelf_id_fk" =>  @$value->shelf_id_fk,
-                            "shelf_floor" =>  @$value->shelf_floor,
-                            "created_at" =>  @$value->created_at,
-                            "updated_at" =>  @$value->updated_at,
-                          );
-              
-                    if(@$data_db_pay_product_receipt_002){
-                        DB::table('db_pay_product_receipt_002')->insertOrIgnore($data_db_pay_product_receipt_002);
-                    }  
-
-                }
-                       
-   
-                DB::select(" INSERT IGNORE INTO  db_pay_product_receipt_002_pay_history (time_pay,invoice_code,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,invoice_code,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppr_004 ");
-
-
-                DB::select(" UPDATE `db_pay_product_receipt_002_pay_history` SET status=2 WHERE amt_remain>0 AND invoice_code='$invoice_code' ");
-
-                $rs_pay_history = DB::select(" SELECT * FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='$invoice_code' AND status in(2) ");
-                if(count($rs_pay_history) > 0){
-
-                      DB::table('db_pay_product_receipt_001')
-                      ->where('invoice_code', $invoice_code)
-                      ->update(array(
-                        'status_sent' => 2 ,
-                      ));
-
-                }else{
-                  DB::table('db_pay_product_receipt_001')
-                      ->where('invoice_code', $invoice_code)
-                      ->update(array(
-                        'status_sent' => 3 ,
-                      ));
-                }
-
-
-              DB::select(" TRUNCATE $temp_db_stocks_compare ;");
-
-              DB::select(" UPDATE `db_pay_product_receipt_001` SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (`id`='$lastInsertId') ");
-
-        
-              // ตัด Stock 
-              $db_select = DB::select(" 
-                SELECT * FROM  `db_pay_product_receipt_002`  WHERE invoice_code='$invoice_code' AND time_pay=$time_pay
-                 ");
-              foreach ($db_select as $key => $v) {
-              
-                       $_choose=DB::table('db_stocks')
-                      ->where('product_id_fk', $v->product_id_fk)
-                      ->where('lot_number', $v->lot_number)
-                      ->where('lot_expired_date', $v->lot_expired_date)
-                      ->get();
-                      if($_choose->count() > 0){
-                        if($v->amt_get<=$_choose[0]->amt){
-                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
-                        }else{
-                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
-                        }
-                      }
-       
-              }
-
-             // อัพเดต สถานะ ด้วย ว่าจ่ายครบแล้ว หรือ ยังค้างอยู่  db_pay_product_receipt_001
-
-
-             $ch_status_cancel = DB::select(" SELECT * FROM `db_pay_product_receipt_002` WHERE invoice_code='$invoice_code' AND status_cancel in (0) ");
-             if(count($ch_status_cancel)==0){
-                DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=1 WHERE invoice_code='$invoice_code' ");
-             }else{
-
-                    $rs_pay_history = DB::select(" SELECT status FROM `db_pay_product_receipt_002_pay_history` WHERE time_pay=$time_pay AND invoice_code='$invoice_code' AND amt_remain>0  ");
-
-                    if(count($rs_pay_history)>0){
-                      DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=2 WHERE invoice_code='$invoice_code' ");
-                    }else{
-                      DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=3 WHERE invoice_code='$invoice_code' ");
-                    }
-
-             }
-
-
-          }
-
-          return $lastInsertId ;
-
-      
-    }
 
 
     public function ajaxApproveProductSent(Request $request)
@@ -1312,8 +1137,8 @@ class Pay_product_receipt_001Controller extends Controller
                   db_pay_product_receipt_002_pay_history.time_pay,
                   db_pay_product_receipt_002_pay_history.invoice_code,
                   DATE(db_pay_product_receipt_002_pay_history.pay_date) as pay_date,
-                  db_pay_product_receipt_002_pay_history.`status`,
-                  ck_users_admin.`name` as pay_user
+                  db_pay_product_receipt_002_pay_history.status,
+                  ck_users_admin.name as pay_user
                   FROM
                   db_pay_product_receipt_002_pay_history
                   Left Join ck_users_admin ON db_pay_product_receipt_002_pay_history.pay_user = ck_users_admin.id  WHERE invoice_code='".$row->invoice_code."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
@@ -1426,7 +1251,7 @@ class Pay_product_receipt_001Controller extends Controller
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
 
-           $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
+           $rs_pay_history = DB::select(" SELECT id FROM db_pay_product_receipt_002_pay_history WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
 
            if(count($rs_pay_history)>0){
                return 2;
@@ -1434,7 +1259,7 @@ class Pay_product_receipt_001Controller extends Controller
                return 3;
            }
 
-          // $r_check_remain = DB::select(" SELECT status FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' ORDER BY time_pay DESC LIMIT 1  ");
+          // $r_check_remain = DB::select(" SELECT status FROM db_pay_product_receipt_002_pay_history WHERE invoice_code='".$row->invoice_code."' ORDER BY time_pay DESC LIMIT 1  ");
           // if($r_check_remain){
           //     return $r_check_remain[0]->status; 
           // }else{
@@ -1517,6 +1342,219 @@ class Pay_product_receipt_001Controller extends Controller
     }
 
 
+ public function ajaxSavePay_requisition(Request $request)
+    {
+      // return $request->txtSearch;
+          $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
+          $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
+
+          $picking_id = implode(',',$request->picking_id);
+          // return $picking_id;
+          // dd();
+
+        // หา time+pay ครั้งที่จ่าย
+          $rs_time_pay = DB::select(" SELECT * FROM db_pay_requisition_001 WHERE pick_pack_packing_code_id_fk in($picking_id) order by time_pay DESC limit 1 ");
+          // return $rs_time_pay;
+          // dd();
+
+          if(count($rs_time_pay)>0){
+            $time_pay = $rs_time_pay[0]->time_pay + 1;
+          }else{
+            $time_pay = 1;
+          }
+
+          // return $time_pay;
+          // dd();
+          $pick_pack_packing_code_id_fk = DB::select(" SELECT
+            $temp_ppp_001.pick_pack_packing_code_id_fk
+            FROM
+            $temp_ppp_003
+            Inner Join $temp_ppp_001 ON $temp_ppp_003.orders_id_fk = $temp_ppp_001.id
+            limit 1;");
+
+         @$pick_pack_packing_code_id_fk = @$pick_pack_packing_code_id_fk[0]->pick_pack_packing_code_id_fk;
+
+// เก็บลงตารางจริง
+          
+          DB::select(" TRUNCATE db_pay_requisition_001 ;");
+          DB::select(" TRUNCATE db_pay_requisition_002 ;");
+
+          $db_temp_ppp_003 = DB::select(" select * from $temp_ppp_003 ;");
+          $data_db_pay_requisition_001 = [];
+          foreach ($db_temp_ppp_003 as $key => $value) {
+                $data_db_pay_requisition_001 = array(
+                    "time_pay" =>  @$time_pay,
+                    "business_location_id_fk" =>  @$value->business_location_id_fk,
+                    "packing_date" =>  date("Y-m-d",strtotime(@$value->updated_at)),
+                    "action_user" =>  @$value->action_user,
+                    "branch_id_fk" =>  @$value->branch_id_fk,
+                    "pick_pack_packing_code_id_fk" =>  @$pick_pack_packing_code_id_fk,
+                    "action_date" =>  @$value->action_date,
+                    "pay_user" =>  @$value->pay_user,
+                    "pay_date" =>  @$value->pay_date,
+                    "status_sent" =>  @$value->status_sent,
+                    "address_send" =>  @$value->address_send,
+                    "address_send_type" =>  @$value->address_send_type,
+                    "created_at" =>  @$value->created_at,
+                    );
+          }
+          if(@$data_db_pay_requisition_001){
+              DB::table('db_pay_requisition_001')->insertOrIgnore($data_db_pay_requisition_001);
+          }
+
+          $lastInsertId = DB::getPdo()->lastInsertId();
+          // return $lastInsertId;
+          // dd();
+
+          if($lastInsertId){
+
+               // เก็บรายการสินค้าที่จ่าย 
+                $db_temp_ppp_004 = DB::select(" select * from $temp_ppp_004 ;");
+                $data_db_pay_requisition_002 = [];
+
+    
+                foreach ($db_temp_ppp_004 as $key => $value) {
+
+                      $data_db_pay_requisition_002 = array(
+                            "time_pay" =>  @$time_pay,
+                            "business_location_id_fk" =>  @$value->business_location_id_fk,
+                            "branch_id_fk" =>  @$value->branch_id_fk,
+                            "pick_pack_packing_code_id_fk" => @$pick_pack_packing_code_id_fk,
+                            "product_id_fk" =>  @$value->product_id_fk,
+                            "product_name" =>  @$value->product_name,
+                            "amt_need" =>  @$value->amt_need,
+                            "amt_get" =>  @$value->amt_get,
+                            "amt_lot" =>  @$value->amt_lot,
+                            "amt_remain" =>  @$value->amt_remain,
+                            "product_unit_id_fk" =>  @$value->product_unit_id_fk,
+                            "product_unit" =>  @$value->product_unit,
+                            "lot_number" =>  @$value->lot_number,
+                            "lot_expired_date" =>  @$value->lot_expired_date,
+                            "warehouse_id_fk" =>  @$value->warehouse_id_fk,
+                            "zone_id_fk" =>  @$value->zone_id_fk,
+                            "shelf_id_fk" =>  @$value->shelf_id_fk,
+                            "shelf_floor" =>  @$value->shelf_floor,
+                            "created_at" =>  @$value->created_at,
+                            "updated_at" =>  @$value->updated_at,
+                          );
+              
+                    if(@$data_db_pay_requisition_002){
+                        DB::table('db_pay_requisition_002')->insertOrIgnore($data_db_pay_requisition_002);
+                    }  
+
+                }
+
+                DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_packing_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_packing_code_id_fk,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 ");
+
+
+                DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_packing_code_id_fk='@$pick_pack_packing_code_id_fk' ");
+
+
+                $rs_pay_history = DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_packing_code_id_fk='@$pick_pack_packing_code_id_fk' AND status in(2) ");
+                if(count($rs_pay_history) > 0){
+
+                      DB::table('db_pay_requisition_001')
+                      ->where('pick_pack_packing_code_id_fk', $pick_pack_packing_code_id_fk)
+                      ->update(array(
+                        'status_sent' => 2 ,
+                      ));
+
+                }else{
+                  DB::table('db_pay_requisition_001')
+                      ->where('pick_pack_packing_code_id_fk', $pick_pack_packing_code_id_fk)
+                      ->update(array(
+                        'status_sent' => 3 ,
+                      ));
+                }
+             
+
+
+              DB::select(" TRUNCATE $temp_db_stocks_compare002 ;");
+
+              DB::select(" UPDATE db_pay_requisition_001 SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (id='$lastInsertId') ");
+
+          
+
+              // ตัด Stock 
+              $db_select = DB::select(" 
+                SELECT * FROM  db_pay_requisition_002 WHERE pick_pack_packing_code_id_fk='@$pick_pack_packing_code_id_fk' AND time_pay=$time_pay
+                 ");
+
+   
+
+              foreach ($db_select as $key => $v) {
+              
+                       $_choose=DB::table('db_stocks')
+                      ->where('product_id_fk', $v->product_id_fk)
+                      ->where('lot_number', $v->lot_number)
+                      ->where('lot_expired_date', $v->lot_expired_date)
+                      ->get();
+                      if($_choose->count() > 0){
+                        if($v->amt_get<=$_choose[0]->amt){
+                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                        }else{
+                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                        }
+                      }
+       
+              }
+        
+             // อัพเดต สถานะ ด้วย ว่าจ่ายครบแล้ว หรือ ยังค้างอยู่  db_pay_requisition_001
+
+
+             $ch_status_cancel = DB::select(" SELECT * FROM db_pay_requisition_002 WHERE pick_pack_packing_code_id_fk='$pick_pack_packing_code_id_fk' AND status_cancel in (0) ");
+// return "OK0";
+                // dd();
+
+               // return $ch_status_cancel;
+
+             if(count($ch_status_cancel)==0 || $ch_status_cancel==""){
+                DB::select(" UPDATE db_pay_requisition_001 SET status_sent=1 WHERE WHERE pick_pack_packing_code_id_fk='$pick_pack_packing_code_id_fk' ");
+
+                // return "OK1";
+                // dd();
+                
+             }else{
+
+                 // return "OK2";
+                // dd();
+
+                    $rs_pay_history = DB::select(" SELECT status FROM db_pay_requisition_002_pay_history WHERE pick_pack_packing_code_id_fk='$pick_pack_packing_code_id_fk' AND time_pay=$time_pay AND amt_remain>0  ");
+
+                      // return "OK3";
+                      // dd();
+
+
+                    if(count($rs_pay_history)>0){
+                      DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_packing_code_id_fk='@$pick_pack_packing_code_id_fk'  ");
+
+                       // return "OK4";
+                      // dd();
+
+
+                    }else{
+                      DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_packing_code_id_fk='@$pick_pack_packing_code_id_fk'  ");
+
+                       // return "OK5";
+                      // dd();
+
+
+                    }
+
+
+
+             }
+
+
+          }
+
+          return $lastInsertId ;
+
+      
+    }
 
 
 }

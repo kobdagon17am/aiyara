@@ -35,6 +35,7 @@
   }
 
   table#data-table-0003 thead { display: none; }
+  table#data-table-0004 thead { display: none; }
 
   .dt-checkboxes-select-all{display: none;}
 
@@ -64,8 +65,6 @@
     background-color: #cfc ;
     z-index: 9999 ;
   } 
-
-
 
     .divTable{
         display: table;
@@ -221,7 +220,7 @@
                             <div class="row">
                               <div class="col-lg-2">
                                 <div class="text-lg-center">
-                                  <img src="backend/images/users/user.png" class=" rounded-circle mb-1 float-left float-lg-none" alt="img" style="width:18%;height: 15%;" />
+                                  <img src="backend/images/users/user.png" class=" images_users rounded-circle mb-1 float-left float-lg-none" alt="img" style="width:18%;height: 15%;" />
                                   <h2 class="font-size-15 text-truncate user_code " data-toggle="tooltip" data-placement="top" title="รหัสสมาชิก">{{@$sUser[0]->user_code}}</h2>
                                 </div>
                               </div>
@@ -263,36 +262,39 @@
                         </div>
 
 
-                       <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                       <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                   <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                   <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
 
-                    <div class=" div_datatables_003 " style="display: none;" >
-                       <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                    </div>     
+                        <div class=" div_datatables_003 " style="display: none;" >
+                           <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                        </div>     
 
-
-                         {{-- @IF(@$sUser[0]->address_send_type==1 && @$sUser[0]->status_sent!=3) --}}
-                        @IF(@$sUser[0]->status_sent!=3)
-                          <div class="form-group row div_btn_save "  >
-                        @ELSE 
-                          <div class="form-group row div_btn_save " style="display: none;" >
-                        @ENDIF 
-                        <div class="col-md-12 text-center ">
+                        <div class=" div_datatables_004 " style="display: none;" >
+                           <table id="data-table-0004" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                        </div>  
+                
+                        <div class="col-md-12 text-center div_btn_save " style="display: none;" >
                           <br>
-                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " disabled="">
+                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " >
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
                           </button>
-
                         </div>
-                      </div>
 
+                
+                        <div class="col-md-12 text-center div_btn_save_004 " style="display: none;" >
+                          <br>
+                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave004 " >
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
+                          </button>
+                        </div>
+                        
 
-
-                    </div>
                   </div>
-                  </div>
 
 
+                </div>
+              </div>
+              </div>
 
 
             </div>
@@ -305,26 +307,6 @@
 @section('script')
 
 <script type="text/javascript">
-
- // check ว่ามีค้างจ่ายไหม ถ้ามี แสดง div_datatables_003 ถ้าไม่มีไม่ต้องแสดง
-
-            $(document).ready(function() {
-              var txtSearch = "{{@$sRow->invoice_code}}";
-                   $.ajax({
-                       type:'POST',
-                       url: " {{ url('backend/ajaxCheckRemain_pay_product_receipt') }} ",
-                       data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
-                        success:function(data){
-                             // console.log(data);
-                             if(data>0){
-                                $(".div_datatables_003").show();
-                             }else{
-                              $(".div_datatables_003").hide();
-                             }
-                          },
-                    });
-            });
-
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
             // var txtSearch = $("input[name='txtSearch']").val();
@@ -353,6 +335,7 @@
                         {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
+
                     }
                 });
 
@@ -393,15 +376,39 @@
 
                         {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center '},
                         {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
+                        {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
                                              
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
+
+                      if(aData['column_004']==aData['time_pay']){
+                        $("td:eq(2)", nRow).html(aData['column_003']);
+                      }else{
+                        $("td:eq(2)", nRow).html("");
+                      }
+                      // console.log(aData['status_cancel']);
+                      if(aData['status_cancel']==1){
+
+                        $("td:eq(2)", nRow).html("<br>ยกเลิกแล้ว").css({'color':'red'});
+
+                        for (var i = 0; i < 2; i++) {
+                          // 'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'
+                          $('td:eq( '+i+')', nRow).html(aData[i]).css({'text-decoration':'line-through','font-style':'italic'});
+                        }
+
+                      }
+
                     }
                 });
+
+              oTable0002.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+              });
            
             });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
   </script>
+
 
 
   <script type="text/javascript">
@@ -472,40 +479,6 @@
 
 
 
-      $(document).on('click', '.btnSave', function(e) {
-
-            Swal.fire({
-                title: 'ยืนยัน ! บันทึกการจ่ายสินค้า ',
-                // text: 'You clicked the button!',
-                type: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#556ee6',
-                cancelButtonColor: "#f46a6a"
-                }).then(function (result) {
-                    if (result.value) {
-                          
-                        $(".myloading").show();
-                         var id = "{{ @$sRow->id}}"; 
-                         $.ajax({
-                             type:'POST',
-                             url: " {{ url('backend/ajaxApproveProductSent') }} ",
-                             data:{ _token: '{{csrf_token()}}',id:id },
-                              success:function(data){
-                                   // console.log(data);
-                                  location.replace('{{ url("backend/pay_product_receipt_001") }}');
-                                },
-                              error: function(jqXHR, textStatus, errorThrown) {
-                                  $(".myloading").hide();
-                              }
-                          });
-
-                    }
-              });
-
-      });
-
-
-
     });
 
   </script>
@@ -540,7 +513,7 @@
 
                           }else{
 
-                            // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
                       // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
                                   $.fn.dataTable.ext.errMode = 'throw';
                                   var oTable0003;
@@ -563,17 +536,131 @@
                                           },
                                           columns: [
 
-                                              {data: 'column_001', title :'<center>  </center> ', className: 'text-center '},
+                                              {data: 'column_001', title :'<center> 3 </center> ', className: 'text-center '},
                                               {data: 'column_002', title :'<center>  </center> ', className: ''},
+                                              {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
                                                                    
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
+
                                             $(".myloading").hide();
+
+                                              // console.log(aData['ch_amt_remain']);
+                                              // console.log(aData['ch_amt_lot_wh']);
+                                              // console.log(aData['status_sent']);
+                                              // console.log(aData['status_cancel_all']);
+
+                                              // aData['status_cancel_all']==1 > มีการยกเลิก
+                                              // aData['status_cancel_all']==0 > ไม่มีการยกเลิก
+
+                                              // ถ้าจ่ายครบแล้ว aData['status_sent']==3
+                                              if(aData['status_sent']==3){
+
+                                                    $(".div_btn_save").hide();
+                                                    $(".div_btn_save_004").hide();
+                                                    $(".div_datatables_003").hide();
+                                                    $(".div_datatables_004").hide();
+
+                                              }else{
+
+                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3 
+                                                      if(aData['status_cancel_all']==1 ){ //มีการยกเลิก
+
+                                                            $(".div_datatables_003").hide();
+                                                            $(".div_datatables_004").show();
+
+                                                      }else{  // ไม่มีการยกเลิก
+
+                                                            $(".div_datatables_003").show();
+                                                            $(".div_datatables_004").hide();
+
+                                                            // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
+                                                            // ถ้าไม่มีสินค้าในคลังเลย
+                                                            if(aData['ch_amt_lot_wh']==0){
+                                                                $(".div_btn_save").hide();
+                                                            }else{
+                                                                $(".div_btn_save").show();
+                                                            }
+
+                                                      }
+
+                                                }
+
                                           }
                                       });
                                  
                                   });
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
+                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
+                                  $.fn.dataTable.ext.errMode = 'throw';
+                                  var oTable0004;
+                                  $(function() {
+                                      oTable0004 = $('#data-table-0004').DataTable({
+                                          processing: true,
+                                          serverSide: true,
+                                          scroller: false,
+                                          scrollCollapse: true,
+                                          scrollX: false,
+                                          ordering: false,
+                                          "searching": false,
+                                          "info":     false,
+                                          "paging":   false,
+                                          destroy: true,
+                                          ajax: {
+                                              url: '{{ route('backend.pay_product_receipt_tb10FIFO.datatable') }}',
+                                              type: "POST",
+                                              data: { _token : "{{ csrf_token() }}", invoice_code:invoice_code },
+                                          },
+                                          columns: [
+
+                                              {data: 'column_001', title :'<center> 4 </center> ', className: 'text-center '},
+                                              {data: 'column_002', title :'<center>  </center> ', className: ''},
+                                              {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
+                                                                   
+                                          ],
+                                          rowCallback: function(nRow, aData, dataIndex){
+
+                                            $(".myloading").hide();
+
+                                              // console.log(aData['ch_amt_remain']);
+                                              // console.log(aData['ch_amt_lot_wh']);
+                                              // console.log(aData['status_sent']);
+                                              // console.log(aData['status_cancel_some']);
+
+                                              // ถ้าจ่ายครบแล้ว aData['status_sent']==3
+                                              if(aData['status_sent']==3){
+                                                    $(".div_btn_save").hide();
+                                                    $(".div_btn_save_004").hide();
+                                                    $(".div_datatables_003").hide();
+                                                    $(".div_datatables_004").hide();
+                                              }else{
+
+                                                      if(aData['status_cancel_some']==0 ){ //ไม่มีการยกเลิก
+
+                                                            $(".div_btn_save_004").hide();
+
+                                                      }else{  //มีการยกเลิก
+                                                            // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
+                                                            // ถ้าไม่มีสินค้าในคลังเลย
+                                                            if(aData['ch_amt_lot_wh']==0){
+                                                                $(".div_btn_save_004").hide();
+                                                            }else{
+                                                                $(".div_btn_save_004").show();
+                                                            }
+
+                                                      }
+
+                                              }
+
+                            
+
+                                          }
+                                      });
+                                 
+                                  });
+                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@                      
 
                           } // ปิด if(data==0){
 
@@ -584,10 +671,324 @@
 
  </script>
  
+    <script>
+
+       $(document).on('click', '.btnSave', function(e) {
+
+                $(".myloading").show();
+                var invoice_code = "{{@$sRow->invoice_code}}";
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                 $.ajax({
+
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      method: "post",
+                      data: {
+                        txtSearch:invoice_code,
+                        "_token": "{{ csrf_token() }}", 
+                      },
+                      success:function(data)
+                      { 
+                          console.log(data);
+                          if(data==0){
+                            Swal.fire({
+                              position: 'top-end',
+                              title: '! ค้นไม่พบใบเสร็จ',
+                              showConfirmButton: false,
+                              timer: 2500
+                            })
+                            $(".myloading").hide();
+                            return false;
+
+                          }else{
+
+
+                            // check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
+                            $('#data-table-0003').DataTable().clear().draw();
+
+                             setTimeout(function(){
+                                    
+                                      $.ajax({
+                                           type:'POST',
+                                           url: " {{ url('backend/ajaxSearch_bill_db_orders002') }} ",
+                                           data:{ _token: '{{csrf_token()}}' },
+                                            success:function(data){
+                                                 // console.log(data);
+
+                                                 // return false;
+                                                 // $(".myloading").hide();
+                                                 if(data=="No_changed"){
+                                                      $(".myloading").hide();
+                                                      Swal.fire({
+                                                            title: 'ยืนยัน ! บันทึกการจ่ายสินค้า ',
+                                                            type: 'question',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#556ee6',
+                                                            cancelButtonColor: "#f46a6a"
+                                                            }).then(function (result) {
+                                                                if (result.value) {
+                                                                      
+                                                                    $(".myloading").show();
+
+                                                                     var txtSearch = "{{@$sRow->invoice_code}}";
+
+                                                                      $.ajax({
+                                                                         type:'POST',
+                                                                         url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
+                                                                         data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
+                                                                          success:function(d2){
+                                                                               // console.log(d2);
+                                                                               // return false;
+                                                                       
+                                                                          location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
+
+                                                                             $(".myloading").hide();
+                                                                          },
+                                                                        error: function(jqXHR, textStatus, errorThrown) {
+                                                                            $(".myloading").hide();
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                          });
+
+                                                 }else{
+
+                                                      Swal.fire({
+                                                        position: 'top-end',
+                                                        title: '! ข้อมูลการจ่ายสินค้ามีการเปลี่ยนแปลง โปรดตรวจสอบอีกครั้ง',
+                                                        showConfirmButton: false,
+                                                        background: '#ffd9b3',
+                                                        timer: 4000
+                                                      })
+
+                                                      var txtSearch = $("input[name='txtSearch']").val();
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                       // $.ajax({
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        method: "post",
+                                                       //        data: {
+                                                       //          txtSearch:txtSearch,
+                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //        },
+                                                       //        success:function(data)
+                                                       //        { 
+                                                       //          console.log(data);
+                                                       //          $(".myloading").hide();
+                                                       //        }
+                                                       // });
+
+                                                 } // ปิด if(data=="No_changed"){
+
+                                              }, // ปิด success:function(data){
+                                        
+                                        }); // ปิด $.ajax({
+
+                                  }, 500); // ปิด setTimeout(function(){
+                                          
+
+                          } // ปิด if(data==0){
+
+                      } // ปิด success:function(data)
+                
+                }); // ปิด $.ajax({
+
+         }); // ปิด $(document).on('click', '.btnSave'
+
+    </script>
+
+
+    <script>
+
+       $(document).on('click', '.btnSave004', function(e) {
+
+                $(".myloading").show();
+                var invoice_code = "{{@$sRow->invoice_code}}";
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                 $.ajax({
+
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      method: "post",
+                      data: {
+                        txtSearch:invoice_code,
+                        "_token": "{{ csrf_token() }}", 
+                      },
+                      success:function(data)
+                      { 
+                          // console.log(data);
+                          if(data==0){
+                            Swal.fire({
+                              position: 'top-end',
+                              title: '! ค้นไม่พบใบเสร็จ',
+                              showConfirmButton: false,
+                              timer: 2500
+                            })
+                            $(".myloading").hide();
+                            return false;
+
+                          }else{
+
+
+                            // check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
+                            $('#data-table-0004').DataTable().clear().draw();
+
+                             setTimeout(function(){
+                                    
+                                      $.ajax({
+                                           type:'POST',
+                                           url: " {{ url('backend/ajaxSearch_bill_db_orders002') }} ",
+                                           data:{ _token: '{{csrf_token()}}' },
+                                            success:function(data){
+                                                 // console.log(data);
+
+                                                 // return false;
+                                                 // $(".myloading").hide();
+                                                 if(data=="No_changed"){
+                                                      $(".myloading").hide();
+                                                      Swal.fire({
+                                                            title: 'ยืนยัน ! บันทึกการจ่ายสินค้า ',
+                                                            type: 'question',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#556ee6',
+                                                            cancelButtonColor: "#f46a6a"
+                                                            }).then(function (result) {
+                                                                if (result.value) {
+                                                                      
+                                                                    $(".myloading").show();
+
+                                                                     var txtSearch = "{{@$sRow->invoice_code}}";
+
+                                                                      $.ajax({
+                                                                         type:'POST',
+                                                                         url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
+                                                                         data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
+                                                                          success:function(d2){
+                                                                               // console.log(d2);
+                                                                               // return false;
+                                                                       
+                                                                          location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
+
+                                                                             $(".myloading").hide();
+                                                                          },
+                                                                        error: function(jqXHR, textStatus, errorThrown) {
+                                                                            $(".myloading").hide();
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                          });
+
+                                                 }else{
+
+                                                      Swal.fire({
+                                                        position: 'top-end',
+                                                        title: '! ข้อมูลการจ่ายสินค้ามีการเปลี่ยนแปลง โปรดตรวจสอบอีกครั้ง',
+                                                        showConfirmButton: false,
+                                                        background: '#ffd9b3',
+                                                        timer: 4000
+                                                      })
+
+                                                      var txtSearch = $("input[name='txtSearch']").val();
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                       // $.ajax({
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        method: "post",
+                                                       //        data: {
+                                                       //          txtSearch:txtSearch,
+                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //        },
+                                                       //        success:function(data)
+                                                       //        { 
+                                                       //          console.log(data);
+                                                       //          $(".myloading").hide();
+                                                       //        }
+                                                       // });
+
+                                                 } // ปิด if(data=="No_changed"){
+
+                                              }, // ปิด success:function(data){
+                                        
+                                        }); // ปิด $.ajax({
+
+                                  }, 500); // ปิด setTimeout(function(){
+                                          
+
+                          } // ปิด if(data==0){
+
+                      } // ปิด success:function(data)
+                
+                }); // ปิด $.ajax({
+
+         }); // ปิด $(document).on('click', '.btnSave'
+
+    </script>
+
+   <script type="text/javascript">
+     
+    $(document).ready(function() {
+
+           $(document).on('click', '.cDelete2', function(){
+
+            var time_pay = $(this).data("time_pay");
+            var invoice_code = "{{@$sRow->invoice_code}}";
+            // alert(invoice_code);
+            // return false;
+
+                    Swal.fire({
+                      title: 'ยืนยัน ! ยกเลิกการจ่ายครั้งนี้',
+                      // text: 'You clicked the button!',
+                      type: 'question',
+                      showCancelButton: true,
+                      confirmButtonColor: '#556ee6',
+                      cancelButtonColor: "#f46a6a"
+                      }).then(function (result) {
+                          if (result.value) {
+
+                             $.ajax({
+                                url: " {{ url('backend/cancel-some-pay_product_receipt_001') }} ", 
+                                method: "post",
+                                data: {
+                                  invoice_code:invoice_code,
+                                  time_pay:time_pay,
+                                  "_token": "{{ csrf_token() }}", 
+                                },
+                                success:function(data)
+                                { 
+                                  // console.log(data);
+                                      Swal.fire({
+                                        type: 'success',
+                                        title: 'ทำการยกเลิกการจ่ายครั้งนี้เรียบร้อยแล้ว',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                      });
+
+                                      setTimeout(function () {
+                                          // $('#data-table-0002').DataTable().clear().draw();
+                                          location.reload();
+                                      }, 1000);
+                                }
+                              })
+                            
+
+
+
+                          }
+                    });
+
+             });   
+
+    });
+   </script>
 
     <script>
 
       $(document).ready(function() {
+
+            $(".images_users").on('click',function(){
+              
+              location.reload();
+       
+            });
+
             $(".test_clear_data").on('click',function(){
               
               location.replace( window.location.href+"?test_clear_data=test_clear_data ");
@@ -603,7 +1004,11 @@
       DB::select("TRUNCATE `db_pay_product_receipt_001`;");
       DB::select("TRUNCATE `db_pay_product_receipt_002`;");
       DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
+      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
       DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
+      DB::select("TRUNCATE `db_stocks_return`;");
+      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
+      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
       ?>
           <script>
           location.replace( "{{ url('backend/pay_product_receipt') }}");

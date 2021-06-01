@@ -49,9 +49,15 @@ class Stock_cardController extends Controller
     public function Datatable(){
       // $sTable = \App\Models\Backend\Stock_card::search()->orderBy('action_date', 'asc');
       DB::select(" SET @csum := 0; ");
+      // $sTable = DB::select(" 
+      //     SELECT db_stock_card.*,
+      //     CASE WHEN @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END ) > 0 THEN 
+      //     (@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) ELSE 0 END
+      //      as remain FROM db_stock_card ORDER BY action_date;
+      //     ");
       $sTable = DB::select(" 
           SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY action_date;
-          ");
+          ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('action_user', function($row) {
@@ -69,7 +75,7 @@ class Stock_cardController extends Controller
         }else{
           return '';
         }
-      })    
+      })   
       ->make(true);
     }
 

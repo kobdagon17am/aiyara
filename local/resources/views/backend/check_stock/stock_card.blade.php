@@ -294,9 +294,11 @@ $(document).ready(function() {
             }
         });
 
-         $('#start_date').change(function(event) {
-           $('#end_date').val($(this).val());
-         });
+         // $('#start_date').change(function(event) {
+         //  if($('#end_date').val()!=""){
+         //   $('#end_date').val($(this).val());
+         //  }
+         // });
 
 
       $(document).ready(function() {

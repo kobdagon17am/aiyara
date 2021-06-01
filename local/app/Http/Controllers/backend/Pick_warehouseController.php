@@ -106,13 +106,21 @@ class Pick_warehouseController extends Controller
 
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\Pick_warehouse::find($id);
-       $Province = DB::select(" select * from dataset_provinces ");
+
+      // dd($id);
+
+      $r = DB::select("SELECT * FROM db_pay_requisition_001 where id =$id ");
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_packing_code_id_fk);
+      // dd($sRow);
+
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
 
        $Customer = DB::select(" select * from customers ");
       return View('backend.pick_warehouse.form')->with(
         array(
-           'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
+           'packing_id'=>$sRow->id,
+           'Customer'=>$Customer,
+           'sBusiness_location'=>$sBusiness_location,
         ) );
     }
 
@@ -228,6 +236,221 @@ class Pick_warehouseController extends Controller
       })
       ->make(true);
     }
+
+
+
+    public function Datatable0002(Request $req){
+
+      $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_packing_code_id_fk='".$req->packing_id."' group by time_pay order By time_pay ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_001', function($row) { 
+        // group by time_pay order by time_pay asc 
+
+            $rs = DB::select(" SELECT
+                  db_pay_requisition_002_pay_history.id,
+                  db_pay_requisition_002_pay_history.time_pay,
+                  db_pay_requisition_002_pay_history.pick_pack_packing_code_id_fk,
+                  DATE(db_pay_requisition_002_pay_history.pay_date) as pay_date,
+                  db_pay_requisition_002_pay_history.`status`,
+                  ck_users_admin.`name` as pay_user
+                  FROM
+                  db_pay_requisition_002_pay_history
+                  Left Join ck_users_admin ON db_pay_requisition_002_pay_history.pay_user = ck_users_admin.id  WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
+
+                        $pn = '<div class="divTable"><div class="divTableBody">';
+                        $pn .=     
+                        '<div class="divTableRow">
+                        <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
+                        <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
+                        <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
+                        </div>
+                        ';
+                  foreach ($rs as $v) {                        
+                        $pn .=     
+                        '<div class="divTableRow">
+                        <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$v->time_pay.'</div>
+                        <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$v->pay_date.'</div>
+                        <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$v->pay_user.'</div>
+                        </div>
+                        ';
+                  }
+
+            return $pn;
+
+        })
+        ->escapeColumns('column_001')
+        ->addColumn('column_002', function($row) {
+
+          $Products = DB::select(" SELECT
+            db_pay_requisition_002.*,sum(amt_get) as sum_amt_get
+            FROM
+            db_pay_requisition_002 
+            WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ");
+
+          $pn = '<div class="divTable"><div class="divTableBody">';
+          $pn .=     
+          '<div class="divTableRow">
+          <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+          <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
+          <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
+          <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
+
+                      <div class="divTableRow">
+                      <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+                      <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;"> Lot number [Expired]</div>
+                      <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+                      </div>
+
+          </div>
+          </div>
+          ';
+
+          $amt_get = 0;
+         
+          foreach ($Products as $key => $v) {
+
+                   $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";
+
+                     $pn .=     
+                    '<div class="divTableRow">
+                    <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;"> '.$v->product_name.'</div>
+                    <div class="divTableCell" style="text-align:center;color:blue;font-weight:bold;"> '.$v->sum_amt_get.'</div>
+                    <div class="divTableCell" style="text-align:center;'.$css_font.'"> '.$v->amt_remain.'</div>
+                    <div class="divTableCell" style="text-align:center;width:400px;padding-bottom:15px !important;"> 
+                    ';
+
+                      $WH = DB::select("
+                         SELECT * from db_pay_requisition_002
+                         where db_pay_requisition_002.pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND time_pay = ".$v->time_pay." AND product_id_fk=".$v->product_id_fk."
+                      ");
+
+                      foreach ($WH AS $v_wh) {
+
+                          $zone = DB::select(" select * from zone where id=".$v_wh->zone_id_fk." ");
+                          $shelf = DB::select(" select * from shelf where id=".$v_wh->shelf_id_fk." ");
+                          if($v_wh->zone_id_fk!=''){
+                            $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v_wh->shelf_floor;
+                            $lot_number = $v_wh->lot_number.' ['.$v_wh->lot_expired_date.']';
+                          }else{
+                            $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
+                            $lot_number = '';
+                          }
+
+                          $pn .=     
+                              '<div class="divTableRow">
+                              <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
+                              <div class="divTableCell" style="width:200px;text-align:center;">'.$lot_number.'</div>
+                              <div class="divTableCell" style="width:80px;text-align:center;color:blue;font-weight:bold;">'.($v_wh->amt_get>0?$v_wh->amt_get:'').'</div>
+                              </div>
+                              ';
+
+                     }
+
+
+            $pn .= '</div>';  
+            $pn .= '</div>';  
+          }
+
+          $pn .= '</div>';  
+          return $pn;
+      })
+      ->escapeColumns('column_002')  
+      ->addColumn('ch_amt_remain', function($row) { 
+        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+        // Case ที่มีการบันทึกข้อมูลแล้ว
+        // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
+
+           $rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND status in (2) ");
+
+           if(count($rs_pay_history)>0){
+               return 2;
+           }else{
+               return 3;
+           }
+
+          // $r_check_remain = DB::select(" SELECT status FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' ORDER BY time_pay DESC LIMIT 1  ");
+          // if($r_check_remain){
+          //     return $r_check_remain[0]->status; 
+          // }else{
+          // // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า 3 ไปก่อน
+          //     return 3;
+          // }
+
+       })
+      ->addColumn('ch_amt_lot_wh', function($row) { 
+// ดูว่าไม่มีสินค้าคลังเลย
+
+          $Products = DB::select("
+            SELECT * from db_pay_requisition_002 WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND amt_remain > 0 GROUP BY product_id_fk 
+          ");
+          // Case ที่มีการบันทึกข้อมูลแล้ว
+              if(@$Products){
+
+                    if(count($Products)>0){
+                        $arr = [];
+                        foreach ($Products as $key => $value) {
+                          array_push($arr,$value->product_id_fk);
+                        }
+                        $arr_im = implode(',',$arr);
+                        $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+                        $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
+                        return @$r[0]->sum?@$r[0]->sum:0; 
+                    }else{
+                        // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
+                        return 1;
+                    }
+
+                }else{
+                  // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
+                  return 1;
+              }
+
+       })      
+       ->addColumn('column_003', function($row) { 
+
+                $pn = '<div class="divTable">';
+                $pn .= '<div class="divTableBody">';
+
+                $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" style="background-color:white !important;color:white !important;">ยกเลิก</div>
+                 </div>
+               ';
+
+                $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" >
+
+                  <a href="javascript: void(0);" class="btn btn-sm btn-danger cDelete2 " data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าครั้งล่าสุด" data-time_pay='.$row->time_pay.' ><i class="bx bx-trash font-size-16 align-middle"></i></a>
+
+                 </div>
+                 </div>
+               ';
+
+              $pn .= '</div>';
+              $pn .= '</div>';
+
+             return $pn;
+
+        })
+        ->escapeColumns('column_003') 
+        ->addColumn('column_004', function($row) { 
+             $r = DB::select("SELECT time_pay from db_pay_requisition_002 where status_cancel<>1 ORDER BY id DESC LIMIT 1");
+             return @$r[0]->time_pay;
+        })
+        ->addColumn('status_cancel', function($row) { 
+            $Products = DB::select(" SELECT status_cancel
+            FROM
+            db_pay_requisition_002 
+            WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay."  group by time_pay ");
+            
+            return @$Products[0]->status_cancel;
+
+        })        
+      ->make(true);
+    }
+
 
 
 

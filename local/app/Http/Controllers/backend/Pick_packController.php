@@ -63,6 +63,7 @@ class Pick_packController extends Controller
             $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
             $DeliveryPackingCode->action_user = (\Auth::user()->id);
             $DeliveryPackingCode->receipt = $receipt ;
+            $DeliveryPackingCode->status_picked = 1 ;
             $DeliveryPackingCode->save();
           }
 

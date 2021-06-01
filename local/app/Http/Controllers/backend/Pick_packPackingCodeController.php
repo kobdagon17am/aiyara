@@ -57,9 +57,16 @@ class Pick_packPackingCodeController extends Controller
 
     }
 
-    public function Datatable(){      
-      $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+    public function Datatable(Request $request){     
+
+      if(!empty($request->packing_id)){
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
+      }else{
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      }
+
       $sQuery = \DataTables::of($sTable);
+
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
         return "P2".sprintf("%05d",$row->id);

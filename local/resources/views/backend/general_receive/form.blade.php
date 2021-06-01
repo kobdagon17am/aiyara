@@ -100,7 +100,7 @@
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> สภาพสินค้าที่รับเข้า : * </label>
                             <div class="col-md-8">
-                              <select name="product_in_cause_id_fk" class="form-control select2-templating " required >
+                              <select name="product_status_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
                                   @if(@$Product_status)
                                     @foreach(@$Product_status AS $r)

@@ -217,7 +217,10 @@ class Pay_product_receiptController extends Controller
     public function edit($id)
     {
 
+            // TEST @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
             // dd($id);
+
             $sRow = \App\Models\Backend\Pay_product_receipt_001::find($id);
             if(!$sRow){
               return redirect()->to(url("backend/pay_product_receipt"));
@@ -380,6 +383,10 @@ class Pay_product_receiptController extends Controller
       })
       ->make(true);
     }
+
+
+
+
 
 
 

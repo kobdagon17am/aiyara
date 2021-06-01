@@ -3,8 +3,6 @@
 Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.'], function() {
 #===========================================================================================================================================================
 
-
-
   // Authentication Routes...
   Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
   Route::post('login', 'Auth\LoginController@login')->name('login');
@@ -393,12 +391,23 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');   
 
     Route::post('cancel-pay_product_receipt_001', 'Pay_product_receipt_001Controller@destroy');
+    Route::post('cancel-some-pay_product_receipt_001', 'Pay_product_receipt_001Controller@destroy_some');
+
+    Route::post('cancel-some-requisition_001', 'Pick_warehouse_fifoController@destroy_some');
+    
     Route::post('ajaxApproveProductSent', 'Pay_product_receipt_001Controller@ajaxApproveProductSent');
     
     Route::post('ajaxSearch_bill_db_orders', 'Products_fifo_billController@ajaxSearch_bill_db_orders');
     Route::post('ajaxSearch_bill_db_orders002', 'Products_fifo_billController@ajaxSearch_bill_db_orders002');
+    Route::get('ajaxSearch_bill_db_orders002', 'Products_fifo_billController@ajaxSearch_bill_db_orders002');
     
+    Route::post('ajaxSearch_requisition_db_orders002', 'Pick_warehouse_fifoController@ajaxSearch_requisition_db_orders002');
+    Route::get('ajaxSearch_requisition_db_orders002', 'Pick_warehouse_fifoController@ajaxSearch_requisition_db_orders002');
+
     Route::post('ajaxSavePay_product_receipt', 'Pay_product_receipt_001Controller@ajaxSavePay_product_receipt');
+    
+    Route::post('ajaxSavePay_requisition', 'Pay_requisition_001Controller@ajaxSavePay_requisition');
+
     Route::post('ajaxCHECKPay_product_receipt', 'Pay_product_receipt_001Controller@ajaxCHECKPay_product_receipt');
 
     Route::resource('pay_product_receipt', 'Pay_product_receiptController');
@@ -418,6 +427,27 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pay_product_receipt_tb7/datatable', 'Pay_product_receipt_001Controller@Datatable007')->name('pay_product_receipt_tb7.datatable');    
     Route::post('pay_product_receipt_tb8/datatable', 'Pay_product_receipt_001Controller@Datatable008')->name('pay_product_receipt_tb8.datatable');    
     Route::post('pay_product_receipt_tb9FIFO/datatable', 'Products_fifo_billController@Datatable009FIFO')->name('pay_product_receipt_tb9FIFO.datatable');    
+
+    Route::post('pay_product_receipt_tb10FIFO/datatable', 'Products_fifo_billController@Datatable010FIFO')->name('pay_product_receipt_tb10FIFO.datatable');    
+
+// @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเบิก @@@@@@@@@@@@@@@@@@@
+    // หน้าแรก
+    Route::resource('pay_requisition_001', 'Pay_requisition_001Controller');
+    // Route::post('pay_requisition_tb1/datatable', 'Pay_requisition_001Controller@Datatable001')->name('pay_requisition_tb1.datatable');
+    Route::post('pick_warehouse_tb_0001/datatable', 'Pick_warehouse_fifoController@Datatable0001')->name('pick_warehouse_tb_0001.datatable');  
+    // Route::post('pick_warehouse_tb_0002/datatable', 'Pick_warehouseController@Datatable0002')->name('pick_warehouse_tb_0002.datatable');  
+    
+    Route::post('pick_warehouse_tb_0002/datatable', 'Pick_warehouse_fifoController@Datatable0002FIFO')->name('pick_warehouse_tb_0002.datatable');
+    // ฝากไว้ก่อน
+    Route::post('pick_warehouse_tb_0002_edit/datatable', 'Pick_warehouseController@Datatable0002')->name('pick_warehouse_tb_0002_edit.datatable');
+    
+    // Route::post('pay_product_receipt_tb6/datatable', 'Pay_product_receipt_001Controller@Datatable006')->name('pay_product_receipt_tb6.datatable');
+    
+    // Route::post('pay_product_receipt_tb7/datatable', 'Pay_product_receipt_001Controller@Datatable007')->name('pay_product_receipt_tb7.datatable');    
+    // Route::post('pay_product_receipt_tb8/datatable', 'Pay_product_receipt_001Controller@Datatable008')->name('pay_product_receipt_tb8.datatable');    
+    // Route::post('pay_product_receipt_tb9FIFO/datatable', 'Products_fifo_billController@Datatable009FIFO')->name('pay_product_receipt_tb9FIFO.datatable');    
+
+    // Route::post('pay_product_receipt_tb10FIFO/datatable', 'Products_fifo_billController@Datatable010FIFO')->name('pay_product_receipt_tb10FIFO.datatable'); 
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
