@@ -1,6 +1,6 @@
 
 @extends('frontend.layouts.customer.customer_app')
-@section('conten') 
+@section('conten')
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jstree/css/style.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/treeview/treeview.css')}}">
@@ -12,7 +12,7 @@
     <div class="card-block">
           โครงสร้างสายงาน
     <div class="card-header" style="padding: 0px">
-      <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
+      <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('tree_view')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
       @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
       <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
         <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
@@ -21,7 +21,7 @@
         <a href="#"  onclick="event.preventDefault();
         document.getElementById('upline_id').submit();"
         class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></a>
-        <form id="upline_id" action="{{ route('home') }}" method="POST" style="display: none;">
+        <form id="upline_id" action="{{ route('tree_view') }}" method="POST" style="display: none;">
           <input type="hidden" name="id" value="{{$data['lv1']->upline_id}}">
           @csrf
         </form>
@@ -55,12 +55,12 @@
           <input type="hidden" name="id" value="{{$data['lv3_b_b']->id}}">
           @csrf
         </form>
-        @endif 
+        @endif
 
         @if(empty($data['lv2_c']) || empty($data['lv3_c_c']))
         <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
 
-        @else 
+        @else
         <a href="#" onclick="event.preventDefault();
         document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
 
@@ -72,17 +72,17 @@
         @endif
 
       </div>
-      
-    
+
+
     </div>
   </div>
   </div>
 </div>
- 
+
 <div class="row">
   <div class="col-sm-12 col-md-3 col-lg-3">
     <!-- Basic Tree card start -->
-    <div class="card"> 
+    <div class="card">
       <div class="card-header">
         <h5>Tree View</h5>
       </div>
@@ -132,11 +132,11 @@
       {{-- <h5 class="m-b-10">โครงสร้างสายงาน</h5>  --}}
 
       <div class="row" align="center">
-        <div class="col-lg-4"> 
+        <div class="col-lg-4">
         </div>
         @if($data['lv1'])
 
-        <div class="col-lg-4"> 
+        <div class="col-lg-4">
           <div class="card widget-statstic-card borderless-card">
             <div class="card-block">
               @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
@@ -185,7 +185,7 @@
               <td></td>
             </tr>
             <tr class="table-success">
-              <td><strong>คะแนนส่วนตัว:</strong></td> 
+              <td><strong>คะแนนส่วนตัว:</strong></td>
               <td>{{ $data['lv1']->pv_point }} PV</td>
               <td>[Exclusive ????]</td>
 
@@ -213,7 +213,7 @@
             <tr>
               <td><strong>ทีมกลางคือทีม</strong></td>
               <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-              <td></td> 
+              <td></td>
             </tr>
 
           </tbody>
@@ -234,7 +234,7 @@
     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
               {{-- <button type="button"  onclick="event.preventDefault();
               document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-              <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
+              <form id="line_id_v1" action="{{route('tree_view')}}" method="POST" style="display: none;">
                 <input type="hidden" name="id" value="{{$data['lv1']->id}}">
                 @csrf
               </form> --}}
@@ -246,7 +246,7 @@
 
       @else
       <!-- กรณีไม่มีข้อมูล -->
-      <div class="col-lg-4"> 
+      <div class="col-lg-4">
         <div class="card widget-statstic-card borderless-card">
           <div class="card-block">
             <i class="fa fa-line-chart st-icon btn-warning"></i>
@@ -260,7 +260,7 @@
 
                         </div>
                         @endif
-                        <div class="col-lg-4"> 
+                        <div class="col-lg-4">
                         </div>
                       </div>
                       <br>
@@ -338,7 +338,7 @@
                                 <td></td>
                               </tr>
                               <tr>
-                                <td><strong>คะแนนส่วนตัว:</strong></td> 
+                                <td><strong>คะแนนส่วนตัว:</strong></td>
                                 <td>{{ $data['lv1']->pv_point }} PV</td>
                                 <td>[Exclusive ????]</td>
 
@@ -366,7 +366,7 @@
                               <tr class="table-success">
                                 <td><strong>ทีมกลางคือทีม</strong></td>
                                 <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                                <td></td> 
+                                <td></td>
                               </tr>
 
                             </tbody>
@@ -387,7 +387,7 @@
                       <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                       <button type="button"  onclick="event.preventDefault();
                       document.getElementById('{{$data_lv2->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-                      <form id="{{$data_lv2->id}}" action="{{route('home')}}" method="POST" style="display: none;">
+                      <form id="{{$data_lv2->id}}" action="{{route('tree_view')}}" method="POST" style="display: none;">
                        <input type="hidden" name="id" value="{{$data_lv2->id}}">
                        @csrf
                      </form>
@@ -419,7 +419,7 @@
               }else{
                 $data_lv3 = null;
                 $model_lv3 = null;
-                $line_lv3 = null; 
+                $line_lv3 = null;
               }
 
               ?>
@@ -475,7 +475,7 @@
                      <td></td>
                    </tr>
                    <tr>
-                     <td><strong>คะแนนส่วนตัว:</strong></td> 
+                     <td><strong>คะแนนส่วนตัว:</strong></td>
                      <td>{{ $data_lv3->pv_point }} PV</td>
                      <td>[Exclusive ????]</td>
 
@@ -503,7 +503,7 @@
                    <tr class="table-success">
                      <td><strong>ทีมกลางคือทีม</strong></td>
                      <td><b>C</b> มีคะแนนสะสม 260,204 PV</td>
-                     <td></td> 
+                     <td></td>
                    </tr>
 
                  </tbody>
@@ -524,7 +524,7 @@
            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
            <button type="button"  onclick="event.preventDefault();
            document.getElementById('{{$data_lv3->id}}').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-           <form id="{{$data_lv3->id}}" action="{{route('home')}}" method="POST" style="display: none;">
+           <form id="{{$data_lv3->id}}" action="{{route('tree_view')}}" method="POST" style="display: none;">
             <input type="hidden" name="id" value="{{$data_lv3->id}}">
             @csrf
           </form>
@@ -546,13 +546,13 @@
     <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
   </div>
   @endif
-  @endif 
+  @endif
   @endfor
 </div>
 </div>
 </div>
 <br>
-</div> 
+</div>
 @else
 <div class="col-lg-4">
   <div class="card widget-statstic-card borderless-card">
@@ -567,7 +567,7 @@
       <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
       <h6 class="f-w-600 m-t-15 m-b-10">Under line : {{$data['lv1']->user_name}} </h6>
 
-      <hr> 
+      <hr>
       <div class="row ml-auto">
        <div class="col-auto col-sm-4 text-center">
         <img src="frontend/assets/icon/add_user_not.png" alt="img" class="img-radius img-70">

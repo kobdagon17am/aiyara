@@ -32,7 +32,7 @@ class LoginController extends Controller
             //     'line_type' => $get_users[0]->line_type]);
           // dd('ok');
            // dd(Auth::user()->id);
-            return redirect('home'); 
+            return redirect('profile');
         }else{
            return redirect('/')->withError('Pless check username and password !.');
 

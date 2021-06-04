@@ -44,6 +44,32 @@ public function alada($user_name=''){
 return view('frontend/salepage/alada',compact('rs'));
 }
 
+public function trimmax($user_name=''){
+
+  $data = DB::table('customers')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
+  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->where('customers.user_name','=',$user_name)
+  ->first();
+  $rs = ['stattus'=>'success','data'=>$data];
+return view('frontend/salepage/trimmax',compact('rs'));
+}
+
+public function aiyara($user_name=''){
+
+  $data = DB::table('customers')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
+  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->where('customers.user_name','=',$user_name)
+  ->first();
+  $rs = ['stattus'=>'success','data'=>$data];
+return view('frontend/salepage/aiyara',compact('rs'));
+}
+
+
+
 	public static function setting(){
 
 		$customer_id =  Auth::guard('c_user')->user()->id;

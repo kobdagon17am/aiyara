@@ -9,7 +9,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
   <div class="modal-content">
    <div class="modal-header bg-c-green">
     <h4 class="modal-title" style="color: #FFFF">{{$data->business_name}} ({{$data->user_name}})</h4>
-     
+
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
    </button>
@@ -34,7 +34,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
       <td></td>
     </tr>
     <tr class="table-success">
-      <td><strong>คะแนนส่วนตัว:</strong></td> 
+      <td><strong>คะแนนส่วนตัว:</strong></td>
       <td>{{ number_format($data->pv) }} PV</td>
       <td><b class="text-danger">{{ $data->dt_package }}</b></td>
 
@@ -57,7 +57,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
       <td><strong>สิทธิ Reward Bonus</strong></td>
       <td>{{ $count_directsponsor['reward_bonus'] }}</td>
       <td></td>
-    </tr> 
+    </tr>
     <tr class="table-success">
       <td><strong>นับคุณวุฒิจาก</strong></td>
       <td>{{ date('01/m/Y') }} ถึง {{ date('t/m/Y') }}</td>
@@ -65,7 +65,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
     </tr>
     <tr>
       <td><strong>ทีมกลางคือทีม</strong></td>
- 
+
     <?php $get_month_pv = MonthPv::get_month_pv($data->id); ?>
       <td>
         @if($get_month_pv['data_avg_pv']['pv_month'] <= 0)
@@ -73,9 +73,9 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
         @else
          <b class="text-danger">{{ $get_month_pv['data_avg_pv']['type'] }}  มีคะแนนสะสม {{ number_format($get_month_pv['data_avg_pv']['pv_month']) }} PV</b>
         @endif
-       
+
       </td>
-      <td></td> 
+      <td></td>
     </tr>
 
   </tbody>
@@ -92,13 +92,13 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
 </div>
 </div>
 </div>
- 
+
 <div class="modal-footer">
   <p class="m-b-0 text-left" style="font-size: 12px"> ข้อมูลวันที่ :{{ date('d/m/Y') }} </p>
   <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
   <button type="button"  onclick="event.preventDefault();
   document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-  <form id="line_id_v1" action="{{route('home')}}" method="POST" style="display: none;">
+  <form id="line_id_v1" action="{{route('tree_view')}}" method="POST" style="display: none;">
     <input type="hidden" name="id" value="{{$data->id}}">
     @csrf
   </form>
@@ -107,5 +107,5 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
 </div>
 
 </div>
-</div> 
+</div>
 </div>

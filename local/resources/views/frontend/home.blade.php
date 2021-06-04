@@ -40,7 +40,7 @@
         <div class="card-header" style="padding: 0px">
           <div class="row">
             <div class="col-md-8">
-              <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('home')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
+              <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('tree_view')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
               @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
               <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
                 <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
@@ -49,7 +49,7 @@
                 <a href="#"  onclick="event.preventDefault();
                 document.getElementById('upline_id').submit();"
                 class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></a>
-                <form id="upline_id" action="{{ route('home') }}" method="POST" style="display: none;">
+                <form id="upline_id" action="{{ route('tree_view') }}" method="POST" style="display: none;">
                   <input type="hidden" name="id" value="{{$data['lv1']->upline_id}}">
                   @csrf
                 </form>

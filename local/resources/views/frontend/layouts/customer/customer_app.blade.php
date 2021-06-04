@@ -67,7 +67,7 @@
 							<i class="ti-menu"></i>
 						</a>
 
-						<a href="{{route('home')}}">
+						<a href="{{route('profile')}}">
 							<img class="img-fluid" src="{{asset('frontend/assets/images/logo.png')}}"  width="140" alt="Theme-Logo" />
 						</a>
 
@@ -290,22 +290,21 @@
 
 	<ul class="pcoded-item pcoded-left-item" item-border="true" item-border-style="none" subitem-border="true">
 
-		<li class="{{ (request()->is('home')) ? 'active' : '' }}">
-			<a href="{{route('home')}}">
+    <li class="{{ (request()->is('profile')) ? 'active' : '' }}">
+			<a href="{{route('profile')}}">
+				<span class="pcoded-micon"><i class="fa fa-wpforms text-success"></i><b>ข้อมูลส่วนตัว</b></span>
+				<span class="pcoded-mtext">ข้อมูลส่วนตัว</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+		<li class="{{ (request()->is('tree_view')) ? 'active' : '' }}">
+			<a href="{{route('tree_view')}}">
 				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b>โครงสร้างสายงาน</b></span>
 				<span class="pcoded-mtext">โครงสร้างสายงาน</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
-
-{{-- 		<li class="{{ (request()->is('home_type_tree')) ? 'active' : '' }}">
-			<a href="{{route('home_type_tree')}}">
-				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b>โครงสร้างสายงาน</b></span>
-				<span class="pcoded-mtext">โครงสร้างสายงาน</span>
-				<span class="pcoded-mcaret"></span>
-				<span class="pcoded-badge label label-danger">NEW</span>
-			</a>
-		</li> --}}
 
 		<li class="{{ (request()->is('direct-sponsor')) ? 'active' : '' }}">
 			<a href="{{route('direct-sponsor')}}">
@@ -315,13 +314,68 @@
 			</a>
 		</li>
 
-		<li class="{{ (request()->is('profile')) ? 'active' : '' }}">
-			<a href="{{route('profile')}}">
-				<span class="pcoded-micon"><i class="fa fa-wpforms text-success"></i><b>ข้อมูลส่วนตัว</b></span>
-				<span class="pcoded-mtext">ข้อมูลส่วนตัว</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
+    <li class="pcoded-hasmenu {{ (request()->is('commission_bonus_transfer') || request()->is('commission-per-day')
+      || request()->is('commission_faststart*') || request()->is('commission_matching*') || request()->is('taxdata')
+      ||  request()->is('commission_bonus_transfer_aistockist') ||  request()->is('commission_bonus_transfer_af') ||  request()->is('commission_bonus_transfer_member'))  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+        <a href="javascript:void(0)">
+          <span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
+          <span class="pcoded-mtext">Commission</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+
+        <ul class="pcoded-submenu">
+          <li class="{{ (request()->is('commission_bonus_transfer')) ? 'active' : '' }}">
+            <a href="{{route('commission_bonus_transfer')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{{ (request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') ) ? 'active' : '' }}">
+            <a href="{{route('commission-per-day')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">ความเหลื่อนไหวคะแนน และโบนัดรายวัน</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{{ (request()->is('commission_bonus_transfer_aistockist')) ? 'active' : '' }}">
+            <a href="{{route('commission_bonus_transfer_aistockist')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{{ (request()->is('commission_bonus_transfer_af')) ? 'active' : '' }}">
+            <a href="{{route('commission_bonus_transfer_af')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น AF</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{{ (request()->is('commission_bonus_transfer_member')) ? 'active' : '' }}">
+            <a href="{{route('commission_bonus_transfer_member')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">รายการโอนค่าคอมมิชชั่นสมาชิกนิติบุคคล</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+      <li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
+            <a href="{{route('taxdata')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext">หนังสือรับรองการหักภาษี ณ ที่จ่าย</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+        </ul>
+      </li>
+
+
 
 		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('cart_payment/*') ) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
@@ -330,13 +384,9 @@
 				<span class="pcoded-mcaret"></span>
 			</a>
 			<ul class="pcoded-submenu">
-			{{-- 	<li class="{{ (request()->is('product-list')) ? 'active' : '' }}">
-					<a href="{{route('product-list')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">สินค้าทั่วไป</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li> --}}
+
+
+
 
 
 				<li class="{{ (request()->is('cart/1') || request()->is('product-list/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1') )  ? 'active' : '' }}">
@@ -407,51 +457,16 @@
 
 			</ul>
 		</li>
-{{--
-		<li class="pcoded-hasmenu {{ (request()->is('product-history') || request()->is('cart-payment-history/*') || request()->is('course') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b>ประวัติการสั่งซื้อ</b></span>
-				<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
 
-			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('product-history')) ? 'active' : '' }}">
-					<a href="{{route('product-history')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">สินค้า</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
+    <li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
+      <a href="{{route('ai-cash')}}">
+        <span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
+        <span class="pcoded-mtext">Ai-Cash</span>
+        <span class="pcoded-mcaret"></span>
+      </a>
+    </li>
 
-				<li class="{{ (request()->is('course')) ? 'active' : '' }}">
-					<a href="{{route('course')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Course/Event</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-			</ul>
-		</li> --}}
-
-
-		<li class="{{ (request()->is('product-history') || request()->is('product-history/*') || request()->is('cart-payment-history/*'))  ? 'active' : '' }}">
-			<a href="{{route('product-history')}}">
-				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b>ประวัติการสั่งซื้อ</b></span>
-				<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-		<li class="{{ (request()->is('course'))  ? 'active' : '' }}">
-			<a href="{{route('course')}}">
-				<span class="pcoded-micon"><i class="fa fa-black-tie text-success"></i><b>Course/Event</b></span>
-				<span class="pcoded-mtext">Course/Event</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-
-		<li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+    <li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Ai Voucher</b></span>
 				<span class="pcoded-mtext"> Ai Voucher</span>
@@ -477,75 +492,6 @@
 			</ul>
 		</li>
 
-	{{-- 	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
-			<a href="{{route('comission')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่น</b></span>
-				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li> --}}
-
-		<li class="pcoded-hasmenu {{ (request()->is('commission_bonus_transfer') || request()->is('commission-per-day')
-    || request()->is('commission_faststart*') || request()->is('commission_matching*') || request()->is('taxdata')
-    ||  request()->is('commission_bonus_transfer_aistockist') ||  request()->is('commission_bonus_transfer_af') ||  request()->is('commission_bonus_transfer_member'))  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
-				<span class="pcoded-mtext">Commission</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-
-			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('commission_bonus_transfer')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_transfer')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-				<li class="{{ (request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') ) ? 'active' : '' }}">
-					<a href="{{route('commission-per-day')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">ความเหลื่อนไหวคะแนน และโบนัดรายวัน</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-        <li class="{{ (request()->is('commission_bonus_transfer_aistockist')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_transfer_aistockist')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-        <li class="{{ (request()->is('commission_bonus_transfer_af')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_transfer_af')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น AF</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-        <li class="{{ (request()->is('commission_bonus_transfer_member')) ? 'active' : '' }}">
-					<a href="{{route('commission_bonus_transfer_member')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รายการโอนค่าคอมมิชชั่นสมาชิกนิติบุคคล</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-		<li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
-					<a href="{{route('taxdata')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">หนังสือรับรองการหักภาษี ณ ที่จ่าย</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-			</ul>
-		</li>
-
 
 		<li class="{{ (request()->is('ai-stockist')) ? 'active' : '' }}">
 			<a href="{{route('ai-stockist')}}">
@@ -555,13 +501,36 @@
 			</a>
 		</li>
 
-		<li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
-			<a href="{{route('ai-cash')}}">
-				<span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
-				<span class="pcoded-mtext">Ai-Cash</span>
+    <li class="{{ (request()->is('course'))  ? 'active' : '' }}">
+			<a href="{{route('course')}}">
+				<span class="pcoded-micon"><i class="fa fa-black-tie text-success"></i><b>Course/Event</b></span>
+				<span class="pcoded-mtext">Course/Event</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
+
+		<li class="{{ (request()->is('product-history') || request()->is('product-history/*') || request()->is('cart-payment-history/*'))  ? 'active' : '' }}">
+			<a href="{{route('product-history')}}">
+				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b>ประวัติการสั่งซื้อ</b></span>
+				<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+
+	{{-- 	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
+			<a href="{{route('comission')}}">
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่น</b></span>
+				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li> --}}
+
+
+
+
+
+
 
 		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
@@ -589,19 +558,7 @@
 			</ul>
 		</li>
 
-
-
-		<li class="{{ (request()->is('news') || request()->is('news_detail/*')) ? 'active' : '' }}">
-			<a href="{{route('news')}}">
-				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b>รวมข่าวสาร/กิจกรรม</b></span>
-				<span class="pcoded-mtext">รวมข่าวสาร/กิจกรรม</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-		</li>
-
-
-
-		<li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('salepage/setting') || request()->is('commission_faststart') || request()->is('commission_matching') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+    <li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('s*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b>Sale page</b></span>
 				<span class="pcoded-mtext">Sale page</span>
@@ -611,26 +568,43 @@
 			<ul class="pcoded-submenu">
 				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
 
-				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
-					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
+        <li class="{{ (request()->is('s1*') ) ? 'active' : '' }}">
+					<a href="{{route('s1',['user_name'=>$user_name])}}" target="_blank">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Aiyara</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+				<li class="{{ (request()->is('s2') ) ? 'active' : '' }}">
+					<a href="{{route('s2',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aimmura</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cashewy*') ) ? 'active' : '' }}">
-					<a href="{{route('cashewy',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('s3*') ) ? 'active' : '' }}">
+					<a href="{{route('s3',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Cashewy Drink</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('alada*') ) ? 'active' : '' }}">
-					<a href="{{route('alada',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('s5*') ) ? 'active' : '' }}">
+					<a href="{{route('s5',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Alada</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+
+				<li class="{{ (request()->is('s6*') ) ? 'active' : '' }}">
+					<a href="{{route('s6',['user_name'=>$user_name])}}" target="_blank">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">TrimMax</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -648,6 +622,20 @@
 
 			</ul>
 		</li>
+
+
+
+		<li class="{{ (request()->is('news') || request()->is('news_detail/*')) ? 'active' : '' }}">
+			<a href="{{route('news')}}">
+				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b>รวมข่าวสาร/กิจกรรม</b></span>
+				<span class="pcoded-mtext">รวมข่าวสาร/กิจกรรม</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
+
+
+
 			<li class="{{ (request()->is('message/*')) ? 'active' : '' }}">
 			<a href="{{route('message')}}">
 				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b>ติดต่อ/สอบถาม</b></span>

@@ -23,7 +23,7 @@ Route::get('/', function () {
 
   // if(session('id')){
   if(Auth::guard('c_user')->check()){
-    return redirect('home');
+    return redirect('profile');
   }else{
     return view('frontend/member_login');
   }
@@ -31,7 +31,7 @@ Route::get('/', function () {
 
 Route::get('login', function () {
   if(Auth::guard('c_user')->check()){
-    return redirect('home');
+    return redirect('profile');
   }else{
     return view('frontend/member_login');
 
@@ -64,9 +64,9 @@ Route::post('search','Frontend\HomeController@search')->name('search');
 
 Route::get('modal_tree','Frontend\HomeController@modal_tree')->name('modal_tree');
 Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
-Route::get('home','Frontend\HomeController@index')->name('home');
+Route::get('tree_view','Frontend\HomeController@index')->name('tree_view');
 Route::get('home_type_tree','Frontend\HomeController@home_type_tree')->name('home_type_tree');
-Route::post('home','Frontend\HomeController@index')->name('home');
+Route::post('tree_view','Frontend\HomeController@index')->name('tree_view');
 
 Route::post('login','Frontend\LoginController@login')->name('login');
 Route::post('register_new_member','Frontend\RegisterController@register_new_member')->name('register_new_member');
@@ -225,9 +225,11 @@ Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
-Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
-Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
-Route::get('alada/{user_name?}','Frontend\SalepageController@alada')->name('alada');
+Route::get('s1/{user_name?}','Frontend\SalepageController@aiyara')->name('s1');
+Route::get('s2/{user_name?}','Frontend\SalepageController@aimmura')->name('s2');
+Route::get('s3/{user_name?}','Frontend\SalepageController@cashewy')->name('s3');
+Route::get('s5/{user_name?}','Frontend\SalepageController@alada')->name('s5');
+Route::get('s6/{user_name?}','Frontend\SalepageController@trimmax')->name('s6');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');

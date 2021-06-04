@@ -64,9 +64,9 @@ class Register extends Model
     $soi= (trim($req->input('soi')) == '') ? null : $req->input('soi');
     $road= (trim($req->input('road')) == '') ? null : $req->input('road');
 
-    $province_id= ($req->province_id == '') ? null : $req->province_id;
-    $amphures_id= ( $req->amphures_id == '') ? null : $req->amphures_id;
-    $district_id= ($req->district_id == '') ? null : $req->district_id;
+    $province_id= ($req->province == '') ? null : $req->province;
+    $amphures_id= ( $req->amphures == '') ? null : $req->amphures;
+    $district_id= ($req->district == '') ? null : $req->district;
     $zipcode= (trim($req->input('zipcode')) == '') ? null : $req->input('zipcode');
 
     $card_house_no= (trim($req->input('card_house_no')) == '') ? null : $req->input('card_house_no');
@@ -75,10 +75,9 @@ class Register extends Model
     $card_soi= (trim($req->input('card_soi')) == '') ? null : $req->input('card_soi');
 
 
-    $card_province= ($req->card_province == '') ? null : $req->card_province;
-    $card_district= ( $req->card_district == '') ? null : $req->card_district;
-
-    $card_district_sub= ($req->card_district_sub == '') ? null : $req->card_district_sub;
+    $card_province_id= ($req->card_province == '') ? null : $req->card_province;
+    $card_amphures_id= ( $req->card_amphures == '') ? null : $req->card_amphures;
+    $card_district_id= ($req->card_district == '') ? null : $req->card_district;
 
     $card_road= (trim($req->input('card_road')) == '') ? null : $req->input('card_road');
     $card_zipcode= (trim($req->input('card_zipcode')) == '') ? null : $req->input('card_zipcode');
@@ -171,9 +170,9 @@ class Register extends Model
              'moo'=>$moo,
              'soi'=>$soi,
              'road'=>$road,
-             'district_sub'=>$district_id,
-             'district'=>$amphures_id,
-             'province'=>$province_id,
+             'province_id_fk'=>$province_id,
+             'amphures_id_fk'=>$amphures_id,
+             'district_id_fk'=>$district_id,
              'zipcode'=>$zipcode,
              'benefit_name'=>$benefit_name,
              'benefit_relation'=>$benefit_relation,
@@ -188,16 +187,14 @@ class Register extends Model
              'customer_id'=>$id];
        //dd($data_customer_detail);
              DB::table('customers_detail')->insert($data_customer_detail);
-
-
              $customer_address_card = [
                 'card_house_no'=>$card_house_no,
                 'card_house_name'=>$card_house_name,
                 'card_moo'=>$card_moo,
                 'card_soi'=>$card_soi,
-                'card_district'=>$card_district,
-                'card_district_sub'=>$card_district_sub,
-                'card_province'=>$card_province,
+                'card_province_id_fk'=>$card_province_id,
+                'card_amphures_id_fk'=>$card_amphures_id,
+                'card_district_id_fk'=>$card_district_id,
                 'card_road'=>$card_road,
                 'card_zipcode'=>$card_zipcode,
                 'customer_id'=>$id];
