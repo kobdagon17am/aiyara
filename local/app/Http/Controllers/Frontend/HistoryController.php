@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Illuminate\Support\Carbon;
+use App\Http\Controllers\Frontend\Ksher\KsherController;
 
 class HistoryController extends Controller
 {
@@ -260,7 +261,17 @@ class HistoryController extends Controller
 
                     }
 
-                } else {
+                }elseif($row->order_status_id_fk == 9){
+                  $action = '<div class="dropdown-warning dropdown open">
+                  <button class="btn btn-warning dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+                  <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">PromptPay</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#truemoney" onclick="re_new_payment_truemoney('.$row->id.',\''.$row->code_order.'\')">TrueMoney</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')">Upload File Slip</a>
+                  </div>
+              </div>';
+                }
+                 else {
                     $action = '';
                 }
                 return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
@@ -458,6 +469,53 @@ class HistoryController extends Controller
             'zipcode' => $zipcode,
         ];
         return $address;
+
+    }
+
+    public static function re_new_payment(Request $rs){
+      if($rs->order_id == "" || $rs->channel_list == ""){
+        dd($rs->all());
+        return redirect('product-history')->withError('Payment Fail');
+      }
+
+
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      $order_data = DB::table('db_orders')
+        ->select('db_orders.*','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
+        ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+        ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+        ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+        ->where('db_orders.id', '=',$rs->order_id)
+        ->first();
+
+        if(empty($order_data)){
+          return redirect('product-history')->withError('Data is Null');
+        }
+
+        if($order_data->pay_type_id_fk == 15){
+          $total_fee = $order_data->prompt_pay_price;
+        }elseif($order_data->pay_type_id_fk == 16){
+          $total_fee = $order_data->true_money_price;
+        }else{
+          return redirect('product-history')->withError('Channel payment in Incorrect');
+        }
+
+        $gateway_pay_data = array('mch_order_no'=> $order_data->code_order,
+        "total_fee" =>  $total_fee,
+        "fee_type" => 'THB',
+        "channel_list" => $rs->channel_list,
+        'mch_code' => $order_data->code_order,
+        'product_name' => $order_data->type,
+      );
+
+      $data = KsherController::gateway_ksher($gateway_pay_data);
+
+      //targetUrl
+          if($data['status'] == 'success'){
+            return redirect($data['url']);
+          }else{
+            return redirect('product-history')->withError('Payment Fail');
+          }
 
     }
 

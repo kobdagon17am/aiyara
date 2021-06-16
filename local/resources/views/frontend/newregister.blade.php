@@ -369,21 +369,21 @@
   <div class="col-sm-6">
     <div class="form-group row">
      <div class="col-sm-12">
-      <label>บัตรประชาชน</label>
-      <input type="file" id="file_1" name="file_1" class="form-control">
+      <label>บัตรประชาชน <b class="text-danger">*</b></label>
+      <input type="file" id="file_1" name="file_1" class="form-control" required>
     </div>
   </div>
 
   <div class="form-group row">
    <div class="col-sm-12">
-     <label>หน้าบัญชีธนาคาร</label>
+     <label>หน้าบัญชีธนาคาร </label>
      <input type="file" id="file_2"  name="file_2" class="form-control">
    </div>
  </div>
  <div class="form-group row">
   <div class="col-sm-12">
-   <label>เอกสารการสมัคร</label>
-   <input type="file" id="file_3" name="file_3" class="form-control">
+   <label>เอกสารการสมัคร <b class="text-danger">*</b></label>
+   <input type="file" id="file_3" name="file_3" class="form-control" required>
  </div>
 </div>
 
@@ -392,14 +392,14 @@
 <div class="col-sm-6">
  <div class="form-group row">
   <div class="col-sm-12">
-    <label>ภาพใบหน้าพร้อมถือบัตรประชาชน</label>
-    <input type="file" id="file_4" name="file_4" class="form-control">
+    <label>ภาพใบหน้าพร้อมถือบัตรประชาชน <b class="text-danger">*</b></label>
+    <input type="file" id="file_4" name="file_4" class="form-control" required>
 
   </div>
 </div>
 
 <div class="m-t-2 col-sm-12 text-center">
-  <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
+  <img src="{{ asset('frontend/assets/images/user_card_new.jpg') }}" id="preview" class="img-thumbnail">
 </div>
 </div>
 

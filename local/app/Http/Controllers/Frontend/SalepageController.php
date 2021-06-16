@@ -3,19 +3,26 @@
 namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Auth;
+use Session;
 
 class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
 
 			$data = DB::table('customers')
-			->select('db_salepage_setting.*','customers_detail.tel_mobile')
+			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
 			->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
 			->where('customers.user_name','=',$user_name)
 			->first();
+
+      Session::put('user_name',	$data->user_name);
+      Session::put('first_name',	$data->first_name);
+      Session::put('last_name',	$data->last_name);
+      Session::put('business_name',	$data->business_name);
+
 			$rs = ['stattus'=>'success','data'=>$data];
 		return view('frontend/salepage/aimmura',compact('rs'));
 	}
@@ -23,11 +30,15 @@ class SalepageController extends Controller
   public function cashewy($user_name=''){
 
     $data = DB::table('customers')
-    ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+    ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
     ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
     ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
     ->where('customers.user_name','=',$user_name)
     ->first();
+    Session::put('user_name',	$data->user_name);
+    Session::put('first_name',	$data->first_name);
+    Session::put('last_name',	$data->last_name);
+    Session::put('business_name',	$data->business_name);
     $rs = ['stattus'=>'success','data'=>$data];
   return view('frontend/salepage/cashewy_drink',compact('rs'));
 }
@@ -35,11 +46,15 @@ class SalepageController extends Controller
 public function alada($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
   ->first();
+  Session::put('user_name',	$data->user_name);
+  Session::put('first_name',	$data->first_name);
+  Session::put('last_name',	$data->last_name);
+  Session::put('business_name',	$data->business_name);
   $rs = ['stattus'=>'success','data'=>$data];
 return view('frontend/salepage/alada',compact('rs'));
 }
@@ -47,11 +62,15 @@ return view('frontend/salepage/alada',compact('rs'));
 public function trimmax($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
   ->first();
+  Session::put('user_name',	$data->user_name);
+  Session::put('first_name',	$data->first_name);
+  Session::put('last_name',	$data->last_name);
+  Session::put('business_name',	$data->business_name);
   $rs = ['stattus'=>'success','data'=>$data];
 return view('frontend/salepage/trimmax',compact('rs'));
 }
@@ -59,11 +78,15 @@ return view('frontend/salepage/trimmax',compact('rs'));
 public function aiyara($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
   ->first();
+  Session::put('user_name',	$data->user_name);
+  Session::put('first_name',	$data->first_name);
+  Session::put('last_name',	$data->last_name);
+  Session::put('business_name',	$data->business_name);
   $rs = ['stattus'=>'success','data'=>$data];
 return view('frontend/salepage/aiyara',compact('rs'));
 }

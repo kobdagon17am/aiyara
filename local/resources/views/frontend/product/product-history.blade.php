@@ -197,6 +197,63 @@
                 </div>
 
 
+                <div class="modal fade" id="promptpay" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-md" role="document">
+                      <form action="{{ route('re_new_payment') }}" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h4 class="modal-title" id="promptpay_title">ยืนยันการชำระเงินด้วย PromptPay </h4>
+                              </div>
+
+                              <div class="modal-body">
+                                <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย PromptPay">
+                                          <input type="hidden" name="order_id" id="promptpay_order_id" value="">
+                                          <input type="hidden" name="channel_list" id="promptpay_channel_list" value="promptpay">
+
+                              </div>
+
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                <button class="btn btn-success md-auto" name="submit" value="PromptPay" type="submit">Confirm</button>
+                            </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+
+
+
+                <div class="modal fade" id="truemoney" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-md" role="document">
+                      <form action="{{ route('re_new_payment') }}" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h4 class="modal-title" id="truemoney_title">ยืนยันการชำระเงินด้วย TrueMoney </h4>
+                              </div>
+
+                              <div class="modal-body">
+
+                                <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="ชำระด้วย TrueMoney">
+
+
+                                          <input type="hidden" name="order_id" id="truemoney_order_id" value="">
+                                          <input type="hidden" name="channel_list" id="truemoney_channel_list" value="truemoney">
+
+                              </div>
+
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                <button class="btn btn-success md-auto" name="submit" value="TrueMoney" type="submit">Confirm</button>
+                            </div>
+
+                          </div>
+                      </form>
+                  </div>
+              </div>
+
+
 
             </div>
         </div>
@@ -301,6 +358,17 @@ function qrcode(id,type='') {
         function cancel_order(order_id, code) {
             $('#cancel_order_id').val(order_id);
             $('#cancel_title').html('ยืนยันการยกเลิกรายการ (' + code + ')');
+        }
+
+        function re_new_payment_truemoney(order_id,code) {
+            $('#truemoney_order_id').val(order_id);
+            $('#truemoney_title').html('Repeat TrueMouney (' + code + ')');
+
+        }
+
+        function re_new_payment_promptpay(order_id,code) {
+            $('#promptpay_order_id').val(order_id);
+            $('#promptpay_title').html('Repeat PromtPay (' + code + ')');
         }
 
         $('#file_slip').change(function() {

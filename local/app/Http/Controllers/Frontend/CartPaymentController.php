@@ -13,7 +13,8 @@ use App\Models\Frontend\PaymentAiCash;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\ShippingCosController;
-
+use App\Models\Db_Orders;
+use App\Http\Controllers\Frontend\Ksher\KsherController;
 class CartPaymentController extends Controller
 {
 	public function index($type){
@@ -143,6 +144,8 @@ class CartPaymentController extends Controller
 
 	public function payment_submit(Request $request){
 
+
+
 		if($request->submit == 'upload'){
 			if($request->type == '6'){
 				$resule = PaymentCourse::payment_uploadfile($request);
@@ -194,6 +197,84 @@ class CartPaymentController extends Controller
 			}else{
 				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
 			}
+    }elseif($request->submit == 'PromptPay'){
+      $request['pay_type'] = 15;
+      $resule = Payment::payment_online_banking($request);
+
+      //$resule['id'] = '7';
+      if($resule['status'] == 'success'){
+        //$resule['id']
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+
+      $order_data = DB::table('db_orders')
+        ->select('db_orders.*','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
+        ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+        ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+        ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+        ->where('db_orders.id', '=',$resule['id'])
+        ->first();
+
+        $gateway_pay_data = array('mch_order_no'=> $order_data->code_order,
+        "total_fee" =>  $order_data->prompt_pay_price,
+        "fee_type" => 'THB',
+        "channel_list" => 'promptpay',
+        'mch_code' => $order_data->code_order,
+        'product_name' => $order_data->type,
+      );
+
+      $data = KsherController::gateway_ksher($gateway_pay_data);
+      //targetUrl
+          if($data['status'] == 'success'){
+            return redirect($data['url']);
+          }else{
+            return redirect('product-history')->withError('Payment Fail');
+          }
+
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			}
+
+    }elseif($request->submit == 'TrueMoney'){
+      $request['pay_type'] = 16;
+      $resule = Payment::payment_online_banking($request);
+
+      //$resule['id'] = '7';
+      if($resule['status'] == 'success'){
+        //$resule['id']
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+
+      $order_data = DB::table('db_orders')
+        ->select('db_orders.*','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
+        ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+        ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+        ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+        ->where('db_orders.id', '=',$resule['id'])
+        ->first();
+
+        $gateway_pay_data = array('mch_order_no'=> $order_data->code_order,
+        "total_fee" => $order_data->true_money_price,
+        "fee_type" => 'THB',
+        "channel_list" => 'truemoney',
+        'mch_code' => $order_data->code_order,
+        'product_name' => $order_data->type,
+      );
+
+      $data = KsherController::gateway_ksher($gateway_pay_data);
+      //targetUrl
+          if($data['status'] == 'success'){
+            return redirect($data['url']);
+          }else{
+            return redirect('product-history')->withError('Payment Fail');
+          }
+
+			}elseif($resule['status'] == 'fail') {
+				return redirect('cart_payment/'.$request->type)->withError($resule['message']);
+			}else{
+				return redirect('cart_payment/'.$request->type)->withError('Data is Null');
+			}
+
 		}elseif($request->submit == 'credit_card'){
 
 			if($request->type == '6'){

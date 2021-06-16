@@ -37,6 +37,13 @@ class PaymentSentAddressOrder extends Model
                 } elseif ($rs->pay_type == '3') { //3 Ai-Cash
                     $insert_db_orders->aicash_price = $rs->price_total_type5;
                     $insert_db_orders->pay_type_id_fk = 14;
+
+                  } elseif ($rs->pay_type == '15') { //15 PromptPay
+                    $insert_db_orders->prompt_pay_price  = $rs->price_total_type5;
+                    $insert_db_orders->pay_type_id_fk = 17;
+                  } elseif ($rs->pay_type == '16') { //16 TrueMoney
+                    $insert_db_orders->true_money_price = $rs->price_total_type5;
+                    $insert_db_orders->pay_type_id_fk = 18;
                 } else {
                     $insert_db_orders->pay_type_id_fk = 4;
                 }
@@ -54,6 +61,14 @@ class PaymentSentAddressOrder extends Model
                 if ($rs->pay_type == '3') { //3 Ai-Cash
                     $insert_db_orders->aicash_price = $rs->price_total;
                 }
+
+                if ($rs->pay_type == '15') { //15 PromptPay
+                  $insert_db_orders->prompt_pay_price = $rs->price_total;
+                }
+
+               if($rs->pay_type == '16') { //15 TrueMoney
+                $insert_db_orders->true_money_price = $rs->price_total;
+              }
 
             }
             // dd($rs->all());

@@ -276,7 +276,7 @@ class CancelOrderController extends Controller
                         $j = 2;
                         for ($i = 1; $i <= $j; $i++) {
 
-                            $data_user = DB::table('Customers')
+                            $data_user = DB::table('customers')
                                 ->where('id', '=', $customer_id)
                                 ->first();
 
@@ -288,7 +288,7 @@ class CancelOrderController extends Controller
                                 if ($last_upline_type == 'A') {
 
                                     $add_pv = $data_user->pv_a - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_a' => $add_pv]);
 
@@ -296,7 +296,7 @@ class CancelOrderController extends Controller
                                     $j = 0;
                                 } elseif ($last_upline_type == 'B') {
                                     $add_pv = $data_user->pv_b - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_b' => $add_pv]);
 
@@ -304,7 +304,7 @@ class CancelOrderController extends Controller
                                     $j = 0;
                                 } elseif ($last_upline_type == 'C') {
                                     $add_pv = $data_user->pv_c - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_c' => $add_pv]);
 
@@ -319,7 +319,7 @@ class CancelOrderController extends Controller
                                 if ($last_upline_type == 'A') {
 
                                     $add_pv = $data_user->pv_a - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_a' => $add_pv]);
 
@@ -328,7 +328,7 @@ class CancelOrderController extends Controller
                                     $j = $j + 1;
                                 } elseif ($last_upline_type == 'B') {
                                     $add_pv = $data_user->pv_b - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_b' => $add_pv]);
 
@@ -337,7 +337,7 @@ class CancelOrderController extends Controller
                                     $j = $j + 1;
                                 } elseif ($last_upline_type == 'C') {
                                     $add_pv = $data_user->pv_c - $pv_total;
-                                    $update_pv = DB::table('Customers')
+                                    $update_pv = DB::table('customers')
                                         ->where('id', $customer_id)
                                         ->update(['pv_c' => $add_pv]);
 
@@ -621,7 +621,7 @@ class CancelOrderController extends Controller
                             $j = 2;
                             for ($i = 1; $i <= $j; $i++) {
 
-                                $data_user = DB::table('Customers')
+                                $data_user = DB::table('customers')
                                     ->where('id', '=', $customer_id)
                                     ->first();
 
@@ -633,7 +633,7 @@ class CancelOrderController extends Controller
                                     if ($last_upline_type == 'A') {
 
                                         $add_pv = $data_user->pv_a + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_a' => $add_pv]);
 
@@ -641,7 +641,7 @@ class CancelOrderController extends Controller
                                         $j = 0;
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_b' => $add_pv]);
 
@@ -649,7 +649,7 @@ class CancelOrderController extends Controller
                                         $j = 0;
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_c' => $add_pv]);
 
@@ -664,7 +664,7 @@ class CancelOrderController extends Controller
                                     if ($last_upline_type == 'A') {
 
                                         $add_pv = $data_user->pv_a + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_a' => $add_pv]);
 
@@ -673,7 +673,7 @@ class CancelOrderController extends Controller
                                         $j = $j + 1;
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_b' => $add_pv]);
 
@@ -682,7 +682,7 @@ class CancelOrderController extends Controller
                                         $j = $j + 1;
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_c' => $add_pv]);
 

@@ -259,7 +259,7 @@ class Runpv extends Model
                             $j = 2;
                             for ($i = 1; $i <= $j; $i++) {
 
-                                $data_user = DB::table('Customers')
+                                $data_user = DB::table('customers')
                                     ->where('id', '=', $customer_id)
                                     ->first();
 
@@ -271,7 +271,7 @@ class Runpv extends Model
                                     if ($last_upline_type == 'A') {
 
                                         $add_pv = $data_user->pv_a + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_a' => $add_pv]);
 
@@ -280,7 +280,7 @@ class Runpv extends Model
 
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_b' => $add_pv]);
 
@@ -289,7 +289,7 @@ class Runpv extends Model
 
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_c' => $add_pv]);
 
@@ -306,7 +306,7 @@ class Runpv extends Model
                                     if ($last_upline_type == 'A') {
 
                                         $add_pv = $data_user->pv_a + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_a' => $add_pv]);
 
@@ -316,7 +316,7 @@ class Runpv extends Model
 
                                     } elseif ($last_upline_type == 'B') {
                                         $add_pv = $data_user->pv_b + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_b' => $add_pv]);
 
@@ -326,7 +326,7 @@ class Runpv extends Model
 
                                     } elseif ($last_upline_type == 'C') {
                                         $add_pv = $data_user->pv_c + $pv;
-                                        $update_pv = DB::table('Customers')
+                                        $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_c' => $add_pv]);
 

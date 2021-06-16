@@ -69,14 +69,10 @@
                                  </li>
                              @endif
 
-
-
                              {{-- <li class="nav-item">
  						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
  						<div class="slide"></div>
  					</li> --}}
-
-
                          </ul>
                          <div class="tab-content m-t-15">
 
@@ -670,7 +666,7 @@
                                              <div class="radio radio-inline">
                                               <label>
                                                   <input type="radio" id="mobile_banking" onchange="open_input(4)" name="pay_type"
-                                                      value="4" >
+                                                      value="" >
                                                   <i class="helper"></i><b>Mobile Banking</b>
                                               </label>
                                             </div>
@@ -761,8 +757,31 @@
                                       <div class="card">
                                           <div class="card-block text-center">
                                               {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
-                                              <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย">
-                                              <button class="btn btn-primary btn-md mt-2">ชำระด้วย PromptPay</button>
+                                              <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย PromptPay">
+                                              <a class="btn btn-primary btn-md mt-2" data-toggle="modal" style="color: aliceblue" data-target="#confirm_promptPay"> ชำระด้วย PromptPay </a>
+
+                                              <div class="modal fade" id="confirm_promptPay" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">ยืนยันการชำระเงินด้วย PromptPay</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            {{-- <h5>Static Modal</h5> --}}
+                                                            <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย PromptPay">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                            <button class="btn btn-success md-auto" name="submit" value="PromptPay" type="submit">Confirm</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
                                           </div>
                                       </div>
                                   </div>
@@ -770,7 +789,30 @@
                                     <div class="card">
                                         <div class="card-block text-center">
                                           <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="TrueMoney">
-                                          <button class="btn btn-primary btn-md mt-2"> ชำระด้วย TrueMoney </button>
+                                          <a class="btn btn-primary btn-md mt-2" class="btn btn-primary btn-md mt-2" data-toggle="modal" style="color: aliceblue" data-target="#confirm_truemoney"> ชำระด้วย TrueMoney </a>
+
+                                          <div class="modal fade" id="confirm_truemoney" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">ยืนยันการชำระเงินด้วย TrueMoney</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {{-- <h5>Static Modal</h5> --}}
+                                                        <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="ชำระด้วย TrueMoney">
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                        <button class="btn btn-success md-auto" name="submit" value="TrueMoney" type="submit">Confirm</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         </div>
                                     </div>
                                 </div>

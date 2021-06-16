@@ -152,6 +152,8 @@ Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_hist
 Route::get('datable/history','Frontend\HistoryController@datatable')->name('datable/history');
 
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
+Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name('re_new_payment');
+
 Route::get('cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 Route::get('gift-cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('gift-cart-payment-history');
 

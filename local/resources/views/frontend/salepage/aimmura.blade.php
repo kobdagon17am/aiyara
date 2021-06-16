@@ -57,23 +57,31 @@
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/18" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-07.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/14" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-08.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/17" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-09.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/19" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-10.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
+              </a>
         </div>
 
     </div>
@@ -91,28 +99,28 @@
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura.png') }}" class="img-fluid" alt="Responsive image">
                 <h2>1,550 บาท</h2>
 
-                <a class="btn btn-success btn-md" href="#" style="font-size: 23px"> สั่งซื้อ </a>
+                <a class="btn btn-success btn-md" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/18" target="_blank" style="font-size: 23px"> สั่งซื้อ </a>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/Aimmura X+Box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>3,000 บาท</h2>
 
-                <p><a class="btn btn-success" href="#" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/14" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura-E_box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>1,900 บาท</h2>
 
-                <p><a class="btn btn-success" href="#" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/17" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
 
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura-V_box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>2,000 บาท</h2>
-                <p><a class="btn btn-success" href="#" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/19" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
 
@@ -208,10 +216,10 @@
             @endif
 
         </div>
-        @if ($rs['data']->tel_mobile)
+        @if ($rs['data']->tel_number)
             <div class="row justify-content-center" style="margin-top: 10px">
-                <a href="tel:{{ $rs['data']->tel_mobile }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
-                    <b>{{ $rs['data']->tel_mobile }}</b></a>
+                <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
+                    <b>{{ $rs['data']->tel_number }}</b></a>
             </div>
         @endif
 
@@ -240,8 +248,8 @@
                     width="50" alt="...">
             </a>
         @endif
-        @if ($rs['data']->tel_mobile)
-            <a href="tel:{{ $rs['data']->tel_mobile }}" class="buttons" title="Phone" data-toggle="tooltip"
+        @if ($rs['data']->tel_number)
+            <a href="tel:{{ $rs['data']->tel_number }}" class="buttons" title="Phone" data-toggle="tooltip"
                 data-placement="left">
                 <svg class="ico_d" width="40" height="40" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg"
                     style="margin-top: -16px;transform: rotate(0deg);">

@@ -106,10 +106,10 @@ Cashewy Drink
             @endif
 
         </div>
-        @if ($rs['data']->tel_mobile)
+        @if ($rs['data']->tel_number)
             <div class="row justify-content-center" style="margin-top: 10px">
-                <a href="tel:{{ $rs['data']->tel_mobile }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
-                    <b>{{ $rs['data']->tel_mobile }}</b></a>
+                <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
+                    <b>{{ $rs['data']->tel_number }}</b></a>
             </div>
         @endif
 
@@ -138,8 +138,8 @@ Cashewy Drink
                     width="50" alt="...">
             </a>
         @endif
-        @if ($rs['data']->tel_mobile)
-            <a href="tel:{{ $rs['data']->tel_mobile }}" class="buttons" title="Phone" data-toggle="tooltip"
+        @if ($rs['data']->tel_number)
+            <a href="tel:{{ $rs['data']->tel_number }}" class="buttons" title="Phone" data-toggle="tooltip"
                 data-placement="left">
                 <svg class="ico_d" width="40" height="40" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg"
                     style="margin-top: -16px;transform: rotate(0deg);">

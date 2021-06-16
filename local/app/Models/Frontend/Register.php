@@ -17,7 +17,7 @@ class Register extends Model
             $introduce_type = '';
         }
 
-        $id =DB::table('Customers')
+        $id =DB::table('customers')
         ->select('id')
         ->orderby('id','DESC')
         ->limit('1')

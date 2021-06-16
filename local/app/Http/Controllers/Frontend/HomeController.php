@@ -53,7 +53,7 @@ class HomeController extends Controller
   public function modal_add(Request $request){
     $id = $request->id;
     $type = $request->type;
-    $data = DB::table('Customers')
+    $data = DB::table('customers')
     ->select('*')
     ->where('id','=',$id)
     ->limit(1)

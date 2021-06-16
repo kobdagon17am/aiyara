@@ -128,7 +128,7 @@ class PaymentAddProduct extends Model
       }
     }
 
-			$resule = ['status'=>'success','message'=>'Product insert Success'];
+			$resule = ['status'=>'success','message'=>'Product insert Success','id' =>$order_id];
       DB::commit();
 			return $resule;
 
