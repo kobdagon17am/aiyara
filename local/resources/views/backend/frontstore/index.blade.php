@@ -15,7 +15,7 @@
 .divTable{
   display: table;
   width: 100%;
-
+  
 }
 .divTableRow {
   display: table-row;
@@ -44,7 +44,7 @@
 }
 .divTH {text-align: right;}
 
-
+  
   .tooltip_cost {
     position: relative ;
     cursor: pointer;
@@ -66,7 +66,7 @@
     /*z-index: 9999;*/
 }
 
-
+  
 </style>
 @endsection
 
@@ -83,7 +83,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php
+  <?php 
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -95,7 +95,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;
+        // echo $menu_id;     
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -103,7 +103,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;
+      // echo $menu_id;     
    ?>
 
 
@@ -117,7 +117,7 @@
               <div class="divTH">
                 <label for="startDate" >วันสร้างเริ่มต้น : </label>
               </div>
-                <?php
+                <?php 
                          $sd = date('d/m/Y');
                          // echo $sd;
                       ?>
@@ -145,7 +145,7 @@
                     @if(@$sPurchase_type)
                       @foreach(@$sPurchase_type AS $r)
                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                          {{$r->orders_type}}
+                          {{$r->orders_type}} 
                         </option>
                       @endforeach
                     @endif
@@ -205,7 +205,7 @@
                   @if(@$sUser)
                     @foreach(@$sUser AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->name}}
+                        {{$r->name}} 
                       </option>
                     @endforeach
                   @endif
@@ -223,7 +223,7 @@
                   @if(@$sApproveStatus)
                     @foreach(@$sApproveStatus AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->txt_desc}}
+                        {{$r->txt_desc}} 
                       </option>
                     @endforeach
                   @endif
@@ -232,29 +232,29 @@
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
-
+            
             </div>
             <div class="divTableRow">
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
-
+                
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-warning" style="color:black;float: right;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
@@ -271,7 +271,7 @@
   </div>
 </div>
 
-
+   
 
 <div class="row">
   <div class="col-12">
@@ -304,10 +304,10 @@
           <div class="col-lg-5">
             <div class="card">
               <div class="card-body">
-
+                
                 <div class="table-responsive">
                   <table class="table table-striped mb-0">
-
+                    
                     <thead>
                       <tr style="background-color: #f2f2f2;text-align: right;">
                         <th></th>
@@ -351,7 +351,7 @@
                     </tbody>
                   </table>
                 </div>
-
+                
               </div>
             </div>
           </div>
@@ -360,16 +360,16 @@
           <div class="col-lg-7">
             <div class="card">
               <div class="card-body">
-
+                
                 <div class="table-responsive">
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                      <?php
+                      <?php 
                          $sd = date('d/m/Y');
                          // echo $sd;
                       ?>
-                        รวมรายการชำระค่าสินค้า {{$sd}} - {{$sd}}
+                        รวมรายการชำระค่าสินค้า {{$sd}} - {{$sd}} 
                       </th></tr>
                       <tr>
                         <th>พนักงานขาย</th>
@@ -384,7 +384,7 @@
                     </thead>
 
                         <tbody>
-
+                          
                           @IF(@$sDBFrontstoreSumCostActionUser)
                               @foreach(@$sDBFrontstoreSumCostActionUser AS $r)
                               @php
@@ -421,10 +421,10 @@
                             <th class="text-right"> {{number_format(@$sum_total_price,2)}} </th>
                           </tr>
                           @ENDIF
-
+                          
                         </tbody>
                   </table>
-
+                  
                 </div>
                 <br>
 
@@ -432,7 +432,7 @@
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        รายการ เติม Ai-Cash {{$sd}} - {{$sd}}
+                        รายการ เติม Ai-Cash {{$sd}} - {{$sd}} 
                       </th></tr>
                       <tr>
                         <th>พนักงานขาย</th>
@@ -442,7 +442,7 @@
                     </thead>
 
                         <tbody>
-
+                          
                           @IF(@$sDBFrontstoreUserAddAiCash)
                               @foreach(@$sDBFrontstoreUserAddAiCash AS $r)
                               @php
@@ -465,10 +465,88 @@
                             <th class="text-right"> {{number_format(@$sum_sum,2)}} </th>
                           </tr>
                           @ENDIF
-
+                          
                         </tbody>
                   </table>
+                  
+                </div>
 
+
+<br>
+
+                 <div id="tb_sent_money" class="table-responsive">
+                  <table class="table table-sm m-0">
+                    <thead>
+                      <tr style="background-color: #f2f2f2;"><th colspan="8">
+                        รายการส่งเงินรายวัน
+                      </th></tr>
+                      <tr>
+                        <th>ครั้งที่</th>
+                        <th class="text-left">รายการใบเสร็จที่ส่ง</th>
+                        <th class="text-center">ผู้ส่ง</th>
+                        <th class="text-center">วัน เวลา ที่ส่ง</th>
+                        <th class="text-center">Tool</th>
+                      </tr>
+                    </thead>
+					<tbody>
+
+						  @IF(@$sDBSentMoneyDaily)
+						  <?php $tt = 1; ?>
+                              @foreach(@$sDBSentMoneyDaily AS $r)
+
+                              <?php 
+
+                                      $sOrders = DB::select("
+							              SELECT invoice_code 
+							              FROM
+							              db_orders where sent_money_daily_id_fk in (".$r->id.");
+							          ");
+
+                              ?>
+
+						<tr>
+							<td class="text-center">  {{$tt}} </td>
+							<?php if(@$r->status_cancel==0){ ?>
+								<td class="text-left">
+								<?php 
+								foreach ($sOrders as $key => $value) {
+						          echo $value->invoice_code."<br>";
+						        }
+
+								?>
+							</td>
+								<?php }else{ ?>
+								<td class="text-left" style="color:red;">
+								 * รายการนี้ได้ทำการยกเลิกการส่งเงิน
+							   </td>
+								<?php } ?>
+							
+							<td class="text-center">{{@$r->sender}} </td>
+							<td class="text-center">{{@$r->updated_at}}</td>
+							<td class="text-center">
+								<!-- <a href="javascript: void(0);" class="btn btn-sm btn-primary" style="" ><i class="bx bx-edit font-size-16 align-middle"></i></a> -->
+								<?php if(@$r->status_cancel==0){ ?>
+								<a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="{{@$r->id}} " > ยกเลิก </a>
+								<?php } ?>
+							</td>
+						</tr>
+ 							<?php $tt++ ; ?>
+ 							@endforeach
+                          @ENDIF
+
+						<tr>
+							<td class="text-center">  </td>
+							<td class="text-left">  </td>
+							<td class="text-center">  </td>
+							<td class="text-center">  </td>
+							<td class="text-center">
+								<a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18 btnSentMoney " style="" > กดส่งเงิน </a>
+							</td>
+						</tr>
+
+					</tbody>
+                  </table>
+                  
                 </div>
 
 
@@ -476,7 +554,7 @@
             </div>
           </div>
 
- <?php
+ <?php 
 
       for ($i=1;$i<=5;$i++){
         $x = $i."test";
@@ -515,8 +593,8 @@ $(function() {
 
       $(document).on('mouseout', '.tooltip_cost', function(event) {
             $('.ttt').hide();
-
-      });
+          
+      });      
 
 });
 
@@ -553,15 +631,12 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
             {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
-            // {data: 'purchase_type',   title :'<center>ประเภทการสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
-            //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-            // }},
 /*
 ทำคุณสมบัติ  <i class="fa fa-shopping-basket"></i>
 รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
 รักษาคุณสมบัติท่องเที่ยว <i class="fa fa-bus"></i>
 เติม Ai-Stockist <i class="ti-wallet "></i>
-Ai Voucher  <i class="fa fa-gift"></i>
+Gift Voucher  <i class="fa fa-gift"></i>
 */
             {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
               if(d==1){
@@ -569,20 +644,21 @@ Ai Voucher  <i class="fa fa-gift"></i>
               }else if(d==2){
                 return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
               }else if(d==3){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
               }else if(d==4){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
               }else if(d==5){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';
-              }else{
+                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
+              }else{ 
                 return '';
               }
             }},
             {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
-            {data: 'total_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
-                return d;
-                // return '<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+d+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;"> เงินสด : 9,999.00 , เงินโอน : 9,999.00 + ค่าธรรมเนียม : 100</span>' ;
-            }},
+            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+            // {data: 'total_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
+            //     return d;
+            //     // return '<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+d+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;"> เงินสด : 9,999.00 , เงินโอน : 9,999.00 + ค่าธรรมเนียม : 100</span>' ;
+            // }},
             {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
@@ -610,12 +686,21 @@ Ai Voucher  <i class="fa fa-gift"></i>
                   return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
               }
             }},
+            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
+              if(d==1){
+                  return '<span class=" badge badge-pill badge-success font-size-16" style="">ส่งเงินแล้ว</span>';
+              }else{
+                  // return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred"> รอส่งเงิน </span>';
+                  return '';
+              }
+            }},
+
             {data: 'id',   title :'ใบเสร็จ', className: 'text-center w80 ',render: function(d) {
                 return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
                 + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
-
-            {data: 'id', title :'Tools', className: 'text-center w70'},
+     
+            {data: 'id', title :'Tools', className: 'text-center w70'}, 
         ],
            // "order": [ [ 1, 'desc' ] ],
            "columnDefs": [ {
@@ -624,6 +709,7 @@ Ai Voucher  <i class="fa fa-gift"></i>
               "orderable": false
           } ],
         rowCallback: function(nRow, aData, dataIndex){
+
 
             if(aData['total_price']){
 
@@ -647,11 +733,11 @@ Ai Voucher  <i class="fa fa-gift"></i>
             var info = $(this).DataTable().page.info();
             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-        if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
+           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
 
 	          if(sU!=''&&sD!=''){
 	              $('td:last-child', nRow).html('-');
-	          }else{
+	          }else{ 
 
               if(aData['type']!='0'){ // เติม Ai-Cash
 
@@ -660,16 +746,29 @@ Ai Voucher  <i class="fa fa-gift"></i>
                 $('td:last-child', nRow).html(''
                   + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                   + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
+                  
                 ).addClass('input');
 
             }
 
              // $('td:last-child', nRow).html(aData['approve_status']);
 
+           
+          }
+          }
 
-          }
-          }
+
+            // console.log(aData['status_delivery']);
+
+            if(aData['status_delivery']=='1'){
+
+              $('td:last-child', nRow).html(''
+                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                ).addClass('input');
+              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
+
+            }
+
 
 
 
@@ -723,25 +822,174 @@ Ai Voucher  <i class="fa fa-gift"></i>
 
 </script>
 
+
+<script>
+$(document).ready(function() {
+	
+       $(document).on('click', '.btnSentMoney', function(e) {
+
+                 Swal.fire({
+                      title: 'ยืนยัน ! การส่งเงิน ',
+                      type: 'question',
+                      showCancelButton: true,
+                      confirmButtonColor: '#556ee6',
+                      cancelButtonColor: "#f46a6a"
+                      }).then(function (result) {
+                          if (result.value) {
+
+                             $.ajax({
+                                url: " {{ url('backend/ajaxSentMoneyDaily') }} ", 
+                                method: "post",
+                                data: {
+                                  "_token": "{{ csrf_token() }}", 
+                                },
+                                success:function(data)
+                                { 
+                                  console.log(data);
+                                  // return false;
+                                      Swal.fire({
+                                        type: 'success',
+                                        title: 'ทำการส่งเงินเรียบร้อยแล้ว',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                      });
+
+                                      setTimeout(function () {
+											$("#tb_sent_money").load(location.href + " #tb_sent_money");
+											$('#data-table').DataTable().clear().draw();
+                                      }, 1000);
+                                }
+                              })
+                          }else{
+                          	 $(".myloading").hide();
+                          }
+                    });
+                
+
+			     }); // ปิด $(document).on('click', '.btnSave'
+
+			});
+
+    </script>
+   
+
+
+<script>
+$(document).ready(function() {
+	
+       $(document).on('click', '.btnCancelSentMoney', function(e) {
+
+       	var id = $(this).data('id');
+
+                 Swal.fire({
+                      title: 'ยืนยัน ! ยกเลิกการส่งเงิน ',
+                      type: 'question',
+                      showCancelButton: true,
+                      confirmButtonColor: '#556ee6',
+                      cancelButtonColor: "#f46a6a"
+                      }).then(function (result) {
+                          if (result.value) {
+
+                             $.ajax({
+                                url: " {{ url('backend/ajaxCancelSentMoney') }} ", 
+                                method: "post",
+                                data: {
+                                  "_token": "{{ csrf_token() }}", id:id
+                                },
+                                success:function(data)
+                                { 
+                                  console.log(data);
+                                  // return false;
+                                      Swal.fire({
+                                        type: 'success',
+                                        title: 'ทำการยกเลิกการส่งเงินเรียบร้อยแล้ว',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                      });
+
+                                      setTimeout(function () {
+											$("#tb_sent_money").load(location.href + " #tb_sent_money");
+											$('#data-table').DataTable().clear().draw();
+                                      }, 1000);
+                                }
+                              })
+                          }else{
+                          	 $(".myloading").hide();
+                          }
+                    });
+                
+
+			     }); // ปิด $(document).on('click', '.btnSave'
+
+			});
+
+    </script>
+   
       <script>
-// Clear data in View page
+// Clear data in View page  
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-
+              
               location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-
+       
             });
-
+                
       });
 
     </script>
-
-    <?php
+   
+    <?php 
     if(isset($_REQUEST['test_clear_data'])){
+
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+      
+      DB::select("TRUNCATE customers_addr_sent;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
+
       DB::select("TRUNCATE `db_orders`;");
       DB::select("TRUNCATE `db_orders_tmp`;");
       DB::select("TRUNCATE `db_order_products_list`;");
       DB::select("TRUNCATE `db_order_products_list_tmp`;");
+      
+      DB::select("TRUNCATE `db_delivery` ;");
+      DB::select("TRUNCATE `db_delivery_packing` ;");
+      DB::select("TRUNCATE `db_delivery_packing_code` ;");
+      DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+
       ?>
           <script>
           location.replace( "{{ url('backend/frontstore') }}");

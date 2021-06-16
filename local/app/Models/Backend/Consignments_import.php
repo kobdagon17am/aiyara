@@ -11,7 +11,6 @@ class Consignments_import extends Model {
 
       $value=DB::table('db_consignments_import')
       ->where('recipient_code', $data['recipient_code'])
-      // ->where('recipient_name', $data['recipient_name'])
       ->get();
       if($value->count() == 0){
          DB::table('db_consignments_import')->insert($data);
@@ -19,7 +18,9 @@ class Consignments_import extends Model {
 		        DB::table('db_consignments_import')
             ->where('recipient_code', $data['recipient_code'])
             ->update(array(
-            	'consignment_no' => $data['consignment_no'],
+            	'recipient_name' => $data['recipient_name'],
+              'address' => $data['address'],
+              'consignment_no' => $data['consignment_no'],
             	'customer_ref_no' => $data['customer_ref_no'],
             	'sender_code' => $data['sender_code'],
             ));
@@ -28,6 +29,22 @@ class Consignments_import extends Model {
    }
 
 
+   public static function insertDataAddr($data){
+
+      $value=DB::table('db_consignments')
+      ->where('recipient_code', $data['recipient_code'])
+      ->get();
+      if($value->count() == 0){
+         DB::table('db_consignments')->insertOrIgnore($data);
+      }else{
+            // DB::table('db_consignments')
+            // ->where('recipient_code', $data['recipient_code'])
+            // ->update(array(
+            //   'sender_code' => $data['sender_code'],
+            // ));
+      }
+
+   }
 
 }
 

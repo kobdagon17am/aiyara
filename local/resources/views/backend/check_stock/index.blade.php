@@ -339,130 +339,7 @@
 
 <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js" type="text/javascript" charset="utf-8" async defer></script>
 
-<script type="text/javascript">
-
-var start_date = "{{@$first_day_this_month}}"; //alert(start_date);
-var end_date = "{{@$last_day_this_month}}"; //alert(end_date);
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-var sU = "{{@$sU}}"; //alert(sU);
-var sD = "{{@$sD}}"; //alert(sD);
-var groupColumn = 2;
-var oTable;
-$(function() {
-    oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        // scrollY: ''+($(window).height()-370)+'px',
-        // iDisplayLength: 25,
-        ajax: {
-          url: '{{ route('backend.check_stock.datatable') }}',
-           data: function ( d ) {
-            d.myWhereStock={};
-            d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
-            oData = d;
-          },
-           method: 'POST',
-         },
-
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},
-            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-            {data: 'amt',defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
-                     return d;
-            }},
-            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-            // {data: 'lot_number', title :'STOCK CARD', className: 'text-center w200'},
-        ],
-        // order: [[1, 'asc']],
-        // columnDefs: [
-        //               { "visible": false, "targets": 6 }
-        //           ],
-        rowGroup: {
-            startRender: null,
-            endRender: function ( rows, group  ) {
-                var sTotal = rows
-                   .data()
-                   .pluck('amt')
-                   .reduce( function (a, b) {
-                       return a + b*1;
-                       // return a + b;
-                   }, 0);
-                    sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ').display( sTotal );
-
-                var product_id_fk = rows.data().pluck('product_id_fk').toArray();
-                var product_id_fk = product_id_fk[0] ;
-
-                var lot_number = rows.data().pluck('lot_number').toArray();
-                var lot_number = lot_number[0];
-
-
-                // if ( group.search("LOT") ) {  
-                if ( group==lot_number ) {  
-                   
-
-                    return $('<tr>')
-                    .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
-                    .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                    .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a> </td>' );
-                    
-                }else{
-                     return $('<tr>')
-                    .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
-                    .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                    .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
-                }
-                
-            },
-            // dataSrc: "product_name"
-            dataSrc: [  "product_name", "lot_number" ]
-        },
-   
-           rowCallback: function(nRow, aData, dataIndex){
-
-           //      if(sU!=''&&sD!=''){
-           //          $('td:last-child', nRow).html('-');
-           //      }else{
-           //            $('td:last-child', nRow).html(''
-           //              + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a>  '
-
-           //            ).addClass('input');
-           //      } 
-
-
-           },
-
-            // drawCallback: function ( settings ) {
-            //         var api = this.api();
-            //         var rows = api.rows( {page:'current'} ).nodes();
-            //         var last=null;
-            //         api.column(groupColumn, {page:'current'} ).data().each( function ( group, i  ) {
-            //             if ( last !== group ) {
-            //                 $(rows).eq( i ).before(
-            //                   '<tr><td colspan=6 ></td><td rowspan=2 width=100 >STOCK CARD</td></tr>'
-            //                 );
-            //                 last = group;
-            //             }
-            //         } );
-            //     },
-
-    });
-
-});
-
-
-</script>
-
-
   <script>
-
 
         $(document).ready(function() {
 
@@ -518,8 +395,8 @@ $(function() {
                                       scrollX: true,
                                       ordering: false,
                                       destroy:true,
-                                      // scrollY: ''+($(window).height()-370)+'px',
-                                      // iDisplayLength: 25,
+                                      stateSave:true,
+                                      iDisplayLength: 5,
                                       ajax: {
                                       url: '{{ route('backend.check_stock.datatable') }}',
                                       data: function ( d ) {
@@ -575,7 +452,7 @@ $(function() {
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a> </td>' );
+                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"  > STOCK CARD </a> </td>' );
                                                   
                                               }else{
                                                    return $('<tr>')
@@ -834,4 +711,14 @@ $(function() {
          });
 
   </script>   
+
+
+<script>
+  /** It is done after the page load is complete . **/
+  $(document).ready(function(){
+    $('.btnSearch').trigger('click');
+  });
+</script>
+
+
 @endsection

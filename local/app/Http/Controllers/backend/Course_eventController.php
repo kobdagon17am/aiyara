@@ -44,7 +44,6 @@ class Course_eventController extends Controller
         $sAistockist = \App\Models\Backend\Aistockist::get();
         $sAgency = \App\Models\Backend\Agency::get();
         $dsCe_type = \App\Models\Backend\Ce_type::get();
-        $dsCe_features_booker = \App\Models\Backend\Ce_features_booker::get();
         $dsCe_can_reserve = \App\Models\Backend\Ce_can_reserve::get();
         $dsCe_limit = \App\Models\Backend\Ce_limit::get();
        return View('backend.course_event.form')->with(array(
@@ -55,7 +54,6 @@ class Course_eventController extends Controller
         'sQualification'=>$sQualification,
         'sPackage'=>$sPackage,
         'dsCe_type'=>$dsCe_type,
-        'dsCe_features_booker'=>$dsCe_features_booker,
         'dsCe_can_reserve'=>$dsCe_can_reserve,
         'dsCe_limit'=>$dsCe_limit
       ) );
@@ -77,7 +75,6 @@ class Course_eventController extends Controller
         $sAgency = \App\Models\Backend\Agency::get();
         $sRow = \App\Models\Backend\Course_event::find($id);
         $dsCe_type = \App\Models\Backend\Ce_type::get();
-        $dsCe_features_booker = \App\Models\Backend\Ce_features_booker::get();
         $dsCe_can_reserve = \App\Models\Backend\Ce_can_reserve::get();
         $dsCe_limit = \App\Models\Backend\Ce_limit::get();
        return View('backend.course_event.form')->with(array(
@@ -89,7 +86,6 @@ class Course_eventController extends Controller
         'sPackage'=>$sPackage,
         'sRow'=>$sRow, 'id'=>$id,
         'dsCe_type'=>$dsCe_type,
-        'dsCe_features_booker'=>$dsCe_features_booker,
         'dsCe_can_reserve'=>$dsCe_can_reserve,
         'dsCe_limit'=>$dsCe_limit
       ) );
@@ -119,7 +115,6 @@ class Course_eventController extends Controller
           $sRow->ce_ticket_price    = request('ce_ticket_price');
           $sRow->ce_sdate    = request('ce_sdate');
           $sRow->ce_edate    = request('ce_edate');
-          // $sRow->ce_features_booker    = request('ce_features_booker');
           $sRow->ce_can_reserve    = request('ce_can_reserve');
           $sRow->ce_limit    = request('ce_limit');
           $sRow->title    = request('title');

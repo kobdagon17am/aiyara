@@ -185,9 +185,10 @@ $delivery_packing = DB::select("
       SELECT * FROM `db_delivery_packing`
       WHERE
       packing_code =
-      ".$delivery_packing_code[0]->id."
+     
+      ".$data[0]."
  ");
-
+//  ".$delivery_packing_code[0]->id."
 // print_r($delivery_packing);
 // print_r($arr_delivery_id_fk);
 
@@ -207,15 +208,14 @@ $value = DB::select("
           customers_detail.road,
           customers_detail.province_id_fk,
           customers.id as cus_id,
-          orders.id as order_id,
-          orders.shipping
+          db_orders.id as order_id
           FROM
           db_delivery
           Left Join customers_detail ON db_delivery.customer_id = customers_detail.customer_id
           Left Join customers ON customers_detail.customer_id = customers.id
-          Left Join orders ON db_delivery.receipt = orders.code_order
+          Left Join db_orders ON db_delivery.receipt = db_orders.invoice_code
           WHERE
-          db_delivery.id in (".$delivery_packing[0]->delivery_id_fk.")
+          db_delivery.id in (1)
      ");
 
         // if($i>1){echo'<div class="page-break"></div>';}
@@ -270,9 +270,9 @@ E-MAIL : info@aiyara.co.th
                 $addr .= $value[0]->moo?", หมู่ ".$value[0]->moo:'';
                 $addr .= $value[0]->soi?", ซอย".$value[0]->soi:'';
                 $addr .= $value[0]->road?", ถนน".$value[0]->road:'';
-                $addr .= $value[0]->amphures?", ต.".$value[0]->amphures:'';
-                $addr .= $value[0]->district?", อ.".$value[0]->district:'';
-                $addr .= $value[0]->province?", จ.".$value[0]->province:'';
+                // $addr .= $value[0]->amphures?", ต.".$value[0]->amphures:'';
+                // $addr .= $value[0]->district?", อ.".$value[0]->district:'';
+                // $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
                 if($addr!=''){
                     $addr = $addr;
@@ -322,23 +322,21 @@ Amount </td>
 
      $P = DB::select("
       SELECT
-      order_items.id,
-      order_items.order_id,
-      order_items.product_id,
-      order_items.product_name,
-      order_items.quantity,
-      order_items.list_price,
-      order_items.pv,
-      order_items.discount,
-      order_items.create_at,
-      order_items.updated_at,
-      orders.shipping,
+      db_order_products_list.id,
+      db_order_products_list.frontstore_id_fk,
+      db_order_products_list.product_id_fk,
+      db_order_products_list.product_name,
+      db_order_products_list.amt,
+      db_order_products_list.total_price,
+      db_order_products_list.pv,
+      db_order_products_list.created_at,
+      db_order_products_list.updated_at,
       db_delivery_packing.id as packing_id,
-      orders.code_order as receipt
+      db_orders.code_order as receipt
       FROM
-      order_items
-      Left Join orders ON order_items.order_id = orders.id
-      Left Join db_delivery ON orders.code_order = db_delivery.receipt
+      db_order_products_list
+      Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+      Left Join db_delivery ON db_orders.invoice_code = db_delivery.receipt
       Left Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
       WHERE
       db_delivery_packing.packing_code = ".$data[0]."

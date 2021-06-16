@@ -127,7 +127,7 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
 
           <div class="col-6">
-            <h4 class="font-size-18 test_clear_data "> จ่ายสินค้าตามใบเสร็จ  </h4>
+            <h4 class="font-size-18 "> จ่ายสินค้าตามใบเสร็จ  </h4>
           </div>
           
           <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">
@@ -332,7 +332,7 @@
                           },
                     columns: [
                         {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w150 '},
-                        {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
+                        {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left '},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -350,10 +350,8 @@
 <script type="text/javascript">
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-// ตารางนี้เกิดจากการดึงข้อมูล FIFO 
             
             var txtSearch = "{{@$sRow->invoice_code}}"; //console.log(txtSearch);
-
             $.fn.dataTable.ext.errMode = 'throw';
             var oTable0002;
             $(function() {
@@ -688,7 +686,7 @@
                       },
                       success:function(data)
                       { 
-                          console.log(data);
+                          // console.log(data);
                           if(data==0){
                             Swal.fire({
                               position: 'top-end',
@@ -930,7 +928,7 @@
 
             var time_pay = $(this).data("time_pay");
             var invoice_code = "{{@$sRow->invoice_code}}";
-            // alert(invoice_code);
+            // alert(time_pay+":"+invoice_code);
             // return false;
 
                     Swal.fire({
@@ -979,43 +977,6 @@
     });
    </script>
 
-    <script>
-
-      $(document).ready(function() {
-
-            $(".images_users").on('click',function(){
-              
-              location.reload();
-       
-            });
-
-            $(".test_clear_data").on('click',function(){
-              
-              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
-            });
-                
-      });
-
-    </script>
-   
-    <?php 
-    if(isset($_REQUEST['test_clear_data'])){
-      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
-      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
-      DB::select("TRUNCATE `db_stocks_return`;");
-      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
-      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
-      ?>
-          <script>
-          location.replace( "{{ url('backend/pay_product_receipt') }}");
-          </script>
-          <?php
-    }
-?>
 @endsection
 
 

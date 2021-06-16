@@ -68,7 +68,8 @@ class DeliveryPackingCodeController extends Controller
             }
       })  
       ->addColumn('packing_code_desc', function($row) {
-        return "P1".sprintf("%05d",$row->id);
+        $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->first();
+        return $DP->packing_code;
       })      
       ->addColumn('receipt', function($row) {
         if($row->id!==""){

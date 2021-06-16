@@ -10,14 +10,19 @@
 <div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
-    <div class="col-12">
+    <div class="col-10">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> ตรวจสอบรับเงินรายวัน </h4>
+            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_money_daily") }}">
+        <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+      </a>
+      
         </div>
 
     </div>
 </div>
 <!-- end page title -->
+
 
   <?php 
     $sPermission = \Auth::user()->permission ;
@@ -53,33 +58,40 @@
         <div class="card">
             <div class="card-body">
 
-
             <div class="myBorder">
-              <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
                   </table>
+                  @IF($sSent_money_daily[0]->status_cancel==0)
+                  <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price" id="sum_total_price" style="text-align: center;" readonly=""></center>
+                  @ENDIF
             </div>
 
+        @IF($sSent_money_daily[0]->status_cancel==0 && $sSent_money_daily[0]->status_approve==0)
 
           <div class="myBorder">
 
 
               @if( empty(@$sRowCheck_money_daily[0]->id) )
               <form action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input name="fronstore_id_fk" type="hidden" value="{{@$sRow->id}}">
+                <input name="id" type="hidden" value="{{@$sRow->id}}">
+                <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
               @else
               <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
-                <input name="fronstore_id_fk" type="hidden" value="{{@$sRow->id}}">
+                <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
+                <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
               @endif
                 {{ csrf_field() }}
+
+             
 
                <span style="font-weight: bold;"><i class="bx bx-play"></i>รายการส่งเงิน</span>
 
                   <div class="form-group row">
                     <label for="total_money" class="col-md-3 col-form-label">ยอดเงิน :</label>
                     <div class="col-md-6">
-                      <input class="form-control NumberOnly " id="total_money" name="total_money" type="text" value="{{@$sRowCheck_money_daily[0]->total_money}}" required >
+                      <input class="form-control NumberOnly " id="total_money" name="total_money" type="text" value="{{@$sRowCheck_money_daily[0]->total_money}}" required autofocus >
                     </div>
                   </div>
 
@@ -106,13 +118,16 @@
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
+                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_money_daily") }}">
+                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                    </a>
                   </div>
                   <div class="col-md-6 text-right">
                     <?php if($can_sentmoney=='1'){ ?>
                         <input name="sent_money" type="hidden" value="1"  >
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSentmoney ">
+                     <!--    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSentmoney ">
                         <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > ส่งเงิน
-                        </button>
+                        </button> -->
                     <?php } ?>
                     <?php if($can_getmoney=='1'){ ?>
                         <input name="get_money" type="hidden"  value="1" >
@@ -124,18 +139,20 @@
                   </div>
                 </div>
 
-  </form>
+             </form>
 
+          </div>
 
-            </div>
+     @ENDIF
 
- @if( !empty(@$sRowCheck_money_daily[0]->id) )
+     @if( !empty(@$sRowCheck_money_daily[0]->id) )
 
-              <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
-                <input name="fronstore_id_fk" type="hidden" value="{{@$sRow->id}}">
+                <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
                 <input name="approved" type="hidden" value="1">
+                <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
   
                 {{ csrf_field() }}
 
@@ -144,7 +161,7 @@
 
       @if( @$sRow->approve_status!='2' )
 
-            <div class="myBorder">
+            <div class="myBorder" style="display: none;">
 
                  <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
@@ -257,10 +274,10 @@
 
 
               @if( empty(@$sRowCheck_money_daily_AiCash[0]->id) )
-              <form action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="add_ai_cash_id_fk" type="hidden" value="{{@$sRowAdd_ai_cash->id}}">
               @else
-              <form action="{{ route('backend.check_money_daily.update', @$sRowAdd_ai_cash->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.check_money_daily.update', @$sRowAdd_ai_cash->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="add_ai_cash_id_fk" type="hidden" value="{{@$sRowAdd_ai_cash->id}}">
                 <input name="sRowCheck_money_daily_AiCash" type="hidden" value="{{@$sRowCheck_money_daily_AiCash[0]->id}}">
@@ -299,13 +316,16 @@
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
+                    <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_money_daily") }}">
+                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                    </a>
                   </div>
                   <div class="col-md-6 text-right">
                     <?php if($can_sentmoney=='1'){ ?>
                         <input name="sent_money" type="hidden" value="1"  >
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSentmoney ">
+                     <!--    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSentmoney ">
                         <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > ส่งเงิน
-                        </button>
+                        </button> -->
                     <?php } ?>
                     <?php if($can_getmoney=='1'){ ?>
                         <input name="get_money" type="hidden"  value="1" >
@@ -324,7 +344,7 @@
 
  @if( !empty(@$sRowCheck_money_daily_AiCash[0]->id) )
 
-              <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily_AiCash[0]->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm" action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily_AiCash[0]->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="add_ai_cash_id_fk" type="hidden" value="{{@$sRowAdd_ai_cash->id}}">
                 <input name="sRowCheck_money_daily_AiCash_id" type="hidden" value="{{@$sRowCheck_money_daily_AiCash[0]->id}}">
@@ -443,6 +463,56 @@
 <script type="text/javascript">
 
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+        
+        $.fn.dataTable.ext.errMode = 'throw';
+        var oTable0001;
+
+        var idsss = "{{$sRow->id}}"; //alert(id);
+
+        $(function() {
+            oTable0001 = $('#data-table-0001').DataTable({
+             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                ordering: false,
+                "info":   false,
+                "paging": false,
+                destroy:true,
+
+                 ajax: {
+                            url: '{{ route('backend.check_money_daily.datatable') }}',
+                            method: "POST",
+                            data:{ _token: '{{csrf_token()}}',
+                            id:idsss,
+                          },
+                        },
+
+                columns: [
+                    {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+                    {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+             
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
+
+                  $("#sum_total_price").val(aData['sum_total_price']);
+
+                    let str = $("#sum_total_price").val();
+                    let newStr = str.replace(',','');
+                    let v2 = parseFloat(newStr); 
+                    $(".sum_total_price2").val(v2);
+  
+                }
+            });
+       
+        });
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
+/*
     var id = "{{@$sRow->id}}"; //alert(id);
 
     var sU = "{{@$sU}}"; //alert(sU);
@@ -498,7 +568,7 @@
         
       });
 
-
+*/
 
     var id = "{{@$sRowAdd_ai_cash->id}}";//alert(id);
 
@@ -560,9 +630,51 @@
               $("input[name=sent_money]").val(1);
               $("input[name=get_money]").val(0);
            });
+
            $(".btnGetmoney").click(function(event) {
+              
               $("input[name=sent_money]").val(0);
               $("input[name=get_money]").val(1);
+
+              var total_money = $("#total_money").val(); //alert(total_money);
+              var sent_money_type = $("#sent_money_type").val(); //alert(total_money);
+
+              if(total_money=='' || sent_money_type==''){
+
+                $("#frm").validate();
+
+              }else{
+                    event.preventDefault();
+                    let v1 = parseFloat($("#total_money").val()); 
+                    let str = $("#sum_total_price").val();
+                    let newStr = str.replace(',','');
+                    let v2 = parseFloat(newStr); 
+                    // alert(v1+":"+v2);
+                    if(v1!=v2){
+                        alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง");
+                        $(this).val("");
+                        return false;
+                    }else{
+
+                         Swal.fire({
+                          title: 'ยืนยัน ! การรับเงิน ',
+                          type: 'question',
+                          showCancelButton: true,
+                          confirmButtonColor: '#556ee6',
+                          cancelButtonColor: "#f46a6a"
+                          }).then(function (result) {
+                            console.log(result);
+                              if (result.value) {
+                               $("#frm").submit();
+                              }else{
+                                 $(".myloading").hide();
+                              }
+                        });
+
+                    }
+              }
+
+
            });
 
 
@@ -577,6 +689,20 @@
 
           });
 
+          $('#total_money').change(function(event) {
+
+            let v1 = parseFloat($(this).val()); 
+            let str = $("#sum_total_price").val();
+            let newStr = str.replace(',','');
+            let v2 = parseFloat(newStr); 
+            // alert(v1+":"+v2);
+            if(v1!=v2){
+                alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง");
+                $(this).val("");
+                return false;
+            }
+
+          });
 
 
     });

@@ -13,47 +13,9 @@ class Pick_warehouseController extends Controller
 
     public function index(Request $request)
     {
-      // dd($request);
-      // $sTable = \App\Models\Backend\Pick_warehouse_fifo::get();
-    //  DB::select(" DROP TABLE IF EXISTS TEMP_db_products_fifo_bill; ");
-      // DB::select(" TRUNCATE TEMP_db_products_fifo_bill; ");
-
-     //  DB::select("
-     //    CREATE TEMPORARY TABLE `TEMP_db_products_fifo_bill` (
-     //      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-     //      `consignment_no` varchar(255) DEFAULT NULL,
-     //      `customer_ref_no` varchar(255) DEFAULT NULL,
-     //      `sender_code` varchar(255) DEFAULT NULL,
-     //      `recipient_code` varchar(255) DEFAULT NULL,
-     //      `recipient_name` varchar(255) DEFAULT NULL,
-     //      `address` varchar(255) DEFAULT NULL,
-     //      `postcode` varchar(255) DEFAULT NULL,
-     //      `mobile` varchar(255) DEFAULT NULL,
-     //      `contact_person` varchar(255) DEFAULT NULL,
-     //      `phone_no` varchar(255) DEFAULT NULL,
-     //      `email` varchar(255) DEFAULT NULL,
-     //      `declare_value` varchar(255) DEFAULT NULL,
-     //      `cod_amount` varchar(255) DEFAULT NULL,
-     //      `remark` varchar(255) DEFAULT NULL,
-     //      `total_box` varchar(255) DEFAULT NULL,
-     //      `sat_del` varchar(255) DEFAULT NULL,
-     //      `hrc` varchar(255) DEFAULT NULL,
-     //      `invr` varchar(255) DEFAULT NULL,
-     //      `service_code` varchar(255) DEFAULT NULL,
-     //      `created_at` timestamp NULL DEFAULT NULL,
-     //      `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-     //      `deleted_at` timestamp NULL DEFAULT NULL,
-     //      PRIMARY KEY (`id`)
-     //    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8
-     // ");
-
-     // DB::select(" INSERT INTO `temp_db_products_fifo_bill` (`consignment_no`) VALUES ('tttttttttt'); ");
-     // $TEMP_db_products_fifo_bill = DB::select(" SELECT * FROM TEMP_db_products_fifo_bill; ");
-     // dd($TEMP_db_products_fifo_bill);
 
       $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
      // dd($Pick_warehouse_fifo_topicked);
-
       $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
       // dd($Pick_warehouse_fifo);
 
@@ -109,20 +71,154 @@ class Pick_warehouseController extends Controller
 
       // dd($id);
 
-      $r = DB::select("SELECT * FROM db_pay_requisition_001 where id =$id ");
-      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_packing_code_id_fk);
+      $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
       // dd($sRow);
 
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
+        $addr_sent =  DB::select(" 
+            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+        ");
 
-       $Customer = DB::select(" select * from customers ");
+        if($addr_sent){
+            $customer_id = @$addr_sent[0]->customer_id?@$addr_sent[0]->customer_id:0;
+            $from_table = @$addr_sent[0]->from_table;
+            $addr =  DB::select(" 
+                SELECT * FROM $from_table WHERE customer_id=$customer_id
+            ");
+        }else{
+          $customer_id = 0;
+          @$addr = [0];
+        }
+
+      if(sizeof(@$addr)>0){
+
+        @$address = "";
+        @$address .= "". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+        @$address .= "". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+        @$address .= " ต. ". @$addr[0]->tamname;
+        @$address .= " อ. ". @$addr[0]->ampname;
+        @$address .= " จ. ". @$addr[0]->provname;
+        @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+      }else{
+        @$address = '-ไม่พบข้อมูล-';
+      }
+      
+        $sUser =  DB::select(" 
+            SELECT
+            db_pay_requisition_001.id,
+            db_pay_requisition_001.business_location_id_fk,
+            db_pay_requisition_001.branch_id_fk,
+            db_pay_requisition_001.pick_pack_requisition_code_id_fk,
+            (select name from ck_users_admin where id=db_pay_requisition_001.action_user)  AS user_action,
+            db_pay_requisition_001.action_date,
+            (select name from ck_users_admin where id=db_pay_requisition_001.pay_user)  AS pay_user,
+            db_pay_requisition_001.pay_date,
+            db_pay_requisition_001.status_sent,
+            db_pay_requisition_001.customer_id_fk,
+            db_pay_requisition_001.address_send AS user_address,
+            db_pay_requisition_001.address_send_type,
+            customers.user_name AS user_code,
+            CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_requisition_001
+            Left Join customers ON $customer_id = customers.id
+            Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
+            where db_pay_requisition_001.id in ($id)
+        ");
       return View('backend.pick_warehouse.form')->with(
         array(
-           'packing_id'=>$sRow->id,
-           'Customer'=>$Customer,
-           'sBusiness_location'=>$sBusiness_location,
+           'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
         ) );
     }
+
+
+    public function qr($id)
+    {
+          // return $id;
+
+      $r = DB::select("SELECT db_pay_requisition_001.*,db_pick_pack_requisition_code.requisition_code FROM db_pay_requisition_001 LEFT Join db_pick_pack_requisition_code ON db_pay_requisition_001.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+where db_pay_requisition_001.id =$id ");
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      // dd($sRow);
+      $requisition_code = $r[0]->requisition_code;
+      // dd($requisition_code);
+
+        $addr_sent =  DB::select(" 
+            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+        ");
+        if($addr_sent){
+            $customer_id = $addr_sent[0]->customer_id;
+            $from_table = $addr_sent[0]->from_table;
+
+            $addr =  DB::select(" 
+                SELECT * FROM $from_table WHERE customer_id=$customer_id
+            ");
+        }else{
+          $customer_id = 0 ;
+          $addr =  [0];
+        }
+
+
+      if(sizeof(@$addr)>0){
+
+        @$address = "";
+        @$address .= "". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+        @$address .= "". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+        @$address .= " ต. ". @$addr[0]->tamname;
+        @$address .= " อ. ". @$addr[0]->ampname;
+        @$address .= " จ. ". @$addr[0]->provname;
+        @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+      }else{
+        @$address = '-ไม่พบข้อมูล-';
+      }
+      
+        $sUser =  DB::select(" 
+            SELECT
+            db_pay_requisition_001.id,
+            db_pay_requisition_001.business_location_id_fk,
+            db_pay_requisition_001.branch_id_fk,
+            db_pay_requisition_001.pick_pack_requisition_code_id_fk,
+            (select name from ck_users_admin where id=db_pay_requisition_001.action_user)  AS user_action,
+            db_pay_requisition_001.action_date,
+            (select name from ck_users_admin where id=db_pay_requisition_001.pay_user)  AS pay_user,
+            db_pay_requisition_001.pay_date,
+            db_pay_requisition_001.status_sent,
+            db_pay_requisition_001.customer_id_fk,
+            db_pay_requisition_001.address_send AS user_address,
+            db_pay_requisition_001.address_send_type,
+            customers.user_name AS user_code,
+            CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_requisition_001
+            Left Join customers ON $customer_id = customers.id
+            Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
+            where db_pay_requisition_001.id = '$id'
+        ");
+        // dd($sUser);
+
+      $user_amdin = DB::select(" select * from ck_users_admin where id=".(\Auth::user()->id)."");
+      $role_group = DB::select(" SELECT can_cancel_packing_sent FROM `role_permit` where can_cancel_packing_sent=1 and role_group_id_fk=".$user_amdin[0]->role_group_id_fk."");
+      // dd($user_amdin[0]->role_group_id_fk);
+      // dd($role_group[0]->can_cancel_packing_sent);
+      if(@$role_group[0]->can_cancel_packing_sent==1){
+          $can_cancel_packing_sent = 1;
+      }else{
+          $can_cancel_packing_sent = 0;
+      }
+
+      return View('backend.pick_warehouse.qr')->with(
+        array(
+           'packing_id'=>$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
+           'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
+        ) );
+      // return View('backend.pick_warehouse.qr');
+
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -241,22 +337,22 @@ class Pick_warehouseController extends Controller
 
     public function Datatable0002(Request $req){
 
-      $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_packing_code_id_fk='".$req->packing_id."' group by time_pay order By time_pay ");
+      $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$req->packing_id."' 
+        group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) { 
-        // group by time_pay order by time_pay asc 
 
             $rs = DB::select(" SELECT
                   db_pay_requisition_002_pay_history.id,
                   db_pay_requisition_002_pay_history.time_pay,
-                  db_pay_requisition_002_pay_history.pick_pack_packing_code_id_fk,
+                  db_pay_requisition_002_pay_history.pick_pack_requisition_code_id_fk,
                   DATE(db_pay_requisition_002_pay_history.pay_date) as pay_date,
                   db_pay_requisition_002_pay_history.`status`,
                   ck_users_admin.`name` as pay_user
                   FROM
                   db_pay_requisition_002_pay_history
-                  Left Join ck_users_admin ON db_pay_requisition_002_pay_history.pay_user = ck_users_admin.id  WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
+                  Left Join ck_users_admin ON db_pay_requisition_002_pay_history.pay_user = ck_users_admin.id  WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
 
                         $pn = '<div class="divTable"><div class="divTableBody">';
                         $pn .=     
@@ -286,7 +382,7 @@ class Pick_warehouseController extends Controller
             db_pay_requisition_002.*,sum(amt_get) as sum_amt_get
             FROM
             db_pay_requisition_002 
-            WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ");
+            WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ");
 
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
@@ -322,7 +418,7 @@ class Pick_warehouseController extends Controller
 
                       $WH = DB::select("
                          SELECT * from db_pay_requisition_002
-                         where db_pay_requisition_002.pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND time_pay = ".$v->time_pay." AND product_id_fk=".$v->product_id_fk."
+                         where db_pay_requisition_002.pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND time_pay = ".$v->time_pay." AND product_id_fk=".$v->product_id_fk."
                       ");
 
                       foreach ($WH AS $v_wh) {
@@ -360,29 +456,21 @@ class Pick_warehouseController extends Controller
         // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
+           @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
 
-           $rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND status in (2) ");
-
-           if(count($rs_pay_history)>0){
+           if(count(@$rs_pay_history)>0){
                return 2;
            }else{
-               return 3;
+               return 3; // เบิกจากคลังมาไว้เตรียมแพ็คกล่องส่ง > จัดเตรียมสินค้าแล้ว
            }
-
-          // $r_check_remain = DB::select(" SELECT status FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' ORDER BY time_pay DESC LIMIT 1  ");
-          // if($r_check_remain){
-          //     return $r_check_remain[0]->status; 
-          // }else{
-          // // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า 3 ไปก่อน
-          //     return 3;
-          // }
 
        })
       ->addColumn('ch_amt_lot_wh', function($row) { 
 // ดูว่าไม่มีสินค้าคลังเลย
 
           $Products = DB::select("
-            SELECT * from db_pay_requisition_002 WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' AND amt_remain > 0 GROUP BY product_id_fk 
+            SELECT * from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' 
+            AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
           ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
               if(@$Products){
@@ -409,6 +497,8 @@ class Pick_warehouseController extends Controller
        })      
        ->addColumn('column_003', function($row) { 
 
+        if(!empty($row->time_pay)){
+
                 $pn = '<div class="divTable">';
                 $pn .= '<div class="divTableBody">';
 
@@ -433,24 +523,349 @@ class Pick_warehouseController extends Controller
 
              return $pn;
 
+           }
+
         })
         ->escapeColumns('column_003') 
         ->addColumn('column_004', function($row) { 
              $r = DB::select("SELECT time_pay from db_pay_requisition_002 where status_cancel<>1 ORDER BY id DESC LIMIT 1");
-             return @$r[0]->time_pay;
+             if($r) return @$r[0]->time_pay;
         })
         ->addColumn('status_cancel', function($row) { 
+
+          if($row->pick_pack_requisition_code_id_fk){
+
             $Products = DB::select(" SELECT status_cancel
             FROM
             db_pay_requisition_002 
-            WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_packing_code_id_fk."' and time_pay=".$row->time_pay."  group by time_pay ");
+            WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay."  group by time_pay ");
             
             return @$Products[0]->status_cancel;
+          }
 
         })        
       ->make(true);
     }
 
+
+
+  public function warehouse_qr_0001(Request $reg){
+
+      $sTable = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `id`=".$reg->id." ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_001', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->requisition_code."</b>";
+      })
+      ->addColumn('column_002', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->pick_pack_packing_code."</b>";
+      })
+      ->escapeColumns('column_002')  
+      ->addColumn('column_003', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->receipts."</b>";      })
+      ->escapeColumns('column_003')        
+      ->make(true);
+    }
+
+
+  public function warehouse_qr_0002(Request $reg){
+
+      $sTable1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$reg->id." ");
+      $sTable = DB::select(" 
+        SELECT db_pick_pack_packing_code.*,db_pick_pack_packing.packing_code FROM db_pick_pack_packing_code 
+        JOIN db_pick_pack_packing  on db_pick_pack_packing.packing_code_id_fk=db_pick_pack_packing_code.id
+        WHERE db_pick_pack_packing_code.id in (".$sTable1[0]->pick_pack_packing_code_id_fk.")
+        GROUP BY db_pick_pack_packing_code.id 
+      ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_001', function($row) {
+         return '<b>'.$row->packing_code.'</b>';
+      })
+      ->escapeColumns('column_001')  
+      ->addColumn('column_002', function($row) {
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+            $pn .=     
+            '<div class="divTableRow">
+            <div class="divTableCell" style="width:200px;font-weight:bold;">ชื่อสินค้า (เลขที่ใบเสร็จ)</div>
+            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
+            <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
+            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+            </div>
+            ';
+
+                $Products = DB::select("
+                SELECT 
+                db_order_products_list.product_id_fk,
+                db_order_products_list.product_name,
+                db_order_products_list.product_unit_id_fk,
+                SUM(db_order_products_list.amt) AS amt ,
+                dataset_product_unit.product_unit
+                from db_order_products_list
+                LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                WHERE db_orders.id in  (".$row->orders_id_fk.")
+                GROUP BY db_order_products_list.product_id_fk
+                ORDER BY db_order_products_list.product_id_fk ");
+
+              $sum_amt = 0 ;
+              foreach ($Products as $key => $value) {
+
+                $arr_inv = [];
+                $arr_inv2 = [];
+                $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+                LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+                WHERE frontstore_id_fk in (".$row->orders_id_fk.") AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
+                foreach ($r_invoice_code as $inv) {
+                    array_push($arr_inv,$inv->invoice_code);
+                    array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+                }
+
+                $invoice_code = implode(",",$arr_inv);
+                $invoice_code2 = implode(",",$arr_inv2);
+                $sum_amt += $value->amt;
+                $pn .=     
+                '<div class="divTableRow">
+                <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                '.$value->product_name.'</b><br>('.$invoice_code.')
+                </div>
+                <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
+                <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
+                <div class="divTableCell" style="text-align:left;"> ';
+
+                $item_id = 1;
+                $amt_scan = $value->amt;
+
+                for ($i=0; $i < $amt_scan ; $i++) { 
+
+                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".$item_id."' and packing_code= ('".$row->packing_code."') AND product_id_fk='".$value->product_id_fk."' ");
+                
+                            if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
+
+                              $pn .= 
+                               '
+                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
+                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                               ';
+
+                            }else{
+
+                               $pn .= 
+                               '
+                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-packing_code="'.$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-packing_code="'.$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i> 
+                               ';
+
+                            }
+
+                              $item_id++;
+                              
+                          }  
+
+                $pn .= '</div>';  
+                $pn .= '</div>';  
+              
+              }
+
+              $pn .=     
+              '<div class="divTableRow">
+              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
+              <div class="divTableCell" style="text-align:center;"> </div>
+              <div class="divTableCell" style="text-align:center;"> </div>
+              </div>
+              ';
+
+          $pn .= '</div>';  
+          return $pn;
+      })
+      ->escapeColumns('column_002')  
+      ->make(true);
+    }
+
+
+  public function warehouse_tb_000(Request $reg){
+
+      $sTable = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `id`=".$reg->id." ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_001', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->requisition_code."</b>";
+      })
+      ->addColumn('column_002', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->pick_pack_packing_code."</b>";
+      })
+      ->escapeColumns('column_002')  
+      ->addColumn('column_003', function($row) {
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+          return "<b>".$d[0]->receipts."</b>";      })
+      ->escapeColumns('column_003')        
+      ->make(true);
+    }
+
+
+  public function warehouse_tb_001(Request $reg){
+
+      $sTable = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$reg->id." ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_002', function($row) {
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+            $pn .=     
+            '<div class="divTableRow">
+            <div class="divTableCell" style="width:200px;font-weight:bold;">รายการสินค้า </div>
+            <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
+            <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
+            <div class="divTableCell" style="width:250px;text-align:left;font-weight:bold;"> รหัสใบเบิก (รหัสใบเสร็จ) </div>
+            </div>
+            ';
+
+            $arr_pick_pack_packing_code_id_fk = explode(',',$row->pick_pack_packing_code_id_fk);
+
+            $sTable1 = DB::select(" SELECT * FROM `db_pick_pack_packing_code` WHERE `id` in(".$row->pick_pack_packing_code_id_fk.") ");
+            $arr1 = [];
+            foreach ($sTable1 as $key => $v) {
+              array_push($arr1,$v->orders_id_fk);
+            }
+            $orders_id_fk = implode(',',$arr1);
+
+            // $pn .= '<div>'.$row->pick_pack_packing_code_id_fk.'</div>';  
+            // $pn .= '<div>'.$orders_id_fk.'</div>';  
+
+            $Products = DB::select("
+            SELECT 
+            db_order_products_list.product_id_fk,
+            db_order_products_list.product_name,
+            db_order_products_list.product_unit_id_fk,
+            SUM(db_order_products_list.amt) AS amt ,
+            dataset_product_unit.product_unit
+            from db_order_products_list
+            LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+            LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+            WHERE db_orders.id in  (".$orders_id_fk.")
+            GROUP BY db_order_products_list.product_id_fk
+            ORDER BY db_order_products_list.product_id_fk ");
+
+              $sum_amt = 0 ;
+              foreach ($Products as $key => $value) {
+
+                $arr_inv = [];
+                $arr_inv2 = [];
+                $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+                LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+                WHERE frontstore_id_fk in (".$orders_id_fk.") AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
+                foreach ($r_invoice_code as $inv) {
+                    array_push($arr_inv,$inv->invoice_code);
+                    array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+                }
+
+                $invoice_code = implode(",",$arr_inv);
+                $sum_amt += $value->amt;
+                if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
+                if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}
+                $pn .=     
+                '<div class="divTableRow">
+                <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                '.$value->product_name.'</b>
+                </div>
+                <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
+                <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
+                <div class="divTableCell" style="text-align:left;">'.$requisition_code.'<br>('.$invoice_code.')</div> 
+                ';
+
+                $pn .= '</div>';  
+              
+              }
+
+              $pn .=     
+              '<div class="divTableRow">
+              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
+              <div class="divTableCell" style="text-align:center;"> </div>
+              <div class="divTableCell" style="text-align:center;"> </div>
+              </div>
+              ';
+
+          $pn .= '</div>';  
+          return $pn;
+      })
+      ->escapeColumns('column_002')  
+      ->make(true);
+    }
+
+
+
+  public function warehouse_address_sent(Request $reg){
+
+    //  $sTable = DB::select(" SELECT * FROM `db_consignments` WHERE `packing_code`=".$reg->packing_id." ");
+      $sTable = DB::select(" SELECT * FROM `db_consignments`  ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      // ->addColumn('column_001', function($row) {
+
+      //   return "P2".sprintf("%05d",$row->packing_code);
+      // })
+      ->addColumn('column_002', function($row) {
+        
+          return $row->recipient_name." > ".$row->address;
+
+        // return "ชื่อและที่อยู่ลูกค้า";
+           // @$addr = DB::select(" SELECT
+           //                            customers_detail.customer_id,
+           //                            customers_detail.house_no,
+           //                            customers_detail.house_name,
+           //                            customers_detail.moo,
+           //                            customers_detail.zipcode,
+           //                            customers_detail.soi,
+           //                            customers_detail.amphures_id_fk,
+           //                            customers_detail.district_id_fk,
+           //                            customers_detail.road,
+           //                            customers_detail.province_id_fk,
+           //                            customers.prefix_name,
+           //                            customers.first_name,
+           //                            customers.last_name,
+           //                            dataset_provinces.name_th AS provname,
+           //                            dataset_amphures.name_th AS ampname,
+           //                            dataset_districts.name_th AS tamname
+           //                            FROM
+           //                            customers_detail
+           //                            Left Join customers ON customers_detail.customer_id = customers.id
+           //                            Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+           //                            Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+           //                            Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+           //                            WHERE customers_detail.customer_id =8");
+
+           //      if(sizeof(@$addr)>0){
+
+           //                      @$address = "";
+           //                      @$address .= "ชื่อผู้รับ : ". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+           //                      @$address .= "<br>ที่อยู่ : ". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+           //                      @$address .= " ต. ". @$addr[0]->tamname;
+           //                      @$address .= " อ. ". @$addr[0]->ampname;
+           //                      @$address .= " จ. ". @$addr[0]->provname;
+           //                      @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+           //                    }else{
+           //                      @$address = '-ไม่พบข้อมูล-';
+           //                    }
+           //  return @$address; 
+
+      })
+      ->escapeColumns('column_002')  
+      ->addColumn('column_003', function($row) {
+          // $d = DB::select(" SELECT * FROM `db_orders` WHERE `invoice_code`='".$row->recipient_code."' ");
+          // return $d[0]->id?$d[0]->id:1;      
+        })
+      ->escapeColumns('column_003')        
+      ->make(true);
+    }
 
 
 

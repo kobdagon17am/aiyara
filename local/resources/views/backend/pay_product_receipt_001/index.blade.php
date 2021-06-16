@@ -595,10 +595,18 @@ $(function() {
 
                             }else{
 
-                               $('td:last-child', nRow).html(''
+                              if(sD!=""){
+                                  $('td:last-child', nRow).html(''
+                                  + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                ).addClass('input');
+                              }else{
+                                  $('td:last-child', nRow).html(''
                                   + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                                    + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                 ).addClass('input');
+                              }
+
+                               
          
                                 
                             }
@@ -1317,19 +1325,49 @@ $(function() {
 
     </script>
    
+    
     <?php 
+    
     if(isset($_REQUEST['test_clear_data'])){
-      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
-      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
-      DB::select("TRUNCATE `db_stocks_return`;");
-      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
-      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
       ?>
           <script>
-          location.replace( "{{ url('backend/pay_product_receipt_001') }}");
+          location.replace( "{{ url('backend/pay_product_receipt') }}");
           </script>
           <?php
       }

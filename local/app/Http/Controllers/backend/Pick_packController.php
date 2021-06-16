@@ -8,6 +8,7 @@ use DB;
 use File;
 use PDF;
 use App\Models\Backend\AddressSent;
+use App\Models\Backend\Consignments_import;
 
 class Pick_packController extends Controller
 {
@@ -31,24 +32,29 @@ class Pick_packController extends Controller
 
         $receipt = '';
         $arr_receipt = [];
+        $arr_orders_id_fk = [];
         // No packing code
-        $packing_code = DB::select(" SELECT id,packing_code,receipt FROM db_delivery WHERE id in ($arr) and packing_code=0 ");
+        $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE id in ($arr) and packing_code=0 ");
         if($packing_code){
             foreach ($packing_code as $key => $value) {
                 array_push($arr_receipt,$value->receipt);
+                array_push($arr_orders_id_fk,$value->orders_id_fk);
             }
             $receipt = implode(',',$arr_receipt);
+            $orders_id_fk = implode(',',$arr_orders_id_fk);
         }
 
         // Packing code
-        $packing_code = DB::select(" SELECT id,packing_code,receipt FROM db_delivery WHERE id in ($arr) and packing_code<>0 ");
+        $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE id in ($arr) and packing_code<>0 ");
         if($packing_code){
 
-            $packing_code = DB::select(" SELECT id,packing_code,receipt FROM db_delivery WHERE packing_code in (".$packing_code[0]->packing_code.") ");
+            $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE packing_code in (".$packing_code[0]->packing_code.") ");
             // dd($packing_code);
             foreach ($packing_code as $key => $value) {
+                array_push($arr_orders_id_fk,$value->orders_id_fk);
                 array_push($arr_receipt,$value->receipt);
             }
+            $orders_id_fk = implode(',',$arr_orders_id_fk);
             $receipt = implode(',',$arr_receipt);
         }
 
@@ -56,30 +62,135 @@ class Pick_packController extends Controller
 
         DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE id in ($arr)  ");
 
-        $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+          $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
 
           $DeliveryPackingCode = new \App\Models\Backend\Pick_packPackingCode;
+
           if( $DeliveryPackingCode ){
-            $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
-            $DeliveryPackingCode->action_user = (\Auth::user()->id);
-            $DeliveryPackingCode->receipt = $receipt ;
-            $DeliveryPackingCode->status_picked = 1 ;
-            $DeliveryPackingCode->save();
+
+              $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
+              $DeliveryPackingCode->action_user = (\Auth::user()->id);
+              $DeliveryPackingCode->orders_id_fk = $orders_id_fk ;
+              $DeliveryPackingCode->receipt = $receipt ;
+              $DeliveryPackingCode->status_picked = 1 ;
+              $DeliveryPackingCode->save();
+
+               DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id.",receipt_no='".$rsDelivery[0]->receipt."' WHERE (invoice_code='".$rsDelivery[0]->receipt."'); ");
+
+
           }
 
          foreach ($rsDelivery as $key => $value) {
             $DeliveryPacking = new \App\Models\Backend\Pick_packPacking;
-            $DeliveryPacking->packing_code = $DeliveryPackingCode->id;
+            $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
+            $DeliveryPacking->packing_code = "P2".sprintf("%05d",$DeliveryPackingCode->id) ;
             $DeliveryPacking->delivery_id_fk = @$value->id;
             $DeliveryPacking->created_at = date('Y-m-d H:i:s');
             $DeliveryPacking->save();
 
             DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE packing_code<>0 and packing_code in (".@$value->packing_code.")  ");
+            DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id." WHERE (receipt_no='".$value->receipt."'); ");
+            DB::select(" UPDATE db_orders SET status_delivery=1 WHERE (invoice_code='".$value->receipt."'); ");
 
          }
 
-        return redirect()->to(url("backend/pick_pack"));
+            // // เก็บข้อมูลที่อยู่ในการจัดส่งลูกค้า  db_consignments
+          $Pick_packPacking = \App\Models\Backend\Pick_packPackingCode::get();
+          $recipient_code = "P2".sprintf("%05d",$Pick_packPacking[0]->id);
 
+          $r1 =  DB::select(" SELECT id FROM `db_pick_pack_packing_code` WHERE LOCATE(',',orders_id_fk)>0 ");
+          // return $r1;
+          if($r1){
+
+           
+                // ที่อยู่จัดส่ง
+                  $addr_sent =  DB::select(" 
+                      SELECT customer_id,from_table,recipient_name FROM `customers_addr_sent` WHERE packing_code=".$r1[0]->id."
+                  ");
+
+                  @$recipient_name = @$addr_sent[0]->recipient_name;
+
+                  if($addr_sent){
+                      $customer_id = @$addr_sent[0]->customer_id?@$addr_sent[0]->customer_id:0;
+                      $from_table = @$addr_sent[0]->from_table;
+                      $addr =  DB::select(" 
+                          SELECT * FROM $from_table WHERE customer_id=$customer_id
+                      ");
+                  }else{
+                    $customer_id = 0;
+                    @$addr = [0];
+                  }
+
+                if(sizeof(@$addr)>0){
+
+                  // @$recipient_name = @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+
+                  @$address = "";
+                  // @$address .= "". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+                  @$address .= "". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+                  @$address .= " ต. ". @$addr[0]->tamname;
+                  @$address .= " อ. ". @$addr[0]->ampname;
+                  @$address .= " จ. ". @$addr[0]->provname;
+                  @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+                }else{
+                  @$address = '-ไม่พบข้อมูล-';
+                  @$recipient_name = '';
+                }
+
+
+              $recipient_code = "P2".sprintf("%05d",$r1[0]->id);
+              DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('$recipient_code',".$r1[0]->id.",'".@$recipient_name."','".@$address."'); ");
+
+
+          }
+
+
+          $r2 =  DB::select(" SELECT id,receipt FROM `db_pick_pack_packing_code` WHERE LOCATE(',',orders_id_fk)=0 ");
+          
+            if($r2){
+
+                // ที่อยู่จัดส่ง
+                  $addr_sent =  DB::select(" 
+                      SELECT customer_id,from_table,recipient_name FROM `customers_addr_sent` WHERE packing_code=".$r2[0]->id."
+                  ");
+                  @$recipient_name  = @$addr_sent[0]->recipient_name;
+
+                  if($addr_sent){
+                      $customer_id = @$addr_sent[0]->customer_id?@$addr_sent[0]->customer_id:0;
+                      $from_table = @$addr_sent[0]->from_table;
+                      $addr =  DB::select(" 
+                          SELECT * FROM $from_table WHERE customer_id=$customer_id
+                      ");
+                  }else{
+                    $customer_id = 0;
+                    @$addr = [0];
+                  }
+
+                if(sizeof(@$addr)>0){
+
+                  // @$recipient_name = @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+
+                  @$address = "";
+                  // @$address .= "". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+                  @$address .= "". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+                  @$address .= " ต. ". @$addr[0]->tamname;
+                  @$address .= " อ. ". @$addr[0]->ampname;
+                  @$address .= " จ. ". @$addr[0]->provname;
+                  @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+                }else{
+                  @$address = '-ไม่พบข้อมูล-';
+                  @$recipient_name = '';
+                }
+
+             DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('".$r2[0]->receipt."',".$r2[0]->id.",'".@$recipient_name."','".@$address."'); ");
+
+          }
+
+      
+
+        return redirect()->to(url("backend/pick_pack"));
 
       }
     }
@@ -143,10 +254,10 @@ class Pick_packController extends Controller
      ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('delivery_date', function($row) {
-          $d = strtotime($row->delivery_date);
-          return date("d/m/", $d).(date("Y", $d)+543);
-      })      
+      // ->addColumn('delivery_date', function($row) {
+      //     $d = strtotime($row->delivery_date);
+      //     return date("d/m/", $d).(date("Y", $d)+543);
+      // })      
       ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");

@@ -1644,7 +1644,7 @@ class Products_fifo_billController extends Controller
 
             $rs_temp_ppr_004 = DB::select(" select product_id_fk,lot_number,lot_expired_date,sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, amt_remain  from $temp_ppr_004 group by invoice_code,product_id_fk  ");
 
-          foreach ($rs_temp_ppr_004 as $key => $v) {
+           foreach ($rs_temp_ppr_004 as $key => $v) {
 
               $_choose=DB::table("$temp_db_stocks_check")
                 ->where('invoice_code', $row->invoice_code)
@@ -1707,7 +1707,7 @@ class Products_fifo_billController extends Controller
 
         })
         ->escapeColumns('column_003')      
-     ->addColumn('ch_amt_remain', function($row) { 
+       ->addColumn('ch_amt_remain', function($row) { 
         // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
@@ -1718,21 +1718,13 @@ class Products_fifo_billController extends Controller
            }else{
                return 3;
            }
-                   
-          // $r_check_remain = DB::select(" SELECT status FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' ORDER BY time_pay DESC LIMIT 1  ");
-          // if($r_check_remain){
-          //     return $r_check_remain[0]->status; 
-          // }else{
-          // // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า 3 ไปก่อน
-          //     return 3;
-          // }
 
        })
       ->addColumn('ch_amt_lot_wh', function($row) { 
 // ดูว่าไม่มีสินค้าคลังเลย
 
           $Products = DB::select("
-            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk 
+            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
           ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
           if(count($Products)>0){
@@ -1828,7 +1820,7 @@ class Products_fifo_billController extends Controller
             return $pn;
         })
        ->escapeColumns('column_001')
-      ->addColumn('column_002', function($row) {
+       ->addColumn('column_002', function($row) {
           
           $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
@@ -2213,8 +2205,8 @@ class Products_fifo_billController extends Controller
                                                         '".$v_02->product_id_fk."',
                                                         '".$value->product_name."',
                                                         '".$value->amt_remain."',
-                                                        '".$pay_this."',
-                                                        '".$pay_this."',
+                                                        '".$amt_to_take."',
+                                                        '".$amt_to_take."',
                                                         '".$amt_pay_remain."',
                                                         '".$v_02->product_unit_id_fk."',
                                                         '".$p_unit_name."',
@@ -2398,20 +2390,13 @@ class Products_fifo_billController extends Controller
                  return 3;
              }
 
-              // $r_check_remain = DB::select(" SELECT status FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' ORDER BY time_pay DESC LIMIT 1  ");
-              // if($r_check_remain){
-              //     return $r_check_remain[0]->status; 
-              // }else{
-              // // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า 3 ไปก่อน
-              //     return 3;
-              // }
 
            })
           ->addColumn('ch_amt_lot_wh', function($row) { 
          // ดูว่าไม่มีสินค้าคลังเลย
 
             $Products = DB::select("
-              SELECT * from db_pay_product_receipt_002_cancel_log WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk 
+              SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
             ");
             // Case ที่มีการบันทึกข้อมูลแล้ว
             if(count($Products)>0){
@@ -2420,6 +2405,7 @@ class Products_fifo_billController extends Controller
                   array_push($arr,$value->product_id_fk);
                 }
                 $arr_im = implode(',',$arr);
+                // return $arr_im;
                 $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                 $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
                 return @$r[0]->sum?@$r[0]->sum:0; 

@@ -90,19 +90,7 @@
                     </div>
                 </div> 
 
-  <!--               <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">คุณสมบัติของผู้จอง :</label>
-                    <div class="col-md-10">
-                         <select name="ce_features_booker" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                            @if(@$dsCe_features_booker)
-                                @foreach(@$dsCe_features_booker AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==@$sRow->ce_features_booker)?'selected':'' }} >{{@$r->txt_desc}}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div> -->
+
                 <div class="form-group row">
                     <label for="example-text-input" class="col-md-2 col-form-label">สมาชิก 1 คน  สามารถจองได้ (จำนวนบัตร) :</label>
                     <div class="col-md-10">

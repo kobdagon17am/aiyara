@@ -48,23 +48,6 @@
     .border-left-0 {height: 67%;}
 
 
-  .tooltip_packing {
-    position: relative ;
-  }
-  .tooltip_packing:hover::after {
-    content: "Packing" ;
-    position: absolute ;
-    /*top: 0.5em ;*/
-    left: -4em ;
-    min-width: 80px ;
-    border: 1px #808080 solid ;
-    padding: 1px ;
-    color: black ;
-    background-color: #cfc ;
-    z-index: 9999 ;
-  } 
-
-
 </style>
 @endsection
 
@@ -74,7 +57,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Packing ใบเบิก  </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> Packing ใบเบิก  </h4>
         </div>
     </div>
 </div>
@@ -241,10 +224,12 @@
               
               <?php }?>
 
-                 <div class="col-md-6 text-right divBtnSave " style="display: none;">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิลใบเบิก
+                 <div class=" divBtnSave " style="display: none;">
+                  <center>
+                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-18 ">
+                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> บันทึกรวมบิล/ใบสั่งซื้อ
                     </button>
+                  </center>
                   </div>
 
               <div id="last_form"></div>
@@ -275,16 +260,20 @@
                           
                           <?php } ?>
 
+                    <center>
+                        <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}">
+                          เบิกสินค้าจากคลัง >
+                        </a>
+                    </center>
+
+
                           </div>
                         </div>
                       </div>
                    
                     </div>
 
-<center>
-                      <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}">
-                       ไปหน้า เบิกสินค้าออกจากคลัง >
-                    </a>
+
 
             </div>
         </div>
@@ -348,7 +337,7 @@ $(function() {
                   {data: 'id', title :'ID', className: 'text-center'},
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
-                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                  {data: 'delivery_date', title :'<center>วันที่ออกบิล </center>', className: 'text-center w100 '},
                   {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -385,7 +374,8 @@ $(function() {
  
                  if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
-                        '<span class="tooltip_packing badge badge-danger font-size-14">P</span>');
+
+                        '<span data-toggle="tooltip" data-placement="right" title="Packing (รวมบิลจากขั้นตอนที่ 1)" class=" badge badge-danger font-size-14">P</span>');
 
                       if(aData['packing_code']){
                             $x= aData['packing_code'].replace(/ *, */g, '<br>');
@@ -456,9 +446,10 @@ $(function() {
                 }
               }
           });
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable.draw();
+           oTable.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
               });
+           
           });
 
 var oTableNopacking;
@@ -550,6 +541,32 @@ $(function() {
 
             $('#data-table').on( 'click', 'tr', function () {
 
+                  $(".myloading").show();
+
+                  $("input[name^=row_id]").remove();
+
+                  setTimeout(function(){
+
+                          var rows_selected = $('#data-table').DataTable().column(0).checkboxes.selected();
+                          $.each(rows_selected, function(index, rowId){
+
+                            $('#last_form').after(
+                                 $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', 'row_id[]')
+                                    .attr('id', 'row_id'+rowId)
+                                    .val(rowId)
+                             );
+
+                          });
+
+                          var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+
+                          console.log(ids); 
+
+                  }, 500);
+
+
   					     setTimeout(function(){
   	            		if($('.select-info').text()!=''){
   	            			var str = $('.select-info').text();
@@ -563,34 +580,6 @@ $(function() {
   		            }, 500);
 
             } );
-
-           $('#frm-example').on( 'click', 'tr', function (e) {
-            // e.preventDefault();
-              var form = this;
-
-              $('input[name*=row_id').remove();
-
-              console.log(form);
-              
-              var rows_selected = oTable.column(0).checkboxes.selected();
-
-               console.log(rows_selected);
-
-                  // Iterate over all selected checkboxes
-                  $.each(rows_selected, function(index, rowId){
-
-                    console.log(rowId);
-                    $('#last_form').after(
-                         $('<input>')
-                            .attr('type', 'hidden')
-                            .attr('name', 'row_id[]')
-                            .val(rowId)
-                     );
-                  });
-
-
-               });
-
 
 
           var oTable2;
@@ -608,7 +597,7 @@ $(function() {
                   iDisplayLength: 10,
                   // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
-                    url: '{{ route('backend.pick_pack_packing_code.datatable') }}',
+                    url: '{{ route('backend.packing_list.datatable') }}',
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -633,7 +622,7 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'packing_code_02', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
+                      {data: 'packing_code_02', title :'<center>รหัส Packing List </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -689,7 +678,7 @@ $(function() {
 
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
-                                + '<a href="{{ route('backend.pick_pack.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                // + '<a href="{{ route('backend.pick_pack.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
     	                          
     	                          + '<a href="backend/pick_pack/" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
     	                        ).addClass('input');
@@ -751,7 +740,7 @@ $(function() {
                   },
                   columns: [
                       // {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'packing_code_desc', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
+                      {data: 'packing_code_desc', title :'<center>รหัส Packing List </center>', className: 'text-center'},
                       
                       // {data: 'packing_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
                       //     return ;
@@ -970,5 +959,35 @@ $(function() {
          
 </script>
 
-@endsection
 
+
+    <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      DB::select("TRUNCATE `db_consignments`;");
+      DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
+
+      ?>
+          <script>
+          location.replace( "{{ url('backend/pick_pack') }}");
+          </script>
+          <?php
+    }
+?>
+
+@endsection

@@ -187,7 +187,7 @@
                       <div class="col-md-12 d-flex  ">
                         <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label>
                         <div class="col-md-4">
-                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value="P1210500001"  > 
+                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value="P1210600002"  > 
  <!-- P1210500002  P1210500001 -->
                         </div>
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%;display: none;" >
@@ -508,7 +508,7 @@
 				                    },
 				                    columns: [
 
-				                        {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center w300'},
+				                        {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center w60'},
 				                        {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
 				                                             
 				                    ],
@@ -780,16 +780,16 @@
         $('#sent_date').val(d+' '+t);
       });
 
-      $(document).ready(function() {
-        $(".a_label_search").on('click',function(){
-            $("#txtSearch").focus();
-            $("#txtSearch").val("P1210500002");
-        });
-        $(".b_label_search").on('click',function(){
-            $("#txtSearch").focus();
-            $("#txtSearch").val("P1210500001");
-        });        
-      });
+      // $(document).ready(function() {
+      //   $(".a_label_search").on('click',function(){
+      //       $("#txtSearch").focus();
+      //       $("#txtSearch").val("P1210500002");
+      //   });
+      //   $(".b_label_search").on('click',function(){
+      //       $("#txtSearch").focus();
+      //       $("#txtSearch").val("P1210500001");
+      //   });        
+      // });
 
 
 
@@ -810,24 +810,54 @@
 
     </script>
    
+  
     <?php 
+    
     if(isset($_REQUEST['test_clear_data'])){
-      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
-      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
-      DB::select("TRUNCATE `db_stocks_return`;");
-      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
-      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
       ?>
           <script>
           location.replace( "{{ url('backend/pay_product_receipt') }}");
           </script>
           <?php
-    }
-?>
-
+      }
+    ?>
 @endsection
+
 
 

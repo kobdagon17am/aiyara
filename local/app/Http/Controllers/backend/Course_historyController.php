@@ -22,16 +22,7 @@ class Course_historyController extends Controller
 
  public function create()
     {
-      //  $dsCe_type = \App\Models\Backend\Ce_type::get();
-      //  $dsCe_features_booker = \App\Models\Backend\Ce_features_booker::get();
-      //  $dsCe_can_reserve = \App\Models\Backend\Ce_can_reserve::get();
-      //  $dsCe_limit = \App\Models\Backend\Ce_limit::get();
-      //  return View('backend.course_history.form')->with(array(
-      //   'dsCe_type'=>$dsCe_type,
-      //   'dsCe_features_booker'=>$dsCe_features_booker,
-      //   'dsCe_can_reserve'=>$dsCe_can_reserve,
-      //   'dsCe_limit'=>$dsCe_limit
-      // ) );
+
     }
 
     public function store(Request $request)
@@ -41,18 +32,7 @@ class Course_historyController extends Controller
 
     public function edit($id)
     {
-      //  $sRow = \App\Models\Backend\Course_event::find($id);
-      //  $dsCe_type = \App\Models\Backend\Ce_type::get();
-      //  $dsCe_features_booker = \App\Models\Backend\Ce_features_booker::get();
-      //  $dsCe_can_reserve = \App\Models\Backend\Ce_can_reserve::get();
-      //  $dsCe_limit = \App\Models\Backend\Ce_limit::get();
-      //  return View('backend.course_history.form')->with(array(
-      //   'sRow'=>$sRow, 'id'=>$id,
-      //   'dsCe_type'=>$dsCe_type,
-      //   'dsCe_features_booker'=>$dsCe_features_booker,
-      //   'dsCe_can_reserve'=>$dsCe_can_reserve,
-      //   'dsCe_limit'=>$dsCe_limit
-      // ) );
+
     }
 
     public function update(Request $request, $id)

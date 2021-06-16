@@ -43,7 +43,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.check_orders_list.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.check_orders_list.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
                   </div>

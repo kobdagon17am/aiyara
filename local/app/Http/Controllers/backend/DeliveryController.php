@@ -22,8 +22,8 @@ class DeliveryController extends Controller
       // DB::select(" TRUNCATE `db_delivery` ; ");
       DB::select("
           INSERT IGNORE INTO db_delivery
-          ( receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
-          SELECT invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_orders where invoice_code<>'' AND delivery_location<>0  ; ");
+          ( orders_id_fk,receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
+          SELECT id,invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_orders where invoice_code<>'' AND delivery_location<>0  ; ");
 
       // AND delivery_location<>0
 
@@ -207,6 +207,10 @@ class DeliveryController extends Controller
 
       if(isset($request->save_to_packing)){
 
+      	if(empty($request->row_id)){
+      		return redirect()->to(url("backend/delivery"));
+      	}
+
       	$arr = implode(',', $request->row_id);
 
         DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
@@ -236,8 +240,6 @@ class DeliveryController extends Controller
     	     	$DeliveryPacking->delivery_id_fk = @$value->id;
     	     	$DeliveryPacking->created_at = date('Y-m-d H:i:s');
   	        $DeliveryPacking->save();
-
-            DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id." WHERE (receipt_no='".$value->receipt."'); ");
 
   	     }
 

@@ -20,17 +20,25 @@
   <?php 
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
+      // print_r($menu_id);
     if($sPermission==1){
       $sC = '';
       $sU = '';
       $sD = '';
+       $sA = 1 ;
     }else{
       $role_group_id = \Auth::user()->role_group_id_fk;
+      // print_r($role_group_id);
       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      // print_r($menu_permit);
       $sC = @$menu_permit->c==1?'':'display:none;';
       $sU = @$menu_permit->u==1?'':'display:none;';
       $sD = @$menu_permit->d==1?'':'display:none;';
+      $sA = @$menu_permit->can_approve ;
     }
+
+    // print_r($sD);
+
    ?>
 <div class="row">
     <div class="col-12">
@@ -43,7 +51,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.check_orders.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.check_orders.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
                   </div>
@@ -140,18 +148,6 @@ $(function() {
 </script>
 
 
-<script type="text/javascript">
-/*
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
 
 @endsection
 

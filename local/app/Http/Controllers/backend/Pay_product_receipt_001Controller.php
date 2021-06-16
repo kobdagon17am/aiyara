@@ -642,10 +642,6 @@ class Pay_product_receipt_001Controller extends Controller
                      ");
 
         }
-        // db_pay_product_receipt_001.address_send_type in (1,2) 
-        // ( db_pay_product_receipt_001.branch_id_fk=".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk_tosent = ".$req->branch_id_fk." )   AND db_pay_product_receipt_001.action_user= ".(\Auth::user()->id)."
-        
-          // WHERE db_pay_product_receipt_001.address_send_type = 1 AND db_pay_product_receipt_001.action_user= ".(\Auth::user()->id)."
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery  
@@ -1069,10 +1065,10 @@ class Pay_product_receipt_001Controller extends Controller
       			$pn = '<div class="divTable"><div class="divTableBody">';
       			$pn .=     
       			'<div class="divTableRow">
-      			<div class="divTableCell" style="width:250px;font-weight:bold;">ชื่อสินค้า</div>
-      			<div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
-      			<div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
-      			<div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
+              <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
       			</div>
       			';
 
@@ -1152,10 +1148,10 @@ class Pay_product_receipt_001Controller extends Controller
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
             '<div class="divTableRow">
-            <div class="divTableCell" style="width:250px;font-weight:bold;">ชื่อสินค้า</div>
-            <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
-            <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
+              <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
             </div>
             ';
 
@@ -1223,10 +1219,10 @@ class Pay_product_receipt_001Controller extends Controller
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
             '<div class="divTableRow">
-            <div class="divTableCell" style="width:250px;font-weight:bold;">ชื่อสินค้า</div>
-            <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
-            <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
+              <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
             </div>
             ';
 
@@ -1305,7 +1301,6 @@ class Pay_product_receipt_001Controller extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) { 
-        // group by time_pay order by time_pay asc 
 
             $rs = DB::select(" SELECT
                   db_pay_product_receipt_002_pay_history.id,
@@ -1342,11 +1337,6 @@ class Pay_product_receipt_001Controller extends Controller
         ->escapeColumns('column_001')
         ->addColumn('column_002', function($row) {
 
-          // $Products = DB::select("
-          //    SELECT *,sum(amt_get) as sum_amt_get  from db_pay_product_receipt_002 
-          //    where db_pay_product_receipt_002.invoice_code='".$row->invoice_code."' and time_pay=1 group by time_pay,product_id_fk order By time_pay
-          // ");
-
           $Products = DB::select(" SELECT
             db_pay_product_receipt_002.*,sum(amt_get) as sum_amt_get
             FROM
@@ -1356,10 +1346,10 @@ class Pay_product_receipt_001Controller extends Controller
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
           '<div class="divTableRow">
-          <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
-          <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
-          <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
-          <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
+            <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
+            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
+            <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
 
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
@@ -1422,32 +1412,25 @@ class Pay_product_receipt_001Controller extends Controller
       })
       ->escapeColumns('column_002')  
       ->addColumn('ch_amt_remain', function($row) { 
-        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
-        // Case ที่มีการบันทึกข้อมูลแล้ว
-        // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
 
+          // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+          // Case ที่มีการบันทึกข้อมูลแล้ว
+          // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย'
            $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
 
            if(count($rs_pay_history)>0){
-               return 2;
+               return 2; // ค้างจ่าย
            }else{
-               return 3;
+               return 3; // จ่ายครบแล้ว
            }
-
-          // $r_check_remain = DB::select(" SELECT status FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' ORDER BY time_pay DESC LIMIT 1  ");
-          // if($r_check_remain){
-          //     return $r_check_remain[0]->status; 
-          // }else{
-          // // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า 3 ไปก่อน
-          //     return 3;
-          // }
 
        })
       ->addColumn('ch_amt_lot_wh', function($row) { 
-// ดูว่าไม่มีสินค้าคลังเลย
-
+          // ดูว่าไม่มีสินค้าคลังเลย
+          // ดูในใบซื้อว่ามีรยการสินค้าใดบ้างที่ยังค้างส่งอยู่ 
           $Products = DB::select("
-            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk 
+            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' 
+            AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
           ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
               if(@$Products){

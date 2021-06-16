@@ -63,7 +63,7 @@ body{
                 customers_detail.amphures_id_fk,
                 customers_detail.district_id_fk,
                 customers_detail.road,
-                customers_detail.province_id_fk,
+                customers_detail.province_id_fk
                 FROM
                 db_taxdata
                 Left Join customers_detail ON db_taxdata.customer_id_fk = customers_detail.customer_id

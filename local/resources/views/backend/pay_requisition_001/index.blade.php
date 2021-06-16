@@ -228,8 +228,8 @@
                     <div class="col-md-9">
                       <select id="status_sent" name="status_sent" class="form-control select2-templating " >
                         <option value="">-Status-</option>
-                        @if(@$sPay_product_status)
-                        @foreach(@$sPay_product_status AS $r)
+                        @if(@$sPay_requisition_status)
+                        @foreach(@$sPay_requisition_status AS $r)
                         <option value="{{$r->id}}" >
                           {{$r->txt_desc}}
                         </option>
@@ -244,7 +244,7 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> วันที่ออกใบเสร็จ : </label>
+                    <label for="" class="col-md-3 col-form-label"> วันที่ออกใบเบิก : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -318,7 +318,7 @@
               <li class="nav-item">
                 <a class="nav-link tab_a active " data-toggle="tab" href="#home" role="tab">
                   <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                  <span class="d-none d-sm-block">ใบเสร็จ</span>
+                  <span class="d-none d-sm-block">ใบเบิก</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -330,7 +330,7 @@
               <li class="nav-item">
                 <a class="nav-link tab_c  " data-toggle="tab" href="#inv" role="tab">
                   <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-                  <span class="d-none d-sm-block">INVOICE DETAILS</span>
+                  <span class="d-none d-sm-block">รายการในใบเบิก</span>
                 </a>
               </li>
             </ul>
@@ -340,7 +340,7 @@
                 <p class="mb-0">
                   <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w200 myLike1 " placeholder="ค้น > รหัสใบเสร็จ" name="txtSearch_001">
+                    <input type="text" class="form-control float-left text-center w200 myLike1 " placeholder="ค้น > รหัสใบเบิก" name="txtSearch_001">
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
@@ -380,7 +380,7 @@
                 <p class="mb-0">
                   <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w200 myLike3 " placeholder="ค้น > เลขที่ใบเสร็จ" name="txtSearch_003">
+                    <input type="text" class="form-control float-left text-center w200 myLike3 " placeholder="ค้น > เลขที่ใบเบิก" name="txtSearch_003">
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
@@ -425,21 +425,19 @@
                   ordering: false,
                   iDisplayLength: 50,
                   ajax: {
-                            url: '{{ route('backend.pay_product_receipt_tb1.datatable') }}',
+                            url: '{{ route('backend.pay_requisition_tb1.datatable') }}',
                               method: 'POST',
                             },
                   columns: [
                       {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
-                      {data: 'bill_date', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-center'},
+                      {data: 'pick_pack_requisition_code_id_fk', title :'<center>ใบเบิก</center>', className: 'text-center'},
+                      {data: 'packing_date', title :'<center>วันที่ออกใบเบิก</center>', className: 'text-center'},
                       {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
                       {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
                       {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
                       {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
-
-                      // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
                       {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
-                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                      {data: 'id', title :'Tools', className: 'text-center w150'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -450,24 +448,24 @@
                         $('td:last-child', nRow).html('-');
                     }else{ 
 
+                          // console.log(aData['status_cancel_some']);
                           // console.log(aData['status_sent_2']);
-                          // console.log(aData['status_cancel_all']);
-                          console.log(aData['status_cancel_some']);
-                          // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
-                          if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
+                          // && aData['status_sent_2']!=3 
+                          if(aData['status_sent_2']==3 || aData['status_sent_2']==4 || aData['status_sent_2']==5 || aData['status_cancel_some']==1 ){ 
 
                               $('td:last-child', nRow).html(''
-                                + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
                                 
                               ).addClass('input');
 
                           }else{
 
                              $('td:last-child', nRow).html(''
-                                + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
+                                + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-pick_pack_requisition_code_id_fk="'+aData['pick_pack_requisition_code_id_fk_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                               ).addClass('input');
-       
                               
                           }
 
@@ -503,7 +501,7 @@ $(function() {
         columns: [
             {data: 'column_001', title :'รหัส:ชื่อสินค้า', className: 'text-left w200 '},
             {data: 'column_002', title :'<center>รายการสินค้า</center>', className: 'text-left '},
-            {data: 'column_003', title :'<center>เลขที่ใบเสร็จ : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
+            {data: 'column_003', title :'<center>เลขที่ใบเบิก : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
             {data: 'column_004', title :'<center>สาขา</center>', className: 'text-left '},
             {data: 'column_005', title :'<center>วันเวลาที่ดำเนินการ</center>', className: 'text-center '},
 
@@ -564,8 +562,8 @@ $(function() {
       		                        },
       					        columns: [
                             {data: 'id', title :'ID', className: 'text-center w50'},
-                            {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
-                            {data: 'bill_date', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-center'},
+                            {data: 'invoice_code', title :'<center>ใบเบิก</center>', className: 'text-center'},
+                            {data: 'bill_date', title :'<center>วันที่ออกใบเบิก</center>', className: 'text-center'},
                             {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
                             {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
                             {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
@@ -683,7 +681,7 @@ $(function() {
                               columns: [
                                   {data: 'column_001', title :'รหัส:ชื่อสินค้า', className: 'text-left w200 '},
                                   {data: 'column_002', title :'<center>รายการสินค้า</center>', className: 'text-left '},
-                                  {data: 'column_003', title :'<center>เลขที่ใบเสร็จ : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
+                                  {data: 'column_003', title :'<center>เลขที่ใบเบิก : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
                                   {data: 'column_004', title :'<center>สาขา</center>', className: 'text-left '},
                                   {data: 'column_005', title :'<center>วันเวลาที่ดำเนินการ</center>', className: 'text-center '},
                               ],
@@ -721,14 +719,14 @@ $(function() {
             destroy:true,
             ordering: false,
              ajax: {
-    	        url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
+    	        url: '{{ route('backend.pay_requisition_tb3.datatable') }}',
     	          data :{
                 	_token: '{{csrf_token()}}',
                       },
                   method: 'POST',
                 },
             columns: [
-                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเบิก </span> ', className: 'text-center w100'},
                     {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
                     {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
                     {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
@@ -788,7 +786,7 @@ $(function() {
 	                                method: 'POST',
 	                              },
 					            columns: [
-					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเบิก </span> ', className: 'text-center w100'},
 					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
 					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
 					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
@@ -891,7 +889,7 @@ $(function() {
 	                                method: 'POST',
 	                              },
 					            columns: [
-					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเบิก </span> ', className: 'text-center w100'},
 					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
 					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
 					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
@@ -1089,8 +1087,8 @@ $(function() {
 	                              },
                             columns: [
                                 {data: 'id', title :'ID', className: 'text-center w50'},
-                                {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
-                                {data: 'bill_date', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-center'},
+                                {data: 'invoice_code', title :'<center>ใบเบิก</center>', className: 'text-center'},
+                                {data: 'bill_date', title :'<center>วันที่ออกใบเบิก</center>', className: 'text-center'},
                                 {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
                                 {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
                                 {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
@@ -1168,7 +1166,7 @@ $(function() {
             						        columns: [
             						            {data: 'column_001', title :'รหัส:ชื่อสินค้า', className: 'text-left w200 '},
             						            {data: 'column_002', title :'<center>รายการสินค้า</center>', className: 'text-left '},
-            						            {data: 'column_003', title :'<center>เลขที่ใบเสร็จ : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
+            						            {data: 'column_003', title :'<center>เลขที่ใบเบิก : ชื่อผู้จ่าย </center>', className: 'text-left w150 '},
             						            {data: 'column_004', title :'<center>สาขา</center>', className: 'text-left '},
             						            {data: 'column_005', title :'<center>วันเวลาที่ดำเนินการ</center>', className: 'text-center '},
 
@@ -1208,7 +1206,7 @@ $(function() {
           	                                method: 'POST',
           	                              },
           					            columns: [
-          					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+          					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเบิก </span> ', className: 'text-center w100'},
           					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
           					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
           					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
@@ -1317,19 +1315,50 @@ $(function() {
 
     </script>
    
+   
     <?php 
+    
     if(isset($_REQUEST['test_clear_data'])){
-      DB::select("TRUNCATE `db_pay_product_receipt_001`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_pay_history`;");
-      DB::select("TRUNCATE `db_pay_product_receipt_002_cancel_log`;");
-      DB::select("TRUNCATE `db_pick_warehouse_qrcode`;");
-      DB::select("TRUNCATE `db_stocks_return`;");
-      DB::select(" DROP TABLE IF EXISTS `temp_db_stocks_compare1` ; ");
-      DB::select(" UPDATE `db_stocks` SET `amt`='0' ; ");
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      DB::select("TRUNCATE `db_consignments`;");
+      DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
+      
       ?>
           <script>
-          location.replace( "{{ url('backend/pay_product_receipt_001') }}");
+          location.replace( "{{ url('backend/pick_pack') }}");
           </script>
           <?php
       }

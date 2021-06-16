@@ -179,7 +179,7 @@
                                        @else
 
                                          @if(@$sBranchs)
-                                         <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
+                                         <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " disabled >
                                              <option value="">Select</option>
                                               @foreach(@$sBranchs AS $r)
                                                @if(@$r->id==$User_branch_id)
@@ -214,7 +214,7 @@
                                        @else
 
                                          @if(@$Customer)
-                                         <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
+                                         <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " disabled >
                                              <option value="">Select</option>
                                               @foreach(@$Customer AS $r)
                                               <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customers_id_fk)?'selected':'' }} >
@@ -238,7 +238,7 @@
                                 <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label">ช่องทางการจำหน่าย : * </label>
                                   <div class="col-md-6">
-                                    <select id="distribution_channel_id_fk" name="distribution_channel_id_fk" class="form-control select2-templating " required >
+                                    <select id="distribution_channel_id_fk" name="distribution_channel_id_fk" class="form-control select2-templating " disabled >
                                       <option value="">Select</option>
                                           @if(@$sDistribution_channel)
                                             @foreach(@$sDistribution_channel AS $r)
@@ -270,7 +270,7 @@
 
                                       @else
 
-                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " required  >
+                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " disabled  >
                                             <option value="">Select</option>
                                             @if(@$sPurchase_type)
                                               @foreach(@$sPurchase_type AS $r)
@@ -294,7 +294,7 @@
                                   <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
                                   <div class="col-md-6">
 
-                                        <select id="aistockist" name="aistockist" class="form-control select2-templating "  >
+                                        <select id="aistockist" name="aistockist" class="form-control select2-templating " disabled >
                                         <option value="">-</option>
                                         @if(@$aistockist)
                                           @foreach(@$aistockist AS $r)
@@ -313,7 +313,7 @@
                                 <div class="col-md-12 form-group row" style="position: absolute;">
                                    <label for="" class="col-form-label">หมายเหตุ :  </label>
                                   <div class="col-md-10">
-                                       <textarea class="form-control" id="note" name="note" rows="5">{{ @$sRow->note }}</textarea>
+                                       <textarea class="form-control" id="note" name="note" rows="5" disabled >{{ @$sRow->note }}</textarea>
                                   </div>
                                 </div>
                               </div>
@@ -327,7 +327,7 @@
                                   <label for="" class="col-md-4 col-form-label"> Agency : </label>
                                   <div class="col-md-6" >
 
-                                        <select id="agency" name="agency" class="form-control select2-templating "   >
+                                        <select id="agency" name="agency" class="form-control select2-templating "  disabled >
                                         <option value="">-</option>
                                         @if(@$agency)
                                           @foreach(@$agency AS $r)
@@ -371,11 +371,11 @@
 
                       <div class="row">
                         <div class="col-md-6">
-                        </div>
+                        </div><!-- 
                         <div class="col-md-5 text-right">
                           <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                          </button>
+                          </button> -->
                         </div>
                       </div>
              </form>
@@ -431,14 +431,13 @@
           <div class="page-title-box d-flex justify-content-between ">
             <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
 
-            <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank >
+        <!--     <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank >
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
             </a>
 
             <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{@$sRow->id}}" target=_blank >
               <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
             </a>
-            <!-- แลก  Ai Voucher -->
                  <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion " href="#" >
                   <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
                 </a>
@@ -449,7 +448,7 @@
 
             <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddList " href="#" >
               <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่ม</span>
-            </a>
+            </a> -->
 
           </div>
 
@@ -493,23 +492,23 @@
                     <thead>
                       <tr style="background-color: #f2f2f2;">
                         <th>ระบุที่อยู่ในการจัดส่ง</th>
-                        <input type="hidden" class="ShippingCalculate02" province_id="{{@$sRow->delivery_province_id}}" id="delivery_province_id" value="{{@$sRow->delivery_province_id}}">
+                        <input type="hidden" class="ShippingCalculate02" province_id="{{@$sRow->delivery_province_id}}" id="delivery_province_id" disabled value="{{@$sRow->delivery_province_id}}">
                       </tr>
                     </thead>
                     <tbody>
 
                        <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
-                          <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                          <input type="radio" disabled province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                         </th>
                       </tr>
 
 
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
-                          <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                          <input type="radio" disabled province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
                             <div class="col-md-6">
-                             <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " >
+                             <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " disabled >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$r->id==@$sRow->branch_id_fk)
@@ -580,7 +579,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_01?>">
-                          <input type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" disabled value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -633,7 +632,7 @@
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input type="radio" province_id="<?=@$addr[0]->province?>"
-                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
+                           class="ShippingCalculate" disabled name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -665,7 +664,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" disabled <?=(@$sRow->delivery_location==3?'checked':'')?> > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -675,14 +674,14 @@
 				 	@if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
                       <tr>
                         <th scope="row"  style="">
-                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> disabled style="transform: scale(1.5);margin-right:5px; " > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
                     @ELSE
                  	<tr>
                         <th scope="row"  style="">
-                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> disabled style="transform: scale(1.5);margin-right:5px; " > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
@@ -790,7 +789,7 @@
             <label for="" > รูปแบบการชำระเงิน : </label>
           </div>
           <div class="divTableCell">
-            <input class="form-control f-ainumber-18 input-aireadonly"  value=" Ai Voucher" readonly="" >
+            <input class="form-control f-ainumber-18 input-aireadonly"  value=" Ai Voucher" disabled >
           </div>
         </div>
 
@@ -819,7 +818,7 @@
                       <label for="" class="" >ยอด GIft Voucher ที่ชำระ : </label>
                     </div>
                     <div class="divTableCell">
-                        <input class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill" name="gift_voucher_price" id="gift_voucher_price" value="{{@$sRow->gift_voucher_price>0?number_format(@$sRow->gift_voucher_price,2):''}}" required="" >
+                        <input class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill" name="gift_voucher_price" id="gift_voucher_price" value="{{@$sRow->gift_voucher_price>0?number_format(@$sRow->gift_voucher_price,2):''}}" disabled >
                     </div>
                     <div class="divTableCell">
                       <i class="bx bx-check-circle" title="ยอดชำระ"></i>
@@ -840,7 +839,7 @@
                       </div>
                       <div class="divTableCell">
 
-                            <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
+                            <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " disabled >
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -864,7 +863,7 @@
                         <label for="" >ค่าธรรมเนียมบัตรเครดิต : </label>
                       </div>
                       <div class="divTableCell">
-                           <select id="fee" name="fee" class="form-control select2-templating " >
+                           <select id="fee" name="fee" class="form-control select2-templating " disabled >
                                 <option value="">Select</option>
                                 @if(@$sFee)
                                 @foreach(@$sFee AS $r)
@@ -903,7 +902,7 @@
                       		<label for="" class="" > บัตรเครดิต  :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
+                          <input class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" disabled />
                       </div>
                     </div>
 
@@ -1012,7 +1011,7 @@
                       </div>
                       <div class="divTableCell">
 
-							<select  id="member_id_aicash" name="member_id_aicash" class="form-control select2-templating " required="" >
+							<select  id="member_id_aicash" name="member_id_aicash" class="form-control select2-templating " disabled >
                                 <option value="">Select</option>
                                   @if(@$Customer)
                                     @foreach(@$Customer AS $r)
@@ -1140,9 +1139,9 @@
                           <label class="" > </label>
                         </div>
                         <div class="divTableCell">
-                            <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " style="float: right;">
+                      <!--       <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " style="float: right;">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                            </button>
+                            </button> -->
                         </div>
                       </div>
 
@@ -1388,7 +1387,7 @@
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
                   <div class="col-md-7">
-                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " >
+                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " disabled >
                        <option value="">Select</option>
                        @if(@$sProvince)
                         @foreach(@$sProvince AS $r)
@@ -1406,7 +1405,7 @@
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
                   <div class="col-md-7">
-                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " required >
+                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " disabled >
                       @if(@$CusAddrFrontstore[0]->amphur_code)
                            <option value="">Select</option>
                            @if(@$sAmphures)
@@ -1426,7 +1425,7 @@
                 <div class="form-group row">
                   <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
                   <div class="col-md-7">
-                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " required >
+                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " disabled >
                       @if(@$CusAddrFrontstore[0]->tambon_code)
                            <option value="">Select</option>
                            @if(@$sTambons)
@@ -1520,7 +1519,7 @@
                   <label for="" class="col-md-3 col-form-label"> <b>ค้นหาสินค้า :</b> </label>
                   <div class="col-md-8">
                     <!-- <input type="text" id="txtSearch" name="" class="form-control" value="" placeholder="กรอกคำค้น รหัสสินหค้า หรือ ชื่อสินค้า" > -->
-                     <select name="product_id_fk[]" id="product_id_fk" class="form-control select2-templating "  >
+                     <select name="product_id_fk[]" id="product_id_fk" class="form-control select2-templating " disabled >
                                 <option value="">-ค้น-</option>
                                    @if(@$Products)
                                         @foreach(@$Products AS $r)
@@ -1545,7 +1544,7 @@
                  <div class="form-group row">
                   <label for="" class="col-md-3 col-form-label"> <b>จำนวน :</b> </label>
                   <div class="col-md-8">
-                    <input type="number" name="quantity[]" id="amt" class="form-control" value="" required="">
+                    <input type="number" name="quantity[]" id="amt" class="form-control" value="" disabled>
                   </div>
                 </div>
 
@@ -1668,7 +1667,7 @@
                         {data: 'total_price',   title :'<center>รวม</center>', className: 'text-center',render: function(d) {
                            return d;
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w60'},
+                        // {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                      'columnDefs': [
                      {
@@ -1692,7 +1691,7 @@
                       }
 
                       $('td:last-child', nRow).html(''
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstorelist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
                 });
@@ -1852,7 +1851,7 @@
                            return d;
                         }},
 
-                        {data: 'id', title :'Tools', className: 'text-center w60'},
+                        // {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                      'columnDefs': [
                      {
@@ -2012,7 +2011,7 @@
             })
 
             $('#modalAddFromProductsList').on('shown.bs.modal', function () {
-                $('.btnProductAll1').trigger('click');
+                // $('.btnProductAll1').trigger('click');
             })
 
             // $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
@@ -2253,7 +2252,7 @@
                                       }},
 
 
-                                      {data: 'id', title :'Tools', className: 'text-center w60'},
+                                      // {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],
                                    'columnDefs': [
                                    {
@@ -2284,7 +2283,7 @@
 
                                     fnGetDBfrontstore();
                                     setTimeout(function(){
-                                      $(".ShippingCalculate02").trigger('click');
+                                      // $(".ShippingCalculate02").trigger('click');
                                     }, 1000);
 
 
@@ -2389,7 +2388,7 @@
                                            return d;
                                         }},
 
-                                        {data: 'id', title :'Tools', className: 'text-center w60'},
+                                        // {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -2419,7 +2418,7 @@
 
                                         fnGetDBfrontstore();
                                          setTimeout(function(){
-                                            $(".ShippingCalculate02").trigger('click');
+                                            // $(".ShippingCalculate02").trigger('click');
                                           }, 1000);
 
 
@@ -2530,7 +2529,7 @@
                                            return d;
                                         }},
 
-                                        {data: 'id', title :'Tools', className: 'text-center w60'},
+                                        // {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -2559,7 +2558,7 @@
 
                                       fnGetDBfrontstore();
                                       setTimeout(function(){
-                                        $(".ShippingCalculate02").trigger('click');
+                                        // $(".ShippingCalculate02").trigger('click');
                                       }, 1000);
 
                                     }
@@ -2668,7 +2667,7 @@
                                            return d;
                                         }},
 
-                                        {data: 'id', title :'Tools', className: 'text-center w60'},
+                                        // {data: 'id', title :'Tools', className: 'text-center w60'},
                                     ],
                                      'columnDefs': [
                                      {
@@ -3242,7 +3241,7 @@ $(document).ready(function() {
                                                    return d;
                                                 }},
 
-                                                {data: 'id', title :'Tools', className: 'text-center w60'},
+                                                // {data: 'id', title :'Tools', className: 'text-center w60'},
                                             ],
                                              'columnDefs': [
                                              {
@@ -3564,14 +3563,14 @@ $(document).ready(function() {
     			  // $(".ShippingCalculate02").trigger('click');
 
 	              $('.btnUpSlip').on('click', function(e) {
-	                    $("#image01").trigger('click');
+	                    // $("#image01").trigger('click');
 	              });
 
                  $('#modalAddFromPromotion,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
                  		$(".myloading").show();
                  		fnCheckDBfrontstore();
                     setTimeout(function(){
-                      $(".ShippingCalculate02").trigger('click');
+                      // $(".ShippingCalculate02").trigger('click');
       							}, 1000);
 
     				    });
@@ -3581,7 +3580,7 @@ $(document).ready(function() {
                     $(".myloading").show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
-                      $(".ShippingCalculate02").trigger('click');
+                      // $(".ShippingCalculate02").trigger('click');
                     }, 1000);
 
                     // setTimeout(function(){

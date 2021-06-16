@@ -144,8 +144,8 @@ class Shipping_costController extends Controller
     }
 
     public function Datatable(){
-      // $sTable = \App\Models\Backend\Shipping_cost::search()->orderBy('id', 'asc');
-      $sTable = DB::select("  select dataset_business_location.*,txt_desc as business_location from dataset_business_location  ");
+      $sTable = \App\Models\Backend\Shipping_cost::search()->orderBy('id', 'asc');
+      // $sTable = DB::select("  select dataset_business_location.*,txt_desc as business_location from dataset_business_location  ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
        ->addColumn('cost_set', function($row) {

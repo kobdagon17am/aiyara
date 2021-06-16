@@ -105,16 +105,13 @@
                 customers_detail.road,
                 customers_detail.province_id_fk,
                 customers.id as cus_id,
-                customers.user_name as cus_code,
-                orders_frontstore.id as order_id,
-                orders_frontstore.shipping
+                customers.user_name as cus_code
 
                 FROM
                 db_order_products_list
                 Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
                 Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                 Left Join customers ON customers_detail.customer_id = customers.id
-                Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
                 WHERE
                 db_order_products_list.frontstore_id_fk =
                 ".$data[0]."
@@ -344,16 +341,15 @@
                     customers_detail.district_id_fk,
                     customers_detail.road,
                     customers_detail.province_id_fk,
-                    customers.id as cus_id,
-                    orders_frontstore.id as order_id,
-                    orders_frontstore.shipping
+                    customers.id as cus_id
+          
 
                     FROM
                     db_order_products_list
                     Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
                     Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-                    Left Join orders_frontstore ON db_orders.code_order = orders_frontstore.code_order
+             
                     WHERE
                     db_order_products_list.frontstore_id_fk =
                     ".$data[0]."  AND add_from=1

@@ -47,24 +47,6 @@
     .select2-selection {height: 34px !important;margin-left: 3px;}
     .border-left-0 {height: 67%;}
 
-
-  .tooltip_shipping {
-    position: relative ;
-  }
-  .tooltip_shipping:hover::after {
-    content: "Shipping" ;
-    position: absolute ;
-    /*top: 0.5em ;*/
-    left: -4em ;
-    min-width: 80px ;
-    border: 1px #808080 solid ;
-    padding: 1px ;
-    color: black ;
-    background-color: #cfc ;
-    z-index: 9999 ;
-  } 
-
-
 </style>
 @endsection
 
@@ -74,7 +56,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รายการรอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> รายการรอจัดส่ง  </h4>
         </div>
     </div>
 </div>
@@ -241,11 +223,14 @@
               
               <?php }?>
 
-                 <div class="col-md-6 text-right divBtnSave " style="display: none;">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกรวมบิล Packing List
+                 <div class=" divBtnSave " style="display: none;">
+                 	<center>
+                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-18  ">
+                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> บันทึกรวมบิล Packing List
                     </button>
+               		</center>
                   </div>
+
 
               <div id="last_form"></div>
 
@@ -274,8 +259,11 @@
               
               <?php }?>
 
-
-                           
+							<center>
+							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">
+								Packing ใบเบิก >
+							</a>
+							</center>
 
                           </div>
                         </div>
@@ -452,7 +440,7 @@ $(function() {
 
                 if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
-                        '<span class="tooltip_shipping badge badge-info font-size-14">S</span>');
+                        '<span class=" badge badge-info font-size-14" data-toggle="tooltip" data-placement="right" title="Shipping"  >S</span>');
                  }else{
                       $("td:eq(2)", nRow).html('');
                  }
@@ -525,8 +513,8 @@ $(function() {
 
               }
           });
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable.draw();
+              oTable.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
               });
           });
 
@@ -610,7 +598,35 @@ $(function() {
                 oTableNopacking.draw();
               });
           });
+
+
             $('#data-table').on( 'click', 'tr', function () {
+
+                 $(".myloading").show();
+
+                  $("input[name^=row_id]").remove();
+
+                  setTimeout(function(){
+
+                          var rows_selected = $('#data-table').DataTable().column(0).checkboxes.selected();
+                          $.each(rows_selected, function(index, rowId){
+
+                            $('#last_form').after(
+                                 $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', 'row_id[]')
+                                    .attr('id', 'row_id'+rowId)
+                                    .val(rowId)
+                             );
+
+                          });
+
+                          var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+
+                          console.log(ids); 
+
+                  }, 500);
+
 
   					     setTimeout(function(){
   	            		if($('.select-info').text()!=''){
@@ -628,50 +644,7 @@ $(function() {
 
             } );
 
-           // Handle form submission event 
-           $('#frm-example').on('submit', function(e){
-            // e.preventDefault();
-              var form = this;
-
-              console.log(form);
-              
-              var rows_selected = oTable.column(0).checkboxes.selected();
-
-              console.log(rows_selected);
-
-               // return false;
-
-              // Iterate over all selected checkboxes
-              $.each(rows_selected, function(index, rowId){
-
-                console.log(rowId);
-                // $("#last_form").after("<input type='text' name='row_id[]' value='"+rowId+"' >");
-                 // Create a hidden element 
-                $('#last_form').after(
-                     $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', 'row_id[]')
-                        .val(rowId)
-                 );
-              });
-
-              // FOR DEMONSTRATION ONLY
-              // The code below is not needed in production
-              
-              // Output form data to a console     
-              // $('#example-console-rows').text(rows_selected.join(","));
-              
-              // Output form data to a console     
-              // $('#example-console-form').text($(form).serialize());
-               
-              // Remove added elements
-              // $('input[name="id\[\]"]', form).remove();
-               
-              // Prevent actual form submission
-              // e.preventDefault();
-
-               });
-
+     
 
           var oTable2;
           $(function() {
@@ -779,7 +752,7 @@ $(function() {
 
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
-                                + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                // + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
     	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
     	                        ).addClass('input');
                     		  }
@@ -1049,5 +1022,33 @@ $(function() {
          
 </script>
 
+
+        <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      DB::select("TRUNCATE `db_delivery` ;");
+      DB::select("TRUNCATE `db_delivery_packing` ;");
+      DB::select("TRUNCATE `db_delivery_packing_code` ;");
+      DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+      DB::select("TRUNCATE db_consignments;");
+      ?>
+          <script>
+          location.replace( "{{ url('backend/delivery') }}");
+          </script>
+          <?php
+      }
+    ?>
 @endsection
 

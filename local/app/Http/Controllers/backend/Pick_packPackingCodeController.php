@@ -57,19 +57,17 @@ class Pick_packPackingCodeController extends Controller
 
     }
 
-    public function Datatable(Request $request){     
+    public function packing_list(Request $request){     
 
-      if(!empty($request->packing_id)){
-          $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
-      }else{
-          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      }
+      $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
 
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
-        return "P2".sprintf("%05d",$row->id);
+        // return "P2".sprintf("%05d",$row->id);
+            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+            return $DP->packing_code;
       })      
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
@@ -98,6 +96,49 @@ class Pick_packPackingCodeController extends Controller
       ->make(true);
     }
 
+
+ public function packing_list_for_fifo(Request $request){     
+
+      if(!empty($request->packing_id)){
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
+      }else{
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status','0')->where('status_picked','1')->search()->orderBy('id', 'asc');
+      }
+
+      $sQuery = \DataTables::of($sTable);
+
+      return $sQuery
+      ->addColumn('packing_code_02', function($row) {
+        // return "P2".sprintf("%05d",$row->id);
+           $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+           return $DP->packing_code;
+      })      
+      ->addColumn('customer_name', function($row) {
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          $array = array();
+          if(@$DP){
+            foreach ($DP as $key => $value) {
+              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+              array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+            }
+            $arr = implode(',', $array);
+            return $arr;
+          }
+      })
+      ->addColumn('action_user_name', function($row) {
+        if(@$row->action_user!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
+           return @$sD[0]->name;
+        }else{
+          return '';
+        }
+      })
+      ->addColumn('updated_at', function($row) {
+        return is_null($row->updated_at) ? '-' : $row->updated_at;
+      })
+      ->make(true);
+    }
 
 
 }

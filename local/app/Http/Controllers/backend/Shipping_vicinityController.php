@@ -110,7 +110,12 @@ class Shipping_vicinityController extends Controller
 
     public function Datatable(Request $req){
 
-       $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk', $req->business_location_id_fk)->where('shipping_type_id', '2')->get();
+      if(isset($req->business_location_id_fk)){
+          $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk', $req->business_location_id_fk)->where('shipping_type_id', '2')->get();
+      }else{
+          $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk', 1)->where('shipping_type_id', '2')->get();
+      }
+
        $d1 = $shipping_cost[0]->id;
        $d2 = DB::table('dataset_shipping_vicinity')->where('shipping_cost_id_fk', $d1 )->get();
 
@@ -118,13 +123,20 @@ class Shipping_vicinityController extends Controller
 
       $sQuery = \DataTables::of($d2);
       return $sQuery
-      ->addColumn('province_name', function($row) {
+      ->addColumn('province_name_th', function($row) {
         if(@$row->province_id_fk){
           @$d = DB::select("select * from dataset_provinces where id=".@$row->province_id_fk." ");
           return @$d[0]->name_th;
         }
         
       })
+      ->addColumn('province_name_en', function($row) {
+        if(@$row->province_id_fk){
+          @$d = DB::select("select * from dataset_provinces where id=".@$row->province_id_fk." ");
+          return @$d[0]->name_en;
+        }
+        
+      })      
       ->make(true);
     }
 

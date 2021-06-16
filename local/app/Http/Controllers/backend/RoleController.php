@@ -154,7 +154,15 @@ class RoleController extends Controller
                     }
                 }
               }
-
+              if(!empty(request('can_cancel_packing_sent'))){
+                $can_cancel_packing_sent = request('can_cancel_packing_sent');
+                if(!empty($can_cancel_packing_sent)){
+                    foreach ($can_cancel_packing_sent AS $row) {
+                         DB::update(" UPDATE role_permit SET can_cancel_packing_sent=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+              
               
           }
 

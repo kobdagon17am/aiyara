@@ -346,6 +346,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxScanQrcodeProduct', 'AjaxController@ajaxScanQrcodeProduct');
     Route::post('ajaxDeleteQrcodeProduct', 'AjaxController@ajaxDeleteQrcodeProduct');
+    Route::post('ajaxScanQrcodeProductPacking', 'AjaxController@ajaxScanQrcodeProductPacking');
+    Route::post('ajaxDeleteQrcodeProductPacking', 'AjaxController@ajaxDeleteQrcodeProductPacking');
+
     Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
 
     Route::post('ajaxSyncStockToNotify', 'AjaxController@ajaxSyncStockToNotify');
@@ -373,6 +376,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('pick_pack_packing_code', 'Pick_packPackingCodeController');
     Route::post('pick_pack_packing_code/datatable', 'Pick_packPackingCodeController@Datatable')->name('pick_pack_packing_code.datatable');
+    
+    Route::post('packing_list/datatable', 'Pick_packPackingCodeController@packing_list')->name('packing_list.datatable');
+    Route::post('packing_list_for_fifo/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo')->name('packing_list_for_fifo.datatable');
 
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');
@@ -382,12 +388,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     // หน้าแรก
     Route::resource('pay_product_receipt_001', 'Pay_product_receipt_001Controller');
     Route::post('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
-    // Route::get('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
 
     Route::post('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    
     Route::get('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    
 
-    Route::post('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');    
+    Route::post('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');   
     Route::get('pay_product_receipt_tb3/datatable', 'Pay_product_receipt_001Controller@Datatable003')->name('pay_product_receipt_tb3.datatable');   
 
     Route::post('cancel-pay_product_receipt_001', 'Pay_product_receipt_001Controller@destroy');
@@ -401,12 +406,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxSearch_bill_db_orders002', 'Products_fifo_billController@ajaxSearch_bill_db_orders002');
     Route::get('ajaxSearch_bill_db_orders002', 'Products_fifo_billController@ajaxSearch_bill_db_orders002');
     
+    Route::post('ajaxSearch_requisition_db_orders', 'Pick_warehouse_fifoController@ajaxSearch_requisition_db_orders');
     Route::post('ajaxSearch_requisition_db_orders002', 'Pick_warehouse_fifoController@ajaxSearch_requisition_db_orders002');
-    Route::get('ajaxSearch_requisition_db_orders002', 'Pick_warehouse_fifoController@ajaxSearch_requisition_db_orders002');
 
     Route::post('ajaxSavePay_product_receipt', 'Pay_product_receipt_001Controller@ajaxSavePay_product_receipt');
     
     Route::post('ajaxSavePay_requisition', 'Pay_requisition_001Controller@ajaxSavePay_requisition');
+    Route::post('ajaxSavePay_requisition_edit', 'Pay_requisition_001Controller@ajaxSavePay_requisition_edit');
 
     Route::post('ajaxCHECKPay_product_receipt', 'Pay_product_receipt_001Controller@ajaxCHECKPay_product_receipt');
 
@@ -433,21 +439,32 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเบิก @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
     Route::resource('pay_requisition_001', 'Pay_requisition_001Controller');
-    // Route::post('pay_requisition_tb1/datatable', 'Pay_requisition_001Controller@Datatable001')->name('pay_requisition_tb1.datatable');
+    Route::post('pay_requisition_tb1/datatable', 'Pay_requisition_001Controller@Datatable001')->name('pay_requisition_tb1.datatable');
+    
     Route::post('pick_warehouse_tb_0001/datatable', 'Pick_warehouse_fifoController@Datatable0001')->name('pick_warehouse_tb_0001.datatable');  
-    // Route::post('pick_warehouse_tb_0002/datatable', 'Pick_warehouseController@Datatable0002')->name('pick_warehouse_tb_0002.datatable');  
     
     Route::post('pick_warehouse_tb_0002/datatable', 'Pick_warehouse_fifoController@Datatable0002FIFO')->name('pick_warehouse_tb_0002.datatable');
     // ฝากไว้ก่อน
     Route::post('pick_warehouse_tb_0002_edit/datatable', 'Pick_warehouseController@Datatable0002')->name('pick_warehouse_tb_0002_edit.datatable');
-    
-    // Route::post('pay_product_receipt_tb6/datatable', 'Pay_product_receipt_001Controller@Datatable006')->name('pay_product_receipt_tb6.datatable');
-    
-    // Route::post('pay_product_receipt_tb7/datatable', 'Pay_product_receipt_001Controller@Datatable007')->name('pay_product_receipt_tb7.datatable');    
-    // Route::post('pay_product_receipt_tb8/datatable', 'Pay_product_receipt_001Controller@Datatable008')->name('pay_product_receipt_tb8.datatable');    
-    // Route::post('pay_product_receipt_tb9FIFO/datatable', 'Products_fifo_billController@Datatable009FIFO')->name('pay_product_receipt_tb9FIFO.datatable');    
 
-    // Route::post('pay_product_receipt_tb10FIFO/datatable', 'Products_fifo_billController@Datatable010FIFO')->name('pay_product_receipt_tb10FIFO.datatable'); 
+    Route::post('pick_warehouse_tb_0003/datatable', 'Pick_warehouse_fifoController@Datatable0003')->name('pick_warehouse_tb_0003.datatable');  
+    Route::post('pick_warehouse_tb_0004/datatable', 'Pick_warehouse_fifoController@Datatable0004')->name('pick_warehouse_tb_0004.datatable');  
+    
+    Route::post('pay_requisition_tb3/datatable', 'Pay_requisition_001Controller@Datatable003')->name('pay_requisition_tb3.datatable');
+    Route::get('pay_requisition_tb3/datatable', 'Pay_requisition_001Controller@Datatable003')->name('pay_requisition_tb3.datatable');   
+
+
+    Route::post('warehouse_qr_0001/datatable', 'Pick_warehouseController@warehouse_qr_0001')->name('warehouse_qr_0001.datatable');  
+    Route::post('warehouse_qr_0002/datatable', 'Pick_warehouseController@warehouse_qr_0002')->name('warehouse_qr_0002.datatable');  
+
+    Route::post('warehouse_tb_000/datatable', 'Pick_warehouseController@warehouse_tb_000')->name('warehouse_tb_000.datatable');  
+    Route::post('warehouse_tb_001/datatable', 'Pick_warehouseController@warehouse_tb_001')->name('warehouse_tb_001.datatable');  
+    Route::post('warehouse_address_sent/datatable', 'Pick_warehouseController@warehouse_address_sent')->name('warehouse_address_sent.datatable');  
+
+    Route::post('ajaxPackingFinished', 'AjaxController@ajaxPackingFinished');
+    Route::post('ajaxShippingFinished', 'AjaxController@ajaxShippingFinished');
+    Route::post('cancel-status-packing-sent', 'AjaxController@ajaxCacelStatusPackingSent');
+
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
@@ -465,6 +482,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('delivery/print_receipt01/{id}', 'AjaxController@createPDFReceipt01');
     Route::post('frontstore/print_receipt022/{id}', 'AjaxController@createPDFReceipt022');
     Route::get('frontstore/print_receipt022/{id}', 'AjaxController@createPDFReceipt022');
+    Route::get('frontstore/print_receipt_02/{id}', 'AjaxController@createPDFReceipt02');
     Route::get('frontstore/print_receipt_packing/{id}', 'AjaxController@createPDFReceiptPacking');
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
@@ -482,6 +500,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
+    Route::get('frontstore/viewdata/{id}', 'FrontstoreController@viewdata');
 
     Route::get('check_stock_account/print_receipt/{id}', 'AjaxController@createPDFStock_account');
 
@@ -605,13 +624,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
     Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');
 
+    Route::post('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
+    Route::get('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
+
     Route::resource('supplier', 'SupplierController');
     Route::post('supplier/datatable', 'SupplierController@Datatable')->name('supplier.datatable');
 
 
     Route::resource('pick_warehouse_fifo', 'Pick_warehouse_fifoController');
     Route::post('pick_warehouse_fifo/datatable', 'Pick_warehouse_fifoController@Datatable')->name('pick_warehouse_fifo.datatable');
-    Route::post('pick_warehouse_fifo/fifo', 'Pick_warehouse_fifoController@calFifo');
+    Route::post('calFifo', 'Pick_warehouse_fifoController@calFifo');
+    Route::post('calFifo_edit', 'Pick_warehouse_fifoController@calFifo_edit');
 
     Route::resource('pick_warehouse_fifo_topicked', 'Pick_warehouse_fifo_topickedController');
     Route::post('pick_warehouse_fifo_topicked/datatable', 'Pick_warehouse_fifo_topickedController@Datatable')->name('pick_warehouse_fifo_topicked.datatable');
@@ -628,7 +651,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 
     Route::resource('check_money_daily', 'Check_money_dailyController');
-    Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
+    // Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
+    Route::post('check_money_daily/datatable', 'Check_money_dailyController@DatatableSentMoney')->name('check_money_daily.datatable');
+    Route::post('check_money_daily02/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily02.datatable');
 
 
     Route::resource('promotion_code', 'PromotionCodeController');
@@ -713,6 +738,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 // ใบยืม
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
+
+
+    Route::post('ajaxSentMoneyDaily', 'AjaxController@ajaxSentMoneyDaily');
+    Route::post('ajaxCancelSentMoney', 'AjaxController@ajaxCancelSentMoney');
 
 
     Route::resource('giveaway', 'GiveawayController');

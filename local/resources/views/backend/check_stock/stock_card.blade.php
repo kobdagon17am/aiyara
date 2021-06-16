@@ -74,7 +74,7 @@
                       </div>
 
                     <div class="col-md-4">
-                      <div style="float: right;font-size: 18px !important;font-weight: bold;">
+                      <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
                         ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
                       </div>
                     </div>
@@ -85,13 +85,12 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-                <div class="row">
-                  <div class="col-12 ">
-                    <center>
-                    <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;margin-right: 15%;margin-top: 2%;" target="_blank" >
-                      <i class="bx bx-printer align-middle "></i> พิมพ์ / Print-Out
+                <div class="row" >
+                  <div class="col-11 "></div>
+                  <div class="col-1 ">
+                    <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;margin-right: 5%;margin-top: 2%;" target="_blank" >
+                      <i class="bx bx-printer align-middle "></i> Print
                     </a>
-                    </center>
                   </div>
                 </div>
 
@@ -223,26 +222,17 @@ $(document).ready(function() {
 
                                             $('td:last-child', nRow).html(formatNumber(parseFloat(aData['remain']).toFixed(0)));
 
-                                              // var decreased = parseInt(aData['amt']);
+                                            var count = $('#data-table').dataTable().fnSettings().aoData.length;
+                                            // alert(count);
+                                            if (count <= 1)
+                                            {
+                                               $(".btnPrint").hide();
+                                            }else{
+                                                $(".btnPrint").show();
+                                            }
 
-                                              // if(isNaN(decreased) || decreased > 0) {
-                                              //   $("td:eq(6)", nRow).html(aData['amt_in']);
-                                              // }else{
-                                              //   $("td:eq(6)", nRow).html('');
-                                              // }
+                                            $(".amt_remain").load(location.href + " .amt_remain");
 
-
-                                              // var increased = parseInt(aData['amt']);
-
-                                              // if(isNaN(increased) || increased <= 0) {
-                                              //   $("td:eq(7)", nRow).html(aData['amt_out']);
-                                              // }else{
-                                              //   $("td:eq(7)", nRow).html('');
-                                              // }
-
-                                            $(".btnPrint").show();
-
-                                            
 
                                           }
                                       });

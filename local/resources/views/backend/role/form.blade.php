@@ -173,6 +173,13 @@
                             สิทธ์ > รับเงิน
                           </label>
                           @ENDIF
+                           @IF(@$row->isCancelStatusSent=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_cancel_packing_sent}}">
+                            <input class="checks" type="checkbox" name="can_cancel_packing_sent[]" {!! (@$menu_admin->can_cancel_packing_sent == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ > สิทธิ์ยกเลิกสถานะการแพ็คและการจัดส่ง
+                          </label>
+                          @ENDIF
 
 
             				@ELSE

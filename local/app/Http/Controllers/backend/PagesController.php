@@ -699,7 +699,7 @@ class PagesController extends Controller{
                 $highestColumn = $worksheet->getHighestColumn(); // total number of columns
                 $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-                $lines = $highestRow - 2; 
+                $lines = $highestRow - 1; 
                 if ($lines <= 0) {
                          // Exit ('There is no data in the Excel table');
                     Session::flash('message','There is no data in the Excel table');
@@ -731,10 +731,20 @@ class PagesController extends Controller{
                          $service_code = $worksheet->getCellByColumnAndRow(19, $row)->getValue(); 
 
                           // Skip first row (Remove below comment if you want to skip the first row)
-                           if($i == 0){
-                              $i++;
-                              continue; 
-                           }
+                         if($i == 0){
+                            $i++;
+                            continue; 
+                         }
+
+
+                        // $check=DB::table('db_consignments')
+                        //   ->where('recipient_code', @$recipient_code)
+                        //   ->get();
+                        //   if($check->count() > 0){
+                        //       Session::flash('message','พบรหัส Recipient Code ซ้ำกับการนำเข้าครั้งที่ผ่านมา');
+                        //   }else{
+                        //      Session::flash('message','test');
+                        //   }
 
                          $insertData = array(
                            "consignment_no"=>@$consignment_no,
@@ -762,6 +772,10 @@ class PagesController extends Controller{
                          $i++;
 
                     }
+                    
+                    if(!empty($request->requisition_code)){
+                      DB::select("UPDATE db_consignments set consignment_no='' WHERE requisition_code='".$request->requisition_code."' ");
+                    }
 
                     Session::flash('message','Import Successful.');
 
@@ -780,7 +794,8 @@ class PagesController extends Controller{
           // Redirect to index
           // return redirect()->action('PagesController@index');
           // return redirect()->to(url("backend/pick_warehouse"));
-          return redirect()->to(url("backend/pay_product_packing"));
+          // return redirect()->to(url("backend/pay_product_packing"));
+          return redirect()->to(url("backend/pick_warehouse/1/qr"));
 
         }
 
