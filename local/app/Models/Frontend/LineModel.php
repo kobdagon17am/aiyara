@@ -18,57 +18,36 @@ class LineModel extends Model
 			$lv1 = DB::table('customers')
 			->select('*')
 			->where('id','=',$id)
-			->limit(1)
-			->get();
+			->first();
 
-			$lv1 = $lv1[0];
 
 			$lv2_a = DB::table('customers')
 			->select('*')
 			->where('upline_id','=',$lv1->id)
 			->where('line_type','=','A')
-			->limit(1)
-			->get();
+			->first();
 
-			if(count($lv2_a) > 0){
+
+
+			if($lv2_a){
 
 				$lv3_a_a = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_a[0]->id)
+				->where('upline_id','=',$lv2_a->id)
 				->where('line_type','=','A')
-				->limit(1)
-				->get();
-				if(count($lv3_a_a)>0){
-					$lv3_a_a = $lv3_a_a[0];
-				}else{
-					$lv3_a_a = null;
-
-				}
+				->first();
 
 				$lv3_a_b = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_a[0]->id)
+				->where('upline_id','=',$lv2_a->id)
 				->where('line_type','=','B')
-				->limit(1)
-				->get();
-				if(count($lv3_a_b)>0){
-					$lv3_a_b = $lv3_a_b[0];
-				}else{
-					$lv3_a_b = null;
-				}
-
+				->first();
 
 				$lv3_a_c = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_a[0]->id)
+				->where('upline_id','=',$lv2_a->id)
 				->where('line_type','=','C')
-				->limit(1)
-				->get();
-				if(count($lv3_a_c)>0){
-					$lv3_a_c = $lv3_a_c[0];
-				}else{
-					$lv3_a_c = null;
-				}
+				->first();
 
 			}else{
 				$lv2_a = null;
@@ -78,53 +57,32 @@ class LineModel extends Model
 			}
 
 
-
 			$lv2_b = DB::table('customers')
 			->select('*')
 			->where('upline_id','=',$lv1->id)
 			->where('line_type','=','B')
-			->get();
+			->first();
 
-			if(count($lv2_b) > 0){
+			if($lv2_b){
 
 				$lv3_b_a = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_b[0]->id)
+				->where('upline_id','=',$lv2_b->id)
 				->where('line_type','=','A')
-				->limit(1)
-				->get();
+				->first();
 
-				if(count($lv3_b_a)>0){
-					$lv3_b_a = $lv3_b_a[0];
-				}else{
-					$lv3_b_a = null;
-
-				}
 
 				$lv3_b_b = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_b[0]->id)
+				->where('upline_id','=',$lv2_b->id)
 				->where('line_type','=','B')
-				->limit(1)
-				->get();
-				if(count($lv3_b_b)>0){
-					$lv3_b_b = $lv3_b_b[0];
-				}else{
-					$lv3_b_b = null;
-				}
-
+				->first();
 
 				$lv3_b_c = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_b[0]->id)
+				->where('upline_id','=',$lv2_b->id)
 				->where('line_type','=','C')
-				->limit(1)
-				->get();
-				if(count($lv3_b_c)>0){
-					$lv3_b_c = $lv3_b_c[0];
-				}else{
-					$lv3_b_c = null;
-				}
+				->first();
 
 			}else{
 				$lv2_b = null;
@@ -133,54 +91,33 @@ class LineModel extends Model
 				$lv3_b_c = null;
 			}
 
-
 			$lv2_c = DB::table('customers')
 			->select('*')
 			->where('upline_id','=',$lv1->id)
 			->where('line_type','=','C')
-			->get();
+			->first();
 
-
-
-			if(count($lv2_c) > 0){
+			if($lv2_c){
 
 				$lv3_c_a = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_c[0]->id)
+				->where('upline_id','=',$lv2_c->id)
 				->where('line_type','=','A')
-				->limit(1)
-				->get();
-				if(count($lv3_c_a)>0){
-					$lv3_c_a = $lv3_c_a[0];
-				}else{
-					$lv3_c_a = null;
+				->first();
 
-				}
 
 				$lv3_c_b = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_c[0]->id)
+				->where('upline_id','=',$lv2_c->id)
 				->where('line_type','=','B')
-				->limit(1)
-				->get();
-				if(count($lv3_c_b)>0){
-					$lv3_c_b = $lv3_c_b[0];
-				}else{
-					$lv3_c_b = null;
-				}
+				->first();
 
 
 				$lv3_c_c = DB::table('customers')
 				->select('*')
-				->where('upline_id','=',$lv2_c[0]->id)
+				->where('upline_id','=',$lv2_c->id)
 				->where('line_type','=','C')
-				->limit(1)
-				->get();
-				if(count($lv3_c_c)>0){
-					$lv3_c_c = $lv3_c_c[0];
-				}else{
-					$lv3_c_c = null;
-				}
+				->first();
 
 			}else{
 				$lv2_c = null;
@@ -189,8 +126,9 @@ class LineModel extends Model
 				$lv3_c_c = null;
 			}
 
+
 			$data = ['lv1'=>$lv1,
-			'lv2_a'=>$lv2_a[0],'lv2_b'=>$lv2_b[0],'lv2_c'=>$lv2_c[0],
+			'lv2_a'=>$lv2_a,'lv2_b'=>$lv2_b,'lv2_c'=>$lv2_c,
 			'lv3_a_a'=>$lv3_a_a,'lv3_a_b'=>$lv3_a_b,'lv3_a_c'=>$lv3_a_c,
 			'lv3_b_a'=>$lv3_b_a,'lv3_b_b'=>$lv3_b_b,'lv3_b_c'=>$lv3_b_c,
 			'lv3_c_a'=>$lv3_c_a,'lv3_c_b'=>$lv3_c_b,'lv3_c_c'=>$lv3_c_c
