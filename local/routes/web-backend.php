@@ -653,7 +653,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('check_money_daily', 'Check_money_dailyController');
     // Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@DatatableSentMoney')->name('check_money_daily.datatable');
-    Route::post('check_money_daily02/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily02.datatable');
+    Route::post('check_money_daily02/datatable', 'Check_money_dailyController@DatatableTotal')->name('check_money_daily02.datatable');
 
 
     Route::resource('promotion_code', 'PromotionCodeController');

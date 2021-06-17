@@ -12,7 +12,15 @@ class Check_money_dailyController extends Controller
 
     public function index(Request $request)
     {
-      return view('backend.check_money_daily.index');
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       $sBranchs = \App\Models\Backend\Branchs::get();
+        $sSeller = DB::select(" select id,name as seller_name from  ck_users_admin ");
+       return View('backend.check_money_daily.index')->with(array(
+        'sBusiness_location'=>$sBusiness_location,
+        'sBranchs'=>$sBranchs,
+           'sSeller'=>$sSeller,
+
+      ) );
     }
 
    public function create()
@@ -38,6 +46,7 @@ class Check_money_dailyController extends Controller
        $sRowCheck_money_daily_AiCash = \App\Models\Backend\Check_money_daily::where('id',$id)->get();
        // dd($sRowCheck_money_daily_AiCash);
        $sSent_money_daily = DB::select(" select * from  db_sent_money_daily where id=$id ");
+       $sSeller = DB::select(" select * from  ck_users_admin ");
 
        return View('backend.check_money_daily.form')->with(
         array(
@@ -46,6 +55,7 @@ class Check_money_dailyController extends Controller
            'sRowCheck_money_daily'=>$sRowCheck_money_daily,
            'sRowCheck_money_daily_AiCash'=>$sRowCheck_money_daily_AiCash,
            'sSent_money_daily'=>$sSent_money_daily,
+           'sSeller'=>$sSeller,
         ) );
     }
 
@@ -73,6 +83,8 @@ class Check_money_dailyController extends Controller
                       // $Frontstore->save();
                      
                      DB::select(" UPDATE `db_sent_money_daily` SET `status_approve`='1', `approver`='".(\Auth::user()->id).")', `approve_date`=now() ,total_money=".$request->sum_total_price2." WHERE (`id`='".$request->id."') ");
+
+                     DB::select(" UPDATE `db_orders` SET `status_sent_money`='2' WHERE (`sent_money_daily_id_fk` in ('".$request->id."') ) ");
 
 
                   }
@@ -295,9 +307,10 @@ class Check_money_dailyController extends Controller
     public function DatatableSentMoney(Request $req){
     
       if(isset($req->id)){
-        $sTable = DB::select("  SELECT * FROM db_sent_money_daily where id=".$req->id." ");
+        $sTable = DB::select("  SELECT *,1 as remark FROM db_sent_money_daily where id=".$req->id." ");
       }else{
-        $sTable = DB::select("  SELECT * FROM db_sent_money_daily  ");
+        $sTable = DB::select("  SELECT *,1 as remark FROM db_sent_money_daily UNION ALL
+ SELECT *,2 as remark FROM db_sent_money_daily GROUP BY sender_id ");
       }
       // WHERE status_cancel=0
 
@@ -305,7 +318,7 @@ class Check_money_dailyController extends Controller
       return $sQuery
       ->addColumn('column_001', function($row) {
 
-              if(@$row->sender_id!=''){
+              if(@$row->sender_id!='' && $row->remark==1){
                 $sD = DB::select(" select * from ck_users_admin where id=".$row->sender_id." ");
                  return @$sD[0]->name;
               }else{
@@ -315,11 +328,17 @@ class Check_money_dailyController extends Controller
       ->escapeColumns('column_001')
 
       ->addColumn('column_002', function($row) {
-         return @$row->time_sent;
+          if($row->remark==1){
+            return @$row->time_sent;
+          }else{
+             return '';
+          }
       })
       ->escapeColumns('column_002')     
 
       ->addColumn('column_003', function($row) {
+         
+         if($row->remark==1){
 
           $sDBSentMoneyDaily = DB::select("
                 SELECT
@@ -341,33 +360,68 @@ class Check_money_dailyController extends Controller
                             db_orders where sent_money_daily_id_fk in (".$r->id.");
                         ");
 
+                        $i = 1;
                         foreach ($sOrders as $key => $value) {
+
                             $pn .=     
-                              '<div class="divTableRow">
+                              ' 
+                              <div class="divTableRow invoice_code_list ">
                               <div class="divTableCell" style="text-align:center;">'. $value->invoice_code.'</div>
                               </div>
                               ';
+                            $i++;
+                            if($i==4){
+                             break;
+                            }
+
                       }
 
+                                 $arr = [];
+                          foreach ($sOrders as $key => $value) {
+                              array_push($arr,$value->invoice_code);
+                            }
+                        $arr_inv = implode(",",$arr);
+
+                        
+
+                         if($i>3){
+                          $pn .=     
+                          '<div class="divTableRow  ">
+                          <div class="divTableCell" style="text-align:center;">...</div>
+                          </div>
+                          ';
+                        }
+
+                         $pn .=     
+                          '<input type="hidden" class="arr_inv" value="'.$arr_inv.'">
+                          ';
                     }
 
-           
-              if($row->status_cancel==1){
-                 return " - ";
-              }else{
-                 return $pn;
-              }
+                  if($row->status_cancel==1){
+                     return " - ";
+                  }else{
+                     return $pn;
+                  }
+
+          }else{
+             return '';
+          }
 
       })
       ->escapeColumns('column_003') 
 
       ->addColumn('column_004', function($row) {
+        if($row->remark==1){
            return $row->updated_at;
+          }else{
+             return '';
+          }           
       })
       ->escapeColumns('column_004') 
 
       ->addColumn('column_005', function($row) {
 
+         if($row->remark==1){
 
           $sDBSentMoneyDaily = DB::select("
                 SELECT
@@ -461,9 +515,9 @@ class Check_money_dailyController extends Controller
 
                 }
                           
-                $pn .=   '         </tbody>
+                $pn .=   '         
+                  </tbody>
                   </table>
-                  
                 </div>';
               }
 
@@ -473,87 +527,218 @@ class Check_money_dailyController extends Controller
                  return $pn;
               }
 
+         }else{
+              
+               $sDBSentMoneyDaily = DB::select("
+                      SELECT
+                      db_sent_money_daily.*,
+                      ck_users_admin.`name` as sender
+                      FROM
+                      db_sent_money_daily
+                      Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                      WHERE date(db_sent_money_daily.updated_at)=CURDATE() AND db_sent_money_daily.id=".$row->id."
+                      order by db_sent_money_daily.time_sent
+                ");
+                
+
+             
+                 $pn =  '';
+                
+
+                  $sDBFrontstoreSumCostActionUser = DB::select("
+                      SELECT
+                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
+                      FROM
+                      db_orders
+                      Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                      Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                      WHERE db_orders.pay_type_id_fk<>0 
+                      GROUP BY action_user
+                 ");
+
+                
+                 $pn .=   ' <div class="table-responsive">
+                        <table class="table table-sm m-0">
+                              <tbody>';
+                        $sum = 0;
+                      foreach(@$sDBFrontstoreSumCostActionUser AS $r){
+
+                        $sum += $r->total_price;
+                              $pn .=   '            
+                                 <tr>
+                                <td colspan="6">  </td>
+                                <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;background-color:#e6ffe6;"> รวมทั้งสิ้น </td>
+                                <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;background-color:#e6ffe6;"> '.number_format($sum,2).' </td>
+                                 </tr>';
+
+                       }
+                                
+                      $pn .=   '         
+                        </tbody>
+                        </table>
+                      </div>';
+
+             return $pn;
+
+         }     
 
       })
       ->escapeColumns('column_005')         
 
       ->addColumn('column_006', function($row) {
 
+        if($row->remark==1){
               if($row->status_cancel==1){
                  return "display:none;";
               }else{
                  return  $row->id ;
               }
 
-          
+          }else{
+             return  "display:none;" ;
+          }
       })
       ->escapeColumns('column_006') 
-        ->addColumn('column_007', function($row) {
+      ->addColumn('column_007', function($row) {
+        
+        if($row->remark==1){
 
-          if($row->status_approve==1){
-             return "<span style='color:green;'>รับเงินแล้ว</span>";
+                if($row->status_approve==1){
+                   return "<span style='color:green;'>รับเงินแล้ว</span>";
+                }else{
+                   return  "-" ;
+                }
+
           }else{
-             return  "-" ;
+             return  "" ;
           }
-
           
       })
       ->escapeColumns('column_007') 
       ->addColumn('sum_total_price', function($row) {
        
+       if($row->remark==1){
 
-          $sDBSentMoneyDaily = DB::select("
-                SELECT
-                db_sent_money_daily.*,
-                ck_users_admin.`name` as sender
-                FROM
-                db_sent_money_daily
-                Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
-                WHERE date(db_sent_money_daily.updated_at)=CURDATE() AND db_sent_money_daily.id=".$row->id."
-                order by db_sent_money_daily.time_sent
-          ");
-          $arr = [];
+                $sDBSentMoneyDaily = DB::select("
+                      SELECT
+                      db_sent_money_daily.*,
+                      ck_users_admin.`name` as sender
+                      FROM
+                      db_sent_money_daily
+                      Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                      WHERE date(db_sent_money_daily.updated_at)=CURDATE() AND db_sent_money_daily.id=".$row->id."
+                      order by db_sent_money_daily.time_sent
+                ");
+                $arr = [];
 
-             foreach(@$sDBSentMoneyDaily AS $r){
-                      $sOrders = DB::select("
-                            SELECT * 
-                            FROM
-                            db_orders where sent_money_daily_id_fk in (".$r->id.");
-                        ");
+                   foreach(@$sDBSentMoneyDaily AS $r){
+                            $sOrders = DB::select("
+                                  SELECT * 
+                                  FROM
+                                  db_orders where sent_money_daily_id_fk in (".$r->id.");
+                              ");
 
-                        foreach ($sOrders as $key => $value) {
-                           array_push($arr,$value->id);
-                      }
-                      }
-                      $id = implode(',',$arr);
+                              foreach ($sOrders as $key => $value) {
+                                 array_push($arr,$value->id);
+                            }
+                            }
+                            $id = implode(',',$arr);
 
-                      if($id){
-            $sDBFrontstoreSumCostActionUser = DB::select("
-                SELECT
-                db_orders.action_user,
-                ck_users_admin.`name` as action_user_name,
-                db_orders.pay_type_id_fk,
-                dataset_pay_type.detail AS pay_type,
-                date(db_orders.action_date) AS action_date,
-                sum(db_orders.cash_pay) as cash_pay,
-                sum(db_orders.credit_price) as credit_price,
-                sum(db_orders.transfer_price) as transfer_price,
-                sum(db_orders.aicash_price) as aicash_price,
-                sum(db_orders.shipping_price) as shipping_price,
-                sum(db_orders.fee_amt) as fee_amt,
-                sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
-                FROM
-                db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id)
-                GROUP BY action_user
-           ");
+                            if($id){
+                  $sDBFrontstoreSumCostActionUser = DB::select("
+                      SELECT
+                      db_orders.action_user,
+                      ck_users_admin.`name` as action_user_name,
+                      db_orders.pay_type_id_fk,
+                      dataset_pay_type.detail AS pay_type,
+                      date(db_orders.action_date) AS action_date,
+                      sum(db_orders.cash_pay) as cash_pay,
+                      sum(db_orders.credit_price) as credit_price,
+                      sum(db_orders.transfer_price) as transfer_price,
+                      sum(db_orders.aicash_price) as aicash_price,
+                      sum(db_orders.shipping_price) as shipping_price,
+                      sum(db_orders.fee_amt) as fee_amt,
+                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
+                      FROM
+                      db_orders
+                      Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                      Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                      WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id)
+                      GROUP BY action_user
+                 ");
 
-                return number_format($sDBFrontstoreSumCostActionUser[0]->total_price,2);
-              }
+                      return number_format($sDBFrontstoreSumCostActionUser[0]->total_price,2);
+                    }
+
+          }else{
+             return  "" ;
+          }
+
       })
       ->escapeColumns('sum_total_price')    
+      ->make(true);
+    }
+
+
+
+
+    public function DatatableTotal(){
+
+
+      $sTable = DB::select("  
+
+            SELECT
+            db_orders.*,
+            dataset_business_location.txt_desc AS business_location,
+            branchs.b_name AS branch_name,
+            ck_users_admin.`name` as action_user,
+            '' as ttp,
+            1 as remark 
+            FROM
+            db_orders
+            Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+            Left Join branchs ON db_orders.branch_id_fk = branchs.id
+            Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+            WHERE
+            DATE(db_orders.created_at)=CURDATE() 
+            UNION ALL 
+            SELECT
+            db_orders.*,
+            dataset_business_location.txt_desc AS business_location,
+            branchs.b_name AS branch_name,
+            ck_users_admin.`name` as action_user , 
+            sum(sum_price) as ttp,
+            2 as remark 
+            FROM
+            db_orders
+            Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+            Left Join branchs ON db_orders.branch_id_fk = branchs.id
+            Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+            WHERE
+            DATE(db_orders.created_at)=CURDATE() 
+
+
+          ");
+
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('total_money', function($row) {
+
+         $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$row->id.") GROUP BY frontstore_id_fk ");
+             
+             if($row->remark==1){
+
+                return "<b>".number_format($r[0]->total_money,2)."</b>";
+
+             }else{
+
+               return "<b>".number_format($row->ttp,2)."</b>";
+
+             }
+
+      }) 
+      ->escapeColumns('total_money')
+
       ->make(true);
     }
 

@@ -453,6 +453,27 @@
 
 
 
+<div class="modal fade" id="modalOne" tabindex="-1" role="dialog" aria-labelledby="modalOneTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จ</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <center>
+       <div class="modal-body invoice_list " style="font-size: 20px;width: 50% !important;">
+
+       </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
 </div>
 <!-- end row -->
 
@@ -710,6 +731,19 @@
 
 
 </script>
+
+     <script>
+      $(document).ready(function() {
+
+           $(document).on('click','.invoice_code_list',function(event){
+               var t = $(this).siblings('.arr_inv').val();
+               var tt = t.split(",").join("\r\n");
+               $('.invoice_list').html(tt);
+               $('#modalOne').modal('show');
+            });
+                
+     });
+    </script>
 
 @endsection
 
