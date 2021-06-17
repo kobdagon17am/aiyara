@@ -4,7 +4,7 @@ namespace App\Models\Frontend;
 use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
-use App\Models\Db_orders;
+use App\Models\Db_Orders;
 use App\Models\Db_Add_ai_cash;
 use App\Models\DbInvoiceCode;
 
@@ -19,7 +19,7 @@ class RunNumberPayment extends Model
 
 	public static function run_number_order($business_location_id_fk){
 
-		$id = Db_orders::where('business_location_id_fk','=',$business_location_id_fk)
+		$id = Db_Orders::where('business_location_id_fk','=',$business_location_id_fk)
 		->where('date_setting_code','=',date('ym'))
 		->orderby('id','desc')
 		->first();

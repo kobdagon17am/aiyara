@@ -107,7 +107,7 @@ class CartController extends Controller
 
         $order_id = '88'; //order_id
         $admin_id = '99'; //admin_id
-        $resule = Pvpayment::PvPayment_type_confirme($order_id, $admin_id);
+        $resule = PvPayment::PvPayment_type_confirme($order_id, $admin_id);
         dd($resule);
     }
 
@@ -124,7 +124,7 @@ class CartController extends Controller
 
         // $order_id = '57';//order_id
         // $admin_id = '99';//admin_id
-        // $resule = Pvpayment::PvPayment_type_confirme($order_id,$admin_id);
+        // $resule = PvPayment::PvPayment_type_confirme($order_id,$admin_id);
         // dd($resule);
     }
 

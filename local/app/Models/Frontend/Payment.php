@@ -4,7 +4,7 @@ namespace App\Models\Frontend;
 use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\PaymentAddProduct;
 use App\Models\Frontend\PaymentSentAddressOrder;
-use App\Models\Frontend\Pvpayment;
+use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\RunNumberPayment;
 use Auth;
 use Cart;
@@ -367,7 +367,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id,$rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
+                $resulePv = PvPayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
@@ -462,7 +462,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
+                $resulePv = PvPayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
                     return $resulePv;
@@ -533,7 +533,7 @@ class Payment extends Model
             $resule = PaymentAddProduct::payment_add_product($id, $customer_id, $rs->type, $business_location_id, $rs->pv_total);
 
             if ($resule['status'] == 'success') {
-                $resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
+                $resulePv = PvPayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
                     return $resulePv;

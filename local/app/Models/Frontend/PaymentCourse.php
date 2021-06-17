@@ -217,7 +217,7 @@ class PaymentCourse extends Model
 
 		if($resule['status'] == 'success'){
 
-			$resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
+			$resulePv = PvPayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 
 			if($resulePv['status'] == 'fail'){
 
@@ -294,7 +294,7 @@ public static function ai_cash($rs){
 
 
 		if($resule['status'] == 'success'){
-			$resulePv = Pvpayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
+			$resulePv = PvPayment::PvPayment_type_confirme($id,$customer_id,'2','customer');
 			if($resulePv['status'] == 'fail'){
 
 				DB::rollback();
