@@ -1026,7 +1026,7 @@ class FrontstoreController extends Controller
 
             $sTable = DB::select("
 
-                SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price
+                SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
@@ -1044,25 +1044,28 @@ class FrontstoreController extends Controller
                 db_add_ai_cash.id as inv_no,approve_status
                 ,'',
                 db_add_ai_cash.updated_at as ud2,
-                'ai_cash' as pay_type,cash_price,credit_price,fee_amt,transfer_price,0 as aicash_price,total_amt as total_price
+                'ai_cash' as pay_type,cash_price,
+                credit_price,fee_amt,transfer_price,
+                0 as aicash_price,total_amt as total_price,'' 
                 FROM db_add_ai_cash
                 WHERE 1 AND db_add_ai_cash.approve_status<>4
                 $w1
 
-                ORDER BY updated_at DESC
+                ORDER BY created_at DESC
 
               ");
 
       // $sTable = \App\Models\Backend\Frontstore::search();
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('action_date', function($row) {
-        $d = strtotime(@$row->action_date);
-        return date("d/m/", $d).(date("Y", $d)+543);
+      ->addColumn('created_at', function($row) {
+        $d = strtotime(@$row->created_at);
+        return date("Y-m-d",$d)."<br/>".date("H:i:s",$d);
       })
+      ->escapeColumns('created_at')
       ->addColumn('customer_name', function($row) {
         $Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-        return @$Customer[0]->user_name.' : '.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+        return "[".@$Customer[0]->user_name.'] <br>'.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
       })
       ->addColumn('purchase_type', function($row) {
         if(@$row->purchase_type_id_fk>0){

@@ -125,7 +125,7 @@
                 <input id="startDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="endDate" >วันสร้างสิ้นสุด : </label>
@@ -134,7 +134,7 @@
                 <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >ประเภทการสั่งซื้อ : </label>
@@ -152,7 +152,7 @@
                   </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
             </div>
             <div class="divTableRow">
@@ -163,7 +163,7 @@
                 <input class="form-control"  />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >ชื่อลูกค้า : </label>
@@ -172,7 +172,7 @@
                 <input class="form-control"  />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >เลขที่ใบสั่งซื้อ : </label>
@@ -181,9 +181,11 @@
                 <input class="form-control"  />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
             </div>
+
+
             <div class="divTableRow">
 
                   <div class="divTH">
@@ -193,7 +195,7 @@
                 <input class="form-control"  />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
 
               <div class="divTH">
@@ -212,7 +214,7 @@
                 </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >สถานะ : </label>
@@ -230,11 +232,52 @@
                 </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
             
             </div>
+
+
+
+            
             <div class="divTableRow">
+
+              <div class="divTH">
+                <label for="" >การส่งเงิน : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+              	   <select name="" class="form-control select2-templating "  >
+                  <option value="">Select</option>
+                      <option value="0"> - </option>
+                      <option value="1"> In Process </option>
+                      <option value="1"> Success </option>
+                </select>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+              <div class="divTH">
+                <label for="" > </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+              </div>
+              <div class="divTableCell">
+              </div>
+              <div class="divTH">
+                <label for="" >  </label>
+              </div>
+              <div class="divTableCell" style="width: 15%;text-align:right;">
+                  <button type="button" class="btn btn-warning" style="color:black;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-info" style="padding: 9%;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
+              </div>
+            
+            </div>
+
+            <div class="divTableRow">
+
+          
               <div class="divTableCell">
                 
               </div>
@@ -251,18 +294,14 @@
                 
               </div>
               <div class="divTableCell">
-                
+              
               </div>
               <div class="divTableCell">
                 
-              </div>
-              <div class="divTableCell">
-                <button type="button" class="btn btn-warning" style="color:black;float: right;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
-              </div>
-              <div class="divTableCell">
-                <button type="button" class="btn btn-info" style="float: left;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
               </div>
             </div>
+
+
           </div>
         </div>
         <!-- DivTable.com -->
@@ -478,11 +517,11 @@
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        รายการส่งเงินรายวัน
+                        <span class="test_clear_sent_money">รายการส่งเงินรายวัน
                       </th></tr>
                       <tr>
-                        <th>ครั้งที่</th>
-                        <th class="text-left">รายการใบเสร็จที่ส่ง</th>
+                        <th class="text-center">ครั้งที่</th>
+                        <th class="text-center">รายการใบเสร็จที่ส่ง</th>
                         <th class="text-center">ผู้ส่ง</th>
                         <th class="text-center">วัน เวลา ที่ส่ง</th>
                         <th class="text-center">Tool</th>
@@ -492,11 +531,13 @@
 
 						  @IF(@$sDBSentMoneyDaily)
 						  <?php $tt = 1; ?>
-                              @foreach(@$sDBSentMoneyDaily AS $r)
+              
+              @foreach(@$sDBSentMoneyDaily AS $r)
 
-                              <?php 
+               
+                <?php 
 
-                                      $sOrders = DB::select("
+                       $sOrders = DB::select("
 							              SELECT invoice_code 
 							              FROM
 							              db_orders where sent_money_daily_id_fk in (".$r->id.");
@@ -507,32 +548,50 @@
 						<tr>
 							<td class="text-center">  {{$tt}} </td>
 							<?php if(@$r->status_cancel==0){ ?>
-								<td class="text-left">
-								<?php 
-								foreach ($sOrders as $key => $value) {
-						          echo $value->invoice_code."<br>";
-						        }
+								<td class="text-center">
+									<div class="invoice_code_list">
+											<?php 
+											$i = 1;
+											foreach ($sOrders as $key => $value) {
+									          echo $value->invoice_code."<br>";
+									          $i++;
+									          if($i==4){
+									           break;
+									          }
+									        }
+									        if($i>3) echo "...";
 
-								?>
+											$arr = [];
+									        foreach ($sOrders as $key => $value) {
+											  array_push($arr,$value->invoice_code);
+									          }
+									        $arr_inv = implode(",",$arr);
+
+											?>
+									</div>
+									<input type="hidden" class="arr_inv" value="<?=$arr_inv?>">
 							</td>
 								<?php }else{ ?>
 								<td class="text-left" style="color:red;">
 								 * รายการนี้ได้ทำการยกเลิกการส่งเงิน
 							   </td>
 								<?php } ?>
+
 							
 							<td class="text-center">{{@$r->sender}} </td>
 							<td class="text-center">{{@$r->updated_at}}</td>
 							<td class="text-center">
 								<!-- <a href="javascript: void(0);" class="btn btn-sm btn-primary" style="" ><i class="bx bx-edit font-size-16 align-middle"></i></a> -->
-								<?php if(@$r->status_cancel==0){ ?>
+								<?php if(@$r->status_approve==0){ ?>
+                <?php if(@$r->status_cancel==0){ ?>
 								<a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="{{@$r->id}} " > ยกเลิก </a>
 								<?php } ?>
+                <?php }else{echo"-";} ?>
 							</td>
 						</tr>
  							<?php $tt++ ; ?>
  							@endforeach
-                          @ENDIF
+             @ENDIF
 
 						<tr>
 							<td class="text-center">  </td>
@@ -573,6 +632,28 @@
 </div>
 </div>
 
+
+
+<div class="modal fade" id="modalOne" tabindex="-1" role="dialog" aria-labelledby="modalOneTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จ</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <center>
+       <div class="modal-body invoice_list " style="font-size: 20px;width: 50% !important;">
+
+       </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+  </div>
+</div>
 
 
 
@@ -630,7 +711,7 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
-            {data: 'action_date', title :'<center>วันสร้าง </center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w50'},
 /*
 ทำคุณสมบัติ  <i class="fa fa-shopping-basket"></i>
 รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
@@ -638,7 +719,7 @@ $(function() {
 เติม Ai-Stockist <i class="ti-wallet "></i>
 Gift Voucher  <i class="fa fa-gift"></i>
 */
-            {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center ',render: function(d) {
+            {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w100 ',render: function(d) {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-shopping-basket"></i> </span>';
               }else if(d==2){
@@ -653,12 +734,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
                 return '';
               }
             }},
-            {data: 'customers_id_fk', title :'<center>ลูกค้า </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
             {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
-            // {data: 'total_price',   title :'<center>รวม (บาท) </center>', className: 'text-center ',render: function(d) {
-            //     return d;
-            //     // return '<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+d+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;"> เงินสด : 9,999.00 , เงินโอน : 9,999.00 + ค่าธรรมเนียม : 100</span>' ;
-            // }},
             {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
@@ -667,8 +744,6 @@ Gift Voucher  <i class="fa fa-gift"></i>
                }
             }},
             {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
-            // {data: 'shipping_price', title :'<center>ค่าขนส่ง</center>', className: 'text-center'},
-
             {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
 
               if(d>0){
@@ -687,11 +762,12 @@ Gift Voucher  <i class="fa fa-gift"></i>
               }
             }},
             {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
-              if(d==1){
-                  return '<span class=" badge badge-pill badge-success font-size-16" style="">ส่งเงินแล้ว</span>';
+              if(d==2){
+                  return '<span style="color:green;">Success</span>';
+              }else if(d==1){
+                  return '<span style="color:black;">In Process</span>';
               }else{
-                  // return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred"> รอส่งเงิน </span>';
-                  return '';
+              	 return '';
               }
             }},
 
@@ -924,7 +1000,21 @@ $(document).ready(function() {
 			});
 
     </script>
-   
+
+     <script>
+      $(document).ready(function() {
+
+           $(document).on('click','.invoice_code_list',function(event){
+               var t = $(this).siblings('.arr_inv').val();
+               var tt = t.split(",").join("\r\n");
+               $('.invoice_list').html(tt);
+               $('#modalOne').modal('show');
+            });
+                
+     });
+    </script>
+
+
       <script>
 // Clear data in View page  
       $(document).ready(function() {
@@ -998,6 +1088,32 @@ $(document).ready(function() {
       }
     ?>
 
+
+      <script>
+// Clear data in View page  
+      $(document).ready(function() {
+
+      	 $(document).on('click', '.test_clear_sent_money', function(event) {
+              location.replace( window.location.href+"?test_clear_sent_money=test_clear_sent_money ");
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_sent_money'])){
+
+      DB::select("UPDATE `db_orders` SET `status_sent_money`='0',`sent_money_daily_id_fk`='0' WHERE date(updated_at)=CURDATE();");
+      DB::select("TRUNCATE `db_sent_money_daily`;");
+
+      ?>
+          <script>
+          location.replace( "{{ url('backend/frontstore') }}");
+          </script>
+          <?php
+      }
+    ?>
 
 @endsection
 

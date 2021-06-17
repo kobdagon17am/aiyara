@@ -44,7 +44,7 @@
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -81,38 +81,56 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-11">
                   <div class="row">
                     <div class="col-12 d-flex ">
-                      <div class="col-md-3 ">
+                      
+                      <div class="col-md-2 ">
                         <div class="form-group row">
-                          <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
-                            <option value="">สาขา</option>
-                            @if(@$sBranchs)
-                            @foreach(@$sBranchs AS $r)
-                            <option value="{{$r->id}}"  >
-                              {{$r->b_name}}
-                            </option>
+                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
+                            <option value="">Business Location</option>
+                             @if(@$sBusiness_location)
+                            @foreach(@$sBusiness_location AS $r)
+                            <option value="{{$r->id}}">{{$r->txt_desc}}</option>
                             @endforeach
                             @endif
                           </select>
                         </div>
                       </div>
+
+
                       <div class="col-md-2">
                         <div class="form-group row">
-                          <select id="warehouse_id_search" name="warehouse_id_search" class="form-control select2-templating "  >
-                            <option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>
+                          <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
+                            <option value="">สาขา</option>
+                          
                           </select>
                         </div>
                       </div>
+
+
+                      <div class="col-md-2 ">
+                        <div class="form-group row">
+                          <select id="seller" name="seller" class="form-control select2-templating " >
+                            <option value="">พนักงานขาย</option>
+                             @if(@$sSeller)
+                            @foreach(@$sSeller AS $r)
+                            <option value="{{$r->id}}">{{$r->seller_name}}</option>
+                            @endforeach
+                            @endif
+                          </select>
+                        </div>
+                      </div>
+
+               
                       <div class="col-md-2">
                         <div class="form-group row">
                           <select id="status_search" name="status_search" class="form-control select2-templating " >
                             <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
+                            <option value="0" >-</option>
+                            <option value="1" >In Process</option>
+                            <option value="3" >Success</option>
+                            <option value="4" >สถานะบิลยกเลิก</option>
                           </select>
                         </div>
                       </div>
@@ -122,8 +140,8 @@
                       </div>
                       <div class="col-md-2">
                         <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
+                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;cursor: pointer;" >
+                          <i class="bx bx-search font-size-16 align-middle mr-1" style="cursor: pointer;" ></i> ค้น
                           </button>
                         </div>
                       </div>
@@ -141,21 +159,49 @@
 
                 </div>
 
-                
-                <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการส่งเงินรายวัน </span>
-                <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
-
-
-          <!--       <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash </span>
-                <table id="data-table-ai_cash" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
- -->
+                  <div class="myBorder">
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการส่งเงินรายวัน </span>
+                    <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
+                    </table>
+                  </div>
+                  <!--       <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash </span>
+                  <table id="data-table-ai_cash" class="table table-bordered dt-responsive" style="width: 100%;">
+                  </table>
+                  -->
+                  <div class="myBorder">
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
+                    <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 90%;">
+                    </table>
+                  </div>
 
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
+
+
+<div class="modal fade" id="modalOne" tabindex="-1" role="dialog" aria-labelledby="modalOneTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จ</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <center>
+       <div class="modal-body invoice_list " style="font-size: 20px;width: 50% !important;">
+
+       </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
 
 @endsection
 
@@ -200,9 +246,51 @@
                         return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                     }},
                 ],
+                 rowCallback: function(nRow, aData, dataIndex){
+
+                }
+            });
+       
+        });
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+        // var txtSearch = $("input[name='txtSearch']").val();
+        $.fn.dataTable.ext.errMode = 'throw';
+        var oTable0002;
+        $(function() {
+            oTable0002 = $('#data-table-0002').DataTable({
+             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                ordering: false,
+                "info":   false,
+                "paging": false,
+                destroy:true,
+                      ajax: {
+                          url: '{{ route('backend.check_money_daily02.datatable') }}',
+                          type: "POST",
+                          // data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
+                      },
+                columns: [
+                    {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
+                    {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
+                    {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
+                  
+                ],
                 rowCallback: function(nRow, aData, dataIndex){
 
-
+                  if(aData['remark']==2){
+                    for (var i = 0; i < 3; i++) {
+                          $('td:eq( '+i+')', nRow).html("");
+                    }
+                    $('td:eq(3)', nRow).html('<span style="color:black;font-size:16px;font-weight:bold;background-color:#e6ffe6;text-align:right;">รวมทั้งสิ้น</span>');
+                    $('td:eq(4)', nRow).html('<span style="color:black;font-size:16px;font-weight:bold;background-color:#e6ffe6;text-align:right;">'+aData['total_money']+'</span>');
+                  }
 
                 }
             });
@@ -407,8 +495,6 @@ $(function() {
 // });
 
 
-
-
 </script>
 
 
@@ -435,7 +521,61 @@ $(function() {
            $('#endDate').val($(this).val());
          });        
 
+
+
 </script>
+
+     <script>
+      $(document).ready(function() {
+
+           $(document).on('click','.invoice_code_list',function(event){
+               var t = $(this).siblings('.arr_inv').val();
+               var tt = t.split(",").join("\r\n");
+               $('.invoice_list').html(tt);
+               $('#modalOne').modal('show');
+            });
+                
+     });
+    </script>
+
+
+    <script>
+       $('#business_location_id_fk').change(function(){
+
+          $(".myloading").show();
+          var business_location_id_fk = this.value;
+          // alert(warehouse_id_fk);
+
+           if(business_location_id_fk != ''){
+             $.ajax({
+                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  method: "post",
+                  data: {
+                    business_location_id_fk:business_location_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                    $(".myloading").hide();
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลสาขา !!.');
+                   }else{
+                       var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.b_name+'</option>';
+                       });
+                       $('#branch_id_fk').html(layout);
+                   }
+                  }
+                })
+           }else{
+            var layout = '<option value="" selected>สาขา</option>';
+            $('#branch_id_fk').html(layout);
+            $(".myloading").hide();
+           }
+ 
+      });
+    </script>
 
 @endsection
 
