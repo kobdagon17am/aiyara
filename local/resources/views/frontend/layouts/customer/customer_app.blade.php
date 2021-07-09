@@ -527,11 +527,6 @@
 		</li> --}}
 
 
-
-
-
-
-
 		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>สิทธิประโยชน์</b></span>
@@ -588,6 +583,14 @@
 					<a href="{{route('s3',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Cashewy Drink</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
+
+        <li class="{{ (request()->is('s4*') ) ? 'active' : '' }}">
+					<a href="{{route('s4',['user_name'=>$user_name])}}" target="_blank">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">Aifacad</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>

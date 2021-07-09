@@ -230,7 +230,8 @@ Route::post('message_reply','Frontend\MessageController@message_reply')->name('m
 Route::get('s1/{user_name?}','Frontend\SalepageController@aiyara')->name('s1');
 Route::get('s2/{user_name?}','Frontend\SalepageController@aimmura')->name('s2');
 Route::get('s3/{user_name?}','Frontend\SalepageController@cashewy')->name('s3');
-Route::get('s5/{user_name?}','Frontend\SalepageController@alada')->name('s5');
+Route::get('s4/{user_name?}','Frontend\SalepageController@aifacad')->name('s4');
+Route::get('s5/{user_name?}','Frontend\SalepageController@ailada')->name('s5');
 Route::get('s6/{user_name?}','Frontend\SalepageController@trimmax')->name('s6');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');

@@ -21,6 +21,7 @@ class RunNumberPayment extends Model
 
 		$id = Db_Orders::where('business_location_id_fk','=',$business_location_id_fk)
 		->where('date_setting_code','=',date('ym'))
+    ->where('order_channel','=','MEMBER')
 		->orderby('id','desc')
 		->first();
 
