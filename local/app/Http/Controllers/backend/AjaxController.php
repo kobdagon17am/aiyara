@@ -3595,4 +3595,28 @@ class AjaxController extends Controller
     }
 
 
+
+
+  public function ajaxCheckAmt_get_po_product(Request $request)
+    {
+
+
+      if($request->ajax()){
+        
+           $r1 = DB::select(" SELECT * FROM `db_po_supplier_products` WHERE po_supplier_id_fk='".$request->po_supplier_products_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
+
+              // print_r($r1);
+           echo $request->amt_get;
+           echo $r1[0]->product_amt;
+           echo $r1[0]->product_amt_receive;
+
+           // return count($rs_pay_history); 
+            
+
+      }
+
+    }
+
+
+
 }

@@ -43,6 +43,8 @@ class Po_receive_products_getController extends Controller
       // dd($request->all()); 
       if(isset($request->save_set_to_warehouse)){
         // dd($request->all());  
+        // เช็คยอด ว่า ครบแล้วหรือไม่ ถ้าครบแล้ว ก็อัพเดตสถานะ ว่าได้รับครบแล้ว ถ้ายัง ก็เป็น ค้างรับสินค้า
+        
 
         DB::select(" INSERT INTO `db_po_supplier_products_receive` (
                       `po_supplier_products_id_fk`,
@@ -74,7 +76,13 @@ class Po_receive_products_getController extends Controller
                        now())
                       ");
 
-              return redirect()->to(url("backend/po_receive/".request('po_supplier_id_fk')."/edit"));
+              DB::select("
+
+                UPDATE `db_po_supplier_products` SET product_amt_receive=(SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$request->po_supplier_products_id_fk." AND product_id_fk=".$request->product_id_fk.")
+                WHERE po_supplier_id_fk=".$request->po_supplier_products_id_fk." and product_id_fk=".$request->product_id_fk." ;
+                ");
+
+              return redirect()->to(url("backend/po_receive/".$request->po_supplier_products_id_fk."/edit"));
 
       }else{
         return $this->form();
@@ -164,10 +172,15 @@ class Po_receive_products_getController extends Controller
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Po_supplier_products::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
+
+      // dd($id);
+      if($id){
+        DB::select("DELETE FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
       }
+      // $sRow = \App\Models\Backend\Po_supplier_products::find($id);
+      // if( $sRow ){
+      //   $sRow->forceDelete();
+      // }
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 

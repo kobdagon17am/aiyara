@@ -17,6 +17,34 @@
     </div>
 </div>
 <!-- end page title -->
+<?php 
+    
+    // print_r(\Auth::user()->business_location_id_fk);
+    // print_r(\Auth::user()->branch_id_fk);
+
+    $sPermission = \Auth::user()->permission ;
+    // print_r($sPermission);
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
+      // print_r($menu_id);
+
+    if($sPermission==1){
+      $sC = '';
+      $sU = '';
+      $sD = '';
+    }else{
+      $role_group_id = \Auth::user()->role_group_id_fk;
+      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      // $menu_permit = DB::select(" select * from role_permit where role_group_id_fk=2 AND menu_id_fk=34 ");
+      // print_r($menu_permit);
+      // print_r($role_group_id);
+      // print_r($menu_id);
+      // print_r($menu_permit);
+      $sC = @$menu_permit->c==1?'':'display:none;';
+      $sU = @$menu_permit->u==1?'':'display:none;';
+      $sD = @$menu_permit->d==1?'':'display:none;';
+    }
+   ?>
 
 <div class="row">
     <div class="col-10">
@@ -231,11 +259,88 @@
 @endif
 
 
+
+@if( $sPermission==1 || @$menu_permit->can_approve==1 )
+
+
+            <div class="myBorder">
+
+
+        
+              <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <input name="_method" type="hidden" value="PUT">
+                <input name="id" type="hidden" value="{{@$sRow->id}}">
+                <input name="approved" type="hidden" value="1">
+                {{ csrf_field() }}
+
+                 <div class="form-group row">
+                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                      <div class="col-md-6">
+                        @if( empty(@$sRow->id) )
+                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
+                            @else
+                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
+                         @endif
+                          
+                      </div>
+                  </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
+                    <div class="col-md-3 mt-2">
+                      <div class=" ">
+
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
+                          <label for="customSwitch1">อนุมัติ / Aproved</label>
+
+                      </div>
+                    </div>
+                     <div class="col-md-4 mt-2">
+                      <div class=" ">
+              
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="5" {{ ( @$sRow->approve_status=='5')?'checked':'' }} required >
+                          <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
+
+                      </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                  <label for="note" class="col-md-4 col-form-label">หมายเหตุ (ถ้ามี) :</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                  </div>
+                </div>
+
+
+                <div class="form-group mb-0 row">
+                  <div class="col-md-6">
+                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_receive") }}">
+                  <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                </a>
+                  </div>
+                  <div class="col-md-6 text-right">
+
+                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
+                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
+                    </button>
+
+                  </div>
+                </div>
+
+            </form>
+
+          </div>
+@ENDIF
         </div>
     </div> <!-- end col -->
 </div>
 </div>
 <!-- end row -->
+
 
 
 
@@ -566,13 +671,18 @@
                         {data: 'product_name', title :'<center>ชื่อสินค้า', className: 'text-center'},
                         {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
-                        // {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       // $('td:last-child', nRow).html(''
                       //   + '<a href="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                       //   + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       // ).addClass('input');
+
+                    $('td:last-child', nRow).html(''
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+
                     }
                 });
       
@@ -622,8 +732,8 @@
              var id = $(this).data('id');
              var product_name = $(this).attr('product_name');
              var product_id_fk = $(this).attr('product_id_fk');
-             console.log(id);
-             console.log(product_name);
+             // console.log(id);
+             // console.log(product_name);
              // var branch_id_fk = $("#branch_id_fk").val();
              $('#product_name').val(product_name);
              $('#product_id_fk').val(product_id_fk);
@@ -632,41 +742,7 @@
              setTimeout(function(){
                  $('#amt_get').focus();
              }, 500);
-             // $('#branch_id_fk_c').val(branch_id_fk).select2();
-
-             // alert(branch_id_fk);
-
-             // if(branch_id_fk != ''){
-             //   $.ajax({
-             //         url: " {{ url('backend/ajaxGetWarehouse') }} ", 
-             //        method: "post",
-             //        data: {
-             //          branch_id_fk:branch_id_fk,
-             //          "_token": "{{ csrf_token() }}", 
-             //        },
-             //        success:function(data)
-             //        { 
-             //         if(data == ''){
-             //             alert('ไม่พบข้อมูลคลัง !!.');
-             //         }else{
-             //             var layout = '<option value="" selected>- เลือกคลัง -</option>';
-             //             $.each(data,function(key,value){
-             //              layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-             //             });
-             //             $('#warehouse_id_fk_c').html(layout);
-             //             $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
-             //             $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-             //         }
-             //        }
-             //      })
-             // }else{
-             //    $('#warehouse_id_fk_c').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
-             //    $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
-             //    $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-             // }
-  
-             // $("#id_set_to_warehouse").val(id);
-             // $('#branch_id_fk_c').attr("disabled", true);
+            
              $('#setToWarehouseModal').modal('show');
 
         });
@@ -803,7 +879,7 @@ $( function() {
             "_token": "{{ csrf_token() }}",
           },
           success:function(data){
-             console.log(data);
+             // console.log(data);
              response( data );
           }
          });
@@ -833,7 +909,7 @@ $( function() {
                 "_token": "{{ csrf_token() }}",
               },
               success:function(data){
-                 console.log(data);
+                 // console.log(data);
                  $.each(data, function( index, value ) {
                     if(this_v==value.value){
                       $('#lot_expired_date').val(value.lot_expired_date);
@@ -850,9 +926,44 @@ $( function() {
              });
         });
 
-   
 
 
  });
+
+
+
+        $(document).ready(function() {
+
+   // amt_get เช็คว่ากรอกเกินจำนวนที่สั่งซื้อหรือไม่ โดยหักออกจากครั้งก่อนๆ ที่ได้รับก่อนหน้าแล้วด้วยนะ
+           $(document).on('change', '#amt_get', function(event) {
+            
+             var amt_get = $(this).val();
+             var po_supplier_products_id_fk = $('#po_supplier_products_id_fk').val();
+             var product_id_fk = $('#product_id_fk').val();
+             // console.log(amt_get);
+             // console.log(po_supplier_products_id_fk);
+             // console.log(product_id_fk);
+             // return false;
+             $.ajax({
+               url: " {{ url('backend/ajaxCheckAmt_get_po_product') }} ", 
+                method: "post",
+                data: {
+                amt_get:amt_get,
+                po_supplier_products_id_fk:po_supplier_products_id_fk,
+                product_id_fk:product_id_fk,
+                  "_token": "{{ csrf_token() }}", 
+                },
+              success:function(data){
+                 console.log(data);
+               }
+      
+             });
+       
+           });
+        
+        });
+
+
 </script>
+
 @endsection

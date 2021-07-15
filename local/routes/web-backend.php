@@ -635,7 +635,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('po_receive_products/print_receipt/{id}', 'AjaxController@createPDFpo_receive_products');
 
-
+    Route::post('ajaxCheckAmt_get_po_product', 'AjaxController@ajaxCheckAmt_get_po_product');
 
     Route::resource('general_receive', 'General_receiveController');
     Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');
