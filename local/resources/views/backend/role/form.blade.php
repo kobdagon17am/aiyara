@@ -180,7 +180,13 @@
                             สิทธ์ > สิทธิ์ยกเลิกสถานะการแพ็คและการจัดส่ง
                           </label>
                           @ENDIF
-
+                           @IF(@$row->isCancelBill=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->can_cancel_bill}}">
+                            <input class="checks" type="checkbox" name="can_cancel_bill[]" {!! (@$menu_admin->can_cancel_bill == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            สิทธ์ > สิทธิ์ยกเลิกใบเสร็จ(ที่ชำระเงินแล้ว)
+                          </label>
+                          @ENDIF
 
             				@ELSE
 

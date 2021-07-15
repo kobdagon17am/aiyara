@@ -107,6 +107,22 @@
                 </div>
 
                 <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ (งานขาย) : * </label>
+                  <div class="col-md-6">
+                     <select id="position_level" name="position_level" class="form-control select2-templating " >
+                             <option value="0">Select</option>
+                             @if(@$position_level)
+                              @foreach(@$position_level AS $r)
+                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->position_level)?'selected':'' }} >
+                                {{$r->txt_desc}}
+                              </option>
+                              @endforeach
+                              @endif
+                          </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ : * </label>
                   <div class="col-md-6">
                     <select name="permission" class="form-control select2-templating " required >

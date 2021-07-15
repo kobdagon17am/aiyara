@@ -244,7 +244,7 @@ class Add_ai_cashController extends Controller
 
        }else{
             DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
-            DB::select(" UPDATE db_add_ai_cash SET approve_status=4 where id=$id ");
+            DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=$id ");
        }
 
        return response()->json(\App\Models\Alert::Msg('success'));
@@ -277,11 +277,11 @@ class Add_ai_cashController extends Controller
          $w01 = "";
       }
 
-      if(!empty($req->branch_id_fk)){
-         $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
-      }else{
-         $w02 = "" ;
-      }
+      // if(!empty($req->branch_id_fk)){
+      //    $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+      // }else{
+      //    $w02 = "" ;
+      // }
 
         if(!empty($req->customer_id_fk)){
            $w03 = " AND db_add_ai_cash.customer_id_fk LIKE '%".$req->customer_id_fk."%'  " ;
@@ -289,11 +289,11 @@ class Add_ai_cashController extends Controller
            $w03 = "";
         }
 
-        if(!empty($req->bill_status)){
-           $w04 = " AND db_add_ai_cash.bill_status = ".$req->bill_status."  " ;
-        }else{
-           $w04 = "";
-        }
+        // if(!empty($req->bill_status)){
+        //    $w04 = " AND db_add_ai_cash.bill_status = ".$req->bill_status."  " ;
+        // }else{
+        //    $w04 = "";
+        // }
 
         if(!empty($req->startDate) && !empty($req->endDate)){
            $w05 = " and date(db_add_ai_cash.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
@@ -370,39 +370,34 @@ class Add_ai_cashController extends Controller
           return '';
         }
       })
-
-      // ->addColumn('status', function($row) {
-      //   // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ
-      //     if($row->approve_status==1){
-      //       return 'อนุมัติ';
-      //     }else if($row->approve_status==2){
-      //       return 'รอชำระ';
-      //     }else if($row->approve_status==3){
-      //       return 'รอจัดส่ง';
-      //     }else if($row->approve_status==4){
-      //       return 'ยกเลิก';
-      //     }else if($row->approve_status==5){
-      //       return 'ไม่อนุมัติ';
-      //     }else if($row->approve_status==9){
-      //       return 'สำเร็จ';
-      //     }else{
-      //       return 'รออนุมัติ';
-      //     }
-      // })
-
       ->addColumn('status', function($row) {
-          if($row->bill_status==1){
-            return 'รอชำระ';
-          }else if($row->bill_status==2){
-            return 'ชำระแล้ว';
-          }else if($row->bill_status==3){
-            return 'ยกเลิก';
+        // if(!empty($row->bill_status)){
+        //   if($row->bill_status==1){
+        //     return 'รอชำระ';
+        //   }else if($row->bill_status==2){
+        //     return 'ชำระแล้ว';
+        //   }else if($row->bill_status==3){
+        //     return 'ยกเลิก';
+        //   }
+        // }else{
+          // return '';
+        // }
+//  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
+        if(@$row->approve_status!=""){
+          @$approve_status = DB::select(" select * from `dataset_approve_status` where id=".@$row->approve_status." ");
+          // return $purchase_type[0]->orders_type;
+          if(@$approve_status[0]->id==2||@$approve_status[0]->id==3||@$approve_status[0]->id==4){
+              return "อนุมัติแล้ว";
+          }else{
+              // return $approve_status[0]->orders_type;
+              return @$approve_status[0]->txt_desc;
           }
+          // return @$approve_status[0]->txt_desc;
+        }else{
+          return "No completed";
+        }
+
       })
-      // ->addColumn('action_date', function($row) {
-      //     $d = strtotime($row->updated_at);
-      //     return date("d/m/", $d).(date("Y", $d)+543);
-      // })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

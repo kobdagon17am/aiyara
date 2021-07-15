@@ -161,13 +161,13 @@
                 <hr>
 
                           <div class="form-group row">
-                            <label for="pay_type_id" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
+                            <label for="pay_type_id_fk" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
                             <div class="col-md-8">
-                               <select id="pay_type_id" name="pay_type_id" class="form-control select2-templating " required="" >
+                               <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id)?'selected':'' }}  >
+                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
                                           {{$r->detail}} 
                                         </option>
                                       @endforeach
@@ -283,12 +283,12 @@
 
 
 
-                      <?php $show_div_transfer_price = @$sRow->pay_type_id==8||@$sRow->pay_type_id==10||@$sRow->pay_type_id==11?"":'display: none;'; ?>
+                      <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
                         <div class="form-group row show_div_transfer_price " style="<?=$show_div_transfer_price?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินโอน : </label>
                           <div class="col-md-8 ">
                               
-                            @IF(@$sRow->pay_type_id==8)
+                            @IF(@$sRow->pay_type_id_fk==8)
                             <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
                             <input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
@@ -306,7 +306,7 @@
                       </div>
 
 
-                      <?php $show_div_cash_pay = (@$sRow->pay_type_id==8||@$sRow->pay_type_id==9||@$sRow->pay_type_id==11)?"display: none;":''; ?>
+                      <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
                         <div class="form-group row show_div_cash_pay " style="<?=$show_div_cash_pay?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินสดที่ต้องชำระ : </label>
                           <div class="col-md-8 ">
@@ -384,7 +384,7 @@
 @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
 
-@if( @$sRow->pay_type_id==8 || @$sRow->pay_type_id==10 || @$sRow->pay_type_id==11 )
+@if( @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
 
             <div class="myBorder">
 
@@ -531,7 +531,7 @@
                                   $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
-                                  if(pay_type_id==''){
+                                  if(pay_type_id_fk==''){
                                      $("#cash_pay").val('');    
                                   }else{
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
@@ -593,13 +593,14 @@
 
             });
 
-           $(document).on('change', '#pay_type_id', function(event) {
+           $(document).on('change', '#pay_type_id_fk', function(event) {
 
               event.preventDefault();
               $(".myloading").show();
 
               var id = "{{@$sRow->id}}";
-              var pay_type_id = $("#pay_type_id").val();
+              var pay_type_id_fk = $("#pay_type_id_fk").val();
+              var aicash_amt = $("#aicash_amt").val();
 
               $(".show_div_credit").hide();
               $(".div_fee").hide();
@@ -608,7 +609,7 @@
 
               $('#fee').val("").select2();
               $("#cash_price").val('');
-              $("#cash_pay").val('');
+              $("#cash_pay").val(aicash_amt);
               $("#credit_price").val('');
               $("#fee_amt").val('');
               $("#sum_credit_price").val('');
@@ -622,7 +623,7 @@
               $("#transfer_price").removeAttr('required');
 
 
-              if(pay_type_id==''){
+              if(pay_type_id_fk==''){
                 $(".myloading").hide();
                 $(".show_div_cash_pay").hide();
                 return false;
@@ -639,6 +640,7 @@
                         success:function(data){
                                   console.log(data); 
                                   // return false;
+                                  
                                   $.each(data,function(key,value){
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));  
                                   });
@@ -654,13 +656,13 @@
                               }
                           });
 
-// alert(pay_type_id);
-                          if(pay_type_id==5){
+// alert(pay_type_id_fk);
+                          if(pay_type_id_fk==5){
                               $(".show_div_cash_pay").show();
 
                             }else
                         // 3  เครดิต + เงินสด
-                            if(pay_type_id==7){
+                            if(pay_type_id_fk==7){
                               // เครดิต
                                 $(".show_div_credit").show();
                                 $("#credit_price").val('');
@@ -674,7 +676,7 @@
 
                             }else
                         // 4  เครดิต + เงินโอน
-                            if(pay_type_id==8){
+                            if(pay_type_id_fk==8){
                              
                                   // เครดิต
                                   $(".show_div_credit").show();
@@ -699,7 +701,7 @@
                                         
                               }else 
                               // 6  เงินโอน + เงินสด
-                              if(pay_type_id==10){
+                              if(pay_type_id_fk==10){
 
                                 // เงินโอน
                                 $(".show_div_transfer_price").show();
@@ -728,9 +730,9 @@
               var id = "{{@$sRow->id}}";
 
 
-              var pay_type_id = $("#pay_type_id").val();
+              var pay_type_id_fk = $("#pay_type_id_fk").val();
 
-              if(pay_type_id==''){
+              if(pay_type_id_fk==''){
                 $("#cash_price").val('');
                 $("#cash_pay").val('');
                 $(".myloading").hide();
@@ -759,7 +761,7 @@
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
                                   $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
 
-                                  if(pay_type_id==''){
+                                  if(pay_type_id_fk==''){
                                      $("#cash_pay").val('');    
                                   }else{
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
@@ -783,12 +785,12 @@
 
         */
               // 1  เงินสด
-                          if(pay_type_id==5){
+                          if(pay_type_id_fk==5){
                               $(".show_div_cash_pay").show();
 
                             }else
                         // 3  เครดิต + เงินสด
-                            if(pay_type_id==7){
+                            if(pay_type_id_fk==7){
                               // เครดิต
                                 // $(".show_div_credit").show();
                                 // $("#credit_price").val('');
@@ -802,7 +804,7 @@
 
                             }else
                         // 4  เครดิต + เงินโอน
-                            if(pay_type_id==8){
+                            if(pay_type_id_fk==8){
                                   // เครดิต
                                   // $(".show_div_credit").show();
                                   // $("#credit_price").val('');
@@ -826,7 +828,7 @@
                                         
                               }else 
                               // 6  เงินโอน + เงินสด
-                              if(pay_type_id==10){
+                              if(pay_type_id_fk==10){
 
                                 // เงินโอน
                                 // $(".show_div_transfer_price").show();
@@ -934,7 +936,7 @@
 
                                 fnGetDBAddAiCash();
 
-                                $('#pay_type_id').val("").select2();
+                                $('#pay_type_id_fk').val("").select2();
                                 $(".show_div_cash_pay").hide();
 
                               // setTimeout(function(){

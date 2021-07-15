@@ -73,17 +73,20 @@
 @section('content')
 @include('popper::assets')
 
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน   </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
         </div>
     </div>
 </div>
 <!-- end page title -->
   <?php 
+      
+      $can_cancel_bill = 0;
+
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -100,6 +103,9 @@
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
         $sD = @$menu_permit->d==1?'':'display:none;';
+
+        $can_cancel_bill = @$menu_permit->can_cancel_bill; 
+
       }
       // echo $sPermission;
       // echo $role_group_id;
@@ -117,15 +123,12 @@
               <div class="divTH">
                 <label for="startDate" >วันสร้างเริ่มต้น : </label>
               </div>
-                <?php 
-                         $sd = date('d/m/Y');
-                         // echo $sd;
-                      ?>
+              <?php $sd = date('Y-m-d'); ?>
               <div class="divTableCell">
                 <input id="startDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="startDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="endDate" >วันสร้างสิ้นสุด : </label>
@@ -134,7 +137,7 @@
                 <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="endDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >ประเภทการสั่งซื้อ : </label>
@@ -152,7 +155,7 @@
                   </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="purchase_type_id_fk" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
             </div>
             <div class="divTableRow">
@@ -160,21 +163,68 @@
                 <label for="" >รหัสลูกค้า : </label>
               </div>
               <div class="divTableCell">
-                <input class="form-control"  />
+
+                 @if(@$Customer)
+                     <select id="customer_code" name="customer_code" class="form-control select2-templating " >
+                         <option value="">Select</option>
+                          @foreach(@$Customer AS $r)
+                          <option value="{{$r->id}}" >
+                            {{$r->user_name}} 
+                          </option>
+                          @endforeach
+                   </select>
+                @endif
+
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_code" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >ชื่อลูกค้า : </label>
               </div>
               <div class="divTableCell">
-                <input class="form-control"  />
+                     @if(@$Customer)
+                     <select id="customer_name" name="customer_name" class="form-control select2-templating " >
+                         <option value="">Select</option>
+                          @foreach(@$Customer AS $r)
+                          <option value="{{$r->id}}" >
+                            {{$r->prefix_name}}{{$r->first_name}} {{$r->last_name}}
+                          </option>
+                          @endforeach
+                   </select>
+                    @endif
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_name" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
+                <label for="" >เลขที่ใบเสร็จ : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                     @if(@$r_invoice_code)
+                     <select id="invoice_code" name="invoice_code" class="form-control select2-templating " >
+                         <option value="">Select</option>
+                          @foreach(@$r_invoice_code AS $r)
+                          <option value="{{$r->invoice_code}}" >
+                            {{$r->invoice_code}}
+                          </option>
+                          @endforeach
+                     </select>
+                     @else
+                     <select class="form-control select2-templating " >
+                         <option value="">Select</option>
+                     </select>
+                    @endif                
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="invoice_code" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+            </div>
+
+
+            <div class="divTableRow">
+<!-- 
+                  <div class="divTH">
                 <label for="" >เลขที่ใบสั่งซื้อ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
@@ -182,27 +232,13 @@
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-              </div>
-            </div>
-
-
-            <div class="divTableRow">
-
-                  <div class="divTH">
-                <label for="" >เลขที่ใบเสร็จ : </label>
-              </div>
-              <div class="divTableCell" style="width: 15%">
-                <input class="form-control"  />
-              </div>
-              <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-              </div>
+              </div> -->
 
               <div class="divTH">
                 <label for="" >ผู้สร้าง : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <select name="" class="form-control select2-templating "  >
+                <select id="action_user" name="action_user" class="form-control select2-templating "  >
                   <option value="">Select</option>
                   @if(@$sUser)
                     @foreach(@$sUser AS $r)
@@ -214,13 +250,29 @@
                 </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="action_user" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
+
+              <div class="divTH">
+                <label for="" >การส่งเงิน : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+              <select id="status_sent_money" class="form-control select2-templating "  >
+                  <option value="">Select</option>
+                      <option value="0"> - (รอดำเนินการ)</option>
+                      <option value="1"> In Process </option>
+                      <option value="2"> Success </option>
+                </select> 
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="status_sent_money" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+
               <div class="divTH">
                 <label for="" >สถานะ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <select name="" class="form-control select2-templating "  >
+                <select id="approve_status" class="form-control select2-templating "  >
                   <option value="">Select</option>
                   @if(@$sApproveStatus)
                     @foreach(@$sApproveStatus AS $r)
@@ -232,7 +284,7 @@
                 </select>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="approve_status" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
             
             </div>
@@ -243,18 +295,18 @@
             <div class="divTableRow">
 
               <div class="divTH">
-                <label for="" >การส่งเงิน : </label>
+                <!-- <label for="" >การส่งเงิน : </label> -->
               </div>
               <div class="divTableCell" style="width: 15%">
-              	   <select name="" class="form-control select2-templating "  >
+             <!--  	   <select name="" class="form-control select2-templating "  >
                   <option value="">Select</option>
                       <option value="0"> - </option>
                       <option value="1"> In Process </option>
                       <option value="1"> Success </option>
-                </select>
+                </select> -->
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
               </div>
               <div class="divTH">
                 <label for="" > </label>
@@ -267,45 +319,16 @@
                 <label for="" >  </label>
               </div>
               <div class="divTableCell" style="width: 15%;text-align:right;">
-                  <button type="button" class="btn btn-warning" style="color:black;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
+                  <button type="button" class="btn btn-warning btnSearchTotal " style="color:black;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-info" style="padding: 9%;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-info btnRefresh " style="padding: 9%;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
               </div>
             
             </div>
-
-            <div class="divTableRow">
-
-          
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-              <div class="divTableCell">
-              
-              </div>
-              <div class="divTableCell">
-                
-              </div>
-            </div>
-
-
           </div>
         </div>
-        <!-- DivTable.com -->
-      </div>
+<!--       </div>
     </div>
   </div>
 </div>
@@ -315,19 +338,21 @@
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body"> -->
+      	<hr>
         <div class="divTable">
           <div class="divTableBody">
             <div class="divTableRow">
-              <div class="divTableCell" style="text-align: right;width: 50%;" >&nbsp; </div>
+
+              <div class="divTableCell" style="text-align: right;width: 40%;" >&nbsp; </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> ดูทั้งหมด</button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewAll" ><i class="bx bx-search font-size-18 align-middle"></i> ดูทั้งหมด</button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> เฉพาะซื้อแบบปกติ</button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyNormal" ><i class="bx bx-search font-size-18 align-middle"></i> เฉพาะซื้อแบบปกติ</button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success" ><i class="bx bx-search font-size-18 align-middle "></i> เฉพาะซื้อแบบใช้ Voucher</button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyVoucher" ><i class="bx bx-search font-size-18 align-middle"></i> เฉพาะซื้อแบบ เติม Ai-Stockist / Gift Voucher </button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
@@ -538,9 +563,10 @@
                 <?php 
 
                        $sOrders = DB::select("
-							              SELECT invoice_code 
+							              SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name
 							              FROM
-							              db_orders where sent_money_daily_id_fk in (".$r->id.");
+							              db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+							              where sent_money_daily_id_fk in (".$r->id.");
 							          ");
 
                               ?>
@@ -563,7 +589,7 @@
 
 											$arr = [];
 									        foreach ($sOrders as $key => $value) {
-											  array_push($arr,$value->invoice_code);
+											  array_push($arr,$value->invoice_code.' :'.(@$value->first_name.' '.@$value->last_name).'<br>');
 									          }
 									        $arr_inv = implode(",",$arr);
 
@@ -643,8 +669,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <center>
-       <div class="modal-body invoice_list " style="font-size: 20px;width: 50% !important;">
+       <div class="modal-body invoice_list " style="margin-left:5%;font-size: 16px;width: 80% !important;">
 
        </div>
         <div class="modal-footer">
@@ -689,6 +714,7 @@ var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
+var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -711,7 +737,7 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
-            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w50'},
+            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
 /*
 ทำคุณสมบัติ  <i class="fa fa-shopping-basket"></i>
 รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
@@ -755,19 +781,21 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }},
 
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              if(d=="รออนุมัติ"){
-                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
-              }
+              // if(d=="รออนุมัติ"){
+              //     return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              // }else{
+                  // return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+                  return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+              // }
             }},
+            // {data: 'status', title :'<center>สถานะบิล</center>', className: 'text-center'},
             {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
               if(d==2){
                   return '<span style="color:green;">Success</span>';
               }else if(d==1){
                   return '<span style="color:black;">In Process</span>';
               }else{
-              	 return '';
+              	 return '-';
               }
             }},
 
@@ -786,18 +814,20 @@ Gift Voucher  <i class="fa fa-gift"></i>
           } ],
         rowCallback: function(nRow, aData, dataIndex){
 
-
+// console.log(can_cancel_bill);
             if(aData['total_price']){
 
               $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
 
+            // console.log(aData['type']);
+
            if(aData['type']!='0'){
               $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
               $("td:eq(5)", nRow).html('');
               $("td:eq(7)", nRow).html('');
-              $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
-              $("td:eq(10)", nRow).html('');
+              // $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
+              // $("td:eq(10)", nRow).html('');
             }
 
             if(aData['pay_type']=='ai_cash'){
@@ -809,7 +839,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             var info = $(this).DataTable().page.info();
             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
+           if(aData['approve_status']==5){$('td:last-child', nRow).html('');}else{
 
 	          if(sU!=''&&sD!=''){
 	              $('td:last-child', nRow).html('-');
@@ -836,7 +866,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
             // console.log(aData['status_delivery']);
 
-            if(aData['status_delivery']=='1'){
+            if(aData['status_delivery']=='1'  ){
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
@@ -845,8 +875,43 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
             }
 
+            if( aData['approve_status']==9 ){
 
+              // console.log(can_cancel_bill);
 
+              if(can_cancel_bill==1){
+                 $('td:last-child', nRow).html(''
+                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                  // + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                ).addClass('input');
+              }else{
+                 $('td:last-child', nRow).html(''
+                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                  ).addClass('input');
+              }
+         
+
+            }
+    
+              // console.log(aData['approve_status']);
+
+              if(aData['approve_status']==0){
+                $("td:eq(10)", nRow).html('');
+              }
+
+              if(aData['approve_status']==5){
+                $("td:eq(8)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                $("td:eq(9)", nRow).html('');
+              }
+              console.log(aData['type']);
+              console.log(aData['status_sent_money']);
+              if(aData['type']=="เติม Ai-Cash"){
+                // $("td:eq(9)", nRow).html('');
+                $("td:eq(10)", nRow).html('');
+                // $("td:eq(10)", nRow).html('<center> <a href="javascript:void(0);" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
+                // + ' <a href="javascript:void(0);" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>');
+                $("td:eq(11)", nRow).html('');
+              }
 
         }
     });
@@ -863,7 +928,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
     <script>
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#startDate').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
             // setDate: today,
@@ -873,17 +938,27 @@ Gift Voucher  <i class="fa fa-gift"></i>
             // }
         });
 
-        // $("#startDate").datepicker().datepicker("setDate", new Date());
-
         $('#endDate').datepicker({
-            format: 'dd/mm/yyyy',
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
             minDate: function () {
-                return $('#startDate').val();
+                // return $('#start_date').val();
             }
         });
 
+         $('#startDate').change(function(event) {
+         	if($('#endDate').val()<$(this).val()){
+           		$('#endDate').val($(this).val());
+       		}
+         });
+
+         $('#endDate').change(function(event) {
+         	if($('#startDate').val()>$(this).val()){
+           		$('#startDate').val($(this).val());
+       		}
+         });
 
         $(document).ready(function() {
 
@@ -921,7 +996,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  console.log(data);
+                                  // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -931,8 +1006,8 @@ $(document).ready(function() {
                                       });
 
                                       setTimeout(function () {
-											$("#tb_sent_money").load(location.href + " #tb_sent_money");
-											$('#data-table').DataTable().clear().draw();
+                  											$("#tb_sent_money").load(location.href + " #tb_sent_money");
+                  											$('#data-table').DataTable().clear().draw();
                                       }, 1000);
                                 }
                               })
@@ -1014,6 +1089,435 @@ $(document).ready(function() {
      });
     </script>
 
+     <script>
+      $(document).ready(function() {
+
+           $(document).on('click','.btnRefresh',function(event){
+          		$("input").val('');
+          		$("select").select2('destroy').val("").select2();
+      				var today = new Date();
+      				var dd = String(today.getDate()).padStart(2, '0');
+      				var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      				var yyyy = today.getFullYear();
+      				today = yyyy + '-' + mm + '-' + dd ;
+          		$('#startDate').val(today);
+          		$('#endDate').val(today);
+          		$('.btnSearchTotal').trigger('click');
+            });
+                
+     });
+    </script>
+
+
+ 
+ <script>
+
+   $(document).ready(function() {
+
+         $(document).on('click', '.btnSearchSub', function(event) {
+              var d = $(this).data('attr');
+              var v = $("#"+d).val();
+              // console.log(d);
+              // console.log(v);
+              
+              $("input").val('');
+              $("select").select2('destroy').val("").select2();
+              $("#"+d).val(v);
+              $("#"+d).trigger('change');
+              $('.btnSearchTotal').trigger('click');
+
+         });
+
+            $(document).on('click', '.btnSearchTotal', function(event) {
+                  event.preventDefault();
+                  $('#data-table').DataTable().clear();
+                  $(".myloading").show();
+                  var startDate = $('#startDate').val();
+                  var endDate = $('#endDate').val();
+                  var purchase_type_id_fk = $('#purchase_type_id_fk').val();
+                  var customer_code = $('#customer_code').val();
+                  var customer_name = $('#customer_name').val();
+                  var invoice_code = $('#invoice_code').val();
+                  var action_user = $('#action_user').val();
+                  var status_sent_money = $('#status_sent_money').val();
+                  var approve_status = $('#approve_status').val();
+
+                  // console.log(status_sent_money);
+                  // return false;
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                   	var sU = "{{@$sU}}"; //alert(sU);
+          					var sD = "{{@$sD}}"; //alert(sD);
+          					var oTable;
+          					$(function() {
+          					    oTable = $('#data-table').DataTable({
+          					        processing: true,
+          					        serverSide: true,
+          					        scroller: true,
+          					        scrollCollapse: true,
+          					        scrollX: true,
+          					        ordering: true,
+          					        paging:   true,
+          					        searching: false,
+          					        bLengthChange: false ,
+          					        destroy: true,
+          					        ajax: {
+          		                        url: '{{ route('backend.frontstore.datatable') }}',
+          		                        data :{
+          		                              startDate:startDate,
+          		                              endDate:endDate,
+          		                              purchase_type_id_fk:purchase_type_id_fk,
+          		                              customer_code:customer_code,
+          		                              customer_name:customer_name,
+          		                              invoice_code:invoice_code,
+          		                              action_user:action_user,
+          		                              status_sent_money:status_sent_money,
+          		                              approve_status:approve_status,
+          		                            },
+          		                          method: 'POST',
+          		                        },
+          					        columns: [
+          					            {data: 'id', title :'ID', className: 'text-center w15'},
+          					            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w50'},
+          					            {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w100 ',render: function(d) {
+          					              if(d==1){
+          					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-shopping-basket"></i> </span>';
+          					              }else if(d==2){
+          					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
+          					              }else if(d==3){
+          					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
+          					              }else if(d==4){
+          					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
+          					              }else if(d==5){
+          					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
+          					              }else{ 
+          					                return '';
+          					              }
+          					            }},
+          					            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
+          					            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+          					            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+          					               if(d){
+          					                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+          					               }else{
+          					                return '';
+          					               }
+          					            }},
+          					            {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
+          					            {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
+
+          					              if(d>0){
+          					                return d;
+          					              }else{
+          					                return '';
+          					              }
+
+          					            }},
+
+          					            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+          					              if(d=="รออนุมัติ"){
+          					                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+          					              }else{
+          					                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+          					              }
+          					            }},
+          					            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
+          					              if(d==2){
+          					                  return '<span style="color:green;">Success</span>';
+          					              }else if(d==1){
+          					                  return '<span style="color:black;">In Process</span>';
+          					              }else{
+          					              	 return '';
+          					              }
+          					            }},
+
+          					            {data: 'id',   title :'ใบเสร็จ', className: 'text-center w80 ',render: function(d) {
+          					                return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
+          					                + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+          					            }},
+          					     
+          					            {data: 'id', title :'Tools', className: 'text-center w70'}, 
+          					        ],
+          					           // "order": [ [ 1, 'desc' ] ],
+          					           "columnDefs": [ {
+          					            // { targets: 'no-sort', orderable: false }
+          					              "targets": [0,2,6,7,8,9] ,
+          					              "orderable": false
+          					          } ],
+          					        rowCallback: function(nRow, aData, dataIndex){
+
+
+          					            if(aData['total_price']){
+
+          					              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+          					            }
+
+          					           if(aData['type']!='0'){
+          					              $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
+          					              $("td:eq(5)", nRow).html('');
+          					              $("td:eq(7)", nRow).html('');
+          					              $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
+          					              $("td:eq(10)", nRow).html('');
+          					            }
+
+          					            if(aData['pay_type']=='ai_cash'){
+          					              $("td:eq(6)", nRow).html('เติม Ai-Cash');
+          					            }
+
+          							      	$("td:eq(3)", nRow).html(aData['customer_name']);
+
+          					            var info = $(this).DataTable().page.info();
+          					            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+          					           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
+
+          						          if(sU!=''&&sD!=''){
+          						              $('td:last-child', nRow).html('-');
+          						          }else{ 
+
+          					              if(aData['type']!='0'){ // เติม Ai-Cash
+
+          					              }else{
+
+          					                $('td:last-child', nRow).html(''
+          					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+          					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          					                  
+          					                ).addClass('input');
+
+          					            }
+
+          					             // $('td:last-child', nRow).html(aData['approve_status']);
+
+          					           
+          					          }
+          					          }
+
+
+          					            // console.log(aData['status_delivery']);
+
+          					            if(aData['status_delivery']=='1'){
+
+          					              $('td:last-child', nRow).html(''
+          					                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+          					                ).addClass('input');
+          					              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
+
+          					            }
+
+
+
+
+          					        }
+          					    });
+
+          					// + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+          					});
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                    	
+                 
+
+                setTimeout(function(){
+                   $(".myloading").hide();
+                }, 1500);
+
+               
+            });
+
+        }); 
+
+
+</script>
+
+
+
+ <script>
+
+   $(document).ready(function() {
+
+            $(document).on('click', '.btnViewCondition', function(event) {
+                  event.preventDefault();
+                  $('#data-table').DataTable().clear();
+                  $(".myloading").show();
+                  let ViewCondition = $(this).data('id');
+                  // console.log(ViewCondition);
+
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                   	var sU = "{{@$sU}}"; //alert(sU);
+              					var sD = "{{@$sD}}"; //alert(sD);
+              					var oTable;
+              					$(function() {
+              					    oTable = $('#data-table').DataTable({
+              					        processing: true,
+              					        serverSide: true,
+              					        scroller: true,
+              					        scrollCollapse: true,
+              					        scrollX: true,
+              					        ordering: true,
+              					        paging:   true,
+              					        searching: false,
+              					        bLengthChange: false ,
+              					        destroy: true,
+              					        ajax: {
+              		                        url: '{{ route('backend.frontstore.datatable') }}',
+              		                        data :{
+              		                              ViewCondition:ViewCondition,
+              		                            },
+              		                          method: 'POST',
+              		                        },
+              					        columns: [
+              					            {data: 'id', title :'ID', className: 'text-center w15'},
+              					            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w50'},
+              					            {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w100 ',render: function(d) {
+              					              if(d==1){
+              					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-shopping-basket"></i> </span>';
+              					              }else if(d==2){
+              					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
+              					              }else if(d==3){
+              					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
+              					              }else if(d==4){
+              					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
+              					              }else if(d==5){
+              					                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
+              					              }else{ 
+              					                return '';
+              					              }
+              					            }},
+              					            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
+              					            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+              					            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+              					               if(d){
+              					                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+              					               }else{
+              					                return '';
+              					               }
+              					            }},
+              					            {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
+              					            {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
+
+              					              if(d>0){
+              					                return d;
+              					              }else{
+              					                return '';
+              					              }
+
+              					            }},
+
+              					            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+              					              if(d=="รออนุมัติ"){
+              					                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+              					              }else{
+              					                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+              					              }
+              					            }},
+              					            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
+              					              if(d==2){
+              					                  return '<span style="color:green;">Success</span>';
+              					              }else if(d==1){
+              					                  return '<span style="color:black;">In Process</span>';
+              					              }else{
+              					              	 return '';
+              					              }
+              					            }},
+
+              					            {data: 'id',   title :'ใบเสร็จ', className: 'text-center w80 ',render: function(d) {
+              					                return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
+              					                + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+              					            }},
+              					     
+              					            {data: 'id', title :'Tools', className: 'text-center w70'}, 
+              					        ],
+              					           // "order": [ [ 1, 'desc' ] ],
+              					           "columnDefs": [ {
+              					            // { targets: 'no-sort', orderable: false }
+              					              "targets": [0,2,6,7,8,9] ,
+              					              "orderable": false
+              					          } ],
+              					        rowCallback: function(nRow, aData, dataIndex){
+
+
+              					            if(aData['total_price']){
+
+              					              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+              					            }
+
+              					           if(aData['type']!='0'){
+              					              $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
+              					              $("td:eq(5)", nRow).html('');
+              					              $("td:eq(7)", nRow).html('');
+              					              $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
+              					              $("td:eq(10)", nRow).html('');
+              					            }
+
+              					            if(aData['pay_type']=='ai_cash'){
+              					              $("td:eq(6)", nRow).html('เติม Ai-Cash');
+              					            }
+
+              							      	$("td:eq(3)", nRow).html(aData['customer_name']);
+
+              					            var info = $(this).DataTable().page.info();
+              					            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+              					           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
+
+              						          if(sU!=''&&sD!=''){
+              						              $('td:last-child', nRow).html('-');
+              						          }else{ 
+
+              					              if(aData['type']!='0'){ // เติม Ai-Cash
+
+              					              }else{
+
+              					                $('td:last-child', nRow).html(''
+              					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+              					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+              					                  
+              					                ).addClass('input');
+
+              					            }
+
+              					             // $('td:last-child', nRow).html(aData['approve_status']);
+
+              					           
+              					          }
+              					          }
+
+
+              					            // console.log(aData['status_delivery']);
+
+              					            if(aData['status_delivery']=='1'){
+
+              					              $('td:last-child', nRow).html(''
+              					                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+              					                ).addClass('input');
+              					              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
+
+              					            }
+
+
+
+
+              					        }
+              					    });
+
+              					// + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+              					});
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                setTimeout(function(){
+                   $(".myloading").hide();
+                }, 1500);
+
+               
+            });
+
+        }); 
+
+
+</script>
+
+
 
       <script>
 // Clear data in View page  
@@ -1079,6 +1583,9 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_delivery_packing` ;");
       DB::select("TRUNCATE `db_delivery_packing_code` ;");
       DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+      
+      DB::select("TRUNCATE `db_sent_money_daily` ;");
+      // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
 
       ?>
           <script>

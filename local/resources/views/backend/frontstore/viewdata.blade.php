@@ -104,7 +104,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย  </h4>
+            <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
 
                     <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ url("backend/frontstore") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
@@ -263,25 +263,45 @@
                                   <label for="" class="col-md-4 col-form-label"> ประเภทการซื้อ : * </label>
                                   <div class="col-md-7">
 
-                                      @if(!empty(@$sRow->purchase_type_id_fk))
-
-                                         <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
-                                         <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
-
-                                      @else
-
-                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " disabled  >
-                                            <option value="">Select</option>
-                                            @if(@$sPurchase_type)
-                                              @foreach(@$sPurchase_type AS $r)
-                                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                                                  {{$r->orders_type}}
-                                                </option>
-                                              @endforeach
-                                            @endif
-                                          </select>
-
+                              @if($ChangePurchaseType==1)
+                                
+                                <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating "  >
+                                      <option value="">Select</option>
+                                      @if(@$sPurchase_type)
+                                        @foreach(@$sPurchase_type AS $r)
+                                          @if($r->id<=3)
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
+                                            {{$r->orders_type}}
+                                          </option>
+                                          @endif
+                                        @endforeach
                                       @endif
+                                    </select>
+
+                              @else
+
+                                @if(!empty(@$sRow->purchase_type_id_fk))
+
+                                   <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
+                                   <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
+
+                                @else
+
+                                   <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " disabled  >
+                                      <option value="">Select</option>
+                                      @if(@$sPurchase_type)
+                                        @foreach(@$sPurchase_type AS $r)
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
+                                            {{$r->orders_type}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+
+                                @endif
+
+                              @endif
+                             
 
                                   </div>
                                 </div>
@@ -294,16 +314,33 @@
                                   <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
                                   <div class="col-md-6">
 
-                                        <select id="aistockist" name="aistockist" class="form-control select2-templating " disabled >
-                                        <option value="">-</option>
-                                        @if(@$aistockist)
-                                          @foreach(@$aistockist AS $r)
-                                            <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
-                                              {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
-                                            </option>
-                                          @endforeach
-                                        @endif
-                                      </select>
+                        @if($ChangePurchaseType==1)
+                              <select id="aistockist" name="aistockist" class="form-control select2-templating "  >
+                                  <option value="">-</option>
+                                  @if(@$aistockist)
+                                    @foreach(@$aistockist AS $r)
+                                      <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
+                                        {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                                </select>
+
+                        @else
+                             
+                                  <select id="aistockist" name="aistockist" class="form-control select2-templating " disabled >
+                                    <option value="">-</option>
+                                    @if(@$aistockist)
+                                      @foreach(@$aistockist AS $r)
+                                        <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
+                                          {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                        </option>
+                                      @endforeach
+                                    @endif
+                                  </select>
+
+                         @endif
+           
 
                                   </div>
                                 </div>
@@ -327,16 +364,31 @@
                                   <label for="" class="col-md-4 col-form-label"> Agency : </label>
                                   <div class="col-md-6" >
 
-                                        <select id="agency" name="agency" class="form-control select2-templating "  disabled >
-                                        <option value="">-</option>
-                                        @if(@$agency)
-                                          @foreach(@$agency AS $r)
-                                            <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
-                                              {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
-                                            </option>
-                                          @endforeach
-                                        @endif
-                                      </select>
+                           @if($ChangePurchaseType==1)
+
+                                      <select id="agency" name="agency" class="form-control select2-templating "   >
+                                      <option value="">-</option>
+                                      @if(@$agency)
+                                        @foreach(@$agency AS $r)
+                                          <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
+                                            {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+                            @else
+                                      <select id="agency" name="agency" class="form-control select2-templating "  disabled >
+                                      <option value="">-</option>
+                                      @if(@$agency)
+                                        @foreach(@$agency AS $r)
+                                          <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
+                                            {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+                            @endif
+
 
                                   </div>
                                 </div>
@@ -371,11 +423,13 @@
 
                       <div class="row">
                         <div class="col-md-6">
-                        </div><!-- 
+                        </div>
+
                         <div class="col-md-5 text-right">
-                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
+                     <!--      <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                          </button> -->
+                          </button>  -->
+
                         </div>
                       </div>
              </form>
@@ -416,8 +470,20 @@
                              </div>
 
                           </div>
-
-
+ <div class="text-right">
+<?php 
+  // echo "วันที่สร้าง : ". $DATE_CREATED ;echo " / "; echo "วันที่เมื่อวานนี้ : ". $DATE_YESTERDAY ;echo " / "; echo "วันนี้ : ".$DATE_TODAY;
+ ?>
+     </div>         
+           
+           @if($ChangePurchaseType==1)
+                    <div class="col-md-11 text-right">
+                      <br>
+                      <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ">
+                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
+                      </button> 
+                    </div>
+           @endif
 <br>
 
 <?php
@@ -1307,7 +1373,7 @@
                           <div class="form-group row div-data-table-list-pro " style="display: none;">
                             <div class="col-md-12">
                               @IF(@$sRow->id)
-                                 <table id="data-table-list-pro" class="table table-bordered " style="width: 100%;"></table>
+                                 <!-- <table id="data-table-list-pro" class="table table-bordered " style="width: 100%;"></table> -->
                               @ENDIF
                             </div>
                           </div>
@@ -4629,9 +4695,57 @@ $(document).ready(function() {
         });
 
 
+        $(document).ready(function() {
+            $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
+               var orders_id_fk = "{{@$sRow->id}}";
+               var purchase_type_id_fk = $("#purchase_type_id_fk").val();
+               var aistockist = $("#aistockist").val();
+               var agency = $("#agency").val();
+               console.log(orders_id_fk);
+               console.log(purchase_type_id_fk);
+               console.log(aistockist);
+               console.log(agency);
+
+               $(".myloading").show();
+
+
+                         Swal.fire({
+                          title: 'ยืนยัน ? การแก้ไขข้อมูล ',
+                          type: 'question',
+                          showCancelButton: true,
+                          confirmButtonColor: '#556ee6',
+                          cancelButtonColor: "#f46a6a"
+                          }).then(function (result) {
+                            console.log(result);
+                              if (result.value) {
+                                     $.ajax({
+                                       type:'POST',
+                                       url: " {{ url('backend/ajaxSaveChangePurchaseType') }} ",
+                                       data: { _token: '{{csrf_token()}}', 
+                                           orders_id_fk:orders_id_fk,
+                                           purchase_type_id_fk:purchase_type_id_fk,
+                                           aistockist:aistockist,
+                                           agency:agency,
+                                        },
+                                        success:function(data){
+                                               console.log(data);
+                                                setTimeout(function(){
+                                                    $(".myloading").hide();
+                                                    location.reload();
+                                                  }, 3000);  
+                                          },
+                                    });
+                              }else{
+                                 $(".myloading").hide();
+                              }
+                        });
+
+
+            });
+        });
+
+
 		</script>
-
-
 
 @endsection
 

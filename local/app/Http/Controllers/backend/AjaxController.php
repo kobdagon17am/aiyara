@@ -283,12 +283,35 @@ class AjaxController extends Controller
      {
         // dd($id);
         $data = [$id];
-        $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+        // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+        $pdf = PDF::loadView('backend.frontstore.print_receipt_02',compact('data'));
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 
     }
 
+
+    public function createPDFReceiptQr($id)
+     {
+        // dd($id);
+        $data = [$id];
+        // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+        $pdf = PDF::loadView('backend.pick_warehouse.print_receipt_03',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFEnvelope($id)
+     {
+        // dd($id);
+        $data = [$id];
+        // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+        $pdf = PDF::loadView('backend.pick_warehouse.print_envelope',compact('data','data'))->setPaper('a6', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
 
     public function createPDFReceipt03($id)
      {
@@ -554,6 +577,16 @@ class AjaxController extends Controller
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.frontstore.print_receipt_02',compact('data'))->setPaper('a5', 'landscape');
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+
+    public function createPDFpo_supplier_products($id)
+     {
+        // dd($id);
+        $data = [$id];
+        $pdf = PDF::loadView('backend.po_supplier_products.print_receipt',compact('data'));
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 
@@ -1870,8 +1903,10 @@ class AjaxController extends Controller
     public function ajaxCheckAddAiCashStatus(Request $request)
     {
         if($request->ajax()){
-                $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE bill_status=1 ");
-                return count($rs);
+            //  $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE bill_status=1 ");
+            //  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
+            $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE approve_status=3 ");
+            return count($rs);
         }
     }
 
@@ -3435,24 +3470,42 @@ class AjaxController extends Controller
 
       if($request->ajax()){
         
-          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND status_sent_money=0  ");
+        //  $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND status_sent_money=0  ");
+        // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
+// ของเดิม
+// `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ',
+// แก้ใหม่
+// `approve_status` int(11) DEFAULT '0' COMMENT ' 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย',
+
+          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND approve_status=3 AND status_sent_money=0 
+              AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
+
+          // return $r0;
 
           if($r0){
 
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)."  ");
+            $arr_orders_id_fk = [];
+            foreach ($r0 as $key => $v) {
+                array_push($arr_orders_id_fk,$v->id);
+            }
+            $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
+            // return $arr_orders_id_fk;
+
+            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." 
+             ");
 
             if($r1){
 
                   $time_sent = $r1[0]->time_sent + 1 ;
 
-                  $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,created_at) values ($time_sent,".(\Auth::user()->id).",now()) ");
+                  $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE date(updated_at)=CURDATE() AND status_sent_money=0  ");
 
               }else{
 
-                  $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,created_at) values ('1',".(\Auth::user()->id).",now()) ");
+                  $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ('1',".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE date(updated_at)=CURDATE() AND status_sent_money=0  ");
@@ -3495,6 +3548,47 @@ class AjaxController extends Controller
           //   DB::select(" UPDATE `db_orders` SET status_sent_money=0,sent_money_daily_id_fk=0 WHERE sent_money_daily_id_fk=".$request->id." ");
           //   DB::select(" UPDATE `db_sent_money_daily` SET `status_cancel`='1' WHERE (`id`='".$request->id."') ");
           // }
+
+      }
+
+    }
+
+
+  public function ajaxSaveChangePurchaseType(Request $request)
+    {
+
+      // return($request);
+      /*
+      agency: "A0002"
+      aistockist: "A0001"
+      orders_id_fk: "4"
+      purchase_type_id_fk: "1"
+      _token: "EOhngZfLgYNC9tyHC2nejkNGWryFV0Li6yzn3Kxn"
+      */
+
+      if($request->ajax()){
+        
+           $r1 =  DB::select(" SELECT * FROM `db_orders` WHERE id=".$request->orders_id_fk." AND purchase_type_id_fk=".$request->purchase_type_id_fk." ");
+           if($r1){
+                  
+                  DB::select(" UPDATE `db_orders` 
+                  SET 
+                  aistockist = '".$request->aistockist."',
+                  agency = '".$request->agency."'
+                  WHERE id=".$request->orders_id_fk." ");
+
+               return "ไม่มีการเปลี่ยนแปลง ประเภทการซื้อ";
+           }else{
+
+                DB::select(" UPDATE `db_orders` 
+                  SET purchase_type_id_fk=".$request->purchase_type_id_fk." ,
+                  aistockist = '".$request->aistockist."',
+                  agency = '".$request->agency."'
+                  WHERE id=".$request->orders_id_fk." ");
+
+                return "มีการเปลี่ยนแปลง ประเภทการซื้อ";
+           }
+       
 
       }
 

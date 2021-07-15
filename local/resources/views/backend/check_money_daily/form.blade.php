@@ -61,26 +61,28 @@
             <div class="myBorder">
               <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
                   </table>
-                  @IF($sSent_money_daily[0]->status_cancel==0)
+                  @IF($sRow->status_cancel==0)
                   <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price" id="sum_total_price" style="text-align: center;" readonly=""></center>
                   @ENDIF
             </div>
 
-        @IF($sSent_money_daily[0]->status_cancel==0 && $sSent_money_daily[0]->status_approve==0)
+        @IF($sRow->status_cancel==0 && $sRow->status_approve==0)
 
           <div class="myBorder">
 
 
               @if( empty(@$sRowCheck_money_daily[0]->id) )
               <form action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input name="id" type="hidden" value="{{@$sRow->id}}">
+                <input type="hidden" name="id" value="{{@$sRow->id}}">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
+                <input type="hidden" name="sum_total_price78" value="78">
               @else
               <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
+                <input type="text" name="sum_total_price85">
               @endif
                 {{ csrf_field() }}
 
@@ -118,9 +120,9 @@
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
-                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_money_daily") }}">
+                   <!--        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/check_money_daily") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                    </a>
+                    </a> -->
                   </div>
                   <div class="col-md-6 text-right">
                     <?php if($can_sentmoney=='1'){ ?>
@@ -131,7 +133,7 @@
                     <?php } ?>
                     <?php if($can_getmoney=='1'){ ?>
                         <input name="get_money" type="hidden"  value="1" >
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnGetmoney ">
+                        <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnGetmoney ">
                         <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > รับเงิน
                         </button>
                     <?php } ?>
@@ -153,7 +155,7 @@
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
                 <input name="approved" type="hidden" value="1">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
-  
+                <input type="text" name="sum_total_price158">
                 {{ csrf_field() }}
 
 
@@ -329,7 +331,7 @@
                     <?php } ?>
                     <?php if($can_getmoney=='1'){ ?>
                         <input name="get_money" type="hidden"  value="1" >
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnGetmoney ">
+                        <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnGetmoney ">
                         <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > รับเงิน
                         </button>
                     <?php } ?>
@@ -463,7 +465,7 @@
         </button>
       </div>
       <center>
-       <div class="modal-body invoice_list " style="font-size: 20px;width: 50% !important;">
+       <div class="modal-body invoice_list " style="font-size: 16px;width: 80% !important;">
 
        </div>
         <div class="modal-footer">
@@ -662,7 +664,10 @@
 
               if(total_money=='' || sent_money_type==''){
 
-                $("#frm").validate();
+
+                $("#total_money").focus();
+                // $("#frm").validate();
+                return false;
 
               }else{
                     event.preventDefault();
@@ -674,6 +679,9 @@
                     if(v1!=v2){
                         alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง");
                         $(this).val("");
+                          setTimeout(function(){
+                               $("#total_money").focus();
+                          }, 500);  
                         return false;
                     }else{
 
@@ -686,7 +694,7 @@
                           }).then(function (result) {
                             console.log(result);
                               if (result.value) {
-                               $("#frm").submit();
+                               $("form").submit();
                               }else{
                                  $(".myloading").hide();
                               }

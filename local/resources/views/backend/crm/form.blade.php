@@ -112,7 +112,8 @@
                             <div class="form-group row">
                                 <label for="example-text-input" class="col-md-3 col-form-label">วันที่รับเรื่อง :</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="date" value="{{ @$sRow->receipt_date }}" name="receipt_date"  >
+                                  <?php // echo $sRow->receipt_date ?>
+                                    <input class="form-control receipt_date " type="text" value="{{ @$sRow->receipt_date }}" name="receipt_date" autocomplete="off" >
                                 </div>
                             </div>
 
@@ -162,7 +163,7 @@
                             </div>
 
 
-                  <div class="form-group row">
+                  <div class="form-group row" style="display: none;">
                     <label for="example-text-input" class="col-md-3 col-form-label">วันที่อัพเดตล่าสุด :</label>
                     <div class="col-md-3">
                       <input class="form-control" type="date" value="{{ @$sRow->last_update }}" name="last_update" >
@@ -189,7 +190,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12" style="{{@$sA}}" > 
-                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}" style="float: right;">
+                            <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.crm_answer.create') }}/{{@$sRow->id}}" style="float: right;">
                               <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม การตอบคำถาม</span>
                             </a>
                             <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการตอบคำถาม  </span>
@@ -330,9 +331,35 @@
             });
               
 </script>
-<script type="text/javascript">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" />
+
+ <script>
+      $('.receipt_date').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'Y-m-d H:i',
+          formatTime: 'H:i',
+          formatDate: 'Y-m-d H:i',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          minDate: 0,
+      });
+
+
 
 </script>
+
 @endsection
+
+
 
 @endsection

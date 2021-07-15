@@ -444,9 +444,9 @@
                       {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> Recipient Name (ชื่อผู้รับ) <br> Address (ที่อยู่ผู้รับ) </span> ', className: 'text-left',render: function(d) {
                         return d;
                       }},
-                      {data: 'column_003',   title :'<span style="vertical-align: top;"><center>ใบปะหน้ากล่อง & ใบเสร็จ ', className: 'text-left',render: function(d) {
-                        return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
-                          + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                      {data: 'recipient_code',   title :'<span style="vertical-align: top;"><center>ใบปะหน้ากล่อง & ใบเสร็จ ', className: 'text-left',render: function(d) {
+                        return '<center> <a href="{{ URL::to('backend/pick_warehouse/print_envelope') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
+                          + ' <a href="{{ URL::to('backend/pick_warehouse/print_receipt_03') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                       }},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){

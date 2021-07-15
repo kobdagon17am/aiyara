@@ -50,7 +50,7 @@
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.po_in.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.po_in.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
                   </div>
@@ -131,7 +131,7 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.po_in.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.po_in.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.po_in.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 
@@ -145,18 +145,6 @@ $(function() {
 </script>
 
 
-<script type="text/javascript">
-/*
-  sessionStorage.setItem("role_group_id", role_group_id);
-  var role_group_id = sessionStorage.getItem("role_group_id");
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
 
 @endsection
 

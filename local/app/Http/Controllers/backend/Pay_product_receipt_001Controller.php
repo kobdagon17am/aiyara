@@ -111,6 +111,9 @@ class Pay_product_receipt_001Controller extends Controller
       // return $request->id;
       // return $request->invoice_code;
       // สถานะกลับไปเป็นรอจ่าย 1 ถ้าเป็นกรณียกเลิกใบเสร็จ 4 ให้เกิดจากการยกเลิกจากคลัง
+      $r01 = DB::select(" SELECT * FROM db_pay_product_receipt_001 WHERE invoice_code='".$request->invoice_code."'; ");
+      DB::update(" UPDATE `db_orders` SET `approve_status`='5' WHERE (`id`='".$r01[0]->orders_id_fk."') ");
+
       DB::select("
         UPDATE db_pay_product_receipt_001 
         SET 

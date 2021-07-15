@@ -124,12 +124,14 @@
     
     // print_r(\Auth::user()->business_location_id_fk);
     // print_r(\Auth::user()->branch_id_fk);
+    $can_cancel_bill = 0;
 
     $sPermission = \Auth::user()->permission ;
     // print_r($sPermission);
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
       // print_r($menu_id);
+      // echo $menu_id;
 
     if($sPermission==1){
       $sC = '';
@@ -146,7 +148,12 @@
       $sC = @$menu_permit->c==1?'':'display:none;';
       $sU = @$menu_permit->u==1?'':'display:none;';
       $sD = @$menu_permit->d==1?'':'display:none;';
+
+      $can_cancel_bill = @$menu_permit->can_cancel_bill; 
+
     }
+
+    // echo $role_group_id;
    ?>
 
 
@@ -413,6 +420,8 @@
     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           var sU = "{{@$sU}}"; 
           var sD = "{{@$sD}}";
+          var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(can_cancel_bill);
+
           var oTable_001;
           $(function() {
           	$.fn.dataTable.ext.errMode = 'throw';
@@ -443,35 +452,51 @@
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                    var info = $(this).DataTable().page.info();
-                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                            var info = $(this).DataTable().page.info();
+                            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                    if(sU!=''&&sD!=''){
-                        $('td:last-child', nRow).html('-');
-                    }else{ 
+                            if(sU!=''&&sD!=''){
+                                $('td:last-child', nRow).html('-');
+                            }else{ 
 
-                          // console.log(aData['status_sent_2']);
-                          // console.log(aData['status_cancel_all']);
-                          console.log(aData['status_cancel_some']);
-                          // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
-                          if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
+                                  // console.log(aData['status_sent_2']);
+                                  // console.log(aData['status_cancel_all']);
+                                  // console.log(aData['status_cancel_some']);
+                                  // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
+                                  if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
 
-                              $('td:last-child', nRow).html(''
-                                + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                
-                              ).addClass('input');
+                                      $('td:last-child', nRow).html(''
+                                        + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                        
+                                      ).addClass('input');
 
-                          }else{
+                                  }else{
 
-                             $('td:last-child', nRow).html(''
-                                + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                              ).addClass('input');
-       
-                              
-                          }
+               
+                                      
+                                  }
 
-                   }
+                           }
+                    
+            
+                              // console.log(can_cancel_bill);
+                              console.log(aData['status_sent_2']);
+
+                              if(can_cancel_bill=='1' && aData['status_sent_2']==3){
+
+                                 $('td:last-child', nRow).html(''
+                                      + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                       + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'"  data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                 ).addClass('input');
+
+                              }else{
+                                      $('td:last-child', nRow).html(''
+                                      + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                      
+                                        ).addClass('input');
+                              }
+
+                       
                    
                   }
               });
@@ -952,7 +977,7 @@ $(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  console.log(data);
+                                  // console.log(data);
                                   // return false;
                                   
                                       Swal.fire({

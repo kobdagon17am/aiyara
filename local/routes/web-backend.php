@@ -359,6 +359,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCe_regis_gift', 'AjaxController@ajaxGetCe_regis_gift');
     Route::post('ajaxGetCEQrcode', 'AjaxController@ajaxGetCEQrcode');
 
+    
+    Route::post('ajaxSaveChangePurchaseType', 'AjaxController@ajaxSaveChangePurchaseType');
+
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
@@ -504,8 +507,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('check_stock_account/print_receipt/{id}', 'AjaxController@createPDFStock_account');
 
-
-    Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
+    Route::get('pick_warehouse/print_receipt_03/{id}', 'AjaxController@createPDFReceiptQr');
+    Route::get('pick_warehouse/print_envelope/{id}', 'AjaxController@createPDFEnvelope');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');
@@ -601,6 +604,39 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('po_in', 'Po_inController');
     Route::post('po_in/datatable', 'Po_inController@Datatable')->name('po_in.datatable');
 
+    Route::resource('po_supplier', 'Po_supplierController');
+    Route::post('po_supplier/datatable', 'Po_supplierController@Datatable')->name('po_supplier.datatable');
+
+    Route::resource('po_supplier_products', 'Po_supplier_productsController');
+    Route::post('po_supplier_products/datatable', 'Po_supplier_productsController@Datatable')->name('po_supplier_products.datatable');
+    Route::get('po_supplier_products/create/{id}', 'Po_supplier_productsController@create');
+
+    Route::resource('po_supplier_products_get', 'Po_supplier_products_getController');
+    Route::post('po_supplier_products_get/datatable', 'Po_supplier_products_getController@Datatable')->name('po_supplier_products_get.datatable');
+    Route::get('po_supplier_products_get/create/{id}', 'Po_supplier_products_getController@create');
+
+    Route::get('po_supplier_products/print_receipt/{id}', 'AjaxController@createPDFpo_supplier_products');
+
+
+    Route::resource('po_receive', 'Po_receiveController');
+    Route::post('po_receive/datatable', 'Po_receiveController@Datatable')->name('po_receive.datatable');
+
+    Route::resource('po_receive_products', 'Po_receive_productsController');
+    Route::post('po_receive_products/datatable', 'Po_receive_productsController@Datatable')->name('po_receive_products.datatable');
+    Route::get('po_receive_products/create/{id}', 'Po_receive_productsController@create');
+
+    Route::resource('po_receive_products_get', 'Po_receive_products_getController');
+
+    Route::post('po_receive_products_get/datatable', 'Po_receive_products_getController@Datatable')->name('po_receive_products_get.datatable');
+
+    Route::post('po_supplier_products_receive/datatable', 'Po_receive_products_getController@DatatablePO_receive')->name('po_supplier_products_receive.datatable');
+
+    Route::get('po_receive_products_get/create/{id}', 'Po_receive_products_getController@create');
+
+    Route::get('po_receive_products/print_receipt/{id}', 'AjaxController@createPDFpo_receive_products');
+
+
+
     Route::resource('general_receive', 'General_receiveController');
     Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');
 
@@ -648,10 +684,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('check_stock_account/adjust/{id}', 'Check_stock_accountController@Adjust');
 
 
-
-
     Route::resource('check_money_daily', 'Check_money_dailyController');
-    // Route::post('check_money_daily/datatable', 'Check_money_dailyController@Datatable')->name('check_money_daily.datatable');
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@DatatableSentMoney')->name('check_money_daily.datatable');
     Route::post('check_money_daily02/datatable', 'Check_money_dailyController@DatatableTotal')->name('check_money_daily02.datatable');
 

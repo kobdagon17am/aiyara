@@ -38,12 +38,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-8 ">
             <!--         <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : เลขใบรับเรื่อง" name="subject_receipt_number"> -->
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="หัวข้อที่ลูกค้าถาม" name="topics_question">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้รับเรื่อง" name="subject_recipient">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ผู้ดำเนินการ" name="operator">
+                    <input type="text" class="form-control float-left text-center w200 myLike" placeholder="วันที่-เวลา รับเรื่อง" name="receipt_date">
+                    <input type="text" class="form-control float-left text-center w200 myLike" placeholder="หัวข้อที่ลูกค้าถาม" name="topics_reported">
+                    <input type="text" class="form-control float-left text-center w200 myLike" placeholder="ผู้รับเรื่อง" name="recipient_name">
+                    <!-- <input type="text" class="form-control float-left text-center w200 myLike" placeholder="ผู้ดำเนินการ" name="operator_name> -->
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
@@ -117,9 +117,10 @@ $(function() {
             {data: 'subject_receipt_number', title :'<center>เลขใบรับเรื่อง </center>', className: 'text-left'},
             {data: 'receipt_date', title :'<center>วันที่-เวลา รับเรื่อง </center>', className: 'text-left'},
             {data: 'topics_reported', title :'<center>หัวข้อที่ลูกค้าแจ้ง </center>', className: 'text-left'},
-            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-left'},
-            {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-left'},
-            {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-left'},
+            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-center'},
+            // {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
+            // {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-center'},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},

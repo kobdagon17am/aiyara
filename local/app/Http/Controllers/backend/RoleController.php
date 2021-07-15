@@ -162,7 +162,14 @@ class RoleController extends Controller
                     }
                 }
               }
-              
+              if(!empty(request('can_cancel_bill'))){
+                $can_cancel_bill = request('can_cancel_bill');
+                if(!empty($can_cancel_bill)){
+                    foreach ($can_cancel_bill AS $row) {
+                         DB::update(" UPDATE role_permit SET can_cancel_bill=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }  
               
           }
 

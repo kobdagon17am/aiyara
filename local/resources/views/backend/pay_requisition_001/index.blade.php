@@ -109,7 +109,7 @@
 
 @endsection
 
-@section('content')
+@section('content')o
 <div class="myloading"></div>
 <!-- start page title -->
 <div class="row">

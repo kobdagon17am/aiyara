@@ -429,34 +429,41 @@
 
 
           <div class="page-title-box d-flex justify-content-between ">
-            <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการย่อย <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
-
-            <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank >
-              <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
-            </a>
-
-            <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{@$sRow->id}}" target=_blank >
-              <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
-            </a>
-            <!-- แลก  Ai Voucher -->
-                 <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion " href="#" >
-                  <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
-                </a>
-
-            <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromProdutcsList " href="#" >
-              <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มแบบ List</span>
-            </a>
-
-            <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddList " href="#" >
-              <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่ม</span>
-            </a>
-
+            <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i> รายการสินค้า/บริการ <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
+            <div style="text-align: right;">
+              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{@$sRow->id}}" target=_blank style="display: none;" >
+                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
+              </a>
+              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{@$sRow->id}}" target=_blank style="display: none;" >
+                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
+              </a>
+              <!-- แลก  Ai Voucher -->
+              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion " href="#" >
+                <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มจากรหัสโปรโมชั่น</span>
+              </a>
+              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromProdutcsList " href="#" >
+                <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่มแบบ List</span>
+              </a>
+              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddList " href="#" >
+                <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span style="font-size: 14px;">เพิ่ม</span>
+              </a>
+            </div>
           </div>
 
           <div class="form-group row ">
             <div class="col-md-12">
               <table id="data-table-list" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
+            </div>
+          </div>
+
+          <div class="form-group row ">
+            <div class="col-md-12">
+                @IF(@$check_giveaway['status']=="fail")
+                   <div style="margin-left:3%;"> * {{@$check_giveaway['message']}} </div>
+                 @ELSE
+                    <div style="margin-left:3%;"> * ของแถม > {{@$check_giveaway['f_data']}} {{@$check_giveaway['s_data']}} </div>
+                @ENDIF
             </div>
           </div>
 
@@ -722,6 +729,20 @@
               <div class="">
                 <div class="divTable">
                   <div class="divTableBody">
+
+
+                    <div class="divTableRow">
+                      <div class="divTableCell" >&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >รวม PV : </label>
+                      </div>
+                      <div class="divTableCell">
+
+                        <input class="form-control f-ainumber-18 input-aireadonly " id="pv_total" name="pv_total" value="{{@$sRow->pv_total>0?number_format(@$sRow->pv_total,0):''}}" readonly="" />
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
 
 
                     <div class="divTableRow">
@@ -1315,6 +1336,7 @@
                   </form>
 
               </div>
+
             </div>
           </div>
         </div>
@@ -3335,6 +3357,7 @@ $(document).ready(function() {
 
                               $.each(d,function(key,value){
 
+                                  $("#pv_total").val(formatNumber(parseFloat(value.pv_total).toFixed(0)));
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
@@ -3674,13 +3697,13 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxShippingCalculate') }} ",
                        data: $("#frm-main").serialize()+"&province_id="+$province_id,
                         success:function(data){
-							console.log(data);
-							// return false;
+              							// console.log(data);
+              							// return false;
 
-							$("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
-							fnGetDBfrontstore();
-							$("input[name=_method]").val('PUT');
-							$(".myloading").hide();
+              							$("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
+              							fnGetDBfrontstore();
+              							$("input[name=_method]").val('PUT');
+              							$(".myloading").hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
@@ -4301,6 +4324,7 @@ $(document).ready(function() {
 
                               $.each(d,function(key,value){
 
+                                  $("#pv_total").val(formatNumber(parseFloat(value.pv_total).toFixed(0)));
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));
@@ -4411,6 +4435,7 @@ $(document).ready(function() {
 
                               $.each(d,function(key,value){
 
+                                  $("#pv_total").val(formatNumber(parseFloat(value.pv_total).toFixed(0)));
                                   $("#sum_price").val(formatNumber(parseFloat(value.sum_price).toFixed(2)));
                                   $("#product_value").val(formatNumber(parseFloat(value.product_value).toFixed(2)));
                                   $("#tax").val(formatNumber(parseFloat(value.tax).toFixed(2)));

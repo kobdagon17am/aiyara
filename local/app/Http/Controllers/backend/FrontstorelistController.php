@@ -258,12 +258,12 @@ class FrontstorelistController extends Controller
 
        $id=   @$request->frontstore_id;
 
-       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total.",pv_total=".@$sFrontstoreDataTotal[0]->total_pv." WHERE id=$id ");
         }else{
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
@@ -524,12 +524,12 @@ class FrontstorelistController extends Controller
 
            $id=   @$request->frontstore_id;
 
-           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
            // dd($sFrontstoreDataTotal);
            if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
               $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total.",pv_total=".@$sFrontstoreDataTotal[0]->total_pv." WHERE id=$id ");
             }else{
               DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
             }
@@ -564,7 +564,7 @@ class FrontstorelistController extends Controller
       $sRow = \App\Models\Backend\Frontstorelist::find($id);
       if( $sRow ){
 
-        $sRow->forceDelete();
+        // $sRow->forceDelete();
 
       }
     }

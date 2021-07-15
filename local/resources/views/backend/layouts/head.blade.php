@@ -40,7 +40,7 @@
         -moz-transform: translate(-50%, -50%);
         -o-transform: translate(-50%, -50%);
         -ms-transform: translate(-50%, -50%);
-        z-index: 100;
+        z-index: 9999;
 
         border: 16px solid #f3f3f3;
         border-radius: 50%;

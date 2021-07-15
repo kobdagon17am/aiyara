@@ -39,11 +39,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                  <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น: รายการคำถาม" name="q_topic">
+                  <div class="col-4">
+                    <input type="text" class="form-control float-left text-center myLike" placeholder="ค้น: รายการคำถาม" name="q_question">
                   </div>
 
-                  <div class="col-4 text-right " style="{{@$sC}}" >
+                  <div class="col-8 text-right " style="{{@$sC}}" >
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.faq.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>

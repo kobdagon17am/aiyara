@@ -317,13 +317,14 @@ $(function() {
             {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
             {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
-             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              if(d=="รออนุมัติ"){
-                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
-              }
-            }},
+            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+            //  {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+            //   if(d=="รออนุมัติ"){
+            //       return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
+            //   }else{
+            //       return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+            //   }
+            // }},
             {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
 
             {data: 'updated_at', title :'<center>วันที่ </center>', className: 'text-center'},
@@ -334,7 +335,7 @@ $(function() {
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(aData['approve_status']==4){
+          if(aData['approve_status']==5){
             for (var i = 0; i < 6; i++) {
               $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
             }
@@ -470,10 +471,7 @@ $(function() {
     </script>
     <script>
 
-
-
         $(document).ready(function() {
-
 
             $(document).on('click', '.btnSearch01', function(event) {
                   event.preventDefault();
@@ -527,7 +525,7 @@ $(function() {
                                                 customer_id_fk:customer_id_fk,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                bill_status:bill_status,                                 
+                                                // bill_status:bill_status,                                 
                                                 approver:approver,                                 
                                                 invoice_code:invoice_code,                                 
                                               },
@@ -559,7 +557,7 @@ $(function() {
                                 ],
                                 rowCallback: function(nRow, aData, dataIndex){
 
-                                  if(aData['approve_status']==4){
+                                  if(aData['approve_status']==5){
                                     for (var i = 0; i < 6; i++) {
                                       $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
                                     }

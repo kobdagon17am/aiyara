@@ -25,7 +25,9 @@ class AdminController extends Controller
   {
     $sRole_group = \App\Models\Backend\Role::get();
     $sBranchs = \App\Models\Backend\Branchs::get();
-    return view('backend.permission.form',['sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs]);
+    $position_level = DB::select("select * from dataset_position_level");
+    // dd($position_level);
+    return view('backend.permission.form',['sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs,'position_level'=>$position_level]);
   }
 
   public function edit($id)
@@ -33,9 +35,11 @@ class AdminController extends Controller
     try {
       $sLocale  = \App\Models\Locale::all();
       $sRow = \App\Models\Backend\Permission\Admin::find($id);
+      // dd($sRow);
       $sRole_group = \App\Models\Backend\Role::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
-      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs));
+      $position_level = DB::select("select * from dataset_position_level");
+      return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs,'position_level'=>$position_level));
     } catch (\Exception $e) {
       return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
     }
@@ -71,6 +75,7 @@ class AdminController extends Controller
         $sRow->business_location_id_fk    = $branch_id_fk->business_location_id_fk;
         $sRow->department    = request('department');
         $sRow->position    = request('position');
+        $sRow->position_level    = request('position_level');
         
         $sRow->permission    = request('permission')?request('permission'):'0';
 
