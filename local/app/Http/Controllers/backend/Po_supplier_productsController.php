@@ -135,15 +135,21 @@ class Po_supplier_productsController extends Controller
           return $sP->product_unit;
       })
       ->addColumn('get_status', function($row) {
-        if($row->get_status==1){
-          return 'ได้รับสินค้าครบแล้ว';
-        }else if($row->get_status==2){
-          return 'ยังค้างรับสินค้าจาก Supplier';
+        if($row->product_amt==$row->product_amt_receive) $get_status=1;
+        if($row->product_amt>$row->product_amt_receive) $get_status=2;
+        if($get_status==1){
+          return '<font color=green>ได้รับสินค้าครบแล้ว</font>';
+        }else if($get_status==2){
+          return '<font color=red>ยังค้างรับสินค้าจาก Supplier</font>';
         }else if($row->get_status==3){
           return 'ยกเลิกรายการสินค้านี้';
         }else{
           return 'อยู่ระหว่างการดำเนินการ';
         }
+      })
+      ->escapeColumns('get_status')
+      ->addColumn('get_status_2', function($row) {
+          return $row->get_status;
       })
       ->make(true);
     }

@@ -44,7 +44,7 @@ class Po_receive_products_getController extends Controller
       if(isset($request->save_set_to_warehouse)){
         // dd($request->all());  
         // เช็คยอด ว่า ครบแล้วหรือไม่ ถ้าครบแล้ว ก็อัพเดตสถานะ ว่าได้รับครบแล้ว ถ้ายัง ก็เป็น ค้างรับสินค้า
-        
+
 
         DB::select(" INSERT INTO `db_po_supplier_products_receive` (
                       `po_supplier_products_id_fk`,
@@ -79,10 +79,15 @@ class Po_receive_products_getController extends Controller
               DB::select("
 
                 UPDATE `db_po_supplier_products` SET product_amt_receive=(SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$request->po_supplier_products_id_fk." AND product_id_fk=".$request->product_id_fk.")
-                WHERE po_supplier_id_fk=".$request->po_supplier_products_id_fk." and product_id_fk=".$request->product_id_fk." ;
+                WHERE id=".$request->po_supplier_products_id_fk." ;
                 ");
 
-              return redirect()->to(url("backend/po_receive/".$request->po_supplier_products_id_fk."/edit"));
+              DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$request->po_supplier_products_id_fk." AND product_amt=product_amt_receive; ");
+              DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='2' where id=".$request->po_supplier_products_id_fk." AND product_amt>product_amt_receive; ");
+
+              $r = DB::select("SELECT * FROM `db_po_supplier_products` where id=".$request->po_supplier_products_id_fk." ");
+
+              return redirect()->to(url("backend/po_receive/".$r[0]->po_supplier_id_fk."/edit"));
 
       }else{
         return $this->form();
@@ -175,7 +180,20 @@ class Po_receive_products_getController extends Controller
 
       // dd($id);
       if($id){
+        $r = DB::select("SELECT *  FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
+
+       DB::select("
+
+        UPDATE `db_po_supplier_products` SET product_amt_receive=((SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$r[0]->po_supplier_products_id_fk." AND product_id_fk=".$r[0]->product_id_fk.") - ".$r[0]->amt_get." ) 
+        WHERE id=".$r[0]->po_supplier_products_id_fk." ;
+        ");
+
         DB::select("DELETE FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
+
+        DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt=product_amt_receive; ");
+        DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='2' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt>product_amt_receive; ");
+
+
       }
       // $sRow = \App\Models\Backend\Po_supplier_products::find($id);
       // if( $sRow ){
@@ -190,32 +208,6 @@ class Po_receive_products_getController extends Controller
       $sTable = \App\Models\Backend\Po_supplier_products_get::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('product_name', function($row) {
-      //             // return $row->product_unit_id_fk;
-      //   if(!empty($row->product_id_fk)){
-
-      //     $Products = DB::select(" 
-      //           SELECT products.id as product_id,
-      //             products.product_code,
-      //             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-      //             products_cost.selling_price,
-      //             products_cost.pv
-      //             FROM
-      //             products_details
-      //             Left Join products ON products_details.product_id_fk = products.id
-      //             LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-      //             WHERE lang_id=1 AND products.id= ".$row->product_id_fk."
-
-      //      ");
-
-      //      return  @$Products[0]->product_code." : ".@$Products[0]->product_name;
-
-      //    }
-      // })
-      // ->addColumn('product_unit_desc', function($row) {
-      //     $sP = \App\Models\Backend\Product_unit::find($row->product_unit);
-      //     return $sP->product_unit;
-      // })
       ->addColumn('get_status', function($row) {
         if($row->get_status==1){
           return 'ได้รับสินค้าครบแล้ว';
@@ -263,6 +255,14 @@ class Po_receive_products_getController extends Controller
           $sP = \App\Models\Backend\Product_unit::find($row->product_unit_id_fk);
           return $sP->product_unit;
       })
+        ->addColumn('warehouses', function($row) {
+        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+        $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
+        $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
+        $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
+        // return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
+        return @$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
+      })   
       ->make(true);
     }
 

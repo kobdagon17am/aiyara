@@ -263,7 +263,7 @@
 @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
 
-            <div class="myBorder">
+            <div class="myBorder" style="display: none;">
 
 
         
@@ -614,7 +614,7 @@
                         {data: 'product_amt', title :'จำนวนที่สั่งซื้อ', className: 'text-center'},
                         {data: 'product_amt_receive', title :'จำนวนที่รับมาแล้ว', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
-                        {data: 'get_status', title :'สถานะการรับสินค้าจาก Supplier', className: 'text-center'},
+                        {data: 'get_status', title :'สถานะ', className: 'text-center'},
                         {data: 'id', title :'Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
@@ -622,10 +622,15 @@
                       //   + '<a href="{{ route('backend.po_receive_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
                       // ).addClass('input');
 
-                      $('td:last-child', nRow).html(''
-                        + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
-                        // + '<a href="{{ route('backend.po_receive_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i> </a> '
-                      ).addClass('input');
+                      if(aData['get_status_2']==2){
+
+                        $('td:last-child', nRow).html(''
+                          + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
+                        ).addClass('input');
+
+                      }else{
+                          $('td:last-child', nRow).html('');
+                      }
 
 
                     }
@@ -671,6 +676,7 @@
                         {data: 'product_name', title :'<center>ชื่อสินค้า', className: 'text-center'},
                         {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
+                        {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
                         {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
@@ -960,6 +966,16 @@ $( function() {
              });
        
            });
+
+
+            $(document).on('click', '.cDelete', function(event) {
+            
+                     setTimeout(function(){
+                         $('#data-table').DataTable().draw();
+                      }, 1000);
+       
+           });
+
         
         });
 
