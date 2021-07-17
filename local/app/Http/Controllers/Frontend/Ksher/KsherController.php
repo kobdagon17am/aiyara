@@ -56,7 +56,6 @@ class KsherController extends Controller
 
     public static function gateway_ksher($data)
     {
-
         //$data['total_fee'] = 0.1;
         $gateway_pay_data = array('mch_order_no' => $data['mch_order_no'],
             "total_fee" => round($data['total_fee'], 2) * 100,
@@ -68,7 +67,7 @@ class KsherController extends Controller
             'mch_redirect_url_fail' => route('payment/fail'),
             'product_name' => $data['product_name'],
             'refer_url' => route('ksher'),
-
+            'mch_notify_url' => route('ksher_notify'),
             //  'shop_name' => 'AIYARA PLANET บริษัท ไอยรา แพลนเน็ต',
             //  'device' => 'PC',
             //'attach' =>'หมายเหตุหรือคถอธิบาย',

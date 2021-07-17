@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "ext-gd": "*",
         "andcarpi/laravel-popper": "^0.9.4",
         "barryvdh/laravel-dompdf": "^0.8.7",
         "darryldecode/cart": "~4.0",
