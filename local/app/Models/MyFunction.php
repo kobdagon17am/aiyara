@@ -118,6 +118,8 @@ function ReadNumber($number)
 
  function ThDate01($d)
   {
+      
       $d = strtotime($d);  
       return date("d/m/", $d).(date("Y", $d)+543);
+      
   }
