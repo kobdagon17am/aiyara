@@ -217,53 +217,27 @@ class CartPaymentController extends Controller
                 }
 
         } elseif ($request->submit == 'credit_card') {
-
-            if ($request->type == '6') {
-                $resule = PaymentCourse::credit_card($request);
-            } elseif ($request->type == '7') {
-                $resule = PaymentAiCash::credit_card($request);
-
-                if ($resule['status'] == 'success') {
-                    return redirect('ai-cash')->withSuccess($resule['message']);
-                } elseif ($resule['status'] == 'fail') {
-                    return redirect('ai-cash')->withError($resule['message']);
-                } else {
-                    return redirect('ai-cash' . $request->type)->withError('Data is Null');
-                }
-            } else {
-                $resule = Payment::credit_card($request);
-            }
-
-            if ($resule['status'] == 'success') {
-                return redirect('product-history')->withSuccess($resule['message']);
-            } elseif ($resule['status'] == 'fail') {
-                return redirect('cart_payment/' . $request->type)->withError($resule['message']);
-            } else {
-                return redirect('cart_payment/' . $request->type)->withError('Data is Null');
-            }
+          dd('coming soon');
         } elseif ($request->submit == 'ai_cash') {
 
-            if ($request->type == '6') {
-                $resule = PaymentCourse::ai_cash($request);
-            } else {
-                $resule = Payment::ai_cash($request);
-            }
+          $resule = Payment::ai_cash($request);
 
             if ($resule['status'] == 'success') {
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
-                return redirect('cart_payment/' . $request->type)->withError($resule['message']);
+              return redirect('cart_payment_transfer/'. $request->code_order)->withError($resule['message']);
             } else {
-                return redirect('cart_payment/' . $request->type)->withError('Data is Null');
+              return redirect('cart_payment_transfer/'. $request->code_order)->withError('Data is Null');
             }
+
         } elseif ($request->submit == 'gift_voucher') {
             $resule = Payment::gift_voucher($request);
             if ($resule['status'] == 'success') {
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
-                return redirect('cart_payment/' . $request->type)->withError($resule['message']);
+                return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
             } else {
-                return redirect('cart_payment/' . $request->type)->withError('Data is Null');
+                return redirect('cart_payment_transfer/' . $request->code_order)->withError('Data is Null');
             }
         } else {
             return redirect('product-history')->withError('Payment submit Fail');

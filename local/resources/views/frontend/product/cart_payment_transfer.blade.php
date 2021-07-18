@@ -141,14 +141,14 @@
                                                             <i class="helper"></i><b>Mobile Banking</b>
                                                         </label>
                                                     </div>
-
+{{--
                                                     <div class="radio radio-inline">
                                                         <label>
                                                             <input type="radio" onchange="open_input(2)" id="credit_cart"
                                                                 name="pay_type" value="2">
                                                             <i class="helper"></i><b>บัตรเครดิต</b>
                                                         </label>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <div class="radio radio-inline">
                                                         <label>
