@@ -261,4 +261,4 @@ Route::get('payment/fail', function() {
 
 Route::get('ksher', 'Frontend\Ksher\KsherController@index')->name('ksher');
 Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->name('gateway_ksher');
-
+Route::post('ksher_notify', 'Frontend\Ksher\KsherNotifyController@ksher_notify')->name('ksher_notify');
