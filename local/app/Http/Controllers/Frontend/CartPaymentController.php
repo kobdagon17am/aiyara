@@ -160,11 +160,7 @@ class CartPaymentController extends Controller
 
         } elseif ($request->submit == 'PromptPay') {
             $request['pay_type'] = 15;
-            $resule = Payment::payment_online_banking($request);
 
-            //$resule['id'] = '7';
-            if ($resule['status'] == 'success') {
-                //$resule['id']
                 $business_location_id = Auth::guard('c_user')->user()->business_location_id;
 
                 $order_data = DB::table('db_orders')
@@ -172,12 +168,12 @@ class CartPaymentController extends Controller
                     ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
                     ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
                     ->where('dataset_orders_type.lang_id', '=', $business_location_id)
-                    ->where('db_orders.id', '=', $resule['id'])
+                    ->where('db_orders.id', '=', $request->id)
                     ->first();
 
                 $gateway_pay_data = array(
                     'mch_order_no' => $order_data->code_order,
-                    "total_fee" => $order_data->prompt_pay_price,
+                    "total_fee" => $order_data->total_price,
                     "fee_type" => 'THB',
                     "channel_list" => 'promptpay',
                     'mch_code' => $order_data->code_order,
@@ -191,31 +187,21 @@ class CartPaymentController extends Controller
                 } else {
                     return redirect('product-history')->withError('Payment Fail');
                 }
-            } elseif ($resule['status'] == 'fail') {
-                return redirect('cart_payment/' . $request->type)->withError($resule['message']);
-            } else {
-                return redirect('cart_payment/' . $request->type)->withError('Data is Null');
-            }
+
         } elseif ($request->submit == 'TrueMoney') {
             $request['pay_type'] = 16;
-            $resule = Payment::payment_online_banking($request);
-
-            //$resule['id'] = '7';
-            if ($resule['status'] == 'success') {
-                //$resule['id']
                 $business_location_id = Auth::guard('c_user')->user()->business_location_id;
-
                 $order_data = DB::table('db_orders')
                     ->select('db_orders.*', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
                     ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
                     ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
                     ->where('dataset_orders_type.lang_id', '=', $business_location_id)
-                    ->where('db_orders.id', '=', $resule['id'])
+                    ->where('db_orders.id', '=', $request->id)
                     ->first();
 
                 $gateway_pay_data = array(
                     'mch_order_no' => $order_data->code_order,
-                    "total_fee" => $order_data->true_money_price,
+                    "total_fee" => $order_data->total_price,
                     "fee_type" => 'THB',
                     "channel_list" => 'truemoney',
                     'mch_code' => $order_data->code_order,
@@ -229,11 +215,7 @@ class CartPaymentController extends Controller
                 } else {
                     return redirect('product-history')->withError('Payment Fail');
                 }
-            } elseif ($resule['status'] == 'fail') {
-                return redirect('cart_payment/' . $request->type)->withError($resule['message']);
-            } else {
-                return redirect('cart_payment/' . $request->type)->withError('Data is Null');
-            }
+
         } elseif ($request->submit == 'credit_card') {
 
             if ($request->type == '6') {
