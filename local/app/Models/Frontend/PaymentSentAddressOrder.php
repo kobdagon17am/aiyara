@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentSentAddressOrder extends Model
 {
 
-    public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv)
+    public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv,$quantity)
     {
 
         try {
             DB::BeginTransaction();
             $insert_db_orders = new Db_Orders();
+            $insert_db_orders->quantity = $quantity;
             $insert_db_orders->customers_id_fk = $customer_id;
             $insert_db_orders->address_sent_id_fk = $rs->address_sent_id_fk;
             $insert_db_orders->business_location_id_fk = $business_location_id;
@@ -78,7 +79,22 @@ class PaymentSentAddressOrder extends Model
                 $insert_db_orders->status_payment_sent_other = 1;
             }
 
-            $insert_db_orders->product_value = $rs->price;
+            $vat = DB::table('dataset_vat')
+            ->where('business_location_id_fk', '=', $business_location_id)
+            ->first();
+
+            $vat = $vat->vat;
+
+            //$shipping = $data_shipping['data']->shipping_cost;
+
+            //vatใน 7%
+
+            $p_vat = $rs->price * ($vat / (100 + $vat));
+            //มูลค่าสินค้า
+            $price_vat = $rs->price - $p_vat;
+
+
+            $insert_db_orders->product_value = $price_vat;
             $insert_db_orders->tax = $rs->vat;
             $insert_db_orders->sum_price = $rs->price;
             $insert_db_orders->total_price = $rs->price_total;

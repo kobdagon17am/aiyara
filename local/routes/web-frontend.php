@@ -101,6 +101,7 @@ Route::post('check_pass_aicash','Frontend\EditPasswordAicashController@check_pas
 
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
+Route::post('payment_address','Frontend\CartPaymentController@payment_address')->name('payment_address');
 
 //------------------------------end-------------------------------//
 
@@ -137,6 +138,8 @@ Route::post('cart_delete','Frontend\CartController@cart_delete')->name('cart_del
 Route::post('edit_item','Frontend\CartController@edit_item')->name('edit_item');
 
 Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('cart_payment');
+
+Route::get('cart_payment_transfer/{order_code}','Frontend\CartPaymentController@cart_payment_transfer')->name('cart_payment_transfer');
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');

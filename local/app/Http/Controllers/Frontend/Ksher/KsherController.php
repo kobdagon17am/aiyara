@@ -59,7 +59,7 @@ class KsherController extends Controller
 
         //$data['total_fee'] = 0.1;
         $gateway_pay_data = array('mch_order_no' => $data['mch_order_no'],
-            "total_fee" => round($data['total_fee'], 2) * 100,
+            "total_fee" => round($data['total_fee'],2) * 100,
             "fee_type" => $data['fee_type'],
             // "channel_list" => 'truemoney',
             "channel_list" => $data['channel_list'],

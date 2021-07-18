@@ -6,18 +6,19 @@
          href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
      <link rel="stylesheet" type="text/css"
          href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
+
  @endsection
  @section('conten')
 
      <div class="row">
          <div class="col-md-8 col-sm-12">
-             <form action="{{ route('payment_submit') }}"  method="POST" enctype="multipart/form-data">
+             <form action="{{ route('payment_address') }}" id="payment_address"  method="POST" enctype="multipart/form-data">
                  @csrf
                  <input type="hidden" id="url_check_user" name="url_check_user" value="{{ route('check_customer_id') }}">
                  <input type="hidden" name="shipping_premium" id="shipping_premium" value="">
                  <input type="hidden" name="type" value="{{ $bill['type'] }}">
                  <input type="hidden" name="vat" value="{{ $bill['vat'] }}">
-                 {{-- <input type="hidden" name="shipping" id="input_shipping" value="{{ $bill['shipping'] }}"> --}}
+
                  <input type="hidden" name="price_vat" value="{{ $bill['price_vat'] }}">
                  <input type="hidden" name="price" value="{{ $bill['price'] }}">
                  <input type="hidden" name="p_vat" value="{{ $bill['p_vat'] }}">
@@ -29,7 +30,7 @@
                  <input type="hidden" name="gift_voucher_price" id="gift_voucher_price"
                      value="{{ $bill['gift_voucher_price'] }}">
 
-                 <!-- Choose Your Payment Method start -->
+
                  <div class="card card-border-success">
                      <div class="card-header p-3">
                          @if ($bill['type'] == 1)
@@ -47,7 +48,7 @@
                          @else
                              <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
                          @endif
-                         {{-- <div class="card-header-right"></div> --}}
+
                      </div>
                      <div class="card-block payment-tabs">
                          <ul class="nav nav-tabs md-tabs" role="tablist">
@@ -69,10 +70,6 @@
                                  </li>
                              @endif
 
-                             {{-- <li class="nav-item">
- 						<a class="nav-link" data-toggle="tab" href="#debit-card" role="tab">Debit Card</a>
- 						<div class="slide"></div>
- 					</li> --}}
                          </ul>
                          <div class="tab-content m-t-15">
 
@@ -563,393 +560,21 @@
                                  <div class="row m-t-5">
                                      <div class="col-sm-12">
 
-                                         {{-- <a href="{{ route('product-list',['type'=>$bill['type']]) }}" class="btn btn-warning">
-               <font style="color: #000">เลือกสินค้าเพิ่มเติม</font>
-             </a> --}}
-
                                          <a type="button" href="{{ route('product-list', ['type' => $bill['type']]) }}"
                                              class="btn btn-warning waves-effect waves-light m-t-20"><i
                                                  class="fa fa-shopping-cart"></i> เลือกสินค้าเพิ่มเติม</a>
 
 
 
-                                         <button type="button" onclick="next()"
+                                         {{-- <button type="button" onclick="submit_address()"
                                              class="btn btn-primary waves-effect waves-light m-t-20 f-right"><i
-                                                 class="fa fa-credit-card-alt"></i> ชำระเงิน</button>
+                                                 class="fa fa-credit-card-alt"></i> ชำระเงิน</button> --}}
 
                                      </div>
                                  </div>
                              </div>
                          </div>
 
-                         @if ($bill['type'] == 6)
-                             <div class="tab-pane active" id="credit-card" role="tabpanel">
-                             @else
-                                 <div class="tab-pane" id="credit-card" role="tabpanel">
-                         @endif
-
-
-                         @if ($bill['price_total_type5'] == 0 and $bill['type'] == 5)
-                             <div class="row">
-                                 <div class="col-md-12 col-xl-12">
-                                     <div class="card bg-c-green order-card m-b-0">
-                                         <div class="card-block">
-                                             <div class="row">
-                                                 <div class="col-md-8 col-sx-8 col-8">
-                                                     <h6 class="m-b-10" style="font-size: 16px">Ai Voucher </h6>
-                                                 </div>
-                                                 <div class="col-md-4 col-sx-4 col-4">
-                                                     <?php $gv =
-                                                     \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
-                                                     ?>
-                                                     <h3 class="text-right">
-                                                         {{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format($gv->sum_gv) }}
-                                                         </span></h3>
-                                                 </div>
-                                             </div>
-
-
-                                             <hr>
-
-                                             <div class="row">
-                                                 <div class="col-md-8 col-sx-8 col-8">
-                                                     <h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
-
-                                                 </div>
-                                                 <div class="col-md-4 col-sx-4 col-4">
-
-                                                     <h3 class="text-right"> <span class="price_total">
-                                                             {{ number_format($bill['price_total']) }} </span></h3>
-                                                 </div>
-                                             </div>
-
-                                             <hr>
-                                             <div class="row">
-                                                 <div class="col-md-8 col-sx-8 col-8">
-                                                     <h6 style="font-size: 16px"> Ai Voucher คงเหลือ </h6>
-
-                                                 </div>
-                                                 <div class="col-md-4 col-sx-4 col-4">
-
-                                                     <h3 class="text-right"> <span class="gv_remove_price">
-                                                             {{ number_format($bill['gv_total'], 2) }} </span></h3>
-                                                 </div>
-                                             </div>
-                                         </div>
-
-                                     </div>
-
-                                     <div class="row m-t-5">
-                                         <div class="col-sm-6">
-                                         </div>
-                                         <div class="col-sm-6 text-right">
-                                             <button class="btn btn-success btn-block" type="submit" name="submit"
-                                                 value="gift_voucher">ชำระเงิน</button>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         @else
-                             <div class="demo-container card-block">
-                                 <div class="row">
-                                     <div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
-
-                                         <div class="form-radio">
-                                             <div class="radio radio-inline">
-                                                 <label>
-                                                     <input type="radio" id="bank" onchange="open_input(1)" name="pay_type"
-                                                         value="1" checked="checked">
-                                                     <i class="helper"></i><b>โอนชำระ</b>
-                                                 </label>
-                                             </div>
-
-                                             <div class="radio radio-inline">
-                                              <label>
-                                                  <input type="radio" id="mobile_banking" onchange="open_input(4)" name="pay_type"
-                                                      value="" >
-                                                  <i class="helper"></i><b>Mobile Banking</b>
-                                              </label>
-                                            </div>
-
-                                             <div class="radio radio-inline">
-                                                 <label>
-                                                     <input type="radio" onchange="open_input(2)" id="credit_cart"
-                                                         name="pay_type" value="2">
-                                                     <i class="helper"></i><b>บัตรเครดิต</b>
-                                                 </label>
-                                             </div>
-
-                                             <div class="radio radio-inline">
-                                                 <label>
-                                                     <input type="radio" onchange="open_input(3)" id="ai_cash"
-                                                         name="pay_type" value="3">
-                                                     <i class="helper"></i><b>Ai-Cash</b>
-                                                 </label>
-                                             </div>
-
-
-                                             {{-- <div class="radio radio-inline">
- 											<label>
- 												<input type="radio" onchange="open_input(4)" id="voucher" name="pay_type" value="Voucher">
- 												<i class="helper"></i><b> Ai Voucher</b>
- 											</label>
- 										</div> --}}
-                                         </div>
-                                     </div>
-                                 </div>
-
-                                 <div class="row" id="cart_payment_tranfer">
-
-                                <div class="row col-md-12 col-lg-12">
-                                  <div class="col-md-6 col-lg-6">
-                                    <div class="card">
-                                        <div class="card-block text-center">
-                                            {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
-                                            <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
-                                            <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
-                                            <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
-                                            {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-md-6 col-lg-6">
-                                  <div class="card">
-                                      <div class="card-block text-center">
-                                        <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
-                                        <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
-                                        <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
-                                        <button class="btn btn-primary btn-sm btn-round">Manage List</button>
-                                      </div>
-                                  </div>
-                              </div> --}}
-                                </div>
-
-                                     <div class="form-group row">
-
-                                         <div class="col-sm-12">
-
-                                             <div class="form-group row">
-                                                 <div class="col-sm-6">
-                                                     <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b>
-                                                     </label>
-                                                     <input type="file" id="upload" name="file_slip" class="form-control">
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         <div class="row">
-                                             <div class="col-xs-6 p-1">
-                                                 <button class="btn btn-success btn-block" type="submit" name="submit"
-                                                     id="submit_upload" value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
-                                             </div>
-
-                                             <div class="col-xs-6 p-1">
-                                                 <button class="btn btn-primary btn-block" type="submit" name="submit"
-                                                     value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
-                                             </div>
-                                         </div>
-                                     </div>
-
-                                 </div>
-
-                                 <div class="row" id="cart_payment_mobile_banking" style="display: none">
-                                  <div class="row col-md-12 col-lg-12">
-                                    <div class="col-md-6 col-lg-6">
-                                      <div class="card">
-                                          <div class="card-block text-center">
-                                              {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
-                                              <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย PromptPay">
-                                              <a class="btn btn-primary btn-md mt-2" data-toggle="modal" style="color: aliceblue" data-target="#confirm_promptPay"> ชำระด้วย PromptPay </a>
-
-                                              <div class="modal fade" id="confirm_promptPay" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">ยืนยันการชำระเงินด้วย PromptPay</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            {{-- <h5>Static Modal</h5> --}}
-                                                            <img src="{{ asset('frontend/assets/images/thai_qr_payment.png') }}" class="img-fluid" alt="ชำระด้วย PromptPay">
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                            <button class="btn btn-success md-auto" name="submit" value="PromptPay" type="submit">Confirm</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-6 col-lg-6">
-                                    <div class="card">
-                                        <div class="card-block text-center">
-                                          <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="TrueMoney">
-                                          <a class="btn btn-primary btn-md mt-2" class="btn btn-primary btn-md mt-2" data-toggle="modal" style="color: aliceblue" data-target="#confirm_truemoney"> ชำระด้วย TrueMoney </a>
-
-                                          <div class="modal fade" id="confirm_truemoney" tabindex="-1" role="dialog">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">ยืนยันการชำระเงินด้วย TrueMoney</h4>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        {{-- <h5>Static Modal</h5> --}}
-                                                        <img src="{{ asset('frontend/assets/images/truemoneywallet-logo.png') }}" class="img-fluid" alt="ชำระด้วย TrueMoney">
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                        <button class="btn btn-success md-auto" name="submit" value="TrueMoney" type="submit">Confirm</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                  </div>
-                                   </div>
-
-
-                                 <div class="row" id="cart_payment_credit_card" style="display: none">
-
-                                     <div class="col-sm-12 col-md-12">
-                                         <div class="card card-border-success">
-
-                                             <div class="card-block" style="padding: 10px">
-                                                 <div class="col-md-12">
-
-                                                     <div class="row mt-2">
-                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                             <h4 class="m-b-10"> ยอดที่ต้องชำระ </h4>
-                                                         </div>
-
-                                                         <div class="col-md-4 col-sx-4 col-4">
-                                                             <h3 class="text-right">
-                                                                 <u><span class="price_total">  </span></u>
-                                                             </h3>
-                                                         </div>
-                                                     </div>
-                                                     <hr>
-                                                 </div>
-                                             </div>
-                                             <div class="card-footer">
-                                                 <div class="text-right">
-                                                     <button class="btn btn-success" name="submit"
-                                                         value="credit_card" type="submit">ชำระเงินด้วยบัตรเครดิต</button>
-                                                 </div>
-
-                                                 <!-- end of card-footer -->
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-
-                                 <div class="row" id="cart_payment_aicash" style="display: none;">
-                                     <div class="col-sm-12 col-md-12">
-                                         <div class="card card-border-success">
-
-                                             <div class="card-block" style="padding: 10px">
-                                                 <div class="col-md-12">
-                                                     <div class="row">
-                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                             <h4 class="m-b-10">Ai-Cash</h4>
-                                                         </div>
-                                                         <div class="col-md-4 col-sx-4 col-4">
-                                                             <h3 class="text-right">
-                                                                 <span id="ai_cash_p" class="text-success"> {{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span>
-                                                             </h3>
-                                                         </div>
-                                                     </div>
-                                                     <hr>
-                                                     <div class="row">
-                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                             <h4 class="m-b-10"> ยอดรวมที่ใช้ </h4>
-                                                         </div>
-                                                         <div class="col-md-4 col-sx-4 col-4">
-                                                             <h3 class="text-right">
-                                                                 <u><span class="price_total"> </span></u>
-                                                             </h3>
-                                                         </div>
-                                                     </div>
-                                                     <hr>
-                                                 </div>
-                                             </div>
-                                             <div class="card-footer">
-                                               <div id="error_aicash" class="text-right"></div>
-                                                 <div class="text-right">
-                                                     {{-- <button class="btn btn-success" name="submit" id="ai_cash_submit" value="ai_cash"
-                                                         type="submit">ชำระเงินด้วย Ai-Cash</button> --}}
-
-                                                      <a class="btn btn-success"
-                                                      data-toggle="modal" data-target="#default-Modal" >ชำระเงินด้วย Ai-Cash</a>
-                                                 </div>
-                                             </div>
-                                             <!-- end of card-footer -->
-                                         </div>
-                                     </div>
-                                 </div>
-
-                                 <div class="modal fade" id="default-Modal" tabindex="-1" role="dialog">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title">กรุณายืนยันรหัสผ่าน Ai-Cash ก่อนทำการชำระเงิน</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <div class="row text-center">
-                                          <div class="col-md-1">
-                                          </div>
-                                          <div class="col-md-10">
-                                            <div id="status_check_pass_aicash"></div>
-
-                                            <div class="input-group input-group-primary">
-                                              <span class="input-group-addon">
-                                                <i class="fa fa-lock"></i>
-                                              </span>
-                                              <input type="password" name="password_aicash" id="password_aicash" class="form-control" placeholder="Password AiCash" >
-                                              <span class="input-group-addon btn btn-primary" id="basic-addon10">
-                                                <span class="" onclick="check_pass_aicash()">Check</span>
-                                            </span>
-                                            </div>
-
-
-                                          </div>
-                                          <div class="col-md-1">
-                                          </div>
-
-                                        </div>
-                                      </div>
-                                      <div class="modal-footer">
-
-                                        <a href="{{ route('chage_password_aicash') }}" id="chage_password_aicash" class="btn btn-warning waves-effect waves-light">ตั้งค่า PassWord  Ai-cash</a>
-                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                        <button class="btn btn-success md-auto" name="submit" id="ai_cash_submit" value="ai_cash" style="display: none"
-                                        type="submit">ชำระเงินด้วย Ai-Cash</button>
-
-
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
-
-                             </div>
-                         @endif
-
-                     </div>
 
                  </div>
          </div>
@@ -960,11 +585,12 @@
          <div class="card card-border-success">
              <div class="card-header">
                  <h4>สรุปรายการสั่งซื้อ</h4>
-                 {{-- <span class="label label-default f-right"> 28 January, 2015 </span> --}}
+
              </div>
-             <div class="card-block" style="padding: 10px">
-                 <div class="col-md-12">
-                     <table class="table table-responsive m-b-0">
+             <div class="card-block">
+
+                 <div class="table-responsive p-3">
+                     <table class="table">
                          <tr>
                              <td><strong id="quantity_bill">มูลค่าสินค้า ({{ $bill['quantity'] }}) ชิ้น</strong></td>
                              <td align="right"><strong id="price"> {{ number_format($bill['price_vat'], 2) }} </strong>
@@ -1011,7 +637,7 @@
                              </tr>
                              <tr>
                                  <td><strong class="text-primary"> Ai Voucher</strong></td>
-                                 <td align="right"><strong class="text-primary"> {{ $gv->sum_gv }}</strong>
+                                 <td align="right"><strong class="text-primary">@if($gv->sum_gv)  {{ $gv->sum_gv }} @else 0 @endif</strong>
                                  </td>
                              </tr>
                              <tr>
@@ -1087,8 +713,8 @@
                          </table>
                      @endif
                      @if($bill['type'] != 6)
-                     <div class="row" align="center">
-                      <div class="form-control bootstrap-tagsinput" id="html_shipping_premium">
+
+                      <div class="form-control bootstrap-tagsinput" id="html_shipping_premium" style=" border: 1px solid #ffc107;line-height: 29px; border-radius: 16px;">
                           <div class="checkbox-color checkbox-success">
                               <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true">
                               <label for="checkbox13"> ส่งแบบพิเศษ / Premium
@@ -1096,8 +722,13 @@
                           </div>
                       </div>
 
-                  </div>
+
                   @endif
+
+                  <button type="button" onclick="submit_address()"
+                  class="btn btn-success waves-effect waves-light btn-block mt-2"><i
+                      class="fa fa-credit-card-alt"></i> ชำระเงิน</button>
+
 
 
                  </div>
@@ -1197,20 +828,6 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-     @if ($bill['price_total_type5'] > 0 and $bill['type'] == 5)
-         <script type="text/javascript">
-             document.getElementById("submit_upload").disabled = true;
-             document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
-
-         </script>
-     @elseif($bill['type'] != 5)
-         <script type="text/javascript">
-             document.getElementById("submit_upload").disabled = true;
-             document.getElementById("submit_upload").className = "btn btn-inverse btn-block";
-
-         </script>
-     @endif
-
      <script type="text/javascript">
          var address_provinces_id = {{ $address->provinces_id }};
          check_shipping({{ $address->provinces_id }});
@@ -1227,28 +844,7 @@
          }
 
 
-         function check_pass_aicash(){
-         var password_aicash = $('#password_aicash').val();
 
-          $.ajax({
-                 type: "POST",
-                 url: "{{ route('check_pass_aicash') }}",
-                 data: {
-                     _token: '{{ csrf_token() }}',
-                     password_aicash: password_aicash,
-                 },
-                 success: function(data) {
-                   if(data['status'] == 'fail'){
-                    $('#status_check_pass_aicash').html('<b class="text-danger m-b-0"> '+data['message']+' </b>');
-                   }else{
-                    $('#status_check_pass_aicash').html('<b class="text-success m-b-0"> '+data['message']+' </b>');
-                    document.getElementById("ai_cash_submit").style.display = 'block';
-                    document.getElementById("chage_password_aicash").style.display = 'none';
-                   }
-
-                 }
-             });
-         }
 
          //console.log(data_1);
          function check_premium() {
@@ -1576,35 +1172,155 @@
                          //alert(data['status']);
 
                      } else {
-                         console.log(data);
-                         Swal.fire({
-                             title: data['data']['message'],
-                             // text: "You won't be able to revert this!",
-                             icon: 'warning',
-                             showConfirmButton: false,
-                             showCancelButton: true,
-                             confirmButtonColor: '#3085d6',
-                             cancelButtonColor: '#d33',
-                             confirmButtonText: 'Yes, delete it!'
-                         }).then((result) => {
-                             if (result.isConfirmed) {
-                                 //$( "#cart_delete" ).attr('action',url);
-                                 // $('#data_id').val(item_id);
-                                 //$( "#cart_delete" ).submit();
-                                 Swal.fire(
-                                     'Deleted!',
-                                     'Your file has been deleted.',
-                                     'success'
-                                 )
 
-                             }
-                         })
+                         //console.log(data);
+                         Swal.fire({
+                                icon: 'error',
+                                text: 'ไม่มีรหัสของลูกทีมที่ท่านเลือก กรุณาเช็คข้อมูลก่อนทำการชำระเงิน',
+                              })
                      }
                  })
                  .fail(function() {
                      console.log("error");
                  })
          }
+
+
+         function submit_address() {
+    var check_sent_other = document.getElementById("sent_other").checked;
+    var check_office_check = document.getElementById("sent_office_check").checked;
+    var sent_type_other = document.getElementById("sent_type_other").checked;//จัดส่งให้คนอื่น
+
+
+    if(sent_type_other){
+        address_sent_id_fk = document.getElementById("address_sent_id_fk").value;
+        if(address_sent_id_fk == ''){
+          Swal.fire({
+                    icon: 'error',
+                    text: 'ไม่มีรหัสของลูกทีมที่ท่านเลือก กรุณาเช็คข้อมูลก่อนทำการชำระเงิน',
+                  })
+            return false;
+        }else{
+          var username = $('#username').val();
+             $.ajax({
+                     url: '{{ route('check_customer_id') }}',
+                     type: 'POST',
+                     data: {
+                         _token: '{{ csrf_token() }}',
+                         'user_name': username
+                     }
+                 })
+                 .done(function(data) {
+                     console.log(data['data']);
+                     if (data['status'] == 'fail') {
+
+                         console.log(data);
+                         Swal.fire({
+                                   icon: 'error',
+                                   title: 'ไม่มีข้อมูลผู้รับที่เลือก กรุณาเช็คข้อมูลก่อนทำการชำระเงิน',
+                                   })
+                         return;
+                     }
+                 })
+                 .fail(function() {
+                     console.log("error");
+                     return;
+                 })
+        }
+
+
+    }
+
+    if (check_sent_other == true) {
+        var other_name = $('#other_name').val();
+        var other_tel_mobile = $('#other_tel_mobile').val();
+        var other_house_no = $('#other_house_no').val();
+        var other_house_name = $('#other_house_name').val();
+        var other_moo = $('#other_moo').val();
+        var other_province = $('#other_province').val();
+        var other_district = $('#other_district').val();
+        var other_district_sub = $('#other_district_sub').val();
+        var other_zipcode = $('#other_zipcode').val();
+        if (other_name == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Name is Null',
+            })
+
+        } else if (other_tel_mobile == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Mobile is Null',
+            })
+
+        } else if (other_house_no == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'House No. is Null',
+            })
+
+        } else if (other_house_name == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล หมู่บ้าน/อาคาร',
+            })
+
+        } else if (other_moo == '') {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล หมู่ที่',
+            })
+
+        } else if (province == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล จังหวัด',
+            })
+
+        } else if (amphures == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล เขต/อำเภอ *',
+            })
+
+        } else if (amphures == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล แขวง/ตำบล',
+            })
+
+        } else if (other_zipcode == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณาใส่ข้อมูล รหัสไปษณีย์',
+            })
+
+        } else {
+             document.getElementById("payment_address").submit();        }
+
+    }else if(check_office_check == true){
+        var office_name = $('#office_name').val();
+        var office_tel_mobile = $('#office_tel_mobile').val();
+        if (office_name == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Name is Null',
+            })
+        } else if (office_tel_mobile == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Mobile is Null',
+            })
+
+        }else{
+         document.getElementById("payment_address").submit();
+        }
+
+    }else {
+        document.getElementById("payment_address").submit();
+    }
+}
 
 
      </script>
