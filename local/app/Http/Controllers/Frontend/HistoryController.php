@@ -24,9 +24,6 @@ class HistoryController extends Controller
 
     public function index()
     {
-
-
-
         $orders_type = DB::table('dataset_orders_type')
             ->where('status', '=', '1')
             ->where('lang_id', '=', '1')
@@ -246,7 +243,10 @@ class HistoryController extends Controller
 
             ->addColumn('action', function ($row) {
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
-                    $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
+                    // $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
+
+                    $action = '<a class="btn btn-sm btn-success" href="'.route('cart_payment_transfer',['code_order'=>$row->code_order]).'" ><i class="fa fa-refresh"></i> ชำระเงิน </a>
+
                     <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';
                 } elseif ($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
 
@@ -453,7 +453,7 @@ class HistoryController extends Controller
         }
 
     }
-    public function address($name, $tel, $email, $house_no, $moo, $house_name, $soi, $road, $district_name, $amphures_name, $provinces_name, $zipcode)
+    public static function address($name, $tel, $email, $house_no, $moo, $house_name, $soi, $road, $district_name, $amphures_name, $provinces_name, $zipcode)
     {
         $address = ['name' => $name,
             'tel' => $tel,

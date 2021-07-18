@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 use App\Http\Controllers\Frontend\Ksher\KsherController;
@@ -15,6 +16,7 @@ use App\Models\Frontend\PaymentAiCash;
 use App\Models\Frontend\PaymentCourse;
 use App\Models\Frontend\PaymentSentAddressOrder;
 use App\Models\Frontend\RunNumberPayment;
+
 use Auth;
 use Cart;
 use Illuminate\Http\Request;
@@ -374,18 +376,76 @@ class CartPaymentController extends Controller
         }
     }
 
-    public function cart_payment_transfer($order_code)
+    public function cart_payment_transfer($code_order)
     {
-        if ($order_code) {
+        if ($code_order) {
+
             $data = DB::table('db_orders')
-                ->where('code_order', '=', $order_code)
-                ->whereRaw('(order_status_id_fk = 1 || order_status_id_fk = 3 )')
-                ->first();
+            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
+                'branchs.b_name as office_name',
+                'branchs.house_no as office_house_no',
+                'branchs.b_name as office_house_name',
+                'branchs.moo as office_moo',
+                'branchs.soi as office_soi',
+                'branchs.amphures_id_fk as office_amphures',
+                'branchs.district_id_fk as office_district',
+                'branchs.road as office_road',
+                'branchs.province_id_fk as office_province',
+                'branchs.zipcode as office_zipcode',
+                'branchs.tel as office_tel',
+                'branchs.email as office_email',
+                'db_invoice_code.order_payment_code',
+                'dataset_pay_type.detail as pay_type_name', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
+            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('branchs', 'branchs.business_location_id_fk', '=', 'db_orders.branch_id_fk')
+            ->leftjoin('db_invoice_code', 'db_invoice_code.order_id', '=', 'db_orders.id')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+
+            ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
+            ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
+            ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
+
+            ->where('dataset_order_status.lang_id', '=', '1')
+            ->where('dataset_orders_type.lang_id', '=', '1')
+            ->where('db_orders.code_order', '=', $code_order)
+            ->first();
+
+        if ($data->delivery_location_frontend == 'sent_address') {
+            $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);
+
+        } elseif ($data->delivery_location_frontend == 'sent_address_card') {
+
+            $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);
+
+        } elseif ($data->delivery_location_frontend == 'sent_office') {
+            $address = HistoryController::address($data->name, $data->tel, $data->email, $data->office_house_no, $data->office_moo, $data->office_name, $data->office_soi, $data->office_road, $data->office_province, $data->office_amphures, $data->office_district, $data->office_zipcode);
+
+        } elseif ($data->delivery_location_frontend == 'sent_address_other') {
+            $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);
+        } else {
+            $address = '';
+        }
+        // dd($data);
+
+        if ($data->purchase_type_id_fk == 6) {
+            $order_items = DB::table('db_order_products_list')
+                ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
+                ->where('frontstore_id_fk', '=',$data->id)
+                ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
+                ->leftjoin('course_ticket_number','course_ticket_number.id', '=', 'course_event_regis.ticket_id')
+                ->get();
+        } else {
+            $order_items = DB::table('db_order_products_list')
+                ->where('frontstore_id_fk', '=', $data->id)
+                ->orderby('id', 'ASC')
+                ->get();
+        }
 
             if ($data) {
-                return view('frontend/product/cart_payment_transfer',compact('data'));
+                return view('frontend/product/cart_payment_transfer',compact('data','order_items','address'));
             } else {
-                return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $order_code . ' อยู่ในระบบรอชำระเงิน');
+                return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
             }
         } else {
             return redirect('product-history')->withError('ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่');

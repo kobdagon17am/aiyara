@@ -139,7 +139,7 @@ Route::post('edit_item','Frontend\CartController@edit_item')->name('edit_item');
 
 Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('cart_payment');
 
-Route::get('cart_payment_transfer/{order_code}','Frontend\CartPaymentController@cart_payment_transfer')->name('cart_payment_transfer');
+Route::get('cart_payment_transfer/{code_order}','Frontend\CartPaymentController@cart_payment_transfer')->name('cart_payment_transfer');
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
