@@ -252,18 +252,9 @@ class Member_regisController extends Controller
       })
       ->addColumn('icon', function($row) {
           $filetype = DB::select(" select * from dataset_regis_filetype where id=".$row->type." ");
-          if($filetype[0]->id==1){
-            return '<i class="bx bx-id-card" style="font-size:24px;vertical-align: middle;"></i>';
-          }else if($filetype[0]->id==2){
-            return '<i class="bx bx-book" style="font-size:24px;vertical-align: middle;"></i> ';
-          }else if($filetype[0]->id==3){
-            return '<i class="bx bx-file" style="font-size:24px;vertical-align: middle;"></i>';
-          }else if($filetype[0]->id==4){
-            return '<i class="bx bxs-user-badge" style="font-size:24px;vertical-align: middle;"></i>';
-          }else{
-            return '';
+          if($filetype){
+            return $filetype[0]->icon;
           }
-          
       })
       ->escapeColumns('icon')
       ->make(true);

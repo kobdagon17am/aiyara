@@ -223,13 +223,18 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-<div style="text-align: center;">
-<b>หมายเหตุ</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<i class="bx bx-id-card" style="font-size:24px;vertical-align: middle;"></i> : บัตรประชาชน
-<i class="bx bx-book" style="font-size:24px;vertical-align: middle;"></i> : หน้าบัญชีธนาคาร
-<i class="bx bx-file" style="font-size:24px;vertical-align: middle;"></i> : เอกสารการสมัคร
-<i class="bx bxs-user-badge" style="font-size:24px;vertical-align: middle;"></i> : ภาพใบหน้าพร้อมถือบัตร ปชช.
-</div>
+                
+                  <div style="text-align: center;">
+                  <b>หมายเหตุ</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <?php 
+                    foreach ($filetype as $key => $value) {
+                         echo $value->icon;
+                         echo " : ";
+                         echo $value->txt_desc;
+                         echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    }
+                    ?>
+                  </div>
 
             </div>
         </div>
@@ -690,9 +695,9 @@ $(function() {
         });
 
 
-     $('#myModal').on('hidden.bs.modal', function () {
-        location.reload();
-     });
+     // $('#checkRegis').on('hidden.bs.modal', function () {
+     //    location.reload();
+     // });
 
 
 </script> 
