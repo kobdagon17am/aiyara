@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use Auth;
+use App\Models\Frontend\RunNumberPayment;
+use App\Models\Frontend\PvPayment;
 
 class FrontstoreController extends Controller
 {
@@ -159,7 +161,7 @@ class FrontstoreController extends Controller
 
 
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
-      $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers where id in(select customers_id_fk from db_orders) ");
 
               $sDBFrontstoreUserAddAiCash = DB::select("
               SELECT
@@ -243,7 +245,7 @@ class FrontstoreController extends Controller
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 1000 ");
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
 
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
@@ -338,7 +340,7 @@ class FrontstoreController extends Controller
 
       // dd($Products);
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers where id in(select customers_id_fk from db_orders)  ");
         /* dataset_orders_type
         1 ทำคุณสมบัติ
         2 รักษาคุณสมบัติรายเดือน
@@ -704,20 +706,35 @@ class FrontstoreController extends Controller
               }
 
               if($sRow->invoice_code==""){
+
+                  // $table = 'db_orders';
+                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
+                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
+                  //   order by invoice_code desc limit 1 ");
+                  // if($inv){
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
+                  // }else{
+                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
+                  // }
+                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
+                  //   $sRow->invoice_code = $invoice_code;
+                  // }
+
+                if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+                  $sRow->invoice_code = '' ;
+                }else{
                   $table = 'db_orders';
                   $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
-                    WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                    order by invoice_code desc limit 1 ");
-                  if($inv){
-                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-                  }else{
-                      $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-                  }
-                  if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                    $sRow->invoice_code = $invoice_code;
-                  }
+                  $sRow->invoice_code = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+                   // $sRow->invoice_code = '' ;
+                }
+
+
               }
+
+
+
 
 
               $sRow->charger_type    = request('charger_type');
@@ -773,6 +790,9 @@ class FrontstoreController extends Controller
                 }
 
               $sRow->save();
+
+              PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+                  //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));

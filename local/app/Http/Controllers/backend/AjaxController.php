@@ -3618,5 +3618,32 @@ class AjaxController extends Controller
     }
 
 
+  public function ajaxGetFilepath(Request $request)
+    {
+
+      if($request->ajax()){
+
+          $rs =  DB::select(" 
+                SELECT concat(url,'/',file) as file_path ,type,file
+                FROM
+                register_files
+                where id = '".$request->id."'
+             ");
+
+        // if (file_exists(trim($rs[0]->file_path))) {
+            return response()->json($rs); 
+        // } else {
+        //     $rs =  DB::select(" SELECT NULL as file_path ");
+        //     return response()->json($rs); 
+        // }
+
+          
+
+      }
+
+    }
+
+
+
 
 }
