@@ -236,7 +236,7 @@ class HistoryController extends Controller
                 if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode(' . $row->id . ')" ><i class="fa fa-qrcode"></i> <b style="color: #000">' . $row->detail . '</b></button>';
                 } else {
-                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" > <b style="color: #000">' . $row->detail . '</b></button>';
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
 
                 }
             })

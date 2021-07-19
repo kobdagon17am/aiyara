@@ -129,17 +129,18 @@ class Po_approveController extends Controller
     public function DatatableSet()
     {
         $sTable = \App\Models\Backend\Orders::search()->orderBy('id', 'asc');
+
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
-                if ($row->type_id == 7) {
+                if ($row->purchase_type_id_fk == 7) {
                     return number_format($row->price, 2);
                 } else {
                     return number_format($row->price + $row->shipping, 2);
                 }
             })
             ->addColumn('type', function ($row) {
-                $D = DB::table('dataset_orders_type')->where('group_id', '=', $row->type_id)->get();
+                $D = DB::table('dataset_orders_type')->where('group_id', '=', $row->purchase_type_id_fk)->get();
                 return @$D[0]->orders_type;
             })
             ->addColumn('date', function ($row) {

@@ -367,6 +367,10 @@ class CartPaymentController extends Controller
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
 
+            if(empty($data)){
+              return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
+            }
+
         if ($data->delivery_location_frontend == 'sent_address') {
             $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);
 
@@ -398,11 +402,11 @@ class CartPaymentController extends Controller
                 ->get();
         }
 
-            if ($data) {
+
                 return view('frontend/product/cart_payment_transfer',compact('data','order_items','address'));
-            } else {
-                return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
-            }
+
+
+
         } else {
             return redirect('product-history')->withError('ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่');
         }

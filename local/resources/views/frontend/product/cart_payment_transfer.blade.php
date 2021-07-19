@@ -380,7 +380,7 @@
                                                         type="submit">ชำระเงินด้วย Ai-Cash</button> --}}
 
                                                             <a class="btn btn-success" data-toggle="modal"
-                                                                data-target="#default-Modal">ชำระเงินด้วย Ai-Cash</a>
+                                                                data-target="#default-Modal" id="ai_cash_submit">ชำระเงินด้วย Ai-Cash</a>
                                                         </div>
                                                     </div>
                                                     <!-- end of card-footer -->
@@ -1001,7 +1001,7 @@
 
 
                 var ai_cash = {{ Auth::guard('c_user')->user()->ai_cash }};
-                var price_total = $('#price_total').val();
+                var price_total = {{ $data->total_price }};
 
                 if (ai_cash < price_total) {
                     document.getElementById("ai_cash_submit").style.display = "none";
