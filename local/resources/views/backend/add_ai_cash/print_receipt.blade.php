@@ -96,7 +96,7 @@
                   db_add_ai_cash.customer_id_fk,
                   db_add_ai_cash.aicash_amt,
                   db_add_ai_cash.action_user,
-                  db_add_ai_cash.pay_type_id,
+                  db_add_ai_cash.pay_type_id_fk,
                   db_add_ai_cash.cash_pay,
                   db_add_ai_cash.transfer_price,
                   db_add_ai_cash.credit_price,

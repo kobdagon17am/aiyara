@@ -358,6 +358,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCEUserRegis', 'AjaxController@ajaxGetCEUserRegis');
     Route::post('ajaxGetCe_regis_gift', 'AjaxController@ajaxGetCe_regis_gift');
     Route::post('ajaxGetCEQrcode', 'AjaxController@ajaxGetCEQrcode');
+    
+    Route::post('ajaxGetFilepath', 'AjaxController@ajaxGetFilepath');
 
     
     Route::post('ajaxSaveChangePurchaseType', 'AjaxController@ajaxSaveChangePurchaseType');
@@ -649,6 +651,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');
     Route::post('check_stock_check_02/datatable', 'Check_stock_checkController@Datatable02')->name('check_stock_check_02.datatable');
+
+
+    Route::resource('member_regis', 'Member_regisController');
+    Route::post('member_regis/datatable', 'Member_regisController@Datatable')->name('member_regis.datatable');
 
 
     Route::resource('stocks_account_code', 'Stocks_account_codeController');
