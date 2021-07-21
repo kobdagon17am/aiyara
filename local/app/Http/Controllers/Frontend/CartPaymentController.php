@@ -190,11 +190,7 @@ class CartPaymentController extends Controller
 
                 $rs_log_gift = GiftVoucher::log_gift($price_total, $customer_id, $code_order);
 
-                if ($rs_log_gift['status'] != 'success') {
-                    DB::commit();
-                    //$resule = ['status' => 'success', 'message' => 'rs_log_gift success'];
-                    return redirect('product-history')->withError($rs_log_gift['message']);
-                }else{
+                if ($rs_log_gift['status'] == 'fail') {
                   DB::rollback();
                   //$resule = ['status' => 'fail', 'message' => 'rs_log_gift fail'];
                   return redirect('product-history')->withError($rs_log_gift['message']);
