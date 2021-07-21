@@ -27,27 +27,8 @@ class PaymentSentAddressOrder extends Model
 
             if ($rs->type == '5') { //โอนชำระแบบกิฟวอยเชอ
               $insert_db_orders->gift_voucher_cost = $gv;
-                $insert_db_orders->gift_voucher_price = $rs->gift_voucher_price;
-                if ($rs->pay_type == '1') { //1 โอนเงิน
-                    $insert_db_orders->transfer_price = $rs->price_total_type5;
-                    $insert_db_orders->pay_type_id_fk = 12;
-                } elseif ($rs->pay_type == '2') { //2 บัตรเครดิต
-                    $insert_db_orders->credit_price = $rs->price_total_type5;
-                    $insert_db_orders->pay_type_id_fk = 13;
+              $insert_db_orders->gift_voucher_price = $rs->gift_voucher_price;
 
-                } elseif ($rs->pay_type == '3') { //3 Ai-Cash
-                    $insert_db_orders->aicash_price = $rs->price_total_type5;
-                    $insert_db_orders->pay_type_id_fk = 14;
-
-                  } elseif ($rs->pay_type == '15') { //15 PromptPay
-                    $insert_db_orders->prompt_pay_price  = $rs->price_total_type5;
-                    $insert_db_orders->pay_type_id_fk = 17;
-                  } elseif ($rs->pay_type == '16') { //16 TrueMoney
-                    $insert_db_orders->true_money_price = $rs->price_total_type5;
-                    $insert_db_orders->pay_type_id_fk = 18;
-                } else {
-                    $insert_db_orders->pay_type_id_fk = 4;
-                }
             } else {
                 $insert_db_orders->pay_type_id_fk = $rs->pay_type;
                 if ($rs->pay_type == '1') { //1 โอนเงิน

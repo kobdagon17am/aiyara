@@ -41,18 +41,12 @@ class GiftVoucher extends Model
 
 	}
 
-	public static function log_gift($price_total,$customer_id,$order_id){
+	public static function log_gift($price_total,$customer_id,$code_order){
     //type_action_giftvoucher = 0 เกิดจากการซื้อสินค้าหรือชำระสินค้า 1 เกิดจากหลังบ้าน Add ให้
     //$type = Add เพิ่มแต้ม หรือ ลดแต้ม Remove
 		// $admin_id = 99;
 		// $price_total = 900;
 		// $order_id = 99;
-
-    $order_data = DB::table('db_orders')
-    ->select('code_order')
-    ->where('id','=',$order_id)
-		->first();
-
 
 		$id = Auth::guard('c_user')->user()->id;
     $user_name = Auth::guard('c_user')->user()->user_name;
@@ -69,12 +63,15 @@ class GiftVoucher extends Model
     ->whereraw('(db_giftvoucher_cus.pro_status = 1 || db_giftvoucher_cus.pro_status = 2)')
 		->get();
 
+
+
 		try {
 			DB::BeginTransaction();
 
 			if($price_total >= $gv_sum){
 
 				foreach ($data_gv as $value){
+
 				$update_giftvoucher = DB::table('db_giftvoucher_cus')//update บิล
 				->where('id',$value->id)
 				->update(['giftvoucher_banlance' => 0 ,'pro_status' =>2]);
@@ -82,25 +79,27 @@ class GiftVoucher extends Model
 				$insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
 					'customer_id_fk'=>$id,
 					'giftvoucher_cus_id_fk'=>$value->id,
-					'order_id_fk'=>$order_id,
+					//'order_id_fk'=>$order_id,
           'giftvoucher_value_old'=>$value->giftvoucher_banlance,
           'giftvoucher_value_use'=>$value->giftvoucher_banlance,
           'giftvoucher_value_banlance'=>0,
-          'code_order'=>$order_data->code_order,
+          'code_order'=>$code_order,
           'detail'=>$value->descriptions,
 					'status'=>'success',
           'type'=>'Remove',
           'type_action_giftvoucher'=>0,
 				]);
 			}
+
 			DB::commit();
 			$resule = ['status'=>'success','message'=>'Use GiftVoucher Success'];
 			return $resule;
 		}else{
 			foreach ($data_gv as $value){
-				$gv_rs = $price_total - $value->giftvoucher_banlance;
 
+				$gv_rs = $price_total - $value->giftvoucher_banlance;
 				if($gv_rs > 0){
+
 
 					$update_giftvoucher = DB::table('db_giftvoucher_cus')//update บิล
 					->where('id',$value->id)
@@ -109,16 +108,18 @@ class GiftVoucher extends Model
           $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
             'customer_id_fk'=>$id,
             'giftvoucher_cus_id_fk'=>$value->id,
-            'order_id_fk'=>$order_id,
+            // 'order_id_fk'=>$order_id,
             'giftvoucher_value_old'=>$value->giftvoucher_banlance,
             'giftvoucher_value_use'=>$value->giftvoucher_banlance,
             'giftvoucher_value_banlance'=>0,
-            'code_order'=>$order_data->code_order,
+            'code_order'=>$code_order,
             'detail'=>$value->descriptions,
             'type'=>'Remove',
             'status'=>'success',
             'type_action_giftvoucher'=>0,
           ]);
+
+
 
 					$price_total = $gv_rs;
 
@@ -131,11 +132,11 @@ class GiftVoucher extends Model
           $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
             'customer_id_fk'=>$id,
             'giftvoucher_cus_id_fk'=>$value->id,
-            'order_id_fk'=>$order_id,
+            //'order_id_fk'=>$order_id,
             'giftvoucher_value_old'=>$value->giftvoucher_banlance,
             'giftvoucher_value_use'=>$price_total,
             'giftvoucher_value_banlance'=>abs($gv_rs),
-            'code_order'=>$order_data->code_order,
+            'code_order'=>$code_order,
             'detail'=>$value->descriptions,
             'type'=>'Remove',
             'status'=>'success',

@@ -35,8 +35,6 @@ class Po_approveController extends Controller
     public function update(Request $request, $id)
     {
 
-
-
         \DB::beginTransaction();
         try {
 
@@ -46,27 +44,26 @@ class Po_approveController extends Controller
                 return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
             }
 
-
             $sRow->approver = \Auth::user()->id;
             $sRow->updated_at = now();
 
             if (@request('approved') != null) {
                 $sRow->status_slip = 'true';
                 $sRow->order_status_id_fk = '5';
-                $date = str_replace("T"," ",$request->slip_date);
+                $date = str_replace("T", " ", $request->slip_date);
                 $sRow->account_bank_name_customer = $request->bank_name;
                 $sRow->transfer_money_datetime = $date;
                 //$sRow->date_action_pv  = now();
             }
 
             if (@request('no_approved') != null) {
-                $sRow->note =  $request->detail;
+                $sRow->note = $request->detail;
                 $sRow->status_slip = 'false';
                 $sRow->order_status_id_fk = '3';
             }
 
             if (@request('approved') != null) {
-               $data =  \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
 
             }
 
@@ -112,6 +109,9 @@ class Po_approveController extends Controller
             ->addColumn('price', function ($row) {
                 if ($row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
+                } else if ($row->purchase_type_id_fk == 5) {
+                    $total_price = $row->total_price - $row->gift_voucher_price;
+                    return number_format($total_price, 2);
                 } else {
                     return number_format($row->sum_price + $row->shipping_price, 2);
                 }
@@ -133,11 +133,14 @@ class Po_approveController extends Controller
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
-                if ($row->purchase_type_id_fk == 7) {
-                    return number_format($row->price, 2);
-                } else {
-                    return number_format($row->price + $row->shipping, 2);
-                }
+              if ($row->purchase_type_id_fk == 7) {
+                return number_format($row->sum_price, 2);
+            } else if ($row->purchase_type_id_fk == 5) {
+                $total_price = $row->total_price - $row->gift_voucher_price;
+                return number_format($total_price, 2);
+            } else {
+                return number_format($row->sum_price + $row->shipping_price, 2);
+            }
             })
             ->addColumn('type', function ($row) {
                 $D = DB::table('dataset_orders_type')->where('group_id', '=', $row->purchase_type_id_fk)->get();

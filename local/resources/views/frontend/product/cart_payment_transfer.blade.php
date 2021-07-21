@@ -6,6 +6,8 @@
         href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
+
+
 @endsection
 @section('conten')
 
@@ -16,6 +18,7 @@
 
                 <input type="hidden" name="code_order" value="{{ $data->code_order }}">
                 <input type="hidden" name="id" value="{{ $data->id }}">
+                <input type="hidden" name="total_price" value="{{ $data->total_price }}">
                 <!-- Choose Your Payment Method start -->
                 <div class="card card-border-success">
                     <div class="card-header p-3">
@@ -30,6 +33,7 @@
                             <h5>รายการสั่งซื้อเพื่อเติม Ai-Stockist</h5>
                         @elseif($data->purchase_type_id_fk == 5)
                             <h5> Ai Voucher</h5>
+                            <?php $price_remove_gv = $data->total_price - $data->gift_voucher_price; ?>
                         @elseif($data->purchase_type_id_fk == 6)
                             <h5>คอร์สอบรม</h5>
                         @else
@@ -60,22 +64,22 @@
                         <div class="tab-content active m-t-15">
 
                             <div class="tab-pane active" id="credit-card" role="tabpanel">
-                                @if ($data->total_price == 0 and $data->purchase_type_id_fk == 5)
+                                @if ($price_remove_gv == 0 and $data->purchase_type_id_fk == 5)
                                     <div class="row">
                                         <div class="col-md-12 col-xl-12">
-                                            <div class="card bg-c-green order-card m-b-0">
+                                            <div class="card m-b-0">
                                                 <div class="card-block">
                                                     <div class="row">
                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                            <h6 class="m-b-10" style="font-size: 16px">Ai Voucher </h6>
+                                                            <h4 class="m-b-10" style="font-size: 16px">ยอดรวม</h4>
                                                         </div>
                                                         <div class="col-md-4 col-sx-4 col-4">
-                                                            <?php $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
+                                                            <?php //$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                                                             ?>
-                                                            <h3 class="text-right">
-                                                                <span>{{ number_format($gv->sum_gv) }}
+                                                            <h5 class="text-right">
+                                                                <span>{{ number_format($data->total_price,2) }}
                                                                 </span>
-                                                            </h3>
+                                                            </h5>
                                                         </div>
                                                     </div>
 
@@ -84,26 +88,24 @@
 
                                                     <div class="row">
                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                            <h6 class="m-b-10" style="font-size: 16px">ยอดรวมที่ใช้ </h6>
+                                                            <h4 class="m-b-10" style="font-size: 16px">Ai Voucher คงเหลือ  </h4>
 
                                                         </div>
                                                         <div class="col-md-4 col-sx-4 col-4">
 
-                                                            <h3 class="text-right"> <span class="price_total">
-                                                                    {{ number_format($data->price_total) }} </span></h3>
+                                                            <h5 class="text-right"> <span class="price_total">
+                                                                    {{ number_format($data->gift_voucher_cost,2) }} </span></h5>
                                                         </div>
                                                     </div>
 
                                                     <hr>
                                                     <div class="row">
                                                         <div class="col-md-8 col-sx-8 col-8">
-                                                            <h6 style="font-size: 16px"> Ai Voucher คงเหลือ </h6>
+                                                            <h4 style="font-size: 16px"> ยอดที่ต้องชำระ </h4>
 
                                                         </div>
                                                         <div class="col-md-4 col-sx-4 col-4">
-
-                                                            <h3 class="text-right"> <span class="gv_remove_price">
-                                                                    {{ number_format($data->gv_total, 2) }} </span></h3>
+                                                          <h5  class="text-right"> 0.00 </h5>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,11 +113,11 @@
                                             </div>
 
                                             <div class="row m-t-5">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-8">
                                                 </div>
-                                                <div class="col-sm-6 text-right">
-                                                    <button class="btn btn-success btn-block" type="submit" name="submit"
-                                                        value="gift_voucher">ชำระเงิน</button>
+                                                <div class="col-sm-4 text-right">
+                                                    <button class="btn btn-success btn-block mt-2" type="submit" name="submit"
+                                                        value="gift_voucher" >ชำระเงิน</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -364,9 +366,14 @@
                                                                 </div>
                                                                 <div class="col-md-4 col-sx-4 col-4">
                                                                     <h3 class="text-right">
-                                                                        <u><span>
-                                                                                {{ number_format($data->total_price, 2) }}
-                                                                            </span></u>
+
+
+                                                                          @if($data->purchase_type_id_fk == 5)
+                                                                            <?php $price_remove_gv = $data->total_price - $data->gift_voucher_price; ?>
+                                                                            <u><span> {{  number_format($price_remove_gv,2) }} </span></u>
+                                                                            @else
+                                                                              <u><span> {{  number_format($data->total_price,2) }} </span></u>
+                                                                              @endif
                                                                     </h3>
                                                                 </div>
                                                             </div>
@@ -376,11 +383,10 @@
                                                     <div class="card-footer">
                                                         <div id="error_aicash" class="text-right"></div>
                                                         <div class="text-right">
-                                                            {{-- <button class="btn btn-success" name="submit" id="ai_cash_submit" value="ai_cash"
-                                                        type="submit">ชำระเงินด้วย Ai-Cash</button> --}}
+
 
                                                             <a class="btn btn-success" data-toggle="modal"
-                                                                data-target="#default-Modal" id="ai_cash_submit">ชำระเงินด้วย Ai-Cash</a>
+                                                                data-target="#default-Modal" >ชำระเงินด้วย Ai-Cash</a>
                                                         </div>
                                                     </div>
                                                     <!-- end of card-footer -->
@@ -429,15 +435,16 @@
                                                     </div>
                                                     <div class="modal-footer">
 
+
+
                                                         <a href="{{ route('chage_password_aicash') }}"
                                                             id="chage_password_aicash"
                                                             class="btn btn-warning waves-effect waves-light">ตั้งค่า
                                                             PassWord Ai-cash</a>
                                                         <button type="button" class="btn btn-default waves-effect "
                                                             data-dismiss="modal">Close</button>
-                                                        <button class="btn btn-success md-auto" name="submit"
-                                                            id="ai_cash_submit" value="ai_cash" style="display: none"
-                                                            type="submit">ชำระเงินด้วย Ai-Cash</button>
+                                                            <button class="btn btn-success" name="submit" id="ai_cash_submit" style="display: none" value="ai_cash"
+                                                            type="submit">ยืนยันการระเงินด้วย Ai-Cash</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -739,15 +746,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><strong class="text-primary">Ai Voucher : </strong></td>
+                                            <td><strong class="text-primary">Ai Voucher คงเหลือ : </strong></td>
                                             <td align="right"><strong class="text-primary">
-                                                    {{ number_format($data->gift_voucher_price, 2) }}</strong>
+                                                    {{ number_format($data->gift_voucher_cost, 2) }}</strong>
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td><strong>ยอดที่ต้องชำระเพิ่ม : </strong></td>
-                                            <?php $price_remove_gv = $data->total_price - $data->gift_voucher_price; ?>
+
                                             <td align="right"><strong> {{ number_format($price_remove_gv, 2) }}</strong>
 
                                             </td>
@@ -831,30 +838,33 @@
                                 </td>
                             </tr>
                             @if ($data->purchase_type_id_fk == 5)
-                                <?php $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
+                                <?php //s$gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
                                 <tr>
                                     <td><strong>ยอดรวม</strong></td>
                                     <td align="right"><strong class="price_total">
-                                            {{ number_format($data->price_total, 2) }}</strong>
+                                            {{ number_format($data->total_price, 2) }}</strong>
                                     </td>
                                 </tr>
-                                <tr>
+
+                                {{-- <tr>
                                     <td><strong class="text-primary"> Ai Voucher</strong></td>
                                     <td align="right"><strong class="text-primary"> {{ $gv->sum_gv }}</strong>
                                     </td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td><strong class="text-primary" style="font-size: 13px"> Ai Voucher คงเหลือ</strong>
                                     </td>
+
                                     <td align="right"><strong class="text-primary gv_remove_price">
-                                            {{ $data->gv_total }}</strong>
+                                            {{ $data->gift_voucher_cost }}</strong>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td><strong>ยอดที่ต้องชำระเพิ่ม</strong></td>
                                     <td align="right"><strong class="total_price">
-                                            {{ number_format($data->total_price, 2) }}</strong>
+
+                                            {{ number_format($price_remove_gv, 2) }}</strong>
 
                                     </td>
                                 </tr>

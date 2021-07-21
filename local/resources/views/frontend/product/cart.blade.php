@@ -146,8 +146,19 @@
 
                     </table>
                     <div class="row" align="center">
+
                         @if($bill['quantity'] > 0)
-                        <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                          @if($type == 5)
+                            @if($gv->sum_gv > 0)
+                            <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                            @else
+                            <label class="label label-inverse-danger"><b style="color: #000"> คุณไม่มียอด Ai Voucher ที่สามารถใช้ชำระสินค้าได้ </b></label>
+                            @endif
+
+                          @else
+                          <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                          @endif
+
                         @endif
 
                     </div>

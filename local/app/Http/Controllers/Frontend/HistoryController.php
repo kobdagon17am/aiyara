@@ -236,7 +236,12 @@ class HistoryController extends Controller
                 if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode(' . $row->id . ')" ><i class="fa fa-qrcode"></i> <b style="color: #000">' . $row->detail . '</b></button>';
                 } else {
+                  if($row->order_status_id_fk == 1 ){
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
+                  }else{
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '"> <b style="color: #000">' . $row->detail . '</b></button>';
+                  }
+
 
                 }
             })
@@ -290,11 +295,14 @@ class HistoryController extends Controller
                 return '<b class="text-primary">' . $row->pay_type_name . '</b>';
             })
             ->addColumn('date_active', function ($row) {
-                if (empty($row->active_mt_tv_date)) {
-                    return '';
-                } else {
-                    $date_active = date('d/m/Y', strtotime($row->active_mt_tv_date));
+                if(!empty($row->active_mt_date)) {
+                  $date_active = date('d/m/Y', strtotime($row->active_mt_date));
+                  return '<span class="label label-inverse-info-border" data-toggle="tooltip" data-placement="right" data-original-title="' . $date_active . '"><b style="color:#000">' . $date_active . '<b></span>';
+                }elseif(!empty($row->active_tv_date)) {
+                    $date_active = date('d/m/Y', strtotime($row->active_tv_date));
                     return '<span class="label label-inverse-info-border" data-toggle="tooltip" data-placement="right" data-original-title="' . $date_active . '"><b style="color:#000">' . $date_active . '<b></span>';
+                }else{
+                  return '';
                 }
             })
 
@@ -302,13 +310,23 @@ class HistoryController extends Controller
                 return $row->type_icon;
             })
 
-            ->rawColumns(['pv_total', 'status', 'action', 'banlance', 'pay_type_name', 'type'])
+            ->rawColumns(['pv_total', 'status', 'action', 'banlance', 'pay_type_name', 'type','date_active'])
 
             ->make(true);
     }
 
     public function upload_slip(Request $request)
     {
+
+      $order = DB::table('db_orders')
+      ->select('total_price')
+      ->where('id','=',$request->order_id)
+      ->first();
+
+      if(empty($order)){
+        return redirect('product-history')->withError('Upload Slip fail');
+      }
+
         $file_slip = $request->file_slip;
         if (isset($file_slip)) {
             $url = 'local/public/files_slip/' . date('Ym');
@@ -322,7 +340,9 @@ class HistoryController extends Controller
 
                     DB::table('db_orders')
                         ->where('id', $request->order_id)
-                        ->update(['order_status_id_fk' => '2']);
+                        ->update(['order_status_id_fk' => '2','pay_type_id_fk'=>'1','transfer_price'=>$order->total_price]);
+
+
 
                     DB::commit();
                     return redirect('product-history')->withSuccess('Upload Slip Success');

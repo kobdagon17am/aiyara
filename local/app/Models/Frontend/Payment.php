@@ -34,9 +34,9 @@ class Payment extends Model
                     DB::table('payment_slip')
                         ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $rs->id]);
 
-                    $update_products_lis = DB::table('db_orders')
+                    $db_orders = DB::table('db_orders')
                         ->where('id', $rs->id)
-                        ->update(['order_status_id_fk' => $orderstatus_id,'pay_type_id_fk'=>'1']);
+                        ->update(['order_status_id_fk' => $orderstatus_id,'transfer_price'=>$rs->total_price,'pay_type_id_fk'=>'1']);
                         $resule = ['status' => 'success', 'message' => 'ชำระเงินแบบโอนชำระสำเร็จ'];
                 }
             }
@@ -63,8 +63,13 @@ class Payment extends Model
 
     public static function ai_cash($rs)
     {
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $customer_id = Auth::guard('c_user')->user()->id;
+
+        $db_orders = DB::table('db_orders')
+        ->where('id', $rs->id)
+        ->update(['pay_type_id_fk'=>'3','aicash_price'=>$rs->total_price]);
 
         $resulePv = PvPayment::PvPayment_type_confirme($rs->id,$customer_id,'2','customer');
         return $resulePv;
@@ -73,14 +78,11 @@ class Payment extends Model
 
     public static function gift_voucher($rs)
     {
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $customer_id = Auth::guard('c_user')->user()->id;
         DB::BeginTransaction();
         try {
-
-            $resule = GiftVoucher::log_gift($rs->total_price, $customer_id, $id);
-
-            if ($resule['status'] == 'success') {
                 $resulePv = PvPayment::PvPayment_type_confirme($rs->id,$customer_id,'2','customer');
                 if ($resulePv['status'] == 'success') {
                     DB::commit();
@@ -90,12 +92,6 @@ class Payment extends Model
                     DB::rollback();
                     return $resulePv;
                 }
-
-            } else {
-                DB::rollback();
-                return $resule;
-
-            }
 
         } catch (Exception $e) {
             DB::rollback();

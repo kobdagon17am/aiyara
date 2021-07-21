@@ -54,7 +54,7 @@ class AiCashController extends Controller
 
         $ai_cash = DB::table('db_add_ai_cash')
             ->select('db_add_ai_cash.*', 'dataset_pay_type.detail as pay_type', 'dataset_order_status.detail as order_status', 'dataset_order_status.css_class')
-            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_add_ai_cash.pay_type_id')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_add_ai_cash.pay_type_id_fk')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_add_ai_cash.order_status_id_fk')
             ->where('db_add_ai_cash.deleted_status', '!=', 1)
             ->where('db_add_ai_cash.customer_id_fk', '=', $customer_id)
