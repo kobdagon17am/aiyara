@@ -61,7 +61,7 @@ class CancelOrderController extends Controller
 
                     if ($type_id == 5) { //GivtVoucher
                         $giv_log = DB::table('log_gift_voucher')
-                            ->where('order_id_fk', '=', $order_id)
+                            ->where('code_order', '=',$order_data->code_order)
                             ->get();
 
                         foreach ($giv_log as $value) {
@@ -71,7 +71,7 @@ class CancelOrderController extends Controller
                         }
 
                         $update_log_gift_voucher = DB::table('log_gift_voucher')
-                            ->where('order_id_fk', $order_id)
+                            ->where('code_order', $order_data->code_order)
                             ->update([
                                 'status' => 'cancel',
                                 'action_user_id_fk' => $customer_or_admin,
