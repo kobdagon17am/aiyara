@@ -41,19 +41,20 @@ class KsherNotifyController extends Controller
             Log::info("IN IF function sign : ". $verify_sign );
             if($verify_sign == 1){
                 $this->updateOrInsertStatus($data_array);
+                $this->updateOrder($data_array);
             }
         }
 
         return response()->json(array('result'=> 'SUCCESS', "msg" => 'OK'));
     }
 
-    private function updateOrInsertStatus($response) 
+    private function updateOrInsertStatus($response)
     {
         $ksher_status = DB::table('ksher_statuses')
             ->updateOrInsert([
                 'mch_order_no' => Arr::get($response, 'data.mch_order_no'),
                 'pay_mch_order_no' => Arr::get($response, 'data.pay_mch_order_no')
-            ], 
+            ],
                 collect($response['data'])->except('appid', 'mch_order_no', 'pay_mch_order_no')
                     ->merge([
                         'sign' => Arr::get($response, 'sign'),
@@ -61,7 +62,47 @@ class KsherNotifyController extends Controller
                     ])
                     ->toArray()
             );
-        
+
         Log::info(">>>> Ksher Status Completed <<<<");
     }
+
+    public function updateOrder($response)
+    {
+        $getKsherData = DB::table('ksher_statuses')
+            ->where('mch_order_no', Arr::get($response, 'data.mch_order_no'))
+            ->first();
+
+        $dataUpdate = collect([
+            'order_status_id_fk' => 2
+        ]);
+
+        if (Str::contains($getKsherData->channel, 'promptpay')) {
+            $payInfo = [
+                'pay_type_id_fk' => 15,
+                'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
+            ];
+        } else {
+            $payInfo = [
+                'pay_type_id_fk' => 16,
+                'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+            ];
+        }
+
+        Log::info('>>>> Update Order After Ksher Insert <<<<');
+        Log::info($dataUpdate->merge($payInfo));
+
+        $order = DB::table('db_orders')
+            ->where('code_order', $getKsherData->mch_order_no)
+            ->update($dataUpdate->merge($payInfo)->toArray());
+
+        Log::info('Order Update Status ' . $order);
+    }
+
+    private function formatPrice($price)
+    {
+        return $price/100;
+    }
+
+
+
 }

@@ -37,6 +37,7 @@
                         @elseif($data->purchase_type_id_fk == 6)
                             <h5>คอร์สอบรม</h5>
                         @else
+
                             <h5 class="text-danger">ไม่ทราบจุดประสงค์การสั่งซื้อ</h5>
                         @endif
                         {{-- <div class="card-header-right"></div> --}}
@@ -64,7 +65,7 @@
                         <div class="tab-content active m-t-15">
 
                             <div class="tab-pane active" id="credit-card" role="tabpanel">
-                                @if ($price_remove_gv == 0 and $data->purchase_type_id_fk == 5)
+                                @if (@$price_remove_gv == 0 and $data->purchase_type_id_fk == 5)
                                     <div class="row">
                                         <div class="col-md-12 col-xl-12">
                                             <div class="card m-b-0">
