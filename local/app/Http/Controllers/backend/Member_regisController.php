@@ -212,7 +212,6 @@ class Member_regisController extends Controller
                 ".$w06."
                 ".$w07."
 
-        GROUP BY customer_id,type,`status`
         ORDER BY updated_at DESC
 
 
@@ -242,9 +241,9 @@ class Member_regisController extends Controller
         return $c[0]->name;
       })
       ->addColumn('regis_status', function($row) {
-        if($row->regis_status==1){
+        if($row->status=="S"){
           return 'ผ่าน';
-        }else if($row->regis_status==2){
+        }else if($row->status=="F"){
           return 'ไม่ผ่าน';
         }else{
           return 'รอตรวจสอบ';

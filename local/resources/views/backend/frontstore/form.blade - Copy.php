@@ -206,7 +206,6 @@
                                   <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า : * </label>
                                   <div class="col-md-7">
 
-
                                        @if(!empty(@$sRow->customers_id_fk))
 
                                          <input type="hidden" name="customers_id_fk" value="{{$sRow->customers_id_fk}}"  >
@@ -214,13 +213,18 @@
 
                                        @else
 
-                                        <!--  <select id="customers_id_fk" name="customers_id_fk" class="form-control customers_id_fk_select2 " required >
-                                         </select> -->
+                                         @if(@$Customer)
+                                         <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " required >
+                                             <option value="">Select</option>
+                                              @foreach(@$Customer AS $r)
+                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customers_id_fk)?'selected':'' }} >
+                                                {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}}
+                                                {{$r->last_name}}
+                                              </option>
+                                              @endforeach
+                                            @endif
 
-                                           <input type="text" class="form-control customer " id="customer" name="customer" >
-                                           <input type="hidden" id="customers_id_fk" name="customers_id_fk"  >
-
-                                       @endif
+                                        @endif
 
                                     </select>
                                   </div>
@@ -4648,75 +4652,11 @@ $(document).ready(function() {
             $(document).on('click', '.btnBack', function(event) {
                localStorage.clear();
             });
-
-
-            // $('.customers_id_fk_select2').select2({
-            //       minimumInputLength: 2,
-            //       allowClear: true,
-            //       ajax: {
-            //        type:'POST',
-            //        url: " {{ url('backend/ajaxGetCustomer') }} ",
-            //        data: { _token: '{{csrf_token()}}', txt:$(this).val() },
-            //        processResults: function (data) {
-            //                console.log(data);
-
-            //           },
-
-            //     }
-
-            // });
-
-
         });
 
 
 		</script>
 
- 
-
-  <!-- Script -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-
-<!-- jQuery UI -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript">
-$( function() {
-
- // Single Select
- $( "#customer" ).autocomplete({
-       source: function( request, response ) {
-   // Fetch data
-         $(".myloading").show();
-         var txt = $('#customer').val();
-         // console.log(txt);
-         $.ajax({
-          url: " {{ url('backend/ajaxGetCustomer') }} ",
-          method: "post",
-          dataType: "json",
-          data: {
-            txt:txt,
-            "_token": "{{ csrf_token() }}",
-          },
-          success:function(data){
-             console.log(data);
-             response( data );
-             $(".myloading").hide();
-
-              $.each(data, function( index, value ) {
-                    $('#customers_id_fk').val(value.id);
-               });
-          }
-         });
-        },
-
-       });
-
-
- });
-
-
-</script>
 
 
 @endsection

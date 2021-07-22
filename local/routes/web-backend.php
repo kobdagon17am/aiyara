@@ -274,6 +274,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetShelf', 'AjaxController@ajaxGetShelf');
     Route::post('ajaxGetLotnumber', 'AjaxController@ajaxGetLotnumber');
     Route::post('ajaxGetLotnumber2', 'AjaxController@ajaxGetLotnumber2');
+    
+    Route::post('ajaxGetCustomer', 'AjaxController@ajaxGetCustomer');
 
     Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
     Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
@@ -360,6 +362,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCEQrcode', 'AjaxController@ajaxGetCEQrcode');
     
     Route::post('ajaxGetFilepath', 'AjaxController@ajaxGetFilepath');
+    Route::post('ajaxGetFilepath02', 'AjaxController@ajaxGetFilepath02');
 
     
     Route::post('ajaxSaveChangePurchaseType', 'AjaxController@ajaxSaveChangePurchaseType');

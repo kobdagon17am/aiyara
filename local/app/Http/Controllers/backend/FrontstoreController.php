@@ -245,7 +245,7 @@ class FrontstoreController extends Controller
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
-      $Customer = DB::select(" select * from customers limit 1000 ");
+      $Customer = DB::select(" select * from customers limit 10000");
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
 
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
