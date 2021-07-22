@@ -140,7 +140,7 @@
                                 </div>
                             </div>
 
-               <div class="form-group row">
+               <div class="form-group row" style="display:none;">
                     <label class="col-md-4 col-form-label">สถานะ (กรณีส่งแบบพิเศษ) :</label>
                     <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
@@ -156,7 +156,25 @@
 
 			  @endif
 
+                @IF($ship_cost->shipping_type_id==5)
+                
+                <hr>
 
+                             <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label">รับที่สาขา /<br> branch :</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" value="{{ @$ship_cost->shipping_name }}" name="shipping_name_5" required="" >
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label">ค่าขนส่ง / Shipping cost :</label>
+                                <div class="col-md-8">
+                                    <input class="form-control NumberOnly " type="text" value="{{ @$ship_cost->shipping_cost }}" name="purchase_amt_5" required="" >
+                                </div>
+                            </div>
+
+              @endif
 
 	      @endforeach 
 	  @endif
@@ -237,9 +255,9 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                    <!--     <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shipping_cost") }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a> -->
+                     <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shipping_vicinity") }}">
+                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                     </a>
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
@@ -279,15 +297,13 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                    @if( !empty(@$shipping_vicinity[0]->shipping_cost_id_fk) )
                                     <table id="data-table-bangkok_vicinity" class="table table-bordered dt-responsive" style="width: 100%" ></table>
-                                    @endif
                                     </div>
                                </div>
 
                                 <div class="row">
                                     <div class="col-12">
-                                    	 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shipping_cost") }}">
+                                    	 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shipping_vicinity") }}">
 					                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
 					                        </a>
                                     </div>
@@ -339,7 +355,7 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             // {data: 'province_id_fk', title :'<center>รหัสจังหวัด </center>', className: 'text-center'},
-            {data: 'province_name', title :'<center>ชื่อจังหวัด </center>', className: 'text-center'},
+            {data: 'province_name_th', title :'<center>ชื่อจังหวัด </center>', className: 'text-center'},
             // {data: 'province_name_en', title :'<center>ค่าขนส่ง (บาท) </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
