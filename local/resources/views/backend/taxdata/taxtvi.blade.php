@@ -43,10 +43,134 @@ body{
 
   </style>
 
-<img src="{{asset('local/public/taxdata/tavi_form.png')}}" width="103%" style="position:absolute;z-index:0;" >
+<!-- <img src="{{asset('local/public/taxdata/tavi_form.jpg')}}" width="100%" style="position:absolute;z-index:0;" > -->
+<img src="<?=public_path('taxdata/tavi_form.png'); ?>" width="103%" style="position:absolute;z-index:0;" >
 
 
 <?php
+
+// echo public_path('taxdata/test_img.png');
+
+ function ThaiBahtConversion02($amount_number)
+
+      {
+
+          $amount_number = number_format($amount_number, 2, ".","");
+
+          //echo "<br/>amount = " . $amount_number . "<br/>";
+
+          $pt = strpos($amount_number , ".");
+
+          $number = $fraction = "";
+
+          if ($pt === false) 
+
+              $number = $amount_number;
+
+          else
+
+          {
+
+              $number = substr($amount_number, 0, $pt);
+
+              $fraction = substr($amount_number, $pt + 1);
+
+          }
+
+          
+
+          //list($number, $fraction) = explode(".", $number);
+
+          $ret = "";
+
+          $baht = ReadNumber02 ($number);
+
+          if ($baht != "")
+
+              $ret .= $baht . "บาท";
+
+          
+
+          $satang = ReadNumber02($fraction);
+
+          if ($satang != "")
+
+              $ret .=  $satang . "สตางค์";
+
+          else 
+
+              $ret .= "ถ้วน";
+
+          //return iconv("UTF-8", "TIS-620", $ret);
+
+          return $ret;
+
+      }
+
+function ReadNumber02($number)
+
+{
+
+    $position_call = array("แสน", "หมื่น", "พัน", "ร้อย", "สิบ", "");
+
+    $number_call = array("", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า");
+
+    $number = $number + 0;
+
+    $ret = "";
+
+    if ($number == 0) return $ret;
+
+    if ($number > 1000000)
+
+    {
+
+        $ret .= ReadNumber02(intval($number / 1000000)) . "ล้าน";
+
+        $number = intval(fmod($number, 1000000));
+
+    }
+
+    
+
+    $divider = 100000;
+
+    $pos = 0;
+
+    while($number > 0)
+
+    {
+
+        $d = intval($number / $divider);
+
+        $ret .= (($divider == 10) && ($d == 2)) ? "ยี่" : 
+
+            ((($divider == 10) && ($d == 1)) ? "" :
+
+            ((($divider == 1) && ($d == 1) && ($ret != "")) ? "เอ็ด" : $number_call[$d]));
+
+        $ret .= ($d ? $position_call[$pos] : "");
+
+        $number = $number % $divider;
+
+        $divider = $divider / 10;
+
+        $pos++;
+
+    }
+
+    return $ret;
+
+}
+
+
+ function ThDate0102($d)
+  {
+      
+      $d = strtotime($d);  
+      return date("d/m/", $d).(date("Y", $d)+543);
+      
+  }
 
       $value = DB::select("
                 SELECT
@@ -362,7 +486,7 @@ body{
 
     <div style="position:absolute;z-index:1;color:red;margin-top:799px;">
         <!-- <div style="margin-left: 35%;">(เก้าล้านเก้าแสนเก้าหมื่นเก้าพันเก้าร้อยเก้าสิบเก้าบาทเก้าสิบเก้าสตางค์) -->
-        <div style="margin-left: 35%;"><?=ThaiBahtConversion(@$value[0]->commission_cost)?>
+        <div style="margin-left: 35%;"><?=ThaiBahtConversion02(@$value[0]->commission_cost)?>
       </div>
     </div>
 
