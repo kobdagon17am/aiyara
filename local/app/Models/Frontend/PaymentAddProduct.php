@@ -14,7 +14,7 @@ use App\Models\DbOrderProductsListGiveaway;
 
 class PaymentAddProduct extends Model
 {
-	public static function payment_add_product($order_id,$customer_id,$type,$business_location_id='',$pv_total=''){
+	public static function payment_add_product($order_id,$customer_id,$type,$business_location_id='',$pv_total='',$code_order){
 
     DB::BeginTransaction();
 		try {
@@ -27,6 +27,7 @@ class PaymentAddProduct extends Model
 				$total_pv = $value['attributes']['pv'] * $value['quantity'];
 				$total_price = $value['price'] * $value['quantity'];
 
+        $insert_db_products_list->code_order = $code_order;
         $insert_db_products_list->frontstore_id_fk = $order_id;
         $insert_db_products_list->customers_id_fk = $customer_id;
         $insert_db_products_list->distribution_channel_id_fk = 2;

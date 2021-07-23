@@ -7,24 +7,26 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\Ksher\KsherController;
+use App\Models\Db_Orders;
 use App\Models\Frontend\CourseCheckRegis;
+use App\Models\Frontend\Couse_Event;
 use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Location;
 use App\Models\Frontend\Payment;
+use App\Models\Frontend\PaymentAddProduct;
 use App\Models\Frontend\PaymentSentAddressOrder;
 use App\Models\Frontend\RunNumberPayment;
 use Auth;
 use Cart;
 use Illuminate\Http\Request;
-use App\Models\Frontend\PaymentAddProduct;
 use Illuminate\Support\Facades\DB;
 
 class CartPaymentController extends Controller
 {
     public function index($type)
     {
-        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
 
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $location = Location::location($business_location_id, $business_location_id);
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
@@ -37,6 +39,7 @@ class CartPaymentController extends Controller
                 $pv[] = $value['quantity'] * $value['attributes']['pv'];
                 if ($type == '6') {
                     $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity']);
+
                     if ($chek_course['status'] == 'fail') {
                         return redirect('cart/' . $type)->withError($chek_course['message']);
                     }
@@ -141,6 +144,117 @@ class CartPaymentController extends Controller
         return view('frontend/product/cart_payment', compact('check_giveaway', 'customer', 'address', 'address_card', 'location', 'provinces', 'bill'));
     }
 
+    public function cart_submit_course($type)
+    {
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        $location = Location::location($business_location_id, $business_location_id);
+        $cartCollection = Cart::session($type)->getContent();
+        $data = $cartCollection->toArray();
+        $quantity = Cart::session($type)->getTotalQuantity();
+        $code_order = RunNumberPayment::run_number_order($business_location_id);
+
+        $customer_id = Auth::guard('c_user')->user()->id;
+        $user_name = Auth::guard('c_user')->user()->user_name;
+
+        if ($data) {
+            foreach ($data as $value) {
+                $pv[] = $value['quantity'] * $value['attributes']['pv'];
+                if ($type == '6') {
+                    $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity']);
+
+                    if ($chek_course['status'] == 'fail') {
+                        return redirect('cart/' . $type)->withError($chek_course['message']);
+                    }
+                } else {
+                    return redirect('product-history')->withError('ไม่พบบิลเลขที่อยู่ในระบบรอชำระเงิน');
+
+                }
+            }
+            $pv_total = array_sum($pv);
+        } else {
+            $pv_total = 0;
+            return redirect('product-list/' . $type)->withError('กรุณาเลือกสินค้าที่ต้องการ');
+        }
+        //ราคาสินค้า
+        $price = Cart::session($type)->getTotal();
+
+        $vat = DB::table('dataset_vat')
+            ->where('business_location_id_fk', '=', $business_location_id)
+            ->first();
+
+        $vat = $vat->vat;
+        $shipping = 0;
+
+        //vatใน 7%
+        $p_vat = $price * ($vat / (100 + $vat));
+
+        //มูลค่าสินค้า
+        $price_vat = $price - $p_vat;
+        $price_total = $price + $shipping;
+        $customer_pv = Auth::guard('c_user')->user()->pv;
+
+        DB::BeginTransaction();
+
+        try {
+            $insert_db_orders = new Db_Orders();
+            $insert_db_orders->quantity = $quantity;
+            $insert_db_orders->code_order = $code_order;
+            $insert_db_orders->customers_id_fk = $customer_id;
+            $insert_db_orders->tax = $vat;
+            $insert_db_orders->sum_price = $price;
+            $insert_db_orders->total_price = $price;
+            $insert_db_orders->product_value = $price_vat;
+            $insert_db_orders->date_setting_code = date('ym');
+            $insert_db_orders->action_date = date('Y-m-d');
+            $insert_db_orders->pv_total = $pv_total;
+            $insert_db_orders->purchase_type_id_fk = $type;
+            $insert_db_orders->business_location_id_fk = $business_location_id;
+            $insert_db_orders->distribution_channel_id_fk = '2';
+            $insert_db_orders->order_status_id_fk = '2';
+
+            foreach ($data as $value) {
+                $j = $value['quantity'];
+                for ($i = 1; $i <= $j; $i++) {
+                    DB::table('db_order_products_list')->insert([
+                        'code_order' => $code_order,
+                        'course_id_fk' => $value['id'],
+                        'product_name' => $value['name'],
+                        'amt' => '1',
+                        'type_product' => 'course',
+                        'selling_price' => $value['price'],
+                        'pv' => $value['attributes']['pv'],
+                        'total_pv' => $value['attributes']['pv'],
+                        'total_price' => $value['price'],
+                    ]);
+
+                }
+
+            }
+            $insert_db_orders->save();
+
+            $update_db_order_products_list = DB::table('db_order_products_list') //log_gift_voucher order_id_fk
+                ->where('code_order', $code_order)
+                ->update(['frontstore_id_fk' => $insert_db_orders->id]);
+            $resule = Couse_Event::couse_register($insert_db_orders->id);
+
+
+            if ($resule['status'] == 'success') {
+                Cart::session(6)->clear();
+                DB::commit();
+                return redirect('cart_payment_transfer/' . $code_order);
+
+            } else {
+                DB::rollback();
+                return redirect('product-history')->withError($resule['message']);
+            }
+
+        } catch (Exception $e) {
+            DB::rollback();
+            return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
+        }
+
+    }
+
     public function payment_address(Request $rs)
     {
 
@@ -191,9 +305,9 @@ class CartPaymentController extends Controller
                 $rs_log_gift = GiftVoucher::log_gift($price_total, $customer_id, $code_order);
 
                 if ($rs_log_gift['status'] == 'fail') {
-                  DB::rollback();
-                  //$resule = ['status' => 'fail', 'message' => 'rs_log_gift fail'];
-                  return redirect('product-history')->withError($rs_log_gift['message']);
+                    DB::rollback();
+                    //$resule = ['status' => 'fail', 'message' => 'rs_log_gift fail'];
+                    return redirect('product-history')->withError($rs_log_gift['message']);
                 }
 
             } else {
@@ -206,7 +320,7 @@ class CartPaymentController extends Controller
                 DB::rollback();
                 return redirect('product-history')->withError($resule['message']);
             } else {
-              $add_product = PaymentAddProduct::payment_add_product($resule['id'],$customer_id, $rs->type, $business_location_id, $rs->pv_total);
+                $add_product = PaymentAddProduct::payment_add_product($resule['id'], $customer_id, $rs->type, $business_location_id, $rs->pv_total,$code_order);
                 if ($rs->type == 5) {
                     $update_giftvoucher = DB::table('log_gift_voucher') //log_gift_voucher order_id_fk
                         ->where('code_order', $code_order)
@@ -225,6 +339,7 @@ class CartPaymentController extends Controller
 
     public function cart_payment_transfer($code_order)
     {
+
         if ($code_order) {
 
             $data = DB::table('db_orders')
@@ -258,6 +373,23 @@ class CartPaymentController extends Controller
                 ->where('db_orders.code_order', '=', $code_order)
                 ->first();
 
+                if ($data->purchase_type_id_fk == 6) {
+
+                  $order_items = DB::table('db_order_products_list')
+                      ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
+                      ->where('code_order', '=',$code_order)
+                      ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
+                      ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=', 'course_event_regis.ticket_id')
+                      ->get();
+              } else {
+                  $order_items = DB::table('db_order_products_list')
+                      ->where('code_order', '=',$code_order)
+                      ->orderby('id', 'ASC')
+                      ->get();
+              }
+
+
+
             if (empty($data)) {
                 return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
             }
@@ -279,19 +411,7 @@ class CartPaymentController extends Controller
             }
             // dd($data);
 
-            if ($data->purchase_type_id_fk == 6) {
-                $order_items = DB::table('db_order_products_list')
-                    ->select('db_order_products_list.*', 'course_ticket_number.ticket_number')
-                    ->where('frontstore_id_fk', '=', $data->id)
-                    ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
-                    ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=', 'course_event_regis.ticket_id')
-                    ->get();
-            } else {
-                $order_items = DB::table('db_order_products_list')
-                    ->where('frontstore_id_fk', '=', $data->id)
-                    ->orderby('id', 'ASC')
-                    ->get();
-            }
+
 
             return view('frontend/product/cart_payment_transfer', compact('data', 'order_items', 'address'));
 
@@ -303,15 +423,15 @@ class CartPaymentController extends Controller
     public function payment_submit(Request $request)
     {
 
-      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
 
-      $order_data = DB::table('db_orders')
-      ->select('db_orders.*', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
-      ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
-      ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
-      ->where('dataset_orders_type.lang_id', '=', $business_location_id)
-      ->where('db_orders.id', '=', $request->id)
-      ->first();
+        $order_data = DB::table('db_orders')
+            ->select('db_orders.*', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+            ->where('db_orders.id', '=', $request->id)
+            ->first();
 
         if (empty($order_data)) {
             return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $request->code_order . ' อยู่ในระบบรอชำระเงิน');
@@ -323,7 +443,6 @@ class CartPaymentController extends Controller
             $total_price = $order_data->total_price;
         }
 
-
         if ($request->submit == 'upload') {
             $resule = Payment::payment_uploadfile($request);
             if ($resule['status'] == 'success') {
@@ -332,7 +451,7 @@ class CartPaymentController extends Controller
 
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '12','transfer_price'=>$total_price]);
+                        ->update(['pay_type_id_fk' => '12', 'transfer_price' => $total_price]);
                 }
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
@@ -405,7 +524,7 @@ class CartPaymentController extends Controller
                 if ($order_data->purchase_type_id_fk == 5) {
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '14','aicash_price'=>$total_price]);
+                        ->update(['pay_type_id_fk' => '14', 'aicash_price' => $total_price]);
                 }
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {

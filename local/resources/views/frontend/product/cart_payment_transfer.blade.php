@@ -605,6 +605,7 @@
                                     <tbody>
                                         @foreach ($order_items as $index => $value)
 
+
                                             <tr>
                                                 <td>
                                                     <h6>{{ $value->product_name }}</h6>
@@ -872,7 +873,7 @@
                             @elseif($data->purchase_type_id_fk == 6)
                                 <tr>
                                     <td><strong>ยอดที่ต้องชำระ</strong></td>
-                                    <td align="right"><strong> {{ number_format($data->price, 2) }} </strong>
+                                    <td align="right"><strong> {{ number_format($data->total_price, 2) }} </strong>
                                     </td>
                                 </tr>
 

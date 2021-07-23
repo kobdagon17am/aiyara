@@ -154,7 +154,8 @@
                             @else
                             <label class="label label-inverse-danger"><b style="color: #000"> คุณไม่มียอด Ai Voucher ที่สามารถใช้ชำระสินค้าได้ </b></label>
                             @endif
-
+                          @elseif($type == 6)
+                          <a href="{{ route('cart_submit_course',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                           @else
                           <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                           @endif

@@ -30,7 +30,7 @@ class Couse_Event extends Model
         return $data;
     }
 
-    public static function couse_register($order_id,$admin_id){
+    public static function couse_register($order_id,$admin_id=''){
 
         $order_data = DB::table('db_orders')
         ->where('id','=',$order_id)

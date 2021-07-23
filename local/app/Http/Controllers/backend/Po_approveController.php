@@ -99,7 +99,7 @@ class Po_approveController extends Controller
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
             ->where('dataset_order_status.lang_id', '=', '1')
             ->where('dataset_orders_type.lang_id', '=', '1')
-            ->where('db_orders.purchase_type_id_fk', '!=', '6')
+           // ->where('db_orders.purchase_type_id_fk', '!=', '6')
             ->where('db_orders.order_status_id_fk', '=', '2')
             ->orderby('id', 'DESC')
             ->get();

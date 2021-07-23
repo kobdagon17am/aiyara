@@ -52,13 +52,7 @@
                      </div>
                      <div class="card-block payment-tabs">
                          <ul class="nav nav-tabs md-tabs" role="tablist">
-                             @if ($bill['type'] == 6)
-                                 <li class="nav-item">
-                                     <a class="nav-link active" data-toggle="tab" id="nav_card" href="#credit-card"
-                                         role="tab">ชำระเงิน</a>
-                                     <div class="slide"></div>
-                                 </li>
-                             @else
+
                                  <li class="nav-item">
                                      <a class="nav-link active" id="nav_address" data-toggle="tab" href="#address"
                                          role="tab">ที่อยู่การจัดส่ง</a>
@@ -68,17 +62,12 @@
                                      <a class="nav-link" id="nav_card">ชำระเงิน</a>
                                      <div class="slide"></div>
                                  </li>
-                             @endif
+
 
                          </ul>
                          <div class="tab-content m-t-15">
 
-
-                             @if ($bill['type'] == 6)
-                                 <div class="tab-pane" id="address" role="tabpanel">
-                                 @else
                                      <div class="tab-pane active" id="address" role="tabpanel">
-                             @endif
 
                              <div class="card-block p-b-0" style="padding:10px">
 
@@ -832,16 +821,14 @@
          var address_provinces_id = {{ $address->provinces_id }};
          check_shipping({{ $address->provinces_id }});
          var type = '{{ $bill['type'] }}';
-         if( type == 6){
-          document.getElementById('shipping_premium').value = false;
-         }else{
+
           var premium = document.getElementById('checkbox13').checked;
               if (premium) {
                   document.getElementById('shipping_premium').value = true;
               } else {
                 document.getElementById('shipping_premium').value = false;
               }
-         }
+
 
 
 
@@ -880,9 +867,9 @@
              var price = '{{ $bill['price'] }}';
 
              var type = '{{ $bill['type'] }}';
-             if (type != 6) {
+
              var shipping_premium = document.getElementById('checkbox13').checked;
-             }
+
 
              if (type == 5) {
                  var sum_gv = '{{ @$gv->sum_gv }}';
@@ -904,9 +891,9 @@
                      type_sent: type_sent,
                  },
                  success: function(data) {
-                  if (type != 6) {
+
                      document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
-                  }
+
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
@@ -917,9 +904,9 @@
                          $('#price_total_type5').val(data['price_total_type5']);
                      }
 
-                     if (type != 6) {
+
                      document.getElementById('shipping').textContent = shipping_cost;
-                     }
+
 
                      var price_total_view = numberWithCommas(price_total);
 
