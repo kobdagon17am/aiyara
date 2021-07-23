@@ -34,6 +34,20 @@
         h1 {
             color:green;
         }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 200px; /* Should be removed. Only for demonstration */
+          }
+
+          /* Clear floats after the columns */
+          .row:after {
+            content: "";
+            display: table;
+            clear: both;
+          }
     </style>
 
 @endsection
@@ -251,7 +265,7 @@
 
 
 <div class="modal fade" id="checkRegis" tabindex="-1" role="dialog" aria-labelledby="checkRegisTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="checkRegisTitle"><b><i class="bx bx-play"></i>บันทึกตรวจสอบการลงทะเบียน </b></h5>
@@ -271,21 +285,37 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
-                <div class="row" >
-                     <div class="col-md-12" >
-                      <div class="form-group row">
-                        <label for="" class="col-md-3 col-form-label"> File : </label>
-                        <div class="col-md-8 ">
-                            <img id="file_path" class="grow" src="" width="80%" style="cursor: pointer;" > 
-                            <!-- <a id="file_path_a"  href="file_path_a" download> file_name </a>  -->
-                            <span class="file_path_desc"></span>
+               <center>
 
-                        </div>
-                      </div>
-                    </div>
+                <h2 id="cus_name"></h2>
+
+              <div class="row">
+                <div class="column" style="background-color:#aaa;">
+                  <h4 class="p_desc_1">ภาพถ่ายบัตรประชาชน</h4>
+                  <p> <img id="file_path1" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                  <h4 class="p_desc_11"></h4>
                 </div>
-                <br>
+                <div class="column" style="background-color:#bbb;">
+                   <h4 class="p_desc_2">ภายถ่ายหน้าตรง</h4>
+                   <p> <img id="file_path2" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="column" style="background-color:#bbb;color: black;">
+                  <h4 class="p_desc_3">ภาพถ่ายหน้าตรงถือบัตรประชาชน</h4>
+                  <p> <img id="file_path3" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                  <h4 class="p_desc_33"></h4>
+                </div>
+                <div class="column" style="background-color:#aaa;">
+                   <h4 class="p_desc_4">ภาพถ่ายหน้าบัญชีธนาคาร</h4>
+                   <p> <img id="file_path4" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                    <h4 class="p_desc_44"> </h4>
+                </div>
+              </div>
+
+
                 <br>
 
               <div class="row" >
@@ -298,7 +328,7 @@
                       </div>
                     </div>
                 </div>
-                <br>
+                  <br>
                 <div class="row" >
                       <div class="col-md-12" >
                       <div class="form-group row">
@@ -313,12 +343,7 @@
                       </div>
                     </div>
                 </div>
-
-
-              </div>
-            </div>
-          </div>
-        </div>
+             <br>
 
          <div class="row">
           <div class="col-md-12 text-center  "  >
@@ -327,12 +352,13 @@
           </div>
         </div>
 
-      </div>
-            <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-              <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+              </div>
             </div>
+          </div>
+        </div>
 
+      </div>
+ 
       </form>
 
     </div>
@@ -639,21 +665,22 @@ $(function() {
 
                       // console.log(data);
 
-
                             $.each(data,function(key,value){
                             // if(value.file_path!=null){
-                              console.log(value.file_path);
-                              console.log(value.type);
-                              console.log(value.file);
+                              // console.log(value.file_path);
+                              // console.log(value.type);
+                              // console.log(value.file);
+                              // console.log(value.status);
+
+                              $('#cus_name').html(value.cus_name);
 
                                var strArray = value.file.split(".");
-
-                                console.log(strArray[1]);
+                                // console.log(strArray[1]);
 
                                 // var arrXls = ['xls', 'xlsx'];
                                 var arrXls = ['png', 'jpg', 'jpeg', 'gif'];
 
-                                console.log(arrXls.includes(strArray[1]));
+                                // console.log(arrXls.includes(strArray[1]));
 
                                 let ch = arrXls.includes(strArray[1]);
                                 if(ch==true){
@@ -661,19 +688,118 @@ $(function() {
                                   // $('#file_path_a').attr("href", value.file_path);
                                   // $('#file_path_a').text("File : Excel");
                                   // $('#file_path_a').css({"font-size": "24px"});
-                                  $('#file_path').attr("src", value.file_path);
-                                  $('#file_path').show();
-                                  $('.file_path_desc').hide();
+                                  if(value.type=="1" && value.status=="S"){
+                                    $('#file_path1').attr("src", value.file_path);
+                                    $('#file_path1').show();
+                                    $('.p_desc_1').css({"background-color": "bisque", "color": "blue" });
+                                    $('.p_desc_11').html("เลขบัตรประชาชน : "+value.id_card);
+                                  }else{
+                                    $('#file_path1').hide();
+                                    $('.p_desc_1').css({"background-color": "", "color": "" });
+                                  }
+
+                                  if(value.type=="2" && value.status=="S"){
+                                    $('#file_path2').attr("src", value.file_path);
+                                    $('#file_path2').show();
+                                    $('.p_desc_2').css({"background-color": "bisque", "color": "blue" });
+                                  }else{
+                                    $('#file_path2').hide();
+                                    $('.p_desc_2').css({"background-color": "", "color": "" });
+                                  }
+                                  
+                                  if(value.type=="3" && value.status=="S"){
+                                    $('#file_path3').attr("src", value.file_path);
+                                    $('#file_path3').show();
+                                    $('.p_desc_3').css({"background-color": "bisque", "color": "blue" });
+                                    $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
+                                  }else{
+                                    $('#file_path3').hide();
+                                    $('.p_desc_3').css({"background-color": "", "color": "" });
+                                  }
+                                  
+                                  if(value.type=="4" && value.status=="S"){
+                                    $('#file_path4').attr("src", value.file_path);
+                                    $('#file_path4').show();
+                                    $('.p_desc_4').css({"background-color": "bisque", "color": "blue" });
+                                    $('.p_desc_44').html("บัญชีธนาคาร : "+value.bank_no+" "+value.bank_name);
+                                  }else{
+                                    $('#file_path4').hide();
+                                    $('.p_desc_4').css({"background-color": "", "color": "" });
+                                  }
+                                  
+                                  // $('.file_path_desc').hide();
+                                   // var id = $(this).data('id');
+                                  // $('#id').val(id);
+                                   $.ajax({
+                                        url: " {{ url('backend/ajaxGetFilepath02') }} ",
+                                        method: "post",
+                                        data: {
+                                          id:id,
+                                          "_token": "{{ csrf_token() }}",
+                                        },
+                                        success:function(data2)
+                                        {
+                                           console.log(data2);
+                                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                             $.each(data2,function(key,value){
+
+
+
+
+                                                   var strArray = value.file.split(".");
+
+                                                    var arrXls = ['png', 'jpg', 'jpeg', 'gif'];
+
+                                                    // console.log(arrXls.includes(strArray[1]));
+                                                    let ch = arrXls.includes(strArray[1]);
+                                                    if(ch==true){
+                                                
+                                                      if(value.type=="1" && value.status=="S"){
+                                                        $('#file_path1').attr("src", value.file_path);
+                                                        $('#file_path1').show();
+                                                        $('.p_desc_11').html("เลขบัตรประชาชน : "+value.id_card);
+                                                      }
+
+                                                      if(value.type=="2" && value.status=="S"){
+                                                        $('#file_path2').attr("src", value.file_path);
+                                                        $('#file_path2').show();
+                                                      }
+                                                      
+                                                      if(value.type=="3" && value.status=="S"){
+                                                        $('#file_path3').attr("src", value.file_path);
+                                                        $('#file_path3').show();
+                                                        $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
+                                                      }
+                                                      
+                                                      if(value.type=="4" && value.status=="S"){
+                                                        $('#file_path4').attr("src", value.file_path);
+                                                        $('#file_path4').show();
+                                                        $('.p_desc_44').html("บัญชีธนาคาร : "+value.bank_no+" "+value.bank_name);
+                                                      }
+
+                                                    }else{
+
+                                                    }
+
+                                               });
+                                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                        }
+                                      });
+
 
                                 }else{
-                                  $('#file_path').hide();
-                                  // $('#file_path').attr("src", value.file_path);
-                                  $('.file_path_desc').html("File not found");
-                                  $('.file_path_desc').css({"background-color": "#ccffe6", "font-size": "24px"});
-                                  $('.file_path_desc').show();
+
+                                  $('#file_path1').hide();
+                                  $('#file_path2').hide();
+                                  $('#file_path3').hide();
+                                  $('#file_path4').hide();
+                                   // $('#file_path').attr("src", value.file_path);
+                                  // $('.file_path_desc').html("File not found");
+                                  // $('.file_path_desc').css({"background-color": "#ccffe6", "font-size": "24px"});
+                                  // $('.file_path_desc').show();
                                 }
 
-                               $('#type').val(value.type);
+                                 $('#type').val(value.type);
                             
                            });
 
@@ -687,7 +813,6 @@ $(function() {
                             //     console.log("bbbbb");
                             //     $('#file_path').show();
                             // }
-
                            $('#checkRegis').modal('show');
                   }
                 })

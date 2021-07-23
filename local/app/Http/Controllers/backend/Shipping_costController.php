@@ -53,6 +53,12 @@ class Shipping_costController extends Controller
             where 
             business_location_id_fk= '". $request->business_location_id_fk."' AND shipping_type_id=4  ");
 
+          DB::select("  UPDATE dataset_shipping_cost SET 
+            shipping_name = '". $request->shipping_name_5."'  ,
+            shipping_cost = '". $request->purchase_amt_5."'  
+            where 
+            business_location_id_fk= '". $request->business_location_id_fk."' AND shipping_type_id=5  ");
+
 
           return redirect()->to(url("backend/shipping_cost/".request('business_location_id_fk')."/edit"));
 
@@ -74,6 +80,10 @@ class Shipping_costController extends Controller
               DB::select("  INSERT IGNORE INTO dataset_shipping_cost (business_location_id_fk, shipping_name, purchase_amt, shipping_cost,shipping_type_id,status_special, created_at) VALUES ('". $request->business_location_id_fk."', '". $request->shipping_name_4."', '0', '". $request->purchase_amt_4."', '4','". $request->status_special."', now() )  ");
           }
 
+          if(!empty($request->shipping_name_5)){
+              DB::select("  INSERT IGNORE INTO dataset_shipping_cost (business_location_id_fk, shipping_name, purchase_amt, shipping_cost,shipping_type_id, created_at) VALUES ('". $request->business_location_id_fk."', '". $request->shipping_name_5."', '0', '". $request->purchase_amt_5."', '5', now() )  ");
+          }
+
           return redirect()->to(url("backend/shipping_cost/".request('business_location_id_fk')."/edit"));
 
       }else{
@@ -85,15 +95,11 @@ class Shipping_costController extends Controller
 
     public function edit($id)
     {
-
+      // dd($id);
       $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk',  $id)->where('shipping_type_id', '2')->get();
       // dd(@$shipping_cost[0]->id);
-      if(!empty(@$shipping_cost[0]->id)){
-        $shipping_vicinity = DB::table('dataset_shipping_vicinity')->where('shipping_cost_id_fk', $shipping_cost[0]->id)->get();
-      }else{
-        $shipping_vicinity = NULL ;
-      }
-      // dd(@$shipping_vicinity[0]->shipping_cost_id_fk);
+        $shipping_vicinity = DB::table('dataset_shipping_vicinity')->where('business_location_id_fk', $id)->get();
+   
        $sRow = DB::table('dataset_shipping_cost')->where('business_location_id_fk', $id)->first();
        // dd($sRow);
        $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -145,9 +151,16 @@ class Shipping_costController extends Controller
 
     public function Datatable(){
       $sTable = \App\Models\Backend\Shipping_cost::search()->orderBy('id', 'asc');
-      // $sTable = DB::select("  select dataset_business_location.*,txt_desc as business_location from dataset_business_location  ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+       ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      }) 
        ->addColumn('cost_set', function($row) {
         if(@$row->id!=''){
              $P = DB::select(" select count(*) as cnt from dataset_shipping_cost where business_location_id_fk=".@$row->id." ");

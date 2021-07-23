@@ -12,19 +12,22 @@ class Shipping_vicinityController extends Controller
 
     public function index(Request $request)
     {
+      // dd($request);
       return view('backend.shipping_vicinity.index');
     }
 
    public function create($id)
     {
-      // dd($id); // $id = business location 
+
+       // dd($id);
+        // $id = business location 
+
       @$Shipping_cost = DB::select(" select * from dataset_shipping_cost where business_location_id_fk=$id AND shipping_type_id=2  ");
-      @$shipping_cost_id_fk = @$Shipping_cost[0]->id;
       // dd($Shipping_cost);
       @$sBusiness_location = \App\Models\Backend\Business_location::get();
       // // dd($sRowNew);
       if(@$Shipping_cost){
-              @$Shipping_vicinity = DB::select(" select * from dataset_shipping_vicinity where shipping_cost_id_fk=".@$Shipping_cost[0]->id."  ");
+              @$Shipping_vicinity = DB::select(" select * from dataset_shipping_vicinity where business_location_id_fk=".@$id."  ");
             // dd($Shipping_vicinity);
             $arr=[];
             foreach (@$Shipping_vicinity as $key => $value) {
@@ -42,7 +45,6 @@ class Shipping_vicinityController extends Controller
         'id'=>$id,
         'Province'=>$Province,
         'sBusiness_location'=>$sBusiness_location,
-        'shipping_cost_id_fk'=>$shipping_cost_id_fk
       ) );
 
     }
@@ -59,9 +61,9 @@ class Shipping_vicinityController extends Controller
 
         $sRow = \App\Models\Backend\Shipping_vicinity::find($id);
         $Province = DB::select(" select * from dataset_provinces ");
-        $sRowNew = \App\Models\Backend\Shipping_cost::find($sRow->shipping_cost_id_fk);
-        // dd($sRowNew);
-        return View('backend.shipping_vicinity.form')->with(array('sRow'=>$sRow, 'id'=>$id ,'Province'=>$Province,'sRowNew'=>$sRowNew) );
+        $sBusiness_location = \App\Models\Backend\Business_location::get();
+        return View('backend.shipping_vicinity.form')->with(array('sRow'=>$sRow, 'id'=>$id ,'Province'=>$Province,
+        'sBusiness_location'=>$sBusiness_location) );
     }
 
     public function update(Request $request, $id)
@@ -73,23 +75,23 @@ class Shipping_vicinityController extends Controller
    public function form($id=NULL)
     {
       \DB::beginTransaction();
+      // dd($id);
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Shipping_vicinity::find($id);
           }else{
             $sRow = new \App\Models\Backend\Shipping_vicinity;
           }
-  //          "business_location_id" => "1"
-  // "shipping_cost_id_fk" => "2"
-  // "province_id_fk" => "5"
-          $sRow->shipping_cost_id_fk    = request('shipping_cost_id_fk');
+
+          $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->province_id_fk    = request('province_id_fk');
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
           \DB::commit();
 
-          return redirect()->to(url("backend/shipping_cost/".request('business_location_id')."/edit"));
+          // return redirect()->to(url("backend/shipping_vicinity/"));
+          return redirect()->to(url("backend/shipping_cost/".request('business_location_id_fk')."/edit"));
 
 
       } catch (\Exception $e) {
@@ -109,20 +111,20 @@ class Shipping_vicinityController extends Controller
     }
 
     public function Datatable(Request $req){
+      
+      $sTable = DB::table('dataset_shipping_vicinity')
+      ->get();
 
-      if(isset($req->business_location_id_fk)){
-          $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk', $req->business_location_id_fk)->where('shipping_type_id', '2')->get();
-      }else{
-          $shipping_cost = DB::table('dataset_shipping_cost')->where('business_location_id_fk', 1)->where('shipping_type_id', '2')->get();
-      }
-
-       $d1 = $shipping_cost[0]->id;
-       $d2 = DB::table('dataset_shipping_vicinity')->where('shipping_cost_id_fk', $d1 )->get();
-
-       $sTable = \App\Models\Backend\Shipping_vicinity::orderBy('id', 'asc');
-
-      $sQuery = \DataTables::of($d2);
+      $sQuery = \DataTables::of($sTable);
       return $sQuery
+      ->addColumn('business_location', function($row) {
+        if(@$row->business_location_id_fk!=''){
+             $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
+             return @$P[0]->txt_desc;
+        }else{
+             return '-';
+        }
+      }) 
       ->addColumn('province_name_th', function($row) {
         if(@$row->province_id_fk){
           @$d = DB::select("select * from dataset_provinces where id=".@$row->province_id_fk." ");
@@ -136,7 +138,7 @@ class Shipping_vicinityController extends Controller
           return @$d[0]->name_en;
         }
         
-      })      
+      })     
       ->make(true);
     }
 

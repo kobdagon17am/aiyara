@@ -25,24 +25,25 @@
 
               @if( empty($sRow) )
               <form action="{{ route('backend.shipping_vicinity.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+
               @else
               <form action="{{ route('backend.shipping_vicinity.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
+                <!-- <input name="id" type="text" value="{{@$id}}"> -->
               @endif
                 {{ csrf_field() }}
 
 
                       <div class="myBorder">
 
-                        <input name="business_location_id" type="hidden" value="{{@$id}}">
+                        <input name="business_location_id_fk" type="hidden" value="{{@$id}}">
                         <input name="shipping_cost_id_fk" type="hidden" value="{{@$shipping_cost_id_fk}}">
-
 
 
                          <div class="form-group row">
                                 <label for="example-text-input" class="col-md-3 col-form-label">Business Location :</label>
                                 <div class="col-md-9">
-                                      <select name="business_location_id_fk" class="form-control select2-templating " disabled="" >
+                                      <select class="form-control select2-templating " disabled="">
                                         <option value="">-Business Location-</option>
                                         @if(@$sBusiness_location)
                                         @foreach(@$sBusiness_location AS $r)
@@ -74,9 +75,13 @@
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.shipping_cost.index') }}/{{@$id}}/edit" }}">
+                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.shipping_cost.index') }}/{{@$id}}/edit" }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
+                        </a> 
+               <!--       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/shipping_vicinity") }}">
+                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                     </a> -->
+
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">

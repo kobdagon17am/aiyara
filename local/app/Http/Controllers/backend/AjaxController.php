@@ -1589,6 +1589,12 @@ class AjaxController extends Controller
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
             $sRow->save();
+
+            $sRow2 = \App\Models\Backend\GiftvoucherCus::where('giftvoucher_code_id_fk', $sRow->id)->first();
+            $sRow2->pro_sdate = $request->pro_sdate;
+            $sRow2->pro_edate = $request->pro_edate;
+            $sRow2->save();
+             
           }
 
     }
@@ -3624,25 +3630,123 @@ class AjaxController extends Controller
       if($request->ajax()){
 
           $rs =  DB::select(" 
-                SELECT concat(url,'/',file) as file_path ,type,file
+                SELECT
+                register_files.id,
+                register_files.business_location_id_fk,
+                register_files.branch_id_fk,
+                register_files.customer_id,
+                register_files.type,
+                register_files.url,
+                register_files.file,
+                register_files.`comment`,
+                register_files.`status`,
+                register_files.regis_status,
+                register_files.approve_date,
+                register_files.approver,
+                register_files.item_checked,
+                register_files.created_at,
+                register_files.updated_at,
+                register_files.deleted_at,
+                concat(url,'/',file) AS file_path,
+                customers.user_name,
+                concat(
+                customers.user_name,' : ',
+                customers.prefix_name,
+                customers.first_name,' ',
+                customers.last_name) as cus_name,
+                customers.id_card,
+                customers_detail.bank_no,
+                customers_detail.bank_name
+                FROM
+                register_files
+                LEFT Join customers ON register_files.customer_id = customers.id
+                Left Join customers_detail ON register_files.customer_id = customers_detail.customer_id
+                where register_files.id= '".$request->id."'
+             ");
+
+            return response()->json($rs); 
+     
+      }
+
+    }
+
+
+
+  public function ajaxGetFilepath02(Request $request)
+    {
+
+      if($request->ajax()){
+
+         $rs1 =  DB::select(" 
+                SELECT
+                *
                 FROM
                 register_files
                 where id = '".$request->id."'
              ");
 
-        // if (file_exists(trim($rs[0]->file_path))) {
+          $rs =  DB::select(" 
+                SELECT
+                register_files.id,
+                register_files.business_location_id_fk,
+                register_files.branch_id_fk,
+                register_files.customer_id,
+                register_files.type,
+                register_files.url,
+                register_files.file,
+                register_files.`comment`,
+                register_files.`status`,
+                register_files.regis_status,
+                register_files.approve_date,
+                register_files.approver,
+                register_files.item_checked,
+                register_files.created_at,
+                register_files.updated_at,
+                register_files.deleted_at,
+                concat(url,'/',file) AS file_path,
+                customers.user_name,
+                concat(
+                customers.user_name,' : ',
+                customers.prefix_name,
+                customers.first_name,' ',
+                customers.last_name) as cus_name,
+                customers.id_card,
+                customers_detail.bank_no,
+                customers_detail.bank_name
+                FROM
+                register_files
+                LEFT Join customers ON register_files.customer_id = customers.id
+                Left Join customers_detail ON register_files.customer_id = customers_detail.customer_id
+                where register_files.customer_id in(".$rs1[0]->customer_id.") AND register_files.status='S' AND register_files.id<>'".$request->id."' AND register_files.item_checked=1
+             ");
+
             return response()->json($rs); 
-        // } else {
-        //     $rs =  DB::select(" SELECT NULL as file_path ");
-        //     return response()->json($rs); 
-        // }
-
-          
-
+     
       }
 
     }
 
+
+
+
+    public function ajaxGetCustomer(Request $request)
+    {
+        if($request->ajax()){
+       
+            $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
+            ->orWhere('first_name','LIKE',"%$request->txt%")
+            ->orWhere('last_name','LIKE',"%$request->txt%")
+            ->take(15)->get();
+
+            $response = array();
+            foreach ($query as $key => $value) {
+                $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
+            }
+
+            return json_encode($response);
+
+           }
+    }    
 
 
 

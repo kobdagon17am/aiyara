@@ -41,6 +41,10 @@
         <script src="{{ URL::asset('backend/libs/select2/select2.min.js')}}"></script>
         <script>
               $('.select2-templating').select2();
+              // $(".select2-templating").select2({
+              //    minimumInputLength: 2,
+              //    allowClear: true,
+              // });
         </script>  
 
         <script type="text/javascript">
