@@ -3,6 +3,7 @@
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/bower_components/jstree/css/style.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/pages/treeview/treeview.css')}}">
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/genealogy.css') }}">
 <style type="text/css">
   .fa-a:before {
     font-weight: bold;
@@ -243,217 +244,180 @@
             {{--    ///////////////////////////////////////////////////////////////////////////// --}}
 
 
-            <div class="tab-pane bg-tree" id="board" role="tabpanel">
-              <div class="row" align="center">
-                <div class="col-lg-4">
-                </div>
-                @if($data['lv1'])
+            <div class="tab-pane" id="board" role="tabpanel">
 
-                <div class="col-lg-4">
-                  <div class="card widget-statstic-card borderless-card">
-                    <div class="card-block">
-                      @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
-                      <i class="fa fa-group st-icon bg-success"></i>
-                      @else
-                      <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px"><b>{{$data['lv1']->line_type}}</b></i>
-                      @endif
-                      <div class="usre-image">
-                        @if($data['lv1']->profile_img)
-                        <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/profile_customer/'.$data['lv1']->profile_img)}}" alt="User-Profile-Image">
-                        </span>
-                        @else
-                        <span onclick="modal_tree({{ $data['lv1']->id }})"><img class="img-radius zoom" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                        </span>
-                        @endif
-
-                      </div>
-                      <h6 class="f-w-600 m-t-15 m-b-10">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
-                      <p class="text-muted">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif</p>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                @else
-                <!-- กรณีไม่มีข้อมูล -->
-                <div class="col-lg-4">
-                  <div class="card widget-statstic-card borderless-card">
-                    <div class="card-block">
-                      <i class="fa fa-line-chart st-icon btn-warning"></i>
-                      <div class="usre-image">
-                        <img src="{{asset('frontend/assets/icon/add_user.png')}}" class="img-radius zoom" alt="User-Profile-Image">
-                      </div>
-                            <!-- <h6 class="f-w-600 m-t-15 m-b-10">Alessa Robert</h6>
-                              <p class="text-muted">Active | Male | Born 23.05.1992</p> -->
+              <div class="body genealogy-body genealogy-scroll">
+                <div class="genealogy-tree">
+                  <ul>
+                    <li>
+                        @if ($data['lv1'])
+                          <a href="javascript:void(0);" onclick="modal_tree({{ $data['lv1']->id }})">
+                            <div class="member-view-box">
+                                <div class="member-image">
+                                    @if($data['lv1']->profile_img)
+                                      <img src="{{ asset('local/public/profile_customer/'.$data['lv1']->profile_img) }}" alt="Member">
+                                    @else 
+                                      <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
+                                    @endif
+                                    <div class="member-details">
+                                        <h6 class="f-w-600 m-t-15">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
+                                        <p class="text-muted">
+                                          @if ($data['lv1']->business_name)
+                                              {{ $data['lv1']->business_name }}
+                                          @endif
+                                        </p>
+                                    </div>
+                                  </div>
                             </div>
-                          </div>
-
-                        </div>
+                          </a>
                         @endif
-                        <div class="col-lg-4">
-                        </div>
-                      </div>
 
-                      <div class="verticalLine"></div>
-
-                      <div class="row text-center">
-                       @for($i=1;$i<=3;$i++)
-                       <?php
-                       if($i==1){
-                        $data_lv2 =$data['lv2_a'];
-                        $model_lv2 = 'lv2_a';
-                        $type = 'a';
-                        $line_lv2 = 'A';
-                      }elseif($i==2){
-                        $data_lv2 =$data['lv2_b'];
-                        $model_lv2 = 'lv2_b';
-                        $type = 'b';
-                        $line_lv2 = 'B';
-                      }elseif($i==3){
-                        $data_lv2 =$data['lv2_c'];
-                        $model_lv2 = 'lv2_c';
-                        $type = 'c';
-                        $line_lv2 = 'C';
-                      }else{
-                        $data_lv2 = null;
-                        $model_lv2 = null;
-                        $line_lv2 = null;
-                      }
-
-                      ?>
-
-
-                      @if($data_lv2)
-                      <div class="col-lg-4">
-                        <div class="card widget-statstic-card borderless-card">
-                         <div class="card-block">
-                          <i class="st-icon bg-primary" style="padding: 34px 43px 12px 28px"><b>{{$line_lv2}}</b></i>
-                          <div class="usre-image">
-
-                            @if($data_lv2->profile_img)
-                            <span onclick="modal_tree({{ $data_lv2->id }})"><img class="img-radius img-80 zoom" src="{{asset('local/public/profile_customer/'.$data_lv2->profile_img)}}" alt="User-Profile-Image">
-                            </span>
-                            @else
-                            <span href="#" onclick="modal_tree({{ $data_lv2->id }})"><img class="img-radius img-80 zoom" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                            </span>
-                            @endif
-                          </div>
-
-
-
-                          <h6 class="f-w-600 m-t-15 m-b-10">สาย {{$line_lv2}} : {{$data_lv2->user_name}} </h6>
-                          <p class="text-muted m-t-15">@if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</p>
-
-
-                          <hr>
-                          <div class="row text-center">
-                           @for($j=1;$j<=3;$j++)
-                           <?php
-                           if($j==1){
-                            $data_lv3 =$data['lv3_'.$type.'_a'];
-                            $model_lv3 = 'lv3_'.$type.'_a';
-                            $line_lv3 = 'A';
-                          }elseif($j==2){
-                            $data_lv3 =$data['lv3_'.$type.'_b'];
-                            $model_lv3 = 'lv3_'.$type.'_b';
-                            $line_lv3 = 'B';
-                          }elseif($j==3){
-                            $data_lv3 =$data['lv3_'.$type.'_c'];
-                            $model_lv3 = 'lv3_'.$type.'_c';
-                            $line_lv3 = 'C';
-                          }else{
-                            $data_lv3 = null;
-                            $model_lv3 = null;
-                            $line_lv3 = null;
-                          }
-
-                          ?>
-                          @if($data_lv3)
-
-
-                          <div class="col-auto col-sm-4 col-4 text-center">
-                            @if($data_lv2->profile_img)
-                            <a onclick="modal_tree({{ $data_lv3->id }})">
-                              <img class="img-radius zoom img-fluid" width="60" src="{{asset('local/public/profile_customer/'.$data_lv3->profile_img)}}" alt="User-Profile-Image">
-                            </a>
-                            @else
-                            <a onclick="modal_tree({{ $data_lv3->id }})">
-                              <img class="img-radius zoom img-fluid" width="60" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
-                            </a>
-                            @endif
-
-
-                            <h6 class="m-t-15 m-b-0" style="font-size: 13px">สาย {{$line_lv3}}<br>{{$data_lv3->user_name}}</h6>
-                          </div>
-
-
-                          @else
-                          @if($data_lv2)
-                          <div class="col-auto col-sm-4 col-4 text-center">
-
-
-                           <a onclick="modal_add({{$data_lv2->id}},'{{$line_lv3}}')"><img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img" class="img-radius img-60 zoom"></a>
-
-                           <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{$line_lv3}} </h6>
-                           <!-- <p class="text-muted m-b-0"><small>PNG-100KB</small></p> -->
-
-                         </div>
-                         @else
-                         <div class="col-auto text-center">
-                          <img src="frontend/assets/images/avatar-4.jpg" alt="img" class="img-radius img-60 zoom">
-                          <h6 class="m-t-15 m-b-0" style="font-size: 13px">สาย {{$line_lv3}}</h6>
-
-                        </div>
-                        @endif
-                        @endif
+                      <ul class="active">
+                        @for ($i = 1; $i <= 3; $i++)
+                            @php
+                                if($i == 1) {
+                                  $data_lv2 = $data['lv2_a'];
+                                  $model_lv2 = 'lv2_a';
+                                  $type = 'a';
+                                  $line_lv2 = 'A';
+                                } elseif ($i == 2) {
+                                  $data_lv2 = $data['lv2_b'];
+                                  $model_lv2 = 'lv2_b';
+                                  $type = 'b';
+                                  $line_lv2 = 'B';
+                                } elseif($i == 3) { 
+                                  $data_lv2 = $data['lv2_c'];
+                                  $model_lv2 = 'lv2_c';
+                                  $type = 'c';
+                                  $line_lv2 = 'C';
+                                } else {
+                                  $data_lv2 = null;
+                                  $model_lv2 = null;
+                                  $line_lv2 = null;
+                                }
+                            @endphp
+                            <li>
+                              @if ($data_lv2)
+                                <a href="javascript:void(0);" onclick="modal_tree({{ $data_lv2->id }})">
+                                  <div class="member-view-box">
+                                      <div class="member-image">
+                                          @if ($data_lv2->profile_img)
+                                            <img src="{{ asset('local/public/profile_customer/'.$data_lv2->profile_img) }}" alt="Member">
+                                          @else
+                                            <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
+                                          @endif
+                                          <div class="member-details">
+                                            <h6 class="f-w-600 m-t-15">สาย {{ $line_lv2 }} : {{ $data_lv2->user_name }}</h6>
+                                            <p class="text-muted">
+                                              @if($data_lv2->business_name)
+                                                {{ $data_lv2->business_name }}
+                                              @else 
+                                                {{ $data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} 
+                                              @endif
+                                            </p>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </a>
+                              @else
+                                <a href="javascript:void(0);" onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')">
+                                  <div class="member-view-box">
+                                    <div class="member-image">
+                                      <img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img">
+                                        <div class="member-details">
+                                          <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{ $line_lv2 }}</h6>
+                                          <p class="text-muted">
+                                            ภายใต้ : 
+                                            @if($data['lv1']->business_name)
+                                              {{ $data['lv1']->business_name }}
+                                            @else 
+                                              {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} 
+                                            @endif 
+                                          </p>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </a>
+                              @endif
+                              <ul class="active leg-three">
+                                @for ($j = 1; $j <= 3; $j++)
+                                  @php
+                                    if($j == 1) {
+                                      $data_lv3 = $data['lv3_'.$type.'_a'];
+                                      $model_lv3 = 'lv3_'.$type.'_a';
+                                      $line_lv3 = 'A';
+                                    } elseif ($j == 2) {
+                                      $data_lv3 = $data['lv3_'.$type.'_b'];
+                                      $model_lv3 = 'lv3_'.$type.'_b';
+                                      $line_lv3 = 'B';
+                                    } elseif ($j == 3) {
+                                      $data_lv3 = $data['lv3_'.$type.'_c'];
+                                      $model_lv3 = 'lv3_'.$type.'_c';
+                                      $line_lv3 = 'C';
+                                    } else {
+                                      $data_lv3 = null;
+                                      $model_lv3 = null;
+                                      $line_lv3 = null;
+                                    }   
+                                  @endphp
+                                  <li>
+                                    @if ($data_lv3)
+                                      <a href="javascript:void(0);" onclick="modal_tree({{ $data_lv3->id }})">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                @if ($data_lv3->profile_img)
+                                                  <img src="{{ asset('local/public/profile_customer/'.$data_lv3->profile_img) }}" alt="Member">
+                                                @else
+                                                  <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
+                                                @endif
+                                                <div class="member-details">
+                                                  <h6 class="f-w-600 m-t-15">สาย {{ $line_lv3 }} : {{ $data_lv3->user_name }}</h6>
+                                                  <p class="text-muted">
+                                                    @if($data_lv3->business_name)
+                                                      {{ $data_lv3->business_name }}
+                                                    @else 
+                                                      {{ $data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} 
+                                                    @endif
+                                                  </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </a>
+                                    @else
+                                      @if ($data_lv2)
+                                        <a href="javascript:void(0);" onclick="modal_add({{ $data_lv2->id }},'{{ $line_lv3 }}')">
+                                          <div class="member-view-box">
+                                              <div class="member-image">
+                                                <img src="{{ asset('frontend/assets/icon/add_user.png') }}" alt="img" class="img-radius img-60 zoom">
+                                                <div class="member-details">
+                                                  <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{ $line_lv3 }} </h6>
+                                                </div>
+                                              </div>
+                                          </div>
+                                        </a>
+                                      @else
+                                        <a href="javascript:void(0);" style="cursor: not-allowed;">
+                                          <div class="member-view-box">
+                                              <div class="member-image">
+                                                <img src="{{ asset('frontend/assets/icon/add_user_not.png') }}" alt="img" class="img-radius img-60">  
+                                                <div class="member-details">
+                                                  <h6 class="m-t-15 m-b-0">สาย {{ $line_lv3 }}</h6>
+                                                </div>
+                                              </div>
+                                          </div>
+                                        </a>
+                                      @endif
+                                    @endif
+                                  </li>
+                                @endfor
+                              </ul>
+                            </li>
                         @endfor
-                      </div>
-                    </div>
-                  </div>
-                  <br>
+                      </ul>
+                    </li>
+                  </ul>
                 </div>
-                @else
-                <div class="col-lg-4">
-                  <div class="card widget-statstic-card borderless-card">
-                   <div class="card-block">
-                    <i class="st-icon bg-success" style="padding: 34px 43px 12px 28px;background-color:#666 !important"><b>{{$line_lv2}}</b></i>
-                    <div class="text-center">
-                     <span onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')">
-                      <img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img" class="img-radius img-80 zoom">
-                    </span>
-
-
-                  </div>
-                  <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{$line_lv2}}</h6>
-                  <p class="text-muted">ภายใต้ : @if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} @endif </p>
-
-                  <hr>
-                  <div class="row ml-auto text-center"  align="center">
-                   <div class="col-sm-4 col-4 text-center">
-                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
-                    <h6 class="m-t-15 m-b-0">สาย A </h6>
-
-                  </div>
-                  <div class="col-sm-4 col-4 text-center">
-                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
-                    <h6 class="m-t-15 m-b-0">สาย B </h6>
-
-                  </div>
-                  <div class="col-sm-4 col-4 text-center">
-                    <img src="{{asset('frontend/assets/icon/add_user_not.png')}}" alt="img" class="img-radius img-60">
-                    <h6 class="m-t-15 m-b-0">สาย C </h6>
-
-                  </div>
-                </div>
-
-
               </div>
-            </div>
-            <br>
-          </div>
-          @endif
-          @endfor
         </div>
       </div>
 
