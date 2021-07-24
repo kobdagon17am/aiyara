@@ -57,28 +57,28 @@
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/18" target="_blank" >
+          <a href="{{ $url }}/aiyarashop/product-detail/2/18/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-07.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/14" target="_blank" >
+          <a href="{{ $url }}/aiyarashop/product-detail/2/14/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-08.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/17" target="_blank" >
+          <a href="{{ $url }}/aiyarashop/product-detail/2/17/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-09.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/19" target="_blank" >
+          <a href="{{ $url }}/aiyarashop/product-detail/2/19/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-10.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
               </a>
@@ -99,28 +99,28 @@
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura.png') }}" class="img-fluid" alt="Responsive image">
                 <h2>1,550 บาท</h2>
 
-                <a class="btn btn-success btn-md" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/18" target="_blank" style="font-size: 23px"> สั่งซื้อ </a>
+                <a class="btn btn-success btn-md" href="{{ $url }}/aiyarashop/product-detail/2/18/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/Aimmura X+Box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>3,000 บาท</h2>
 
-                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/14" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="{{ $url }}/aiyarashop/product-detail/2/14/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura-E_box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>1,900 บาท</h2>
 
-                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/17" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="{{ $url }}/aiyarashop/product-detail/2/17/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
 
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura-V_box.png') }}" class="img-fluid"
                     alt="Responsive image">
                 <h2>2,000 บาท</h2>
-                <p><a class="btn btn-success" href="https://v3.aiyara.co.th/aiyarashop/product-detail/2/19" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success" href="{{ $url }}/aiyarashop/product-detail/2/19/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
 
