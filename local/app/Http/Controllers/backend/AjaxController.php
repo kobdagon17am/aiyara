@@ -3734,18 +3734,36 @@ class AjaxController extends Controller
     public function ajaxGetCustomer(Request $request)
     {
         if($request->ajax()){
-       
-            $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
-            ->orWhere('first_name','LIKE',"%$request->txt%")
-            ->orWhere('last_name','LIKE',"%$request->txt%")
-            ->take(15)->get();
+            
+            // สำหรับกรณี Autocomplete
+            // $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
+            // ->orWhere('first_name','LIKE',"%$request->txt%")
+            // ->orWhere('last_name','LIKE',"%$request->txt%")
+            // ->take(15)->get();
+            // $response = array();
+            // foreach ($query as $key => $value) {
+            //     $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
+            // }
+            // return json_encode($response);
 
-            $response = array();
-            foreach ($query as $key => $value) {
-                $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->orderBy('user_name', 'asc')
+                ->get();
             }
-
-            return json_encode($response);
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
 
            }
     }    

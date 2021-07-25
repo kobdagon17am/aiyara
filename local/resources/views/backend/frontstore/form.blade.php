@@ -214,11 +214,11 @@
 
                                        @else
 
-                                        <!--  <select id="customers_id_fk" name="customers_id_fk" class="form-control customers_id_fk_select2 " required >
-                                         </select> -->
+                                         <select id="customers_id_fk" name="customers_id_fk" class="form-control" required >
+                                         </select> 
 
-                                           <input type="text" class="form-control customer " id="customer" name="customer" >
-                                           <input type="hidden" id="customers_id_fk" name="customers_id_fk"  >
+                                           <!-- <input type="text" class="form-control customer " id="customer" name="customer" > -->
+                                           <!-- <input type="hidden" id="customers_id_fk" name="customers_id_fk"  > -->
 
                                        @endif
 
@@ -4648,27 +4648,7 @@ $(document).ready(function() {
             $(document).on('click', '.btnBack', function(event) {
                localStorage.clear();
             });
-
-
-            // $('.customers_id_fk_select2').select2({
-            //       minimumInputLength: 2,
-            //       allowClear: true,
-            //       ajax: {
-            //        type:'POST',
-            //        url: " {{ url('backend/ajaxGetCustomer') }} ",
-            //        data: { _token: '{{csrf_token()}}', txt:$(this).val() },
-            //        processResults: function (data) {
-            //                console.log(data);
-
-            //           },
-
-            //     }
-
-            // });
-
-
         });
-
 
 		</script>
 
@@ -4680,44 +4660,71 @@ $(document).ready(function() {
 <!-- jQuery UI -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <script type="text/javascript">
-$( function() {
 
- // Single Select
- $( "#customer" ).autocomplete({
-       source: function( request, response ) {
-   // Fetch data
-         $(".myloading").show();
-         var txt = $('#customer').val();
-         // console.log(txt);
-         $.ajax({
-          url: " {{ url('backend/ajaxGetCustomer') }} ",
-          method: "post",
-          dataType: "json",
-          data: {
-            txt:txt,
-            "_token": "{{ csrf_token() }}",
-          },
-          success:function(data){
-             console.log(data);
-             response( data );
-             $(".myloading").hide();
+    // $( function() {
+    //  // สำหรับกรณี Autocomplete
+    //  $( "#customer" ).autocomplete({
+    //        source: function( request, response ) {
+    //          $(".myloading").show();
+    //          var txt = $('#customer').val();
+    //          $.ajax({
+    //           url: " {{ url('backend/ajaxGetCustomer') }} ",
+    //           method: "post",
+    //           dataType: "json",
+    //           data: {
+    //             txt:txt,
+    //             "_token": "{{ csrf_token() }}",
+    //           },
+    //           success:function(data){
+    //              console.log(data);
+    //              response( data );
+    //              $(".myloading").hide();
 
-              $.each(data, function( index, value ) {
-                    $('#customers_id_fk').val(value.id);
-               });
-          }
-         });
-        },
+    //               $.each(data, function( index, value ) {
+    //                     $('#customers_id_fk').val(value.id);
+    //                });
+    //           }
+    //          });
+    //         },
 
-       });
+    //        });
 
-
- });
+    //  });
 
 
 </script>
 
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
 
+      $("#customers_id_fk").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: 'Select',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
 @endsection
 
