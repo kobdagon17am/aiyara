@@ -1,6 +1,3 @@
-@php
-@include(app_path() . '\Models\MyFunction.php');
-@endphp
 <style>
 @font-face{
  font-family:  'THSarabunNew';
@@ -236,6 +233,7 @@ tr.border_bottom td {
 </style>
 <?php
 
+require(app_path().'/Models/MyFunction.php');
 
 $value = DB::select("
                     SELECT
@@ -496,7 +494,7 @@ $value = DB::select("
       </td>
       <td style="width:10%;vertical-align: top;font-weight: bold;" >
         เลขที่ / No. <?=@$value->invoice_code?><br>
-        วันที่ / Date <?=ThDate01(@$sRow->action_date)?>
+        วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
       </td>
       <td style="width:10%;vertical-align: top;" >
           <br>

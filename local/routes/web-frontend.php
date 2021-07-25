@@ -39,7 +39,8 @@ Route::get('login', function () {
 });
 
 Route::get('/admin_access/{username}', 'Frontend\LoginController@forceLogin')
-  ->middleware('auth:admin');
+  ->middleware('auth:admin')
+  ->name('admin.access');
 
 Route::get('register_success', function () {
   return view('frontend/register_success');
