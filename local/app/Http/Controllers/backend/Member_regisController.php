@@ -21,6 +21,8 @@ class Member_regisController extends Controller
        $filetype = DB::select(" SELECT * FROM `dataset_regis_filetype` ");
        $regis_doc_status = DB::select(" SELECT * FROM `dataset_regis_doc_status` ");
 
+       // dd($regis_doc_status);
+
         $customer = DB::select(" SELECT
               customers.user_name AS cus_code,
               customers.prefix_name,
@@ -126,13 +128,14 @@ class Member_regisController extends Controller
 
               $sRow = \App\Models\Backend\Member_regis::find(request('id'));
 
+              // dd($sRow);
+
               $sRow->regis_doc_status    = request('regis_status');
               $sRow->approver    = \Auth::user()->id;
               $sRow->approve_date    = date("Y-m-d");
               $sRow->comment    = request('comment');
               $sRow->item_checked    = 1 ;
               $sRow->save();
-
 
 // customers
 //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
@@ -141,7 +144,19 @@ class Member_regisController extends Controller
 //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
 
               $Customers = \App\Models\Backend\Customers::find($sRow->customer_id);
-              $Customers->regis_doc1_status = request('regis_status');
+              if(request('type')==1){
+                 $Customers->regis_doc1_status = request('regis_status');
+              }
+              if(request('type')==2){
+                $Customers->regis_doc2_status = request('regis_status');
+              }
+              if(request('type')==3){
+                $Customers->regis_doc3_status = request('regis_status');
+              }
+              if(request('type')==4){
+                $Customers->regis_doc4_status = request('regis_status');
+              }
+              
               $Customers->save();
        
          }
@@ -235,12 +250,12 @@ class Member_regisController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('branch', function($row) {
-         if ($row->branch_id_fk) {
-            $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-         }
-        return isset($sD) ? $sD[0]->b_name : '';
-      })
+      // ->addColumn('branch', function($row) {
+      //    if ($row->branch_id_fk) {
+      //       $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+      //    }
+      //   return isset($sD) ? $sD[0]->b_name : '';
+      // })
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
@@ -260,14 +275,103 @@ class Member_regisController extends Controller
         return isset($c) ? $c[0]->name : ''; 
       })
       ->addColumn('regis_status', function($row) {
-        if($row->regis_doc_status=="1"){
-          return 'ผ่าน';
-        }else if($row->status=="2"){
-          return 'ไม่ผ่าน';
-        }else{
-          return 'รอตรวจสอบ';
+        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
+        //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        $Customers = \App\Models\Backend\Customers::find($row->customer_id);
+        if($row->type==1){
+          if($Customers->regis_doc1_status=="1"){
+            return 'ผ่าน';
+          }elseif($Customers->regis_doc1_status=="2"){
+            return 'ไม่ผ่าน';
+          }else{
+             return 'รอตรวจสอบ';
+          }
         }
+
+        if($row->type==2){
+          if($Customers->regis_doc2_status=="1"){
+            return 'ผ่าน';
+          }elseif($Customers->regis_doc2_status=="2"){
+            return 'ไม่ผ่าน';
+          }else{
+             return 'รอตรวจสอบ';
+          }
+        }
+
+        if($row->type==3){
+          if($Customers->regis_doc3_status=="1"){
+            return 'ผ่าน';
+          }elseif($Customers->regis_doc3_status=="2"){
+            return 'ไม่ผ่าน';
+          }else{
+             return 'รอตรวจสอบ';
+          }
+        }
+
+        if($row->type==4){
+          if($Customers->regis_doc4_status=="1"){
+            return 'ผ่าน';
+          }elseif($Customers->regis_doc4_status=="2"){
+            return 'ไม่ผ่าน';
+          }else{
+             return 'รอตรวจสอบ';
+          }
+        }
+
       })
+// เอาไว้ไปเช็คในตาราง Datatable สมาชิกลงทะเบียน ตรวจเอกสาร
+      ->addColumn('regis_status_02', function($row) {
+        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
+        //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        $Customers = \App\Models\Backend\Customers::find($row->customer_id);
+        if($row->type==1){
+          if($Customers->regis_doc1_status=="1"){
+            return 'S';
+          }elseif($Customers->regis_doc1_status=="2"){
+            return 'F';
+          }else{
+             return 'W';
+          }
+        }
+
+        if($row->type==2){
+          if($Customers->regis_doc2_status=="1"){
+            return 'S';
+          }elseif($Customers->regis_doc2_status=="2"){
+            return 'F';
+          }else{
+             return 'W';
+          }
+        }
+
+        if($row->type==3){
+          if($Customers->regis_doc3_status=="1"){
+            return 'S';
+          }elseif($Customers->regis_doc3_status=="2"){
+            return 'F';
+          }else{
+             return 'W';
+          }
+        }
+
+        if($row->type==4){
+          if($Customers->regis_doc4_status=="1"){
+            return 'S';
+          }elseif($Customers->regis_doc4_status=="2"){
+            return 'F';
+          }else{
+             return 'W';
+          }
+        }
+
+      })
+
       ->addColumn('icon', function($row) {
           $filetype = DB::select(" select * from dataset_regis_filetype where id=".$row->type." ");
           if($filetype){
@@ -282,240 +386,235 @@ class Member_regisController extends Controller
     public function Datatable02(Request $req){
 
         // dd($req);
+        // customers
+        //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        // dataset_regis_doc_status
+        // 1=ยืนยันตัวตนแล้ว,2=ยังไม่ยืนยันตัวตน,3=ผ่านแล้วบางรายการ,4=เอกสารไม่ผ่าน
+
+        // กรณี 1=ยืนยันตัวตนแล้ว ผ่าน 3 รายการแรก หลัก ก็ถือว่าผ่าน  
+        $case_ok = DB::select("
+        SELECT customer_id FROM `register_files` where customer_id in 
+        (
+        SELECT
+        customers.id
+        FROM
+        customers WHERE regis_doc1_status=1 AND  regis_doc2_status=1 AND  regis_doc3_status=1
+        )
+        group by customer_id
+        ");
+
+        $arr_case_ok = [0];
+        if($case_ok){
+          foreach ($case_ok as $key => $value) {
+             array_push($arr_case_ok, $value->customer_id);
+          }
+        }
+         $arr_case_ok = implode(",", $arr_case_ok);
+
+        // กรณี 2=ยังไม่ยืนยันตัวตน
+        $case_nosend = DB::select("
+        SELECT customer_id FROM `register_files` where customer_id in 
+        (
+        SELECT
+        customers.id
+        FROM
+        customers WHERE regis_doc1_status=0 AND  regis_doc2_status=0 AND  regis_doc3_status=0 AND  regis_doc4_status=0
+        )
+        group by customer_id
+        ");
+
+        $arr_case_nosend = [0];
+        if($case_nosend){
+          foreach ($case_nosend as $key => $value) {
+             array_push($arr_case_nosend, $value->customer_id);
+          }
+        }
+         $arr_case_nosend = implode(",", $arr_case_nosend);
 
 
-// customers
-//   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+        // กรณี 3=ผ่านแล้วบางรายการ
+        $case_somepass = DB::select("
+        SELECT customer_id FROM `register_files` where customer_id in 
+        (
+        SELECT
+        customers.id
+        FROM
+        customers WHERE regis_doc1_status=1 OR  regis_doc2_status=1 OR  regis_doc3_status=1 OR  regis_doc4_status=1
+        )
+        group by customer_id
+        ");
+
+        $arr_case_somepass  = [0];
+        if($case_somepass ){
+          foreach ($case_somepass  as $key => $value) {
+             array_push($arr_case_somepass , $value->customer_id);
+          }
+        }
+         $arr_case_somepass  = implode(",", $arr_case_somepass );
 
 
-    // dataset_regis_doc_status
-    // 1=ยืนยันตัวตนแล้ว,2=ยังไม่ยืนยันตัวตน,3=ผ่านแล้วบางรายการ,4=เอกสารไม่ผ่าน
+        // กรณี 4=เอกสารไม่ผ่าน 
+        $case_nopass = DB::select("
+        SELECT customer_id FROM `register_files` where customer_id in 
+        (
+        SELECT
+        customers.id
+        FROM
+        customers WHERE regis_doc1_status=2 AND regis_doc2_status=2 AND regis_doc3_status=2 
+        )
+        group by customer_id
+        ");
 
-// กรณี 1=ยืนยันตัวตนแล้ว ผ่าน 3 รายการแรก หลัก ก็ถือว่าผ่าน  
-$case_ok = DB::select("
-SELECT customer_id FROM `register_files` where customer_id in 
-(
-SELECT
-customers.id
-FROM
-customers WHERE regis_doc1_status=1 AND  regis_doc2_status=1 AND  regis_doc3_status=1
-)
-group by customer_id
-");
-
-$arr_case_ok = [0];
-if($case_ok){
-  foreach ($case_ok as $key => $value) {
-     array_push($arr_case_ok, $value->customer_id);
-  }
-}
- $arr_case_ok = implode(",", $arr_case_ok);
+        $arr_case_nopass  = [0];
+        if($case_nopass ){
+          foreach ($case_nopass  as $key => $value) {
+             array_push($arr_case_nopass , $value->customer_id);
+          }
+        }
+         $arr_case_nopass  = implode(",", $arr_case_nopass );
 
 
-// กรณี 2=ยังไม่ยืนยันตัวตน
-$case_nosend = DB::select("
-SELECT customer_id FROM `register_files` where customer_id in 
-(
-SELECT
-customers.id
-FROM
-customers WHERE regis_doc1_status=0 AND  regis_doc2_status=0 AND  regis_doc3_status=0 AND  regis_doc4_status=0
-)
-group by customer_id
-");
-
-$arr_case_nosend = [0];
-if($case_nosend){
-  foreach ($case_nosend as $key => $value) {
-     array_push($arr_case_nosend, $value->customer_id);
-  }
-}
- $arr_case_nosend = implode(",", $arr_case_nosend);
-
-
-// กรณี 3=ผ่านแล้วบางรายการ
-$case_somepass = DB::select("
-SELECT customer_id FROM `register_files` where customer_id in 
-(
-SELECT
-customers.id
-FROM
-customers WHERE regis_doc1_status=1 OR  regis_doc2_status=1 OR  regis_doc3_status=1 OR  regis_doc4_status=1
-)
-group by customer_id
-");
-
-$arr_case_somepass  = [0];
-if($case_somepass ){
-  foreach ($case_somepass  as $key => $value) {
-     array_push($arr_case_somepass , $value->customer_id);
-  }
-}
- $arr_case_somepass  = implode(",", $arr_case_somepass );
-
-
-// กรณี 4=เอกสารไม่ผ่าน 
-$case_nopass = DB::select("
-SELECT customer_id FROM `register_files` where customer_id in 
-(
-SELECT
-customers.id
-FROM
-customers WHERE regis_doc1_status=2 AND regis_doc2_status=2 AND regis_doc3_status=2 
-)
-group by customer_id
-");
-
-$arr_case_nopass  = [0];
-if($case_nopass ){
-  foreach ($case_nopass  as $key => $value) {
-     array_push($arr_case_nopass , $value->customer_id);
-  }
-}
- $arr_case_nopass  = implode(",", $arr_case_nopass );
-
-
-        if(!empty($req->regis_doc_status)){
-          if($req->regis_doc_status==1){
-             $w02 = " AND customer_id in ($arr_case_ok) " ;
-          }elseif($req->regis_doc_status==2){
-             $w02 = " AND customer_id in ($arr_case_nosend) " ;
-          }elseif($req->regis_doc_status==3){
-             $w02 = " AND customer_id in ($arr_case_somepass) " ;
-          }elseif($req->regis_doc_status==4){
-             $w02 = " AND customer_id in ($arr_case_nopass) " ;           
+          if(!empty($req->regis_doc_status)){
+            if($req->regis_doc_status==1){
+               $w02 = " AND customer_id in ($arr_case_ok) " ;
+            }elseif($req->regis_doc_status==2){
+               $w02 = " AND customer_id in ($arr_case_nosend) " ;
+            }elseif($req->regis_doc_status==3){
+               $w02 = " AND customer_id in ($arr_case_somepass) " ;
+            }elseif($req->regis_doc_status==4){
+               $w02 = " AND customer_id in ($arr_case_nopass) " ;           
+            }else{
+               $w02 = "";
+            }
           }else{
              $w02 = "";
           }
-        }else{
-           $w02 = "";
-        }
-// AND customer_id in (0)
+  // AND customer_id in (0)
 
-        if(!empty($req->startDate) && !empty($req->endDate)){
-           $w01 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
-        }else{
-           $w01 = "";
-        }
-
-
-      $sTable = DB::select("
-
-            SELECT id,created_at,customer_id,type,regis_doc_status,updated_at FROM `register_files` 
-            where 1
-                    ".$w01."
-                    ".$w02."
-            group by customer_id
-            ORDER BY updated_at DESC
-       
-         ");
-
-      $sQuery = \DataTables::of($sTable);
-      return $sQuery
-       ->addColumn('customer_name', function($row) {
-        if(@$row->customer_id!=''){
-          $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
-          return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
-        }else{
-          return '';
-        }
-      })
-      ->addColumn('icon', function($row) {
-
-          $icon = '';
-          $type_1 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=1 group by customer_id,type ");
-          if($type_1){
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=1 ");
-              foreach ($type_1 as $key => $value) {
-                  if($value->regis_doc_status==0){
-                      $icon .= $filetype[0]->icon;
-                  }elseif($value->regis_doc_status==1){
-                      $icon .= $filetype[0]->icon_pass;
-                  }elseif($value->regis_doc_status==2){
-                      $icon .= $filetype[0]->icon_nopass;
-                  }else{
-                      $icon .= $filetype[0]->icon_nosend;
-                  }
-              }
+          if(!empty($req->startDate) && !empty($req->endDate)){
+             $w01 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
           }else{
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=1 ");
-              $icon .= $filetype[0]->icon_nosend;
-           }
+             $w01 = "";
+          }
 
 
+        $sTable = DB::select("
 
-          $type_2 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=2 group by customer_id,type ");
-          if($type_2){
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=2 ");
-              foreach ($type_2 as $key => $value) {
-                  if($value->regis_doc_status==0){
-                      $icon .= $filetype[0]->icon;
-                  }elseif($value->regis_doc_status==1){
-                      $icon .= $filetype[0]->icon_pass;
-                  }elseif($value->regis_doc_status==2){
-                      $icon .= $filetype[0]->icon_nopass;
-                  }else{
-                      $icon .= $filetype[0]->icon_nosend;
-                  }
-              }
-           }else{
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=2 ");
-              $icon .= $filetype[0]->icon_nosend;
-           }
+              SELECT id,created_at,customer_id,type,regis_doc_status,updated_at FROM `register_files` 
+              where 1
+                      ".$w01."
+                      ".$w02."
+              group by customer_id
+              ORDER BY updated_at DESC
+         
+           ");
 
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+         ->addColumn('customer_name', function($row) {
+          if(@$row->customer_id!=''){
+            $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
+            return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+          }else{
+            return '';
+          }
+        })
+        ->addColumn('icon', function($row) {
 
-          $type_3 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=3 group by customer_id,type ");
-          if($type_3){
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=3 ");
-              foreach ($type_3 as $key => $value) {
-                  if($value->regis_doc_status==0){
-                      $icon .= $filetype[0]->icon;
-                  }elseif($value->regis_doc_status==1){
-                      $icon .= $filetype[0]->icon_pass;
-                  }elseif($value->regis_doc_status==2){
-                      $icon .= $filetype[0]->icon_nopass;
-                  }else{
-                      $icon .= $filetype[0]->icon_nosend;
-                  }
-              }
+            $icon = '';
+            $type_1 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=1 group by customer_id,type ");
+            if($type_1){
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=1 ");
+                foreach ($type_1 as $key => $value) {
+                    if($value->regis_doc_status==0){
+                        $icon .= $filetype[0]->icon;
+                    }elseif($value->regis_doc_status==1){
+                        $icon .= $filetype[0]->icon_pass;
+                    }elseif($value->regis_doc_status==2){
+                        $icon .= $filetype[0]->icon_nopass;
+                    }else{
+                        $icon .= $filetype[0]->icon_nosend;
+                    }
+                }
             }else{
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=3 ");
-              $icon .= $filetype[0]->icon_nosend;
-           }
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=1 ");
+                $icon .= $filetype[0]->icon_nosend;
+             }
 
 
-          $type_4 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=4 group by customer_id,type ");
-          if($type_4){
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=4 ");
-              foreach ($type_4 as $key => $value) {
-                  if($value->regis_doc_status==0){
-                      $icon .= $filetype[0]->icon;
-                  }elseif($value->regis_doc_status==1){
-                      $icon .= $filetype[0]->icon_pass;
-                  }elseif($value->regis_doc_status==2){
-                      $icon .= $filetype[0]->icon_nopass;
-                  }else{
-                      $icon .= $filetype[0]->icon_nosend;
-                  }
-              }
-           }else{
-              $filetype = DB::select(" select * from dataset_regis_filetype where id=4 ");
-              $icon .= $filetype[0]->icon_nosend;
-           }
 
-          return $icon;
-       
-      })
-      ->escapeColumns('icon')
-      ->addColumn('created_at', function($row) {
-          return date("Y-m-d",strtotime($row->created_at));
-      })
-      ->escapeColumns('created_at')
-      ->make(true);
-    }
+            $type_2 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=2 group by customer_id,type ");
+            if($type_2){
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=2 ");
+                foreach ($type_2 as $key => $value) {
+                    if($value->regis_doc_status==0){
+                        $icon .= $filetype[0]->icon;
+                    }elseif($value->regis_doc_status==1){
+                        $icon .= $filetype[0]->icon_pass;
+                    }elseif($value->regis_doc_status==2){
+                        $icon .= $filetype[0]->icon_nopass;
+                    }else{
+                        $icon .= $filetype[0]->icon_nosend;
+                    }
+                }
+             }else{
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=2 ");
+                $icon .= $filetype[0]->icon_nosend;
+             }
+
+
+            $type_3 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=3 group by customer_id,type ");
+            if($type_3){
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=3 ");
+                foreach ($type_3 as $key => $value) {
+                    if($value->regis_doc_status==0){
+                        $icon .= $filetype[0]->icon;
+                    }elseif($value->regis_doc_status==1){
+                        $icon .= $filetype[0]->icon_pass;
+                    }elseif($value->regis_doc_status==2){
+                        $icon .= $filetype[0]->icon_nopass;
+                    }else{
+                        $icon .= $filetype[0]->icon_nosend;
+                    }
+                }
+              }else{
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=3 ");
+                $icon .= $filetype[0]->icon_nosend;
+             }
+
+
+            $type_4 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=4 group by customer_id,type ");
+            if($type_4){
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=4 ");
+                foreach ($type_4 as $key => $value) {
+                    if($value->regis_doc_status==0){
+                        $icon .= $filetype[0]->icon;
+                    }elseif($value->regis_doc_status==1){
+                        $icon .= $filetype[0]->icon_pass;
+                    }elseif($value->regis_doc_status==2){
+                        $icon .= $filetype[0]->icon_nopass;
+                    }else{
+                        $icon .= $filetype[0]->icon_nosend;
+                    }
+                }
+             }else{
+                $filetype = DB::select(" select * from dataset_regis_filetype where id=4 ");
+                $icon .= $filetype[0]->icon_nosend;
+             }
+
+            return $icon;
+         
+        })
+        ->escapeColumns('icon')
+        ->addColumn('created_at', function($row) {
+            return date("Y-m-d",strtotime($row->created_at));
+        })
+        ->escapeColumns('created_at')
+        ->make(true);
+      }
 
 
 }

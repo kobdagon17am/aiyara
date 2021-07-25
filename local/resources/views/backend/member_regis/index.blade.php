@@ -420,7 +420,7 @@
       <form action="{{ route('backend.member_regis.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_regis" value="1" >
             <input type="hidden" id="id" name="id" value="">
-            <input type="hidden" id="type" >
+            <input type="hidden" id="type" name="type" >
             {{ csrf_field() }}
 
       <div class="modal-body">
@@ -556,10 +556,9 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
             {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
             {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
-            {data: 'regis_status', title :'<center>สถานะการอนุมัติ </center>', className: 'text-center'},
+            {data: 'regis_status', title :'<center> สถานะการอนุมัติ </center>', className: 'text-center'},
             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
             {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
@@ -570,21 +569,23 @@ $(function() {
               $('td:last-child', nRow).html('-');
           }else{ 
 
-              // $('td:last-child', nRow).html(''
-              //   + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              
-              // ).addClass('input');
+            console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+
+            if(aData['regis_status_02']=='S' && aData['item_checked']==0){
+$('td:last-child', nRow).html('-');
+
+            }else{
 
                $('td:last-child', nRow).html(''
                   + '<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'+aData['id']+'"  ><i class="bx bx-edit font-size-16 align-middle"></i> </a> '
                 ).addClass('input');
 
+            }
+
           }
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+
 });
 </script>
 
@@ -954,6 +955,7 @@ $(function() {
           event.preventDefault();
              var id = $(this).data('id');
              $('#id').val(id);
+             // console.log(id);
 
              $.ajax({
                   url: " {{ url('backend/ajaxGetFilepath') }} ",
@@ -965,7 +967,7 @@ $(function() {
                   success:function(data)
                   {
 
-                      // console.log(data);
+                      console.log(data);
 
                             $.each(data,function(key,value){
                             // if(value.file_path!=null){
