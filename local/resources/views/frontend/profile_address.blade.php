@@ -90,7 +90,9 @@
  			<div class="form-group row text-right">
  				<label class="col-sm-2"></label>
  				<div class="col-sm-10">
+          @can('can-access')
  					<button type="button" class="btn btn-primary m-b-0" data-toggle="modal" data-target="#default-Modal">บันทึก</button>
+          @endcan
  				</div>
 
  			</div>
@@ -120,8 +122,10 @@
  							</div>
  						</div>
  						<div class="modal-footer">
+              @can('can-access')
  							<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
  							<button type="submit" class="btn btn-primary waves-effect waves-light ">ยืนยันรหัสผ่าน</button>
+               @endcan
  						</div>
  					</div>
  				</div>

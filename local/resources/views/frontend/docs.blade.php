@@ -10,7 +10,7 @@
         <h4 class="sub-title"><i class="fa fa-file-text"></i> เอกสารการลงทะเบียน</h4>
       </div>
       <div class="card-block table-border-style">
-        
+
 
         <h4 class="sub-title"><i class="fa fa-upload"></i> ส่งเอกสารเพิ่มเติม</h4>
 
@@ -19,7 +19,7 @@
           @csrf
           <div class="form-group row">
 
-            <div class="col-sm-6"> 
+            <div class="col-sm-6">
              <div class="form-group row">
               <div class="col-sm-12">
                 <label>บัตรประชาชน</label>
@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="form-group row">
-              <div class="col-sm-12"> 
+              <div class="col-sm-12">
                 <label>เอกสารการสมัคร</label>
                 <input type="file" id="file_3" name="file_3" class="form-control">
               </div>
@@ -44,14 +44,14 @@
 
           <div class="col-sm-6">
            <div class="form-group row">
-            <div class="col-sm-12"> 
+            <div class="col-sm-12">
               <label>ภาพใบหน้าพร้อมถือบัตรประชาชน</label>
               <input type="file" id="file_4" name="file_4" class="form-control">
-              
-            </div>
-          </div> 
 
-          <div class="m-t-2 col-sm-12 text-center"> 
+            </div>
+          </div>
+
+          <div class="m-t-2 col-sm-12 text-center">
             <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
           </div>
         </div>
@@ -59,7 +59,9 @@
         <div class="form-group row ml-auto">
           <label class="col-sm-2"></label>
           <div class="col-sm-10">
+            @can('can-access')
             <button type="submit" class="btn btn-primary m-b-0">Upload</button>
+            @endcan
           </div>
         </div>
       </div>
@@ -116,7 +118,7 @@
               @endforeach
             </tbody>
           </table>
-        </div> 
+        </div>
 
         <hr>
         <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการคะ </p>
@@ -172,7 +174,7 @@
   // read the image file as a data URL.
   reader.readAsDataURL(this.files[0]);
 
-} 
+}
 
 
 });

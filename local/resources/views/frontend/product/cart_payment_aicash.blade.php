@@ -77,13 +77,15 @@
  											</div>
  										</div>
  										<div class="row">
+                      @can('can-access')
  											<div class="col-xs-6 p-1">
+
  												<button class="btn btn-success btn-block" type="submit" name="submit" id="submit_upload" value="upload" >อัพโหลดหลักฐานการชำระเงิน</button>
  											</div>
  											<div class="col-xs-6 p-1">
  												<button class="btn btn-primary btn-block" type="" name="submit" value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
  											</div>
-
+                       @endcan
 
  										</div>
  									</div>

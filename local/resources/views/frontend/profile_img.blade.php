@@ -8,15 +8,15 @@
      <form action="{{route('update_img_profile')}}" method="POST" enctype="multipart/form-data" id="addemployee">
         @csrf
         <div class="card user-card">
-           
+
 
             <div class="card-header-img">
               {{-- <div class="col-md-3 boxContainer" id="div-image"></div> --}}
               @if(Auth::guard('c_user')->user()->profile_img)
-         
+
               <img class="img-fluid img-radius input-image" width="300" id="div-image" src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" alt="card-img">
               @else
-              
+
                <img class="img-fluid img-radius input-image" width="300" id="div-image" src="{{asset('local/public/images/ex.png')}}" alt="card-img">
               @endif
 
@@ -29,9 +29,10 @@
             </div>
 
             <div>
+              @can('can-access')
                 <button type="button" onclick="document.getElementById('img').click()" class="btn btn-primary waves-effect waves-light m-r-15"><i class="icofont icofont-plus m-r-5"></i> เลือกรูปภาพ</button>
                 <button type="submit" id="upload" class="btn btn-success waves-effect waves-light"><i class="fa fa-upload m-r-5"></i> อัพโหลดรูปภาพ</button>
-
+                @endcan
             </div>
         </div>
     </form>

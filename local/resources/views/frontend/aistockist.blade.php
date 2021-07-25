@@ -34,12 +34,14 @@
 
                       <div class="col-md-6 m-t-5">
                         <span class="text-danger">คุณยังไม่ได้รับสิทธิ์ Ai-Stockit ไม่สามารถใช้งานฟังก์ชั่นนี้ได้</span>
+                        @can('can-access')
                         <div class="input-group input-group-button">
                             <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้" disabled>
                             <span class="input-group-addon btn btn-primary" onclick="check()">
                                 <span class="">ทำรายการ</span>
                             </span>
                         </div>
+                        @endcan
                     </div>
 
                       @endif

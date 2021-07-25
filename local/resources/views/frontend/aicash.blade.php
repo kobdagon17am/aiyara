@@ -30,6 +30,7 @@
                         <div class="col-md-6 m-t-5">
                             <form action="{{ route('cart_payment_aicash') }}" id="cart_payment_aicash" method="post">
                                 @csrf
+                                @can('can-access')
                                 <div class="input-group input-group-button">
                                     <input type="text" id="price" name="price" class="form-control autonumber"
                                         data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
@@ -37,6 +38,7 @@
                                         <span class="">ทำรายการ</span>
                                     </span>
                                 </div>
+                                @endcan
                             </form>
                         </div>
                     </div>

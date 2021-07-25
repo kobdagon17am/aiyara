@@ -124,8 +124,10 @@ use App\Models\Frontend\CourseCheckRegis;
                                         <div class="form-group row">
 
                                             <div class="col-xs-6 p-1">
+                                              @can('can-access')
                                                 <button class="btn btn-success btn-block" type="submit" name="submit"
                                                     id="submit_upload" value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
+                                              @endcan
                                             </div>
                                         </div>
 
@@ -164,9 +166,11 @@ use App\Models\Frontend\CourseCheckRegis;
                                                                         <button type="button"
                                                                             class="btn btn-default waves-effect "
                                                                             data-dismiss="modal">Close</button>
+                                                                        @can('can-access')
                                                                         <button class="btn btn-success md-auto"
                                                                             name="submit" value="PromptPay"
                                                                             type="submit">Confirm</button>
+                                                                        @endcan
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -208,9 +212,11 @@ use App\Models\Frontend\CourseCheckRegis;
                                                                         <button type="button"
                                                                             class="btn btn-default waves-effect "
                                                                             data-dismiss="modal">Close</button>
+                                                                        @can('can-access')
                                                                         <button class="btn btn-success md-auto"
                                                                             name="submit" value="TrueMoney"
                                                                             type="submit">Confirm</button>
+                                                                        @endcan
                                                                     </div>
                                                                 </div>
                                                             </div>
