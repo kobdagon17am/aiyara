@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Frontend\Fc\CancelOrderController;
-use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
-use App\Models\Frontend\Random_code;
+use PDF;
 use Auth;
 use DataTables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use PDF;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Frontend\Random_code;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Frontend\Ksher\KsherController;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
 
 class HistoryController extends Controller
 {
