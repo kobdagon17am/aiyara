@@ -252,8 +252,10 @@ class Member_regisController extends Controller
         return $filetype[0]->txt_desc;
       })
       ->addColumn('approver', function($row) {
-        $c = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
-        return $c[0]->name;
+         if ($row->approver) {
+            $c = DB::select("select * from ck_users_admin where id = ".$row->approver);
+         }
+        return isset($c) ? $c[0]->name : ''; 
       })
       ->addColumn('regis_status', function($row) {
         if($row->regis_doc_status=="1"){
