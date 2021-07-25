@@ -22,7 +22,7 @@
 
                                 </div>
                                 
-                                <a href="http://localhost/aiyara/admin_access/{{ Crypt::encryptString('A0000008') }}" target="_blank" class="btn btn-primary">A0000008</a>
+                                <a href="{{ route('admin.access', Crypt::encryptString('A0000008')) }}" target="_blank" class="btn btn-primary">A0000008</a>
                             </div>
                         </div>
                         <!-- end page title -->
