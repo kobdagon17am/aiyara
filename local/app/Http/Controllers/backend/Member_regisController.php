@@ -236,8 +236,10 @@ class Member_regisController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('branch', function($row) {
-        $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-        return $sD[0]->b_name;
+         if ($row->branch_id_fk) {
+            $sD = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+         }
+        return isset($sD) ? $sD[0]->b_name : '';
       })
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
@@ -252,8 +254,10 @@ class Member_regisController extends Controller
         return $filetype[0]->txt_desc;
       })
       ->addColumn('approver', function($row) {
-        $c = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
-        return $c[0]->name;
+         if ($row->approver) {
+            $c = DB::select("select * from ck_users_admin where id = ".$row->approver);
+         }
+        return isset($c) ? $c[0]->name : ''; 
       })
       ->addColumn('regis_status', function($row) {
         if($row->regis_doc_status=="1"){

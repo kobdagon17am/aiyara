@@ -561,7 +561,7 @@ $(function() {
             {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
             {data: 'regis_status', title :'<center>สถานะการอนุมัติ </center>', className: 'text-center'},
             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-            {data: 'approve_date', title :'<center>วันที่นุมัติ </center>', className: 'text-center'},
+            {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
             {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],

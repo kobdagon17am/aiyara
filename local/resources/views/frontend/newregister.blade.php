@@ -119,7 +119,23 @@
     @endforeach
   </select>
 </div>
+</div>
 
+<div class="form-group row">
+  <div class="col-sm-3">
+    <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
+    <input type="text" class="form-control" placeholder="โทรศัพท์มือถือ" name="tel_mobile" value="{{ old('tel_mobile') }}" required="">
+  </div>
+
+  <div class="col-sm-3">
+    <label>โทรศัพท์บ้าน</label>
+    <input type="text" class="form-control" placeholder="โทรศัพท์บ้าน" name="tel_home" value="{{ old('tel_home') }}" >
+  </div>
+
+  <div class="col-sm-3">
+    <label>Email <font class="text-danger">*</font></label>
+    <input type="text" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}" required="">
+  </div>
 </div>
 
 
@@ -186,8 +202,8 @@
   </div>
 
   <div class="col-sm-3">
-    <label>รหัสไปษณีย์</label>
-    <input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="card_zipcode" name="card_zipcode" value="{{ old('card_zipcode') }}">
+    <label>รหัสไปรษณีย์</label>
+    <input type="text" class="form-control" placeholder="รหัสไปรษณีย์" id="card_zipcode" name="card_zipcode" value="{{ old('card_zipcode') }}">
   </div>
 </div>
 
@@ -328,21 +344,6 @@
 
 <div class="form-group row">
 
- <div class="col-sm-3">
-  <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
-  <input type="text" class="form-control" placeholder="โทรศัพท์มือถือ" name="tel_mobile" value="{{ old('tel_mobile') }}" required="">
-</div>
-
-<div class="col-sm-3">
-  <label>โทรศัพท์บ้าน</label>
-  <input type="text" class="form-control" placeholder="โทรศัพท์บ้าน" name="tel_home" value="{{ old('tel_home') }}" >
-</div>
-
-<div class="col-sm-3">
-  <label>Email <font class="text-danger">*</font></label>
-  <input type="text" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}" required="">
-</div>
-
 <div class="col-sm-3">
   <label>ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล</label>
   <input type="text" class="form-control"  placeholder="ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล" name="benefit_name" value="{{ old('benefit_name') }}" >
@@ -369,21 +370,21 @@
   <div class="col-sm-6">
     <div class="form-group row">
      <div class="col-sm-12">
-      <label>บัตรประชาชน <b class="text-danger">*</b></label>
+      <label>ภาพถ่ายบัตรประชาชน <b class="text-danger">*</b></label>
       <input type="file" id="file_1" name="file_1" class="form-control" required>
     </div>
   </div>
 
   <div class="form-group row">
    <div class="col-sm-12">
-     <label>หน้าบัญชีธนาคาร </label>
-     <input type="file" id="file_2"  name="file_2" class="form-control">
+     <label>ภาพถ่ายหน้าบัญชีธนาคาร </label>
+     <input type="file" id="file_4"  name="file_4" class="form-control">
    </div>
  </div>
  <div class="form-group row">
   <div class="col-sm-12">
-   <label>เอกสารการสมัคร <b class="text-danger">*</b></label>
-   <input type="file" id="file_3" name="file_3" class="form-control" required>
+   <label>ภายถ่ายหน้าตรง <b class="text-danger">*</b></label>
+   <input type="file" id="file_2" name="file_2" class="form-control" required>
  </div>
 </div>
 
@@ -392,8 +393,8 @@
 <div class="col-sm-6">
  <div class="form-group row">
   <div class="col-sm-12">
-    <label>ภาพใบหน้าพร้อมถือบัตรประชาชน <b class="text-danger">*</b></label>
-    <input type="file" id="file_4" name="file_4" class="form-control" required>
+    <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน	 <b class="text-danger">*</b></label>
+    <input type="file" id="file_3" name="file_3" class="form-control" required>
 
   </div>
 </div>
@@ -516,7 +517,7 @@
   }
 
   $('#file_1').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -524,7 +525,7 @@
    }
  });
   $('#file_2').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -533,7 +534,7 @@
  });
 
   $('#file_3').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -542,7 +543,7 @@
  });
 
   $('#file_4').change( function () {
-    var fileExtension = ['jpg','png'];
+    var fileExtension = ['jpg','png', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';

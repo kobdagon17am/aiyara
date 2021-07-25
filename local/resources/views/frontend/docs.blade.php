@@ -22,21 +22,21 @@
             <div class="col-sm-6">
              <div class="form-group row">
               <div class="col-sm-12">
-                <label>บัตรประชาชน</label>
+                <label>ภาพถ่ายบัตรประชาชน</label>
                 <input type="file" id="file_1" name="file_1" class="form-control">
               </div>
             </div>
 
             <div class="form-group row">
               <div class="col-sm-12">
-                <label>หน้าบัญชีธนาคาร</label>
-                <input type="file" id="file_2" name="file_2" class="form-control">
+                <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                <input type="file" id="file_4" name="file_4" class="form-control">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-12">
-                <label>เอกสารการสมัคร</label>
-                <input type="file" id="file_3" name="file_3" class="form-control">
+                <label>ภายถ่ายหน้าตรง</label>
+                <input type="file" id="file_2" name="file_2" class="form-control">
               </div>
             </div>
 
@@ -45,8 +45,8 @@
           <div class="col-sm-6">
            <div class="form-group row">
             <div class="col-sm-12">
-              <label>ภาพใบหน้าพร้อมถือบัตรประชาชน</label>
-              <input type="file" id="file_4" name="file_4" class="form-control">
+              <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน</label>
+              <input type="file" id="file_3" name="file_3" class="form-control">
 
             </div>
           </div>
@@ -121,7 +121,7 @@
         </div>
 
         <hr>
-        <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการคะ </p>
+        <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการค่ะ </p>
 
 
   </div>
@@ -133,7 +133,7 @@
 @section('js')
 <script type="text/javascript">
   $('#file_1').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -141,7 +141,7 @@
    }
  });
   $('#file_2').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -150,7 +150,7 @@
  });
 
   $('#file_3').change( function () {
-    var fileExtension = ['jpg','png','pdf'];
+    var fileExtension = ['jpg','png','pdf', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
@@ -159,7 +159,7 @@
  });
 
   $('#file_4').change( function () {
-    var fileExtension = ['jpg','png'];
+    var fileExtension = ['jpg','png', 'jpeg'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
      alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
      this.value = '';
