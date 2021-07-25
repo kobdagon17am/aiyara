@@ -1,6 +1,3 @@
-@php
-@include(app_path() . '\Models\MyFunction.php');
-@endphp
 <style>
 @font-face{
  font-family:  'THSarabunNew';
@@ -235,7 +232,7 @@ tr.border_bottom td {
 
 </style>
 <?php
-
+require(app_path().'/Models/MyFunction.php');
 
 $value = DB::select("
                     SELECT * FROM db_po_supplier

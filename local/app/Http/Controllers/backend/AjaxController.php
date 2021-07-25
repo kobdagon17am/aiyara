@@ -3639,8 +3639,7 @@ class AjaxController extends Controller
                 register_files.url,
                 register_files.file,
                 register_files.`comment`,
-                register_files.`status`,
-                register_files.regis_status,
+                register_files.regis_doc_status as status,
                 register_files.approve_date,
                 register_files.approver,
                 register_files.item_checked,
@@ -3685,6 +3684,10 @@ class AjaxController extends Controller
                 where id = '".$request->id."'
              ");
 
+         // return ($request->id);
+         // return $rs1[0]->customer_id;
+
+
           $rs =  DB::select(" 
                 SELECT
                 register_files.id,
@@ -3695,8 +3698,7 @@ class AjaxController extends Controller
                 register_files.url,
                 register_files.file,
                 register_files.`comment`,
-                register_files.`status`,
-                register_files.regis_status,
+                register_files.regis_doc_status as status,
                 register_files.approve_date,
                 register_files.approver,
                 register_files.item_checked,
@@ -3717,7 +3719,7 @@ class AjaxController extends Controller
                 register_files
                 LEFT Join customers ON register_files.customer_id = customers.id
                 Left Join customers_detail ON register_files.customer_id = customers_detail.customer_id
-                where register_files.customer_id in(".$rs1[0]->customer_id.") AND register_files.status='S' AND register_files.id<>'".$request->id."' AND register_files.item_checked=1
+                where register_files.customer_id =(".$rs1[0]->customer_id.") AND register_files.regis_doc_status='1' AND register_files.id<>".$request->id." AND register_files.item_checked=1
              ");
 
             return response()->json($rs); 

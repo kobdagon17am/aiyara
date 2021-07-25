@@ -1,6 +1,3 @@
-@php
-@include(app_path() . '\Models\MyFunction.php');
-@endphp
 <style>
 
     body{
@@ -88,7 +85,8 @@
 
 </style>
 <?php 
-
+    
+    require(app_path().'/Models/MyFunction.php');
          
       $value = DB::select(" 
                   SELECT

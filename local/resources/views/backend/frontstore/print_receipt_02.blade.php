@@ -1,6 +1,3 @@
-@php
-@include(app_path() . '\Models\MyFunction.php');
-@endphp
 <style>
 
     body{
@@ -88,6 +85,8 @@
 
 </style>
 <?php
+
+    require(app_path().'/Models/MyFunction.php');
 
       $value = DB::select("
                 SELECT
@@ -311,7 +310,7 @@
         <br>
         <br>
         <br>
-        P2102100001 <br>
+         <br>
         <?=ThDate01(@$sRow->action_date)?>
       </td>
       </tr>
