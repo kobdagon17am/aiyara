@@ -378,34 +378,21 @@
                     <div class="divTableRow">
                       <?php
                       foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon_pass.' : '.$value->txt_desc.' : <font color=green>ผ่าน</font> </div>';
-                      }
-                      ?>
-                    </div>
-                    <div class="divTableRow">
-                      <?php
-                      foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon_nopass.' : '.$value->txt_desc.' : <font color=red>ไม่ผ่าน</font> </div>';
-                      }
-                      ?>
-                    </div>
-                     <div class="divTableRow">
-                      <?php
-                      foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon_nosend.' : '.$value->txt_desc.' : <font color=#ff884d>ยังไม่ส่ง</font> </div>';
-                      }
-                      ?>
-                    </div>
-                     <div class="divTableRow">
-                      <?php
-                      foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon.' : '.$value->txt_desc.' : ส่งมาแล้วรอตรวจ </div>';
+                      echo '<div class="divTableCell">'.$value->icon.' : '.$value->txt_desc.' </div>';
                       }
                       ?>
                     </div>
                   </div>
                 </div>
+
+                <div class="" style="
+                  margin-left: 1%;
+                  color: black;
+                  ">
+                  (<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง | สีเทา = รอตรวจสอบ)
                 </div>
+                            
+            </div>
 
           </div>
     <!--end Tab panes -->
