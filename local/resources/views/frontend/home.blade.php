@@ -256,7 +256,7 @@
                                 <div class="member-image">
                                     @if($data['lv1']->profile_img)
                                       <img src="{{ asset('local/public/profile_customer/'.$data['lv1']->profile_img) }}" alt="Member">
-                                    @else 
+                                    @else
                                       <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
                                     @endif
                                     <div class="member-details">
@@ -285,7 +285,7 @@
                                   $model_lv2 = 'lv2_b';
                                   $type = 'b';
                                   $line_lv2 = 'B';
-                                } elseif($i == 3) { 
+                                } elseif($i == 3) {
                                   $data_lv2 = $data['lv2_c'];
                                   $model_lv2 = 'lv2_c';
                                   $type = 'c';
@@ -307,12 +307,12 @@
                                             <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
                                           @endif
                                           <div class="member-details">
-                                            <h6 class="f-w-600 m-t-15">สาย {{ $line_lv2 }} : {{ $data_lv2->user_name }}</h6>
+                                            <h6 class="f-w-600 m-t-15"> {{ $line_lv2 }} : {{ $data_lv2->user_name }}</h6>
                                             <p class="text-muted">
                                               @if($data_lv2->business_name)
                                                 {{ $data_lv2->business_name }}
-                                              @else 
-                                                {{ $data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} 
+                                              @else
+                                                {{ $data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }}
                                               @endif
                                             </p>
                                           </div>
@@ -327,12 +327,12 @@
                                         <div class="member-details">
                                           <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{ $line_lv2 }}</h6>
                                           <p class="text-muted">
-                                            ภายใต้ : 
+                                            ภายใต้ :
                                             @if($data['lv1']->business_name)
                                               {{ $data['lv1']->business_name }}
-                                            @else 
-                                              {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }} 
-                                            @endif 
+                                            @else
+                                              {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }}
+                                            @endif
                                           </p>
                                         </div>
                                     </div>
@@ -358,7 +358,7 @@
                                       $data_lv3 = null;
                                       $model_lv3 = null;
                                       $line_lv3 = null;
-                                    }   
+                                    }
                                   @endphp
                                   <li>
                                     @if ($data_lv3)
@@ -371,12 +371,12 @@
                                                   <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
                                                 @endif
                                                 <div class="member-details">
-                                                  <h6 class="f-w-600 m-t-15">สาย {{ $line_lv3 }} : {{ $data_lv3->user_name }}</h6>
+                                                  <h6 class="f-w-600 m-t-15">{{ $line_lv3 }} : {{ $data_lv3->user_name }}</h6>
                                                   <p class="text-muted">
                                                     @if($data_lv3->business_name)
                                                       {{ $data_lv3->business_name }}
-                                                    @else 
-                                                      {{ $data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} 
+                                                    @else
+                                                      {{ $data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }}
                                                     @endif
                                                   </p>
                                                 </div>
@@ -399,7 +399,7 @@
                                         <a href="javascript:void(0);" style="cursor: not-allowed;">
                                           <div class="member-view-box">
                                               <div class="member-image">
-                                                <img src="{{ asset('frontend/assets/icon/add_user_not.png') }}" alt="img" class="img-radius img-60">  
+                                                <img src="{{ asset('frontend/assets/icon/add_user_not.png') }}" alt="img" class="img-radius img-60">
                                                 <div class="member-details">
                                                   <h6 class="m-t-15 m-b-0">สาย {{ $line_lv3 }}</h6>
                                                 </div>
@@ -420,8 +420,6 @@
               </div>
         </div>
       </div>
-
-
     </div>
   </div>
 
