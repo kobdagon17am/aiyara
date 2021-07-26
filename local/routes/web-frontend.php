@@ -14,9 +14,13 @@
 //    return view('errors.404');
 //  });
  //Clear Config cache:
-Route::get('/config-cache', function() {
-    $exitCode = Artisan::call('config:cache');
-    return '<h1>Clear Config cleared</h1>';
+
+Route::get('/clear-cache', function () {
+  $exitCode = Artisan::call('cache:clear');
+  $exitCode = Artisan::call('config:clear');
+  $exitCode = Artisan::call('view:clear');
+  // $exitCode = Artisan::call('config:cache');
+  return '<h1>Clear Config cleared</h1>';
 });
 
 Route::get('/', function () {

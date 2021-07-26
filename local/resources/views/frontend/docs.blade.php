@@ -46,7 +46,6 @@
                 </div>
               </div>
             @endif
-
           </div>
 
           <div class="col-sm-6">
@@ -56,7 +55,7 @@
                 <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน</label>
                 <input type="file" id="file_3" name="file_3" class="form-control">
               </div>
-            </div>   
+            </div>
            @endif
 
           <div class="m-t-2 col-sm-12 text-center">
