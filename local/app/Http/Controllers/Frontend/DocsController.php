@@ -16,7 +16,10 @@ class DocsController extends Controller
     	        //->where('customer_id','=',Auth::guard('c_user')->user()->id)
 		->where('customer_id','=',Auth::guard('c_user')->user()->id)
 		->get();
-		return view('frontend/docs',compact('data'));
+
+		$registeredDocs = $this->registeredDocs();
+
+		return view('frontend/docs',compact('data', 'registeredDocs'));
 	}
 
 	public function docs_upload(Request $request){
@@ -77,5 +80,15 @@ class DocsController extends Controller
 		}else{
 			return redirect('docs')->withError('Docs upload Fail');
 		}
+	}
+
+	public function registeredDocs() {
+
+		$registeredDocs = DB::table('customers')
+				->select('regis_doc1_status', 'regis_doc2_status', 'regis_doc3_status', 'regis_doc4_status')
+				->where('id', auth('c_user')->id())
+				->first();
+
+		return $registeredDocs;
 	}
 }

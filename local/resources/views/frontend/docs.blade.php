@@ -20,36 +20,44 @@
           <div class="form-group row">
 
             <div class="col-sm-6">
-             <div class="form-group row">
-              <div class="col-sm-12">
-                <label>ภาพถ่ายบัตรประชาชน</label>
-                <input type="file" id="file_1" name="file_1" class="form-control">
+             @if ($registeredDocs->regis_doc1_status !== 1)
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <label>ภาพถ่ายบัตรประชาชน</label>
+                  <input type="file" id="file_1" name="file_1" class="form-control">
+                </div>
               </div>
-            </div>
+             @endif
 
-            <div class="form-group row">
-              <div class="col-sm-12">
-                <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
-                <input type="file" id="file_4" name="file_4" class="form-control">
+            @if ($registeredDocs->regis_doc4_status !== 1)
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                  <input type="file" id="file_4" name="file_4" class="form-control">
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-12">
-                <label>ภายถ่ายหน้าตรง</label>
-                <input type="file" id="file_2" name="file_2" class="form-control">
+            @endif
+
+            @if ($registeredDocs->regis_doc2_status !== 1)
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <label>ภายถ่ายหน้าตรง</label>
+                  <input type="file" id="file_2" name="file_2" class="form-control">
+                </div>
               </div>
-            </div>
+            @endif
 
           </div>
 
           <div class="col-sm-6">
-           <div class="form-group row">
-            <div class="col-sm-12">
-              <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน</label>
-              <input type="file" id="file_3" name="file_3" class="form-control">
-
-            </div>
-          </div>
+           @if ($registeredDocs->regis_doc3_status !== 1)
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน</label>
+                <input type="file" id="file_3" name="file_3" class="form-control">
+              </div>
+            </div>   
+           @endif
 
           <div class="m-t-2 col-sm-12 text-center">
             <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
