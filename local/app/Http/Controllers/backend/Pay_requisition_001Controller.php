@@ -16,15 +16,6 @@ class Pay_requisition_001Controller extends Controller
 
     public function index(Request $request)
     {
-      // dd($request->all());
-       // $sPermission = \Auth::user()->permission ;
-       // dd($sPermission);
-
-      // dd(\Auth::user()->branch_id_fk);
-      // dd(\Auth::user()->permission);
-
-      // $menu_permit = DB::select(" select * from role_permit where role_group_id_fk=2 AND menu_id_fk=34 ");
-      // dd($menu_permit);
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();

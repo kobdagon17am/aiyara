@@ -90,7 +90,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> คะแนนสมาชิก </h4>
+            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก </h4>
         </div>
     </div>
 </div>
@@ -277,10 +277,10 @@ $(function() {
 
             }else{
 
-              // console.log(aData['user_name']);
+               console.log(aData['user_name']);
 
                $('td:last-child', nRow).html(''
-                  + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+(aData['user_name'])+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
+                  + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+aData['user_name']+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
                 ).addClass('input');
 
             }

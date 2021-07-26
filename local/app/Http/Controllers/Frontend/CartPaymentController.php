@@ -279,11 +279,11 @@ class CartPaymentController extends Controller
                         'to_customer_id' => $customer_id,
                         'transection_code' => $transection_code,
                         'set_transection_code' => date('ym'),
-                        'order_code' => $code_order,
+                        'code_order' => $code_order,
                         'pv' => $rs->pv_total,
                         'type_id' => $rs->type,
                         'status' => 'panding',
-                        'detail' => 'Payment Add Ai-Stockist',
+                        //'detail' => 'Payment Add Ai-Stockist',
                     ]
                 );
             }

@@ -19,10 +19,10 @@ class FrontstoreController extends Controller
 
     public function index(Request $request)
     {
+      // dd($request);
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
       $user_login_id = \Auth::user()->id;
-      $Frontstore = \App\Models\Backend\Frontstore::get();
       $sUser = DB::select(" select * from ck_users_admin ");
       $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (1,2) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
 
@@ -153,7 +153,7 @@ class FrontstoreController extends Controller
            }
 
 
-        $sDBFrontstoreSumCostActionUser = DB::select("
+           $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
                 db_orders.action_user,
                 ck_users_admin.`name` as action_user_name,
@@ -192,22 +192,7 @@ class FrontstoreController extends Controller
         ");
 
 
-      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
-       $Customer = DB::select(" select * from customers where id in(select customers_id_fk from db_orders) ");
-
-              $sDBFrontstoreUserAddAiCash = DB::select("
-              SELECT
-              db_add_ai_cash.action_user,ck_users_admin.`name`,
-              sum(db_add_ai_cash.aicash_amt) as sum,
-              count(*) as cnt,
-              db_add_ai_cash.created_at
-              FROM
-              db_add_ai_cash
-              Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
-              WHERE approve_status<>4
-              GROUP BY action_user
-
-        ");
+        $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
 
 
         $sDBSentMoneyDaily = DB::select("
@@ -228,7 +213,6 @@ class FrontstoreController extends Controller
 
       return View('backend.frontstore.index')->with(
         array(
-           'Customer'=>$Customer,
            'sUser'=>$sUser,
            'sApproveStatus'=>$sApproveStatus,
            'sPurchase_type'=>$sPurchase_type,
@@ -253,7 +237,6 @@ class FrontstoreController extends Controller
            'approve_status_88'=>($approve_status_88),
            'sum_price_88'=>$sum_price_88,
            'pv_88'=>$pv_88,
-
 
            'approve_status_total'=>($approve_status_total),
            'sum_price_total'=>$sum_price_total,
@@ -281,7 +264,6 @@ class FrontstoreController extends Controller
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
-      $Customer = DB::select(" select * from customers limit 10000");
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
 
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
@@ -302,7 +284,6 @@ class FrontstoreController extends Controller
 
       return View('backend.frontstore.form')->with(
         array(
-           'Customer'=>$Customer,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
@@ -376,7 +357,6 @@ class FrontstoreController extends Controller
 
       // dd($Products);
 
-      $Customer = DB::select(" select * from customers where id in(select customers_id_fk from db_orders)  ");
         /* dataset_orders_type
         1 ทำคุณสมบัติ
         2 รักษาคุณสมบัติรายเดือน
@@ -467,7 +447,6 @@ class FrontstoreController extends Controller
       return View('backend.frontstore.form')->with(
         array(
            'sRow'=>$sRow,
-           'Customer'=>$Customer,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
@@ -544,7 +523,6 @@ class FrontstoreController extends Controller
 
       ");
 
-      $Customer = DB::select(" select * from customers ");
         /* dataset_orders_type
         1 ทำคุณสมบัติ
         2 รักษาคุณสมบัติรายเดือน
@@ -651,7 +629,6 @@ class FrontstoreController extends Controller
       return View('backend.frontstore.viewdata')->with(
         array(
            'sRow'=>$sRow,
-           'Customer'=>$Customer,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
@@ -1294,8 +1271,10 @@ class FrontstoreController extends Controller
       })
       ->escapeColumns('created_at')
       ->addColumn('customer_name', function($row) {
-        $Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-        return "[".@$Customer[0]->user_name.'] <br>'.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+        if($row->customers_id_fk){
+           $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
+           return "[".@$Customer[0]->user_name.'] <br>'.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+        }
       })
       ->addColumn('purchase_type', function($row) {
         if(@$row->purchase_type_id_fk>0){

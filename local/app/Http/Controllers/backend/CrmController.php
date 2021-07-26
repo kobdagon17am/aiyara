@@ -22,7 +22,7 @@ class CrmController extends Controller
       $sMainGroup = DB::select(" select * from role_group where id<>1 ");
       $sCrm_topic = \App\Models\Backend\Crm_gettopic::get();
       $sOperator = \App\Models\Backend\Permission\Admin::get();
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.crm.form')->with(array('sCrm_topic'=>$sCrm_topic,'sOperator'=>$sOperator,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
     }
 
@@ -41,7 +41,7 @@ class CrmController extends Controller
        $operator_name = \App\Models\Backend\Permission\Admin::where('id', $sRow->operator)->get();
        $operator_name = $operator_name[0]->name;
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
 
        return View('backend.crm.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'sCrm_topic'=>$sCrm_topic,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));

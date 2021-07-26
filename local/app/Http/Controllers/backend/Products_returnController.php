@@ -22,7 +22,7 @@ class Products_returnController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.products_return.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
@@ -38,7 +38,7 @@ class Products_returnController extends Controller
        $sRow = \App\Models\Backend\Products_return::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.products_return.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
