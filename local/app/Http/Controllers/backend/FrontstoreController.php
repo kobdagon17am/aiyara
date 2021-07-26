@@ -655,71 +655,9 @@ class FrontstoreController extends Controller
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
-              // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
-              if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
-
-                 $sRow->approve_status = 0  ;
-                 $sRow->invoice_code = '' ;
-
-              }else if(request('pay_type_id_fk')==5 || request('pay_type_id_fk')==6 || request('pay_type_id_fk')==7 || request('pay_type_id_fk')==9){
-                $sRow->approve_status = 2  ;
-
-                  // $table = 'db_orders';
-                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
-                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                  //   order by invoice_code desc limit 1 ");
-                  // if($inv){
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-                  // }else{
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-                  // }
-                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                  //   $sRow->invoice_code = $invoice_code;
-                  // }
-
-                  // $sRow->status_delivery = 1 ;
-                  $sRow->approve_status = 3 ;
-
-              }else{
-
-                  // $table = 'db_orders';
-                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
-                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                  //   order by invoice_code desc limit 1 ");
-                  // if($inv){
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-                  // }else{
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-                  // }
-                  // // dd($invoice_code);
-                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                  //   $sRow->invoice_code = $invoice_code;
-                  // }
-
-
-                  // $sRow->status_delivery = 1 ;
-                  $sRow->approve_status = 3 ;
-
-
-              }
+              // dd($sRow);
 
               if($sRow->invoice_code==""){
-
-                  // $table = 'db_orders';
-                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  // $inv = DB::select(" select invoice_code,SUBSTR(invoice_code,3,2)as y,SUBSTR(invoice_code,5,2)as m,DATE_FORMAT(now(), '%y') as this_y,DATE_FORMAT(now(), '%m') as this_m from $table
-                  //   WHERE SUBSTR(invoice_code,3,2)=DATE_FORMAT(now(), '%y') AND SUBSTR(invoice_code,5,2)=DATE_FORMAT(now(), '%m')
-                  //   order by invoice_code desc limit 1 ");
-                  // if($inv){
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",intval(substr($inv[0]->invoice_code,-5))+1);
-                  // }else{
-                  //     $invoice_code = 'P'.$branchs[0]->business_location_id_fk.date("ym").sprintf("%05d",1);
-                  // }
-                  // if($sRow->invoice_code==''||$sRow->invoice_code==0){
-                  //   $sRow->invoice_code = $invoice_code;
-                  // }
 
                 if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   $sRow->invoice_code = '' ;
@@ -727,54 +665,42 @@ class FrontstoreController extends Controller
                   $table = 'db_orders';
                   $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
                   $sRow->invoice_code = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
-                   // $sRow->invoice_code = '' ;
                 }
-
 
               }
 
-
-
-
+              // dd("706");
 
               $sRow->charger_type    = request('charger_type');
               $sRow->credit_price    = str_replace(',','',request('credit_price'));
               $sRow->sum_credit_price    = str_replace(',','',request('sum_credit_price'));
               $sRow->pay_type_id_fk    = request('pay_type_id_fk')?request('pay_type_id_fk'):0;
               $sRow->gift_voucher_cost    = str_replace(',','',request('gift_voucher_cost'));
-
               $sRow->member_id_aicash    = str_replace(',','',request('member_id_aicash'));
-
               $sRow->aistockist    = request('aistockist');
               $sRow->agency    = request('agency');
               $sRow->note    = request('note');
-
               $sRow->delivery_location    = request('delivery_location');
               $sRow->cash_price    = str_replace(',','',request('cash_price'));
-
-              // dd(str_replace(',','',request('cash_price')));
-
               $sRow->shipping_price    = str_replace(',','',request('shipping_price'));
               $sRow->fee    =  str_replace(',','',request('fee'));
               $sRow->fee_amt    =  str_replace(',','',request('fee_amt'));
               $sRow->sum_price    =  str_replace(',','',request('sum_price'));
               $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
-
               $sRow->account_bank_id = request('account_bank_id');
               $sRow->transfer_money_datetime = request('transfer_money_datetime');
-              // dd(request('shipping_price'));
               if(empty(request('shipping_price'))){
                 $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('fee_amt'));
-              }else{
-                if(request('sum_price')>0){
-                // $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
-                }
+              // }else{
+              //   if(request('sum_price')>0){
+              //   // $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
+              //   }
               }
 
+              // dd("734");
 
               $sRow->action_user = \Auth::user()->id;
               $sRow->action_date = date('Y-m-d H:i:s');
-
 
               $request = app('request');
               if ($request->hasFile('image01')) {
@@ -789,7 +715,7 @@ class FrontstoreController extends Controller
                   $sRow->file_slip = $image_path.$name;
                 }
 
-              $sRow->save();
+    
 
               PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
                   //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
@@ -869,14 +795,14 @@ class FrontstoreController extends Controller
                           customers.first_name,
                           customers.last_name,
                           dataset_amphures.name_th AS amp_name,
-						dataset_districts.name_th AS tambon_name,
-						dataset_provinces.name_th AS province_name
+              						dataset_districts.name_th AS tambon_name,
+              						dataset_provinces.name_th AS province_name
                           FROM
                           customers_detail
                           Left Join customers ON customers_detail.customer_id = customers.id
                           Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-							Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-							Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+            							Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+            							Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
                           WHERE customers_detail.customer_id =
                            ".@$request->customers_id_fk." ");
 
@@ -969,6 +895,43 @@ class FrontstoreController extends Controller
                   customers_addr_sent.id='".($r_addr[0]->address_sent_id_fk)."' ");
             }
         
+
+ /*
+1 เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+12  Gift Voucher + เงินโอน
+13  Gift Voucher + บัตรเครดิต
+14  Gift Voucher + Ai-Cash
+15  PromptPay
+16  TrueMoney
+17  Gift Voucher + PromptPay
+18  Gift Voucher + TrueMoney
+*/
+// `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
+
+    // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
+// dd(request('pay_type_id_fk'));
+              if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+                  $sRow->approve_status = 1  ;
+              // }else if(request('pay_type_id_fk')==5 || request('pay_type_id_fk')==6 || request('pay_type_id_fk')==7 || request('pay_type_id_fk')==9){
+                // dd(request('pay_type_id_fk'));
+                  // $sRow->approve_status = 2  ;
+              }else{
+                  $sRow->approve_status = 4 ;
+              }
+
+              // $sRow->approve_status = 9 ;
+
+              $sRow->save();
 
              // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
