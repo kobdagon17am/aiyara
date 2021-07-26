@@ -145,6 +145,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <!-- item-->
                 <!--     <a class="dropdown-item" href="backend/template/contacts-profile"><i class="bx bx-user font-size-16 align-middle mr-1"></i> Profile</a> -->
+                    <a class="dropdown-item" href="{{ url('/config-cache') }}"><i class="fas fa-sync font-size-16 align-middle mr-1"></i> Clear Cache</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="backend/logout"><i class="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i> {{ __('Logout') }} </a>
                 </div>
