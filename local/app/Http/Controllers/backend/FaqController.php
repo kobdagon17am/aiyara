@@ -11,7 +11,7 @@ use App\Models\UserModel;
 use App\Models\MenuPermissionModel;
 
 
-class FaqController extends MyAjaxController 
+class FaqController extends Controller 
 {
 
     public function index(Request $request)
