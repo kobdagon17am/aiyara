@@ -48,14 +48,15 @@ class Add_ai_cashController extends Controller
 
    public function create()
     {
-      $Customer = DB::select(" select * from customers ");
+      // $Customer = DB::select(" select * from customers  ");
       $sPay_type = DB::select(" select * from dataset_pay_type where id in(5,7,8,10); ");
       $sAccount_bank = \App\Models\Backend\Account_bank::get();
       $sFee = \App\Models\Backend\Fee::get();
 
       return View('backend.add_ai_cash.form')->with(
       array(
-         'Customer'=>$Customer,'sPay_type'=>$sPay_type,'sAccount_bank'=>$sAccount_bank,'sFee'=>$sFee,
+         // 'Customer'=>$Customer,
+         'sPay_type'=>$sPay_type,'sAccount_bank'=>$sAccount_bank,'sFee'=>$sFee,
       ));
     }
 
@@ -68,7 +69,7 @@ class Add_ai_cashController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Add_ai_cash::find($id);
-       $Customer = DB::select(" select * from customers ");
+       // $Customer = DB::select(" select * from customers ");
        $sPay_type = DB::select(" select * from dataset_pay_type where id in(5,7,8,10); ");
 
        if($sRow){
@@ -91,7 +92,7 @@ class Add_ai_cashController extends Controller
        return View('backend.add_ai_cash.form')->with(array(
           'sRow'=>$sRow,
           'id'=>$id,
-          'Customer'=>$Customer,
+          // 'Customer'=>$Customer,
           'action_user'=>$action_user,
           'sPay_type'=>$sPay_type,
           'sAccount_bank'=>$sAccount_bank,

@@ -79,19 +79,9 @@
                         <?php if(isset($_REQUEST['fromAddAiCash'])){ $customer_id = $_REQUEST['customer_id']; ?>
 
                           <div class="form-group row">
-                            <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
+                            <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                             <div class="col-md-8">
-                              <select class="form-control select2-templating " disabled="" >
-                                <option value="">Select</option>
-                                  @if(@$Customer)
-                                    @foreach(@$Customer AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$customer_id)?'selected':'' }} >
-                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
-                                        {{$r->last_name}}
-                                      </option>
-                                    @endforeach
-                                  @endif
-                              </select>
+                              <select id="customer_id_fk" class="form-control" required ></select> 
                             </div>
                           </div>
 
@@ -103,41 +93,22 @@
 
                           @if( empty(@$sRow) )
                             <div class="form-group row">
-                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                               <div class="col-md-8">
-                                <select name="customer_id_fk" id="member_id_aicash" class="form-control select2-templating " required >
-                                  <option value="">Select</option>
-                                    @if(@$Customer)
-                                      @foreach(@$Customer AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id_fk)?'selected':'' }} >
-                                          {{@$r->user_name}} : {{@$r->prefix_name}}{{@$r->first_name}} 
-                                          {{@$r->last_name}}
-                                        </option>
-                                      @endforeach
-                                    @endif
-                                </select>
+                                <select id="customer_id_fk" class="form-control"  name="customer_id_fk" required ></select> 
                               </div>
                             </div>
                           @else
                             <div class="form-group row">
-                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส:ชื่อลูกค้า : * </label>
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                               <div class="col-md-8">
                                 <input type="hidden" id="member_id_aicash" name="customer_id_fk" value="{{@$sRow->customer_id_fk}}">
-                                <select class="form-control select2-templating " disabled >
-                                  <option value="">Select</option>
-                                    @if(@$Customer)
-                                      @foreach(@$Customer AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->customer_id_fk)?'selected':'' }} >
-                                          {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}} 
-                                          {{$r->last_name}}
-                                        </option>
-                                      @endforeach
-                                    @endif
+                                <select id="customer_id_fk" class="form-control select2-templating " disabled >
+                                  <option value="{{@$sRow->customer_id_fk}}" selected ></option>
                                 </select>
                               </div>
                             </div>
                           @endif
-
                      
 
                         <?php } ?>
@@ -1070,6 +1041,35 @@
 
 
 </script>
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
 
+      $("#customer_id_fk").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
 @endsection
 

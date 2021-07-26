@@ -148,18 +148,9 @@
 
 
                     <div class="form-group row">
-                      <label for="example-text-input" class="col-md-3 col-form-label"> ID สมาชิก : </label>
+                      <label for="customer_code" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
                       <div class="col-md-3">
-                        <select id="customer_code" name="customer_code" class="form-control select2-templating " >
-                          <option value="">Select</option>
-                            @if(@$Customer)
-                              @foreach(@$Customer AS $r)
-                              <option value="{{$r->user_name}}"  >
-                                {{$r->user_name}} : {{$r->first_name}}{{$r->last_name}}
-                              </option>
-                              @endforeach
-                            @endif
-                        </select>
+                        <select id="customer_code" name="customer_code" class="form-control" required ></select> 
                       </div>
                     </div>
 
@@ -308,6 +299,8 @@
 @endsection
 
 @section('script')
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
 
 <script>
 
@@ -465,7 +458,7 @@ $(document).ready(function() {
 
    $(".btnImXlsx").click(function(event) {
 
-          $("#descriptions").valid();
+          $("#descriptions").validate();
           var descriptions = $("#descriptions").val();
           if(!descriptions){
             $("#descriptions").focus();
@@ -504,7 +497,7 @@ $(document).ready(function() {
           // alert(giftvoucher_code_id_fk);
           // return false;
 
-          $("#descriptions").valid();
+          $("#descriptions").validate();
           var descriptions = $("#descriptions").val();
           if(!descriptions){
             $("#descriptions").focus();
@@ -960,6 +953,36 @@ $(document).ready(function() {
 
 </script>
 
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#customer_code").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerCode') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
 
 @endsection
 
