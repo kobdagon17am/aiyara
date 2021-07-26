@@ -383,9 +383,9 @@
                     <tbody>
                       <tr style="color: red" >
                         <th scope="row">สถานะ > รอตรวจสอบ / รอชำระ /<br> รออนุมัติ</th>
-                        <td style="text-align: right;">{{@$approve_status_2}}</td>
-                        <td style="text-align: right;">{{@$pv_2}}</td>
-                        <td style="text-align: right;">{{@$sum_price_2}}</td>
+                        <td style="text-align: right;">{{@$approve_status_1}}</td>
+                        <td style="text-align: right;">{{@$pv_1}}</td>
+                        <td style="text-align: right;">{{@$sum_price_1}}</td>
                       </tr>
                       <tr>
                         <th scope="row">สถานะ สำเร็จ</th>
@@ -395,9 +395,9 @@
                       </tr>
                       <tr>
                         <th scope="row">สถานะ ยกเลิก</th>
-                        <td style="text-align: right;">{{@$approve_status_4}}</td>
-                        <td style="text-align: right;">{{@$pv_4}}</td>
-                        <td style="text-align: right;">{{@$sum_price_4}}</td>
+                        <td style="text-align: right;">{{@$approve_status_5}}</td>
+                        <td style="text-align: right;">{{@$pv_5}}</td>
+                        <td style="text-align: right;">{{@$sum_price_5}}</td>
                       </tr>
                       <tr>
                         <th scope="row">สถานะ อื่นๆ <br>(ยกเว้น 3 สถานะข้างบน) </th>
@@ -1628,8 +1628,9 @@ $(document).ready(function() {
                         });
 
                         setTimeout(function () {
-                          $('#data-table').DataTable().clear().draw();
-                        }, 1000);
+                          // $('#data-table').DataTable().clear().draw();
+                          location.reload();
+                        }, 1500);
                   }
                 });
 

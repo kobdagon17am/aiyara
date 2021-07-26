@@ -661,6 +661,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('member_regis02/datatable', 'Member_regisController@Datatable02')->name('member_regis02.datatable');
 
 
+    Route::resource('member_pv', 'Member_pvController');
+    Route::post('member_pv/datatable', 'Member_pvController@Datatable')->name('member_pv.datatable');
+
+
     Route::resource('stocks_account_code', 'Stocks_account_codeController');
     Route::post('stocks_account_code/datatable', 'Stocks_account_codeController@Datatable')->name('stocks_account_code.datatable');
 
@@ -785,7 +789,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxSentMoneyDaily', 'AjaxController@ajaxSentMoneyDaily');
     Route::post('ajaxCancelSentMoney', 'AjaxController@ajaxCancelSentMoney');
-    
+
     Route::post('ajaxCancelOrderBackend', 'AjaxController@ajaxCancelOrderBackend');
 
 

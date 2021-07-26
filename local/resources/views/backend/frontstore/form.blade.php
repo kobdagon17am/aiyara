@@ -4703,7 +4703,7 @@ $(document).ready(function() {
       $("#customers_id_fk").select2({
           minimumInputLength: 3,
           allowClear: true,
-          placeholder: 'Select',
+          placeholder: '-Select-',
           ajax: {
           url: " {{ url('backend/ajaxGetCustomer') }} ",
           type  : 'POST',

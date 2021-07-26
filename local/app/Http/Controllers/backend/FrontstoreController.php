@@ -64,6 +64,14 @@ class FrontstoreController extends Controller
           // dd($sDBFrontstoreApproveStatus);
 
       // 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
+
+          //   `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
+
+          // รออนุมัติ
+          $approve_status_1 = 0;
+          $sum_price_1 = 0;
+          $pv_1 = 0;
+
           $approve_status_2 = 0;
           $sum_price_2 = 0;
           $pv_2 = 0;
@@ -71,6 +79,11 @@ class FrontstoreController extends Controller
           $approve_status_4 = 0;
           $sum_price_4 = 0;
           $pv_4 = 0;
+
+          // 5=ยกเลิก
+          $approve_status_5 = 0;
+          $sum_price_5 = 0;
+          $pv_5 = 0;
 
           $approve_status_9 = 0;
           $sum_price_9 = 0;
@@ -89,16 +102,28 @@ class FrontstoreController extends Controller
 
           foreach ($sDBFrontstoreApproveStatus as $key => $value) {
 
-            if($value->approve_status==0 || $value->approve_status==2 || $value->approve_status==3){
-              $approve_status_2 += 1;
-              $sum_price_2 += $value->sum_price;
-              $pv_2 += @$value->pv;
+            // if($value->approve_status==0 || $value->approve_status==2 || $value->approve_status==3){
+            //   $approve_status_2 += 1;
+            //   $sum_price_2 += $value->sum_price;
+            //   $pv_2 += @$value->pv;
+            // }
+
+            if($value->approve_status==1){
+              $approve_status_1 += 1;
+              $sum_price_1 += $value->sum_price;
+              $pv_1 += @$value->pv;
             }
 
-            if($value->approve_status==4){
-              $approve_status_4 += 1;
-              $sum_price_4 += $value->sum_price;
-              $pv_4 += @$value->pv;
+            // if($value->approve_status==4){
+            //   $approve_status_4 += 1;
+            //   $sum_price_4 += $value->sum_price;
+            //   $pv_4 += @$value->pv;
+            // }
+
+            if($value->approve_status==5){
+              $approve_status_5 += 1;
+              $sum_price_5 += $value->sum_price;
+              $pv_5 += @$value->pv;
             }
 
             if($value->approve_status==9){
@@ -107,7 +132,14 @@ class FrontstoreController extends Controller
               $pv_9 += @$value->pv;
             }
 
-            if($value->approve_status==1 || $value->approve_status==5 || $value->approve_status==6  || $value->approve_status==7  || $value->approve_status==8 ){
+            // if($value->approve_status==1 || $value->approve_status==5 || $value->approve_status==6  || $value->approve_status==7  || $value->approve_status==8 ){
+            //     $approve_status_88 += 1;
+            //     $sum_price_88 += @$value->sum_price;
+            //     $pv_88 += @$value->pv;
+            // }
+
+
+            if($value->approve_status!=1 && $value->approve_status!=5 && $value->approve_status!=9 ){
                 $approve_status_88 += 1;
                 $sum_price_88 += @$value->sum_price;
                 $pv_88 += @$value->pv;
@@ -209,6 +241,10 @@ class FrontstoreController extends Controller
            'approve_status_4'=>($approve_status_4),
            'sum_price_4'=>$sum_price_4,
            'pv_4'=>$pv_4,
+
+           'approve_status_5'=>($approve_status_5),
+           'sum_price_5'=>$sum_price_5,
+           'pv_5'=>$pv_5,
 
            'approve_status_9'=>($approve_status_9),
            'sum_price_9'=>$sum_price_9,
@@ -717,8 +753,8 @@ class FrontstoreController extends Controller
 
     
 
-              PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
-                  //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
+              // PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+              //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));

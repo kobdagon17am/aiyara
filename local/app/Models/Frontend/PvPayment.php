@@ -541,8 +541,10 @@ class PvPayment extends Model
                             ->where('id', '=', $customer_id)
                             ->first();
 
-                        $upline_type = $data_user->line_type;
-                        $upline_id = $data_user->upline_id;
+                        // $upline_type = $data_user->line_type;
+                        $upline_type = 1 ;
+                        // $upline_id = $data_user->upline_id;
+                        $upline_id = 1 ;
 
                         if ($upline_id == 'AA') {
 

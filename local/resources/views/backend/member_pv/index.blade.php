@@ -48,6 +48,38 @@
             display: table;
             clear: both;
           }
+
+          /* DivTable.com */
+.divTable{
+  display: table;
+  width: 100%;
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  /*border: 1px solid #999999;*/
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+}
+
     </style>
 
 @endsection
@@ -58,7 +90,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> สมาชิกลงทะเบียน </h4>
+            <h4 class="mb-0 font-size-18"> คะแนนสมาชิก </h4>
         </div>
     </div>
 </div>
@@ -85,96 +117,31 @@
       // echo $role_group_id;
       // echo $menu_id;     
    ?>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-
 
 <div class="row" >
     <div class="col-12">
         <div class="card">
             <div class="card-body">
 
-              <div class="row" >
 
-                 <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
-                        <div class="col-md-9">
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
-                              <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
-                                @endforeach
-                              @endif
-                            </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                            <div class="col-md-9">
-
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
-                                   @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @endif
-                                  @endforeach
-                                @endif
-                              </select>
-
-                            </div>
-                          </div>
-                    </div>
-
-               </div>
+    <div class="myBorder">
 
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="customer_id" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
                     <div class="col-md-9">
-                       <select id="customer_id" name="customer_id" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                        @if(@$customer)
-                        @foreach(@$customer AS $r)
-                        <option value="{{$r->customer_id}}" >
-                          {{$r->cus_code}} :
-                          {{$r->prefix_name}}{{$r->first_name}} {{$r->last_name}}
-                        </option>
-                        @endforeach
-                        @endif
-                      </select>
+                       <select id="customer_id" name="customer_id" class="form-control" required ></select> 
                     </div>
                   </div>
                 </div>
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="po_status" class="col-md-3 col-form-label"> ประเภทไฟล์ :  </label>
+                    <label for="status_aistockis" class="col-md-3 col-form-label"> Status AiStockis :  </label>
                     <div class="col-md-9">
-                       <select id="filetype" name="filetype" class="form-control select2-templating " >
+                       <select id="status_aistockis" name="status_aistockis" class="form-control select2-templating " >
                         <option value="">-Select-</option>
-                        @if(@$filetype)
-                        @foreach(@$filetype AS $r)
-                        <option value="{{$r->id}}" >
-                          {{$r->txt_desc}} 
-                        </option>
-                        @endforeach
-                        @endif
                       </select>
                     </div>
                   </div>
@@ -193,28 +160,24 @@
                 </div>
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
+                    <label for="regis_status" class="col-md-3 col-form-label"> สถานะการสมัคร : </label>
                      <div class="col-md-9 ">
-                     <select id="approver" name="approver" class="form-control select2-templating " >
+                     <select id="regis_status" name="regis_status" class="form-control select2-templating " >
                         <option value="">-Select-</option>
-                        @if(@$sApprover)
-                        @foreach(@$sApprover AS $r)
-                        <option value="{{$r->id}}" >
-                           {{$r->name}}
-                        </option>
-                        @endforeach
-                        @endif
+                        <option value="1">ผ่าน</option>
+                        <option value="2">ไม่ผ่าน</option>
+                        <option value="4">ยังไม่ส่ง</option>
+                        <option value="3">ส่งมาแล้วบางรายการหรือทั้งหมด</option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
               
-
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                   <div class="form-group row">
-                    <label for="action_user" class="col-md-3 col-form-label">  </label>
+                    <label for="" class="col-md-3 col-form-label">  </label>
                     <div class="col-md-9">
                      
                     </div>
@@ -224,7 +187,7 @@
     
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
-                    <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
+                    <label for="" class="col-md-3 col-form-label">  </label>
                      <div class="col-md-9" >
                      <a class="btn btn-info btn-sm btnSearch01 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
                         <i class="bx bx-search align-middle "></i> SEARCH
@@ -237,133 +200,17 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-                
-                  <div style="text-align: center;">
-                  <b>หมายเหตุ</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <?php 
-                    foreach ($filetype as $key => $value) {
-                         echo $value->icon;
-                         echo " : ";
-                         echo $value->txt_desc;
-                         echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                    }
-                    ?>
-                  </div>
-
-            </div>
-        </div>
-    </div> <!-- end col -->
-</div> <!-- end row -->
-
-          
-
-            </div>
-        </div>
-    </div> <!-- end col -->
-</div> <!-- end row -->
-
-
-
-<div class="modal fade" id="checkRegis" tabindex="-1" role="dialog" aria-labelledby="checkRegisTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px !important;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="checkRegisTitle"><b><i class="bx bx-play"></i>บันทึกตรวจสอบการลงทะเบียน </b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form action="{{ route('backend.member_regis.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_regis" value="1" >
-            <input type="hidden" id="id" name="id" value="">
-            <input type="hidden" id="type" >
-            {{ csrf_field() }}
-
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-               <center>
-
-                <h2 id="cus_name"></h2>
-
-              <div class="row">
-                <div class="column" style="background-color:#aaa;">
-                  <h4 class="p_desc_1">ภาพถ่ายบัตรประชาชน</h4>
-                  <p> <img id="file_path1" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
-                  <h4 class="p_desc_11"></h4>
-                </div>
-                <div class="column" style="background-color:#bbb;">
-                   <h4 class="p_desc_2">ภายถ่ายหน้าตรง</h4>
-                   <p> <img id="file_path2" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
-                </div>
-              </div>
-
-
-              <div class="row">
-                <div class="column" style="background-color:#bbb;color: black;">
-                  <h4 class="p_desc_3">ภาพถ่ายหน้าตรงถือบัตรประชาชน</h4>
-                  <p> <img id="file_path3" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
-                  <h4 class="p_desc_33"></h4>
-                </div>
-                <div class="column" style="background-color:#aaa;">
-                   <h4 class="p_desc_4">ภาพถ่ายหน้าบัญชีธนาคาร</h4>
-                   <p> <img id="file_path4" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
-                    <h4 class="p_desc_44"> </h4>
-                </div>
-              </div>
-
-
-                <br>
-
-              <div class="row" >
-                      <div class="col-md-12" >
-                      <div class="form-group row">
-                        <label for="comment" class="col-md-4 col-form-label"> หมายเหตุ (ถ้ามี) : </label>
-                        <div class="col-md-6">
-                            <textarea class="form-control" rows="3" id="comment" name="comment" ></textarea>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                  <br>
-                <div class="row" >
-                      <div class="col-md-12" >
-                      <div class="form-group row">
-                        <label for="regis_status" class="col-md-4 col-form-label"> ผลการตรวจสอบ : </label>
-                        <div class="col-md-4">
-                           <select name="regis_status" class="form-control select2-templating " required >
-                              <option value="">Select</option>
-                              <option value="S">ผ่าน</option>
-                              <option value="F">ไม่ผ่าน</option>
-                            </select>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-             <br>
-
-         <div class="row">
-          <div class="col-md-12 text-center  "  >
-             <button type="submit" class="btn btn-primary" style="width: 10%;" >Save</button>
-             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 1%;">Close</button>
-          </div>
-        </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
- 
-      </form>
-
-    </div>
-  </div>
+       
 </div>
+         
+  
+
+            </div>  <!-- end card-body -->
+        </div>  <!-- end card -->
+    </div> <!-- end col-12 -->
+</div> <!-- end row -->
+
+
 
 
 @endsection
@@ -371,8 +218,6 @@
 @section('script')
 
 <script>
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
@@ -382,13 +227,11 @@ $(function() {
         processing: true,
         serverSide: true,
         scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
+        destroy: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.member_regis.datatable') }}',
+          url: '{{ route('backend.member_pv.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -415,13 +258,10 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left'},
-            {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
-            {data: 'regis_status', title :'<center>สถานะการอนุมัติ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-            {data: 'approve_date', title :'<center>วันที่นุมัติ </center>', className: 'text-center'},
-            {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
+            {data: 'status_aistockis', title :'<center> Status AiStockis </center>', className: 'text-center'},
+            {data: 'regis_status', title :'<center> สถานะการสมัคร (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
+            {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
@@ -429,21 +269,25 @@ $(function() {
               $('td:last-child', nRow).html('-');
           }else{ 
 
-              // $('td:last-child', nRow).html(''
-              //   + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              
-              // ).addClass('input');
+            // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+
+            if(aData['regis_status_02']=='S' && aData['item_checked']==0){
+                  $('td:last-child', nRow).html('-');
+
+            }else{
+
+              // console.log(aData['user_name']);
 
                $('td:last-child', nRow).html(''
-                  + '<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'+aData['id']+'"  ><i class="bx bx-edit font-size-16 align-middle"></i> </a> '
+                  + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+(aData['user_name'])+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
                 ).addClass('input');
+
+            }
 
           }
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+
 });
 </script>
 
@@ -481,17 +325,44 @@ $(function() {
         }
         $('#startPayDate').val('');
         $('#endPayDate').val('');
-        $('#btnSearch03').val('0');
+
+      });        
+
+    </script>
+
+    <script>
+
+      $('#startDate02').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+      });
+
+      $('#endDate02').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          minDate: function () {
+              return $('#startDate').val();
+          }
+      });
+
+      $('#startDate02').change(function(event) {
+
+        if($('#endDate02').val()>$(this).val()){
+        }else{
+          $('#endDate02').val($(this).val());
+        }
+        $('#startPayDate02').val('');
+        $('#endPayDate02').val('');
 
       });        
 
 
-      $('#endDate').change(function(event) {
-        $('#btnSearch03').val('0');
-      });  
-
-
     </script>
+
     <script>
 
       $('#startPayDate').datepicker({
@@ -529,78 +400,71 @@ $(function() {
                   event.preventDefault();
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();
-                  var business_location_id_fk = $('#business_location_id_fk').val();
-                  var branch_id_fk = $('#branch_id_fk').val();
-                  var po_number = $('#po_number').val();
+
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
-                  var action_user = $('#action_user').val();
-                  var po_status = $('#po_status').val();
-                  var supplier_id_fk = $('#supplier_id_fk').val();
-                  console.log(supplier_id_fk);
-                  if(business_location_id_fk==''){
-                    $('#business_location_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-                  // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
+
+                  var regis_status = $('#regis_status').val();
+
+                  var customer_id = $('#customer_id').val();
+                  var status_aistockis = $('#status_aistockis').val();
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
-                        var oTable;
-                        $(function() {
-                          $.fn.dataTable.ext.errMode = 'throw';
-                             oTable = $('#data-table').DataTable({
-                            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                processing: true,
-                                serverSide: true,
-                                scroller: true,
-                                destroy:true,
-                                ordering: false,
-                                ajax: {
-                                          url: '{{ route('backend.po_receive.datatable') }}',
+                            var oTable;
+                            $(function() {
+                                oTable = $('#data-table').DataTable({
+                                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                    processing: true,
+                                    serverSide: true,
+                                    scroller: true,
+                                    destroy:true,
+                                    ordering: false,
+                                    ajax: {
+                                          url: '{{ route('backend.member_pv.datatable') }}',
                                           data :{
                                             _token: '{{csrf_token()}}',
-                                                business_location_id_fk:business_location_id_fk,
-                                                branch_id_fk:branch_id_fk,
-                                                po_number:po_number,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                action_user:action_user,                                 
-                                                po_status:po_status,                                 
-                                                supplier_id_fk:supplier_id_fk,                                 
+                                                regis_status:regis_status,                                 
+                                                customer_id:customer_id,                                 
+                                                status_aistockis:status_aistockis,                                 
                                               },
                                             method: 'POST',
                                           },
-                                       columns: [
-                                      {data: 'id', title :'ID', className: 'text-center w50'},
-                                      {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
-                                      {data: 'po_number', title :'<center>รหัสใบ PO </center>', className: 'text-center'},
-                                      {data: 'supplier_name', title :'<center> Supplier </center>', className: 'text-center'},
-                                      {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
-                                      {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
-                                      {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                  ],
-                                  rowCallback: function(nRow, aData, dataIndex){
-                                    if(sU!=''&&sD!=''){
-                                        $('td:last-child', nRow).html('-');
-                                    }else{ 
 
-                                        $('td:last-child', nRow).html(''
-                                          + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                        ).addClass('input');
+                                    columns: [
+                                        {data: 'id', title :'ID', className: 'text-center w50'},
+                                        {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
+                                        {data: 'status_aistockis', title :'<center> Status AiStockis </center>', className: 'text-center'},
+                                        {data: 'regis_status', title :'<center> สถานะการสมัคร (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
+                                        {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
+                                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                    ],
+                                    rowCallback: function(nRow, aData, dataIndex){
+                                      if(sU!=''&&sD!=''){
+                                          $('td:last-child', nRow).html('-');
+                                      }else{ 
 
+                                        // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+
+                                        if(aData['regis_status_02']=='S' && aData['item_checked']==0){
+                                              $('td:last-child', nRow).html('-');
+
+                                        }else{
+
+                                          // console.log(aData['user_name']);
+
+                                           $('td:last-child', nRow).html(''
+                                              + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+(aData['user_name'])+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
+                                            ).addClass('input');
+
+                                        }
+
+                                      }
                                     }
-                                  }
-                              });
-                        });
+                                });
 
+                            });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){
@@ -612,6 +476,8 @@ $(function() {
           });
 
     </script>
+
+
 
 
 <script type="text/javascript">
@@ -652,6 +518,7 @@ $(function() {
           event.preventDefault();
              var id = $(this).data('id');
              $('#id').val(id);
+             // console.log(id);
 
              $.ajax({
                   url: " {{ url('backend/ajaxGetFilepath') }} ",
@@ -688,48 +555,70 @@ $(function() {
                                   // $('#file_path_a').attr("href", value.file_path);
                                   // $('#file_path_a').text("File : Excel");
                                   // $('#file_path_a').css({"font-size": "24px"});
-                                  if(value.type=="1" && value.status=="S"){
+
+                                  // console.log(value.type);
+                                  // console.log(value.status);
+                                  // console.log(value.comment);
+
+                                  $('#comment').val(value.comment);
+
+                                  $('#regis_status').val(value.status);
+                                   $('#regis_status').select2().trigger('change');
+                                  if(value.status==0){
+                                      $("#regis_status").select2('destroy').val("").select2();
+                                  }
+
+                                  if(value.type=="1"){
                                     $('#file_path1').attr("src", value.file_path);
                                     $('#file_path1').show();
                                     $('.p_desc_1').css({"background-color": "bisque", "color": "blue" });
                                     $('.p_desc_11').html("เลขบัตรประชาชน : "+value.id_card);
+                                    $('.column_1').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral" });
                                   }else{
                                     $('#file_path1').hide();
                                     $('.p_desc_1').css({"background-color": "", "color": "" });
+                                    $('.column_1').css({"border-style": "", "border-width": "", "border-color": "" });
                                   }
 
-                                  if(value.type=="2" && value.status=="S"){
+                                  if(value.type=="2"){
                                     $('#file_path2').attr("src", value.file_path);
                                     $('#file_path2').show();
                                     $('.p_desc_2').css({"background-color": "bisque", "color": "blue" });
+                                    $('.column_2').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral" });
                                   }else{
                                     $('#file_path2').hide();
                                     $('.p_desc_2').css({"background-color": "", "color": "" });
+                                    $('.column_2').css({"border-style": "", "border-width": "", "border-color": "" });
+
                                   }
                                   
-                                  if(value.type=="3" && value.status=="S"){
+                                  if(value.type=="3"){
                                     $('#file_path3').attr("src", value.file_path);
                                     $('#file_path3').show();
                                     $('.p_desc_3').css({"background-color": "bisque", "color": "blue" });
                                     $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
+                                    $('.column_3').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral" });
                                   }else{
                                     $('#file_path3').hide();
                                     $('.p_desc_3').css({"background-color": "", "color": "" });
+                                    $('.column_3').css({"border-style": "", "border-width": "", "border-color": "" });
                                   }
                                   
-                                  if(value.type=="4" && value.status=="S"){
+                                  if(value.type=="4"){
                                     $('#file_path4').attr("src", value.file_path);
                                     $('#file_path4').show();
                                     $('.p_desc_4').css({"background-color": "bisque", "color": "blue" });
                                     $('.p_desc_44').html("บัญชีธนาคาร : "+value.bank_no+" "+value.bank_name);
+                                    $('.column_4').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral" });
                                   }else{
                                     $('#file_path4').hide();
                                     $('.p_desc_4').css({"background-color": "", "color": "" });
+                                    $('.column_4').css({"border-style": "", "border-width": "", "border-color": "" });
                                   }
-                                  
-                                  // $('.file_path_desc').hide();
-                                   // var id = $(this).data('id');
-                                  // $('#id').val(id);
+                          
+
+                                    // กรณี type อื่นๆ ที่ผ่านก็แสดงเช่นเดียวกัน แต่ไม่มีกรอบ
+                                    // ต้องส่ง ajax ไปดึงมาแสดงต่างหาก เว้น type อันที่ระบุ 
                                    $.ajax({
                                         url: " {{ url('backend/ajaxGetFilepath02') }} ",
                                         method: "post",
@@ -739,11 +628,9 @@ $(function() {
                                         },
                                         success:function(data2)
                                         {
-                                           console.log(data2);
+                                           // console.log(data2);
                                            // @@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                              $.each(data2,function(key,value){
-
-
 
 
                                                    var strArray = value.file.split(".");
@@ -754,30 +641,28 @@ $(function() {
                                                     let ch = arrXls.includes(strArray[1]);
                                                     if(ch==true){
                                                 
-                                                      if(value.type=="1" && value.status=="S"){
+                                                      if(value.type=="1" && value.status=="1"){
                                                         $('#file_path1').attr("src", value.file_path);
                                                         $('#file_path1').show();
                                                         $('.p_desc_11').html("เลขบัตรประชาชน : "+value.id_card);
                                                       }
 
-                                                      if(value.type=="2" && value.status=="S"){
+                                                      if(value.type=="2" && value.status=="1"){
                                                         $('#file_path2').attr("src", value.file_path);
                                                         $('#file_path2').show();
                                                       }
                                                       
-                                                      if(value.type=="3" && value.status=="S"){
+                                                      if(value.type=="3" && value.status=="1"){
                                                         $('#file_path3').attr("src", value.file_path);
                                                         $('#file_path3').show();
                                                         $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
                                                       }
                                                       
-                                                      if(value.type=="4" && value.status=="S"){
+                                                      if(value.type=="4" && value.status=="1"){
                                                         $('#file_path4').attr("src", value.file_path);
                                                         $('#file_path4').show();
                                                         $('.p_desc_44').html("บัญชีธนาคาร : "+value.bank_no+" "+value.bank_name);
                                                       }
-
-                                                    }else{
 
                                                     }
 
@@ -793,38 +678,53 @@ $(function() {
                                   $('#file_path2').hide();
                                   $('#file_path3').hide();
                                   $('#file_path4').hide();
-                                   // $('#file_path').attr("src", value.file_path);
-                                  // $('.file_path_desc').html("File not found");
-                                  // $('.file_path_desc').css({"background-color": "#ccffe6", "font-size": "24px"});
-                                  // $('.file_path_desc').show();
+                             
                                 }
 
                                  $('#type').val(value.type);
                             
                            });
 
-                            // console.log(v);
-                            // if(v==null){
-                            //     console.log("aaaaa");
-                            //     $('#file_path').hide();
-                            //     $('.file_path_desc').html("File not found");
-                            //     $('.file_path_desc').css({"background-color": "#ccffe6", "font-size": "24px"});
-                            // }else{
-                            //     console.log("bbbbb");
-                            //     $('#file_path').show();
-                            // }
-                           $('#checkRegis').modal('show');
+                   
                   }
                 })
 
         });
 
 
-     // $('#checkRegis').on('hidden.bs.modal', function () {
-     //    location.reload();
-     // });
-
 
 </script> 
+
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#customer_id").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
+
 @endsection
 
