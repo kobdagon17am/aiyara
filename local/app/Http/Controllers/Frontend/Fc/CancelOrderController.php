@@ -415,7 +415,7 @@ class CancelOrderController extends Controller
                                     'pv' => $pv,
                                     'status' => 'success',
                                     'type_id' => $type,
-                                    'detail' => 'Sent Ai-Stockis',
+                                    //'detail' => 'Sent Ai-Stockis',
                                     'banlance' => $pv_total,
                                 ]);
 
@@ -450,7 +450,7 @@ class CancelOrderController extends Controller
                                     'pv' => $pv,
                                     'status' => 'success',
                                     'type_id' => $type,
-                                    'detail' => 'Sent Ai-Stockis',
+                                    //'detail' => 'Sent Ai-Stockis',
                                     'banlance' => $pv_total,
                                 ]);
 
@@ -564,7 +564,7 @@ class CancelOrderController extends Controller
                                     'pv' => $pv,
                                     'status' => 'success',
                                     'type_id' => $type,
-                                    'detail' => 'Sent Ai-Stockis',
+                                    //'detail' => 'Sent Ai-Stockis',
                                     'banlance' => $pv_total,
                                 ]);
 

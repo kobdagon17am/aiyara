@@ -47,7 +47,7 @@ class Runpv extends Model
                                     'pv' => $pv,
                                     'status' => 'success',
                                     'type_id' => $type,
-                                    'detail' => 'Sent Ai-Stockis',
+                                    //'detail' => 'Sent Ai-Stockis',
                                     'banlance' => $pv_total,
                                 ]);
 
@@ -82,7 +82,7 @@ class Runpv extends Model
                                     'pv' => $pv,
                                     'status' => 'success',
                                     'type_id' => $type,
-                                    'detail' => 'Sent Ai-Stockis',
+                                    //'detail' => 'Sent Ai-Stockis',
                                     'banlance' => $pv_total,
                                 ]);
 
@@ -198,7 +198,7 @@ class Runpv extends Model
                                   'pv' => $pv,
                                   'status' => 'success',
                                   'type_id' => $type,
-                                  'detail' => 'Sent Ai-Stockis',
+                                  //'detail' => 'Sent Ai-Stockis',
                                   'banlance' => $pv_total,
                               ]);
 
