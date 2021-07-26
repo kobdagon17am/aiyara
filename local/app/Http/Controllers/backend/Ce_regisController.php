@@ -25,7 +25,7 @@ class Ce_regisController extends Controller
       $sCourse = \App\Models\Backend\Course_event::get();
        // dd($sCourse);
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       $Ce_regis_gift = DB::select(" select * from dataset_ce_regis_gift ");
 
       return View('backend.ce_regis.form')->with(
@@ -99,7 +99,7 @@ class Ce_regisController extends Controller
 
       $sCourse = \App\Models\Backend\Course_event::get();
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100");
       return View('backend.ce_regis.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'Customer'=>$Customer,'sCourse'=>$sCourse

@@ -54,13 +54,6 @@ class Pay_product_receiptController extends Controller
  public function create()
     {
 
-      // $Province = DB::select(" select * from dataset_provinces ");
-
-      // $Customer = DB::select(" select * from customers ");
-      // return View('backend.pay_product_receipt.form')->with(
-      //   array(
-      //      'Customer'=>$Customer,'Province'=>$Province
-      //   ) );
     }
 
 
@@ -335,20 +328,6 @@ class Pay_product_receiptController extends Controller
 		 ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('receipt', function($row) {
-      // 	if($row->packing_code!=0){
-	     //      $DP = DB::table('db_pick_warehouse_packing')->where('packing_code',$row->packing_code)->get();
-	     //      $array = array();
-	     //      foreach ($DP as $key => $value) {
-	     //        $rs = DB::table('db_pick_warehouse')->where('id',$value->pick_warehouse_id_fk)->get();
-	     //        array_push($array, @$rs[0]->receipt);
-	     //      }
-	     //      $arr = implode(',', $array);
-	     //      return $arr;
-      // 	}else{
-      // 		return $row->receipt;
-      // 	}
-      // })
       ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");

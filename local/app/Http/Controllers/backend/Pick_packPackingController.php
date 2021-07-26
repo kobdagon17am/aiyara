@@ -20,13 +20,6 @@ class Pick_packPackingController extends Controller
  public function create()
     {
 
-      // $Province = DB::select(" select * from dataset_provinces ");
-
-      // $Customer = DB::select(" select * from customers ");
-      // return View('backend.pick_pack_packing.form')->with(
-      //   array(
-      //      'Customer'=>$Customer,'Province'=>$Province
-      //   ) );
     }
     public function store(Request $request)
     {
@@ -35,14 +28,7 @@ class Pick_packPackingController extends Controller
 
     public function edit($id)
     {
-      //  $sRow = \App\Models\Backend\DeliveryPacking::find($id);
-      //  $Province = DB::select(" select * from dataset_provinces ");
 
-      //  $Customer = DB::select(" select * from customers ");
-      // return View('backend.pick_pack_packing.form')->with(
-      //   array(
-      //      'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,
-      //   ) );
     }
 
     public function update(Request $request, $id)

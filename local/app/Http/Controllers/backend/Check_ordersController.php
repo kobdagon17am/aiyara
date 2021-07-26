@@ -22,7 +22,7 @@ class Check_ordersController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.check_orders.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
@@ -38,7 +38,7 @@ class Check_ordersController extends Controller
        $sRow = \App\Models\Backend\Check_orders::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.check_orders.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,

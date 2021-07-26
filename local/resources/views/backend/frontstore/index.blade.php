@@ -66,7 +66,7 @@
     /*z-index: 9999;*/
 }
 
-  
+
 </style>
 @endsection
 
@@ -164,16 +164,7 @@
               </div>
               <div class="divTableCell">
 
-                 @if(@$Customer)
-                     <select id="customer_code" name="customer_code" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                          @foreach(@$Customer AS $r)
-                          <option value="{{$r->id}}" >
-                            {{$r->user_name}} 
-                          </option>
-                          @endforeach
-                   </select>
-                @endif
+                 <select id="customer_code" name="customer_code" class="form-control" ></select> 
 
               </div>
               <div class="divTableCell">
@@ -183,16 +174,7 @@
                 <label for="" >ชื่อลูกค้า : </label>
               </div>
               <div class="divTableCell">
-                     @if(@$Customer)
-                     <select id="customer_name" name="customer_name" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                          @foreach(@$Customer AS $r)
-                          <option value="{{$r->id}}" >
-                            {{$r->prefix_name}}{{$r->first_name}} {{$r->last_name}}
-                          </option>
-                          @endforeach
-                   </select>
-                    @endif
+                <select id="customer_name" name="customer_name" class="form-control" ></select> 
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_name" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -1656,6 +1638,70 @@ $(document).ready(function() {
           <?php
       }
     ?>
+
+
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#customer_code").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: 'Select',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerCodeOnly') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
+
+
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#customer_name").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: 'Select',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerNameOnly') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
 
 @endsection
 

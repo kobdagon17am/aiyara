@@ -53,7 +53,7 @@ class Pay_product_packingController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.pay_product_packing.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
@@ -231,7 +231,7 @@ class Pay_product_packingController extends Controller
 
        $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.pay_product_packing.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,

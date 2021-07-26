@@ -97,6 +97,11 @@
         border: 1px solid #cccccc;
       }
 
+      .select2-selection__placeholder{
+          color: #4d4d4d !important;
+        }
+          
+
 </style>
 
 <!-- Sweet Alert -->
