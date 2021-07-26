@@ -21,7 +21,7 @@ class Pm_broadcastController extends Controller
     {
       $sMainGroup = DB::select(" select * from role_group where id<>1 ");
       $sOperator = \App\Models\Backend\Permission\Admin::get();
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.pm_broadcast.form')->with(
         array(
            'sOperator'=>$sOperator,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup
@@ -40,7 +40,7 @@ class Pm_broadcastController extends Controller
        $subject_recipient = $sUser[0]->name;
        $operator_name = \App\Models\Backend\Permission\Admin::where('id', $sRow->operator)->get();
        $operator_name = $operator_name[0]->name;
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
        return View('backend.pm_broadcast.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
     }

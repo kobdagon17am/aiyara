@@ -22,7 +22,7 @@ class Po_inController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.po_in.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
@@ -38,7 +38,7 @@ class Po_inController extends Controller
        $sRow = \App\Models\Backend\Po_in::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.po_in.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,

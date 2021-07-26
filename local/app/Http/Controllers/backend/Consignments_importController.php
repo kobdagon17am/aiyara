@@ -19,13 +19,7 @@ class Consignments_importController extends Controller
 
  public function create()
     {
-      // $sMainGroup = DB::select(" select * from role_group where id<>1 ");
-      // $sOperator = \App\Models\Backend\Permission\Admin::get();
-      // $Customer = DB::select(" select * from customers ");
-      // return View('backend.consignments_import.form')->with(
-      //   array(
-      //      'sOperator'=>$sOperator,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup
-      //   ) );
+
     }
     public function store(Request $request)
     {

@@ -51,7 +51,7 @@ class Pick_warehouseController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.pick_warehouse.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province

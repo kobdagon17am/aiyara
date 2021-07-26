@@ -193,7 +193,7 @@ class DeliveryController extends Controller
 
       $Province = DB::select(" select * from dataset_provinces ");
 
-      $Customer = DB::select(" select * from customers ");
+      $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.delivery.form')->with(
         array(
            'Customer'=>$Customer,'Province'=>$Province
@@ -337,7 +337,7 @@ class DeliveryController extends Controller
        $sRow = \App\Models\Backend\Delivery::find($id);
        $Province = DB::select(" select * from dataset_provinces ");
 
-       $Customer = DB::select(" select * from customers ");
+       $Customer = DB::select(" select * from customers limit 100 ");
       return View('backend.delivery.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id, 'Province'=>$Province,'Customer'=>$Customer,

@@ -27,9 +27,6 @@ class Pay_product_packing_listController extends Controller
               left Join customers ON db_pay_product_receipt.customer_id = customers.id
               GROUP BY db_pay_product_receipt.customer_id
               ");
-      // return $sBranchs;
-      // dd($customer);
-       // $customer_name = @$P[0]->cus_code ." : ".@$P[0]->prefix_name.@$P[0]->first_name." ".@$P[0]->last_name;
 
         return View('backend.pay_product_packing_list.index')->with(
         array(
@@ -43,11 +40,6 @@ class Pay_product_packing_listController extends Controller
     public function create()
     {
       return View('backend.pay_product_packing_list.form');
-      // $Customer = DB::select(" select * from customers ");
-      // return View('backend.pay_product_packing_list.form')->with(
-      //   array(
-      //      'Customer'=>$Customer,'Province'=>$Province
-      //   ) );
     }
 
 
@@ -63,17 +55,7 @@ class Pay_product_packing_listController extends Controller
 
       return View('backend.pay_product_packing_list.form');
 
-      //  $sRow = DB::select(" SELECT db_pick_warehouse_tmp.*,db_consignments.recipient_name,db_consignments.address,db_consignments.mobile,db_consignments.status_sent,db_consignments.sent_date,db_consignments.id as consignments_id from db_pick_warehouse_tmp 
-      //   Left Join db_consignments ON db_consignments.recipient_code = db_pick_warehouse_tmp.invoice_code
-      //   where db_pick_warehouse_tmp.id = '$id'
-      //   group by db_pick_warehouse_tmp.invoice_code ");
-      //  // dd($sRow);
 
-      //  $Customer = DB::select(" select * from customers ");
-      // return View('backend.pay_product_packing_list.form')->with(
-      //   array(
-      //      'sRow'=>$sRow, 'id'=>$id, 'Customer'=>$Customer,
-      //   ) );
     }
 
     public function update(Request $request, $id)
@@ -87,26 +69,10 @@ class Pay_product_packing_listController extends Controller
 
       \DB::beginTransaction();
       try {
-          if( $id ){
-          //   // $sRow = \App\Models\Backend\Pay_product_receipt::find($id);
-          //   $sRow = \App\Models\Backend\Consignments::find(request('consignments_id'));
-          //   // $db_pick_warehouse_tmp = DB::select(" select * from db_pick_warehouse_tmp where id = '$id' ");
-          //   // $sRow = \App\Models\Backend\Consignments::where('recipient_code',$db_pick_warehouse_tmp[0]->invoice_code);
-
-          // $sRow->mobile = request('mobile');
-          // $sRow->sent_date = request('sent_date');
-          // $sRow->status_sent = request('status_sent')==1?1:0;
-          // $sRow->approver = \Auth::user()->id;
-          // $sRow->created_at = date('Y-m-d H:i:s');
-          // $sRow->save();
-
-
-        }
-
+  
           \DB::commit();
 
           return redirect()->to(url("backend/pay_product_packing"));
-
 
       } catch (\Exception $e) {
         echo $e->getMessage();
