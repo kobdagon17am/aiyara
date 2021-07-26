@@ -21,13 +21,13 @@ class LoginController extends Controller
         // ->where('user_name','=',$req->username)
         // ->where('password','=',md5($req->password))
         // ->first();
-
       $get_users = CUser::where('user_name','=',$req->username)
         ->where('password','=',md5($req->password))
         ->first();
 // dd($get_users);
         // if(count($get_users)>0){
  if($get_users){
+          session()->forget('access_from_admin');
           Auth::guard('c_user')->login($get_users);
             // session(['id' => $get_users[0]->id,
             //     'line_type' => $get_users[0]->line_type]);

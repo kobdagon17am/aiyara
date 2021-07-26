@@ -29,10 +29,10 @@
             </div>
 
             <div>
-              @can('can-access')
+              @if($canAccess)
                 <button type="button" onclick="document.getElementById('img').click()" class="btn btn-primary waves-effect waves-light m-r-15"><i class="icofont icofont-plus m-r-5"></i> เลือกรูปภาพ</button>
                 <button type="submit" id="upload" class="btn btn-success waves-effect waves-light"><i class="fa fa-upload m-r-5"></i> อัพโหลดรูปภาพ</button>
-                @endcan
+                @endif
             </div>
         </div>
     </form>

@@ -76,9 +76,9 @@
 
             </div>
             <div class="modal-footer">
-              @can('can-access')
+              @if($canAccess)
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                @can
+                @endif
                 {{-- <button type="button" class="btn btn-primary waves-effect waves-light ">Save
                   changes</button> --}}
             </div>

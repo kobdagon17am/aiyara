@@ -12,7 +12,7 @@
         <p>ภายใต้ @if($data->business_name){{ $data->business_name }}@else {{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} @endif</p>
       </div>
       <div class="modal-footer">
-        @can('can-access')
+        @if($canAccess)
         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
         <a href="{{route('register',['id'=>$data->id,'line_type'=>$type])}}" type="button" class="btn btn-primary waves-effect waves-light ">Add</a>
         @endcan
