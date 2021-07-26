@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 
 class Member_pvController extends Controller
 {
@@ -271,6 +272,9 @@ class Member_pvController extends Controller
       ->addColumn('regis_date', function($row) {
         $Member_regis = \App\Models\Backend\Member_regis::where('customer_id',$row->id)->first();
         return @$Member_regis->created_at;
+      })
+      ->addColumn('routes_user', function ($user) {
+          return route('admin.access', Crypt::encryptString($user->user_name));
       })
       ->make(true);
     }

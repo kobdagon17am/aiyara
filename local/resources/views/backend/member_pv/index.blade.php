@@ -217,7 +217,6 @@
 
 @section('script')
 
-
 <script>
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
@@ -277,10 +276,9 @@ $(function() {
 
             }else{
 
-               console.log(aData['user_name']);
 
                $('td:last-child', nRow).html(''
-                  + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+aData['user_name']+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
+                  + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
                 ).addClass('input');
 
             }
