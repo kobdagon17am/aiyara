@@ -217,6 +217,7 @@
 
 @section('script')
 
+
 <script>
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);

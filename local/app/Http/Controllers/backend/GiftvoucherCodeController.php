@@ -17,10 +17,10 @@ class GiftvoucherCodeController extends Controller
 
     public function create(Request $request)
     {
-        $Customer = DB::select(" SELECT *  FROM customers ");
+        // $Customer = DB::select(" SELECT *  FROM customers limit 100 ");
         return View('backend.giftvoucher_code.form')->with(
         array(
-           'Customer'=>$Customer,
+           // 'Customer'=>$Customer,
         ));
 
     }
@@ -34,7 +34,7 @@ class GiftvoucherCodeController extends Controller
     {
       // dd($id);
       $sRow = \App\Models\Backend\GiftvoucherCode::find($id);
-      $Customer = DB::select(" SELECT *  FROM customers ");
+      // $Customer = DB::select(" SELECT *  FROM customers limit 100 ");
       // dd($sRow);
 
       $sRowGiftvoucherCus = \App\Models\Backend\GiftvoucherCus::where('giftvoucher_code_id_fk', $id)->get();
@@ -45,7 +45,7 @@ class GiftvoucherCodeController extends Controller
       ->with(
         array(
            'sRow'=>$sRow,
-           'Customer'=>$Customer,
+           // 'Customer'=>$Customer,
            'sRowGiftvoucherCus'=>$sRowGiftvoucherCus,
         ) );       
     }

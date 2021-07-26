@@ -134,20 +134,9 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส/ชื่อสมาชิก : </label>
+                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
                     <div class="col-md-9">
-                      <select id="customer_id_fk" name="customer_id_fk" class="form-control select2-templating " >
-                        <option value="">-Customer-</option>
-                        @if(@$customer)
-                        @foreach(@$customer AS $r)
-                        <option value="{{$r->customer_id_fk}}" >
-                          <!-- {{$r->customer_id_fk}} -->
-                          {{$r->cus_code}} :
-                          {{$r->prefix_name}}{{$r->first_name}} {{$r->last_name}}
-                        </option>
-                        @endforeach
-                        @endif
-                      </select>
+                       <select id="customer_id_fk" name="customer_id_fk" class="form-control" required ></select> 
                     </div>
                   </div>
                 </div>
@@ -736,7 +725,36 @@ $(document).ready(function() {
 });
 
 </script>
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
 
+      $("#customer_id_fk").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
  
 @endsection
 

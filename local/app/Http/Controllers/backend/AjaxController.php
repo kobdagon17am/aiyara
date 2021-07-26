@@ -3766,6 +3766,35 @@ class AjaxController extends Controller
            }
     }    
 
+
+
+    public function ajaxGetCustomerCode(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->orderBy('user_name', 'asc')
+                ->get();
+            }
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->user_name,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }    
+
+
     public function ajaxCancelOrderBackend(Request $request)
     {
       // return ($request);

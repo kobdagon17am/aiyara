@@ -13,6 +13,9 @@ class Member_pvController extends Controller
     public function index(Request $request)
     {
 
+       ini_set('max_execution_time', '0'); 
+       ini_set('memory_limit', '-1'); 
+
        $sApprover = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sBranchs = \App\Models\Backend\Branchs::get();
@@ -22,18 +25,6 @@ class Member_pvController extends Controller
        $regis_doc_status = DB::select(" SELECT * FROM `dataset_regis_doc_status` ");
 
        // dd($regis_doc_status);
-
-        $customer = DB::select(" SELECT
-              customers.user_name AS cus_code,
-              customers.prefix_name,
-              customers.first_name,
-              customers.last_name,
-              register_files.customer_id
-              FROM
-              register_files
-              left Join customers ON register_files.customer_id = customers.id
-              GROUP BY register_files.customer_id
-              ");
 
       // $sPay_product_status = \App\Models\Backend\Pay_product_status::get();
       $sInvoice_code = DB::select(" SELECT
@@ -49,7 +40,6 @@ class Member_pvController extends Controller
            'sBusiness_location'=>$sBusiness_location,'sBranchs'=>$sBranchs,'Supplier'=>$Supplier,
            'sApprover'=>$sApprover,
            'po_number'=>$po_number,
-           'customer'=>$customer,
            'filetype'=>$filetype,
            'regis_doc_status'=>$regis_doc_status,
 
@@ -93,6 +83,10 @@ class Member_pvController extends Controller
 
 
     public function Datatable(Request $req){
+
+
+       ini_set('max_execution_time', '0'); 
+       ini_set('memory_limit', '-1'); 
 
         if(!empty($req->customer_id)){
            $w01 = " AND customers.id=".$req->customer_id."  " ;
@@ -155,6 +149,9 @@ class Member_pvController extends Controller
                 ".$w02."
                 ".$w03."
                 ".$w04."
+
+              limit 100
+
          ");
 
       // (SELECT created_at FROM register_files WHERE customer_id=customers.id limit 1) as regis_date
@@ -213,6 +210,10 @@ class Member_pvController extends Controller
           }else{
              return 'รอตรวจสอบ';
           }
+        }
+
+        if(@$row->regis_doc1_status==0 && @$row->regis_doc2_status==0 && @$row->regis_doc3_status==0 && @$row->regis_doc4_status==0){
+          return 'ไม่พบไฟล์เอกสาร';
         }
 
       })

@@ -145,7 +145,7 @@
 
             <!-- Tab panes -->
             <div class="tab-content p-3 text-muted">
-              <div class="tab-pane active " id="home" role="tabpanel">
+              <div class="tab-pane  active " id="home" role="tabpanel">
                 <p class="mb-0">
 
 <div class="myBorder">
@@ -305,7 +305,7 @@
    
 
           <!--Tab panes -->
-          <div class="tab-pane " id="second_tab" role="tabpanel">
+          <div class="tab-pane  " id="second_tab" role="tabpanel">
             <p class="mb-0">
            
 
@@ -569,7 +569,7 @@ $(function() {
               $('td:last-child', nRow).html('-');
           }else{ 
 
-            console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+            // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
 
             if(aData['regis_status_02']=='S' && aData['item_checked']==0){
 $('td:last-child', nRow).html('-');
@@ -632,6 +632,14 @@ $(function() {
           method: 'POST'
         },
 
+        dom: 'frtipB',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'รายการตรวจเอกสาร'
+            },
+       
+        ],
         columns: [
             {data: 'id', title :'No.', className: 'text-center w50'},
             {data: 'created_at', title :'<center>วันที่สมัคร</center>', className: 'text-center'},
