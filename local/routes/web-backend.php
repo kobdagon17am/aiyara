@@ -785,6 +785,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxSentMoneyDaily', 'AjaxController@ajaxSentMoneyDaily');
     Route::post('ajaxCancelSentMoney', 'AjaxController@ajaxCancelSentMoney');
+    
+    Route::post('ajaxCancelOrderBackend', 'AjaxController@ajaxCancelOrderBackend');
 
 
     Route::resource('giveaway', 'GiveawayController');

@@ -3729,8 +3729,6 @@ class AjaxController extends Controller
     }
 
 
-
-
     public function ajaxGetCustomer(Request $request)
     {
         if($request->ajax()){
@@ -3767,6 +3765,16 @@ class AjaxController extends Controller
 
            }
     }    
+
+    public function ajaxCancelOrderBackend(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+      DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
+      // return response()->json(\App\Models\Alert::Msg('success'));
+       // return redirect()->to(url("backend/frontstore"));
+       }
+    }
 
 
 

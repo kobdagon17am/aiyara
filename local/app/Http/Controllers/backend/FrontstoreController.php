@@ -1012,39 +1012,14 @@ class FrontstoreController extends Controller
       }
     }
 
+// สคริปต์นี้มีปัญหากับ V3 ไปใช้ ajaxCancelOrderBackend แทน
     public function destroy($id)
     {
-      // dd($id);
-      // return $id ;
-      // dd();
-
-      // $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
-      //  if($sFrontstoreDataTotal){
-      //     $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-      //     $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-      //     DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
-      //   }else{
-      //     DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0,cash_pay='0', cash_price='0', shipping_price='0', total_price='0' WHERE id=$id  ");
-      //   }
-
-      // DB::select(" DELETE FROM db_order_products_list where frontstore_id_fk=$id ");
-
-      //   if($request->frontstore_id){
-      //      $r = DB::select(" SELECT * FROM db_orders where id=$id ");
-      //   }else{
-      //     $r = NULL;
-      //   }
-
-
-      // DB::select(" UPDATE customers SET ai_cash=(ai_cash + ".$r[0]->aicash_price.") WHERE (id='".$r[0]->member_id_aicash."') ");
-
-      // DB::select(" UPDATE db_orders SET approve_status=4 where id=$id ");
-      DB::select(" UPDATE db_orders SET approve_status=5 where id=$id ");
-   
-      return response()->json(\App\Models\Alert::Msg('success'));
+      // DB::select(" UPDATE db_orders SET approve_status=5 where id=$id ");
+      // return response()->json(\App\Models\Alert::Msg('success'));
+       // return redirect()->to(url("backend/frontstore"));
     }
-
-
+   
 
     public function Datatable(Request $req){
 

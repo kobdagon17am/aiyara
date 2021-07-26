@@ -849,9 +849,11 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
               }else{
 
+                // console.log(aData['id']);
+
                 $('td:last-child', nRow).html(''
                   + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                   
                 ).addClass('input');
 
@@ -903,8 +905,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
                 $("td:eq(8)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
                 $("td:eq(9)", nRow).html('');
               }
-              console.log(aData['type']);
-              console.log(aData['status_sent_money']);
+              // console.log(aData['type']);
+              // console.log(aData['status_sent_money']);
               if(aData['type']=="เติม Ai-Cash"){
                 // $("td:eq(9)", nRow).html('');
                 $("td:eq(10)", nRow).html('');
@@ -1049,7 +1051,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  console.log(data);
+                                  // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -1280,7 +1282,7 @@ $(document).ready(function() {
 
           					                $('td:last-child', nRow).html(''
           					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-          					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           					                  
           					                ).addClass('input');
 
@@ -1310,8 +1312,7 @@ $(document).ready(function() {
           					        }
           					    });
 
-          					// + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
+          		
           					});
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     	
@@ -1470,7 +1471,7 @@ $(document).ready(function() {
 
               					                $('td:last-child', nRow).html(''
               					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+              					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               					                  
               					                ).addClass('input');
 
@@ -1499,8 +1500,6 @@ $(document).ready(function() {
 
               					        }
               					    });
-
-              					// + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
               					});
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1602,6 +1601,41 @@ $(document).ready(function() {
 
       	 $(document).on('click', '.test_clear_sent_money', function(event) {
               location.replace( window.location.href+"?test_clear_sent_money=test_clear_sent_money ");
+            });
+
+          $(document).on('click', '.cCancel', function(event) {
+
+            var id = $(this).data('id');
+         
+              if (!confirm("ยืนยัน ? เพื่อยกเลิกรายการสั่งซื้อที่ระบุ ")){
+                  return false;
+              }else{
+              $.ajax({
+                  url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", id:id,
+                  },
+                  success:function(data)
+                  { 
+                    console.log(data);
+                    // return false;
+                        Swal.fire({
+                          type: 'success',
+                          title: 'ทำการยกเลิกรายการสั่งซื้อที่ระบุเรียบร้อยแล้ว',
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+
+                        setTimeout(function () {
+                          $('#data-table').DataTable().clear().draw();
+                        }, 1000);
+                  }
+                });
+
+            }
+
+              
             });
                 
       });
