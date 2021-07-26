@@ -376,7 +376,7 @@
       </li>
 
 
-    @can('can-access')
+    @if($canAccess)
 		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('cart_payment/*') ) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-shopping-cart text-success"></i><b>สั่งซื้อสินค้า</b></span>
@@ -457,7 +457,7 @@
 
 			</ul>
 		</li>
-    @endcan
+    @endif
 
     <li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
       <a href="{{route('ai-cash')}}">

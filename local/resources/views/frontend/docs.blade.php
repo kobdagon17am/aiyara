@@ -57,19 +57,18 @@
                 <input type="file" id="file_3" name="file_3" class="form-control">
               </div>
             </div>   
+            <div class="m-t-2 col-sm-12 text-center">
+              <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
+            </div>
            @endif
-
-          <div class="m-t-2 col-sm-12 text-center">
-            <img src="{{ asset('frontend/assets/images/user_card.jpg') }}" id="preview" class="img-thumbnail">
-          </div>
         </div>
 
         <div class="form-group row ml-auto">
           <label class="col-sm-2"></label>
           <div class="col-sm-10">
-            @can('can-access')
+            @if($canAccess)
             <button type="submit" class="btn btn-primary m-b-0">Upload</button>
-            @endcan
+            @endif
           </div>
         </div>
       </div>
