@@ -58,6 +58,8 @@ class RegisterController extends Controller
     if (isset($request->function) && $request->function == 'provinces') {
       $id = $request->id;
 
+      $hasOldAmphures = isset($request->amphuresId) ? $request->amphuresId : '';
+
       $amphures = DB::table('dataset_amphures')
       ->select('*')
       ->where('province_id','=',$id)
@@ -65,7 +67,9 @@ class RegisterController extends Controller
       $data_amphures = '';
       $data_amphures .= '<option value="" > กรุณาเลือกอำเภอ </option>';
       foreach ($amphures as $amphures_value) {
-        $data_amphures .= '<option value="'.$amphures_value->id.'">'.$amphures_value->name_th.'</option>';
+        $selected = $hasOldAmphures && $amphures_value->id == $hasOldAmphures ? 'selected' : '';
+
+        $data_amphures .= '<option value="'.$amphures_value->id.'" '.$selected.'>'.$amphures_value->name_th.'</option>';
       }
       return $data_amphures;
     }
@@ -74,6 +78,8 @@ class RegisterController extends Controller
 
     if (isset($request->function) && $request->function == 'amphures') {
       $id = $request->id;
+      $hasOldDistrict = isset($request->districtId) ? $request->districtId : '';
+
       $district = DB::table('dataset_districts')
       ->select('*')
       ->where('amphure_id','=',$id)
@@ -82,7 +88,8 @@ class RegisterController extends Controller
       $data_district .= '<option value="" > กรุณาเลือกตำบล </option>';
 
       foreach ($district as $district_value) {
-        $data_district .= '<option value="'.$district_value->id.'">'.$district_value->name_th.'</option>';
+        $selected = $hasOldDistrict && $district_value->id == $hasOldDistrict ? 'selected' : '';
+        $data_district .= '<option value="'.$district_value->id.'" '.$selected.'>'.$district_value->name_th.'</option>';
       }
       return $data_district;
     }

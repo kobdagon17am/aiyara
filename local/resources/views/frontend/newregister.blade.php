@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <label><b> Besines Location </b></label>
+          <label><b> Business Location </b></label>
           <select name="business_location" class="form-control">
             @foreach($data['business_location'] as $business_location_value)
             <option value="{{ $business_location_value->id }}" @if($business_location_value->id == $data['data']->business_location_id) selected="" @endif>{{ $business_location_value->txt_desc }}</option>
@@ -114,8 +114,7 @@
   <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
     <option value="" >Select</option>
     @foreach($data['country'] as $country_value)
-    <option value="{{ $country_value->nation_id }}"  @if($country_value->nation_id == $data['data']->nation_id) selected="" @endif>{{ $country_value->nation_name_en }}</option>
-
+    <option value="{{ $country_value->nation_id }}"  @if($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>{{ $country_value->nation_name_en }}</option>
     @endforeach
   </select>
 </div>
@@ -179,7 +178,7 @@
     <select class="js-example-basic-single col-sm-12" id="card_province" name="card_province" required="">
       <option value="" >Select</option>
       @foreach($data['provinces'] as $value_provinces)
-      <option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
+      <option value="{{ $value_provinces->id }}" @if($value_provinces->id == old('card_province')) selected @endif>{{ $value_provinces->name_th }}</option>
       @endforeach
     </select>
 
@@ -217,7 +216,7 @@
 <div class="col-sm-12 col-xl-6 m-b-30">
   <div class="checkbox-fade fade-in-primary">
     <label>
-      <input type="checkbox" id="copy_card_address" onchange="copy_address()" >
+      <input type="checkbox" id="copy_card_address" onchange="copy_address()" name="copy_card_address">
       <span class="cr">
         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
       </span>
@@ -383,7 +382,7 @@
  </div>
  <div class="form-group row">
   <div class="col-sm-12">
-   <label>ภายถ่ายหน้าตรง <b class="text-danger">*</b></label>
+   <label>ภาพถ่ายหน้าตรง <b class="text-danger">*</b></label>
    <input type="file" id="file_2" name="file_2" class="form-control" required>
  </div>
 </div>
@@ -562,6 +561,7 @@
 </script>
 
 <script type="text/javascript">
+
   $('#card_province').change(function() {
     var id_province = $(this).val();
     $.ajax({
@@ -655,5 +655,51 @@
     });
 
   });
+
+  getOldAddress()
+
+  function getOldAddress() {
+    const province = "{{ old('card_province') }}"
+    const amphures = "{{ old('card_amphures') }}"
+    const district = "{{ old('card_district') }}"
+    const copyAddress = "{{ old('copy_card_address') }}"
+
+    if (province) {
+      $.ajax({
+        type: "get",
+        url: "{{ route('location') }}",
+        data: { id: province, function: 'provinces', amphuresId: amphures},
+        success: function (data) {
+          $('#card_amphures').html(data)
+        }
+      })
+    }
+
+    if (amphures) {
+      $.ajax({
+        type: "get",
+        url: "{{ route('location') }}",
+        data: { id: amphures, function: 'amphures', districtId: district},
+        success: function (data) {
+          $('#card_district').html(data)
+        }
+      })
+    }
+
+    if (district) {
+      $.ajax({
+        type: "get",
+        url: "{{ route('location') }}",
+        data: { id: district, function: 'district'},
+        success: function(data){
+          $('#card_zipcode').val(data);
+        }
+      });
+    }
+
+    if (copyAddress) {
+      $('#copy_card_address').attr('checked', true)
+    }
+  }
 </script>
 @endsection
