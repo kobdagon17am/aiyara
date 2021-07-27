@@ -166,6 +166,7 @@
                     </div>
                   </div>
                 </div>
+                <!-- 
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="invoice_code" class="col-md-3 col-form-label"> เลขออเดอร์ : </label>
@@ -183,11 +184,33 @@
                     </div>
                   </div>
                 </div>
+ -->
+
+    <div class="col-md-6 " >
+                   <div class="form-group row">
+                    <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
+                    <div class="col-md-9">
+                     <select id="approver" name="approver" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                        @if(@$sApprover)
+                        @foreach(@$sApprover AS $r)
+                        <option value="{{$r->id}}" >
+                           {{$r->name}}
+                        </option>
+                        @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                
               </div>
               
 
             <div class="row" >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
+                  <!--  
                   <div class="form-group row">
                     <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
                     <div class="col-md-9">
@@ -203,6 +226,8 @@
                       </select>
                     </div>
                   </div>
+
+                -->
                 </div>
 
     
@@ -299,7 +324,7 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'invoice_code', title :'<center>เลขออเดอร์ </center>', className: 'text-left'},
+            // {data: 'invoice_code', title :'<center>เลขออเดอร์ </center>', className: 'text-left'},
             {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
             {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
             {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},

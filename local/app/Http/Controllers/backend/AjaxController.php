@@ -3850,6 +3850,64 @@ class AjaxController extends Controller
            }
     }    
 
+    public function ajaxGetBusinessName(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('business_name', 'LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->orderBy('business_name', 'asc')
+                ->get();
+            }
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->business_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }  
+
+
+    public function ajaxGetIntroduce_id(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->orderBy('user_name', 'asc')
+                ->get();
+
+                $customers_introduce = DB::table('customers')
+                ->where('id', $customers[0]->id)
+                ->groupBy('id')
+                ->orderBy('user_name', 'asc')
+                ->get();
+
+            }
+
+            foreach($customers_introduce as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }  
+
+
 
     public function ajaxCancelOrderBackend(Request $request)
     {

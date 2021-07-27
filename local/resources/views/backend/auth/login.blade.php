@@ -33,7 +33,7 @@ Login
                                 @csrf
                                     <div class="form-group">
                                         <label for="username">Username</label>
-                                        <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" @if(old('email')) value="{{ old('email') }}" @else value="admin@email.com" @endif id="username" placeholder="Enter username" autocomplete="email" autofocus>
+                                        <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" @if(old('email')) value="{{ old('email') }}" @else  @endif id="username" placeholder="Enter username" autocomplete="on" autofocus>
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -43,7 +43,7 @@ Login
 
                                     <div class="form-group">
                                         <label for="userpassword">Password</label>
-                                        <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" id="userpassword" value="aaaa1111" placeholder="Enter password">
+                                        <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" id="userpassword"  placeholder="Enter password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -52,8 +52,8 @@ Login
                                     </div>
 
                                     <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customControlInline" checked="checked">
-                                            <label class="custom-control-label" for="customControlInline">Remember me</label>
+                                         <!--    <input type="checkbox" class="custom-control-input" id="customControlInline" >
+                                            <label class="custom-control-label" for="customControlInline">Remember me</label> -->
                                     </div>
 
                                     <div class="mt-3">

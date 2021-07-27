@@ -138,10 +138,17 @@ class Member_pvController extends Controller
           customers.prefix_name,
           customers.first_name,
           customers.last_name,
+          customers.aistockist_status,
+          customers.qualification_id,
+          customers.package_id,
+          customers.pv,
+          customers.introduce_id,
+          customers.regis_date_doc,
           customers.regis_doc1_status,
           customers.regis_doc2_status,
           customers.regis_doc3_status,
-          customers.regis_doc4_status
+          customers.regis_doc4_status,
+          customers.business_name
 
           FROM `customers`
 
@@ -160,10 +167,27 @@ class Member_pvController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
        ->addColumn('customer_name', function($row) {
-          return $row->user_name." : ".$row->prefix_name.$row->first_name." ".$row->last_name;
+        if($row->user_name){
+          return @$row->user_name." : ".trim(@$row->prefix_name).trim(@$row->first_name)." ".trim(@$row->last_name);
+        }else{
+          return '';
+        }
       })
-      ->addColumn('status_aistockis', function($row) {
-        return '-';
+      ->addColumn('qualification', function($row) {
+        if($row->qualification_id){
+          $d = DB::select(" SELECT * FROM `dataset_qualification` where id= ".$row->qualification_id."  ");
+          return @$d[0]->business_qualifications;
+        }else{
+          return '-';
+        }
+      })
+      ->addColumn('package', function($row) {
+        if($row->qualification_id){
+          $d = DB::select(" SELECT * FROM `dataset_package` where id= ".$row->package_id."  ");
+          return @$d[0]->dt_package;
+        }else{
+          return '-';
+        }
       })
       ->addColumn('regis_status', function($row) {
         // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
@@ -172,109 +196,85 @@ class Member_pvController extends Controller
         //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
 
-        $Member_regis = \App\Models\Backend\Member_regis::where('customer_id',$row->id)->first();
-        if(@$Member_regis->type==1){
-          if($row->regis_doc1_status=="1"){
-            return 'ผ่าน';
-          }elseif($row->regis_doc1_status=="2"){
-            return 'ไม่ผ่าน';
-          }else{
-             return 'รอตรวจสอบ';
-          }
+        $ic = '';
+
+        if($row->regis_doc1_status==1){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=1 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ผ่าน">'.@$icon[0]->icon_pass.'</span>';
+        }elseif($row->regis_doc1_status==2){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=1 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ไม่ผ่าน">'.@$icon[0]->icon_nopass.'</span>';
+        }else{
+          $icon = DB::select(" select * from dataset_regis_filetype where id=1 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ยังไม่ส่ง">'.@$icon[0]->icon_nosend.'</span>';
         }
 
-        if(@$Member_regis[0]->type==2){
-          if($row->regis_doc2_status=="1"){
-            return 'ผ่าน';
-          }elseif($row->regis_doc2_status=="2"){
-            return 'ไม่ผ่าน';
-          }else{
-             return 'รอตรวจสอบ';
-          }
+        if($row->regis_doc2_status==1){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=2 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ผ่าน">'.@$icon[0]->icon_pass.'</span>';
+        }elseif($row->regis_doc2_status==2){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=2 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ไม่ผ่าน">'.@$icon[0]->icon_nopass.'</span>';
+        }else{
+          $icon = DB::select(" select * from dataset_regis_filetype where id=2 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ยังไม่ส่ง">'.@$icon[0]->icon_nosend.'</span>';
         }
 
-        if(@$Member_regis[0]->type==3){
-          if($row->regis_doc3_status=="1"){
-            return 'ผ่าน';
-          }elseif($row->regis_doc3_status=="2"){
-            return 'ไม่ผ่าน';
-          }else{
-             return 'รอตรวจสอบ';
-          }
+        if($row->regis_doc3_status==1){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=3 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ผ่าน">'.@$icon[0]->icon_pass.'</span>';
+        }elseif($row->regis_doc3_status==2){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=3 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ไม่ผ่าน">'.@$icon[0]->icon_nopass.'</span>';
+        }else{
+          $icon = DB::select(" select * from dataset_regis_filetype where id=3 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ยังไม่ส่ง">'.@$icon[0]->icon_nosend.'</span>';
         }
 
-        if(@$Member_regis[0]->type==4){
-          if($row->regis_doc4_status=="1"){
-            return 'ผ่าน';
-          }elseif($row->regis_doc4_status=="2"){
-            return 'ไม่ผ่าน';
-          }else{
-             return 'รอตรวจสอบ';
-          }
+        if($row->regis_doc4_status==1){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=4 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ผ่าน">'.@$icon[0]->icon_pass.'</span>';
+        }elseif($row->regis_doc4_status==2){
+          $icon = DB::select(" select * from dataset_regis_filetype where id=4 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ไม่ผ่าน">'.@$icon[0]->icon_nopass.'</span>';
+        }else{
+          $icon = DB::select(" select * from dataset_regis_filetype where id=4 ");
+          $ic .= '<span  data-toggle="tooltip" data-placement="right" title="ยังไม่ส่ง">'.@$icon[0]->icon_nosend.'</span>';
         }
 
-        if(@$row->regis_doc1_status==0 && @$row->regis_doc2_status==0 && @$row->regis_doc3_status==0 && @$row->regis_doc4_status==0){
-          return 'ไม่พบไฟล์เอกสาร';
-        }
+        return $ic;
 
       })
-// เอาไว้ไปเช็คในตาราง Datatable สมาชิกลงทะเบียน ตรวจเอกสาร
-      ->addColumn('regis_status_02', function($row) {
-        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
-        //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-        //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-        //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-        //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-        $Member_regis = \App\Models\Backend\Member_regis::where('customer_id',$row->id)->first();
-
-        if(@$Member_regis[0]->type==1){
-          if($row->regis_doc1_status=="1"){
-            return 'S';
-          }elseif($row->regis_doc1_status=="2"){
-            return 'F';
-          }else{
-             return 'W';
-          }
+      ->escapeColumns('regis_status')
+      ->addColumn('regis_date_doc', function($row) {
+        if($row->regis_date_doc){
+           return $row->regis_date_doc;
+        }else{
+           return '';
         }
-
-        if(@$Member_regis[0]->type==2){
-          if($row->regis_doc2_status=="1"){
-            return 'S';
-          }elseif($row->regis_doc2_status=="2"){
-            return 'F';
-          }else{
-             return 'W';
-          }
-        }
-
-        if(@$Member_regis[0]->type==3){
-          if($row->regis_doc3_status=="1"){
-            return 'S';
-          }elseif($row->regis_doc3_status=="2"){
-            return 'F';
-          }else{
-             return 'W';
-          }
-        }
-
-        if(@$Member_regis[0]->type==4){
-          if($row->regis_doc4_status=="1"){
-            return 'S';
-          }elseif($row->regis_doc4_status=="2"){
-            return 'F';
-          }else{
-             return 'W';
-          }
-        }
-
-      })
-
-      ->addColumn('regis_date', function($row) {
-        $Member_regis = \App\Models\Backend\Member_regis::where('customer_id',$row->id)->first();
-        return @$Member_regis->created_at;
       })
       ->addColumn('routes_user', function ($user) {
-          return route('admin.access', Crypt::encryptString($user->user_name));
+        if(@$user->user_name){
+          return route('admin.access', Crypt::encryptString(@$user->user_name));
+        }else{
+          return 0;
+        }
+      })
+      ->addColumn('aistockist_status', function ($row) {
+          if($row->aistockist_status==1){
+            return '<i class="bx bx-check-circle" style="color:green;font-weight:bold;font-size:16px;" data-toggle="tooltip" data-placement="right" title="เป็นแล้ว" ></i>';
+          }else{
+            return '<i class="bx bx-x-circle" style="color:darkred;" data-toggle="tooltip" data-placement="right" title="ยังไม่เป็น" ></i>';
+          }
+      })
+      ->escapeColumns('aistockist_status')
+      ->addColumn('introduce', function($row) {
+        if($row->introduce_id){
+          $d = \App\Models\Backend\Customers::find($row->introduce_id);
+          return @$d->user_name;
+        }else{
+          return '';
+        }
       })
       ->make(true);
     }
