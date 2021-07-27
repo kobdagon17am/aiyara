@@ -46,8 +46,9 @@
       <hr>
       <div class="row">
         <div class="col-md-12 text-center">
-
+          @if($canAccess)
           <button type="button" onclick="change_password()" class="btn btn-primary"> Change Password </button>
+          @endif
 
         </div>
       </div>

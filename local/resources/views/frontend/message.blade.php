@@ -1,4 +1,4 @@
- 
+
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 @section('css')
@@ -33,29 +33,33 @@
 
                   <div class="modal-header">
                     <h4 class="modal-title">สอบถาม</h4>
+
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
+
                   </div>
                   <div class="modal-body">
 
-                   
+
                     @csrf
                     <div class="form-group">
                       <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
                     </div>
-                    
+
 
                     <textarea name="question"></textarea>
 
-                    
-                    
+
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    @if($canAccess)
                     <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit</button>
+                    @endif
                   </div>
-                  
+
                 </div>
               </form>
             </div>
@@ -67,7 +71,7 @@
 
 
         {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
-      </div>  
+      </div>
 
       <div class="card-block">
        <div class="dt-responsive table-responsive">
@@ -85,9 +89,9 @@
           <tbody>
             @foreach($data as $value)
 
-            <?php 
+            <?php
 
-            $answers = strip_tags($value->answers); 
+            $answers = strip_tags($value->answers);
 
             $text = strlen($answers) > 60 ? substr( $answers,0,60)."..." : $answers; ?>
             <tr>
@@ -108,7 +112,7 @@
 
       <p><span><i class="icofont icofont-star text-primary"></i> New Message</span> | <span><i class="icofont icofont-star text-warning"></i> Sent Message</span></p>
 
-      
+
 
     </div>
   </div>

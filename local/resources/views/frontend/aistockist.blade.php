@@ -23,12 +23,14 @@
                     <div class="form-group row">
                       @if(Auth::guard('c_user')->user()->aistockist_status == 1)
                         <div class="col-md-6 m-t-5">
+                          @if($canAccess)
                           <div class="input-group input-group-button">
                               <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้">
                               <span class="input-group-addon btn btn-primary" onclick="check()">
                                   <span class="">ทำรายการ</span>
                               </span>
                           </div>
+                          @endif
                       </div>
                       @else
 

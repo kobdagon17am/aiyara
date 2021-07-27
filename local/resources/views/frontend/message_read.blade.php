@@ -1,4 +1,4 @@
- 
+
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 @section('css')
@@ -12,14 +12,14 @@
 <div class="card">
   <!-- Email-card start -->
   <div class="card-block email-card">
- 
+
       <div class="row">
         <!-- Left-side section start -->
         <div class="col-lg-3 col-xl-3 ">
           <div class="user-body">
             <div class="p-20 text-center">
               <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"> <i class="fa fa-plus-square"></i> สอบถาม</button>
-              
+
             </div>
 
               <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
@@ -36,23 +36,25 @@
                   </div>
                   <div class="modal-body">
 
-                   
+
                     @csrf
                     <div class="form-group">
                       <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
                     </div>
-                    
+
 
                     <textarea name="question"></textarea>
 
-                    
-                    
+
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    @if($canAccess)
                     <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit</button>
+                    @endif
                   </div>
-                  
+
                 </div>
               </form>
             </div>
@@ -60,29 +62,29 @@
 
             <ul class="page-list nav nav-tabs flex-column" id="pills-tab" role="tablist">
 
-     
+
 
               <li class="nav-item mail-section">
               <a class="nav-link active" data-toggle="pill" href="#e-inbox" role="tab">
                 <i class="fa fa-commenting-o"></i> Message
                  {{-- <span class="label label-primary f-right">6</span> --}}
               </a>
-            </li> 
+            </li>
 
             <li class="nav-item mail-section">
               <a class="nav-link " href="{{ route('message',['active'=>'inbox']) }}" >
                 <i class="fa fa-envelope-o"></i> ติดต่อ/สอบถาม
-                  <?php  
+                  <?php
                   $noti = \App\Helpers\Frontend::notifications(Auth::guard('c_user')->user()->id);
-                   
-                   
+
+
                    ?>
                    @if($noti['count'] > 0)
                   <span class="label label-primary f-right">{{ $noti['count'] }}</span>
                   @endif
               </a>
             </li>
- 
+
 
           </ul>
          {{--  <ul class="p-20 label-list">
@@ -99,13 +101,13 @@
               <li>
                 <a class="mail-design" href="">Design</a>
               </li>
-              
+
            <li>
                 <a class="mail-friends" href="">Friends</a>
               </li>
               <li>
                 <a class="mail-office" href="">Office</a>
-              </li>  
+              </li>
             </ul> --}}
           </div>
         </div>
@@ -114,7 +116,7 @@
         <div class="col-lg-9 col-xl-9">
           <div class="tab-content" id="pills-tabContent">
 
-    
+
 
        <div class="tab-pane fade show active" id="e-inbox" role="tabpanel">
 
@@ -126,7 +128,7 @@
                 <h5>{{ $pm_data->topics_question }}</h5>
                 <h6 class="f-right">@if($pm_data->created_at){{ date('d/m/Y H:i:s',strtotime($pm_data->created_at)) }}@endif</h6>
               </div>
-              <div class=""> 
+              <div class="">
                 <div class="media m-b-20">
                   <div class="media-left photo-table">
 
@@ -195,7 +197,7 @@
               @endforeach
 
               <div class="m-t-15">
-                <i class="icofont icofont-paper-plane f-20 mb-5"></i>Reply Your Thoughts 
+                <i class="icofont icofont-paper-plane f-20 mb-5"></i>Reply Your Thoughts
             {{--   <div class="row mail-img">
                 <div class="col-sm-4 col-md-2 col-xs-12">
                   <a href="#"><img class="card-img-top img-fluid img-thumbnail" src="{{asset('frontend/assets/images/card-block/card1.jpg')}}" alt="Card image cap"></a>
@@ -211,8 +213,10 @@
                 @csrf
                 <input type="hidden" name="pm_id" value="{{ $pm_data->id }}">
               <textarea name="question_txt" class="form-control m-t-5 col-xs-12 email-textarea" id="exampleTextarea-1" placeholder="Reply Your Thoughts" rows="4"></textarea>
-              <div class="row mt-2 f-right mr-0"> 
+              <div class="row mt-2 f-right mr-0">
+                @if($canAccess)
                <button type="submit" class="btn btn-primary">Reply</button>
+               @endif
              </div>
               </form>
            </div>
@@ -222,7 +226,7 @@
    </div>
 
  </div>
- 
+
 </div>
 </div>
 <!-- Right-side section end -->

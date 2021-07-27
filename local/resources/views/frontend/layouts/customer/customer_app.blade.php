@@ -258,14 +258,18 @@
 										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i> สถานะเอกสารการสมัคร </a>
 
 									</li>
+                  @if($canAccess)
 									<li>
 										<a href="{{route('chage_password')}}"><i class="fa fa-key text-success"></i> แก้ไขรหัสผ่าน Login </a>
 
 									</li>
+
                   <li>
 										<a href="{{route('chage_password_aicash')}}"><i class="fa fa-key text-success"></i> แก้ไขรหัสผ่าน Ai-Cash </a>
 
 									</li>
+                  @endif
+
 
 									<li>
 										<a href="{{route('logout')}}">
