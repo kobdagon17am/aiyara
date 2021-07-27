@@ -499,7 +499,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -523,7 +523,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -545,7 +545,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -3755,6 +3755,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3783,6 +3784,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->user_name,
@@ -3812,6 +3814,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3839,6 +3842,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3863,6 +3867,7 @@ class AjaxController extends Controller
                 ->orderBy('business_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3888,21 +3893,28 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
 
-                $customers_introduce = DB::table('customers')
-                ->where('id', $customers[0]->id)
-                ->groupBy('id')
-                ->orderBy('user_name', 'asc')
-                ->get();
+                if($customers){
 
-            }
+                        $customers_introduce = DB::table('customers')
+                        ->where('id', @$customers[0]->id)
+                        ->groupBy('id')
+                        ->orderBy('user_name', 'asc')
+                        ->get();
 
-            foreach($customers_introduce as $k => $v){
-                $json_result[] = [
-                    'id'    => $v->id,
-                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
-                ];
-            }           
-            return json_encode($json_result);
+                         $json_result = [];
+                            if($customers_introduce){
+                                foreach($customers_introduce as $k => $v){
+                                    $json_result[] = [
+                                        'id'    => @$v->user_name,
+                                        'text'  => @$v->user_name.':'.@$v->first_name.' '.@$v->last_name,
+                                    ];
+                                } 
+                            }          
+                            return json_encode($json_result);
+
+                        }
+              }
+
 
            }
     }  

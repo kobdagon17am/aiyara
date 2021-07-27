@@ -606,6 +606,7 @@ $(function() {
         destroy: true,
         ordering: false,
         iDisplayLength: 25,
+        searching: false,
         ajax: {
           url: '{{ route('backend.member_regis02.datatable') }}',
           data: function ( d ) {

@@ -130,39 +130,69 @@ class Member_pvController extends Controller
   // `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
 
       // $sTable = \App\Models\Backend\Member_pv::search()->orderBy('id', 'asc');
-      $sTable = DB::select("
+      // $sTable = DB::select("
 
-          SELECT
-          customers.id,
-          customers.user_name,
-          customers.prefix_name,
-          customers.first_name,
-          customers.last_name,
-          customers.aistockist_status,
-          customers.qualification_id,
-          customers.package_id,
-          customers.pv,
-          customers.introduce_id,
-          customers.regis_date_doc,
-          customers.regis_doc1_status,
-          customers.regis_doc2_status,
-          customers.regis_doc3_status,
-          customers.regis_doc4_status,
-          customers.business_name
+      //     SELECT
+      //     customers.id,
+      //     customers.user_name,
+      //     customers.prefix_name,
+      //     customers.first_name,
+      //     customers.last_name,
+      //     customers.aistockist_status,
+      //     customers.qualification_id,
+      //     customers.package_id,
+      //     customers.pv,
+      //     customers.introduce_id,
+      //     customers.regis_date_doc,
+      //     customers.regis_doc1_status,
+      //     customers.regis_doc2_status,
+      //     customers.regis_doc3_status,
+      //     customers.regis_doc4_status,
+      //     customers.business_name
 
-          FROM `customers`
+      //     FROM `customers`
 
-          where 1 
-                ".$w01."
-                ".$w02."
-                ".$w03."
-                ".$w04."
+      //     where 1 
+      //           ".$w01."
+      //           ".$w02."
+      //           ".$w03."
+      //           ".$w04."
 
-              limit 100
+      //         limit 100
 
-         ");
+      //    ");
 
       // (SELECT created_at FROM register_files WHERE customer_id=customers.id limit 1) as regis_date
+
+      if(!empty($req->customer_id)){
+        $w01 = $req->customer_id;
+        $condition = "=";
+      }else{
+        $w01 = 0 ;
+        $condition = "!=";
+      }
+
+      if(!empty($req->business_name)){
+        $w02 = $req->business_name;
+        $condition02 = "=";
+      }else{
+        $w02 = "0" ;
+        $condition02 = "!=";
+      }
+
+      if(!empty($req->introduce_id)){
+        $w03 = $req->introduce_id;
+        $condition03 = "=";
+      }else{
+        $w03 = "0" ;
+        $condition03 = "!=";
+      }
+
+      $sTable = \App\Models\Backend\Customers::where('id','!=',0)
+      ->where('customers.id',$condition,$w01)
+      ->where('customers.business_name',$condition02,$w02)
+      ->where('customers.introduce_id',$condition03,$w03)
+      ;
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -268,14 +298,14 @@ class Member_pvController extends Controller
           }
       })
       ->escapeColumns('aistockist_status')
-      ->addColumn('introduce', function($row) {
-        if($row->introduce_id){
-          $d = \App\Models\Backend\Customers::find($row->introduce_id);
-          return @$d->user_name;
-        }else{
-          return '';
-        }
-      })
+      // ->addColumn('introduce', function($row) {
+      //   if($row->introduce_id){
+      //     $d = \App\Models\Backend\Customers::find($row->introduce_id);
+      //     return @$d->user_name;
+      //   }else{
+      //     return '';
+      //   }
+      // })
       ->make(true);
     }
 

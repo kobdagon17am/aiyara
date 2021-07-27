@@ -90,7 +90,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color:red">*** อยู่ระหว่างการปรับปรุง ***</span> </h4> 
+            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก </h4> 
             
         </div>
     </div>
@@ -139,7 +139,7 @@
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="status_aistockis" class="col-md-3 col-form-label"> นามแฝง :  </label>
+                    <label for="business_name" class="col-md-3 col-form-label"> นามแฝง :  </label>
                     <div class="col-md-9">
                        <select id="business_name" name="business_name" class="form-control" ></select> 
                     </div>
@@ -267,15 +267,15 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
-            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left'},
-            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center'},
-            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center'},
+            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
+            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
+            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
             {data: 'package', title :'<center> Package </center>', className: 'text-center'},
-            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center'},
-            {data: 'introduce', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center'},
-            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
+            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
+            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
             {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
@@ -405,13 +405,13 @@ $(function() {
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();
 
-                  var startDate = $('#startDate').val();
-                  var endDate = $('#endDate').val();
-
-                  var regis_status = $('#regis_status').val();
-
                   var customer_id = $('#customer_id').val();
-                  var status_aistockis = $('#status_aistockis').val();
+                  var business_name = $('#business_name').val();
+                  var introduce_id = $('#introduce_id').val();
+
+                  console.log(customer_id);
+                  console.log(business_name);
+                  console.log(introduce_id);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                             var oTable;
@@ -423,49 +423,47 @@ $(function() {
                                     scroller: true,
                                     destroy:true,
                                     ordering: false,
+                                    searching: false,
                                     ajax: {
                                           url: '{{ route('backend.member_pv.datatable') }}',
                                           data :{
                                             _token: '{{csrf_token()}}',
-                                                startDate:startDate,
-                                                endDate:endDate,
-                                                regis_status:regis_status,                                 
                                                 customer_id:customer_id,                                 
-                                                status_aistockis:status_aistockis,                                 
+                                                business_name:business_name,                                 
+                                                introduce_id:introduce_id,                                 
                                               },
                                             method: 'POST',
                                           },
-
-                                    columns: [
-                                        {data: 'id', title :'ID', className: 'text-center w50'},
-                                        {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
-                                        {data: 'status_aistockis', title :'<center> Status AiStockis </center>', className: 'text-center'},
-                                        {data: 'regis_status', title :'<center> สถานะการสมัคร (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
-                                        {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
-                                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                    ],
-                                    rowCallback: function(nRow, aData, dataIndex){
-                                      if(sU!=''&&sD!=''){
-                                          $('td:last-child', nRow).html('-');
-                                      }else{ 
-
-                                        // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
-
-                                        if(aData['regis_status_02']=='S' && aData['item_checked']==0){
-                                              $('td:last-child', nRow).html('-');
-
-                                        }else{
-
-                                          // console.log(aData['user_name']);
-
-                                           $('td:last-child', nRow).html(''
-                                              + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+(aData['user_name'])+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
-                                            ).addClass('input');
-
+                                          dom: 'Bfrtip',
+                                          buttons: [
+                                            {
+                                              extend: 'excelHtml5',
+                                              title: 'ข้อมูลงานบริการสมาชิก'
+                                            },
+                                          ],
+                                          columns: [
+                                            {data: 'id', title :'ID', className: 'text-center w50'},
+                                            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
+                                            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
+                                            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
+                                            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
+                                            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
+                                            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
+                                            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+                                            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
+                                            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
+                                            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
+                                        ],
+                                      rowCallback: function(nRow, aData, dataIndex){
+                                        if(sU!=''&&sD!=''){
+                                            $('td:last-child', nRow).html('-');
+                                        }else{ 
+                                          // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+                                             $('td:last-child', nRow).html(''
+                                                + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
+                                              ).addClass('input');
                                         }
-
                                       }
-                                    }
                                 });
 
                             });
