@@ -3864,13 +3864,14 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')
                 ->where('business_name', 'LIKE', '%'.$request->term.'%')
                 ->take(15)
+                ->groupBy('business_name')
                 ->orderBy('business_name', 'asc')
                 ->get();
             }
             $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
-                    'id'    => $v->id,
+                    'id'    => $v->business_name,
                     'text'  => $v->business_name,
                 ];
             }           

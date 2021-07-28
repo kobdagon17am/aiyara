@@ -86,43 +86,43 @@ class Member_pvController extends Controller
     public function Datatable(Request $req){
 
 
-       ini_set('max_execution_time', '0'); 
-       ini_set('memory_limit', '-1'); 
+       // ini_set('max_execution_time', '0'); 
+       // ini_set('memory_limit', '-1'); 
 
-        if(!empty($req->customer_id)){
-           $w01 = " AND customers.id=".$req->customer_id."  " ;
-        }else{
-           $w01 = "";
-        }
+       //  if(!empty($req->customer_id)){
+       //     $w01 = " AND customers.id=".$req->customer_id."  " ;
+       //  }else{
+       //     $w01 = "";
+       //  }
 
-        if(!empty($req->status_aistockis)){
-           $w02 = " AND customers.id=".$req->status_aistockis."  " ;
-        }else{
-           $w02 = "";
-        }
-
-
-        if(!empty($req->startDate) && !empty($req->endDate)){
-          // $w03 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
-           $w03 = " AND (SELECT date(register_files.created_at) FROM register_files WHERE register_files.customer_id=customers.id limit 1) BETWEEN '".$req->startDate."' AND '".$req->endDate."' " ;
-        }else{
-           $w03 = "";
-        }
+       //  if(!empty($req->status_aistockis)){
+       //     $w02 = " AND customers.id=".$req->status_aistockis."  " ;
+       //  }else{
+       //     $w02 = "";
+       //  }
 
 
-        if(!empty($req->regis_status)){
-          if($req->regis_status==1){
-            $w04 = " AND customers.regis_doc1_status=1 AND customers.regis_doc2_status=1 AND customers.regis_doc2_status=1 " ;
-          }elseif($req->regis_status==2){
-            $w04 = " AND (customers.regis_doc1_status=2 OR customers.regis_doc2_status=2 OR customers.regis_doc2_status=2) " ;
-          }elseif($req->regis_status==3){
-            $w04 = " AND (customers.regis_doc1_status in(1,2) OR customers.regis_doc2_status in(1,2) OR customers.regis_doc2_status in(1,2)) " ;
-          }else{
-            $w04 = " AND customers.regis_doc1_status=0 AND customers.regis_doc2_status=0 AND customers.regis_doc2_status=0 AND customers.regis_doc4_status=0 " ;
-          }
-        }else{
-           $w04 = "";
-        }
+       //  if(!empty($req->startDate) && !empty($req->endDate)){
+       //    // $w03 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+       //     $w03 = " AND (SELECT date(register_files.created_at) FROM register_files WHERE register_files.customer_id=customers.id limit 1) BETWEEN '".$req->startDate."' AND '".$req->endDate."' " ;
+       //  }else{
+       //     $w03 = "";
+       //  }
+
+
+       //  if(!empty($req->regis_status)){
+       //    if($req->regis_status==1){
+       //      $w04 = " AND customers.regis_doc1_status=1 AND customers.regis_doc2_status=1 AND customers.regis_doc2_status=1 " ;
+       //    }elseif($req->regis_status==2){
+       //      $w04 = " AND (customers.regis_doc1_status=2 OR customers.regis_doc2_status=2 OR customers.regis_doc2_status=2) " ;
+       //    }elseif($req->regis_status==3){
+       //      $w04 = " AND (customers.regis_doc1_status in(1,2) OR customers.regis_doc2_status in(1,2) OR customers.regis_doc2_status in(1,2)) " ;
+       //    }else{
+       //      $w04 = " AND customers.regis_doc1_status=0 AND customers.regis_doc2_status=0 AND customers.regis_doc2_status=0 AND customers.regis_doc4_status=0 " ;
+       //    }
+       //  }else{
+       //     $w04 = "";
+       //  }
 
   // `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
   // `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
@@ -190,7 +190,7 @@ class Member_pvController extends Controller
 
       $sTable = \App\Models\Backend\Customers::where('id','!=',0)
       ->where('customers.id',$condition,$w01)
-      ->where('customers.business_name',$condition02,$w02)
+      ->where('customers.business_name',$condition02,trim($w02))
       ->where('customers.introduce_id',$condition03,$w03)
       ;
 
