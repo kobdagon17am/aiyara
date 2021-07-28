@@ -339,6 +339,9 @@
 
 <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js" type="text/javascript" charset="utf-8" async defer></script>
 
+
+
+
   <script>
 
         $(document).ready(function() {
@@ -396,7 +399,8 @@
                                       ordering: false,
                                       destroy:true,
                                       stateSave:true,
-                                      iDisplayLength: 5,
+                                      iDisplayLength: 15,
+                                      "searching": false,
                                       ajax: {
                                       url: '{{ route('backend.check_stock.datatable') }}',
                                       data: function ( d ) {
@@ -414,6 +418,15 @@
                                         },
                                          method: 'POST',
                                        },
+                                        // dom: 'frtipB',
+                                        dom: 'Bfrtip',
+                                        buttons: [
+                                            {
+                                                extend: 'excelHtml5',
+                                                title: 'CHECK STOCK'
+                                            },
+                                       
+                                        ],
                                        columns: [
                                               {data: 'id', title :'ID', className: 'text-center w50'},
                                               {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},

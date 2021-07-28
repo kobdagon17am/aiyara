@@ -33,7 +33,9 @@ class Add_ai_cashController extends Controller
         ");
 
       // $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
-      $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select approver from db_add_ai_cash) ");
+   //   $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select approver from db_add_ai_cash) ");
+
+      $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
 
         return View('backend.add_ai_cash.index')->with(
         array(
@@ -75,10 +77,16 @@ class Add_ai_cashController extends Controller
          $action_user = @$action_user[0]->name;
 
         $CustomerAicash = DB::select(" select * from customers where id=".$sRow->customer_id_fk." ");
+        if($CustomerAicash){
+          $CustomerAicashName = $CustomerAicash[0]->prefix_name.$CustomerAicash[0]->first_name.' '.$CustomerAicash[0]->last_name;
+        }else{
+          $CustomerAicashName = 'ไม่ระบุชื่อ';
+        }
 
        }else{
          $action_user = NULL ;
          $CustomerAicash = NULL ;
+         $CustomerAicashName = 'ไม่ระบุชื่อ';
        }
 
 
@@ -96,6 +104,8 @@ class Add_ai_cashController extends Controller
           'sAccount_bank'=>$sAccount_bank,
           'sFee'=>$sFee,
           'CustomerAicash'=>$CustomerAicash,
+          'CustomerAicash'=>$CustomerAicash,
+          'CustomerAicashName'=>$CustomerAicashName,
       ));
 
     }

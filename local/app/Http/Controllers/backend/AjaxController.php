@@ -499,7 +499,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -523,7 +523,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -545,7 +545,7 @@ class AjaxController extends Controller
         // $Branch = \App\Models\Backend\Branchs::find($sRow[0]->branch_id_fk);
         // $Zone = \App\Models\Backend\Zone::find($sRow[0]->zone_id_fk);
         // $Shelf = \App\Models\Backend\Shelf::find($sRow[0]->shelf_id_fk);
-
+        $json_result = [];
         foreach ($sRow as $key => $value) {
             $json_result[] = [
                 'id'=>$value->id ,
@@ -3755,6 +3755,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3783,6 +3784,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->user_name,
@@ -3812,6 +3814,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3839,6 +3842,7 @@ class AjaxController extends Controller
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
+            $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
@@ -3849,6 +3853,73 @@ class AjaxController extends Controller
 
            }
     }    
+
+    public function ajaxGetBusinessName(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('business_name', 'LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->groupBy('business_name')
+                ->orderBy('business_name', 'asc')
+                ->get();
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->business_name,
+                    'text'  => $v->business_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }  
+
+
+    public function ajaxGetIntroduce_id(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->get();
+
+                  $json_result = [];
+
+                if($customers){
+
+                        //  $customers_introduce = DB::table('customers')
+                        // ->where('introduce_id', @$customers[0]->introduce_id)
+                        // ->groupBy('introduce_id')
+                        // ->orderBy('introduce_id', 'asc')
+                        // ->get();
+                       
+                                foreach($customers as $k => $v){
+                                    $json_result[] = [
+                                        'id'    => @$v->user_name,
+                                        'text'  => @$v->user_name.':'.@$v->first_name.' '.@$v->last_name,
+                                    ];
+                                } 
+                           
+
+                        }
+                         return json_encode($json_result);
+              }
+
+
+           }
+    }  
+
 
 
     public function ajaxCancelOrderBackend(Request $request)

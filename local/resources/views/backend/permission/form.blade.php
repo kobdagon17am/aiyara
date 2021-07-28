@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">Name</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อผู้ใช้ที่แสดงในระบบ</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ $sRow->name??'' }}" name="name" required>
                     </div>
@@ -75,6 +75,20 @@
                         <input class="form-control" type="text" value="{{ @$sRow->tel }}" name="tel" >
                     </div>
                 </div>
+               <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">ตำแหน่ง :</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ @$sRow->position }}" name="position" >
+                    </div>
+                </div>
+
+                                <div class="form-group row">
+                    <label for="example-text-input" class="col-md-2 col-form-label">แผนก :</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" value="{{ @$sRow->department }}" name="department" >
+                    </div>
+                </div>
+
 
                 <div class="form-group row">
                    <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
@@ -92,22 +106,23 @@
                         </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">แผนก :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->department }}" name="department" >
-                    </div>
+
+ 
+
+               <div class="form-group row">
+                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ในระบบ : * </label>
+                  <div class="col-md-6">
+                    <select name="permission" class="form-control select2-templating " required >
+                      <option value="">Select</option>
+                         <option value="1" {{ (@$sRow->permission==1)?'selected':'' }} >Super Admin</option>
+                         <option value="0" {{ (@$sRow->permission==0)?'selected':'' }} >User </option>
+                    </select>
+                  </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ตำแหน่ง :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->position }}" name="position" >
-                    </div>
-                </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ (งานขาย) : * </label>
+                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์งานขาย : * </label>
                   <div class="col-md-6">
                      <select id="position_level" name="position_level" class="form-control select2-templating " >
                              <option value="0">Select</option>
@@ -122,19 +137,10 @@
                   </div>
                 </div>
 
-                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ : * </label>
-                  <div class="col-md-6">
-                    <select name="permission" class="form-control select2-templating " required >
-                      <option value="">Select</option>
-                         <option value="1" {{ (@$sRow->permission==1)?'selected':'' }} >Super Admin</option>
-                         <option value="0" {{ (@$sRow->permission==0)?'selected':'' }} >สมาชิกระดับ Admin ทั่วไป</option>
-                    </select>
-                  </div>
-                </div>
+           
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์ : * </label>
+                  <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์การเข้าถึงเมนู : * </label>
                   <div class="col-md-6">
                     <select name="role_group_id_fk" class="form-control select2-templating " required >
                       <option value="">Select</option>

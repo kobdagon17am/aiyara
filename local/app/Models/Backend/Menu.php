@@ -191,9 +191,12 @@ foreach ($MenuPermission as $key => $value) {
           }
 
           if(\Auth::user()->permission==1){
+
+                // $click_link = $sMenu->ref==0?'click_link':'';
+
                 $txtMenu .= '
                 <li>
-                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect click_link ">
+                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect  ">
                         <i class="'.$mMenu->icon.'"></i>
                         <span>'.$mMenu->name.' </span>
                     </a>
@@ -206,9 +209,11 @@ foreach ($MenuPermission as $key => $value) {
 
                 if(in_array($mMenu->id, $arr_menu_id)){
 
+                  // $click_link = $sMenu->ref==0?'click_link':'';
+
 	                $txtMenu .= '
 	                <li>
-	                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect click_link ">
+	                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect  ">
 	                        <i class="'.$mMenu->icon.'"></i>
 	                        <span>'.$mMenu->name.'  </span>
 	                    </a>

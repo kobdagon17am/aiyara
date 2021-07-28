@@ -19,6 +19,7 @@ class RoleController extends Controller
    public function create()
     {
       $sMenu_All = \App\Models\MenuModel::query()->where('isActive', 'Y')->get();
+      // dd($sMenu_All);
       return View('backend.role.form')->with(array('sMenu_All'=>$sMenu_All));
     }
 
@@ -29,7 +30,10 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-       $sMenu_All = \App\Models\MenuModel::query()->where('isActive', 'Y')->get();
+       $sMenu_All = \App\Models\MenuModel::query()->where('isActive', 'Y')->orderBy('sort')->get();
+       // foreach ($sMenu_All as $key => $value) {
+       //     echo $value->id." : ".$value->ref."<br>";
+       // }
        $sRow = \App\Models\Backend\Role::find($id);
        return View('backend.role.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'sMenu_All'=>$sMenu_All));
     }
