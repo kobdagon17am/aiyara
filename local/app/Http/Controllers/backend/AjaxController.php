@@ -3888,32 +3888,32 @@ class AjaxController extends Controller
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
+                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
                 $customers = DB::table('customers')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->take(15)
-                ->orderBy('user_name', 'asc')
                 ->get();
+
+                  $json_result = [];
 
                 if($customers){
 
-                        $customers_introduce = DB::table('customers')
-                        ->where('id', @$customers[0]->id)
-                        ->groupBy('id')
-                        ->orderBy('user_name', 'asc')
-                        ->get();
-
-                         $json_result = [];
-                            if($customers_introduce){
-                                foreach($customers_introduce as $k => $v){
+                        //  $customers_introduce = DB::table('customers')
+                        // ->where('introduce_id', @$customers[0]->introduce_id)
+                        // ->groupBy('introduce_id')
+                        // ->orderBy('introduce_id', 'asc')
+                        // ->get();
+                       
+                                foreach($customers as $k => $v){
                                     $json_result[] = [
                                         'id'    => @$v->user_name,
                                         'text'  => @$v->user_name.':'.@$v->first_name.' '.@$v->last_name,
                                     ];
                                 } 
-                            }          
-                            return json_encode($json_result);
+                           
 
                         }
+                         return json_encode($json_result);
               }
 
 

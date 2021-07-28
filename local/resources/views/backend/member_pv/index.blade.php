@@ -764,7 +764,7 @@ $(function() {
    $(document).ready(function(){   
 
       $("#introduce_id").select2({
-          minimumInputLength: 3,
+          // minimumInputLength: 3,
           allowClear: true,
           placeholder: '-Select-',
           ajax: {
