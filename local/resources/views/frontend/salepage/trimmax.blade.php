@@ -47,8 +47,10 @@
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-05.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
@@ -67,8 +69,10 @@
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-09.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
@@ -87,8 +91,10 @@
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-13.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+          </a>
         </div>
 
     </div>
@@ -102,26 +108,35 @@
 
         <div class="row text-center mb-2">
             <div class="col-6 col-sm-6 col-lg-4 mt-2">
+              <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
                 <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR_01.png') }}" class="img-fluid" alt="Responsive image">
+              </a>
                 <h3 class="mb-0">ราคา 420 บาท</h3>
                 <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
 
-                <a class="btn btn-success btn-md" href="#" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a>
+                <a class="btn btn-success btn-md"  href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-4">
+              <a href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" >
                 <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR02.png') }}" class="img-fluid"
                     alt="Responsive image">
+              </a>
                 <h3 class="mb-0">ราคา 450 บาท</h3>
                 <p class="mt-0" style="font-size: 18px">จำนวน 10 ซอง</p>
 
-                <p><a class="btn btn-success" href="#" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
+                <p>
+                  <a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ
+                  </a>
+                </p>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-4">
+              <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
                 <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR03.png') }}" class="img-fluid"
                     alt="Responsive image">
+              </a>
                 <h3 class="mb-0">ราคา 580 บาท</h3>
                 <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
-                <p><a class="btn btn-success" href="#" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
+                <p><a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank"  style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
             </div><!-- /.col-lg-4 -->
 
         </div><!-- /.row -->

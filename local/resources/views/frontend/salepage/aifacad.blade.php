@@ -76,8 +76,11 @@ AIFACAD
                 class="img-fluid" alt="CashewyDrink">
         </div>
         <div class="row justify-content-center mt-2">
-          <img src="{{ asset('frontend/salepage/Aifacad/11.jpg') }}"
+          <a href="{{ $url }}/aiyarashop/product-detail/2/1/{{ $rs['data']->user_name }}" target="_blank" >
+            <img src="{{ asset('frontend/salepage/Aifacad/11.jpg') }}"
               class="img-fluid" alt="CashewyDrink">
+          </a>
+
       </div>
     </div>
 

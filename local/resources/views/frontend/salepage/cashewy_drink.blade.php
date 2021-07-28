@@ -80,8 +80,12 @@ Cashewy Drink
               class="img-fluid" alt="CashewyDrink">
       </div>
       <div class="row justify-content-center mt-2">
-        <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-12.jpg') }}"
+        <a href="{{ $url }}/aiyarashop/product-detail/2/10/{{ $rs['data']->user_name }}" target="_blank" >
+          <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-12.jpg') }}"
             class="img-fluid" alt="CashewyDrink">
+        </a>
+
+
     </div>
 
     </div>
