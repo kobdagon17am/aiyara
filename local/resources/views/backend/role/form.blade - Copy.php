@@ -67,47 +67,44 @@
                                  
                                     <input type="hidden" name="id_user" value="{{@$id}}">
 
-      <div class="task-content ">
+                                    <div class="task-content ">
+                                      @foreach(@$sMenu_All AS $row)
+                                      @php
+                                      $menu_admin = DB::table('role_permit')->where('role_group_id_fk',@$id)->where('menu_id_fk',@$row->id)->first();
+                                      @endphp
 
-        @foreach(@$sMenu_All AS $row)
+                                      <div class="to-do-label">
+                                        <div class="checkbox-fade fade-in-primary">
 
-        
-        @php
-        $menu_admin = DB::table('role_permit')->where('role_group_id_fk',@$id)->where('menu_id_fk',@$row->id)->first();
-        @endphp
+                                        <div class="row aaa ">
 
-        <div class="to-do-label">
-          <div class="checkbox-fade fade-in-primary">
+                                        	<div class="col-md-4">
 
-          <div class="row aaa ">
+                                            <input type="hidden" name="id_menuAd[]" value="{{@$menu_admin->id}}">
 
-          	<div class="col-md-4">
+                                            <input type="hidden" name="menu_id_fk[]" value="{{@$menu_admin->menu_id_fk}}">
+                                            <label class="checkbox-inline">
+                                              @IF(@$row->ref==0)
+                                              
+                                                <input type="checkbox" class="check_m" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" id="m{{@$row->id}}" >
 
-              <input type="hidden" name="id_menuAd[]" value="{{@$menu_admin->id}}">
+                                              @ELSE
+                                                <input type="checkbox" class="check_s" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" data-id="{{@$row->ref}}" id="s{{@$row->ref}}" >
+                                              @ENDIF
 
-              <input type="hidden" name="menu_id_fk[]" value="{{@$menu_admin->menu_id_fk}}">
-              <label class="checkbox-inline">
-                @IF(@$row->ref==0)
-                
-                  <input type="checkbox" class="check_m" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" id="m{{@$row->id}}" >
+                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                            <span class="task-title-sp">
+                                              @IF(@$row->ref==0)
+                                              <span style="font-size: 16px;font-weight: bold;color: blue;"><i class="{{@$row->icon}}"></i>&nbsp;&nbsp;&nbsp;{{@$row->name}}</span>
+                                              @ELSE
+                                              &nbsp;&nbsp;&nbsp; <i class="{{@$row->icon}}"></i>
+                                              <span style="font-size: 14px;font-weight: bold;color: black;">{{@$row->name}}</span>
+                                              @ENDIF
+                                            </span>
 
-                @ELSE
-                  <input type="checkbox" class="check_s" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" data-id="{{@$row->ref}}" id="s{{@$row->ref}}" >
-                @ENDIF
+                                           </label>
 
-              <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-              <span class="task-title-sp">
-                @IF(@$row->ref==0)
-                <span style="font-size: 16px;font-weight: bold;color: blue;"><i class="{{@$row->icon}}"></i>&nbsp;&nbsp;&nbsp;{{@$row->name}}</span>
-                @ELSE
-                &nbsp;&nbsp;&nbsp; <i class="{{@$row->icon}}"></i>
-                <span style="font-size: 14px;font-weight: bold;color: black;">{{@$row->name}}</span>
-                @ENDIF
-              </span>
-
-             </label>
-
-         </div>
+                                       </div>
 
              <div class="col-md-8">
 
