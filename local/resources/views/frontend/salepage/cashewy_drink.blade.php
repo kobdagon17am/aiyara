@@ -3,7 +3,6 @@
 @section('title')
 Cashewy Drink
 @endsection
-
 @section('css')
 
     <style>
