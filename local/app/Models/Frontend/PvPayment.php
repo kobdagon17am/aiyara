@@ -4,8 +4,10 @@ namespace App\Models\Frontend;
 use App\Models\Frontend\RunNumberPayment;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-use  App\Models\Frontend\Customer;
-use  App\Models\Frontend\Order;
+use App\Models\Frontend\Customer;
+use App\Models\Frontend\Order;
+use App\Models\Db_Movement_ai_cash;
+use App\Models\Db_Course_event_regis;
 class PvPayment extends Model
 {
 
@@ -18,7 +20,7 @@ class PvPayment extends Model
             ->first();
 
         $order_update = Order::find($order_id);
-
+        $movement_ai_cash = new Db_Movement_ai_cash;
 
         if (empty($order_data)) {
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
@@ -80,21 +82,21 @@ class PvPayment extends Model
 
                     }
 
-                    $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
-                      'customer_id_fk' => $customer_id,
-                      'order_id_fk' =>$order_id,
+
+
+                    $movement_ai_cash->customer_id_fk = $customer_id;
+                    $movement_ai_cash->order_id_fk =$order_id;
                       //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
-                      'business_location_id_fk' => $order_data->business_location_id_fk,
-                      'price_total' => $order_data->total_price,
-                      'aicash_old' => $check_aicash->ai_cash,
-                      'aicash_price' => $order_data->aicash_price,
-                      'aicash_banlance' => $update_icash,
-                      'order_code' => $order_data->code_order,
-                      'order_type_id_fk' => $order_data->purchase_type_id_fk,
-                      'pay_type_id_fk' =>$order_data->pay_type_id_fk,
-                      'type' => $movement_type,
-                      'detail'=> $movement_detail,
-                  ]);
+                      $movement_ai_cash->business_location_id_fk = $order_data->business_location_id_fk;
+                      $movement_ai_cash->price_total = $order_data->total_price;
+                      $movement_ai_cash->aicash_old = $check_aicash->ai_cash;
+                      $movement_ai_cash->aicash_price = $order_data->aicash_price;
+                      $movement_ai_cash->aicash_banlance = $update_icash;
+                      $movement_ai_cash->order_code = $order_data->code_order;
+                      $movement_ai_cash->order_type_id_fk = $order_data->purchase_type_id_fk;
+                      $movement_ai_cash->pay_type_id_fk =$order_data->pay_type_id_fk;
+                      $movement_ai_cash->type = $movement_type;
+                      $movement_ai_cash->detail = $movement_detail;
 
                   $customer_update->ai_cash = $update_icash;
 
@@ -490,22 +492,16 @@ class PvPayment extends Model
                         ->first();
 
                     $order_update->pv_banlance =$pv_banlance->pv;
-
-
                     //ไม่เข้าสถานะต้อง Approve
                 } elseif ($type_id == 6) { //couse อบรม
-
-                    $resuleRegisCourse = Couse_Event::couse_register($order_id, $admin_id);
-
-                    if ($resuleRegisCourse['status'] != 'success') {
-                        DB::rollback();
-                        return $resuleRegisCourse;
-                    }
 
                     $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
                         ->select('*')
                         ->where('id', '=', $customer_id)
                         ->first();
+                        $update_couse = DB::table('course_event_regis')
+                        ->where('order_id_fk', $order_id)
+                        ->update(['status_register' => '2']);
 
                     $add_pv = $data_user->pv + $pv;;
                     $customer_update->pv = $add_pv;
@@ -629,6 +625,7 @@ class PvPayment extends Model
                 }
 
                 if ($resule['status'] == 'success') {
+                  $movement_ai_cash->save();
                   $customer_update->save();
                   $order_update->save();
 

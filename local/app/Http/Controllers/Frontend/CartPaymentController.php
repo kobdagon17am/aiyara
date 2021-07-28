@@ -146,6 +146,7 @@ class CartPaymentController extends Controller
 
     public function cart_submit_course($type)
     {
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $location = Location::location($business_location_id, $business_location_id);
         $cartCollection = Cart::session($type)->getContent();

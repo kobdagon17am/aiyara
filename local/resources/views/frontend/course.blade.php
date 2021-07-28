@@ -38,7 +38,8 @@
                     <th>C/E</th>
                     <th>ราคา</th>
                     <th>PV</th>
-                    <th>สถานะ</th>
+                    <th>CourseStatus</th>
+                    <th>OrderStatus</th>
                     <th>QRCODE</th>
                 </tr>
             </thead>
@@ -182,10 +183,13 @@ function fetch_data(order_type = '') {
                         "data": "pv"
                     },
                     {
-                        "data": "status"
+                        "data": "ce_status","class":'text-center'
                     },
                     {
-                        "data": "qrcode"
+                        "data": "status","class":'text-center'
+                    },
+                    {
+                        "data": "qrcode","class":'text-center'
                     },
                 ],
                 //order: [[ "0", "desc" ]],

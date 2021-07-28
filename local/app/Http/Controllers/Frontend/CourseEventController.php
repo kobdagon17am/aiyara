@@ -94,7 +94,8 @@ public function dt_course(Request $request){
     5 => 'price',
     6 => 'pv',
     7 => 'status',
-    8 => 'qrcode',
+    8 => 'ce_status',
+    9 => 'qrcode',
   );
 
   if(empty($request->input('search.value')) ){
@@ -102,6 +103,7 @@ public function dt_course(Request $request){
     $totalData =  DB::table('course_event_regis')
     ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk')
     ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
+    ->leftjoin('course_ticket_number','course_ticket_number.id','=','course_event_regis.ticket_id')
     ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
     ->count();
     $totalFiltered = $totalData;
@@ -111,9 +113,12 @@ public function dt_course(Request $request){
         //$dir = $request->input('order.0.dir');
 
     $course_event_regis = DB::table('course_event_regis')
-    ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc')
+    ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name',
+    'course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price',
+    'course_event.pv','dataset_ce_type.txt_desc','course_ticket_number.ticket_number')
     ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
     ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id')
+    ->leftjoin('course_ticket_number','course_ticket_number.id','=','course_event_regis.ticket_id')
     ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
     ->offset($start)
     ->limit($limit)
@@ -130,6 +135,7 @@ public function dt_course(Request $request){
    $totalData =  DB::table('course_event_regis')
    ->leftjoin('course_event', 'course_event.id', '=','course_event_regis.ce_id_fk')
    ->leftjoin('dataset_ce_type', 'course_event.ce_type','=','dataset_ce_type.id')
+   ->leftjoin('course_ticket_number','course_ticket_number.id','=','course_event_regis.ticket_id')
    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->count();
    $totalFiltered = $totalData;
@@ -139,15 +145,19 @@ public function dt_course(Request $request){
       //$dir = $request->input('order.0.dir');
 
    $course_event_regis = DB::table('course_event_regis')
-   ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name','course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price','course_event.pv','dataset_ce_type.txt_desc')
+   ->select('course_event_regis.*','course_event.ce_name','course_event.ce_name',
+   'course_event.ce_sdate','course_event.ce_edate','course_event.ce_ticket_price',
+   'course_event.pv','dataset_ce_type.txt_desc','course_ticket_number.ticket_number')
    ->leftjoin('course_event','course_event.id', '=','course_event_regis.ce_id_fk')
    ->leftjoin('dataset_ce_type','course_event.ce_type','=','dataset_ce_type.id')
+   ->leftjoin('course_ticket_number','course_ticket_number.id','=','course_event_regis.ticket_id')
    ->where('course_event_regis.customers_id_fk','=',Auth::guard('c_user')->user()->id)
    ->offset($start)
    ->limit($limit)
    ->orderby('course_event_regis.updated_at','DESC')
    ->get();
  }
+
 
  $data = array();
  $i= $start;
@@ -168,14 +178,14 @@ public function dt_course(Request $request){
     $date_css = 'danger';
   }
 
-  $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
+  $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css.'"><b style="color:#000">'
   .date('d/m/Y',strtotime($value->ce_sdate)).'</b></span>';
 
 
-  $nestedData['edate'] = '<span class="label label-inverse-'.$date_css.'"><b>'
+  $nestedData['edate'] = '<span class="label label-inverse-'.$date_css.'"><b style="color:#000">'
   .date('d/m/Y',strtotime($value->ce_edate)).'</b></span>';
 
-  $nestedData['title'] = '<b>'.$value->ce_name.'</b>';
+  $nestedData['title'] = '<b>'.$value->ce_name.'</b><br><span>'.$value->ticket_number.'</span>';
 
 
 
@@ -194,15 +204,46 @@ public function dt_course(Request $request){
   // $nestedData['status'] = '<button class="btn btn-sm btn-'.$value->css_class.' btn-outline-'.$value->css_class.'" ><b style="color: #000">'.$value->detail.'</b></button>';
   if($value->status_ce == 'Y' ){
 
-   $status = '<button class="btn btn-sm btn-success btn-outline-success"><b style="color: #000">ผ่านกิจกรรม</b></button>';
+   $status = '<span class="label label-inverse-success"><b style="color: #000">ผ่านกิจกรรม</b></span>';
 
  }else{
-  $status = '<button class="btn btn-sm btn-warning btn-outline-warning"><b style="color: #000">ยังไม่ผ่านกิจกรรม</b></button>';
+   if($value->status_register == 1){
+    $status = '<span class="label label-inverse-warning"><b style="color: #000">รอตรวจสอบการชำระ</b></span>';
+
+   }elseif($value->status_register == 3){
+
+    $status = '<span class="label label-inverse-danger"><b style="color: #000">Cancel</b></span>';
+
+   }else{
+    $status = '<span class="label label-inverse-success"><b style="color: #000">ลงทะเบียนสำเร็จ</b></span>';
+
+   }
+
 }
 
 $nestedData['status'] = $status;
 
-$nestedData['qrcode'] = '<button class="btn btn-sm btn-primary" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> QR </button>';
+
+
+if($value->status_ce == 'Y' ){
+  $nestedData['ce_status'] = '<span class="label label-inverse-success"><b style="color: #000">ผ่านกิจกรรม</b></span>';
+
+  $nestedData['qrcode'] = '';
+
+}else{
+  if($value->status_register == 1){
+    $nestedData['qrcode'] = '';
+  }elseif($value->status_register == 3){
+    $nestedData['qrcode'] = '';
+  }else{
+
+    $nestedData['qrcode'] = '<button class="btn btn-sm btn-primary" onclick="qrcode('.$value->id.')" ><i class="fa fa-qrcode"></i> QR </button>';
+  }
+  $nestedData['ce_status'] = '<span class="label label-inverse-warning"><b style="color: #000">ยังไม่ผ่านกิจกรรม</b></span>';
+
+}
+
+
 
 $data[] = $nestedData;
 }
