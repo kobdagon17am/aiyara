@@ -99,7 +99,7 @@ class KsherNotifyController extends Controller
           }
 
 
-        if (Str::contains($getKsherData->channel, 'promptpay')) {
+        if ($getKsherData->channel == 'promptpay') {
             $payInfo = [
                 'pay_type_id_fk' => 15,
                 'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
