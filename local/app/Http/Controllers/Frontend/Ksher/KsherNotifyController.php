@@ -14,6 +14,7 @@ class KsherNotifyController extends Controller
     const SUCCESS = 'SUCCESS';
 
     public function ksher_notify() {
+      $time = date("Y-m-d H:i:s", time());
         Log::info(">>>> Ksher Notify <<<<<" );
         $ksherPay = new KsherController;
         // //1.接收参数
@@ -43,11 +44,15 @@ class KsherNotifyController extends Controller
             if($verify_sign == 1){
                 $this->updateOrInsertStatus($data_array);
                 $this->updateOrder($data_array);
+                Log::info('change order status');
             }
         }
-
+        Log::info("------notify data ".$time." end------" );
         return response()->json(array('result'=> 'SUCCESS', "msg" => 'OK'));
     }
+
+
+
 
     private function updateOrInsertStatus($response)
     {
@@ -82,7 +87,11 @@ class KsherNotifyController extends Controller
               $dataUpdate = collect([
                   'order_status_id_fk' => 5
               ]);
-              $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id,$getOrderData->customers_id_fk,'2','customer');
+
+              if($getOrderData->order_status_id_fk == 1){
+                $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id,$getOrderData->customers_id_fk,'2','customer');
+              }
+
           }else{
               $dataUpdate = collect([
                   'order_status_id_fk' => 2
