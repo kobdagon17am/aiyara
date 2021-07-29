@@ -150,7 +150,7 @@ Route::get('cart_submit_course/{type}','Frontend\CartPaymentController@cart_subm
 
 Route::get('cart_payment_transfer/{code_order}','Frontend\CartPaymentController@cart_payment_transfer')->name('cart_payment_transfer');
 
-Route::get('cart_payment_transfer_course/{code_order}','Frontend\CartPaymentController@cart_payment_transfer_course')->name('cart_payment_transfer_course');
+//Route::get('cart_payment_transfer_course/{code_order}','Frontend\CartPaymentController@cart_payment_transfer_course')->name('cart_payment_transfer_course');
 
 
 Route::get('product-history','Frontend\HistoryController@index')->name('product-history');
@@ -192,7 +192,7 @@ Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 Route::get('datatable_order_aicash','Frontend\AiCashController@datatable_order_aicash')->name('datatable_order_aicash');
 Route::get('datatable_add_aicash','Frontend\AiCashController@datatable_add_aicash')->name('datatable_add_aicash');
-Route::any('cart_payment_aicash','Frontend\AiCashController@cart_payment_aicash')->name('cart_payment_aicash');
+Route::any('cart_payment_aicash_submit','Frontend\AiCashController@cart_payment_aicash_submit')->name('cart_payment_aicash_submit');
 Route::get('view_aicash','Frontend\AiCashController@view_aicash')->name('view_aicash');
 
 

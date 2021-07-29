@@ -10,6 +10,7 @@ use Auth;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Frontend\RunNumberPayment;
 
 class AiCashController extends Controller
 {
@@ -46,6 +47,53 @@ class AiCashController extends Controller
 
         return view('frontend/aicash', compact('type', 'data'));
     }
+
+    public function cart_payment_aicash_submit(Request $rs)
+    {
+        if ($rs->price == '') {
+            return redirect('ai-cash')->withError('Price is null');
+        } else {
+            //$data = ['type' => 7, 'price' => $request->price];
+
+            DB::BeginTransaction();
+        $price = str_replace(',', '', $rs->price);
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        $customer_id = Auth::guard('c_user')->user()->id;
+        $code_order = RunNumberPayment::run_number_aicash($business_location_id);
+        try {
+            $id = DB::table('db_add_ai_cash')->insertGetId(
+              [
+                  'customer_id_fk' => $customer_id,
+                  'business_location_id_fk' => $business_location_id,
+                  //'aicash_amt' => $price,
+                  'action_user' => $customer_id,
+                  'order_type_id_fk' => 7,
+                  // 'purchase_type_id_fk' => 7,
+                  'pay_type_id_fk' => $rs->pay_type,
+                  'code_order' => $code_order,
+                  'date_setting_code' => date('ym'),
+                  'transfer_price' => $price,
+                  'credit_price' => 0,
+                  'total_amt' => $price,
+                  'approve_status' => 0,
+                  'order_status_id_fk' => 1,
+                  'upto_customer_status' => 0,
+                  'note' => 'Add Ai-Cash',
+              ]
+          );
+
+            DB::commit();
+            return redirect('cart_payment_transfer/'.$code_order);
+        } catch (Exception $e) {
+            DB::rollback();
+            return redirect('product-history')->withError('ทำรายการไม่สำเร็จกรุณาตรวจสอบรายการสั่งซื้อ');
+        }
+
+        }
+    }
+
+
+
 
     public function datatable_add_aicash(Request $request)
     {
@@ -256,15 +304,6 @@ class AiCashController extends Controller
         }
     }
 
-    public function cart_payment_aicash(Request $request)
-    {
-        if ($request->price == '') {
-            return redirect('ai-cash');
-        } else {
-            $data = ['type' => 7, 'price' => $request->price];
-            return view('frontend/product/cart_payment_aicash', compact('data'));
-        }
-    }
 
     public function view_aicash(Request $request)
     {
