@@ -77,7 +77,7 @@ class AicashConfirmeController extends Controller
           'order_type_id_fk' => 7,
           'pay_type_id_fk' => $db_add_ai_cash->pay_type_id,
           'type' => 'add_aicash',
-          'detail'=>'Add Ai-Cash ',
+          // 'detail'=>'Add Ai-Cash ',
       ]);
 
           $customers_update = DB::table('customers')

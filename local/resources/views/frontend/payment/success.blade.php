@@ -9,9 +9,18 @@
 </style> --}}
 @endsection
 @section('conten')
-
-
-<h1>Success</h1>
+<div class="row justify-content-center">
+<div class="col-md-8 col-lg-8 mt-3">
+  <div class="card p-4">
+      <div class="card-block text-center">
+          <i class="fa fa-check text-c-green d-block f-70"></i>
+          <h4 class="m-t-20"> Successful Payment </h4>
+          <p class="m-b-20">ชำระเงินสำเร็จ</p>
+          <a href="{{ route('product-history') }}" class="btn btn-success">ประวัติการสั่งซื้อ</a>
+      </div>
+  </div>
+</div>
+</div>
 
 <!-- End Contact Info area-->
 @endsection

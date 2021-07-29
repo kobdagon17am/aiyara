@@ -156,7 +156,13 @@ class Member_regisController extends Controller
               if(request('type')==4){
                 $Customers->regis_doc4_status = request('regis_status');
               }
-              
+
+              if($Customers->regis_doc1_status==1 && $Customers->regis_doc2_status==1 && $Customers->regis_doc3_status==1){
+                $Customers->regis_date_doc = date("Y-m-d");
+              }else{
+                $Customers->regis_date_doc = NULL;
+              }
+
               $Customers->save();
        
          }

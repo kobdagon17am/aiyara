@@ -77,11 +77,12 @@ class KsherController extends Controller
         $gateway_pay_response = KsherController::gateway_pay($gateway_pay_data);
         $gateway_pay_array = json_decode($gateway_pay_response, true);
 
-        if (isset($gateway_pay_array['data']['pay_content'])) {
+
+        if (!empty($gateway_pay_array['data']['pay_content'])) {
           $resule = ['status' => 'success', 'url' => $gateway_pay_array['data']['pay_content']];
             return $resule;
         } else {
-          $resule = ['status' => 'fail', 'url' => $gateway_pay_array['data']['pay_content'] ='' ];
+          $resule = ['status' => 'fail', 'url' => $gateway_pay_array['data']];
           return $resule;
         }
 

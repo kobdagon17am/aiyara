@@ -22,7 +22,9 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  </h4>
+            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
+              &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+               <i class="bx bx-play"></i> {{@$wh}} </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
                 <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
               </a>
@@ -164,6 +166,7 @@ $(document).ready(function() {
                                           ordering: false,
                                           info:     false,
                                           destroy:true,
+                                           "searching": false,
                                           // scrollY: ''+($(window).height()-370)+'px',
                                           // iDisplayLength: 25,
                                           paging: false,
@@ -193,6 +196,14 @@ $(document).ready(function() {
                                             },
                                             method: 'POST'
                                           },
+                                          dom: 'Bfrtip',
+                                        buttons: [
+                                            {
+                                                extend: 'excelHtml5',
+                                                title: 'STOCK CARD'
+                                            },
+                                       
+                                        ],
                                           columns: [
                                               {data: 'id', title :'Row(s)', className: 'text-center w50'},
                                               {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},

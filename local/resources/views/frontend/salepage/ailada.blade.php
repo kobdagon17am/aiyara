@@ -47,34 +47,48 @@
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-05.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+          </a>
+
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/3/30/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-06.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/3/24/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-07.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/3/31/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-08.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+          <a href="{{ $url }}/aiyarashop/product-detail/3/27/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-09.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+          </a>
         </div>
 
         <div class="row justify-content-center mt-2">
+
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-10.jpg') }}" class="img-fluid"
-                alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+            alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
+
         </div>
+
         <div class="row justify-content-center mt-2">
             <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-11.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
@@ -110,8 +124,9 @@
                         </p>
                         <h5> ราคา 1,500 บาท </h5>
                         <div class="text-center">
-                            <a href="#!"><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
-                                    class="img-fluid" alt="Responsive image"></a>
+                            <a href="{{ $url }}/aiyarashop/product-detail/3/24/{{ $rs['data']->user_name }}" target="_blank" >
+                              <img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
+                                    class="img-fluid" alt="Responsive image"> </a>
 
                         </div>
                     </div>
@@ -129,7 +144,8 @@
                         </p>
                         <h5> ราคา 1,500 บาท </h5>
                         <div class="text-center">
-                            <a href="#!"><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
+                          <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
+                            <img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>
 
                         </div>
@@ -147,7 +163,7 @@
                         </p>
                         <h5> ราคา 1,100 บาท </h5>
                         <div class="text-center">
-                            <a href="#!"><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
+                          <a href="{{ $url }}/aiyarashop/product-detail/3/30/{{ $rs['data']->user_name }}" target="_blank" ><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>
 
                         </div>
@@ -165,7 +181,7 @@
                         </p>
                         <h5> ราคา 1,000 บาท </h5>
                         <div class="text-center">
-                            <a href="#!"><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
+                          <a href="{{ $url }}/aiyarashop/product-detail/3/31/{{ $rs['data']->user_name }}" target="_blank" ><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>
                         </div>
                     </div>
@@ -184,7 +200,7 @@
                         </p>
                         <h5> ราคา 550 บาท </h5>
                         <div class="text-center">
-                            <a href="#!"><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
+                          <a href="{{ $url }}/aiyarashop/product-detail/3/27/{{ $rs['data']->user_name }}" target="_blank" ><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>
                         </div>
                     </div>

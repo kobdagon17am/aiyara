@@ -36,6 +36,13 @@ class DeleteOrderController extends Controller
           DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
           DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
 
+        }elseif($order_data->purchase_type_id_fk == 5){
+
+          DB::table('course_event_regis')->where('order_id_fk', '=', $order_id)->delete();
+          DB::table('db_orders')->where('id', '=', $order_id)->delete();
+          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
+          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
+
         }else{
 
           DB::table('db_orders')->where('id', '=', $order_id)->delete();

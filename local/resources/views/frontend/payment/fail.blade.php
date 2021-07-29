@@ -9,9 +9,18 @@
 </style> --}}
 @endsection
 @section('conten')
-
-
-<h1>Fail</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-8 mt-3">
+    <div class="card p-4">
+        <div class="card-block text-center">
+            <i class="fa fa-times text-warning d-block f-70"></i>
+            <h4 class="m-t-20"> Fail Payment </h4>
+            <p class="m-b-20">การชำระเงินล้มเหลว! <br><span>คุณสามารถติดต่อฝ่ายบริการลูกค้าสำหรับความช่วยเหลือเพิ่มเติม</span></p>
+            <a href="{{ route('product-history') }}" class="btn btn-warning">ตรวจสอบคำสั่งซื้อของฉัน</a>
+        </div>
+    </div>
+  </div>
+  </div>
 
 <!-- End Contact Info area-->
 @endsection

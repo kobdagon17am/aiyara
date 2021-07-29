@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Frontend\Ksher\KsherController;
+use App\Models\Frontend\PvPayment;
 
 class KsherNotifyController extends Controller
 {
     const SUCCESS = 'SUCCESS';
 
     public function ksher_notify() {
+      $time = date("Y-m-d H:i:s", time());
         Log::info(">>>> Ksher Notify <<<<<" );
         $ksherPay = new KsherController;
         // //1.接收参数
@@ -42,11 +44,15 @@ class KsherNotifyController extends Controller
             if($verify_sign == 1){
                 $this->updateOrInsertStatus($data_array);
                 $this->updateOrder($data_array);
+                Log::info('change order status');
             }
         }
-
+        Log::info("------notify data ".$time." end------" );
         return response()->json(array('result'=> 'SUCCESS', "msg" => 'OK'));
     }
+
+
+
 
     private function updateOrInsertStatus($response)
     {
@@ -58,7 +64,8 @@ class KsherNotifyController extends Controller
                 collect($response['data'])->except('appid', 'mch_order_no', 'pay_mch_order_no')
                     ->merge([
                         'sign' => Arr::get($response, 'sign'),
-                        'created_at' => now()
+                        'created_at' => now(),
+                        'total_price' => $this->formatPrice(Arr::get($response, 'data.total_fee'))
                     ])
                     ->toArray()
             );
@@ -72,11 +79,27 @@ class KsherNotifyController extends Controller
             ->where('mch_order_no', Arr::get($response, 'data.mch_order_no'))
             ->first();
 
-        $dataUpdate = collect([
-            'order_status_id_fk' => 2
-        ]);
+            $getOrderData = DB::table('db_orders')
+            ->where('code_order', Arr::get($response, 'data.mch_order_no'))
+            ->first();
 
-        if (Str::contains($getKsherData->channel, 'promptpay')) {
+            if($getOrderData->total_price == $getKsherData->total_price){//ยอดเงินเท่ากันให้อัพเดททันที
+              $dataUpdate = collect([
+                  'order_status_id_fk' => 5
+              ]);
+
+              if($getOrderData->order_status_id_fk == 1){
+                $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id,$getOrderData->customers_id_fk,'2','customer');
+              }
+
+          }else{
+              $dataUpdate = collect([
+                  'order_status_id_fk' => 2
+              ]);
+          }
+
+
+        if ($getKsherData->channel == 'promptpay') {
             $payInfo = [
                 'pay_type_id_fk' => 15,
                 'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),

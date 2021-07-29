@@ -90,7 +90,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก </h4>
+            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก </h4> 
+            
         </div>
     </div>
 </div>
@@ -131,18 +132,16 @@
                   <div class="form-group row">
                     <label for="customer_id" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
                     <div class="col-md-9">
-                       <select id="customer_id" name="customer_id" class="form-control" required ></select> 
+                       <select id="customer_id" name="customer_id" class="form-control" ></select> 
                     </div>
                   </div>
                 </div>
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="status_aistockis" class="col-md-3 col-form-label"> Status AiStockis :  </label>
+                    <label for="business_name" class="col-md-3 col-form-label"> นามแฝง :  </label>
                     <div class="col-md-9">
-                       <select id="status_aistockis" name="status_aistockis" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                      </select>
+                       <select id="business_name" name="business_name" class="form-control" ></select> 
                     </div>
                   </div>
                 </div>
@@ -151,45 +150,35 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่ลงทะเบียน : </label>
                      <div class="col-md-9 d-flex">
-                      <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
-                      <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
+              
                     </div>
                   </div>
                 </div>
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="regis_status" class="col-md-3 col-form-label"> สถานะการสมัคร : </label>
                      <div class="col-md-9 ">
-                     <select id="regis_status" name="regis_status" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                        <option value="1">ผ่าน</option>
-                        <option value="2">ไม่ผ่าน</option>
-                        <option value="4">ยังไม่ส่ง</option>
-                        <option value="3">ส่งมาแล้วบางรายการหรือทั้งหมด</option>
-                      </select>
+                   
                     </div>
                   </div>
                 </div>
               </div>
               
-            <div class="row" style="margin-bottom: 2% !important;"  >
-                <div class="col-md-6 " style="margin-top: -1% !important;" >
+            <div class="row" style="margin-bottom: 1% !important;"  >
+                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">  </label>
+                    <label for="introduce_id" class="col-md-3 col-form-label"> รหัสผู้แนะนำ : </label>
                     <div class="col-md-9">
-                     
+                       <select id="introduce_id" name="introduce_id" class="form-control" ></select> 
                     </div>
                   </div>
                 </div>
-
     
-                <div class="col-md-6 " style="margin-top: -0.5% !important;" >
+                <div class="col-md-6 " style="" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
                      <div class="col-md-9" >
-                     <a class="btn btn-info btn-sm btnSearch01 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
+                     <a class="btn btn-info btn-sm btnSearch01 " href="#" style="font-size: 14px !important;margin-left: 0.8%;margin-top: 1%;" >
                         <i class="bx bx-search align-middle "></i> SEARCH
                       </a>
 
@@ -202,7 +191,26 @@
                 </table>
        
 </div>
-         
+   
+                <b style="font-size: 14px;">หมายเหตุ</b> 
+                <div class="divTable">
+                  <div class="divTableBody">
+                    <div class="divTableRow">
+                      <?php
+                      foreach ($filetype as $key => $value) {
+                      echo '<div class="divTableCell">'.$value->icon.' : '.$value->txt_desc.' </div>';
+                      }
+                      ?>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="" style="
+                  margin-left: 1%;
+                  color: black;
+                  ">
+                  (<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง)
+                </div>  
   
 
             </div>  <!-- end card-body -->
@@ -229,7 +237,7 @@ $(function() {
         scroller: true,
         destroy: true,
         ordering: false,
-        iDisplayLength: 25,
+        iDisplayLength: 15,
         ajax: {
           url: '{{ route('backend.member_pv.datatable') }}',
           data: function ( d ) {
@@ -258,33 +266,30 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
-            {data: 'status_aistockis', title :'<center> Status AiStockis </center>', className: 'text-center'},
-            {data: 'regis_status', title :'<center> สถานะการสมัคร (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
-            {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
+            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
+            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
+            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
+            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
+            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
+            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
+            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
+            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
           }else{ 
-
             // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
-
-            if(aData['regis_status_02']=='S' && aData['item_checked']==0){
-                  $('td:last-child', nRow).html('-');
-
-            }else{
-
-
                $('td:last-child', nRow).html(''
                   + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
                 ).addClass('input');
-
-            }
-
           }
         }
+    });
+     oTable.on( 'draw', function () {
+      $('[data-toggle="tooltip"]').tooltip();
     });
 
 });
@@ -400,13 +405,13 @@ $(function() {
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();
 
-                  var startDate = $('#startDate').val();
-                  var endDate = $('#endDate').val();
-
-                  var regis_status = $('#regis_status').val();
-
                   var customer_id = $('#customer_id').val();
-                  var status_aistockis = $('#status_aistockis').val();
+                  var business_name = $('#business_name').val();
+                  var introduce_id = $('#introduce_id').val();
+
+                  console.log(customer_id);
+                  console.log(business_name);
+                  console.log(introduce_id);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                             var oTable;
@@ -418,49 +423,47 @@ $(function() {
                                     scroller: true,
                                     destroy:true,
                                     ordering: false,
+                                    searching: false,
                                     ajax: {
                                           url: '{{ route('backend.member_pv.datatable') }}',
                                           data :{
                                             _token: '{{csrf_token()}}',
-                                                startDate:startDate,
-                                                endDate:endDate,
-                                                regis_status:regis_status,                                 
                                                 customer_id:customer_id,                                 
-                                                status_aistockis:status_aistockis,                                 
+                                                business_name:business_name,                                 
+                                                introduce_id:introduce_id,                                 
                                               },
                                             method: 'POST',
                                           },
-
-                                    columns: [
-                                        {data: 'id', title :'ID', className: 'text-center w50'},
-                                        {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
-                                        {data: 'status_aistockis', title :'<center> Status AiStockis </center>', className: 'text-center'},
-                                        {data: 'regis_status', title :'<center> สถานะการสมัคร (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center'},
-                                        {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
-                                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                    ],
-                                    rowCallback: function(nRow, aData, dataIndex){
-                                      if(sU!=''&&sD!=''){
-                                          $('td:last-child', nRow).html('-');
-                                      }else{ 
-
-                                        // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
-
-                                        if(aData['regis_status_02']=='S' && aData['item_checked']==0){
-                                              $('td:last-child', nRow).html('-');
-
-                                        }else{
-
-                                          // console.log(aData['user_name']);
-
-                                           $('td:last-child', nRow).html(''
-                                              + '<a class="btn btn-sm btn-info " href="{{ route("admin.access", Crypt::encryptString("'+(aData['user_name'])+'")) }}" target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
-                                            ).addClass('input');
-
+                                          dom: 'Bfrtip',
+                                          buttons: [
+                                            {
+                                              extend: 'excelHtml5',
+                                              title: 'ข้อมูลงานบริการสมาชิก'
+                                            },
+                                          ],
+                                          columns: [
+                                            {data: 'id', title :'ID', className: 'text-center w50'},
+                                            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
+                                            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
+                                            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
+                                            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
+                                            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
+                                            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
+                                            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+                                            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
+                                            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
+                                            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
+                                        ],
+                                      rowCallback: function(nRow, aData, dataIndex){
+                                        if(sU!=''&&sD!=''){
+                                            $('td:last-child', nRow).html('-');
+                                        }else{ 
+                                          // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
+                                             $('td:last-child', nRow).html(''
+                                                + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
+                                              ).addClass('input');
                                         }
-
                                       }
-                                    }
                                 });
 
                             });
@@ -704,6 +707,68 @@ $(function() {
           placeholder: '-Select-',
           ajax: {
           url: " {{ url('backend/ajaxGetCustomer') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
+
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#business_name").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetBusinessName') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
+
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#introduce_id").select2({
+          // minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetIntroduce_id') }} ",
           type  : 'POST',
           dataType : 'json',
           delay  : 250,

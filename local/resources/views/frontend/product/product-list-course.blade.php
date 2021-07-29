@@ -23,7 +23,7 @@ use App\Models\Frontend\CourseCheckRegis;
       $type_name = '';
     }
 
-    $check_status = CourseCheckRegis::check_register($value->id);
+    $check_status = CourseCheckRegis::check_register($value->id,Auth::guard('c_user')->user()->user_name);
     //dd($check_status['message']);
     ?>
     <div class="row">

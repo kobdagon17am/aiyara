@@ -1,11 +1,11 @@
-  
+
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 
 <div class="row">
 
 
-  <div class="col-md-5 col-xl-5"> 
+  <div class="col-md-5 col-xl-5">
     <div class="card">
     {{--   <div class="card-header">
         <h5>Setting Salepage</h5>
@@ -14,9 +14,11 @@
 
       <div class="card-header">
         <h5 class="card-header-text">Setting Salepage All </h5>
+        @if($canAccess)
         <button id="edit-Contact" type="button" onclick="save_contact()" class="btn btn-primary waves-effect waves-light f-right">
           <i class="icofont icofont-edit"></i> Save
         </button>
+        @endif
       </div>
 
       <div class="card-block">
@@ -71,9 +73,11 @@
 
       <div class="card-header" style="margin-bottom: -24px;">
         <h5 class="card-header-text">Setting Salepage  </h5>
+        @if($canAccess)
         <button type="button" onclick="save_js()" class="btn btn-primary waves-effect waves-light f-right">
           <i class="icofont icofont-edit"></i> Save
         </button>
+        @endif
       </div>
 
       <div class="card-block">
@@ -82,22 +86,22 @@
         <div class="form-group row">
           <label> Add Facebook Pixel Salepage 1  </label>
           <textarea rows="5" cols="5" id="js_page_1" class="form-control" placeholder="Tag javascript in hearder Page 1">@if($data->js_page_1){{ @$data->js_page_1 }}@endif</textarea>
-          
+
         </div>
         <div class="form-group row">
           <label> Add Facebook Pixel Salepage 2  </label>
           <textarea rows="5" cols="5" id="js_page_2" class="form-control" placeholder="Tag javascript in hearder Page 2">@if($data->js_page_2){{ @$data->js_page_2 }}@endif</textarea>
-          
+
         </div>
         <div class="form-group row">
           <label> Add Facebook Pixel Salepage 3  </label>
           <textarea rows="5" cols="5" id="js_page_3" class="form-control" placeholder="Tag javascript in hearder Page 3">@if($data->js_page_3){{ @$data->js_page_3 }}@endif</textarea>
-          
+
         </div>
         <div class="form-group row">
           <label> Add Facebook Pixel Salepage 4  </label>
           <textarea rows="5" cols="5" id="js_page_4" class="form-control" placeholder="Tag javascript in hearder Page 4">@if($data->js_page_4){{ @$data->js_page_4 }}@endif</textarea>
-          
+
         </div>
 
       </div>
@@ -243,7 +247,7 @@
           data: {_token:'{{ csrf_token() }}',fb:fb,ig:ig,line:line,'tel_number':tel_number},
         })
         .done(function(data) {
-          
+
           if(data['status'] == 'success'){
             Swal.fire('Saved!', '', 'success');
           }else {
@@ -253,9 +257,9 @@
             // text: 'Something went wrong!',
             // footer: '<a href>Why do I have this issue?</a>'
           })
-            
+
           }
-          
+
         })
         .fail(function() {
 
@@ -268,7 +272,7 @@
           console.log("error");
         })
 
-        
+
 
 
       }
@@ -300,7 +304,7 @@
           data: {_token:'{{ csrf_token() }}',js_page_1:js_page_1,js_page_2:js_page_2,js_page_3:js_page_3,js_page_4:js_page_4},
         })
         .done(function(data) {
-          
+
           if(data['status'] == 'success'){
             Swal.fire('Saved!', '', 'success');
           }else {
@@ -310,9 +314,9 @@
             // text: 'Something went wrong!',
             // footer: '<a href>Why do I have this issue?</a>'
           })
-            
+
           }
-          
+
         })
         .fail(function() {
 
@@ -325,7 +329,7 @@
           console.log("error");
         })
 
-        
+
 
 
       }

@@ -7,22 +7,32 @@ use DB;
 use Auth;
 class CourseCheckRegis extends Model
 {
-    public static function check_register($course_id){
-        $data_ce = DB::table('course_event') 
+    public static function check_register($course_id,$customer_username){
+        $data_ce = DB::table('course_event')
         ->where('id',$course_id)
         ->first();
 
+
+        $customer = DB::table('customers')
+        ->where('user_name',$customer_username)
+        ->first();
+
+        if(empty($customer)){
+          $resule = ['status'=>'fail','message'=>'ไม่มีข้อมูล Coustomer is null'];
+          return $resule;
+        }
+
         //dd($data_ce->aistockist);
 
-        $customer_id = Auth::guard('c_user')->user()->id;
-        $package_id = Auth::guard('c_user')->user()->package_id;
-        $qualification_id = Auth::guard('c_user')->user()->qualification_id;
-        $aistockist_status = Auth::guard('c_user')->user()->aistockist_status;
-       
+        $customer_id =  $customer->id;
+        $package_id =  $customer->package_id;
+        $qualification_id =  $customer->qualification_id;
+        $aistockist_status =  $customer->aistockist_status;
+
 
         //1 เช็คบัตรก่อนว่าเต็มไหม
         $count_ce = \App\Helpers\Frontend::get_ce_register($course_id);//[บัตรทั้งหมด]
- 
+
         $ce_register_per_customer_perday = \App\Helpers\Frontend::get_ce_register_per_customer_perday($course_id,$customer_id);//จำนวนที่จองคอสนี้ ต่อวัน
         $ce_register_per_customer_course = \App\Helpers\Frontend::get_ce_register_per_customer_percourse($course_id,$customer_id);//จำนวนที่จองคอสนี้ต่อ Course
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
@@ -32,7 +42,7 @@ class CourseCheckRegis extends Model
         if($count_ce >=  $data_ce->ce_max_ticket){
             $resule = ['status'=>'fail','message'=>'Ticket Full','code'=>'e001'];
             return $resule;exit();
-        }elseif($package_id < $data_ce->minimum_package_purchased and !empty($data_ce->minimum_package_purchased)){//Package ขั้นต่ำที่ซื้อได้ :(DB:dataset_package) package_id 
+        }elseif($package_id < $data_ce->minimum_package_purchased and !empty($data_ce->minimum_package_purchased)){//Package ขั้นต่ำที่ซื้อได้ :(DB:dataset_package) package_id
             $resule = ['status'=>'fail','message'=>'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้','code'=>'e002'];
             return $resule;exit();
         }elseif($qualification_id < $data_ce->reward_qualify_purchased and !empty($data_ce->reward_qualify_purchased)){
@@ -53,11 +63,11 @@ class CourseCheckRegis extends Model
                 ///ไม่ต้องรักษาคุณสมบัตรรายเดือน
         $resule = ['status'=>'fail','message'=>$mt_active['message'],'code'=>'e006'];
         return $resule;exit();
-        
+
     }elseif($data_ce->keep_personal_quality == 2 and !empty($data_ce->keep_personal_quality) and $mt_active['type']=='Y'){
         $resule = ['status'=>'fail','message'=>'ต้องไม่รักษาคุณสมบัติรายเดือน','code'=>'e007'];
         return $resule;exit();
-        
+
 
     }elseif($data_ce->maintain_travel_feature == 1 and !empty($data_ce->maintain_travel_feature) and $mt_active['status'] == 'fail'){
                 ///ต้องรักษาคุณสมบัตรรายเดือน
@@ -70,7 +80,7 @@ class CourseCheckRegis extends Model
         return $resule;exit();
 
     }elseif($data_ce->maintain_travel_feature == 2 and !empty($data_ce->maintain_travel_feature) and $tv_active['status'] == 'fail'){
-                            ///ไม่ต้องรักษาคุณสมบัตรรายเดือน 
+                            ///ไม่ต้องรักษาคุณสมบัตรรายเดือน
         $resule = ['status'=>'fail','message'=>$tv_active['message'],'code'=>'e010'];
         return $resule;exit();
 
@@ -83,7 +93,7 @@ class CourseCheckRegis extends Model
         $resule = ['status'=>'fail','message'=>'ต้องเป็น  Ai-Stockist','code'=>'e012'];
         return $resule;exit();
 
-    }elseif($data_ce->aistockist == 2 and !empty($data_ce->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist  
+    }elseif($data_ce->aistockist == 2 and !empty($data_ce->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist
 
         $resule = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist','code'=>'e013'];
         return $resule;exit();
@@ -113,12 +123,12 @@ class CourseCheckRegis extends Model
             $resule = ['status'=>'success','message'=>'Register open','code'=>'0'];
             return $resule;exit();
         }
-        
+
     }
 
     public static function cart_check_register($course_id,$quantity){
 
-        $data_ce = DB::table('course_event') 
+        $data_ce = DB::table('course_event')
         ->where('id',$course_id)
         ->first();
 
@@ -153,7 +163,7 @@ class CourseCheckRegis extends Model
                 return $resule;exit();
 
             }elseif($data_ce->ce_limit == Null and $ce_register_per_customer_course > $data_ce->ce_can_reserve){//ต่อกิจกรรม
-                $resule = ['status'=>'fail','message'=>'สิทธิ์การจองเกินกำหนด','code'=>'e03']; 
+                $resule = ['status'=>'fail','message'=>'สิทธิ์การจองเกินกำหนด','code'=>'e03'];
                 return $resule;exit();
             }else{
 
@@ -167,6 +177,6 @@ class CourseCheckRegis extends Model
             $resule = ['status'=>'success','message'=>'Register open','code'=>'0'];
             return $resule;exit();
         }
-        
+
     }
 }

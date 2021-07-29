@@ -66,7 +66,7 @@ public function form($id=NULL)
     $sRow->save();
 
     if (@request('approved') != null ){
-     \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id,\Auth::user()->id,'1','admin');
+     $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id,\Auth::user()->id,'1','admin');
    }
 
    \DB::commit();
@@ -96,7 +96,7 @@ public function Datatable(){
  ->leftjoin('dataset_pay_type','dataset_pay_type.id','=','db_orders.pay_type_id_fk')
  ->where('dataset_order_status.lang_id','=','1')
  ->where('dataset_orders_type.lang_id','=','1')
- ->where('db_orders.purchase_type_id_fk','=','6')
+//  ->where('db_orders.purchase_type_id_fk','=','6')
  ->where('db_orders.order_status_id_fk','=','2')
  ->orderby('id','DESC')
  ->get();

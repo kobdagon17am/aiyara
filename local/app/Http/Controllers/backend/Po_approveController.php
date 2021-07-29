@@ -34,7 +34,6 @@ class Po_approveController extends Controller
 
     public function update(Request $request, $id)
     {
-
         \DB::beginTransaction();
         try {
 

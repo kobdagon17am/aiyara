@@ -28,16 +28,16 @@
 
                     <div class="form-group row">
                         <div class="col-md-6 m-t-5">
-                            <form action="{{ route('cart_payment_aicash') }}" id="cart_payment_aicash" method="post">
+                            <form action="{{ route('cart_payment_aicash_submit') }}" id="cart_payment_aicash_submit" method="post">
                                 @csrf
-                                @if($canAccess)
-                                <div class="input-group input-group-button">
-                                    <input type="text" id="price" name="price" class="form-control autonumber"
-                                        data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
-                                    <span class="input-group-addon btn btn-primary" onclick="add_aicash()">
-                                        <span class="">ทำรายการ</span>
-                                    </span>
-                                </div>
+                                @if ($canAccess)
+                                    <div class="input-group input-group-button">
+                                        <input type="text" id="price" name="price" class="form-control autonumber"
+                                            data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
+                                        <span class="input-group-addon btn btn-primary" onclick="add_aicash()">
+                                            <span class="">ทำรายการ</span>
+                                        </span>
+                                    </div>
                                 @endif
                             </form>
                         </div>
@@ -71,7 +71,7 @@
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="delete_title_aicash" st>ยืนยันการลบรายการ Ai-Cash</h5>
+                                        <h5 class="modal-title" id="delete_title_aicash">ยืนยันการลบรายการ Ai-Cash</h5>
                                     </div>
 
                                     <div class="modal-body">
@@ -214,14 +214,15 @@
                             <h2 class="text-right"><i class="ti-wallet f-left"></i><span id="price_add_aicash"></span></h2>
 
 
-                           <p id="status"></p>
+                            <p id="status"></p>
                             {{-- <p class="m-b-0">Stattus<span class="f-right" id="status">Success</span></p> --}}
-                            <p class="m-b-0" style="margin-top: 31px;">Action Date <span class="f-right" id="date_aicash"> </span></p>
+                            <p class="m-b-0" style="margin-top: 31px;">Action Date <span class="f-right" id="date_aicash">
+                                </span></p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default waves-effect"  data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -247,9 +248,6 @@
     </script>
     <script src="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
     </script>
-
-
-
     <script type="text/javascript">
         function add_aicash() {
             var price = $('#price').val();
@@ -262,7 +260,22 @@
                 })
 
             } else {
-                document.getElementById("cart_payment_aicash").submit();
+              var price = $('#price').val();
+                Swal.fire({
+                    title: 'ยืนยันการเติม Ai Cash',
+                    text: 'ยอด '+price,
+                    showCancelButton: true,
+                    confirmButtonText: `Confirm`,
+                    // denyButtonText: `Don't save`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                      document.getElementById("cart_payment_aicash_submit").submit();
+                    }
+                })
+
+
+
 
             }
         }
@@ -281,7 +294,6 @@
             $('#aicash_id').val(aicash_id);
             $('#upload_title_aicash').html('Upload File Slip Ai-Cash (' + code + ')');
         }
-
     </script>
 
     <script type="text/javascript">
@@ -348,7 +360,6 @@
             // });
 
         });
-
     </script>
 
     <script type="text/javascript">
@@ -435,20 +446,20 @@
                     $('#code_order_aicash').html(data['data']['code_order']);
                     $('#price_add_aicash').html(data['price']);
 
-                    if(data['data']['order_status_id_fk'] == '7'){
-                      var status = 'Success';
-                    }else{
-                      var status = data['data']['order_status'];
+                    if (data['data']['order_status_id_fk'] == '7') {
+                        var status = 'Success';
+                    } else {
+                        var status = data['data']['order_status'];
                     }
 
-                    $("#status").html('<span class="label f-right m-b-0 label-'+data['data']['css_class']+'" id="status" style="font-size: 14px">'+status+'</span>');
+                    $("#status").html('<span class="label f-right m-b-0 label-' + data['data']['css_class'] +
+                        '" id="status" style="font-size: 14px">' + status + '</span>');
                     $('#date_aicash').html(data['date_aicash']);
                 })
                 .fail(function() {
                     console.log("error");
                 })
         }
-
     </script>
 
 @endsection

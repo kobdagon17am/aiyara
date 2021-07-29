@@ -248,9 +248,9 @@ class HistoryController extends Controller
             })
 
             ->addColumn('action', function ($row) {
+
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
                     // $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
-
                     $action = '<a class="btn btn-sm btn-success" href="'.route('cart_payment_transfer',['code_order'=>$row->code_order]).'" ><i class="fa fa-refresh"></i> ชำระเงิน </a>
 
                     <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';

@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         view()->composer('*', function ($view) {
             $view->with([
                 'url' => env('APP_ENV') === 'local' ? 'http://localhost' : 'https://v3.aiyara.co.th',

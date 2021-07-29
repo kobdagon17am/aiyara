@@ -103,8 +103,8 @@
                               <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                               <div class="col-md-8">
                                 <input type="hidden" id="member_id_aicash" name="customer_id_fk" value="{{@$sRow->customer_id_fk}}">
-                                <select id="customer_id_fk" class="form-control select2-templating " disabled >
-                                  <option value="{{@$sRow->customer_id_fk}}" selected ></option>
+                                <select class="form-control select2-templating " disabled >
+                                  <option value="{{@$sRow->customer_id_fk}}" selected >{{@$CustomerAicashName}}</option>
                                 </select>
                               </div>
                             </div>

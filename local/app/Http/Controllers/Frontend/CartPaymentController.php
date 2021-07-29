@@ -12,6 +12,7 @@ use App\Models\Frontend\CourseCheckRegis;
 use App\Models\Frontend\Couse_Event;
 use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Location;
+
 use App\Models\Frontend\Payment;
 use App\Models\Frontend\PaymentAddProduct;
 use App\Models\Frontend\PaymentSentAddressOrder;
@@ -146,6 +147,7 @@ class CartPaymentController extends Controller
 
     public function cart_submit_course($type)
     {
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $location = Location::location($business_location_id, $business_location_id);
         $cartCollection = Cart::session($type)->getContent();
@@ -257,6 +259,7 @@ class CartPaymentController extends Controller
 
     public function payment_address(Request $rs)
     {
+
 
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;

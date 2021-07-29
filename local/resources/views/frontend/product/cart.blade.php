@@ -155,7 +155,10 @@
                             <label class="label label-inverse-danger"><b style="color: #000"> คุณไม่มียอด Ai Voucher ที่สามารถใช้ชำระสินค้าได้ </b></label>
                             @endif
                           @elseif($type == 6)
-                          <a href="{{ route('cart_submit_course',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                            @if($check['status'] == 'fail')
+                              <?php $css_disable = 'display: none'; ?>
+                            @endif
+                          <a href="{{ route('cart_submit_course',['type'=>$type]) }}" id="couse_submit" style="{{ @$css_disable }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                           @else
                           <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                           @endif
@@ -239,10 +242,14 @@
         if(data['chek_course']['status'] == 'fail'){
             var eror_id = 'eror_'+data['action_id'];
             $('#'+eror_id).html(data['chek_course']['message']);
+            document.getElementById("couse_submit").style.display = "non";
+
 
         }else {
           var eror_id = 'eror_'+data['action_id'];
           $('#'+eror_id).html('');
+          document.getElementById("couse_submit").style.display = "block";
+
       }
 
       $('#price').html(data['price_total']);

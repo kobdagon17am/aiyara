@@ -256,9 +256,9 @@ class CancelOrderController extends Controller
                         $customer_id = $upline_id;
                         $last_upline_type = $upline_type;
                     } elseif ($type_id == 6) { // Course
-                        $update_ai_stockist = DB::table('course_event_regis')
+                        $update_couse = DB::table('course_event_regis')
                             ->where('order_id_fk', $order_id)
-                            ->update(['status_register' => 'cancel']);
+                            ->update(['status_register' => '3']);
 
                         $upline_type = $customer_user->line_type;
                         $upline_id = $customer_user->upline_id;

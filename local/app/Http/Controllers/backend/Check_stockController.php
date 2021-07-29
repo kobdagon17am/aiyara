@@ -59,12 +59,22 @@ class Check_stockController extends Controller
 
          // dd($sBalance);
 
+        $sRow = \App\Models\Backend\Check_stock::where('id',$id)->get();
+        // dd($sRow);
+
+        $b = DB::select(" select * from branchs where id=".$sRow[0]->branch_id_fk." ");
+        $warehouse = DB::select(" select * from warehouse where id=".$sRow[0]->warehouse_id_fk." ");
+        $zone = DB::select(" select * from zone where id=".$sRow[0]->zone_id_fk." ");
+        $shelf = DB::select(" select * from shelf where id=".$sRow[0]->shelf_id_fk." ");
+        $wh = @$b[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$sRow[0]->shelf_floor;
+
          return View('backend.check_stock.stock_card')->with(
          array(
            'Products'=>$Products,
            'lot_number'=>$lot_number,
            'sBalance'=>$sBalance,
            'date_s_e'=>$request->date,
+           'wh'=>$wh,
          ));
 
     }

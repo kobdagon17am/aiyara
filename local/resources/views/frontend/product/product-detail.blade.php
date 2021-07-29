@@ -141,7 +141,7 @@
                 @if($data['type'] == 6)
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-6">
                   <?php
-                  $ce_check = \App\Models\Frontend\CourseCheckRegis::check_register($data['product_data']->id);
+                  $ce_check = \App\Models\Frontend\CourseCheckRegis::check_register($data['product_data']->id,Auth::guard('c_user')->user()->user_name);
                   ?>
                   @if($ce_check['status'] == 'success')
                     <button type="button" onclick="addcart({{$data['product_data']->id}})" class="btn btn-primary waves-effect waves-light btn-block" data-type="success" data-from="top" data-align="right" style="margin-top: -2px">
