@@ -119,6 +119,9 @@
         <div class="form-group">
           <label>Aiyara</label>
           <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary" id="basic-addon11">
+                <span class="">Left Click</span>
+            </span>
             <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Aiyara" value="{{ $data->name_s1 }}">
             <span class="input-group-addon btn btn-primary btn-save-url">
                 <span class="">Save</span>

@@ -186,7 +186,7 @@ return view('frontend/salepage/aiyara',compact('rs'));
 			Rule::unique('db_salepage_setting', $key)
 		];
 
-		$validate = collect($request->except('_token'))->map(function ($item) use ($rules) {
+		$validate = collect($request->except('_token'))->map(function () use ($rules) {
 			return $rules;
 		})->toArray();
 
