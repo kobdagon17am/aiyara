@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use DB;
 use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class SalepageController extends Controller
 {
@@ -92,10 +93,10 @@ return view('frontend/salepage/aiyara',compact('rs'));
 
 	public static function setting(){
 
-		$customer_id =  Auth::guard('c_user')->user()->id;
+		$customer_id =  Auth::guard('c_user')->user();
 
 		$data = DB::table('db_salepage_setting')
-		->where('customers_id_fk','=',$customer_id)
+		->where('customers_id_fk','=',$customer_id->id)
 		->first();
 
 		return view('frontend/salepage/setting',compact('data'));
@@ -177,6 +178,36 @@ return view('frontend/salepage/aiyara',compact('rs'));
 		return $resule;
 	}
 
+	public function saveUrl(Request $request) 
+	{
+		$key = collect($request->except('_token'))->keys()->first();
+		$rules = [
+			'max:20', 
+			Rule::unique('db_salepage_setting', $key)
+		];
+
+		$validate = collect($request->except('_token'))->map(function ($item) use ($rules) {
+			return $rules;
+		})->toArray();
+
+		$this->validate($request, $validate, ['unique' => "{$request->$key} has already been taken."]);
+
+		try {
+
+			DB::table('db_salepage_setting')
+				->updateOrInsert([
+					'customers_id_fk' => auth('c_user')->id()
+				], $request->except('_token'));
+
+			return response()->json([
+				'success' => true,
+			]);
+
+		} catch (\Exception $e) {
+			\Log::info('>>>> Error: SalepageController@saveUrl <<<<');
+			\Log::info($e->getMessage());
+		}
+	}
 
 
 }

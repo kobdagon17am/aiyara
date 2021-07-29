@@ -107,6 +107,74 @@
 
 </div>
 
+{{-- Card Form URL name --}}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
+      </div>
+      <div class="card-block">
+
+        <div class="form-group">
+          <label>Aiyara</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Aiyara" value="{{ $data->name_s1 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Aimmura</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s2" id="name_s2" placeholder="Aimmura" value="{{ $data->name_s2 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cashewy Drink</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s3" id="name_s3" placeholder="Cashewy Drink" value="{{ $data->name_s3 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Aifacad</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s4" id="name_s4" placeholder="Aifacad" value="{{ $data->name_s4 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Alada</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s5" id="name_s5" placeholder="Alada" value="{{ $data->name_s5 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>TrimMax</label>
+          <div class="input-group input-group-button mb-0">
+            <input type="text" class="form-control" name="name_s6 btn-save-url" id="name_s6" placeholder="TrimMax" value="{{ $data->name_s6 }}">
+            <span class="input-group-addon btn btn-primary">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -248,6 +316,60 @@
   }
 
 
+  $('input[name^="name_s"]').each(function () {
+    $(this).on('input', function (e) {
+      return e.target.value = e.target.value.replaceAll(' ', '-')
+    })
+  })
+
+  $('.btn-save-url').each(function () {
+    $(this).on('click', function () {
+      saveUrl($(this).prev(), $(this).prev().val())
+    })
+  })
+
+  function saveUrl(input, value) {
+
+
+    let data = {
+      _token: "{{ csrf_token() }}"
+    }
+
+    data[input.attr('name')] = value
+
+    Swal.fire({
+      title: 'Do you want to save the changes?',
+      showCancelButton: true,
+      confirmButtonText: `Save`,
+    })
+    .then(function(result) {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "{{ route('salepage/save_url') }}",
+          type: "POST",
+          data: data,
+          success: function(response) {
+            if (response.success) {
+              Swal.fire('Saved!', '', 'success');
+              input.removeClass('is-invalid')
+              input.parent().parent().find('.invalid-feedback').remove();
+            }
+          },
+          error: function(response) {
+            if (response.status === 422) {
+              input.addClass('is-invalid')
+              input.parent().parent().append(`
+                <div class="invalid-feedback d-block">
+                  ${response.responseJSON.errors[input.attr('name')]}
+                </div>
+              `)
+            }
+          }
+        })
+      }
+    })
+
+  }
 </script>
 
 @endsection

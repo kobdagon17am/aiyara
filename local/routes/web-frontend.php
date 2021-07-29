@@ -251,6 +251,7 @@ Route::get('s6/{user_name?}','Frontend\SalepageController@trimmax')->name('s6');
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');
 Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
+Route::post('salepage/save_url', 'Frontend\SalepageController@saveUrl')->name('salepage/save_url');
 
 Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
 
