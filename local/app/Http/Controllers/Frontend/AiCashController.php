@@ -61,7 +61,7 @@ class AiCashController extends Controller
         $customer_id = Auth::guard('c_user')->user()->id;
         $code_order = RunNumberPayment::run_number_aicash($business_location_id);
         try {
-            $id = DB::table('db_add_ai_cash')->insertGetId(
+            $id = DB::table('db_add_ai_cash_log')->insertGetId(
               [
                   'customer_id_fk' => $customer_id,
                   'business_location_id_fk' => $business_location_id,
