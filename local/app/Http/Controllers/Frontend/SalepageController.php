@@ -11,7 +11,7 @@ class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
 
-    dd('ddd');
+
 			$data = DB::table('customers')
 			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
@@ -78,16 +78,23 @@ return view('frontend/salepage/trimmax',compact('rs'));
 }
 
 public function aiyara($user_name=''){
-
+  dd($user_name);
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
+  ->orwhere('db_salepage_setting.user_name','=',$user_name)
   ->first();
+  if($data){
+    $rs = ['stattus'=>'success','data'=>$data];
+    return view('frontend/salepage/aiyara',compact('rs'));
+  }else{
 
-  $rs = ['stattus'=>'success','data'=>$data];
-return view('frontend/salepage/aiyara',compact('rs'));
+  }
+
+
+
 }
 
 
