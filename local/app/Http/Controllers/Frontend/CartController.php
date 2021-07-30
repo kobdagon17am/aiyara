@@ -9,7 +9,7 @@ use App\Models\Frontend\GiftVoucher;
 use App\Models\Frontend\Pvpayment;
 use Cart;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
   // public function __construct()
