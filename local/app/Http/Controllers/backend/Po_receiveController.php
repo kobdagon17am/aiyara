@@ -146,7 +146,7 @@ class Po_receiveController extends Controller
            $w03 = "";
         }
 
-        if(!empty($req->po_status)){
+        if(isset($req->po_status)){
            $w04 = " AND db_po_supplier.po_status = ".$req->po_status."  " ;
         }else{
            $w04 = "";
@@ -176,7 +176,7 @@ class Po_receiveController extends Controller
             SELECT db_po_supplier.*
             FROM
             db_po_supplier
-            WHERE 1
+            WHERE buy_status=1
             ".$w01."
             ".$w02."
             ".$w03."

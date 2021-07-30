@@ -302,7 +302,8 @@ $(function() {
             {data: 'supplier_name', title :'<center> Supplier </center>', className: 'text-center'},
             {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
             {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
-            {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
+            {data: 'buy_status', title :'<center>สถานะการสั่งซื้อ </center>', className: 'text-center'},
+            {data: 'po_status', title :'<center>สถานะการได้รับสินค้า </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
@@ -461,7 +462,8 @@ $(function() {
                                       {data: 'supplier_name', title :'<center> Supplier </center>', className: 'text-center'},
                                       {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
                                       {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
-                                      {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
+                                      {data: 'buy_status', title :'<center>สถานะการสั่งซื้อ </center>', className: 'text-center'},
+                                      {data: 'po_status', title :'<center>สถานะการได้รับสินค้า </center>', className: 'text-center'},
                                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){

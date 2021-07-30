@@ -14,6 +14,7 @@ use Auth;
 use App\Models\Frontend\RunNumberPayment;
 use App\Models\Frontend\PvPayment;
 
+
 class FrontstoreController extends Controller
 {
 
@@ -22,6 +23,7 @@ class FrontstoreController extends Controller
       // dd($request);
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
+      $branch_id_fk = \Auth::user()->branch_id_fk;
       $user_login_id = \Auth::user()->id;
       $sUser = DB::select(" select * from ck_users_admin ");
       $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (1,2) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
@@ -39,7 +41,7 @@ class FrontstoreController extends Controller
               SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,pay_type_id_fk,action_user
               FROM db_orders
               Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-              WHERE 1
+              WHERE db_orders.branch_id_fk=$branch_id_fk
               $w1
 
               UNION
@@ -56,7 +58,7 @@ class FrontstoreController extends Controller
               db_add_ai_cash.updated_at as ud2,
               'ai_cash' as pay_type,3 as pay_type_id_fk,action_user
               FROM db_add_ai_cash
-              WHERE 1 AND db_add_ai_cash.approve_status<>4
+              WHERE db_add_ai_cash.approve_status<>4
               $w1
 
            ");
@@ -264,7 +266,7 @@ class FrontstoreController extends Controller
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
-      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
 
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
 
@@ -370,7 +372,7 @@ class FrontstoreController extends Controller
       }else{
         $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       }
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ");
 
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -429,8 +431,11 @@ class FrontstoreController extends Controller
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $vat = $vat > 0 ? $vat : 0 ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          $product_value = $product_value > 0 ? $product_value : 0 ;
+          $total = @$sFrontstoreDataTotal[0]->total>0 ? @$sFrontstoreDataTotal[0]->total : 0 ;
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total)." WHERE id=$id ");
         }else{
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
@@ -444,8 +449,16 @@ class FrontstoreController extends Controller
       $check_giveaway = GiveawayController::check_giveaway($business_location_id,$type,$customer_pv,$pv_total);
       // dd($check_giveaway);
 
+      $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
+
+      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','9');
+      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','A0000009');
+      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','1');
+      // dd($CourseCheckRegis);
+
       return View('backend.frontstore.form')->with(
         array(
+           // 'CourseCheckRegis'=>$CourseCheckRegis,
            'sRow'=>$sRow,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
@@ -471,6 +484,7 @@ class FrontstoreController extends Controller
            'shipping_special'=>$shipping_special,
            'sFrontstoreDataTotal'=>$sFrontstoreDataTotal,
            'check_giveaway'=>$check_giveaway,
+           'sPay_type_purchase_type6'=>$sPay_type_purchase_type6,
         ) );
     }
 
@@ -595,8 +609,11 @@ class FrontstoreController extends Controller
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
           $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $vat = $vat > 0 ? $vat : 0 ;
           $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total." WHERE id=$id ");
+          $product_value = $product_value > 0 ? $product_value : 0 ;
+          $total = @$sFrontstoreDataTotal[0]->total>0 ? @$sFrontstoreDataTotal[0]->total : 0 ;
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total)." WHERE id=$id ");
         }else{
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
@@ -672,7 +689,7 @@ class FrontstoreController extends Controller
 
               if($sRow->invoice_code==""){
 
-                if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+                if(request('purchase_type_id_fk')==6 || request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   $sRow->invoice_code = '' ;
                 }else{
                   $table = 'db_orders';
@@ -702,12 +719,15 @@ class FrontstoreController extends Controller
               $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
               $sRow->account_bank_id = request('account_bank_id');
               $sRow->transfer_money_datetime = request('transfer_money_datetime');
+
               if(empty(request('shipping_price'))){
-                $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('fee_amt'));
-              // }else{
-              //   if(request('sum_price')>0){
-              //   // $sRow->total_price    =  str_replace(',','',request('sum_price'))+str_replace(',','',request('shipping_price'))+str_replace(',','',request('fee_amt'));
-              //   }
+
+                $sum_price = str_replace(',','',request('sum_price'));
+                $fee_amt = request('fee_amt')>0 ? str_replace(',','',request('fee_amt')) : 0 ;
+                // dd(str_replace(',','',request('fee_amt')));
+                // dd($fee_amt);
+                $sRow->total_price    =  $sum_price  + $fee_amt ;
+       
               }
 
               // dd("734");
@@ -1039,8 +1059,8 @@ class FrontstoreController extends Controller
           $user_login_id = \Auth::user()->id;
           $sPermission = \Auth::user()->permission ;
           // dd($sPermission);
-// \Auth::user()->position_level==1 => Supervisor
-        if(\Auth::user()->position_level=='1'){
+// \Auth::user()->position_level==4 => Supervisor
+        if(\Auth::user()->position_level=='4'){
             $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }else{
             $action_user_011 = " AND action_user = $user_login_id ";
@@ -1232,7 +1252,6 @@ class FrontstoreController extends Controller
                 $invoice_code
                 $action_user_02
                 $status_sent_money
-                $approve_status
 
                 UNION ALL 
 

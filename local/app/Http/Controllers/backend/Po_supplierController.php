@@ -97,6 +97,7 @@ class Po_supplierController extends Controller
           $sRow->po_code_other    = request('po_code_other');
           $sRow->action_user    = request('action_user');
           $sRow->note    = request('note');
+          $sRow->buy_status    = request('buy_status')?request('buy_status'):0;
           $sRow->created_at    = request('created_at');
           // $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
@@ -206,6 +207,13 @@ class Po_supplierController extends Controller
           return 'ใบ PO ที่ยกเลิก';
         }else{
           return 'อยู่ระหว่างการดำเนินการ';
+        }
+      })
+       ->addColumn('buy_status', function($row) {
+        if($row->buy_status==1){
+          return 'ดำเนินการสั่งซื้อแล้ว';
+        }else{
+          return 'ยังไม่ได้สั่งซื้อ';
         }
       })
       ->make(true);

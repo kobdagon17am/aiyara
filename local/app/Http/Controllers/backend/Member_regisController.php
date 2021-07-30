@@ -619,6 +619,15 @@ class Member_regisController extends Controller
             return date("Y-m-d",strtotime($row->created_at));
         })
         ->escapeColumns('created_at')
+        ->addColumn('regis_date_doc', function($row) {
+            $regis_date_doc = DB::select(" select regis_date_doc from customers where id=".@$row->customer_id." ");
+            if($regis_date_doc[0]->regis_date_doc!=""){
+              return date("Y-m-d",strtotime($regis_date_doc[0]->regis_date_doc));
+            }else{
+              return '';
+            }
+            
+        })
         ->make(true);
       }
 

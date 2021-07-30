@@ -131,10 +131,11 @@
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
+
                  echo "<br>";
                  echo @$value[0]->cus_code." <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."<br>";
 
-                      if(@$sRow->delivery_location==0){
+                      if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
                         echo " รับสินค้าด้วยตัวเอง ";
                       }else{
 
@@ -358,8 +359,13 @@
     $i=1;
 
 
-
     foreach ($P as $key => $v) {
+
+      if($v->type_product=="course"){
+         $product_name = "(คอร์สอบรม) ".$v->product_name;
+      }else{
+
+        if($v->product_id_fk!=''){
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -371,7 +377,17 @@
 
             $product_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
+          }else{
+
+            $product_name = '';
+
+
+          }
+        }
+
+
      ?>
+
 
           <tr style="  ">
             <td style="width:5%;text-align: center;" > <?=$i?> </td>

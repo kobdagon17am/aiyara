@@ -98,6 +98,39 @@
 </div>
 
 
+@if( !empty($sRow) )
+
+<div class="myBorder" style="display: none;">
+
+      
+        <div style="">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการประวัติการรับสินค้าจาก Supplier </span>
+                <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.po_supplier_products_get.create') }}/{{@$sRow->id}}" style="float: right;" >
+                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่มประวัติการสินค้า</span>
+              </a>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-0 row">
+            <div class="col-md-6">
+                <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.po_supplier.index') }}/{{@$sRowNew->id}}/edit" }}">
+                <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                </a>
+            </div>
+        </div>
+
+      </div>
+@endif
+
 
 
             </div>
@@ -110,5 +143,55 @@
 @section('script')
 
 
+  <script>
+
+
+
+            var po_supplier_products_id_fk = "{{@$sRow->id?@$sRow->id:0}}"; console.log(po_supplier_products_id_fk);
+            var oTable;
+
+            $(function() {
+                oTable = $('#data-table').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                            url: '{{ route('backend.po_supplier_products_get.datatable') }}',
+                            data: function ( d ) {
+                                    d.Where={};
+                                    d.Where['po_supplier_products_id_fk'] = po_supplier_products_id_fk ;
+                                    oData = d;
+                                  },
+                              method: 'POST',
+                            },
+                 
+                    columns: [
+                        {data: 'id', title :'<center>ID', className: 'text-center w50'},
+                        {data: 'time_get', title :'<center>ครั้งที่', className: 'text-center'},
+                        {data: 'amt', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
+                        // {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
+                        {data: 'get_status', title :'<center>สถานะการรับสินค้าจาก Supplier', className: 'text-center'},
+                        {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                      $('td:last-child', nRow).html(''
+                        + '<a href="{{ route('backend.po_supplier_products_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.po_supplier_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                      ).addClass('input');
+                    }
+                });
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+                  oTable.draw();
+                });
+            });
+
+
+            </script>
 
 @endsection

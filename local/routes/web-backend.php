@@ -623,13 +623,13 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('po_supplier_products/datatable', 'Po_supplier_productsController@Datatable')->name('po_supplier_products.datatable');
     Route::get('po_supplier_products/create/{id}', 'Po_supplier_productsController@create');
 
-    Route::resource('po_supplier_products_get', 'Po_supplier_products_getController');
-    Route::post('po_supplier_products_get/datatable', 'Po_supplier_products_getController@Datatable')->name('po_supplier_products_get.datatable');
-    Route::get('po_supplier_products_get/create/{id}', 'Po_supplier_products_getController@create');
+    // Route::resource('po_supplier_products_get', 'Po_supplier_products_getController');
+    // Route::post('po_supplier_products_get/datatable', 'Po_supplier_products_getController@Datatable')->name('po_supplier_products_get.datatable');
+    // Route::get('po_supplier_products_get/create/{id}', 'Po_supplier_products_getController@create');
 
     Route::get('po_supplier_products/print_receipt/{id}', 'AjaxController@createPDFpo_supplier_products');
 
-
+// Start ใบ PO รับสินค้า
     Route::resource('po_receive', 'Po_receiveController');
     Route::post('po_receive/datatable', 'Po_receiveController@Datatable')->name('po_receive.datatable');
 
@@ -648,6 +648,22 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('po_receive_products/print_receipt/{id}', 'AjaxController@createPDFpo_receive_products');
 
     Route::post('ajaxCheckAmt_get_po_product', 'AjaxController@ajaxCheckAmt_get_po_product');
+
+// End ใบ PO รับสินค้า
+
+// Start รับสินค้าเข้าจากการโอนระหว่างสาขา
+    Route::resource('transfer_branch_get', 'Transfer_branch_getController');
+    Route::post('transfer_branch_get/datatable', 'Transfer_branch_getController@Datatable')->name('transfer_branch_get.datatable');
+
+    Route::resource('transfer_branch_get_products', 'Transfer_branch_get_productsController');
+    Route::post('transfer_branch_get_products/datatable', 'Transfer_branch_get_productsController@Datatable')->name('transfer_branch_get_products.datatable');
+
+    Route::post('transfer_branch_get_products_receive/datatable', 'Transfer_branch_get_productsController@Datatable02')->name('transfer_branch_get_products_receive.datatable');
+
+    Route::post('ajaxCheckAmt_get_transfer_branch_get_products', 'AjaxController@ajaxCheckAmt_get_transfer_branch_get_products');
+
+
+// End รับสินค้าเข้าจากการโอนระหว่างสาขา 
 
     Route::resource('general_receive', 'General_receiveController');
     Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');

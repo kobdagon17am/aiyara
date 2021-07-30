@@ -40,7 +40,7 @@
                     @if( empty($sRow) )
                     <input class="form-control" type="text" name="po_number" value="{{ @$po_runno }}" readonly="">
                     @else
-                    <input class="form-control" type="text" value="{{ @$sRow->po_number }}" readonly="">
+                    <input class="form-control" type="text" name="po_number" value="{{ @$sRow->po_number }}" readonly="">
                     @endif
                   </div>
                 </div>
@@ -141,6 +141,19 @@
                        </div>
                           
   
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label">สถานะ :</label>
+                    <div class="col-md-9 mt-2">
+                      <div class="custom-control custom-switch">
+                      
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="buy_status" value="1" {{ ( @$sRow->buy_status=='1')?'checked':'' }}>
+                          <label class="custom-control-label" for="customSwitch">ดำเนินการสั่งซื้อแล้ว</label>
+
+                      </div>
+                    </div>
+                </div>
+
+
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_supplier") }}">

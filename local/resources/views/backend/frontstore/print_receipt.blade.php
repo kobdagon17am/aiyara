@@ -304,7 +304,7 @@ $value = DB::select("
   <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="width:30%;" >
+        <td style="width:60%;" >
 
          <?php
 
@@ -312,19 +312,14 @@ $value = DB::select("
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
-                echo "<b>ที่อยู่จัดส่ง</b>"."<br>";
-                echo "<b>".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</b><br>";
+                echo "<b>ชื่อ - ที่อยู่จัดส่ง</b>"."<br>";
+                echo  @$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name;
 
 
-                      if(@$sRow->delivery_location==0){
+                      if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
                         echo " รับสินค้าด้วยตัวเอง </span> ";
                       }else{
 
-                        // foreach(@$Delivery_location AS $r){
-                        //   if(@$r->id==@$sRow->delivery_location){
-                        //     echo "( ".$r->txt_desc." ) </span> ";
-                        //   }
-                        // }
 
                         if(@$sRow->delivery_location==1){
 
@@ -527,6 +522,12 @@ Amount </td>
 <!-- รายการสินค้า -->
 <?php
 
+     // $sFrontstorelist = \App\Models\Backend\Frontstorelist::find($data[0]);
+     // // dd($sFrontstorelist);
+     // if($sFrontstorelist->type_product=="course"){
+     //    $Course_event = \App\Models\Backend\Course_event::find($sFrontstorelist->course_id_fk);
+     // }
+
      $P = DB::select("
                     SELECT
                     db_order_products_list.*,
@@ -567,6 +568,12 @@ Amount </td>
 
     foreach ($P as $key => $v) {
 
+      if($v->type_product=="course"){
+         $product_name = "(คอร์สอบรม) ".$v->product_name;
+      }else{
+
+        if($v->product_id_fk!=''){
+
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -576,6 +583,15 @@ Amount </td>
             WHERE products.id=".$v->product_id_fk." AND lang_id=1");
 
             $product_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+          }else{
+
+            $product_name = '';
+
+
+          }
+        }
+
 
      ?>
 

@@ -178,22 +178,23 @@ class Po_receive_products_getController extends Controller
     public function destroy($id)
     {
 
-      // dd($id);
-      if($id){
+
+       if($id){
+        
         $r = DB::select("SELECT *  FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
 
-       DB::select("
-
-        UPDATE `db_po_supplier_products` SET product_amt_receive=((SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$r[0]->po_supplier_products_id_fk." AND product_id_fk=".$r[0]->product_id_fk.") - ".$r[0]->amt_get." ) 
-        WHERE id=".$r[0]->po_supplier_products_id_fk." ;
-        ");
 
         DB::select("DELETE FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
 
+
+        DB::select("
+          UPDATE `db_po_supplier_products` SET product_amt_receive=((SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$r[0]->po_supplier_products_id_fk." AND product_id_fk=".$r[0]->product_id_fk.") - ".$r[0]->amt_get." ) 
+          WHERE id=".$r[0]->po_supplier_products_id_fk." ;
+        ");
+
         DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt=product_amt_receive; ");
         DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='2' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt>product_amt_receive; ");
-
-
+        
       }
       // $sRow = \App\Models\Backend\Po_supplier_products::find($id);
       // if( $sRow ){
@@ -209,11 +210,11 @@ class Po_receive_products_getController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('get_status', function($row) {
-        if($row->get_status==1){
+        if(@$row->get_status==1){
           return 'ได้รับสินค้าครบแล้ว';
-        }else if($row->get_status==2){
+        }else if(@$row->get_status==2){
           return 'ยังค้างรับสินค้าจาก Supplier';
-        }else if($row->get_status==3){
+        }else if(@$row->get_status==3){
           return 'ยกเลิกรายการสินค้านี้';
         }else{
           return 'อยู่ระหว่างการดำเนินการ';
@@ -225,8 +226,22 @@ class Po_receive_products_getController extends Controller
 
 
     public function DatatablePO_receive(Request $req){
-      $sTable = DB::select("select * from db_po_supplier_products_receive   ");
-      // $sTable = \App\Models\Backend\Po_supplier_products_get::search()->orderBy('id', 'asc');
+
+      $d1 = DB::select("select * from db_po_supplier_products where po_supplier_id_fk=".$req->po_supplier_id_fk."  ");
+
+      $arr = [];
+      if($d1){
+        foreach ($d1 as $key => $value) {
+           array_push($arr, $value->id);
+        }
+
+        $db_po_supplier_products_id = implode(',', $arr);
+      }else{
+        $db_po_supplier_products_id = 0;
+      }
+
+      $sTable = DB::select("select * from db_po_supplier_products_receive where po_supplier_products_id_fk in ($db_po_supplier_products_id)  ");
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {

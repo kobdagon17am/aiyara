@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รับสินค้าตาม PO </h4>
+            <h4 class="mb-0 font-size-18"> รับสินค้าจากการโอนระหว่างสาขา </h4>
         </div>
     </div>
 </div>
@@ -54,25 +54,28 @@
             <div class="myBorder">
 
               @if( empty($sRow) )
-              <form action="{{ route('backend.po_supplier.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.transfer_branch_get.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
               @else
-              <form action="{{ route('backend.po_supplier.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
                 {{ csrf_field() }}
 
     
                 <div class="form-group row">
-                  <label for="po_number" class="col-md-3 col-form-label">รหัสใบ PO :</label>
+                  <label for="tr_number" class="col-md-3 col-form-label">รหัสใบโอน :</label>
                   <div class="col-md-6">
-                    @if( empty($sRow) )
-                    <input class="form-control" type="text" name="po_number" value="{{ @$po_runno }}" readonly="">
+                    
+
+                    @if( empty(@$sRow) )
+                        <input class="form-control" type="text" name="tr_number" value="" required >
                     @else
-                    <input class="form-control" type="text" value="{{ @$sRow->po_number }}" readonly="">
+                        <input class="form-control" type="text" name="tr_number" value="{{ @$sRow->tr_number }}" readonly >
                     @endif
+
                   </div>
                 </div>
-
+<!-- 
                       <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                             <div class="col-md-6">
@@ -88,10 +91,10 @@
                             </select>
                             </div>
                           </div>
-
+ -->
                         
                         <div class="form-group row">
-                          <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
+                          <label for="" class="col-md-3 col-form-label"> รับจากสาขา : * </label>
                           <div class="col-md-6">
 
                               @if( empty(@$sRow) )
@@ -100,10 +103,10 @@
                                 </select>
                               @else
 
-                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled >
+                                  <select id="get_from_branch_id_fk"  name="get_from_branch_id_fk" class="form-control select2-templating " disabled >
                                     @if(@$sBranchs)
                                       @foreach(@$sBranchs AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->get_from_branch_id_fk)?'selected':'' }} >
                                         {{$r->b_name}}
                                       </option>
                                       @endforeach
@@ -117,14 +120,14 @@
                         </div>
 
                         <div class="form-group row">
-                          <label for="example-text-input" class="col-md-3 col-form-label">  Supplier : * </label>
+                          <label for="example-text-input" class="col-md-3 col-form-label">  ผู้รับโอน : * </label>
                           <div class="col-md-6">
-                            <select name="supplier_id_fk" id="supplier_id_fk" class="form-control select2-templating " disabled >
+                            <select name="action_user" id="action_user" class="form-control select2-templating " required >
                               <option value="">Select</option>
-                                @if(@$Supplier)
-                                  @foreach(@$Supplier AS $r)
-                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
-                                      {{$r->txt_desc}} 
+                                @if(@$sUserAdmin)
+                                  @foreach(@$sUserAdmin AS $r)
+                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->action_user)?'selected':'' }} >
+                                      {{$r->name}} 
                                     </option>
                                   @endforeach
                                 @endif
@@ -133,29 +136,37 @@
                         </div>
 
 
+                <div class="form-group row">
+                    <label for="created_at" class="col-md-3 col-form-label">วันที่สร้างใบโอน : * </label>
+                    <div class="col-md-2">
+                          <input class="form-control" autocomplete="off" id="created_at" name="created_at" value="{{@$sRow->created_at}}"  required  />
+                    </div>
+                </div>
+
                           <div class="form-group row">
-                            <label for="po_code_other" class="col-md-3 col-form-label">เลข PO (อื่นๆ ถ้ามี) :</label>
+                            <label for="tr_status" class="col-md-3 col-form-label">สถานะใบโอน :</label>
                             <div class="col-md-6">
-                              <input class="form-control" type="text" name="po_code_other" value="{{ @$sRow->po_code_other }}" disabled >
+                               <select id="tr_status" name="tr_status" class="form-control select2-templating " >
+                                <option value="">-Status-</option>
+                                <option value="0" {{ (0==@$sRow->tr_status)?'selected':'' }}> อยู่ระหว่างการดำเนินการ </option>
+                                <option value="1" {{ (1==@$sRow->tr_status)?'selected':'' }}> ได้รับสินค้าครบแล้ว </option>
+                                <option value="2" {{ (2==@$sRow->tr_status)?'selected':'' }}> ยังค้างรับสินค้า </option>
+                                <option value="3" {{ (3==@$sRow->tr_status)?'selected':'' }}> ใบโอนที่ยกเลิก </option>
+                              </select>
                             </div>
                           </div>
 
                 <div class="form-group row">
                   <label for="note" class="col-md-3 col-form-label">หมายเหตุ (ถ้ามี) :</label>
                   <div class="col-md-6">
-                    <textarea class="form-control" rows="3" id="note" name="note" disabled >{{ @$sRow->note }}</textarea>
+                    <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
                   </div>
                 </div>
 
 
-                <div class="form-group row">
-                    <label for="created_at" class="col-md-3 col-form-label">วันที่สร้างใบ PO : * </label>
-                    <div class="col-md-2">
-                          <input class="form-control" autocomplete="off" id="created_at" name="created_at" value="{{@$sRow->created_at}}" disabled   />
-                    </div>
-                </div>
+    
 
-                  <div class="form-group row">
+<!--                   <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
                             <div class="col-md-6">
                               @if( empty($sRow) )
@@ -167,11 +178,11 @@
                                @endif
                             </div>
                        </div>
-                          
+                           -->
   
-<!--                 <div class="form-group mb-0 row">
+                <div class="form-group mb-0 row">
                     <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_supplier") }}">
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                         </a>
                     </div>
@@ -180,32 +191,31 @@
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>
                     </div>
-                </div> -->
+                </div> 
 
               </form>
             </div>
 
 
- @if( !empty($sRow) )
 
       <div class="myBorder">
         <div style="">
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรับสินค้าตามใบ PO </span>
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรับสินค้าตามใบโอน </span>
 <!-- 
-              <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.po_supplier_products.create') }}/{{@$sRow->id}}" style="float: right;" >
+              <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{@$sRow->id}}" style="float: right;" >
                 <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
               </a> -->
 
-               <a href="{{ URL::to('backend/po_supplier_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
+               <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
                </a>
 
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
             </div>
           </div>
@@ -214,7 +224,7 @@
         <div class="form-group mb-0 row">
             <div class="col-md-6">
 
-                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_receive") }}">
+                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
                   <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                 </a>
 
@@ -232,14 +242,14 @@
           <div class="form-group row">
             <div class="col-md-12">
               <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ประวัติการรับสินค้า </span>
-              <!--   <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.po_receive_products_get.create') }}/{{@$sRow->id}}" style="float: right;" >
+              <!--   <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get.create') }}/{{@$sRow->id}}" style="float: right;" >
                 <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
               </a> -->
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <table id="data-table-history" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
               </table>
             </div>
           </div>
@@ -247,7 +257,7 @@
 
         <div class="form-group mb-0 row">
             <div class="col-md-6">
-                   <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_receive") }}">
+                   <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
                   <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                 </a>
             </div>
@@ -256,7 +266,6 @@
       </div>
 
 
-@endif
 
 
 
@@ -265,7 +274,7 @@
 
             <div class="myBorder" style="">
         
-              <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm-main" action="" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="approved" type="hidden" value="1">
@@ -316,7 +325,7 @@
 
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
-                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_receive") }}">
+                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
                   <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                 </a>
                   </div>
@@ -353,10 +362,11 @@
         </button>
       </div>
 
-      <form action="{{ route('backend.po_receive_products_get.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+      <form action="{{ route('backend.transfer_branch_get_products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_set_to_warehouse" value="1" >
-            <input type="hidden" id="po_supplier_products_id_fk" name="po_supplier_products_id_fk" >
-            <input type="hidden" id="po_supplier_id_fk" name="po_supplier_id_fk" value="{{@$sRow->id}}">
+            <input type="hidden" id="this_id" name="id" >
+            <input type="hidden" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk" >
+            <input type="hidden" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
             <input type="hidden" id="product_id_fk" name="product_id_fk" >
             {{ csrf_field() }}
 
@@ -562,6 +572,7 @@
           datepicker: true,
           weeks: false,
           minDate: 0,
+          minView: 2, 
       });
 
 
@@ -570,11 +581,11 @@
 
   <script>
 
-            var po_supplier_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
             var oTable;
 
             $(function() {
-                oTable = $('#data-table').DataTable({
+                oTable = $('#data-table-01').DataTable({
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                     processing: true,
                     serverSide: true,
@@ -585,10 +596,10 @@
                     scrollY: ''+($(window).height()-370)+'px',
                     iDisplayLength: 5,
                     ajax: {
-                            url: '{{ route('backend.po_supplier_products.datatable') }}',
+                            url: '{{ route('backend.transfer_branch_get_products.datatable') }}',
                             data: function ( d ) {
                                     d.Where={};
-                                    d.Where['po_supplier_id_fk'] = po_supplier_id_fk ;
+                                    d.Where['transfer_branch_get_id_fk'] = transfer_branch_get_id_fk ;
                                     oData = d;
                                   },
                               method: 'POST',
@@ -597,13 +608,14 @@
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
-                        {data: 'product_amt', title :'จำนวนที่สั่งซื้อ', className: 'text-center'},
+                        {data: 'product_amt', title :'จำนวนตามใบโอน', className: 'text-center'},
                         {data: 'product_amt_receive', title :'จำนวนที่รับมาแล้ว', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'get_status', title :'สถานะ', className: 'text-center'},
                         {data: 'id', title :'Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
+
                       // console.log(aData['get_status_2']);
                       // console.log(aData['product_amt']);
                       // console.log(aData['product_amt_receive']);
@@ -633,11 +645,13 @@
 
   <script>
 
-            var po_supplier_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            // var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+            console.log(transfer_branch_get_id_fk);
             var oTable2;
 
             $(function() {
-                oTable2 = $('#data-table-history').DataTable({
+                oTable2 = $('#data-table-02').DataTable({
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                     processing: true,
                     serverSide: true,
@@ -648,9 +662,9 @@
                     scrollY: ''+($(window).height()-370)+'px',
                     iDisplayLength: 5,
                     ajax: {
-                        url: '{{ route('backend.po_supplier_products_receive.datatable') }}',
+                        url: '{{ route('backend.transfer_branch_get_products_receive.datatable') }}',
                         data :{
-                              po_supplier_id_fk:po_supplier_id_fk,
+                              transfer_branch_get_id_fk:transfer_branch_get_id_fk,
                             },
                           method: 'POST',
                         },
@@ -664,13 +678,9 @@
                         {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
-                      // $('td:last-child', nRow).html(''
-                      //   + '<a href="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                      //   + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                      // ).addClass('input');
 
                     $('td:last-child', nRow).html(''
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
 
                     }
@@ -722,12 +732,18 @@
              var id = $(this).data('id');
              var product_name = $(this).attr('product_name');
              var product_id_fk = $(this).attr('product_id_fk');
+             var transfer_branch_get_products_id_fk = $(this).data('id');
              // console.log(product_id_fk);
+             // console.log(product_name);
              // console.log(product_name);
              // var branch_id_fk = $("#branch_id_fk").val();
              $('#product_name').val(product_name);
              $('#product_id_fk').val(product_id_fk);
-             $('#po_supplier_products_id_fk').val(id);
+             $('#transfer_branch_get_products_id_fk').val(transfer_branch_get_products_id_fk);
+             $('#this_id').val(transfer_branch_get_products_id_fk);
+             // $('#transfer_branch_get_products_id_fk').val(id);
+             // var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+              // console.log(transfer_branch_get_id_fk);
             
              setTimeout(function(){
                  $('#amt_get').focus();
@@ -930,18 +946,18 @@ $( function() {
              $(".myloading").show();
             
              var amt_get = $(this).val();
-             var po_supplier_products_id_fk = $('#po_supplier_products_id_fk').val();
+             var transfer_branch_get_id_fk = $('#transfer_branch_get_id_fk').val();
              var product_id_fk = $('#product_id_fk').val();
              // console.log(amt_get);
-             // console.log(po_supplier_products_id_fk);
+             // console.log(transfer_branch_get_id_fk);
              // console.log(product_id_fk);
              // return false;
              $.ajax({
-               url: " {{ url('backend/ajaxCheckAmt_get_po_product') }} ", 
+               url: " {{ url('backend/ajaxCheckAmt_get_transfer_branch_get_products') }} ", 
                 method: "post",
                 data: {
                 amt_get:amt_get,
-                po_supplier_products_id_fk:po_supplier_products_id_fk,
+                transfer_branch_get_id_fk:transfer_branch_get_id_fk,
                 product_id_fk:product_id_fk,
                   "_token": "{{ csrf_token() }}", 
                 },
@@ -966,8 +982,9 @@ $( function() {
             $(document).on('click', '.cDelete', function(event) {
             
                      setTimeout(function(){
-                         $('#data-table').DataTable().draw();
-                      }, 1000);
+                         $('#data-table-01').DataTable().draw();
+                         $('#data-table-02').DataTable().draw();
+                      }, 1500);
        
            });
 

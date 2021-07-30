@@ -174,7 +174,14 @@ class RoleController extends Controller
                     }
                 }
               }  
-              
+              if(!empty(request('can_cancel_bill_across_day'))){
+                $can_cancel_bill_across_day = request('can_cancel_bill_across_day');
+                if(!empty($can_cancel_bill_across_day)){
+                    foreach ($can_cancel_bill_across_day AS $row) {
+                         DB::update(" UPDATE role_permit SET can_cancel_bill_across_day=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }  
           }
 
           $sRow->save();

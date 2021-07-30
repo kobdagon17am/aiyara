@@ -646,6 +646,7 @@ $(function() {
             {data: 'created_at', title :'<center>วันที่สมัคร</center>', className: 'text-center'},
             {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left'},
             {data: 'icon', title :'<center> เอกสาร </center>', className: 'text-center'},
+            {data: 'regis_date_doc', title :'<center>วันที่ตรวจเอกสารผ่าน </center>', className: 'text-center'},
             {data: 'updated_at', title :'<center>ปรับปรุงล่าสุด </center>', className: 'text-center'},
         ],
         rowCallback: function(nRow, aData, dataIndex){

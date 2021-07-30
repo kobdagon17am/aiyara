@@ -86,6 +86,7 @@
   <?php 
       
       $can_cancel_bill = 0;
+      $can_cancel_bill_across_day = 0;
 
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
@@ -105,6 +106,7 @@
         $sD = @$menu_permit->d==1?'':'display:none;';
 
         $can_cancel_bill = @$menu_permit->can_cancel_bill; 
+        $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
 
       }
       // echo $sPermission;
@@ -697,6 +699,7 @@ var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(sD);
+var can_cancel_bill_across_day = "{{@$can_cancel_bill_across_day}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -726,18 +729,21 @@ $(function() {
 รักษาคุณสมบัติท่องเที่ยว <i class="fa fa-bus"></i>
 เติม Ai-Stockist <i class="ti-wallet "></i>
 Gift Voucher  <i class="fa fa-gift"></i>
+คอร์สอบรม <i class="mdi mdi-account-tie"></i>
 */
             {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w100 ',render: function(d) {
               if(d==1){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-shopping-basket"></i> </span>';
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
               }else if(d==2){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-calendar-check-o"></i> </span>';
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
               }else if(d==3){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-bus"></i> </span>';        
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
               }else if(d==4){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>';      
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
               }else if(d==5){
-                return '<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fa fa-gift"></i> </span>';                                    
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
+              }else if(d==6){
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
               }else{ 
                 return '';
               }
@@ -862,6 +868,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             if( aData['approve_status']==9 ){
 
               // console.log(can_cancel_bill);
+              // console.log(can_cancel_bill_across_day);
 
               if(can_cancel_bill==1){
                  $('td:last-child', nRow).html(''
@@ -898,6 +905,9 @@ Gift Voucher  <i class="fa fa-gift"></i>
               }
 
         }
+    });
+    oTable.on( 'draw', function () {
+      $('[data-toggle="tooltip"]').tooltip();
     });
 
 // + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'

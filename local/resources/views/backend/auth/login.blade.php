@@ -32,8 +32,15 @@ Login
                             <form class="form-horizontal" method="POST" action="{{ route('backend.login') }}">
                                 @csrf
                                     <div class="form-group">
+
+                                        <?php //echo 'username ' . @$_COOKIE["username"]; ?>
+                                        <?php //echo 'password ' . @$_COOKIE["password"]; ?>
+
                                         <label for="username">Username</label>
-                                        <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" @if(old('email')) value="{{ old('email') }}" @else  @endif id="username" placeholder="Enter username" autocomplete="on" autofocus>
+                                        <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                                        @if(old('email')) value="{{ old('email') }}" @else  @endif 
+                                        @if(!empty(@$_COOKIE['username'])) value="{{@$_COOKIE['username']}}" @endif 
+                                        id="username" placeholder="Enter username" autocomplete="on"  autofocus>
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -43,7 +50,7 @@ Login
 
                                     <div class="form-group">
                                         <label for="userpassword">Password</label>
-                                        <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" id="userpassword"  placeholder="Enter password">
+                                        <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" id="userpassword" @if(!empty(@$_COOKIE['password'])) value="{{@$_COOKIE['password']}}" @endif  placeholder="Enter password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

@@ -44,7 +44,15 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ใบ PO รับสินค้า </h4>
+            <h4 class="mb-0 font-size-18"> รับสินค้าจากการโอนระหว่างสาขา </h4>
+
+
+                  <div class="col-4 text-right" style="{{@$sC}}">
+                    <a class="btn btn-info btn-sm mt-1  font-size-16 " href="{{ route('backend.transfer_branch_get.create') }}">
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i> สร้างใบรับสินค้าจากการโอน 
+                    </a>
+                  </div>
+
         </div>
     </div>
 </div>
@@ -131,14 +139,14 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="customer_id_fk" class="col-md-3 col-form-label"> Supplier : </label>
+                    <label for="get_from_branch_id_fk" class="col-md-3 col-form-label"> รับมาจากสาขา : </label>
                     <div class="col-md-9">
-                      <select name="supplier_id_fk" id="supplier_id_fk" class="form-control select2-templating " required >
-                              <option value="">Select</option>
-                                @if(@$Supplier)
-                                  @foreach(@$Supplier AS $r)
-                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
-                                      {{$r->txt_desc}} 
+                      <select name="get_from_branch_id_fk" id="get_from_branch_id_fk" class="form-control select2-templating " required >
+                              <option value="">-Select-</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->b_name}} 
                                     </option>
                                   @endforeach
                                 @endif
@@ -149,14 +157,14 @@
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="po_status" class="col-md-3 col-form-label"> สถานะใบ PO :  </label>
+                    <label for="tr_status" class="col-md-3 col-form-label"> สถานะใบโอน :  </label>
                     <div class="col-md-9">
-                      <select id="po_status" name="po_status" class="form-control select2-templating " >
+                      <select id="tr_status" name="tr_status" class="form-control select2-templating " >
                         <option value="">-Status-</option>
                         <option value="0" > อยู่ระหว่างการดำเนินการ </option>
                         <option value="1" > ได้รับสินค้าครบแล้ว </option>
-                        <option value="2" > ยังค้างรับสินค้าจาก Supplier </option>
-                        <option value="3" > ใบ PO ที่ยกเลิก </option>
+                        <option value="2" > ยังค้างรับสินค้า </option>
+                        <option value="3" > ใบโอนที่ยกเลิก </option>
                       </select>
                     </div>
                   </div>
@@ -166,7 +174,7 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="startDate" class="col-md-3 col-form-label"> วันที่สร้างใบ PO : </label>
+                    <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่สร้างใบโอน : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -175,14 +183,14 @@
                 </div>
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="po_number" class="col-md-3 col-form-label"> รหัสใบ PO : </label>
+                    <label for="tr_number" class="col-md-3 col-form-label"> รหัสใบโอน : </label>
                      <div class="col-md-9 ">
-                      <select id="po_number" name="po_number" class="form-control select2-templating " >
+                      <select id="tr_number" name="tr_number" class="form-control select2-templating " >
                         <option value="">-Select-</option>
-                        @if(@$po_number)
-                        @foreach(@$po_number AS $r)
-                        <option value="{{$r->po_number}}" >
-                          {{$r->po_number}}
+                        @if(@$tr_number)
+                        @foreach(@$tr_number AS $r)
+                        <option value="{{$r->tr_number}}" >
+                          {{$r->tr_number}}
                         </option>
                         @endforeach
                         @endif
@@ -196,7 +204,7 @@
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                   <div class="form-group row">
-                    <label for="action_user" class="col-md-3 col-form-label"> ผู้สร้างใบ PO : </label>
+                    <label for="action_user" class="col-md-3 col-form-label"> ผู้รับใบโอน : </label>
                     <div class="col-md-9">
                      <select id="action_user" name="action_user" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -222,7 +230,7 @@
                       </a>
 
 
-                <!--     <a class="btn btn-info btn-sm float-right " style="{{@$sC}}" href="{{ route('backend.po_receive.create') }}">
+                <!--     <a class="btn btn-info btn-sm float-right " style="{{@$sC}}" href="{{ route('backend.transfer_branch_get.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle"></i>ADD สร้างใบรับสินค้าจาก PO
                     </a> -->
 
@@ -270,7 +278,7 @@ $(function() {
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.po_receive.datatable') }}',
+          url: '{{ route('backend.transfer_branch_get.datatable') }}',
           data: function ( d ) {
             d.Where={};
             $('.myWhere').each(function() {
@@ -297,12 +305,13 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
-            {data: 'po_number', title :'<center>รหัสใบ PO </center>', className: 'text-center'},
-            {data: 'supplier_name', title :'<center> Supplier </center>', className: 'text-center'},
-            {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
-            {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
-            {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
+            {data: 'tr_number', title :'<center>รหัสใบโอน </center>', className: 'text-center'},
+            {data: 'get_from_branch', title :'<center>รับจากสาขา</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>ผู้รับใบโอน </center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+            {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+            {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
+            {data: 'tr_status', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
@@ -311,7 +320,7 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               
               ).addClass('input');
 
@@ -325,6 +334,100 @@ $(function() {
 </script>
 
 
+<script>
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.btnSearch01', function(event) {
+                  event.preventDefault();
+                  $('#data-table').DataTable().clear();
+                  $(".myloading").show();
+                  var business_location_id_fk = $('#business_location_id_fk').val();
+                  var branch_id_fk = $('#branch_id_fk').val();
+                  var get_from_branch_id_fk = $('#get_from_branch_id_fk').val();
+                  var tr_number = $('#tr_number').val();
+                  var startDate = $('#startDate').val();
+                  var endDate = $('#endDate').val();
+                  var action_user = $('#action_user').val();
+                  var tr_status = $('#tr_status').val();
+                  var supplier_id_fk = $('#supplier_id_fk').val();
+                  console.log(tr_status);
+                  if(business_location_id_fk==''){
+                    $('#business_location_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+                  // alert(branch_id_fk);
+                  if(branch_id_fk=='' || branch_id_fk === null ){
+                    $('#branch_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                        var sU = "{{@$sU}}"; 
+                        var sD = "{{@$sD}}";  
+                        var oTable;
+                        $(function() {
+                          $.fn.dataTable.ext.errMode = 'throw';
+                             oTable = $('#data-table').DataTable({
+                            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                processing: true,
+                                serverSide: true,
+                                scroller: true,
+                                destroy:true,
+                                ordering: false,
+                                ajax: {
+                                          url: '{{ route('backend.transfer_branch_get.datatable') }}',
+                                          data :{
+                                            _token: '{{csrf_token()}}',
+                                                business_location_id_fk:business_location_id_fk,
+                                                branch_id_fk:branch_id_fk,
+                                                get_from_branch_id_fk:get_from_branch_id_fk,
+                                                tr_number:tr_number,
+                                                startDate:startDate,
+                                                endDate:endDate,
+                                                action_user:action_user,                                 
+                                                tr_status:tr_status,                                 
+                                                supplier_id_fk:supplier_id_fk,                                 
+                                              },
+                                            method: 'POST',
+                                          },
+                                    columns: [
+                                        {data: 'id', title :'ID', className: 'text-center w50'},
+                                        {data: 'tr_number', title :'<center>รหัสใบโอน </center>', className: 'text-center'},
+                                        {data: 'get_from_branch', title :'<center>รับจากสาขา</center>', className: 'text-center'},
+                                        {data: 'action_user', title :'<center>ผู้รับใบโอน </center>', className: 'text-center'},
+                                        {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                        {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                        {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
+                                        {data: 'tr_status', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
+                                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                    ],
+                                  rowCallback: function(nRow, aData, dataIndex){
+                                    if(sU!=''&&sD!=''){
+                                        $('td:last-child', nRow).html('-');
+                                    }else{ 
+
+                                        $('td:last-child', nRow).html(''
+                                          + '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                        ).addClass('input');
+
+                                    }
+                                  }
+                              });
+                        });
+
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                setTimeout(function(){
+                   $(".myloading").hide();
+                }, 1500);
+
+               
+            });
+          });
+
+    </script>
 
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -398,97 +501,6 @@ $(function() {
     </script>
 
 
-<script>
-
-        $(document).ready(function() {
-
-            $(document).on('click', '.btnSearch01', function(event) {
-                  event.preventDefault();
-                  $('#data-table').DataTable().clear();
-                  $(".myloading").show();
-                  var business_location_id_fk = $('#business_location_id_fk').val();
-                  var branch_id_fk = $('#branch_id_fk').val();
-                  var po_number = $('#po_number').val();
-                  var startDate = $('#startDate').val();
-                  var endDate = $('#endDate').val();
-                  var action_user = $('#action_user').val();
-                  var po_status = $('#po_status').val();
-                  var supplier_id_fk = $('#supplier_id_fk').val();
-                  console.log(po_status);
-                  if(business_location_id_fk==''){
-                    $('#business_location_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-                  // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
-                        var oTable;
-                        $(function() {
-                          $.fn.dataTable.ext.errMode = 'throw';
-                             oTable = $('#data-table').DataTable({
-                            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                processing: true,
-                                serverSide: true,
-                                scroller: true,
-                                destroy:true,
-                                ordering: false,
-                                ajax: {
-                                          url: '{{ route('backend.po_receive.datatable') }}',
-                                          data :{
-                                            _token: '{{csrf_token()}}',
-                                                business_location_id_fk:business_location_id_fk,
-                                                branch_id_fk:branch_id_fk,
-                                                po_number:po_number,
-                                                startDate:startDate,
-                                                endDate:endDate,
-                                                action_user:action_user,                                 
-                                                po_status:po_status,                                 
-                                                supplier_id_fk:supplier_id_fk,                                 
-                                              },
-                                            method: 'POST',
-                                          },
-                                       columns: [
-                                      {data: 'id', title :'ID', className: 'text-center w50'},
-                                      {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
-                                      {data: 'po_number', title :'<center>รหัสใบ PO </center>', className: 'text-center'},
-                                      {data: 'supplier_name', title :'<center> Supplier </center>', className: 'text-center'},
-                                      {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
-                                      {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
-                                      {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                  ],
-                                  rowCallback: function(nRow, aData, dataIndex){
-                                    if(sU!=''&&sD!=''){
-                                        $('td:last-child', nRow).html('-');
-                                    }else{ 
-
-                                        $('td:last-child', nRow).html(''
-                                          + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                        ).addClass('input');
-
-                                    }
-                                  }
-                              });
-                        });
-
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-
-                setTimeout(function(){
-                   $(".myloading").hide();
-                }, 1500);
-
-               
-            });
-          });
-
-    </script>
 
 
 <script type="text/javascript">

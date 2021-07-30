@@ -910,6 +910,7 @@ class AjaxController extends Controller
         $pay_type_id_fk = $request->pay_type_id_fk?$request->pay_type_id_fk:0;
         $frontstore_id =  $request->frontstore_id ;
         $shipping_price = str_replace(',','',$request->shipping_price);
+        $shipping_price = $shipping_price>0?$shipping_price:0;
 
         $sum_price = ($sum_price+$shipping_price) ;
 
@@ -3483,7 +3484,7 @@ class AjaxController extends Controller
 // แก้ใหม่
 // `approve_status` int(11) DEFAULT '0' COMMENT ' 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย',
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND approve_status=3 AND status_sent_money=0 
+          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND approve_status=4 AND status_sent_money=0 
               AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
           // return $r0;
@@ -3606,18 +3607,51 @@ class AjaxController extends Controller
   public function ajaxCheckAmt_get_po_product(Request $request)
     {
 
+      if($request->ajax()){
+        
+           $r1 = DB::select("  SELECT db_po_supplier_products.*,product_amt-product_amt_receive as remain FROM `db_po_supplier_products`  WHERE po_supplier_id_fk='".$request->po_supplier_products_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
+           // return $request->product_id_fk;
+           if($r1){
+                if($r1[0]->remain > 0){
+                    if($request->amt_get > $r1[0]->remain){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    return 0;
+                }
+           }else{
+            return 0;
+           }
+ 
+
+      }
+
+    }
+
+
+  public function ajaxCheckAmt_get_transfer_branch_get_products(Request $request)
+    {
 
       if($request->ajax()){
         
-           $r1 = DB::select(" SELECT * FROM `db_po_supplier_products` WHERE po_supplier_id_fk='".$request->po_supplier_products_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
-
-              // print_r($r1);
-           echo $request->amt_get;
-           echo $r1[0]->product_amt;
-           echo $r1[0]->product_amt_receive;
-
-           // return count($rs_pay_history); 
-            
+           $r1 = DB::select("  SELECT db_transfer_branch_get_products.*,product_amt-product_amt_receive as remain FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk='".$request->transfer_branch_get_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
+           // return $request->product_id_fk;
+           if($r1){
+                if($r1[0]->remain > 0){
+                    if($request->amt_get > $r1[0]->remain){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    return 0;
+                }
+           }else{
+            return 0;
+           }
+ 
 
       }
 

@@ -125,6 +125,7 @@
     // print_r(\Auth::user()->business_location_id_fk);
     // print_r(\Auth::user()->branch_id_fk);
     $can_cancel_bill = 0;
+    $can_cancel_bill_across_day = 0;
 
     $sPermission = \Auth::user()->permission ;
     // print_r($sPermission);
@@ -150,6 +151,7 @@
       $sD = @$menu_permit->d==1?'':'display:none;';
 
       $can_cancel_bill = @$menu_permit->can_cancel_bill; 
+      $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
 
     }
 
@@ -421,6 +423,7 @@
           var sU = "{{@$sU}}"; 
           var sD = "{{@$sD}}";
           var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(can_cancel_bill);
+          var can_cancel_bill_across_day = "{{@$can_cancel_bill_across_day}}"; //alert(can_cancel_bill);
 
           var oTable_001;
           $(function() {
@@ -480,6 +483,7 @@
                     
             
                               // console.log(can_cancel_bill);
+                              // console.log(can_cancel_bill_across_day);
                               console.log(aData['status_sent_2']);
 
                               if(can_cancel_bill=='1' && aData['status_sent_2']==3){

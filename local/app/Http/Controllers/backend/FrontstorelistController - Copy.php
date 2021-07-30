@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 use PDO;
-use App\Models\Frontend\RunNumberPayment;
 
 class FrontstorelistController extends Controller
 {
@@ -262,12 +261,9 @@ class FrontstorelistController extends Controller
        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
-              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-              $vat = $vat > 0  ? $vat : 0 ;
-              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
-              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
-              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total.",pv_total=".@$sFrontstoreDataTotal[0]->total_pv." WHERE id=$id ");
         }else{
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
@@ -293,59 +289,34 @@ class FrontstorelistController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        // dd($request->frontstore_id);
+
         if(isset($request->add_course)){
 
-            $business_location_id = \Auth::user()->business_location_id;
-            $code_order = RunNumberPayment::run_number_order($business_location_id);
+            for ($i=0; $i < count($request->id) ; $i++) { 
 
-            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+               // echo $request->id[$i];
 
-            $id = request('id');
-
-            for ($i=0; $i < count($id) ; $i++) { 
-
-                $sRow = new \App\Models\Backend\Frontstorelist;
-                $sRow->frontstore_id_fk    = request('frontstore_id') ;
-                $sRow->customers_id_fk    = $sFrontstore->customers_id_fk ;
-                $sRow->purchase_type_id_fk    = 6 ;
-                $sRow->distribution_channel_id_fk = '2';
-                $sRow->action_user = \Auth::user()->id;
-                $sRow->action_date = date('Y-m-d H:i:s');
-                $sRow->created_at = date('Y-m-d H:i:s');
-                $sRow->type_product = 'course' ;
-                $sRow->code_order = $code_order  ;
-
+                // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
+                // $sRow = new \App\Models\Backend\Transfer_choose_branch;
+                // $sRow->branch_id_fk    = request('branch_id_select_to_transfer');
+                // $sRow->branch_id_fk_to    = request('branch_id_select_to_transfer_to');
+                // $sRow->stocks_id_fk    = $Check_stock->id;
+                // $sRow->product_id_fk    = $Check_stock->product_id_fk;
+                // $sRow->lot_number    = $Check_stock->lot_number;
+                // $sRow->lot_expired_date    = $Check_stock->lot_expired_date;
+                // $sRow->amt    = request('amt_transfer')[$i];
+                // $sRow->product_unit_id_fk    = $Check_stock->product_unit_id_fk;
+                // $sRow->date_in_stock    = $Check_stock->date_in_stock;
+                // $sRow->action_user = \Auth::user()->id;
+                // $sRow->action_date = date('Y-m-d H:i:s');
+                // $sRow->created_at = date('Y-m-d H:i:s');
                 if(!empty(request('amt_apply')[$i])){
-                    $Course_event = \App\Models\Backend\Course_event::find($id[$i]);
-                    $sRow->course_id_fk    = $id[$i];
-                    $sRow->product_name    = $Course_event->ce_name;
-                    $sRow->selling_price    = $Course_event->ce_ticket_price;
-                    $sRow->pv    = $Course_event->pv;
-                    $sRow->total_pv    = $Course_event->pv * request('amt_apply')[$i] ;
-                    $sRow->total_price    =  $Course_event->ce_ticket_price * request('amt_apply')[$i];
-                    $sRow->amt    = request('amt_apply')[$i];
-                    $sRow->save();
+                  // $sRow->save();
                 }
-
               }
 
-
-             $id=   request('frontstore_id');
-
-             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
-             // dd($sFrontstoreDataTotal);
-             if($sFrontstoreDataTotal){
-                    $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-                    $vat = $vat > 0  ? $vat : 0 ;
-                    $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-                    $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
-                    $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
-                    DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
-              }else{
-                DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
-              }
-
-
+              dd();
 
             return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
 
@@ -589,11 +560,8 @@ class FrontstorelistController extends Controller
            // dd($sFrontstoreDataTotal);
            if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-              $vat = $vat > 0  ? $vat : 0 ;
               $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
-              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
-              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".@$sFrontstoreDataTotal[0]->total.",pv_total=".@$sFrontstoreDataTotal[0]->total_pv." WHERE id=$id ");
             }else{
               DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
             }
@@ -611,7 +579,6 @@ class FrontstorelistController extends Controller
 
     public function edit($id)
     {
-      // dd($id);
     }
 
     public function update(Request $request, $id)
@@ -653,79 +620,68 @@ class FrontstorelistController extends Controller
       return $sQuery
       ->addColumn('product_name', function($row) {
 
-        if($row->type_product=="course"){
-              return $row->product_name;
+        if(!empty($row->product_id_fk) && $row->add_from==1){
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".$row->product_id_fk." AND lang_id=1");
+
+            return @$Products[0]->product_code." : ".@$Products[0]->product_name;
         }else{
 
+          // return $row->promotion_id_fk;
 
-            if(!empty($row->product_id_fk) && $row->add_from==1){
+          // if(!empty($row->product_id_fk) && $row->add_from==2 && $row->promotion_code!=''){
+          //   // SELECT * from db_order_products_list WHERE promotion_code='B1D3JVM59'
 
-                $Products = DB::select("SELECT products.id as product_id,
-                products.product_code,
-                (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-                FROM
-                products_details
-                Left Join products ON products_details.product_id_fk = products.id
-                WHERE products.id=".$row->product_id_fk." AND lang_id=1");
+            $Products = DB::select("
+              SELECT
+              (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1) as product_code,
+              (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1) as product_name,
+              (SELECT product_unit
+              FROM
+              dataset_product_unit
+              WHERE id = promotions_products.product_unit AND  lang_id=1 ) as product_unit,
+              promotions_products.product_amt
+              FROM
+              promotions_products
+              WHERE
+              promotions_products.promotion_id_fk='".$row->promotion_id_fk."'
+            ");
 
-                return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+            $pn = '<div class="divTable"><div class="divTableBody">';
 
+            foreach ($Products as $key => $value) {
+             $pn .=
+                  '<div class="divTableRow">
+                  <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
+                  <div class="divTableCell"><center>'.$value->product_amt.' x '.$row->amt.' = </div>
+                  <div class="divTableCell"><center>'.($value->product_amt*$row->amt).'</div>
+                  <div class="divTableCell">'.$value->product_unit.'</div>
+                  </div>
+                  ';
+             }
+
+              $pn .= '</div></div>';
+
+            $sD = '';
+
+            if($row->promotion_id_fk!='' && $row->promotion_code!=''){
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
+                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " > รหัสคูปอง : ".($row->promotion_code)."</br>";
             }else{
-
-              // return $row->promotion_id_fk;
-
-              // if(!empty($row->product_id_fk) && $row->add_from==2 && $row->promotion_code!=''){
-              //   // SELECT * from db_order_products_list WHERE promotion_code='B1D3JVM59'
-
-                $Products = DB::select("
-                  SELECT
-                  (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1) as product_code,
-                  (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1) as product_name,
-                  (SELECT product_unit
-                  FROM
-                  dataset_product_unit
-                  WHERE id = promotions_products.product_unit AND  lang_id=1 ) as product_unit,
-                  promotions_products.product_amt
-                  FROM
-                  promotions_products
-                  WHERE
-                  promotions_products.promotion_id_fk='".$row->promotion_id_fk."'
-                ");
-
-                $pn = '<div class="divTable"><div class="divTableBody">';
-
-                foreach ($Products as $key => $value) {
-                 $pn .=
-                      '<div class="divTableRow">
-                      <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
-                      <div class="divTableCell"><center>'.$value->product_amt.' x '.$row->amt.' = </div>
-                      <div class="divTableCell"><center>'.($value->product_amt*$row->amt).'</div>
-                      <div class="divTableCell">'.$value->product_unit.'</div>
-                      </div>
-                      ';
-                 }
-
-                  $pn .= '</div></div>';
-
-                $sD = '';
-
-                if($row->promotion_id_fk!='' && $row->promotion_code!=''){
-                    $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
-                    $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " > รหัสคูปอง : ".($row->promotion_code)."</br>";
-                }else{
-                    $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
-                    $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . "</br>";
-                }
+                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->promotion_id_fk."' ");
+                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . "</br>";
+            }
 
 
-                $sD .=  $pn;
-                return $sD;
-
-           }
+            $sD .=  $pn;
+            return $sD;
 
         }
-
-
       })
       ->escapeColumns('product_name')
       ->addColumn('product_unit', function($row) {

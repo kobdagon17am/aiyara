@@ -33,6 +33,8 @@ class LoginController extends Controller
     {
         if (\Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'isActive' => 'Y'], $request->get('remember'))) {
             \Cache::forget('Menu-'.\Auth::guard('admin')->user()->id);
+            setcookie('username', $request->email, time()+60*60*24*365);
+            setcookie('password', $request->password, time()+60*60*24*365);
             return redirect()->intended('backend/index');
         }
     }
