@@ -9,6 +9,11 @@ use Auth;
 
 class EditPasswordAicashController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
+
 	public function index()
 	{
     $id = Auth::guard('c_user')->user()->id;

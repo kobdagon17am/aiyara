@@ -18,6 +18,7 @@ use App\Http\Controllers\Frontend\Fc\DeleteOrderController;
 class HistoryController extends Controller
 {
 
+
     public function __construct()
     {
         $this->middleware('customer');

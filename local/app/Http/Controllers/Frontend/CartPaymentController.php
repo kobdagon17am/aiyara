@@ -24,6 +24,10 @@ use Illuminate\Support\Facades\DB;
 
 class CartPaymentController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
     public function index($type)
     {
 
@@ -39,7 +43,7 @@ class CartPaymentController extends Controller
             foreach ($data as $value) {
                 $pv[] = $value['quantity'] * $value['attributes']['pv'];
                 if ($type == '6') {
-                    $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity']);
+                    $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity'],Auth::guard('c_user')->user()->user_name);
 
                     if ($chek_course['status'] == 'fail') {
                         return redirect('cart/' . $type)->withError($chek_course['message']);
@@ -162,7 +166,7 @@ class CartPaymentController extends Controller
             foreach ($data as $value) {
                 $pv[] = $value['quantity'] * $value['attributes']['pv'];
                 if ($type == '6') {
-                    $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity']);
+                    $chek_course = CourseCheckRegis::cart_check_register($value['id'], $value['quantity'],Auth::guard('c_user')->user()->user_name);
 
                     if ($chek_course['status'] == 'fail') {
                         return redirect('cart/' . $type)->withError($chek_course['message']);

@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
     public function cart($type)
     {
 
@@ -53,7 +57,7 @@ class CartController extends Controller
     {
         $type = $request->type;
         if ($type == 6) {
-            $chek_course = CourseCheckRegis::cart_check_register($request->item_id, $request->qty);
+            $chek_course = CourseCheckRegis::cart_check_register($request->item_id, $request->qty,Auth::guard('c_user')->user()->user_name);
         } else {
             $chek_course = '';
         }

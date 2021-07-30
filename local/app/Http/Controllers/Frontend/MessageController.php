@@ -8,6 +8,10 @@ use Auth;
 
 class MessageController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
 	public function index($active = ''){
 
 		if($active){
@@ -23,16 +27,16 @@ class MessageController extends Controller
 		}
 		$customers_id_fk = Auth::guard('c_user')->user()->id;
 		$data = DB::table('pm')
-		->select('pm.*','pm_answers.txt_answers as answers',DB::raw('MAX(pm_answers.created_at) as answers_create')) 
+		->select('pm.*','pm_answers.txt_answers as answers',DB::raw('MAX(pm_answers.created_at) as answers_create'))
 		->where('pm.customers_id_fk','=',$customers_id_fk)
-		->leftjoin('pm_answers', 'pm_answers.pm_id_fk','=','pm.id') 
+		->leftjoin('pm_answers', 'pm_answers.pm_id_fk','=','pm.id')
 		->groupby('pm.id')
 		->orderby('pm_answers.created_at','DESC')
-		->get(); 
- 
+		->get();
+
 
 		return view('frontend/message',compact('data','contact','inbox','contact_tab','inbox_tab'));
-	} 
+	}
 
 	public function message_read($pm_id){
 
@@ -42,14 +46,14 @@ class MessageController extends Controller
 
 		$customers_id_fk = Auth::guard('c_user')->user()->id;
 		$pm_data = DB::table('pm')
-		->select('*') 
+		->select('*')
 		->where('id','=',$pm_id)
 		->orderby('id','DESC')
 		->first();
 
 		$data = DB::table('pm_answers')
-		->select('*') 
-		->where('pm_id_fk','=',$pm_id)  
+		->select('*')
+		->where('pm_id_fk','=',$pm_id)
 		->orderby('created_at','ASC')
 		->get();
 
@@ -71,13 +75,13 @@ class MessageController extends Controller
 			]);
 
 			return redirect('message')->withSuccess('success');
-			
+
 		} catch (Exception $e){
 			return redirect('message')->withSuccess($e);
-			
+
 		}
 
-		
+
 	}
 
 	public function message_reply(Request $request){
@@ -90,7 +94,7 @@ class MessageController extends Controller
 			->update(['see_status' => 0,'status'=>1 ,'last_update'=>date('Y-m-d')]);
 
 
-			DB::table('pm_answers')->insert([ 
+			DB::table('pm_answers')->insert([
 				'customers_id_fk'=>Auth::guard('c_user')->user()->id,
 				'pm_id_fk' => $request->pm_id,
 				'txt_answers' => $request->question_txt,
@@ -99,10 +103,10 @@ class MessageController extends Controller
 
 
 			return redirect('message_read/'.$request->pm_id)->withSuccess('success');
-			
+
 		} catch (Exception $e){
 			return redirect('message_read/'.$request->pm_id)->withSuccess($e);
-			
+
 		}
 	}
 

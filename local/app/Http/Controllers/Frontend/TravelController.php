@@ -10,6 +10,7 @@ class TravelController extends Controller
 {
 	public function index(){
 
+
 		$business_location_id_fk = Auth::guard('c_user')->user()->business_location_id;
 
 		$data = DB::table('db_travel')

@@ -402,7 +402,7 @@ use App\Models\Frontend\CourseCheckRegis;
                                     <tbody>
                                         @foreach($bill['data'] as $value)
                                         <?php
-                                            $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
+                                            $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity'],Auth::guard('c_user')->user()->user_name);
                                         ?>
 
                                         <tr id="items">

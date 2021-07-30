@@ -9,6 +9,10 @@ use Auth;
 
 class DocsController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
 	public function index()
 	{
 		$data = DB::table('register_files')
@@ -33,7 +37,7 @@ class DocsController extends Controller
 			if(isset($file_1)){
             // $f_name = $file_1->getClientOriginalName().'_'.date('YmdHis').'.'.$file_1->getClientOriginalExtension();
 				$url='local/public/files_register/1/'.date('Ym');
-				
+
 				$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_1'.'.'.$file_1->getClientOriginalExtension();
 				if($file_1->move($url,$f_name)){
 					DB::table('register_files')
@@ -63,7 +67,7 @@ class DocsController extends Controller
 
 				}
 			}
- 
+
 			if(isset($file_4)){
             // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
 				$url='local/public/files_register/4/'.date('Ym');

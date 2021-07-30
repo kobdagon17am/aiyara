@@ -8,14 +8,20 @@ use Auth;
 
 class NewsController extends Controller
 {
+
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
 	public function index(){
+
 
 		$business_location_id_fk = Auth::guard('c_user')->user()->business_location_id;
 
 		$data = DB::table('db_news')
 		->where('business_location_id_fk','=',$business_location_id_fk)
-		->whereDate('start_date', '<=',date('Y-m-d')) 
-		->whereDate('end_date', '>=',date('Y-m-d')) 
+		->whereDate('start_date', '<=',date('Y-m-d'))
+		->whereDate('end_date', '>=',date('Y-m-d'))
 		->orderby('id','DESC')
 		->get();
 

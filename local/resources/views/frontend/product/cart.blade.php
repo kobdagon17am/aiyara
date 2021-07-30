@@ -64,7 +64,7 @@
                                     <?php
 
                                     if($type == 6){
-                                        $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity']);
+                                        $check = CourseCheckRegis::cart_check_register($value['id'],$value['quantity'],Auth::guard('c_user')->user()->user_name);
                                     }
 
                                     ?>

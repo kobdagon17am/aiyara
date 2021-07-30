@@ -126,7 +126,7 @@ class CourseCheckRegis extends Model
 
     }
 
-    public static function cart_check_register($course_id,$quantity){
+    public static function cart_check_register($course_id,$quantity,$customer_username){
 
         $data_ce = DB::table('course_event')
         ->where('id',$course_id)
@@ -134,10 +134,21 @@ class CourseCheckRegis extends Model
 
         //dd($data_ce->aistockist);
 
-        $customer_id = Auth::guard('c_user')->user()->id;
-        $package_id = Auth::guard('c_user')->user()->package_id;
-        $qualification_id = Auth::guard('c_user')->user()->qualification_id;
-        $aistockist_id = Auth::guard('c_user')->user()->aistockist_id;
+        $customer = DB::table('customers')
+        ->where('user_name',$customer_username)
+        ->first();
+
+        if(empty($customer)){
+          $resule = ['status'=>'fail','message'=>'ไม่มีข้อมูล Coustomer is null'];
+          return $resule;
+        }
+
+        //dd($data_ce->aistockist);
+
+        $customer_id =  $customer->id;
+        $package_id = $customer->package_id;
+        $qualification_id = $customer->qualification_id;
+        $aistockist_id = $customer->aistockist_id;
         //dd($data_ce);
 
         //1 เช็คบัตรก่อนว่าเต็มไหม

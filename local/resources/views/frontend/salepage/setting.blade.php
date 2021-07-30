@@ -59,6 +59,100 @@
 
   </div>
 </div>
+
+{{-- Card Form URL name --}}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
+      </div>
+      <div class="card-block">
+
+        <div class="form-group">
+          <label>Aiyara</label>
+          <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s1) }}" data-url="{{ route('s1', $data->name_s1) }}">
+                <span class="">Copy URL</span>
+            </span>
+            <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Aiyara" value="{{ $data->name_s1 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Aimmura</label>
+          <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s2) }}" data-url="{{ route('s2', $data->name_s2) }}">
+              <span class="">Copy URL</span>
+            </span>
+            <input type="text" class="form-control" name="name_s2" id="name_s2" placeholder="Aimmura" value="{{ $data->name_s2 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cashewy Drink</label>
+          <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s3) }}" data-url="{{ route('s3', $data->name_s3) }}">
+              <span class="">Copy URL</span>
+            </span>
+            <input type="text" class="form-control" name="name_s3" id="name_s3" placeholder="Cashewy Drink" value="{{ $data->name_s3 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Aifacad</label>
+          <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s4) }}" data-url="{{ route('s4', $data->name_s4) }}">
+              <span class="">Copy URL</span>
+            </span>
+            <input type="text" class="form-control" name="name_s4" id="name_s4" placeholder="Aifacad" value="{{ $data->name_s4 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Alada</label>
+          <div class="input-group input-group-button mb-0">
+            <span class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s5) }}" data-url="{{ route('s5', $data->name_s5) }}">
+              <span class="">Copy URL</span>
+            </span>
+            <input type="text" class="form-control" name="name_s5" id="name_s5" placeholder="Alada" value="{{ $data->name_s5 }}">
+            <span class="input-group-addon btn btn-primary btn-save-url">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>TrimMax</label>
+          <div class="input-group input-group-button mb-0">
+            <button class="input-group-addon btn btn-primary copy-to-clipboard"
+            data-toggle="tooltip" data-html="true" title="" data-original-title="{{ route('s1', $data->name_s6) }}" data-url="{{ route('s6', $data->name_s6) }}">
+              <span class="">Copy URL</span>
+            </button>
+            <input type="text" class="form-control" name="name_s6 btn-save-url" id="name_s6" placeholder="TrimMax" value="{{ $data->name_s6 }}">
+            <span class="input-group-addon btn btn-primary">
+                <span class="">Save</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="col-md-7 col-xl-7">
@@ -111,92 +205,6 @@
 
 </div>
 
-{{-- Card Form URL name --}}
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
-      </div>
-      <div class="card-block">
-
-        <div class="form-group">
-          <label>Aiyara</label>
-          <div class="input-group input-group-button mb-0">
-            <span class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s1', $data->name_s1) }}">
-                <span class="">Copy URL</span>
-            </span>
-            <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Aiyara" value="{{ $data->name_s1 }}">
-            <span class="input-group-addon btn btn-primary btn-save-url">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Aimmura</label>
-          <div class="input-group input-group-button mb-0">
-            <span class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s2', $data->name_s2) }}">
-              <span class="">Copy URL</span>
-            </span>
-            <input type="text" class="form-control" name="name_s2" id="name_s2" placeholder="Aimmura" value="{{ $data->name_s2 }}">
-            <span class="input-group-addon btn btn-primary btn-save-url">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Cashewy Drink</label>
-          <div class="input-group input-group-button mb-0">
-            <span class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s3', $data->name_s3) }}">
-              <span class="">Copy URL</span>
-            </span>
-            <input type="text" class="form-control" name="name_s3" id="name_s3" placeholder="Cashewy Drink" value="{{ $data->name_s3 }}">
-            <span class="input-group-addon btn btn-primary btn-save-url">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Aifacad</label>
-          <div class="input-group input-group-button mb-0">
-            <span class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s4', $data->name_s4) }}">
-              <span class="">Copy URL</span>
-            </span>
-            <input type="text" class="form-control" name="name_s4" id="name_s4" placeholder="Aifacad" value="{{ $data->name_s4 }}">
-            <span class="input-group-addon btn btn-primary btn-save-url">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Alada</label>
-          <div class="input-group input-group-button mb-0">
-            <span class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s5', $data->name_s5) }}">
-              <span class="">Copy URL</span>
-            </span>
-            <input type="text" class="form-control" name="name_s5" id="name_s5" placeholder="Alada" value="{{ $data->name_s5 }}">
-            <span class="input-group-addon btn btn-primary btn-save-url">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>TrimMax</label>
-          <div class="input-group input-group-button mb-0">
-            <button class="input-group-addon btn btn-primary copy-to-clipboard" data-url="{{ route('s6', $data->name_s6) }}">
-              <span class="">Copy URL</span>
-            </button>
-            <input type="text" class="form-control" name="name_s6 btn-save-url" id="name_s6" placeholder="TrimMax" value="{{ $data->name_s6 }}">
-            <span class="input-group-addon btn btn-primary">
-                <span class="">Save</span>
-            </span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 
 

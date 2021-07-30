@@ -11,6 +11,7 @@ class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
 
+
 			$data = DB::table('customers')
 			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
@@ -178,11 +179,11 @@ return view('frontend/salepage/aiyara',compact('rs'));
 		return $resule;
 	}
 
-	public function saveUrl(Request $request) 
+	public function saveUrl(Request $request)
 	{
 		$key = collect($request->except('_token'))->keys()->first();
 		$rules = [
-			'max:20', 
+			'max:20',
 			Rule::unique('db_salepage_setting', $key)
 		];
 
