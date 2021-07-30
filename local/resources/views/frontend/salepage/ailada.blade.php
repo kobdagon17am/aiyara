@@ -21,6 +21,7 @@
         }
 
     </style>
+     {!! $rs['data']->js_page_5 !!}
 @endsection
 
 @section('content')

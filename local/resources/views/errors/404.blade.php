@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>404 Gradient Able bootstrap admin template by codedthemes</title>
+    <title>Aiyara 404</title>
     <meta name="description" content="Gradient able 404 Error page design" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Codedthemes">
@@ -18,7 +18,7 @@
     <canvas id="canvas"></canvas>
     <!-- Your logo on the top left -->
     <a href="#" class="logo-link" title="back home">
-        <img src="{{ asset('frontend/error/img/logo.png')}}" class="logo" alt="Company's logo" />
+        <img src="{{ asset('frontend/assets/images/logo.png')}}" class="logo" alt="logo" width="200" />
     </a>
     <div class="content">
         <div class="content-box">

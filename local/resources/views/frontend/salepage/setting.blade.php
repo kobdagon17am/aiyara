@@ -1,4 +1,10 @@
 @extends('frontend.layouts.customer.customer_app')
+<style>
+  code {
+    color: #009688 !important;
+}
+
+</style>
 @section('conten')
 
     <div class="row">
@@ -74,16 +80,17 @@
                         <div class="card-block">
 
                             <div class="form-group">
-                                <label>Aiyara</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s1)) {
-                                        $url_s1 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s1 = $data->name_s1;
-                                    }
+                              <?php
+                              if (empty($data->name_s1)) {
+                                  $url_s1 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s1 = $data->name_s1;
+                              }
 
-                                    ?>
+                              ?>
+                                <label>Aiyara</label> <code>{{ route('s1', $url_s1) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
 
                                     <div class="input-group-btn">
                                       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
@@ -106,16 +113,17 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Aimmura</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s2)) {
-                                        $url_s2 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s2 = $data->name_s2;
-                                    }
+                              <?php
+                              if (empty($data->name_s2)) {
+                                  $url_s2 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s2 = $data->name_s2;
+                              }
 
-                                    ?>
+                              ?>
+                                <label>Aimmura</label><code>{{ route('s2', $url_s2) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
                                        <div class="input-group-btn">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -135,16 +143,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Cashewy Drink</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s3)) {
-                                        $url_s3 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s3 = $data->name_s3;
-                                    }
+                              <?php
+                              if (empty($data->name_s3)) {
+                                  $url_s3 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s3 = $data->name_s3;
+                              }
 
-                                    ?>
+                              ?>
+                                <label>Cashewy Drink</label> <code>{{ route('s3', $url_s3) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
                                        <div class="input-group-btn">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -164,16 +173,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Aifacad</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s4)) {
-                                        $url_s4 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s4 = $data->name_s4;
-                                    }
+                              <?php
+                              if (empty($data->name_s4)) {
+                                  $url_s4 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s4 = $data->name_s4;
+                              }
 
-                                    ?>
+                              ?>
+                                <label>Aifacad</label> <code>{{ route('s4', $url_s4) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
                                         <div class="input-group-btn">
                                           <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                               aria-haspopup="true" aria-expanded="false">
@@ -193,16 +203,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Alada</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s5)) {
-                                        $url_s5 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s5 = $data->name_s5;
-                                    }
+                              <?php
+                              if (empty($data->name_s5)) {
+                                  $url_s5 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s5 = $data->name_s5;
+                              }
 
-                                    ?>
+                              ?>
+
+
+                                <label>Alada</label> <code>{{ route('s5', $url_s5) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
                                     <div class="input-group-btn">
                                       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                           aria-haspopup="true" aria-expanded="false">
@@ -222,16 +235,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>TrimMax</label>
-                                <div class="input-group input-group-button mb-0">
-                                    <?php
-                                    if (empty($data->name_s6)) {
-                                        $url_s6 = Auth::guard('c_user')->user()->user_name;
-                                    } else {
-                                        $url_s6 = $data->name_s6;
-                                    }
+                              <?php
+                              if (empty($data->name_s6)) {
+                                  $url_s6 = Auth::guard('c_user')->user()->user_name;
+                              } else {
+                                  $url_s6 = $data->name_s6;
+                              }
 
-                                    ?>
+                              ?>
+                                <label>TrimMax</label> <code>{{ route('s6', $url_s6) }}</code>
+                                <div class="input-group input-group-button mb-0">
+
                                        <div class="input-group-btn">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -282,40 +296,40 @@
 
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aiyara </label>
-                        <textarea rows="5" cols="5" id="js_page_1" class="form-control"
-                            placeholder="Tag javascript in hearder Page 1">@if ($data->js_page_1){{ @$data->js_page_1 }}@endif</textarea>
+                        <textarea rows="5" cols="5" id="js_page_1" class="form-control language-javascript"
+                            placeholder="Tag javascript in hearder Page Aiyara">@if ($data->js_page_1){{ @$data->js_page_1 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aimmura </label>
                         <textarea rows="5" cols="5" id="js_page_2" class="form-control"
-                            placeholder="Tag javascript in hearder Page 2">@if ($data->js_page_2){{ @$data->js_page_2 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Aimmura">@if ($data->js_page_2){{ @$data->js_page_2 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Cashewy Drink </label>
                         <textarea rows="5" cols="5" id="js_page_3" class="form-control"
-                            placeholder="Tag javascript in hearder Page 3">@if ($data->js_page_3){{ @$data->js_page_3 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Cashewy Drink ">@if ($data->js_page_3){{ @$data->js_page_3 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aifacad </label>
                         <textarea rows="5" cols="5" id="js_page_4" class="form-control"
-                            placeholder="Tag javascript in hearder Page 4">@if ($data->js_page_4){{ @$data->js_page_4 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Aifacad">@if ($data->js_page_4){{ @$data->js_page_4 }}@endif</textarea>
 
                     </div>
 
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Alada </label>
                         <textarea rows="5" cols="5" id="js_page_5" class="form-control"
-                            placeholder="Tag javascript in hearder Page 5">@if ($data->js_page_5){{ @$data->js_page_5 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Alada">@if ($data->js_page_5){{ @$data->js_page_5 }}@endif</textarea>
 
                     </div>
 
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage TrimMax </label>
                         <textarea rows="5" cols="5" id="js_page_6" class="form-control"
-                            placeholder="Tag javascript in hearder Page 6">@if ($data->js_page_6){{ @$data->js_page_6 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page TrimMax">@if ($data->js_page_6){{ @$data->js_page_6 }}@endif</textarea>
 
                     </div>
 
@@ -528,6 +542,7 @@
                                     Swal.fire('Saved!', '', 'success');
                                     input.removeClass('is-invalid')
                                     input.parent().parent().find('.invalid-feedback').remove();
+                                    location.reload();
                                 }
                             },
                             error: function(response) {

@@ -11,16 +11,20 @@ class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
 
-
 			$data = DB::table('customers')
 			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
 			->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
 			->where('customers.user_name','=',$user_name)
-			->first();
+      ->orwhere('db_salepage_setting.name_s2','=',$user_name)
+      ->first();
+      if($data){
+        $rs = ['stattus'=>'success','data'=>$data];
+        return view('frontend/salepage/aimmura',compact('rs'));
+      }else{
+        return view('errors/404');
 
-			$rs = ['stattus'=>'success','data'=>$data];
-		return view('frontend/salepage/aimmura',compact('rs'));
+      }
 	}
 
   public function cashewy($user_name=''){
@@ -30,10 +34,17 @@ class SalepageController extends Controller
     ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
     ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
     ->where('customers.user_name','=',$user_name)
+    ->orwhere('db_salepage_setting.name_s3','=',$user_name)
     ->first();
+    if($data){
+      $rs = ['stattus'=>'success','data'=>$data];
+      return view('frontend/salepage/cashewy_drink',compact('rs'));
+    }else{
+      return view('errors/404');
 
-    $rs = ['stattus'=>'success','data'=>$data];
-  return view('frontend/salepage/cashewy_drink',compact('rs'));
+    }
+
+
 }
 
 public function aifacad($user_name=''){
@@ -43,10 +54,17 @@ public function aifacad($user_name=''){
     ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
     ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
     ->where('customers.user_name','=',$user_name)
+    ->orwhere('db_salepage_setting.name_s4','=',$user_name)
     ->first();
+    if($data){
+      $rs = ['stattus'=>'success','data'=>$data];
+      return view('frontend/salepage/aifacad',compact('rs'));
+    }else{
+      return view('errors/404');
 
-    $rs = ['stattus'=>'success','data'=>$data];
-  return view('frontend/salepage/aifacad',compact('rs'));
+    }
+
+
 }
 
 
@@ -58,10 +76,16 @@ public function ailada($user_name=''){
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
+  ->orwhere('db_salepage_setting.name_s5','=',$user_name)
   ->first();
+  if($data){
+    $rs = ['stattus'=>'success','data'=>$data];
+    return view('frontend/salepage/ailada',compact('rs'));
+  }else{
+    return view('errors/404');
 
-  $rs = ['stattus'=>'success','data'=>$data];
-return view('frontend/salepage/ailada',compact('rs'));
+  }
+
 }
 
 public function trimmax($user_name=''){
@@ -71,29 +95,34 @@ public function trimmax($user_name=''){
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
+  ->orwhere('db_salepage_setting.name_s6','=',$user_name)
   ->first();
+  if($data){
+    $rs = ['stattus'=>'success','data'=>$data];
+    return view('frontend/salepage/trimmax',compact('rs'));
+  }else{
+    return view('errors/404');
 
-  $rs = ['stattus'=>'success','data'=>$data];
-return view('frontend/salepage/trimmax',compact('rs'));
+  }
+
 }
 
 public function aiyara($user_name=''){
-  dd($user_name);
+
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
-  ->orwhere('db_salepage_setting.user_name','=',$user_name)
+  ->orwhere('db_salepage_setting.name_s1','=',$user_name)
   ->first();
   if($data){
     $rs = ['stattus'=>'success','data'=>$data];
     return view('frontend/salepage/aiyara',compact('rs'));
   }else{
+    return view('errors/404');
 
   }
-
-
 
 }
 

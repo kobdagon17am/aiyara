@@ -21,6 +21,7 @@ AIFACAD
         }
 
     </style>
+     {!! $rs['data']->js_page_3 !!}
 @endsection
 
 @section('content')
