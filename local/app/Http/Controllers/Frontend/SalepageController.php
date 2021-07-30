@@ -11,7 +11,7 @@ class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
 
-
+    dd('ddd');
 			$data = DB::table('customers')
 			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
@@ -144,6 +144,8 @@ return view('frontend/salepage/aiyara',compact('rs'));
 			$js_page_2= (trim($req->js_page_2) == '') ? null : $req->js_page_2;
 			$js_page_3= (trim($req->js_page_3) == '') ? null : $req->js_page_3;
 			$js_page_4= (trim($req->js_page_4) == '') ? null : $req->js_page_4;
+      $js_page_5= (trim($req->js_page_5) == '') ? null : $req->js_page_5;
+			$js_page_6= (trim($req->js_page_6) == '') ? null : $req->js_page_6;
 
 		$customer_id =  Auth::guard('c_user')->user()->id;
 		try {
@@ -155,7 +157,8 @@ return view('frontend/salepage/aiyara',compact('rs'));
 			if($count_data > 0){
 				$update_salepage_setting = DB::table('db_salepage_setting')//update บิล
 				->where('customers_id_fk',$customer_id)
-				->update(['js_page_1'=>$req->js_page_1,'js_page_2'=>$req->js_page_2,'js_page_3'=>$req->js_page_3,'js_page_4'=>$req->js_page_4]);
+				->update(['js_page_1'=>$req->js_page_1,'js_page_2'=>$req->js_page_2,
+        'js_page_3'=>$req->js_page_3,'js_page_4'=>$req->js_page_4,'js_page_5'=>$req->js_page_5,'js_page_6'=>$req->js_page_6]);
 
 			}else{
 
@@ -165,6 +168,8 @@ return view('frontend/salepage/aiyara',compact('rs'));
 					'js_page_2'=>$req->js_page_2,
 					'js_page_3'=>$req->js_page_3,
 					'js_page_4'=>$req->js_page_4,
+          'js_page_3'=>$req->js_page_5,
+					'js_page_4'=>$req->js_page_6,
 				]);
 			}
 

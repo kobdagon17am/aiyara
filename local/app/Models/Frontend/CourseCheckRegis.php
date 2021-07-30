@@ -26,8 +26,8 @@ class CourseCheckRegis extends Model
 
         $customer_id =  $customer->id;
         $package_id =  $customer->package_id;
-        $qualification_id =  $customer->qualification_id;
-        $aistockist_status =  $customer->aistockist_status;
+        $qualification_id =  $data_ce->qualification_id;
+        $aistockist_status =  $data_ce->aistockist_status;
 
 
         //1 เช็คบัตรก่อนว่าเต็มไหม
@@ -146,9 +146,9 @@ class CourseCheckRegis extends Model
         //dd($data_ce->aistockist);
 
         $customer_id =  $customer->id;
-        $package_id = $customer->package_id;
-        $qualification_id = $customer->qualification_id;
-        $aistockist_id = $customer->aistockist_id;
+
+
+
         //dd($data_ce);
 
         //1 เช็คบัตรก่อนว่าเต็มไหม
