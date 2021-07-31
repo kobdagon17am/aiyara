@@ -28,7 +28,7 @@ class VipReportController extends Controller
             })
             ->editColumn('created_at', function ($user) {
                 $dateFormat = date('d-M-Y', strtotime($user->created_at));
-                return "<span class='badge badge-dark'>{$dateFormat}</span>";
+                return "<label class='label label-inverse-info-border'>{$dateFormat}</label>";
             })
             ->rawColumns(['created_at'])
             ->make(true);
