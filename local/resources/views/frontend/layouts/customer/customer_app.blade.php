@@ -627,7 +627,13 @@
 					</a>
 				</li>
 
-
+				<li class="{{ (request()->is('salepage/vip-report')) ? 'active' : '' }}">
+					<a href="{{route('salepage.vip-report')}}">
+						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+						<span class="pcoded-mtext">VIP Report</span>
+						<span class="pcoded-mcaret"></span>
+					</a>
+				</li>
 			</ul>
 		</li>
 
