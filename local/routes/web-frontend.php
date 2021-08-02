@@ -253,6 +253,9 @@ Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')-
 Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
 Route::post('salepage/save_url', 'Frontend\SalepageController@saveUrl')->name('salepage/save_url');
 
+Route::get('salepage/vip-report', 'Frontend\VipReportController@index')->name('salepage.vip-report');
+Route::get('salepage/vip-report-datatable', 'Frontend\VipReportController@vipDatatable')->name('salepage.vip-report-datatable');
+
 Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
 
 Route::get('reward-history','Frontend\RewardHistoryController@index')->name('reward-history');
