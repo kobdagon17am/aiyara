@@ -24,7 +24,7 @@ class HomeController extends Controller
   	if($request->id){
   		$id = $request->id;
   	}else{
-  		$id = Auth::guard('c_user')->user()->id;
+  		$id = Auth::guard('c_user')->user()->user_name;
   	}
 
   	$data = LineModel::line_all($id);
@@ -33,6 +33,7 @@ class HomeController extends Controller
 
   public function search(Request $request){
 
+    dd($request->home_search_id);
     $data = LineModel::line_all($request->home_search_id);
     return view('frontend/home',compact('data'));
   }
@@ -64,19 +65,19 @@ class HomeController extends Controller
   public function home_type_tree(Request $request){
 
     if($request->id){
-      $id = $request->id;
+      $user_name = $request->id;
     }else{
-      $id = Auth::guard('c_user')->user()->id;
+      $user_name = Auth::guard('c_user')->user()->user_name;
     }
 
-    $data = LineModel::line_all($id);
+    $data = LineModel::line_all($user_name);
     return view('frontend/home_type_tree',compact('data'));
   }
 
   public function under_a(Request $request){
-    $id = $request->id;
+    $user_name = $request->id;
 
-    $las_a_id = LineModel::under_a($id);
+    $las_a_id = LineModel::under_a($user_name);
 
     $data = LineModel::line_all($las_a_id);
 
@@ -84,9 +85,9 @@ class HomeController extends Controller
   }
 
   public function under_b(Request $request){
-    $id = $request->id;
+    $user_name = $request->id;
 
-    $las_a_id = LineModel::under_b($id);
+    $las_a_id = LineModel::under_b($user_name);
 
     $data = LineModel::line_all($las_a_id);
 
@@ -94,9 +95,9 @@ class HomeController extends Controller
   }
 
   public function under_c(Request $request){
-    $id = $request->id;
+    $user_name = $request->id;
 
-    $las_a_id = LineModel::under_c($id);
+    $las_a_id = LineModel::under_c($user_name);
 
     $data = LineModel::line_all($las_a_id);
 

@@ -24,7 +24,7 @@
 
           <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{ $data['data']->business_name }} ( {{$data['data']->user_name}} ) </font></span>
           {{--  <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
-          <input type="hidden"  name="upline_id" value="{{$data['data']->id}}">
+          <input type="hidden"  name="upline_id" value="{{$data['data']->user_name}}">
 
         </div>
 

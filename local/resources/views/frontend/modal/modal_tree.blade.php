@@ -99,7 +99,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
   <button type="button"  onclick="event.preventDefault();
   document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
   <form id="line_id_v1" action="{{route('tree_view')}}" method="POST" style="display: none;">
-    <input type="hidden" name="id" value="{{$data->id}}">
+    <input type="hidden" name="id" value="{{$data->user_name}}">
     @csrf
   </form>
 
