@@ -37,18 +37,29 @@ class VipReportController extends Controller
     public function ordersDatatable(Request $request)
     {
         $orders = DB::table('db_orders')
-            ->select('db_orders.*', 'users.name')
+            ->select('db_orders.*', 'users.name', 'dataset_pay_type.detail as pay_type', 'dataset_order_status.detail as pay_status', 'dataset_order_status.css_class')
             ->leftJoin('users', 'users.id', 'db_orders.user_id_fk')
+            ->leftJoin('dataset_pay_type', 'dataset_pay_type.id', 'pay_type_id_fk')
+            ->leftJoin('dataset_order_status', 'dataset_order_status.orderstatus_id', 'db_orders.order_status_id_fk')
             ->where('users.user_recommend', auth('c_user')->user()->user_name)
             ->orderBy('db_orders.created_at', 'desc')
             ->get();
         
         return Datatables::of($orders)
+            ->editColumn('created_at', function ($order) {
+                return date('d/m/Y H:i:s', strtotime($order->created_at));
+            })
+            ->editColumn('pay_type', function ($order) {
+                return '<b class="text-primary">' . $order->pay_type . '</b>';
+            })
+            ->editColumn('pay_status', function ($order) {
+                return "<span class='badge badge-{$order->css_class} rounded px-2 py-1'>$order->pay_status</span>";
+            })
             ->editColumn('action', function ($order) {
                 $route = route('cart-payment-history', $order->code_order);
                 return "<a href='{$route}' class='btn btn-sm btn-success'><i class='fa fa-search'></i></a>";
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['pay_type', 'pay_status', 'action'])
             ->make(true);
     }
 }

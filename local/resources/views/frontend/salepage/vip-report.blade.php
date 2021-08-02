@@ -123,10 +123,10 @@
                     data: 'total_price'
                 },
                 {
-                    data: 'fee'
+                    data: 'pay_type'
                 },
                 {
-                    data: 'fee'
+                    data: 'pay_status'
                 },
                 {
                     data: 'action'
