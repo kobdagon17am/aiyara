@@ -42,7 +42,8 @@
           <div class="row">
             <div class="col-md-8">
               <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('tree_view')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
-              @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
+              <?php //dd($data['lv1']);?>
+              @if($data['lv1']->user_name == Auth::guard('c_user')->user()->user_name)
               <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
                 <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
                 @else
@@ -64,7 +65,7 @@
                 document.getElementById('under_a').submit();" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</a>
 
                 <form id="under_a" action="{{ route('under_a') }}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_a_a']->id}}">
+                  <input type="hidden" name="id" value="{{$data['lv3_a_a']->user_name}}">
                   @csrf
                 </form>
 
@@ -79,7 +80,7 @@
                 document.getElementById('under_b').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</a>
 
                 <form id="under_b" action="{{ route('under_b') }}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_b_b']->id}}">
+                  <input type="hidden" name="id" value="{{$data['lv3_b_b']->user_name}}">
                   @csrf
                 </form>
                 @endif
@@ -92,7 +93,7 @@
                 document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
 
                 <form id="under_c" action="{{route('under_c')}}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_c_c']->id}}">
+                  <input type="hidden" name="id" value="{{$data['lv3_c_c']->user_name}}">
                   @csrf
                 </form>
 
@@ -538,7 +539,8 @@
       .done(function(data) {
         if(data['status'] == 'success'){
           //alert(data['data'])
-          $('#home_search_id').val(data['id']);
+
+          $('#home_search_id').val(data['user_name']);
           document.getElementById("home_search").submit();
 
         }else{

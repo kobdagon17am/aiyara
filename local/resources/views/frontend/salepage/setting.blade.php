@@ -297,39 +297,39 @@
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aiyara </label>
                         <textarea rows="5" cols="5" id="js_page_1" class="form-control language-javascript"
-                            placeholder="Tag javascript in hearder Page Aiyara">@if ($data->js_page_1){{ @$data->js_page_1 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Aiyara">@if (@$data->js_page_1){{ @$data->js_page_1 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aimmura </label>
                         <textarea rows="5" cols="5" id="js_page_2" class="form-control"
-                            placeholder="Tag javascript in hearder Page Aimmura">@if ($data->js_page_2){{ @$data->js_page_2 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Aimmura">@if (@$data->js_page_2){{ @$data->js_page_2 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Cashewy Drink </label>
                         <textarea rows="5" cols="5" id="js_page_3" class="form-control"
-                            placeholder="Tag javascript in hearder Page Cashewy Drink ">@if ($data->js_page_3){{ @$data->js_page_3 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Cashewy Drink ">@if (@$data->js_page_3){{ @$data->js_page_3 }}@endif</textarea>
 
                     </div>
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Aifacad </label>
                         <textarea rows="5" cols="5" id="js_page_4" class="form-control"
-                            placeholder="Tag javascript in hearder Page Aifacad">@if ($data->js_page_4){{ @$data->js_page_4 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Aifacad">@if (@$data->js_page_4){{ @$data->js_page_4 }}@endif</textarea>
 
                     </div>
 
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage Alada </label>
                         <textarea rows="5" cols="5" id="js_page_5" class="form-control"
-                            placeholder="Tag javascript in hearder Page Alada">@if ($data->js_page_5){{ @$data->js_page_5 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page Alada">@if (@$data->js_page_5){{ @$data->js_page_5 }}@endif</textarea>
 
                     </div>
 
                     <div class="form-group row">
                         <label> Add Facebook Pixel Salepage TrimMax </label>
                         <textarea rows="5" cols="5" id="js_page_6" class="form-control"
-                            placeholder="Tag javascript in hearder Page TrimMax">@if ($data->js_page_6){{ @$data->js_page_6 }}@endif</textarea>
+                            placeholder="Tag javascript in hearder Page TrimMax">@if (@$data->js_page_6){{ @$data->js_page_6 }}@endif</textarea>
 
                     </div>
 
