@@ -209,7 +209,7 @@ public static function under_b($username=''){
 
 				$last_id_a = DB::table('customers')
 				->select('*')
-				->where('id','=',$username)
+				->where('user_name','=',$username)
 				->where('line_type','=','B')
 				->limit(1)
 				->get();
@@ -250,7 +250,7 @@ public static function under_c($username=''){
 
 				$last_id_a = DB::table('customers')
 				->select('*')
-				->where('id','=',$username)
+				->where('user_name','=',$username)
 				->where('line_type','=','C')
 				->limit(1)
 				->get();

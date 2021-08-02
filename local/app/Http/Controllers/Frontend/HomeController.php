@@ -33,7 +33,7 @@ class HomeController extends Controller
 
   public function search(Request $request){
 
-    dd($request->home_search_id);
+
     $data = LineModel::line_all($request->home_search_id);
     return view('frontend/home',compact('data'));
   }
@@ -109,7 +109,7 @@ class HomeController extends Controller
     $resule =LineModel::check_line($request->user_name);
 
     if($resule['status'] == 'success'){
-      $data = array('status'=>'success','id'=>$resule['data']->id);
+      $data = array('status'=>'success','user_name'=>$resule['data']->user_name);
     }else{
      $data = array('status'=>'fail','data'=>$resule);
    }

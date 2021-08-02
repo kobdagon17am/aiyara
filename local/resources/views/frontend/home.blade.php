@@ -539,6 +539,7 @@
       .done(function(data) {
         if(data['status'] == 'success'){
           //alert(data['data'])
+
           $('#home_search_id').val(data['user_name']);
           document.getElementById("home_search").submit();
 
