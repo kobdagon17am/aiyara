@@ -33,4 +33,22 @@ class VipReportController extends Controller
             ->rawColumns(['created_at'])
             ->make(true);
     }
+
+    public function ordersDatatable(Request $request)
+    {
+        $orders = DB::table('db_orders')
+            ->select('db_orders.*', 'users.name')
+            ->leftJoin('users', 'users.id', 'db_orders.user_id_fk')
+            ->where('users.user_recommend', auth('c_user')->user()->user_name)
+            ->orderBy('db_orders.created_at', 'desc')
+            ->get();
+        
+        return Datatables::of($orders)
+            ->editColumn('action', function ($order) {
+                $route = route('cart-payment-history', $order->code_order);
+                return "<a href='{$route}' class='btn btn-sm btn-success'><i class='fa fa-search'></i></a>";
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
 }
