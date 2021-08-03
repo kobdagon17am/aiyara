@@ -13,6 +13,7 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use Auth;
 use App\Models\Frontend\RunNumberPayment;
 use App\Models\Frontend\PvPayment;
+use App\Models\Frontend\CourseCheckRegis;
 
 
 class FrontstoreController extends Controller
@@ -310,6 +311,7 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
+
       $sRow = \App\Models\Backend\Frontstore::find($id);
       // dd($sRow);
       // dd($sRow->pv_total);
@@ -320,6 +322,7 @@ class FrontstoreController extends Controller
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
       @$CusName = (@$sCustomer[0]->user_name." : ".@$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".@$sCustomer[0]->last_name);
+      @$user_name = @$sCustomer[0]->user_name;
 
       $Cus_Aicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
       $Cus_Aicash = @$Cus_Aicash[0]->ai_cash;
@@ -451,14 +454,14 @@ class FrontstoreController extends Controller
 
       $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
 
-      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','9');
-      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','A0000009');
-      // $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register('1','1');
-      // dd($CourseCheckRegis);
+      // CourseCheckRegis::cart_check_register($value['id'], $value['quantity'],user_name);
+      // $chek_course = CourseCheckRegis::cart_check_register('1', '1',@$user_name);
+      // dd($sRow->customers_id_fk);
+      // dd($chek_course);
+
 
       return View('backend.frontstore.form')->with(
         array(
-           // 'CourseCheckRegis'=>$CourseCheckRegis,
            'sRow'=>$sRow,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
@@ -475,6 +478,7 @@ class FrontstoreController extends Controller
            'aistockist'=>$aistockist,
            'agency'=>$agency,
            'CusName'=>$CusName,
+           'user_name'=>$user_name,
            'Cus_Aicash'=>$Cus_Aicash,
            'BranchName'=>$BranchName,
            'PurchaseName'=>$PurchaseName,
@@ -633,9 +637,9 @@ class FrontstoreController extends Controller
         $ChangePurchaseType = 1; // เปิด / แสดง
       }else{
         // dataset_position_level
-        // 1 Supervisor/Manager
+        // 4 Supervisor/Manager
         // 2 CS แผนกขาย
-        if($position_level==1){
+        if($position_level==4){
           if( $DATE_CREATED>=$DATE_YESTERDAY && $DATE_CREATED<=$DATE_TODAY  ) $ChangePurchaseType = 1;
         }else{
           if($DATE_CREATED==$DATE_TODAY) $ChangePurchaseType = 1;
@@ -689,7 +693,7 @@ class FrontstoreController extends Controller
 
               if($sRow->invoice_code==""){
 
-                if(request('purchase_type_id_fk')==6 || request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+                if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   $sRow->invoice_code = '' ;
                 }else{
                   $table = 'db_orders';
@@ -1374,6 +1378,25 @@ class FrontstoreController extends Controller
       ->make(true);
     }
 
+    public function DatatableCourseEvent(Request $req){
+      // print_r($req->user_name);
+      // $sTable = \App\Models\Backend\Course_event::search()->orderBy('id', 'asc');
+      $sTable = DB::select(" SELECT course_event.*,('".$req->user_name."') as user_name FROM `course_event` ");
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('ce_type_desc', function($row) {
+        $ce_type = \App\Models\Backend\Ce_type::find($row->ce_type);
+        return @$ce_type->txt_desc;
+      })
+      ->addColumn('updated_at', function($row) {
+        return is_null($row->updated_at) ? '-' : $row->updated_at;
+      })
+      ->addColumn('CourseCheckRegis', function($row) {
+        $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::cart_check_register($row->id, 1 ,$row->user_name);
+        return $CourseCheckRegis['status'];
+      })
+      ->make(true);
+    }
 
 
 }

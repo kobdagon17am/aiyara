@@ -18,24 +18,6 @@
 </div>
 <!-- end page title -->
 
-
-  <?php 
-        $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-        if($sPermission==1){
-          $sC = '';
-          $sU = '';
-          $sD = '';
-        }else{
-          $role_group_id = \Auth::user()->role_group_id_fk;
-          $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-          $sC = @$menu_permit->c==1?'':'display:none;';
-          $sU = @$menu_permit->u==1?'':'display:none;';
-          $sD = @$menu_permit->d==1?'':'display:none;';
-        }
-   ?>
-
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -45,8 +27,8 @@
                     <input type="text" class="form-control float-left text-center w130 myLike" placeholder="คุณวุฒินักธุรกิจ" name="business_qualifications">
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.qualification.create') }}">
+                  <div class="col-4 text-right" >
+                    <a class="btn btn-info btn-sm mt-1 class_btn_add " href="{{ route('backend.qualification.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -66,8 +48,6 @@
 @section('script')
 
 <script>
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";    
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -146,17 +126,28 @@ $(function() {
         rowCallback: function(nRow, aData, dataIndex){
 
 
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+              var sPermission = "<?=\Auth::user()->permission?>";
+              var sU = sessionStorage.getItem("sU");
+              var sD = sessionStorage.getItem("sD");
+              if(sPermission==1){
+                sU = 1;
+                sD = 1;
+              }
+              var str_U = '';
+              if(sU=='1'){
+                str_U = '<a href="{{ route('backend.qualification.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+              }
+              var str_D = '';
+              if(sD=='1'){
+                str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.qualification.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+              }
+              if(sU!='1' && sD!='1'){
+                 $('td:last-child', nRow).html('-');
+              }else{
+                $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+              }
 
-
-          $('td:last-child', nRow).html(''
-            + '<a href="{{ route('backend.qualification.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.qualification.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          ).addClass('input');
-
-        }
+        
 
         }
     });
@@ -166,16 +157,6 @@ $(function() {
 });
 </script>
 
-<script type="text/javascript">
-/*	
-    var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-        if(!window.location.hash) {
-             window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-        }
-    }
-    */
-</script>
 
 @endsection
 

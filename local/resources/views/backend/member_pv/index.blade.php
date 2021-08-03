@@ -167,9 +167,32 @@
             <div class="row" style="margin-bottom: 1% !important;"  >
                  <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="introduce_id" class="col-md-3 col-form-label"> รหัสผู้แนะนำ : </label>
+                    <label for="upline_id" class="col-md-3 col-form-label"> รหัส Upline : </label>
+                    <div class="col-md-9">
+                       <select id="upline_id" name="upline_id" class="form-control" ></select> 
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label"> รหัสผู้แนะนำ :  </label>
                     <div class="col-md-9">
                        <select id="introduce_id" name="introduce_id" class="form-control" ></select> 
+                    </div>
+                  </div>
+                </div>
+    
+         
+              </div>
+
+
+            <div class="row" style="margin-bottom: 1% !important;"  >
+                 <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label">   </label>
+                    <div class="col-md-9">
                     </div>
                   </div>
                 </div>
@@ -266,13 +289,14 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
+            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w100 '},
             {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
             {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
             {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
             {data: 'package', title :'<center> Package </center>', className: 'text-center'},
             {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
-            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+            {data: 'upline', title :'<center> Upline </center>', className: 'text-center  '},
+            {data: 'introduce', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
             {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
             {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
             {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
@@ -408,10 +432,12 @@ $(function() {
                   var customer_id = $('#customer_id').val();
                   var business_name = $('#business_name').val();
                   var introduce_id = $('#introduce_id').val();
+                  var upline_id = $('#upline_id').val();
 
                   console.log(customer_id);
                   console.log(business_name);
                   console.log(introduce_id);
+                  console.log(upline_id);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                             var oTable;
@@ -431,6 +457,7 @@ $(function() {
                                                 customer_id:customer_id,                                 
                                                 business_name:business_name,                                 
                                                 introduce_id:introduce_id,                                 
+                                                upline_id:upline_id,                                 
                                               },
                                             method: 'POST',
                                           },
@@ -441,19 +468,21 @@ $(function() {
                                               title: 'ข้อมูลงานบริการสมาชิก'
                                             },
                                           ],
-                                          columns: [
-                                            {data: 'id', title :'ID', className: 'text-center w50'},
-                                            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
-                                            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
-                                            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
-                                            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
-                                            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
-                                            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
-                                            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
-                                            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
-                                            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
-                                            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
-                                        ],
+                                       
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w100 '},
+            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
+            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
+            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
+            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
+            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
+            {data: 'upline', title :'<center> Upline </center>', className: 'text-center  '},
+            {data: 'introduce', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
+            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
+            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
+            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
+        ],
                                       rowCallback: function(nRow, aData, dataIndex){
                                         if(sU!=''&&sD!=''){
                                             $('td:last-child', nRow).html('-');
@@ -790,5 +819,35 @@ $(function() {
    });
 </script>
 
+<script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#upline_id").select2({
+          // minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetUpline_id') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
 @endsection
 

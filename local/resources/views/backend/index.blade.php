@@ -12,11 +12,10 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-flex align-items-center justify-content-between">
-                                    <h4 class="mb-0 font-size-18">Dashboard </h4>
-
+                                    <h4 class="mb-0 font-size-18">@lang('message.DASHBOARD')</h4>
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item active" style="color:black;font-size: 16px;font-weight: bold;">บริษัท ไอยรา แพลนเน็ต จำกัด</li>
+                                            <li class="breadcrumb-item active" style="color:black;font-size: 16px;font-weight: bold;">@lang('message.COMPANY')</li>
                                         </ol>
                                     </div>
 
@@ -247,7 +246,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-4"> Check Notify </h4>
+                            <h4 class="card-title mb-4"> @lang('message.CHECKNOTIFY') </h4>
                             <div class="table-responsive">
                                 <table class="table table-centered table-nowrap">
                                     <thead class="thead-light">

@@ -134,6 +134,37 @@
                 </div>
             </div>
 
+           <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @IF(Session::get('locale')=='th')
+                    <img class="" src="backend/images/flags/flag_thai.jpg" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='en')
+                    <img class="" src="backend/images/flags/us.jpg" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='lo')
+                    <img class="" src="backend/images/flags/flag_laos.jpg" alt="Language" height="16">
+                    @ELSE
+                    <img class="" src="backend/images/flags/flag_thai.jpg" alt="Language" height="16">
+                    @ENDIF
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <!-- item-->
+                    <a href="{{ URL('/lang/th') }}" class="dropdown-item notify-item">
+                        <img src="backend/images/flags/flag_thai.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Thai</span>
+                    </a>
+                    <!-- item-->
+                    <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
+                        <img src="backend/images/flags/us.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">US</span>
+                    </a> 
+                     <!-- item-->
+                    <a href="{{ URL('/lang/lo') }}" class="dropdown-item notify-item">
+                        <img src="backend/images/flags/flag_laos.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Laos</span>
+                    </a>
+
+                </div>
+            </div>
+
+
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,19 +174,13 @@
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <!-- item-->
-                <!--     <a class="dropdown-item" href="backend/template/contacts-profile"><i class="bx bx-user font-size-16 align-middle mr-1"></i> Profile</a> -->
                     <a class="dropdown-item" href="{{ url('/config-cache') }}"><i class="fas fa-sync font-size-16 align-middle mr-1"></i> Clear Cache</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="backend/logout"><i class="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i> {{ __('Logout') }} </a>
                 </div>
             </div>
 
-  <!--           <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
-                    <i class="bx bx-cog bx-spin"></i>
-                </button>
-            </div> -->
+
 
         </div>
     </div>

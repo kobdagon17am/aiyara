@@ -10,11 +10,63 @@ use Session;
 use Storage;
 use PDF;
 use Redirect;
+use Auth;
 use App\Models\Backend\PromotionCode_add;
 use App\Models\Backend\GiftvoucherCode_add;
+use App\Models\Frontend\CourseCheckRegis;
 
 class AjaxController extends Controller
 {
+
+    public function ajaxMenuPermissionControl(Request $request)
+    {
+
+        // $position_level = DB::select("select * from dataset_position_level");
+        // 1   Super Admin
+        // 2   Director
+        // 3   Manager
+        // 4   Supervisor
+        // 5   User
+        // return  $request->menu_id;
+
+        $sC = 1;
+        $sU = 1;
+        $sD = 1;
+        $can_cancel_bill = 0;
+        $can_cancel_bill_across_day = 0;
+        
+        $sPermission = \Auth::user()->permission ;
+        $menu_id = $request->menu_id;
+
+        if($sPermission==1){
+            $role_group_id = '%';
+        }else{
+            $role_group_id = \Auth::user()->role_group_id_fk;
+            $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+
+            $sC = @$menu_permit->c;
+            $sU = @$menu_permit->u;
+            $sD = @$menu_permit->d;
+
+            $can_cancel_bill = @$menu_permit->can_cancel_bill; 
+            $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
+            $can_approve = @$menu_permit->can_approve; 
+
+        }
+
+        return response()->json([
+            'menu_id' => $request->menu_id,
+            'sPermission' => \Auth::user()->permission,
+            'sC' => $sC,
+            'sU' => $sU,
+            'sD' => $sD,
+            'can_cancel_bill' => $can_cancel_bill,
+            'can_cancel_bill_across_day' => $can_cancel_bill_across_day,
+            'can_approve' => $can_approve,
+        ]);
+
+    }
+
 
     public function ajaxSetSession(Request $request)
     {
@@ -283,8 +335,8 @@ class AjaxController extends Controller
      {
         // dd($id);
         $data = [$id];
-        // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
-        $pdf = PDF::loadView('backend.frontstore.print_receipt_02',compact('data'));
+        $customPaper = array(0,0,370,565); // width and height $customPaper = The end result was: 10CM X 20CM = array(0,0,567.00,283.80); size 9.5" x 5.5"  24.13 cm x 13.97 cm
+        $pdf = PDF::loadView('backend.frontstore.print_receipt_02',compact('data'))->setPaper($customPaper, 'landscape');
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 
@@ -3763,6 +3815,24 @@ class AjaxController extends Controller
     }
 
 
+
+
+  public function ajaxGetRegis_date_doc(Request $request)
+    {
+
+      if($request->ajax()){
+
+            $rs =  DB::select(" 
+                SELECT regis_date_doc from customers where id=".$request->customer_id."
+             ");
+            
+            return response()->json($rs); 
+     
+      }
+
+    }
+
+
     public function ajaxGetCustomer(Request $request)
     {
         if($request->ajax()){
@@ -3801,6 +3871,36 @@ class AjaxController extends Controller
            }
     }    
 
+
+
+
+    public function ajaxGetCustomerForFrontstore(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                // ->whereNotNull('regis_date_doc')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->orderBy('user_name', 'asc')
+                ->get();
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }    
 
 
     public function ajaxGetCustomerCode(Request $request)
@@ -3924,7 +4024,7 @@ class AjaxController extends Controller
             }else{
                 // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
                 $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->where('introduce_id', 'LIKE', '%'.$request->term.'%')
                 ->take(15)
                 ->get();
 
@@ -3940,8 +4040,8 @@ class AjaxController extends Controller
                        
                                 foreach($customers as $k => $v){
                                     $json_result[] = [
-                                        'id'    => @$v->user_name,
-                                        'text'  => @$v->user_name.':'.@$v->first_name.' '.@$v->last_name,
+                                        'id'    => @$v->introduce_id,
+                                        'text'  => @$v->introduce_id,
                                     ];
                                 } 
                            
@@ -3956,6 +4056,46 @@ class AjaxController extends Controller
 
 
 
+
+    public function ajaxGetUpline_id(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
+                $customers = DB::table('customers')
+                ->where('upline_id', 'LIKE', '%'.$request->term.'%')
+                ->take(15)
+                ->get();
+
+                  $json_result = [];
+
+                if($customers){
+
+                        //  $customers_introduce = DB::table('customers')
+                        // ->where('introduce_id', @$customers[0]->introduce_id)
+                        // ->groupBy('introduce_id')
+                        // ->orderBy('introduce_id', 'asc')
+                        // ->get();
+                       
+                                foreach($customers as $k => $v){
+                                    $json_result[] = [
+                                        'id'    => @$v->upline_id,
+                                        'text'  => @$v->upline_id,
+                                    ];
+                                } 
+                           
+
+                        }
+                         return json_encode($json_result);
+              }
+
+
+           }
+    }  
+
     public function ajaxCancelOrderBackend(Request $request)
     {
       // return ($request);
@@ -3963,6 +4103,18 @@ class AjaxController extends Controller
       DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
       // return response()->json(\App\Models\Alert::Msg('success'));
        // return redirect()->to(url("backend/frontstore"));
+       }
+    }
+
+// 
+
+    public function ajaxCourseCheckRegis(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+          $CourseCheckRegis = CourseCheckRegis::cart_check_register($request->id_course,$request->amt_apply ,$request->user_name);
+          return $CourseCheckRegis['status'];
+
        }
     }
 
