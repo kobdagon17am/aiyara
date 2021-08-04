@@ -87,6 +87,7 @@
             </thead>
             <tbody>
               <?php $i = 0; ?>
+
               @foreach($data as $value)
               <?php $i++;
               if($value->type == 1){
@@ -101,16 +102,15 @@
               }else{
                 $type = "อื่นๆ";
               }
-
-              if ($value->status=='W'){
-                $status = "<span class='pcoded-badge label label-warning'>รอการอนุมัติ</span>";
-              }elseif ($value->status=='S') {
+//0=ส่งมาแล้วรอตรวจสอบ-สีเทา, 1=ผ่าน-เขียว, 2=ไม่ผ่าน-สีแดง, 3=ยังไม่ส่ง-สีส้ม
+              if ($value->regis_doc_status=='1'){
                 $status = "<span class='pcoded-badge label label-success'>ผ่านการอนุมัติ</span>";
-              }elseif ($value->status=='F') {
-                $status = "<span class='pcoded-badge label label-danger'>ไม่ผ่านการอนุมัติ</span>";
-                                                                # code...
+              }elseif ($value->regis_doc_status=='2') {
+                $status = "<span class='pcoded-badge label label-danger'>รอการอนุมัติ</span>";
+              }elseif ($value->regis_doc_status=='3') {
+                $status = "<span class='pcoded-badge label label-warning'>ยังไม่ส่งเอกสาร</span>";                                            # code...
               }else{
-                $status = "อื่นๆ";
+                $status = "<span class='pcoded-badge label label-warning'>รอการอนุมัติ</span>";
               }
 
               ?>

@@ -16,10 +16,12 @@ class DocsController extends Controller
 	public function index()
 	{
 		$data = DB::table('register_files')
-		->orderby('created_at')
-    	        //->where('customer_id','=',Auth::guard('c_user')->user()->id)
-		->where('customer_id','=',Auth::guard('c_user')->user()->id)
+    ->select('register_files.*')
+		->where('register_files.customer_id','=',Auth::guard('c_user')->user()->id)
+    // ->leftjoin('dataset_regis_doc_status', 'dataset_regis_doc_status.id', '=', 'register_files.regis_doc_status')
+    ->orderby('register_files.created_at')
 		->get();
+
 
 		$registeredDocs = $this->registeredDocs();
 
@@ -41,7 +43,7 @@ class DocsController extends Controller
 				$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_1'.'.'.$file_1->getClientOriginalExtension();
 				if($file_1->move($url,$f_name)){
 					DB::table('register_files')
-					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'1','url'=>$url,'file'=>$f_name,'status'=>'W']);
+					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'1','url'=>$url,'file'=>$f_name]);
 
 				}
 			}
@@ -52,7 +54,7 @@ class DocsController extends Controller
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_2->getClientOriginalExtension();
 				if($file_2->move($url,$f_name)){
 					DB::table('register_files')
-					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name,'status'=>'W']);
+					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name]);
 
 				}
 			}
@@ -63,7 +65,7 @@ class DocsController extends Controller
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_3'.'.'.$file_3->getClientOriginalExtension();
 				if($file_3->move($url,$f_name)){
 					DB::table('register_files')
-					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name,'status'=>'W']);
+					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name]);
 
 				}
 			}
@@ -74,7 +76,7 @@ class DocsController extends Controller
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
 				if($file_4->move($url,$f_name)){
 					DB::table('register_files')
-					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'4','url'=>$url,'file'=>$f_name,'status'=>'W']);
+					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'4','url'=>$url,'file'=>$f_name]);
 				}
 			}
 
