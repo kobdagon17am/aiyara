@@ -101,17 +101,23 @@ class KsherNotifyController extends Controller
             ]);
         }
 
-
         if ($getKsherData->channel == 'promptpay') {
+
+          $pay_type_id_fk = 15;
+
           $payInfo = [
-              'pay_type_id_fk' => 15,
+              'pay_type_id_fk' =>  $pay_type_id_fk,
               'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
           ];
-      } else {
+        } else {
+          $pay_type_id_fk = 16;
           $payInfo = [
-              'pay_type_id_fk' => 16,
+              'pay_type_id_fk' =>  $pay_type_id_fk,
               'true_money_price' => $this->formatPrice($getKsherData->total_fee),
           ];
+
+
+
       }
 
       Log::info('>>>> Update Order After Ksher Insert <<<<');
@@ -143,17 +149,30 @@ class KsherNotifyController extends Controller
                 ]);
             }
 
-            if ($getKsherData->channel == 'promptpay') {
-              $payInfo = [
-                  'pay_type_id_fk' => 15,
-                  'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
-              ];
-          } else {
-              $payInfo = [
-                  'pay_type_id_fk' => 16,
-                  'true_money_price' => $this->formatPrice($getKsherData->total_fee),
-              ];
+
+        if ($getKsherData->channel == 'promptpay') {
+
+          if($getOrderData->purchase_type_id_fk == '5'){
+            $pay_type_id_fk = 17;
+          }else{
+            $pay_type_id_fk = 15;
           }
+
+          $payInfo = [
+              'pay_type_id_fk' =>  $pay_type_id_fk,
+              'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
+          ];
+        } else {
+          if($getOrderData->purchase_type_id_fk == '5'){
+            $pay_type_id_fk = 18;
+          }else{
+            $pay_type_id_fk = 15;
+          }
+          $payInfo = [
+              'pay_type_id_fk' =>  $pay_type_id_fk,
+              'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+          ];
+        }
 
           Log::info('>>>> Update Order After Ksher Insert <<<<');
           Log::info($dataUpdate->merge($payInfo));
