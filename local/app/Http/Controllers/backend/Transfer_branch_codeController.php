@@ -278,7 +278,7 @@ class Transfer_branch_codeController extends Controller
       // })
       ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
+          $sD = DB::select(" select * from ck_users_admin where id=".@$row->approver." ");
            return @$sD[0]->name;
         }else{
           return '-';
@@ -298,21 +298,21 @@ class Transfer_branch_codeController extends Controller
           `tr_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า  3=ใบโอน ที่ถูกยกเลิก',
           */
         $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
-        if($sD){
-          if($sD[0]->approve_status==1){
+        if(@$sD){
+          if(@$sD[0]->approve_status==1){
             return '<span style="color:green;">รับสินค้าแล้ว</span>';
-          }elseif($sD[0]->approve_status==5){
+          }elseif(@$sD[0]->approve_status==5){
 
               $t = '';
-            if($sD[0]->approve_status_getback==1){
-              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
-            }elseif($sD[0]->approve_status_getback==5){
-              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
+            if(@$sD[0]->approve_status_getback==1){
+              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+            }elseif(@$sD[0]->approve_status_getback==5){
+              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
             }
 
-            $n = $sD[0]->note2?"<br>หมายเหตุ ".$sD[0]->note2:'';
+            $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
             return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
 
           }else{
@@ -322,9 +322,9 @@ class Transfer_branch_codeController extends Controller
       })
       ->escapeColumns('status_get')
       ->addColumn('approve_date_get', function($row) {
-        $sD = DB::select(" select approve_date from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
-        if(!is_null($sD[0]->approve_date)){
-            return date("Y-m-d",strtotime($sD[0]->approve_date))."<br>".date("H:i:s",strtotime($sD[0]->approve_date));
+        $sD = DB::select(" select approve_date from `db_transfer_branch_get` where tr_number='".@$row->tr_number."' ");
+        if(!is_null(@$sD[0]->approve_date)){
+            return date("Y-m-d",strtotime(@$sD[0]->approve_date))."<br>".date("H:i:s",strtotime(@$sD[0]->approve_date));
         }
       })
       ->escapeColumns('approve_date_get')
