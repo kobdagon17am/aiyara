@@ -55,7 +55,7 @@ class AicashConfirmeController extends Controller
                 'order_status_id_fk' => 7,
                 'upto_customer_status' => 1,
                 'cancel_expiry_date'=>$cancel_expiry_date,
-                'note' => 'Add Ai-Cash',
+                // 'note' => 'Add Ai-Cash',
                 'type_user' => $type_user_confirme,
             ]);
 

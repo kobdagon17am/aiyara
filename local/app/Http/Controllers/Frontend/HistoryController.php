@@ -338,7 +338,7 @@ class HistoryController extends Controller
                 try {
                     DB::BeginTransaction();
                     DB::table('payment_slip')
-                        ->insert(['customer_id' => Auth::guard('c_user')->user()->id, 'url' => $url, 'file' => $f_name, 'order_id' => $request->order_id]);
+                        ->insert(['customer_id' => Auth::guard('c_user')->user()->id, 'url' => $url, 'file' => $f_name,'code_order' => $order->code_order, 'order_id' => $request->order_id]);
 
                     DB::table('db_orders')
                         ->where('id', $request->order_id)

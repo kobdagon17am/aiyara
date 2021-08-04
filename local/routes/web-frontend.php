@@ -149,6 +149,9 @@ Route::get('cart_payment/{type}','Frontend\CartPaymentController@index')->name('
 Route::get('cart_submit_course/{type}','Frontend\CartPaymentController@cart_submit_course')->name('cart_submit_course');
 
 Route::get('cart_payment_transfer/{code_order}','Frontend\CartPaymentController@cart_payment_transfer')->name('cart_payment_transfer');
+Route::get('cart_payment_transfer_aicash/{code_order}','Frontend\AiCashController@cart_payment_transfer_aicash')->name('cart_payment_transfer_aicash');
+Route::post('cart_payment_transfer_aicash_submit','Frontend\AiCashController@cart_payment_transfer_aicash_submit')->name('cart_payment_transfer_aicash_submit');
+
 
 //Route::get('cart_payment_transfer_course/{code_order}','Frontend\CartPaymentController@cart_payment_transfer_course')->name('cart_payment_transfer_course');
 

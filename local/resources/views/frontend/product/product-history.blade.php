@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header p-4">
-
+                  <h4> ประวัติการสั่งซื้อสินค้า </h4>
 
                     <div class="col-md-12 col-lg-12">
                         <div class="row">
@@ -258,6 +258,121 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="card">
+              <div class="card-header">
+                  <h5>ประวัติการเติม Ai-Cash</h5>
+                  {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
+              </div>
+
+              <div class="card-block">
+                  <div class="table-responsive dt-responsive">
+                      <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+
+
+                      </table>
+                  </div>
+
+                  <div class="modal fade" id="delete_aicash" tabindex="-1" role="dialog">
+                      <div class="modal-dialog modal-md" role="document">
+                          <form action="{{ route('delete_aicash') }}" method="POST" enctype="multipart/form-data">
+                              @csrf
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="delete_title_aicash">ยืนยันการลบรายการ Ai-Cash</h5>
+                                  </div>
+
+                                  <div class="modal-body">
+                                      <div class="form-group row">
+                                          <div class="col-sm-12 text-center">
+                                              <button type="button" class="btn btn-default waves-effect "
+                                                  data-dismiss="modal">Close</button>
+                                              <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+
+                                              <input type="hidden" name="delete_aicash_id" id="delete_aicash_id" value="">
+                                          </div>
+
+                                      </div>
+                                  </div>
+
+                                  {{-- <div class="modal-footer">
+                      <button type="button" class="btn btn-default waves-effect "
+                          data-dismiss="modal">Close</button>
+
+                  </div> --}}
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+
+
+                  <div class="modal fade" id="cancel_aicash" tabindex="-1" role="dialog">
+                      <div class="modal-dialog modal-md" role="document">
+                          <form action="{{ route('cancel_aicash') }}" method="POST" enctype="multipart/form-data">
+                              @csrf
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="cancel_title_aicash">ยืนยันการยกเลิกรายการ Ai-Cash</h5>
+                                  </div>
+
+                                  <div class="modal-body">
+                                      <div class="form-group row">
+                                          <div class="col-sm-12 text-center">
+                                              <button type="button" class="btn btn-default waves-effect "
+                                                  data-dismiss="modal">Close</button>
+                                              <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+                                              <input type="hidden" name="cancel_aicash_id" id="cancel_aicash_id" value="">
+                                          </div>
+
+                                      </div>
+                                  </div>
+
+                                  {{-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect "
+                        data-dismiss="modal">Close</button>
+
+                </div> --}}
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+
+                  <div class="modal fade" id="view_aicash" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-md" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Oder Code : <b id="code_order_aicash"></b></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card bg-c-green order-card">
+                                    <div class="card-block">
+                                        <h6 class="m-b-20">เติม Ai-Cash</h6>
+                                        <h2 class="text-right"><i class="ti-wallet f-left"></i><span id="price_add_aicash"></span></h2>
+
+
+                                        <p id="status"></p>
+                                        {{-- <p class="m-b-0">Stattus<span class="f-right" id="status">Success</span></p> --}}
+                                        <p class="m-b-0" style="margin-top: 31px;">Action Date <span class="f-right" id="date_aicash">
+                                            </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+
 @endsection
 @section('js')
     <!-- data-table js -->
@@ -445,5 +560,110 @@ function qrcode(id,type='') {
         });
 
     </script>
+
+<script type="text/javascript">
+  $(function() {
+      var oTable = $('#dt-ajax-array').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+          ajax: {
+              url: "{!! route('datatable_add_aicash') !!}",
+              //     data: function(d) {
+              //         d.dt_order_type = $('#dt_order_type').val();
+              //         d.dt_pay_type = $('#dt_pay_type').val();
+              //         d.s_date = $('#s_date').val();
+              //         d.e_date = $('#e_date').val();
+              //     }
+          },
+          columns: [{
+                  data: 'created_at',
+                  title: 'Date'
+              },
+              {
+                  data: 'order_status',
+                  title: 'Status'
+              },
+              {
+                  data: 'code_order',
+                  title: 'OrderCode'
+              },
+              {
+                  data: 'pay_type',
+                  title: 'Type',
+                  className: 'text-center'
+              },
+              {
+                  data: 'total_amt',
+                  title: 'AiCash',
+                  className: 'text-right'
+              },
+              {
+                  data: 'aicash_banlance',
+                  title: 'Banlance',
+                  className: 'text-right'
+              },
+              {
+                  data: 'note',
+                  title: 'Detail'
+              },
+              {
+                  data: 'action',
+                  title: 'Action'
+
+              }
+
+          ],
+          order: [
+              [0, 'DESC']
+          ]
+      });
+
+      // $('#search-form').on('click', function(e) {
+      //     oTable.draw();
+      //     e.preventDefault();
+      // });
+
+  });
+
+  function view_aicash(id) {
+            $.ajax({
+                    url: '{{ route('view_aicash') }}',
+                    type: 'GET',
+                    data: {id}
+                })
+                .done(function(data) {
+                    //console.log(data['data']['css_class']);
+                    $("#view_aicash").modal();
+                    $('#code_order_aicash').html(data['data']['code_order']);
+                    $('#price_add_aicash').html(data['price']);
+
+                    if (data['data']['order_status_id_fk'] == '7') {
+                        var status = 'Success';
+                    } else {
+                        var status = data['data']['order_status'];
+                    }
+
+                    $("#status").html('<span class="label f-right m-b-0 label-' + data['data']['css_class'] +
+                        '" id="status" style="font-size: 14px">' + status + '</span>');
+                    $('#date_aicash').html(data['date_aicash']);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+        }
+
+        function delete_aicash(aicash_id, code) {
+            $('#delete_aicash_id').val(aicash_id);
+            $('#delete_title_aicash').html('ยืนยันการลบรายการ Ai-Cash (' + code + ')');
+        }
+
+        function cancel_aicash(aicash_id, code) {
+            $('#cancel_aicash_id').val(aicash_id);
+            $('#cancel_title_aicash').html('ยืนยันการยกเลิกรายการ Ai-Cash (' + code + ')');
+        }
+
+
+</script>
 
 @endsection

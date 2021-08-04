@@ -16,6 +16,7 @@ class Payment extends Model
 {
     public static function payment_uploadfile($rs)
     {
+
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         $customer_id = Auth::guard('c_user')->user()->id;
@@ -32,7 +33,7 @@ class Payment extends Model
                 $f_name = date('YmdHis') . '_' . $customer_id . '.' . $file_slip->getClientOriginalExtension();
                 if ($file_slip->move($url, $f_name)) {
                     DB::table('payment_slip')
-                        ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $rs->id]);
+                        ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name,'code_order' => $rs->code_order, 'order_id' => $rs->id]);
 
                     $db_orders = DB::table('db_orders')
                         ->where('id', $rs->id)

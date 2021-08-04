@@ -281,6 +281,7 @@
         }
 
         function delete_aicash(aicash_id, code) {
+
             $('#delete_aicash_id').val(aicash_id);
             $('#delete_title_aicash').html('ยืนยันการลบรายการ Ai-Cash (' + code + ')');
         }
@@ -436,9 +437,7 @@
             $.ajax({
                     url: '{{ route('view_aicash') }}',
                     type: 'GET',
-                    data: {
-                        id
-                    }
+                    data: {id}
                 })
                 .done(function(data) {
                     //console.log(data['data']['css_class']);
