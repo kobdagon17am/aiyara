@@ -1,3 +1,7 @@
+<?php
+use App\Helpers\Frontend;
+$check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
+?>
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
 
@@ -18,8 +22,14 @@
 
         <div class="col-md-9 col-xl-9">
             <div class="card">
+
                 <div class="card-block">
                     <h6>ใช้ Ai-Stockist</h6>
+
+                    @if($check_kyc['status'] == 'fail')
+
+                    {!! $check_kyc['html'] !!}
+                    @else
                     <div class="form-group row">
                       @if(Auth::guard('c_user')->user()->aistockist_status == 1)
                         <div class="col-md-6 m-t-5">
@@ -45,11 +55,9 @@
                         </div>
                         @endif
                     </div>
-
                       @endif
-
-
                     </div>
+                  @endif
 
                 </div>
             </div>

@@ -1,6 +1,9 @@
+<?php
+ use App\Helpers\Frontend;
+ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
+?>
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
-
 
     <div class="row">
         <div class="col-md-4 col-xl-4">
@@ -24,10 +27,14 @@
         <div class="col-md-8 col-xl-8">
             <div class="card">
                 <div class="card-block">
-                    <h5>เติม Ai-Cash</h5>
+                    <h5 class="mb-2">เติม Ai-Cash</h5>
 
+                    @if($check_kyc['status'] == 'fail')
+
+                    {!! $check_kyc['html'] !!}
+                    @else
                     <div class="form-group row">
-                        <div class="col-md-6 m-t-5">
+                        <div class="col-md-6">
                             <form action="{{ route('cart_payment_aicash_submit') }}" id="cart_payment_aicash_submit" method="post">
                                 @csrf
                                 @if ($canAccess)
@@ -42,6 +49,7 @@
                             </form>
                         </div>
                     </div>
+                    @endif
 
                 </div>
             </div>

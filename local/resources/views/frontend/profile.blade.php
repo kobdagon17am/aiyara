@@ -1,11 +1,15 @@
 <?php
 use App\Helpers\Frontend;
 $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
+$check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 ?>
 
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
+<style>
+  .icons-alert:before {top: 11px;}
+</style>
 @section('css')
 
 @endsection
@@ -14,7 +18,13 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
     <!-- Panel card start -->
     <div class="card">
       <div class="card-header">
+        @if($check_kyc['status'] == 'fail')
+
+        {!! $check_kyc['html'] !!}
+      @endif
+
         <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION ') </h4>
+
       </div>
       <div class="card-block panels-wells">
         <div class="row">

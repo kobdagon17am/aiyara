@@ -30,6 +30,32 @@ class Frontend{
 		return $customer;
 	}
 
+  public static function check_kyc($user_customer){
+		$customer =  DB::table('customers')
+		->select('*')
+		->where('user_name','=',$user_customer)
+    ->where('regis_doc1_status','=','1')
+    ->where('regis_doc2_status','=','1')
+    ->where('regis_doc3_status','=','1')
+    ->where('regis_doc4_status','=','1')
+    ->where('regis_date_doc','!=',null)
+		->first();
+
+    if($customer){
+      $rs = ['status'=>'success','message'=>''];
+    }else{
+      $rs = ['status'=>'fail','message'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
+    'html'=>' <div class="alert alert-warning icons-alert">
+
+    <p><strong>Warning!</strong> <code>คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
+    </div>
+    '];
+    }
+    return $rs;
+
+
+	}
+
 	public static function notifications($customer_id){
 
 		$data = DB::table('pm')

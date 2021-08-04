@@ -1,5 +1,7 @@
  <?php
  use App\Models\Frontend\CourseCheckRegis;
+ use App\Helpers\Frontend;
+ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
  ?>
  @extends('frontend.layouts.customer.customer_app')
  @section('css')
@@ -145,28 +147,29 @@
 
 
                     </table>
-                    <div class="row" align="center">
 
-                        @if($bill['quantity'] > 0)
-                          @if($type == 5)
-                            @if($gv->sum_gv > 0)
-                            <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                    @if($check_kyc['status'] == 'fail')
+                       {!! $check_kyc['html'] !!}
+                    @else
+                        <div class="row" align="center">
+                          @if($bill['quantity'] > 0)
+                            @if($type == 5)
+                              @if($gv->sum_gv > 0)
+                              <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
+                              @else
+                              <label class="label label-inverse-danger"><b style="color: #000"> คุณไม่มียอด Ai Voucher ที่สามารถใช้ชำระสินค้าได้ </b></label>
+                              @endif
+                            @elseif($type == 6)
+                              @if($check['status'] == 'fail')
+                                <?php $css_disable = 'display: none'; ?>
+                              @endif
+                            <a href="{{ route('cart_submit_course',['type'=>$type]) }}" id="couse_submit" style="{{ @$css_disable }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                             @else
-                            <label class="label label-inverse-danger"><b style="color: #000"> คุณไม่มียอด Ai Voucher ที่สามารถใช้ชำระสินค้าได้ </b></label>
+                            <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                             @endif
-                          @elseif($type == 6)
-                            @if($check['status'] == 'fail')
-                              <?php $css_disable = 'display: none'; ?>
-                            @endif
-                          <a href="{{ route('cart_submit_course',['type'=>$type]) }}" id="couse_submit" style="{{ @$css_disable }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
-                          @else
-                          <a href="{{ route('cart_payment',['type'=>$type]) }}" class="btn btn-success btn-block" type="">ชำระเงิน</a>
                           @endif
-
-                        @endif
-
-                    </div>
-
+                      </div>
+                @endif
                 </div>
 
             </div>

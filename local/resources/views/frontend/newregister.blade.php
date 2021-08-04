@@ -1,5 +1,12 @@
+ <?php
+ use App\Helpers\Frontend;
+$check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
+ ?>
  @extends('frontend.layouts.customer.customer_app')
  <!-- Select 2 css -->
+ <style>
+  .icons-alert:before {top: 11px;}
+</style>
  @section('css')
  <link rel="stylesheet" href="{{asset('frontend/bower_components/select2/css/select2.min.css')}}" />
  <!-- Multi Select css -->
@@ -14,18 +21,20 @@
  	</div>
 
  	<div class="card-block">
+    @if($check_kyc['status'] == 'fail')
+    <div class="col-md-8">
+    {!! $check_kyc['html'] !!}
+   </div>
+  @endif
  		<form action="{{route('register_new_member')}}" id="register_new_member" method="POST" enctype="multipart/form-data">
  			@csrf
-
 
        <div class="form-group row">
          <div class="col-sm-3">
           <label><b>Uplind ID</b></label>
-
           <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;"><font style="color: #000;">{{ $data['data']->business_name }} ( {{$data['data']->user_name}} ) </font></span>
           {{--  <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
           <input type="hidden"  name="upline_id" value="{{$data['data']->user_name}}">
-
         </div>
 
         <div class="col-sm-3">
@@ -402,13 +411,19 @@
   <img src="{{ asset('frontend/assets/images/user_card_new.jpg') }}" id="preview" class="img-thumbnail">
 </div>
 </div>
+@if($check_kyc['status'] == 'success')
 
-<div class="form-group row text-right">
- <label class="col-sm-2"></label>
- <div class="col-sm-10">
-  <button type="submit" class="btn btn-primary m-b-0">Submit</button>
-</div>
-</div>
+  <div class="form-group row text-right">
+    <label class="col-sm-2"></label>
+    <div class="col-sm-10">
+     <button type="submit" class="btn btn-primary m-b-0">Submit</button>
+   </div>
+   </div>
+
+
+
+@endif
+
 </form>
 </div>
 
