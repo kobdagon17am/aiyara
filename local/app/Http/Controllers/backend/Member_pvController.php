@@ -87,42 +87,42 @@ class Member_pvController extends Controller
 
       if(!empty($req->customer_id)){
         $w01 = $req->customer_id;
-        $condition = "=";
+        $Operator01 = "=";
       }else{
         $w01 = 0 ;
-        $condition = "!=";
+        $Operator01 = "!=";
       }
 
       if(!empty($req->business_name)){
         $w02 = $req->business_name;
-        $condition02 = "=";
+        $Operator02 = "=";
       }else{
         $w02 = "0" ;
-        $condition02 = "!=";
+        $Operator02 = "!=";
       }
 
       if(!empty($req->introduce_id)){
         $w03 = $req->introduce_id;
-        $condition03 = "=";
+        $Operator03 = "=";
       }else{
         $w03 = "0" ;
-        $condition03 = "!=";
+        $Operator03 = "!=";
       }
 
       if(!empty($req->upline_id)){
         $w04 = $req->upline_id;
-        $condition04 = "=";
+        $Operator04 = "=";
       }else{
         $w04 = "0" ;
-        $condition04 = "!=";
+        $Operator04 = "!=";
       }
 
 
       $sTable = \App\Models\Backend\Customers::where('id','!=',0)
-      ->where('customers.id',$condition,$w01)
-      ->where('customers.business_name',$condition02,trim($w02))
-      ->where('customers.introduce_id',$condition03,$w03)
-      ->where('customers.upline_id',$condition04,$w04)
+      ->where('customers.id',$Operator01,$w01)
+      ->where('customers.business_name',$Operator02,trim($w02))
+      ->where('customers.introduce_id',$Operator03,$w03)
+      ->where('customers.upline_id',$Operator04,$w04)
       ;
 
       $sQuery = \DataTables::of($sTable);

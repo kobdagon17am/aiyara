@@ -110,15 +110,17 @@
          SELECT count(id) as cnt from db_order_products_list WHERE frontstore_id_fk = ".$data[0]." and add_from=1 GROUP BY promotion_id_fk,promotion_code
      ");
 
+$LIMIT_RANGE = 7 ;
+
 $amt_list =  @$Count_Product_list_add_from_1[0]->cnt;
-$amt_page = ceil($amt_list / 7) ;
+$amt_page = ceil($amt_list / $LIMIT_RANGE) ;
 // echo $amt_page;
 
-
-
-$LIMIT_RANGE = 7 ;
 $LIMIT_PAGE = $LIMIT_RANGE * ($amt_page-1) ;
 
+
+// Test
+// $amt_page = 1;
 
 // Start for 
 for ($j=1; $j <= $amt_page ; $j++) { 
@@ -128,6 +130,9 @@ for ($j=1; $j <= $amt_page ; $j++) {
   }else{
     $LIMIT = " LIMIT $LIMIT_PAGE,$LIMIT_RANGE ";
   }
+
+  // Test
+   // $LIMIT = " LIMIT 3 ";
 
 ?>
  
@@ -225,10 +230,10 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
                               @$address = "";
                               @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ;
-                              @$address .=  " ต.". @$addr[0]->tamname;
+                              @$address .=  " ต.". @$addr[0]->tamname . "<br> ";
                               @$address .=  " อ.". @$addr[0]->ampname;
                               @$address .=  " จ.". @$addr[0]->provname;
-                              @$address .=  " <br>รหัส ปณ. ". @$addr[0]->card_zipcode ;
+                              @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
 
                               echo @$address;
 
@@ -273,7 +278,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                   @$address .=  " ต.". @$addr[0]->tambon_name;
                                   @$address .=  " อ.". @$addr[0]->amp_name;
                                   @$address .=  " จ.". @$addr[0]->province_name;
-                                  @$address .=  " <br> รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+                                  @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
 
                                   echo @$address;
                               }else{
@@ -313,11 +318,11 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                       WHERE customers_detail.customer_id =
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
                                 // print_r(@$addr);
-                                @$address =  @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name. "<br>";
-                                @$address .= " ต.". @$addr[0]->tamname;
+                                @$address =  @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name;
+                                @$address .= " ต.". @$addr[0]->tamname. "<br>";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
-                                @$address .= " <br> รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
 
                                 echo @$address;
 
@@ -336,11 +341,11 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
                                 // print_r(@$addr);
                                 @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name;
-                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no. "<br> ";
-                                @$address .= " ต.". @$addr[0]->tamname;
+                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no;
+                                @$address .= " ต.". @$addr[0]->tamname. "<br> ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
-                                @$address .= " <br> รหัส ปณ. ". @$addr[0]->zip_code. " ";
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zip_code. " ";
 
                                 echo @$address;
 
@@ -356,7 +361,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
             {{@$db_orders[0]->branch_code}}
       </td>
 
-      <td style="width:30%;vertical-align: top;" >
+      <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
         <br> {{@$db_orders[0]->invoice_code}}
         <br>
              {{@ThDate01(@$sRow->action_date)}}
@@ -366,7 +371,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
     
 
 
-    <table style="margin-left:10px !important;margin-top:30px !important;border-collapse: collapse;height: 150px !important;" >
+    <table style="margin-left:10px !important;margin-top:50px !important;border-collapse: collapse;height: 150px !important;" >
 <!-- รายการสินค้า -->
 
 <?php
@@ -437,7 +442,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
           <tr style="vertical-align: top;line-height: 13px !important;">
             <td style="width:2.6%;text-align: left;"><?=$i?></td>
-            <td style="width:31%;text-align: left;"><?=$product_name?></td>
+            <td style="width:28%;text-align: left;"><?=$product_name?></td>
             <td style="width:6%;text-align: right;"><?=number_format($v->selling_price,0)?></td>
             <td style="width:5%;text-align: right;"><?=$v->total_pv?>pv</td>
             <td style="width:4%;text-align: right;"><?=$v->amt?></td>
@@ -509,7 +514,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
           <tr style="vertical-align: top;line-height: 13px !important;">
             <td style="width:2.6%;text-align: left;"><?=$i?></td>
-            <td style="width:31%;text-align: left;"><?=$pn?></td>
+            <td style="width:28%;text-align: left;"><?=$pn?></td>
             <td style="width:6%;text-align: right;"><?=number_format($v->selling_price,0)?></td>
             <td style="width:5%;text-align: right;"><?=$v->total_pv?>pv</td>
             <td style="width:4%;text-align: right;"><?=$v->amt?></td>
@@ -535,7 +540,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
   <table style="border-collapse: collapse;vertical-align: top;" >
     <tr>
-      <td style="width:80%;font-size: 14px;">
+      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
        REF : [ {{@$db_orders[0]->id}} ] AG : [ {{@$db_orders[0]->branch_code}} ] SK : [ - ] คะแนนครั้งนี้ : [  {{@$sFrontstorePVtotal[0]->pv_total}} pv ]
       </td>
       <td style="text-align: right;"></td>
@@ -544,7 +549,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td style="width:80%;font-size: 14px;">
+      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
        ชำระ : [ สด={{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}} ] พนักงาน : [ admin ] การจัดส่ง : [ 4/{{$shipping_cost}} ]
       </td>
       <td style="text-align: right;"></td>
@@ -558,7 +563,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
       </td>
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
-      <td style="text-align: right;"> {{number_format(@$sFrontstoreDataTotal[0]->total,2)}} </td>
+      <td style="text-align: right;margin-top:-3px !important;"> {{number_format(@$sFrontstoreDataTotal[0]->total,2)}} </td>
     </tr>
 
     <tr>

@@ -185,8 +185,8 @@
                 <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
               </a> -->
 
-         <!--       <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
-               </a> -->
+               <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
+               </a>
 
             </div>
           </div>
@@ -290,7 +290,7 @@
                 <div class="form-group row">
                   <label for="note" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
                   <div class="col-md-8">
-                    <textarea class="form-control" rows="3" id="note2" name="note2" required >{{ @$sRow->note2 }}</textarea>
+                    <textarea class="form-control" rows="3" id="note2" name="note2" >{{ @$sRow->note2 }}</textarea>
                   </div>
                 </div>
 
@@ -326,7 +326,7 @@
 
 
 <div class="modal fade" id="setToWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="setToWarehouseModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 800px !important;">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="setToWarehouseModalTitle"><b><i class="bx bx-play"></i>บันทึกการรับสินค้าและระบุคลังจัดเก็บสินค้า </b></h5>
@@ -350,53 +350,87 @@
               <div class="card-body">
                
 
-              <div class="row" >
-                <div class="col-md-12" style="font-size: 18px;" >
-                  <div class="form-group row">
-                    <label for="div_show_product" class="col-md-3 " style="vertical-align: top;"> สินค้า : </label>
-                    <div class="col-md-9">
-                      <div id="div_show_product" style="vertical-align: top;color: black;"></div>
-
-                       <input type="hidden" class="form-control" id="lot_number" name="lot_number" readonly >
-                       <input type="hidden" class="form-control" id="lot_expired_date" name="lot_expired_date" readonly >
-                       <input type="hidden" class="form-control" id="product_unit_id_fk" name="product_unit_id_fk" readonly >
-                       <input type="hidden" class="form-control" id="branch_id_fk_c" name="branch_id_fk_c" readonly >
-                       <!-- บอกสถานะว่า มีการปฏิเสธการรับ จากฝั่งรับ  -->
-                       <!-- <input type="text"  id="tr_status_get" name="tr_status_get" readonly > -->
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <hr>
-
-               <div class="row" >
+                    <div class="row" >
                     <div class="col-md-5 " >
-                      <div class="form-group row">
-                        <label for="" class="col-md-5 col-form-label required_star_red "> จำนวนที่ได้รับ : </label>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control NumberOnly " name="amt_get" id="amt_get" required >
-                        </div>
-                      </div>
+                       <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> ชื่อสินค้า : </label>
+                            <div class="col-md-9">
+                               <input type="text" class="form-control" id="product_name" readonly >
+                            </div>
+                          </div>
                     </div>
                     <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="" class="col-md-5 col-form-label">นำไปเก็บที่ => สาขา : </label>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control" id="branch_name" readonly >
-                        </div>
-                      </div>
+                        <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> จำนวนที่ได้รับ : </label>
+                            <div class="col-md-3">
+                             <input type="text" class="form-control NumberOnly " name="amt_get" id="amt_get" required >
+                            </div>
+
+                            <label for="" class="col-md-2 col-form-label">หน่วย : * </label>
+
+                             <div class="col-md-4">
+                                     <select name="product_unit_id_fk" class="form-control select2-templating " required >
+                              <option value="">Select</option>
+                                @if(@$sProductUnit)
+                                  @foreach(@$sProductUnit AS $r)
+                                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_unit_id_fk)?'selected':'' }} >{{$r->product_unit}}</option>
+                                  @endforeach
+                                @endif
+                            </select>
+                            </div>
+
+                          </div>
                     </div>
                   </div>
 
+
+
+       <div class="row" >
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="" class="col-md-3 col-form-label"> Lot Number  : </label>
+                        <div class="col-md-7">
+                  <input type="text" class="form-control lot_number_auto " id="lot_number_auto" name="lot_number" required value="{{@$sRow->lot_number}}" >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5 " >
+                      <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> วันหมดอายุ : </label>
+                            <div class="col-md-5">
+                               @IF(!empty(@$sRow->lot_expired_date))
+                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly > 
+                               @ELSE 
+                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required > 
+                               @ENDIF 
+                            </div>
+                          </div>
+                    </div>
+                  </div>
 
 
                 <div class="row" >
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="branch_id_fk_c" class="col-md-3 col-form-label"> สาขา : </label>
+                        <div class="col-md-7">
+                            <select id="branch_id_fk_c" name="branch_id_fk_c" class="form-control select2-templating " required >
+                             <option value="">Select</option>
+                             @if(@$sBranchs)
+                              @foreach(@$sBranchs AS $r)
+                              <option value="{{$r->id}}"  >
+                                {{$r->b_name}}
+                              </option>
+                              @endforeach
+                              @endif
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                     <div class="col-md-5 " >
                       <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label required_star_red "> คลัง : </label>
-                            <div class="col-md-9">
+                            <label for="example-text-input" class="col-md-3 col-form-label"> คลัง : </label>
+                            <div class="col-md-5">
                               <select id="warehouse_id_fk_c" name="warehouse_id_fk_c" class="form-control select2-templating " required >
                                  <option value="">เลือกคลัง</option>
                                  @if(@$Subwarehouse)
@@ -410,41 +444,41 @@
                             </div>
                           </div>
                     </div>
+                  </div>
+
+                  <div class="row" >
                     <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label required_star_red "> Zone : </label>
-                            <div class="col-md-9">
-                             <select id="zone_id_fk_c" name="zone_id_fk_c" class="form-control select2-templating " required >
+                       <div class="form-group row">
+                            <label for="zone_id_fk_c" class="col-md-3 col-form-label"> Zone : </label>
+                            <div class="col-md-7">
+                              <select id="zone_id_fk_c" name="zone_id_fk_c" class="form-control select2-templating " required >
                                 <option disabled selected>กรุณาเลือกคลังก่อน</option>
                               </select>
                             </div>
                           </div>
                     </div>
-                  </div>
-
-
-
-                <div class="row" >
                     <div class="col-md-5 " >
-                      <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label required_star_red "> Shelf : </label>
-                            <div class="col-md-9">
-                             <select id="shelf_id_fk_c"  name="shelf_id_fk_c" class="form-control select2-templating " required >
+                        <div class="form-group row">
+                            <label for="shelf_id_fk_c" class="col-md-3 col-form-label"> Shelf : </label>
+                            <div class="col-md-5">
+                              <select id="shelf_id_fk_c"  name="shelf_id_fk_c" class="form-control select2-templating " required >
                                  <option disabled selected>กรุณาเลือกโซนก่อน</option>
                               </select>
                             </div>
-                          </div>
-                    </div>
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label required_star_red "> ชั้น : </label>
-                            <div class="col-md-9">
-                             <input type="text" class="form-control NumberOnly " id="shelf_floor_c" name="shelf_floor_c" placeholder="เก็บไว้ที่ชั้น" required >
+
+                             <div class="col-md-4">
+                                <input type="text" class="form-control NumberOnly " id="shelf_floor_c" name="shelf_floor_c" placeholder="เก็บไว้ที่ชั้น" required >
                             </div>
+
                           </div>
                     </div>
                   </div>
-<br>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
 
          <div class="row">
           <div class="col-md-12 text-center  "  >
@@ -453,14 +487,11 @@
           </div>
         </div>
 
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-
       </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+              <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+            </div>
 
       </form>
 
@@ -558,19 +589,18 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                      console.log(aData['get_status_2']);
+                      // console.log(aData['get_status_2']);
                       // console.log(aData['product_amt']);
                       // console.log(aData['product_amt_receive']);
-                      // console.log(aData['product_details']);
-                      console.log(aData['tr_status']);
+                      // console.log(aData['tr_status']);
 
                       // if(aData['get_status_2']==2){
                       if(aData['product_amt']>aData['product_amt_receive']){
 
-                        if(aData['get_status_2']==2){
+                        if(aData['tr_status']!=3){
 
                           $('td:last-child', nRow).html(''
-                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
+                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
                           ).addClass('input');
 
                         }else{
@@ -679,71 +709,65 @@
 
      $(document).on('click', '.btnSetToWarehouse', function(event) {
           event.preventDefault();
-              var id = $(this).data('id');
-              var product_name = $(this).attr('product_name');
-              var product_id_fk = $(this).attr('product_id_fk');
-              var transfer_branch_get_products_id_fk = $(this).data('id');
-              var product_details = $(this).attr('product_details');
-              var branch_name = $(this).attr('branch_name');
-              var branch_id_this = $(this).attr('branch_id_this');
-              var product_unit_id_fk = $(this).attr('product_unit_id_fk');
-              var lot_expired_date = $(this).attr('lot_expired_date');
-              var lot_number = $(this).attr('lot_number');
-              // console.log(product_id_fk);
-              // console.log(product_name);
-              // console.log(product_name);
-              // var branch_id_fk = $("#branch_id_fk").val();
-              $('#product_name').val(product_name);
-              $('#product_id_fk').val(product_id_fk);
-              $('#transfer_branch_get_products_id_fk').val(transfer_branch_get_products_id_fk);
-              $('#this_id').val(transfer_branch_get_products_id_fk);
-
-              $('#branch_id_fk_c').val(branch_id_this);
-              $('#product_unit_id_fk').val(product_unit_id_fk);
-              $('#lot_expired_date').val(lot_expired_date);
-              $('#lot_number').val(lot_number);
-
-
-              $('#div_show_product').html(product_details);
-              $('#branch_name').val(branch_name);
+             var id = $(this).data('id');
+             var product_name = $(this).attr('product_name');
+             var product_id_fk = $(this).attr('product_id_fk');
+             var transfer_branch_get_products_id_fk = $(this).data('id');
+             // console.log(product_id_fk);
+             // console.log(product_name);
+             // console.log(product_name);
+             // var branch_id_fk = $("#branch_id_fk").val();
+             $('#product_name').val(product_name);
+             $('#product_id_fk').val(product_id_fk);
+             $('#transfer_branch_get_products_id_fk').val(transfer_branch_get_products_id_fk);
+             $('#this_id').val(transfer_branch_get_products_id_fk);
+             // $('#transfer_branch_get_products_id_fk').val(id);
+             // var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+              // console.log(transfer_branch_get_id_fk);
             
              setTimeout(function(){
                  $('#amt_get').focus();
              }, 500);
-
-             if(branch_id_this != ''){
-               $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
-                    method: "post",
-                    data: {
-                      branch_id_fk:branch_id_this,
-                      "_token": "{{ csrf_token() }}", 
-                    },
-                    success:function(data)
-                    { 
-                     if(data == ''){
-                         alert('ไม่พบข้อมูลคลัง !!.');
-                     }else{
-                         var layout = '<option value="" selected>- เลือกคลัง -</option>';
-                         $.each(data,function(key,value){
-                          layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-                         });
-                         $('#warehouse_id_fk_c').html(layout);
-                         $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
-                         $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-                     }
-                    }
-                  })
-             }else{
-                $('#warehouse_id_fk_c').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
-                $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
-                $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-             }
-
             
              $('#setToWarehouseModal').modal('show');
 
         });
+
+
+
+       $('#branch_id_fk_c').change(function(){
+
+          var branch_id_fk = this.value;
+          // alert(warehouse_id_fk);
+           if(branch_id_fk != ''){
+            $('.myloading').show();
+             $.ajax({
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                  method: "post",
+                  data: {
+                    branch_id_fk:branch_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลคลัง !!.');
+                       $('.myloading').hide();
+                   }else{
+                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                       });
+                       $('#warehouse_id_fk_c').html(layout);
+                       $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                       $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                       $('.myloading').hide();
+                   }
+                  }
+                })
+           }
+ 
+      });
 
 
        $('#warehouse_id_fk_c').change(function(){
@@ -825,6 +849,74 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script type="text/javascript">
+$( function() {
+
+ // Single Select
+ $( "#lot_number_auto" ).autocomplete({
+  source: function( request, response ) {
+   // Fetch data
+         var product_id_fk = $('#product_id_fk').val();
+         $.ajax({
+          url: " {{ url('backend/ajaxGetLotnumber2') }} ",
+          method: "post",
+          dataType: "json",
+          data: {
+            product_id_fk:product_id_fk,
+            "_token": "{{ csrf_token() }}",
+          },
+          success:function(data){
+             // console.log(data);
+             response( data );
+          }
+         });
+        },
+        // select: function (event, ui) {
+        //    console.log(ui.item);
+        //    $('#lot_number_auto').val(ui.item.value); 
+        //    return false;
+        // },
+        // focus: function(event, ui){
+        //    $( "#lot_number_auto" ).val( ui.item.value );
+        //    return false;
+        //  },
+       });
+
+
+        $(document).on('change', '#lot_number_auto', function(event) {
+            var this_v = $(this).val();
+            // alert(this_v);
+             var product_id_fk = $('#product_id_fk').val();
+             $.ajax({
+              url: " {{ url('backend/ajaxGetLotnumber2') }} ",
+              method: "post",
+              dataType: "json",
+              data: {
+                product_id_fk:product_id_fk,
+                "_token": "{{ csrf_token() }}",
+              },
+              success:function(data){
+                 // console.log(data);
+                 $.each(data, function( index, value ) {
+                    if(this_v==value.value){
+                      $('#lot_expired_date').val(value.lot_expired_date);
+                      $('#lot_expired_date').prop('readonly',true);
+                      $('#lot_expired_date').prop('type','text');
+                    }else{
+                      $('#lot_expired_date').val('');
+                      $('#lot_expired_date').prop('readonly',false);
+                      $('#lot_expired_date').prop('required',true);
+                      $('#lot_expired_date').prop('type','date');
+                    }
+                 });
+              }
+             });
+        });
+
+
+
+ });
+
+
 
         $(document).ready(function() {
 
@@ -878,7 +970,6 @@
 
         
         });
-
 
 
 </script>

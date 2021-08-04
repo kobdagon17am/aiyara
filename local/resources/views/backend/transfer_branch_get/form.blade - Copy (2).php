@@ -361,8 +361,6 @@
                        <input type="hidden" class="form-control" id="lot_expired_date" name="lot_expired_date" readonly >
                        <input type="hidden" class="form-control" id="product_unit_id_fk" name="product_unit_id_fk" readonly >
                        <input type="hidden" class="form-control" id="branch_id_fk_c" name="branch_id_fk_c" readonly >
-                       <!-- บอกสถานะว่า มีการปฏิเสธการรับ จากฝั่งรับ  -->
-                       <!-- <input type="text"  id="tr_status_get" name="tr_status_get" readonly > -->
 
                     </div>
                   </div>

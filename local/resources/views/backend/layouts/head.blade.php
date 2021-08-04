@@ -101,7 +101,11 @@
           color: #4d4d4d !important;
         }
           
-
+      .required_star_red:after {
+        content:" *";
+        color: red;
+      }
+      
 </style>
 
 <!-- Sweet Alert -->

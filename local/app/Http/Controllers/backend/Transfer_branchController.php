@@ -352,32 +352,41 @@ CREATE TABLE `db_transfer_branch_code` (
             Left Join products ON products_details.product_id_fk = products.id
             WHERE products.id=".$row->product_id_fk." AND lang_id=1");
 
-        return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+        return @$Products[0]->product_code." <br> ".@$Products[0]->product_name;
 
       })
-      ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
-      ->addColumn('action_date', function($row) {
-        $d = strtotime($row->action_date); 
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
+      // ->addColumn('lot_expired_date', function($row) {
+      //   $d = strtotime($row->lot_expired_date); 
+      //   return date("d/m/", $d).(date("Y", $d)+543);
+      // })
+      // ->addColumn('action_date', function($row) {
+      //   $d = strtotime($row->action_date); 
+      //   return date("d/m/", $d).(date("Y", $d)+543);
+      // })
+       ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
-        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-        return @$sBranchs[0]->b_name;
+        $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();
+        // return $Check_stock->branch_id_fk;
+        $sBranchs = DB::select(" select * from branchs where id=".$Check_stock->branch_id_fk." ");
+        $warehouse = DB::select(" select * from warehouse where id=".$Check_stock->warehouse_id_fk." ");
+        $zone = DB::select(" select * from zone where id=".$Check_stock->zone_id_fk." ");
+        $shelf = DB::select(" select * from shelf where id=".$Check_stock->shelf_id_fk." ");
+        return str_replace(">","/",@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น '.@$Check_stock->shelf_floor);
       })  
+      ->escapeColumns('warehouses')
       ->addColumn('amt_in_warehouse', function($row) {
-        // $Check_stock = \App\Models\Backend\Check_stock::where('id',$row->stock_id_fk);
         if($row->stocks_id_fk!=''){
           $Check_stock = DB::select(" select * from db_stocks where id=".$row->stocks_id_fk." ");
           return @$Check_stock[0]->amt;
         }
-        
-      })     
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
-      })
+      }) 
+      ->addColumn('to_branch', function($row) {
+          $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+          return @$sBranchs[0]->b_name;
+      })      
+      // ->addColumn('updated_at', function($row) {
+      //   return is_null($row->updated_at) ? '-' : $row->updated_at;
+      // })
       ->make(true);
     }
 
