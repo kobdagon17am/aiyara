@@ -334,7 +334,7 @@
                       <div class="form-group row">
                         <label for="branch_id_fk_c" class="col-md-3 col-form-label"> สาขา : </label>
                         <div class="col-md-9">
-                            <select id="branch_id_fk_c" name="branch_id_fk_c" class="form-control select2-templating " >
+                            <select id="c" name="branch_id_fk_c" class="form-control select2-templating " >
                              <option value="">Select</option>
                              @if(@$sBranchs)
                               @foreach(@$sBranchs AS $r)
@@ -427,7 +427,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง.</b></h5>
+        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

@@ -145,7 +145,7 @@
                         <option value="0" > อยู่ระหว่างการดำเนินการ </option>
                         <option value="1" > ได้รับสินค้าครบแล้ว </option>
                         <option value="2" > ยังค้างรับสินค้า </option>
-                        <option value="3" > ใบโอนที่ยกเลิก </option>
+                        <option value="3" > ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
                       </select>
                     </div>
                   </div>
@@ -300,7 +300,14 @@ $(function() {
               }
               var str_U = '';
               if(sU=='1'){
-                str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                console.log(aData['tr_status_code']);
+                // กรณีปฏิเสธการรับจากฝั่งรับ
+                if(aData['tr_status_code']==3){
+                  str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                }else{
+                  str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                }
+                
               }
     
               if(sU!='1'){
@@ -386,6 +393,7 @@ $(function() {
                                     ],
                                   rowCallback: function(nRow, aData, dataIndex){
                               
+ 
                                           var sPermission = "<?=\Auth::user()->permission?>";
                                           var sU = sessionStorage.getItem("sU");
                                           if(sPermission==1){
@@ -393,7 +401,14 @@ $(function() {
                                           }
                                           var str_U = '';
                                           if(sU=='1'){
-                                            str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                            console.log(aData['tr_status_code']);
+                                            // กรณีปฏิเสธการรับจากฝั่งรับ
+                                            if(aData['tr_status_code']==3){
+                                              str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                            }else{
+                                              str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                            }
+                                            
                                           }
                                 
                                           if(sU!='1'){

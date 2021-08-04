@@ -104,11 +104,15 @@ class Check_stockController extends Controller
 
     public function Datatable(Request $req){
 
+      
+
       if(isset($req->id)){
         $sTable = \App\Models\Backend\Check_stock::where('id',$req->id)->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
       }else{
-        $sTable = \App\Models\Backend\Check_stock::search()->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
+        $sTable = \App\Models\Backend\Check_stock::where('lot_expired_date',">=",date("Y-m-d"))->search()->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
       }
+// TEST
+      // $sTable = \App\Models\Backend\Check_stock::where('id',0)->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
       
       $sQuery = \DataTables::of($sTable);
       return $sQuery

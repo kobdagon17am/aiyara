@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รับสินค้าจากการโอนระหว่างสาขา </h4>
+            <h4 class="mb-0 font-size-18"> รับสินค้าจากการโอนระหว่างสาขา (รับคืนจากสาขาที่ปฏิเสธการรับ) </h4>
         </div>
     </div>
 </div>
@@ -25,33 +25,20 @@
 
             <div class="myBorder">
 
-              @if( empty($sRow) )
-              <form action="{{ route('backend.transfer_branch_get.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-              @else
-              <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input name="_method" type="hidden" value="PUT">
-              @endif
-                {{ csrf_field() }}
-
-                 <input name="save_from_firstform" type="hidden" value="1">
 
                 <div class="form-group row">
                   <label for="tr_number" class="col-md-3 col-form-label">รหัสใบโอน :</label>
                   <div class="col-md-6">
-                    
-
                     @if( empty(@$sRow) )
                         <input class="form-control" type="text" name="tr_number" value="" required >
                     @else
                         <input class="form-control" type="text" name="tr_number" value="{{ @$sRow->tr_number }}" readonly >
                     @endif
-
                   </div>
                 </div>
 
-                        
                         <div class="form-group row">
-                          <label for="" class="col-md-3 col-form-label "> รับจากสาขา : </label>
+                          <label for="" class="col-md-3 col-form-label "> สาขาต้นทางที่โอน : </label>
                           <div class="col-md-6">
 
                               @if( empty(@$sRow) )
@@ -77,40 +64,25 @@
                         </div>
 
                         <div class="form-group row">
-                          <label for="example-text-input" class="col-md-3 col-form-label">  ผู้รับโอน :  </label>
+                          <label for="" class="col-md-3 col-form-label "> สาขาปลายทางที่ปฏิเสธการรับ : </label>
                           <div class="col-md-6">
 
-                            @if( empty(@$sRow->action_user) )
+                              @if( !empty(@$sRow) )
 
-                                <select name="action_user" id="action_user" class="form-control select2-templating " required >
-                                  <option value="">Select</option>
-                                    @if(@$sUserAdmin)
-                                      @foreach(@$sUserAdmin AS $r)
-                                        <option value="{{$r->id}}"  >
-                                          {{$r->name}} 
-                                        </option>
+                                  <select  class="form-control select2-templating " disabled >
+                                    @if(@$sBranchs)
+                                      @foreach(@$sBranchs AS $r)
+                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                        {{$r->b_name}}
+                                      </option>
                                       @endforeach
                                     @endif
-                                </select>
-
-                            @else
-
-                                <select name="action_user" id="action_user" class="form-control select2-templating " disabled >
-                                    @if(@$sUserAdmin_ALL)
-                                      @foreach(@$sUserAdmin_ALL AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->action_user)?'selected':'' }} >
-                                          {{$r->name}} 
-                                        </option>
-                                      @endforeach
-                                    @endif
-                                </select>
-
-                            @endif
-
-                       
+                                      </select>
+                              @endif
 
                           </div>
                         </div>
+
 
 
                 <div class="form-group row">
@@ -120,57 +92,27 @@
                     </div>
                 </div>
 
-                          <div class="form-group row">
-                            <label for="tr_status" class="col-md-3 col-form-label">สถานะใบโอน :</label>
-                            <div class="col-md-6">
-                               <select id="tr_status" name="tr_status" class="form-control select2-templating " >
-                                <option value="">-Status-</option>
-                                <option value="0" {{ (0==@$sRow->tr_status)?'selected':'' }}> อยู่ระหว่างการดำเนินการ </option>
-                                <option value="1" {{ (1==@$sRow->tr_status)?'selected':'' }}> ได้รับสินค้าครบแล้ว </option>
-                                <option value="2" {{ (2==@$sRow->tr_status)?'selected':'' }}> ยังค้างรับสินค้า </option>
-                                <option value="3" {{ (3==@$sRow->tr_status)?'selected':'' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
-                              </select>
-                            </div>
-                          </div>
+                <div class="form-group row">
+                  <label for="tr_status" class="col-md-3 col-form-label">สถานะใบโอน :</label>
+                  <div class="col-md-6">
+                     <select id="tr_status" name="tr_status" class="form-control select2-templating " disabled >
+                      <option value="">-Status-</option>
+                      <option value="0" {{ (0==@$sRow->tr_status)?'selected':'' }}> อยู่ระหว่างการดำเนินการ </option>
+                      <option value="1" {{ (1==@$sRow->tr_status)?'selected':'' }}> ได้รับสินค้าครบแล้ว </option>
+                      <option value="2" {{ (2==@$sRow->tr_status)?'selected':'' }}> ยังค้างรับสินค้า </option>
+                      <option value="3" {{ (3==@$sRow->tr_status)?'selected':'' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
+                    </select>
+                  </div>
+                </div>
 
                 <div class="form-group row">
-                  <label for="note" class="col-md-3 col-form-label">หมายเหตุ (ถ้ามี) :</label>
+                  <label for="note" class="col-md-3 col-form-label">หมายเหตุ  :</label>
                   <div class="col-md-6">
-                    <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                    <textarea class="form-control" rows="3" id="note" name="note" readonly="" >{{ @$sRow->note }}</textarea>
                   </div>
                 </div>
 
 
-    
-
-<!--                   <div class="form-group row">
-                            <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
-                            <div class="col-md-6">
-                              @if( empty($sRow) )
-                                <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                                  <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="action_user" readonly >
-                                  @else
-                                    <input class="form-control" type="text" value="{{@$action_user}}" readonly >
-                                  <input class="form-control" type="hidden" value="{{ @$sRow->action_user }}" name="action_user" >
-                               @endif
-                            </div>
-                       </div>
-                           -->
-  
-                <div class="form-group mb-0 row">
-                    <div class="col-md-6">
-                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                        </button>
-                    </div>
-                </div> 
-
-              </form>
             </div>
 
 
@@ -179,14 +121,7 @@
         <div style="">
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรับสินค้าตามใบโอน </span>
-<!-- 
-              <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{@$sRow->id}}" style="float: right;" >
-                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
-              </a> -->
-
-         <!--       <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
-               </a> -->
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรับสินค้าคืนตามใบโอน </span>
 
             </div>
           </div>
@@ -218,10 +153,7 @@
         <div style="">
           <div class="form-group row">
             <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ประวัติการรับสินค้า </span>
-              <!--   <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get.create') }}/{{@$sRow->id}}" style="float: right;" >
-                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
-              </a> -->
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ประวัติการรับสินค้าคืน </span>
             </div>
           </div>
           <div class="form-group row">
@@ -245,15 +177,16 @@
 
 
             <div class="myBorder div_approve_transfer_branch_get " >
-        
-              <form id="frm-main" action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+   
+            <form action="{{url('backend/transfer_branch_get/get_product_back')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
+
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
-                <input name="approved" type="hidden" value="1">
+                <input name="approve_getback" type="hidden" value="1">
                 {{ csrf_field() }}
 
                  <div class="form-group row">
-                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) การรับสินค้าคืน :</label>
                       <div class="col-md-6">
                         @if( empty(@$sRow->id) )
                           <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
@@ -271,16 +204,16 @@
                     <div class="col-md-3 mt-2">
                       <div class=" ">
 
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
-                          <label for="customSwitch1">อนุมัติ / Aproved (รับโอน)</label>
+                          <input type="radio" class="" id="customSwitch1" name="approve_status_getback" value="1" {{ ( @$sRow->approve_status_getback=='1')?'checked':'' }} required >
+                          <label for="customSwitch1">อนุมัติ / Aproved (รับคืน)</label>
 
                       </div>
                     </div>
                      <div class="col-md-4 mt-2">
                       <div class=" ">
               
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="5" {{ ( @$sRow->approve_status=='5')?'checked':'' }} required >
-                          <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved (ปฏิเสธการรับโอน)</label>
+                          <input type="radio" class="" id="customSwitch2" name="approve_status_getback" value="5" {{ ( @$sRow->approve_status_getback=='5')?'checked':'' }} required >
+                          <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved (ปฏิเสธการรับคืน)</label>
 
                       </div>
                     </div>
@@ -288,9 +221,9 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="note" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
+                  <label for="note3" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
                   <div class="col-md-8">
-                    <textarea class="form-control" rows="3" id="note2" name="note2" required >{{ @$sRow->note2 }}</textarea>
+                    <textarea class="form-control" rows="3" id="note3" name="note3" required >{{ @$sRow->note3 }}</textarea>
                   </div>
                 </div>
 
@@ -302,7 +235,7 @@
                 </a>
                   </div>
                   <div class="col-md-6 text-right">
-                  @IF(@$sRow->approve_status=='')
+                  @IF(@$sRow->approve_status_getback=='')
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก
                     </button>
@@ -311,7 +244,7 @@
                   </div>
                 </div>
 
-            </form>
+      </form>
 
           </div>
 
@@ -323,24 +256,22 @@
 
 
 
-
-
 <div class="modal fade" id="setToWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="setToWarehouseModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 800px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="setToWarehouseModalTitle"><b><i class="bx bx-play"></i>บันทึกการรับสินค้าและระบุคลังจัดเก็บสินค้า </b></h5>
+        <h5 class="modal-title" id="setToWarehouseModalTitle"><b><i class="bx bx-play"></i>บันทึกการรับสินค้าและระบุคลังจัดเก็บสินค้า (รับสินค้าคืน) </b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
 
       <form action="{{ route('backend.transfer_branch_get_products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_set_to_warehouse" value="1" >
-            <input type="hidden" id="this_id" name="id" >
-            <input type="hidden" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk" >
-            <input type="hidden" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
-            <input type="hidden" id="product_id_fk" name="product_id_fk" >
+            <input type="text" name="save_set_to_warehouse_fromnoget" value="1" >
+            <input type="text" id="this_id" name="id" >
+            <input type="text" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk" >
+            <input type="text" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
+            <input type="text" id="product_id_fk" name="product_id_fk" >
             {{ csrf_field() }}
 
       <div class="modal-body">
@@ -361,8 +292,6 @@
                        <input type="hidden" class="form-control" id="lot_expired_date" name="lot_expired_date" readonly >
                        <input type="hidden" class="form-control" id="product_unit_id_fk" name="product_unit_id_fk" readonly >
                        <input type="hidden" class="form-control" id="branch_id_fk_c" name="branch_id_fk_c" readonly >
-                       <!-- บอกสถานะว่า มีการปฏิเสธการรับ จากฝั่งรับ  -->
-                       <!-- <input type="text"  id="tr_status_get" name="tr_status_get" readonly > -->
 
                     </div>
                   </div>
@@ -570,9 +499,8 @@
                         if(aData['get_status_2']==2){
 
                           $('td:last-child', nRow).html(''
-                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
+                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_sent_name']+'" branch_id_this="'+aData['branch_sent_id']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
                           ).addClass('input');
-
                         }else{
                           $('td:last-child', nRow).html('-');
                         }

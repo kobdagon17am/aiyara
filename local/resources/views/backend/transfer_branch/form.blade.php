@@ -40,7 +40,7 @@
 
    ?>
 <div class="row">
-    <div class="col-10">
+    <div class="col-12">
         <div class="card">
             <div class="card-body">
 
@@ -114,9 +114,9 @@
                 </div>
 
                         <div class="form-group row">
-                          <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>หมายเหตุ (ถ้ามี) :</label>
+                          <label for="note" class="col-md-3 col-form-label required_star_red "><i class="bx bx-play"></i>หมายเหตุ :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" required >{{ @$sRow->note }}</textarea>
                           </div>
                         </div>
 
@@ -171,10 +171,7 @@
 
 <script type="text/javascript">
 
-
     var list_id = "{{@$_REQUEST['list_id']}}";
-
-  
     var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
     var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
     var sU = "{{@$sU}}"; //alert(sU);
@@ -202,20 +199,20 @@
                 },
                  method: 'POST',
                },
-
-           columns: [
+             columns: [
                   {data: 'id', title :'ลำดับ', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                   {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                  {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
-                  {data: 'amt', title :'<center>จำนวนที่ต้องการโอน </center>', className: 'text-center'},
-                  {data: 'warehouses',   title :'<center>โอนย้ายไปที่สาขา</center>', className: 'text-center',render: function(d) {
-                      if(d!='0'){
-                         return d;
-                       }else{
-                          return  "<span style='color:red;'>* รอเลือกคลังปลายทาง </span>";
-                       }
+                  {data: 'warehouses', title :'<center> คลัง </center>', className: 'text-center'},
+                  {data: 'amt_in_warehouse', title :'<center> จำนวน<br>ที่มีในคลัง </center>', className: 'text-center'},
+                  {data: 'amt', title :'<center>จำนวน<br>ที่ต้องการโอน </center>', className: 'text-center'},
+                  {data: 'to_branch',   title :'<center>โอนย้าย<br>ไปที่สาขา</center>', className: 'text-center',render: function(d) {
+                     if(d!='0'){
+                        return d;
+                     }else{
+                        return  "<span style='color:red;'>* รอเลือกคลังปลายทาง </span>";
+                     }
                   }},
                 ],
                 rowCallback: function (nRow, aData, iDisplayIndex) {
@@ -227,7 +224,7 @@
         
       });
 
-      // alert(list_id);
+       // alert(list_id);
 
       var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
       var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
@@ -248,15 +245,12 @@
                 "paging":   false,
                 scrollY: ''+($(window).height()-370)+'px',
                 ajax: {
-                url: '{{ route('backend.transfer_branch_code.datatable') }}',
-                data: function ( d ) {
-                  d.Where={};
-                  d.Where['id'] = list_id ;
-                  oData = d;
-                },
-                 method: 'POST',
-               },
-
+                      url: '{{ route('backend.transfer_branch_code.datatable') }}',
+                      data :{
+                            id:list_id,
+                          },
+                        method: 'POST',
+                      },
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
                   {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},

@@ -661,8 +661,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('transfer_branch_get', 'Transfer_branch_getController');
     Route::post('transfer_branch_get/datatable', 'Transfer_branch_getController@Datatable')->name('transfer_branch_get.datatable');
 
+    Route::get('transfer_branch_get/noget/{id}', 'Transfer_branch_getController@noget');
+    
     Route::resource('transfer_branch_get_products', 'Transfer_branch_get_productsController');
     Route::post('transfer_branch_get_products/datatable', 'Transfer_branch_get_productsController@Datatable')->name('transfer_branch_get_products.datatable');
+    Route::post('transfer_branch_get_products_03/datatable', 'Transfer_branch_get_productsController@Datatable03')->name('transfer_branch_get_products_03.datatable');
 
     Route::post('transfer_branch_get_products_receive/datatable', 'Transfer_branch_get_productsController@Datatable02')->name('transfer_branch_get_products_receive.datatable');
 

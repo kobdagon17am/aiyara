@@ -243,15 +243,21 @@ class Transfer_branch_codeController extends Controller
       }else{
           $action_date = "";
       }
-      
+   
+      if(isset($req->id)){
+          $id = "  AND id = ".$req->id." ";
+      }else{
+          $id = "";
+      }
+
       $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
           WHERE 
           ".$branch_id2." 
           ".$approve_status." 
           (action_user LIKE ".(\Auth::user()->id)." OR 
           (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
-          ".$action_date." 
-          ORDER BY action_date DESC ");
+          ".$action_date." ".$id."
+          ORDER BY updated_at DESC ");
 
       $sQuery = \DataTables::of($sTable);
        return $sQuery
@@ -263,31 +269,65 @@ class Transfer_branch_codeController extends Controller
           return '';
         }
       })  
-      ->addColumn('action_date', function($row) {
-        if(@$row->action_date!=''){
-          $d = strtotime($row->action_date); return date("d/m/", $d).(date("Y", $d)+543);
-        }else{
-          return '';
-        }
-      })
+      // ->addColumn('action_date', function($row) {
+      //   if(@$row->action_date!=''){
+      //     $d = strtotime($row->action_date); return date("d/m/", $d).(date("Y", $d)+543);
+      //   }else{
+      //     return '';
+      //   }
+      // })
       ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
+          $sD = DB::select(" select * from ck_users_admin where id=".@$row->approver." ");
            return @$sD[0]->name;
         }else{
           return '-';
         }
       })  
-      ->addColumn('approve_date', function($row) {
-        if(@$row->approve_date!=''){
-          $d = strtotime($row->approve_date); return date("d/m/", $d).(date("Y", $d)+543);
-        }else{
-          return '-';
+      // ->addColumn('approve_date', function($row) {
+      //   if(@$row->approve_date!=''){
+      //     $d = strtotime($row->approve_date); return date("d/m/", $d).(date("Y", $d)+543);
+      //   }else{
+      //     return '-';
+      //   }
+      // })                         
+      ->addColumn('status_get', function($row) {
+        /*
+          `approve_status` int(1) DEFAULT '0' COMMENT '1=อนุมัติ 5=ไม่อนุมัติ',
+          `note2` text COMMENT 'หมายเหตุของส่วนการอนุมัติ',
+          `tr_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า  3=ใบโอน ที่ถูกยกเลิก',
+          */
+        $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
+        if(@$sD){
+          if(@$sD[0]->approve_status==1){
+            return '<span style="color:green;">รับสินค้าแล้ว</span>';
+          }elseif(@$sD[0]->approve_status==5){
+
+              $t = '';
+            if(@$sD[0]->approve_status_getback==1){
+              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+            }elseif(@$sD[0]->approve_status_getback==5){
+              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+            }
+
+            $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
+            return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
+
+          }else{
+            return 'อยู่ระหว่างการโอน';
+          }
         }
-      })                         
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+      ->escapeColumns('status_get')
+      ->addColumn('approve_date_get', function($row) {
+        $sD = DB::select(" select approve_date from `db_transfer_branch_get` where tr_number='".@$row->tr_number."' ");
+        if(!is_null(@$sD[0]->approve_date)){
+            return date("Y-m-d",strtotime(@$sD[0]->approve_date))."<br>".date("H:i:s",strtotime(@$sD[0]->approve_date));
+        }
+      })
+      ->escapeColumns('approve_date_get')
       ->make(true);
     }
 

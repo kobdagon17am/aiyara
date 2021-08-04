@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data_transfer_branch " > โอนข้ามสาขา </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data_transfer_branch " > โอนระหว่างสาขา </h4>
 
            <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
               <button type="button" class="btn btn-primary btn-sm btnAddTransferItem " style="font-size: 14px !important;" >
@@ -790,10 +790,10 @@
 
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                  {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                  {data: 'action_date', title :'<center>วันที่<br>ดำเนินการ </center>', className: 'text-center'},
                   // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
-                  {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
-                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                  {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
+                  {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
                     if(d==1){
                         return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
                     }else if(d==2){
@@ -806,12 +806,14 @@
                   }},
                   {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
                   {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
-                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
+                  {data: 'id',   title :'พิมพ์<br>ใบโอน', className: 'text-center ',render: function(d) {
                       return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   }},
-                  {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
-                      return d ;
-                  }},
+                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                  //     return d ;
+                  // }},
+                  {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
+                  {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
                   {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               rowCallback: function(nRow, aData, dataIndex){
@@ -1387,9 +1389,10 @@
                                   {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
                                       return '<center><a href="{{ URL::to('backend/transfer_warehouses/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                                   }},
-                                  {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
-                                      return d ;
-                                  }},
+                                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                                  //     return d ;
+                                  // }},
+                                  {data: 'status_get', title :'<center> สถานะฝั่งรับโอน </center>', className: 'text-center'},
                                   {data: 'id', title :'Tools', className: 'text-center w80'}, 
                               ],
                               rowCallback: function(nRow, aData, dataIndex){

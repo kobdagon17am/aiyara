@@ -279,7 +279,7 @@
       <div class="row" >
                     <div class="col-md-6 " >
                        <div class="form-group row">
-                            <label for="ref_code" class="col-md-3 col-form-label"> เริ่ม-สิ้นสุด : </label>
+                            <label for="ref_code" class="col-md-3 col-form-label">Lot expired date : </label>
                             <div class="col-md-9 d-flex">
                               <?php
                                 $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
@@ -323,8 +323,27 @@
         </div>
 
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
+                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+
+
+              <div class="myBorder" style="margin-top: 2%;">
+                
+                <div style="">
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าที่อยู่ระหว่างการโอนระหว่างสาขา </span>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <!-- ตารางนี้ถ้ามีการโอนค่อยแสดง -->
+                      <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
             </div>
         </div>
@@ -338,9 +357,6 @@
 @section('script')
 
 <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js" type="text/javascript" charset="utf-8" async defer></script>
-
-
-
 
   <script>
 
@@ -523,6 +539,49 @@
         });
     </script>
 
+
+  <script>
+            var oTable02;
+            $(function() {
+                oTable02 = $('#data-table-02').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 5,
+                    ajax: {
+                        url: '{{ route('backend.transfer_branch_get_products_03.datatable') }}',
+                        // data :{
+                              // branch_id_fk:branch_id_fk,
+                        //     },
+                          method: 'POST',
+                        },
+                    columns: [
+                        {data: 'id', title :'No.', className: 'text-center w50'},
+                        {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center'},
+                        {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
+                        {data: 'lot_number_desc', title :'LOT<br>(Lot Expired date)', className: 'text-left'},
+                        {data: 'branch_source', title :'สาขาต้นทาง', className: 'text-left'},
+                        {data: 'product_amt', title :'จำนวน<br>ที่โอน', className: 'text-center'},
+                        {data: 'product_unit_desc', title :'หน่วย', className: 'text-center'},
+                        {data: 'branch_name', title :'สาขาปลายทาง', className: 'text-left'},
+                        {data: 'product_amt_receive', title :'จำนวน<br>ที่รับโอน', className: 'text-center'},
+                        {data: 'approve_status_get', title :'สถานะการรับ', className: 'text-left'},
+                        {data: 'approve_date_get', title :'วัน-เวลา<br>ดำเนินการฝั่งรับ', className: 'text-center'},
+
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+
+                    }
+                });
+         
+            });
+
+ </script>
 
 
 <script type="text/javascript">
