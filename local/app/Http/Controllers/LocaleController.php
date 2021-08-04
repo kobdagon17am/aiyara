@@ -13,7 +13,7 @@ class LocaleController extends Controller
 
     	// dd($locale);
     	if($locale==""){
-    		$locale = 'en';
+    		$locale = 'th';
     	}
         App::setLocale($locale);
         session()->put('locale', $locale);

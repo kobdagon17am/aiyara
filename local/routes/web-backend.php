@@ -23,6 +23,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('course_event', 'Course_eventController');
     Route::post('course_event/datatable', 'Course_eventController@Datatable')->name('course_event.datatable');
 
+    Route::post('course_event_frontstore/datatable', 'FrontstoreController@DatatableCourseEvent')->name('course_event_frontstore.datatable');
+
     Route::resource('course_event_images', 'Course_event_imagesController');
     Route::post('course_event_images/datatable', 'Course_event_imagesController@Datatable')->name('course_event_images.datatable');
     Route::get('course_event_images/create/{id}', 'Course_event_imagesController@create');
@@ -257,6 +259,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('excelExportChart', 'ExcelChart@createexcelfileAction');
 
     Route::post('ajaxSetSession', 'AjaxController@ajaxSetSession');
+    Route::post('ajaxMenuPermissionControl', 'AjaxController@ajaxMenuPermissionControl');
 
     Route::post('ajaxClearDataPm_broadcast', 'AjaxController@ajaxClearDataPm_broadcast');
     Route::post('ajaxClearDataPromotionCode', 'AjaxController@ajaxClearDataPromotionCode');
@@ -281,8 +284,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCustomerCodeOnly', 'AjaxController@ajaxGetCustomerCodeOnly');
     Route::post('ajaxGetCustomerNameOnly', 'AjaxController@ajaxGetCustomerNameOnly');
     
+    Route::post('ajaxGetCustomerForFrontstore', 'AjaxController@ajaxGetCustomerForFrontstore');
+    
     Route::post('ajaxGetBusinessName', 'AjaxController@ajaxGetBusinessName');
     Route::post('ajaxGetIntroduce_id', 'AjaxController@ajaxGetIntroduce_id');
+    Route::post('ajaxGetUpline_id', 'AjaxController@ajaxGetUpline_id');
 
     Route::post('ajaxGetAmphur', 'AjaxController@ajaxGetAmphur');
     Route::post('ajaxGetTambon', 'AjaxController@ajaxGetTambon');
@@ -815,6 +821,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxCancelOrderBackend', 'AjaxController@ajaxCancelOrderBackend');
 
+    Route::post('ajaxCourseCheckRegis', 'AjaxController@ajaxCourseCheckRegis');
+    
+    Route::post('ajaxGetRegis_date_doc', 'AjaxController@ajaxGetRegis_date_doc');
+
 
     Route::resource('giveaway', 'GiveawayController');
     Route::post('giveaway/datatable', 'GiveawayController@Datatable')->name('giveaway.datatable');
@@ -840,6 +850,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     #=======================================================================================================================================================
 
     Route::get('template/{any?}', 'TemplateController@index')->name('template');
+
+    // Route::get('lang/{lang}', 'LocaleController@lang');
 
 
   #=========================================================================================================================================================

@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> โอนข้ามสาขา </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data_transfer_branch " > โอนข้ามสาขา </h4>
 
            <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
               <button type="button" class="btn btn-primary btn-sm btnAddTransferItem " style="font-size: 14px !important;" >
@@ -1431,7 +1431,31 @@
             });
 
         }); 
+
+
+           $(document).on('click', '.test_clear_data_transfer_branch', function(event) {
+              location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
+            });
+
+
     </script>
+
+    <?php 
+    if(isset($_REQUEST['test_clear_data_transfer_branch'])){
+
+          DB::select("TRUNCATE `db_transfer_branch_details`;");
+          DB::select("TRUNCATE `db_transfer_branch_code`;");
+          DB::select("TRUNCATE `db_transfer_branch_get`;");
+          DB::select("TRUNCATE `db_transfer_branch_get_products`;");
+          DB::select("TRUNCATE `db_transfer_branch_get_products_receive`;");
+
+      ?>
+          <script>
+          location.replace( "{{ url('backend/transfer_branch') }}");
+          </script>
+          <?php
+      }
+    ?>
 
 
 @endsection

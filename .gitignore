@@ -19,3 +19,10 @@ local/resources/views/backend/pay_product_receipt/form.blade - Copy.php
 local/resources/views/backend/pick_warehouse/form.blade - Copy.php
 local/resources/views/backend/pick_warehouse/index.blade - Copy (2).php
 local/resources/views/backend/pick_warehouse/index.blade - Copy.php
+local/resources/views/backend/frontstore/index.blade - Copy (2).php
+local/resources/views/backend/frontstore/index.blade - Copy (3).php
+local/resources/views/backend/frontstore/index.blade - Copy (4).php
+local/resources/views/backend/frontstore/index.blade - Copy.php
+local/resources/views/backend/layouts/topbar.blade - Copy.php
+local/resources/lang/~$lang_file.xlsx
+local/resources/lang/lang_file.xlsx

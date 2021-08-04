@@ -4706,9 +4706,6 @@ $(document).ready(function() {
                console.log(aistockist);
                console.log(agency);
 
-               $(".myloading").show();
-
-
                          Swal.fire({
                           title: 'ยืนยัน ? การแก้ไขข้อมูล ',
                           type: 'question',
@@ -4718,6 +4715,7 @@ $(document).ready(function() {
                           }).then(function (result) {
                             console.log(result);
                               if (result.value) {
+                                 $(".myloading").show();
                                      $.ajax({
                                        type:'POST',
                                        url: " {{ url('backend/ajaxSaveChangePurchaseType') }} ",

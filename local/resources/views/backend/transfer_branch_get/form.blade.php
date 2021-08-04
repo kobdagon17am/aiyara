@@ -17,36 +17,8 @@
     </div>
 </div>
 <!-- end page title -->
-<?php 
-    
-    // print_r(\Auth::user()->business_location_id_fk);
-    // print_r(\Auth::user()->branch_id_fk);
 
-    $sPermission = \Auth::user()->permission ;
-    // print_r($sPermission);
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      // print_r($menu_id);
-
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-    }else{
-      $role_group_id = \Auth::user()->role_group_id_fk;
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      // $menu_permit = DB::select(" select * from role_permit where role_group_id_fk=2 AND menu_id_fk=34 ");
-      // print_r($menu_permit);
-      // print_r($role_group_id);
-      // print_r($menu_id);
-      // print_r($menu_permit);
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sU = @$menu_permit->u==1?'':'display:none;';
-      $sD = @$menu_permit->d==1?'':'display:none;';
-    }
-   ?>
-
-<div class="row">
+<div class="row ">
     <div class="col-10">
         <div class="card">
             <div class="card-body">
@@ -267,14 +239,9 @@
 
 
 
-
-
-@if( $sPermission==1 || @$menu_permit->can_approve==1 )
-
-
-            <div class="myBorder" style="">
+            <div class="myBorder div_approve_transfer_branch_get " >
         
-              <form id="frm-main" action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm-main" action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="approved" type="hidden" value="1">
@@ -330,10 +297,11 @@
                 </a>
                   </div>
                   <div class="col-md-6 text-right">
-
+                  @IF(@$sRow->approve_status=='')
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
                     </button>
+                  @ENDIF
 
                   </div>
                 </div>
@@ -341,7 +309,7 @@
             </form>
 
           </div>
-@ENDIF
+
         </div>
     </div> <!-- end col -->
 </div>
@@ -647,7 +615,7 @@
 
             // var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
             var transfer_branch_get_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
-            console.log(transfer_branch_get_id_fk);
+            // console.log(transfer_branch_get_id_fk);
             var oTable2;
 
             $(function() {

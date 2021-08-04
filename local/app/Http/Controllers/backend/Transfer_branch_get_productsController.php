@@ -31,7 +31,7 @@ class Transfer_branch_get_productsController extends Controller
  public function create(Request $request)
     {
 
-      dd($request->all());
+      // dd($request->all());
       //  $po_supplier = DB::select(" SELECT CONVERT(SUBSTRING(tr_number, -3),UNSIGNED INTEGER) AS cnt FROM db_transfer_branch_get WHERE tr_number is not null  order by tr_number desc limit 1  ");
       //  // dd($po_supplier[0]->cnt);
       //  $po_runno = "PO".date("ymd").sprintf("%03d", $po_supplier[0]->cnt + 1);

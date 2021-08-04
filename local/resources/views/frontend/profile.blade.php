@@ -14,7 +14,7 @@ $customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
     <!-- Panel card start -->
     <div class="card">
       <div class="card-header">
-        <h4><i class="fa fa-user"></i> ข้อมูลส่วนตัว</h4>
+        <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION ') </h4>
       </div>
       <div class="card-block panels-wells">
         <div class="row">

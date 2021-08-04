@@ -18,13 +18,13 @@ class Localization
 
         // dd(session()->get('locale'));
 
-        if(session()->has('locale') && in_array(session()->get('locale'),['en','th','vn','in']))
+        if(session()->has('locale') && in_array(session()->get('locale'),['th','en','lo']))
         {
             app()->setLocale(session()->get('locale'));
         }
         else
         {
-            session()->put('locale','en');
+            session()->put('locale','th');
         }
         return $next($request);
     }

@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติรายเดือน : </label>
                   <div class="col-md-8">
                     <select name="keep_personal_quality" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -194,7 +194,6 @@
                     </select>
                   </div>
                 </div>
-
 
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-4 col-form-label">aistockist : </label>

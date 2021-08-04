@@ -75,46 +75,19 @@
 
 <div class="myloading"></div>
 <!-- start page title -->
+
+<?php
+   $sPermission = \Auth::user()->permission ;
+?>
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <!-- <input type="text" class="get_menu_id"> -->
         </div>
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-      
-      $can_cancel_bill = 0;
-      $can_cancel_bill_across_day = 0;
-
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;     
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-
-        $can_cancel_bill = @$menu_permit->can_cancel_bill; 
-        $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
-
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;     
-   ?>
-
-
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -340,7 +313,7 @@
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
-                <button type="button" class="btn btn-success btnAdd " ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
+                <button type="button" class="btn btn-success btnAdd class_btn_add " ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
                  </a>
               </div>
             </div>
@@ -694,12 +667,6 @@ $(function() {
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
 
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-var sU = "{{@$sU}}"; //alert(sU);
-var sD = "{{@$sD}}"; //alert(sD);
-var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(sD);
-var can_cancel_bill_across_day = "{{@$can_cancel_bill_across_day}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -802,20 +769,14 @@ Gift Voucher  <i class="fa fa-gift"></i>
           } ],
         rowCallback: function(nRow, aData, dataIndex){
 
-// console.log(can_cancel_bill);
             if(aData['total_price']){
-
               $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
-
-            // console.log(aData['type']);
 
            if(aData['type']!='0'){
               $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
               $("td:eq(5)", nRow).html('');
               $("td:eq(7)", nRow).html('');
-              // $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
-              // $("td:eq(10)", nRow).html('');
             }
 
             if(aData['pay_type']=='ai_cash'){
@@ -827,31 +788,65 @@ Gift Voucher  <i class="fa fa-gift"></i>
             var info = $(this).DataTable().page.info();
             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-           if(aData['approve_status']==5){$('td:last-child', nRow).html('');}else{
+            if(aData['approve_status']==5){
 
-	          if(sU!=''&&sD!=''){
-	              $('td:last-child', nRow).html('-');
-	          }else{ 
+              $('td:last-child', nRow).html('');
 
-              if(aData['type']!='0'){ // เติม Ai-Cash
+            }else{
 
-              }else{
+                      var sPermission = "<?=\Auth::user()->permission?>";
+                      var sU = sessionStorage.getItem("sU");
+                      var sD = sessionStorage.getItem("sD");
+                      var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                      var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-                // console.log(aData['id']);
+                      console.log('sPermission : '+sPermission);
 
-                $('td:last-child', nRow).html(''
-                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                  
-                ).addClass('input');
+                      if(sPermission==1){
+                        sU = 1;
+                        sD = 1;
+                        can_cancel_bill = 1;
+                        can_cancel_bill_across_day = 1;
+                      }
+                      console.log('sU : '+sU);
+                      console.log('sD : '+sD);
+                      // console.log('can_cancel_bill : '+can_cancel_bill);
+                      // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+
+        	          if(sU!='1'&&sD!='1'){
+        	              $('td:last-child', nRow).html('-');
+        	          }else{ 
+
+                      if(aData['type']!='0'){ // เติม Ai-Cash
+
+                      }else{
+              
+                          var str_U = '';
+                          if(sU=='1'){
+                            str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                          }
+                          var str_D = '';
+                          if(sD=='1'){
+                            str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                          }
+                          if(sU!='1' && sD!='1'){
+                             $('td:last-child', nRow).html('-');
+                          }else{
+                            $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                          }
+
+                    }
+
+
+                    // console.log(aData['purchase_type_id_fk']);
+                    if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                       $("td:eq(8)", nRow).html('Success');
+                    }
+           
+               }
+
 
             }
-
-             // $('td:last-child', nRow).html(aData['approve_status']);
-
-           
-          }
-          }
 
 
             // console.log(aData['status_delivery']);
@@ -859,7 +854,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             if(aData['status_delivery']=='1'  ){
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
                 ).addClass('input');
               $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
 
@@ -872,12 +867,12 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
               if(can_cancel_bill==1){
                  $('td:last-child', nRow).html(''
-                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
-                  // + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                 
                 ).addClass('input');
               }else{
                  $('td:last-child', nRow).html(''
-                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                  + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
                   ).addClass('input');
               }
          
@@ -899,10 +894,10 @@ Gift Voucher  <i class="fa fa-gift"></i>
               if(aData['type']=="เติม Ai-Cash"){
                 // $("td:eq(9)", nRow).html('');
                 $("td:eq(10)", nRow).html('');
-                // $("td:eq(10)", nRow).html('<center> <a href="javascript:void(0);" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
-                // + ' <a href="javascript:void(0);" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>');
+              
                 $("td:eq(11)", nRow).html('');
               }
+
 
         }
     });
@@ -910,7 +905,6 @@ Gift Voucher  <i class="fa fa-gift"></i>
       $('[data-toggle="tooltip"]').tooltip();
     });
 
-// + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
 });
 </script>
@@ -1139,8 +1133,6 @@ $(document).ready(function() {
                   // console.log(status_sent_money);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                   	var sU = "{{@$sU}}"; //alert(sU);
-          					var sD = "{{@$sD}}"; //alert(sD);
           					var oTable;
           					$(function() {
           					    oTable = $('#data-table').DataTable({
@@ -1240,72 +1232,92 @@ $(document).ready(function() {
           					        rowCallback: function(nRow, aData, dataIndex){
 
 
-          					            if(aData['total_price']){
+                                    if(aData['total_price']){
 
-          					              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-          					            }
+                                      $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+                                    }
 
-          					           if(aData['type']!='0'){
-          					              $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
-          					              $("td:eq(5)", nRow).html('');
-          					              $("td:eq(7)", nRow).html('');
-          					              $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
-          					              $("td:eq(10)", nRow).html('');
-          					            }
+                                   if(aData['type']!='0'){
+                                      $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
+                                      $("td:eq(5)", nRow).html('');
+                                      $("td:eq(7)", nRow).html('');
+                                      $("td:eq(9)", nRow).html('<center><a href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a></center>');
+                                      $("td:eq(10)", nRow).html('');
+                                    }
 
-          					            if(aData['pay_type']=='ai_cash'){
-          					              $("td:eq(6)", nRow).html('เติม Ai-Cash');
-          					            }
+                                    if(aData['pay_type']=='ai_cash'){
+                                      $("td:eq(6)", nRow).html('เติม Ai-Cash');
+                                    }
 
-          							      	$("td:eq(3)", nRow).html(aData['customer_name']);
+                                    $("td:eq(3)", nRow).html(aData['customer_name']);
 
-          					            var info = $(this).DataTable().page.info();
-          					            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                    var info = $(this).DataTable().page.info();
+                                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-          					           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
+                                   if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
 
-          						          if(sU!=''&&sD!=''){
-          						              $('td:last-child', nRow).html('-');
-          						          }else{ 
+                                                var sPermission = "<?=\Auth::user()->permission?>";
+                                                var sU = sessionStorage.getItem("sU");
+                                                var sD = sessionStorage.getItem("sD");
+                                                var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                                var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-          					              if(aData['type']!='0'){ // เติม Ai-Cash
+                                                if(sPermission==1){
+                                                  sU = 1;
+                                                  sD = 1;
+                                                  can_cancel_bill = 1;
+                                                  can_cancel_bill_across_day = 1;
+                                                }
+                                                // console.log('sU : '+sU);
+                                                // console.log('sD : '+sD);
+                                                // console.log('can_cancel_bill : '+can_cancel_bill);
+                                                // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
-          					              }else{
+                                              if(sU!='1'&&sD!='1'){
+                                                  $('td:last-child', nRow).html('-');
+                                              }else{ 
 
-          					                $('td:last-child', nRow).html(''
-          					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-          					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-          					                  
-          					                ).addClass('input');
+                                                if(aData['type']!='0'){ // เติม Ai-Cash
 
-          					            }
+                                                }else{
+                                        
+                                                    var str_U = '';
+                                                    if(sU=='1'){
+                                                      str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                    }
+                                                    var str_D = '';
+                                                    if(sD=='1'){
+                                                      str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                    }
+                                                    if(sU!='1' && sD!='1'){
+                                                       $('td:last-child', nRow).html('-');
+                                                    }else{
+                                                      $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                    }
 
-          					             // $('td:last-child', nRow).html(aData['approve_status']);
+                                              }
 
-          					           
-          					          }
-          					          }
+                                            }
 
+                                             // console.log(aData['status_delivery']);
 
-          					            // console.log(aData['status_delivery']);
+                                            if(aData['status_delivery']=='1'){
 
-          					            if(aData['status_delivery']=='1'){
+                                              $('td:last-child', nRow).html(''
+                                                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                ).addClass('input');
+                                              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
 
-          					              $('td:last-child', nRow).html(''
-          					                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
-          					                ).addClass('input');
-          					              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
-
-          					            }
+                                            }
 
 
 
+                                  }
 
-          					        }
-          					    });
+                                }
 
-          		
-          					});
+                            });
+                        });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     	
                  
@@ -1336,8 +1348,6 @@ $(document).ready(function() {
                   // console.log(ViewCondition);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                   	var sU = "{{@$sU}}"; //alert(sU);
-              					var sD = "{{@$sD}}"; //alert(sD);
               					var oTable;
               					$(function() {
               					    oTable = $('#data-table').DataTable({
@@ -1453,47 +1463,69 @@ $(document).ready(function() {
 
               					           if(aData['approve_status']==4){$('td:last-child', nRow).html('');}else{
 
-              						          if(sU!=''&&sD!=''){
-              						              $('td:last-child', nRow).html('-');
-              						          }else{ 
+                                                var sPermission = "<?=\Auth::user()->permission?>";
+                                                var sU = sessionStorage.getItem("sU");
+                                                var sD = sessionStorage.getItem("sD");
+                                                var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                                var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-              					              if(aData['type']!='0'){ // เติม Ai-Cash
+                                                if(sPermission==1){
+                                                  sU = 1;
+                                                  sD = 1;
+                                                  can_cancel_bill = 1;
+                                                  can_cancel_bill_across_day = 1;
+                                                }
+                                                // console.log('sU : '+sU);
+                                                // console.log('sD : '+sD);
+                                                // console.log('can_cancel_bill : '+can_cancel_bill);
+                                                // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
-              					              }else{
+                                              if(sU!='1'&&sD!='1'){
+                                                  $('td:last-child', nRow).html('-');
+                                              }else{ 
 
-              					                $('td:last-child', nRow).html(''
-              					                  + '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              					                  + '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-              					                  
-              					                ).addClass('input');
+                                                if(aData['type']!='0'){ // เติม Ai-Cash
 
-              					            }
+                                                }else{
+                                        
+                                                    var str_U = '';
+                                                    if(sU=='1'){
+                                                      str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                    }
+                                                    var str_D = '';
+                                                    if(sD=='1'){
+                                                      str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                    }
+                                                    if(sU!='1' && sD!='1'){
+                                                       $('td:last-child', nRow).html('-');
+                                                    }else{
+                                                      $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                    }
 
-              					             // $('td:last-child', nRow).html(aData['approve_status']);
+                                              }
 
-              					           
+                                            }
+
+
+                                             // console.log(aData['status_delivery']);
+
+                                            if(aData['status_delivery']=='1'){
+
+                                              $('td:last-child', nRow).html(''
+                                                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
+                                                ).addClass('input');
+                                              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
+
+                                            }
+
+
+
               					          }
-              					          }
-
-
-              					            // console.log(aData['status_delivery']);
-
-              					            if(aData['status_delivery']=='1'){
-
-              					              $('td:last-child', nRow).html(''
-              					                + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
-              					                ).addClass('input');
-              					              $("td:eq(8)", nRow).html('<span class="badge badge-pill badge-soft-primary font-size-14" style="color:darkred">อยู่ระหว่างจัดส่ง</span>');
-
-              					            }
-
-
-
 
               					        }
-              					    });
 
-              					});
+                            });
+                        });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){
@@ -1610,7 +1642,7 @@ $(document).ready(function() {
                   },
                   success:function(data)
                   { 
-                    console.log(data);
+                    // console.log(data);
                     // return false;
                         Swal.fire({
                           type: 'success',
@@ -1712,6 +1744,7 @@ $(document).ready(function() {
 
    });
 </script>
+
 
 @endsection
 

@@ -187,8 +187,9 @@ class Transfer_branchController extends Controller
 
       }
 
-
       return $this->form($id);
+
+
     }
 
    public function form($id=NULL)
@@ -213,6 +214,107 @@ class Transfer_branchController extends Controller
           $sRow->approve_date = date('Y-m-d H:i:s');
 
           $sRow->save();
+/*
+
+CREATE TABLE `db_transfer_branch_code` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `business_location_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>dataset_business_location>id',
+  `branch_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>branchs>id สาขาต้นทาง',
+  `tr_number` varchar(255) DEFAULT NULL COMMENT 'รหัสการโอนย้าย',
+  `note` text,
+  `action_date` date DEFAULT NULL COMMENT 'วันดำเนินการ',
+  `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ทำการโอน Ref>ck_users_admin>id',
+  `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ',
+  `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
+  `approve_date` date DEFAULT NULL COMMENT 'วันที่อนุมัติ',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+
+
+  `branch_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>branchs>id',
+  `get_from_branch_id_fk` int(11) DEFAULT '0' COMMENT 'รับจากสาขาใด',
+  `business_location_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>dataset_business_location>id',
+  `tr_number` varchar(255) DEFAULT NULL COMMENT 'รหัสการโอนย้าย',
+  `po_code_other` varchar(255) DEFAULT NULL COMMENT 'รหัสอื่นๆ ถ้ามี',
+  `supplier_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>dataset_supplier>id',
+  `action_user` int(11) DEFAULT NULL,
+  `note` text COMMENT 'หมายเหตุ',
+  `approver` int(11) DEFAULT '0' COMMENT 'รหัสผู้อนุมัติ Ref>ck_users_admin>id',
+  `approve_date` datetime DEFAULT NULL COMMENT 'วันที่อนุมัติ',
+  `approve_status` int(1) DEFAULT '0' COMMENT '1=อนุมัติ 5=ไม่อนุมัติ',
+  `note2` text COMMENT 'หมายเหตุของส่วนการอนุมัติ',
+  `tr_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า  3=ใบโอน ที่ถูกยกเลิก',
+  `buy_status` int(1) DEFAULT '0' COMMENT '1=สั่งซื้อแล้ว',
+  `created_at` timestamp NULL DEFAULT NULL,
+*/
+          $Transfer_branch_get = new \App\Models\Backend\Transfer_branch_get;
+          $Transfer_branch_get->get_from_branch_id_fk    = $sRow->branch_id_fk;
+          $Transfer_branch_get->business_location_id_fk    = $sRow->business_location_id_fk;
+          $Transfer_branch_get->tr_number    = $sRow->tr_number;
+
+          // $Transfer_branch_get->po_code_other    = request('action_user');
+          // $Transfer_branch_get->supplier_id_fk    = request('action_user');
+          $Transfer_branch_get->action_user    = \Auth::user()->id ;
+          $Transfer_branch_get->note    = $sRow->note;
+          $Transfer_branch_get->buy_status    = 1 ;
+          $Transfer_branch_get->created_at    = request('created_at');
+
+// อนุมัติ เท่านั้น
+          if($sRow->approve_status==1){
+    // สาขาปลายทางที่รับ 
+              $r_product = DB::select("  SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$sRow->id." limit 1  ");
+              $Transfer_branch_get->branch_id_fk    = $r_product[0]->branch_id_fk;
+              $Transfer_branch_get->save();
+
+            /*
+
+            CREATE TABLE `db_transfer_branch_details` (
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `transfer_branch_code_id` int(11) DEFAULT '0' COMMENT 'Ref>db_transfer_warehouses_code >id',
+            `stocks_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>db_stocks>id',
+            `product_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>products>id',
+            `lot_number` varchar(255) DEFAULT NULL,
+            `lot_expired_date` date DEFAULT NULL COMMENT 'วันหมดอายุของ lot นี้',
+            `amt` int(11) DEFAULT '0' COMMENT 'จำนวนโอน',
+            `product_unit_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>dataset_product_unit>id',
+            `branch_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>branchs>id',
+            `warehouse_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>warehouse>id',
+            `zone_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>zone>id',
+            `shelf_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>shelf>id',
+            `shelf_floor` int(11) DEFAULT '0' COMMENT 'ชั้นของ shelf',
+            `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ทำการโอน Ref>ck_users_admin>id',
+            `action_date` date DEFAULT NULL COMMENT 'วันดำเนินการ',
+            `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
+            `approve_status` int(11) DEFAULT '0' COMMENT '1=อนุมัติแล้ว',
+            `approve_date` date DEFAULT NULL COMMENT 'วันอนุมัติ',
+            `stock_amt_before_up` int(11) DEFAULT '0' COMMENT 'จำนวนคงคลังก่อนอัพเดต',
+            `stock_date_before_up` date DEFAULT NULL COMMENT 'วันที่ในสต๊อดก่อนอัพเดต',
+            `created_at` timestamp NULL DEFAULT NULL,
+
+
+            CREATE TABLE `db_transfer_branch_get_products` (
+              `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `transfer_branch_get_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>db_transfer_branch_get>id',
+              `product_id_fk` int(11) DEFAULT '0' COMMENT 'Ref>products>id',
+              `product_amt` int(11) DEFAULT '0' COMMENT 'จำนวน',
+              `product_amt_receive` int(11) DEFAULT '0' COMMENT 'จำนวนที่รับมาแล้ว',
+              `product_unit` int(11) DEFAULT '0' COMMENT 'หน่วยนับหลัก',
+              `get_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า 3=ยกเลิกรายการสินค้านี้',
+              `created_at` timestamp NULL DEFAULT NULL,
+              */
+            // ส่วนของสินค้า ก็รับเข้ามาจากใบโอนสินค้าจากสาชาต้นทางเลย
+                       $Transfer_branch_get_products = new \App\Models\Backend\Transfer_branch_get_products;
+                       $Transfer_branch_get_products->transfer_branch_get_id_fk = $Transfer_branch_get->id;
+                       // สินค้ามาจากตาราง db_transfer_branch_details
+                       $Transfer_branch_get_products->product_id_fk = $r_product[0]->product_id_fk;
+                       $Transfer_branch_get_products->product_amt = $r_product[0]->amt;
+                       $Transfer_branch_get_products->product_unit = $r_product[0]->product_unit_id_fk;
+                       $Transfer_branch_get_products->get_status = 2 ;
+                       $Transfer_branch_get_products->created_at    = date("Y-m-d H:i:s");
+                       $Transfer_branch_get_products->save();
+
+          }
 
           \DB::commit();
 

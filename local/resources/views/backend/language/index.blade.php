@@ -17,21 +17,6 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-    $sPermission = \Auth::user()->permission ;
-    $menu_id = @$_REQUEST['menu_id'];
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-    }else{
-      $role_group_id = \Auth::user()->role_group_id_fk;
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sU = @$menu_permit->u==1?'':'display:none;';
-      $sD = @$menu_permit->d==1?'':'display:none;';
-    }
-   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -42,8 +27,8 @@
                     <span>(หมายเหตุ : เพื่อป้องกันความผิดพลาดกรณีเชื่อมโยงข้อมูลด้านภาษา ระบบจะยึดเอาภาษาไทยเป็นหลัก ไม่ให้แก้ไข รายการ ID=1)</span>
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}" >
-                    <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.language.create') }}">
+                  <div class="col-4 text-right" >
+                    <a class="btn btn-info btn-sm mt-1 class_btn_add " href="{{ route('backend.language.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -116,18 +101,26 @@ $(function() {
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(sU!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+              var sPermission = "<?=\Auth::user()->permission?>";
+              var sU = sessionStorage.getItem("sU");
+              if(sPermission==1){
+                sU = 1;
+              }
+              var str_U = '';
+              if(sU=='1'){
+                str_U = '<a href="{{ route('backend.language.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+              }
 
             if(aData['id']!=1){
-                  $('td:last-child', nRow).html(''
-                  + '<a href="{{ route('backend.language.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  + ''
-                ).addClass('input');
+
+                  if(sU!='1'){
+                     $('td:last-child', nRow).html('-');
+                  }else{
+                    $('td:last-child', nRow).html( str_U ).addClass('input');
+                  }
+
             }
 
-          }
           
         }
 

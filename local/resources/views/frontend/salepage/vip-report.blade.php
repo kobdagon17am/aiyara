@@ -7,14 +7,37 @@
             <h4 class="mb-4">VIP Report</h4>
 
             <div class="dt-responsive table-responsive">
-                <table id="vip-datatable" class="table table-striped table-bordered  w-100">
+                <table id="vip-datatable" class="table table-striped table-bordered w-100">
                     <thead>
                         <tr>
                             <td>#</td>
-                            <td>Name</td>
-                            <td>Mobile</td>
-                            <td>Email</td>
-                            <td>Member Since</td>
+                            <td>ชื่อ</td>
+                            <td>เบอร์โทร</td>
+                            <td>อีเมล</td>
+                            <td>เป็นสมาชิกตั้งแต่</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card card-body">
+            <h4 class="mb-4">Orders</h4>
+
+            <div class="dt-responsive table-responsive">
+                <table id="orders-datatable" class="table table-striped table-bordered w-100">
+                    <thead>
+                        <tr>
+                            <th>ชื่อ</th>
+                            <th>วันที่สั่งซื้อ</th>
+                            <th>เลขใบสั่งซื้อ</th>
+                            <th>Tracking</th>
+                            <th>ยอดชำระ</th>
+                            <th>ชำระโดย</th>
+                            <th>สถานะ</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                 </table>
@@ -47,7 +70,7 @@
     <script src="{{ asset('frontend/assets/pages/data-table/js/data-table-custom.js') }}"></script>
 
     <script>
-        let vipDatatable = $('#vip-datatable').DataTable({
+        const vipDatatable = $('#vip-datatable').DataTable({
             processing: true,
             serverSide: true,
             searching: true,
@@ -73,6 +96,43 @@
                 }
             ],
             order: [[ 4, "desc" ]]
+        })
+
+        const ordersDatatable = $('#orders-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: true,
+            ajax: {
+                url: "{{ route('salepage.orders-datatable') }}",
+                type: 'GET'
+            },
+            columns: [
+                {
+                    data: 'name'
+                },
+                {
+                    data: 'created_at',
+                },
+                {
+                    data: 'code_order'
+                },
+                {
+                    data: 'tracking_no'
+                },
+                {
+                    data: 'total_price'
+                },
+                {
+                    data: 'pay_type'
+                },
+                {
+                    data: 'pay_status'
+                },
+                {
+                    data: 'action'
+                },
+            ],
+            order: [[ 1, 'desc' ]]
         })
     </script>
 @endsection

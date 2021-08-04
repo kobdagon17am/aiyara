@@ -374,10 +374,12 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 ">
+                          
                         </div>
-                        <div class="col-md-5 text-right">
-                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
+                        <div class="col-md-5 text-right ">
+                          <span class="note_check_regis_doc" style="color: red;font-size: 16px;margin-right: 2%;display: none;">หมายเหตุ ลูกค้ารหัสนี้ ยังไม่ผ่านการยืนยันตัวตน </span>
+                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 btn_btnsave ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                           </button>
                         </div>
@@ -1703,7 +1705,7 @@
             <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
             {{ csrf_field() }}
             <div class="modal-body">
-               
+          
               <div class="row">
                 <div class="col-12">
                   <table id="data-table-choose-course" class="table table-bordered dt-responsive" style="width: 100%;"></table>
@@ -1711,7 +1713,7 @@
             </div>
             <div class="row">
               <div class="col-md-12 text-right  "  >
-                <button type="submit" class="btn btn-primary" style="width: 8%;" >Save</button>
+                <button type="submit" class="btn btn-primary btnSaveCourse " style="width: 8%;" >Save</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 2px;">Close</button>
               </div>
             </div>
@@ -1735,7 +1737,7 @@
             $.fn.dataTable.ext.errMode = 'throw';
 
             var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
-            var purchase_type_id_fk = {{@$sRow->purchase_type_id_fk}}; ////alert(frontstore_id_fk);
+            var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}"; ////alert(frontstore_id_fk);
             var oTable;
 
             if(purchase_type_id_fk==6){
@@ -2245,8 +2247,7 @@
                 $('#modalCourse').modal('show');
             });
 
-            // $('#modalAddFromPromotion,#modalAddFromProductsList').on('hidden.bs.modal', function () {
-            //     $("#spinner_frame").show();
+            // $('#modalCourse').on('hidden.bs.modal', function () {
             //     window.location.reload(true);
             // })
 
@@ -4738,6 +4739,7 @@ $(document).ready(function() {
 
 <script type="text/javascript">
   
+            var user_name = '{{@$user_name}}' ;
             var oTableChooseCourse ;
             $(function() {
 
@@ -4751,32 +4753,39 @@ $(document).ready(function() {
                     searching: false,
                     paging: false,
                     ajax: {
-                      url: '{{ route('backend.course_event.datatable') }}',
-                      data: function ( d ) {
-                        d.Where={};
-                        // d.Where['branch_id_fk'] = 1 ;
-                        // d.Where['product_id_fk'] = 1 ;
-                        oData = d;
-                      },
-                      method: 'POST'
-                    },
+                        url: '{{ route('backend.course_event_frontstore.datatable') }}',
+                        data :{
+                              user_name:user_name,
+                            },
+                          method: 'POST',
+                        },
                      columns: [
                         {data: 'id', title :'ID', className: 'text-center w30'},
                         {data: 'ce_name', title :'<center>ชื่อกิจกรรม</center>', className: 'text-left w100 '},
                         {data: 'ce_type_desc', title :'<center>ประเภท </center>', className: 'text-center w50'},
                         {data: 'ce_place', title :'<center>สถานที่จัดงาน</center>', className: 'text-left w150 '},
-                        // {data: 'ce_max_ticket', title :'<center>จำนวนบัตรสูงสุด</center>', className: 'text-center'},
                         {data: 'ce_ticket_price', title :'<center>ราคาบัตร (บาท)</center>', className: 'text-center'},
                         {data: 'ce_sdate', title :'<center>เริ่ม</center>', className: 'text-center  w70  '},
                         {data: 'ce_edate', title :'<center>สิ้นสุด</center>', className: 'text-center  w70 '},
-                        
-                        {data: 'id',   title :'<center>จำนวนสมัคร</center>', className: 'text-center w70 ',render: function(d) {
-                           return '<center><input class="form-control amt_apply in-tx " type="number"  name="amt_apply[]" style="background-color:#e6ffff;border: 2px inset #EBE9ED;width:60%;text-align:center;" ><input type="hidden" name="id[]" value="'+(d)+'" >' ;
-                        }},
+                        {data: 'id', title :'<center>จำนวนสมัคร</center>', className: 'text-center  w70 '},
                         {data: 'id', title :'', className: 'text-center w2 '},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
+                        // console.log(aData['CourseCheckRegis']);
+                        // console.log(aData['user_name']);
+
                         $('td:last-child', nRow).html('');
+
+                        if(aData['CourseCheckRegis']=="success"){
+                             $("td:eq(7)", nRow).html('<center><input class="form-control amt_apply in-tx " type="number"  name="amt_apply[]" user_name="'+aData['user_name']+'" id_course="'+aData['id']+'" style="background-color:#e6ffff;border: 2px inset #EBE9ED;width:60%;text-align:center;" ><input type="hidden" name="id[]" value="'+(aData['id'])+'" >');
+                        }else{
+                            $("td:eq(7)", nRow).html('<center><input class="form-control " type="text" style="background-color:#d9d9d9 !important;border: 1px inset #EBE9ED;width:60%;text-align:center;" readonly >');
+                              for (var i = 0; i < 7; i++) {
+                                // $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#cccccc','text-decoration':'line-through','font-style':'italic'});
+                                $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#999999','font-style':'italic'});
+                              }
+                        }
+
                     }
 
                 });
@@ -4787,20 +4796,53 @@ $(document).ready(function() {
 
   <script type="text/javascript">
      $(document).ready(function(){   
-        $(".amt_apply").prop("type", "number");
+
+          $(".btnSaveCourse").prop('disabled', true);
+
+         $(document).on('change', '.amt_apply', function(event) {
+            // event.preventDefault();
+             $(".myloading").show();
+             let amt_apply = $(this).val();
+             let id_course = $(this).attr('id_course');
+             let user_name = $(this).attr('user_name');
+             console.log(amt_apply);
+             console.log(id_course);
+             console.log(user_name);
+
+             // $request->id_course,$request->amt_apply ,$request->user_name);
+
+              $.ajax({
+                   type:'POST',
+                   url: " {{ url('backend/ajaxCourseCheckRegis') }} ",
+                   data: { _token: '{{csrf_token()}}', 
+                   amt_apply:amt_apply,
+                   id_course:id_course,
+                   user_name:user_name,
+                  },
+                  success:function(data){
+                         console.log(data);
+                         // alert("Test");
+                         if(data=="fail"){
+                          alert("! ไม่สามารถสมัครคอร์สนี้ได้ เนื่องจากไม่เข้าเงื่อนไขเกณฑ์ที่กำหนด โปรดตรวจสอบอีกครั้ง");
+                          $('.amt_apply').val('');
+                          $('.amt_apply').focus();
+                          $(".myloading").hide();
+                          $(".btnSaveCourse").prop('disabled', true);
+                          return false;
+                         }else{
+                          $(".btnSaveCourse").prop('disabled', false);
+                          $(".myloading").hide();
+                         }
+                       
+                    },
+
+              });
+
+         });
      });
   </script>
 
         <script>
-
-         $('.in-tx').keypress(function (e) {
-             if (e.which === 13) {
-                 var index = $('.in-tx').index(this) + 1;
-                 // $('.in-tx').eq(index).focus();
-                 $(".btnSave").focus();
-                 return false;
-             }
-         });
 
 
          $(document).on('click', '.btnAddAiCashModal', function(event) {
@@ -4941,9 +4983,34 @@ $(document).ready(function() {
             });
         });
 
-    </script>
 
- 
+
+    </script>
+<!-- 
+
+         $('.in-tx').keypress(function (e) {
+             if (e.which === 13) {
+                 var index = $('.in-tx').index(this) + 1;
+                 // $('.in-tx').eq(index).focus();
+                 // $(".btnSave").focus();
+                 return false;
+             }
+         });
+ -->
+
+ <script language="JavaScript">
+      document.onkeydown = chkEvent 
+      function chkEvent(e) {
+        var keycode;
+        if (window.event) keycode = window.event.keyCode; //*** for IE ***//
+        else if (e) keycode = e.which; //*** for Firefox ***//
+        if(keycode==13)
+        {
+           var index = $('.in-tx').index(this) + 1;
+          return false;
+        }
+    }
+</script>
 
   <!-- Script -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
@@ -4996,7 +5063,7 @@ $(document).ready(function() {
           allowClear: true,
           placeholder: '-Select-',
           ajax: {
-          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
           type  : 'POST',
           dataType : 'json',
           delay  : 250,
@@ -5016,6 +5083,44 @@ $(document).ready(function() {
         });
 
    });
+
+         $(document).ready(function() {
+          $(document).on('change', '#customers_id_fk', function(event) {
+              $(".myloading").show();
+              var customer_id = $(this).val();
+               $.ajax({
+                   type:'POST',
+                   url: " {{ url('backend/ajaxGetRegis_date_doc') }} ",
+                   data: { _token: '{{csrf_token()}}', 
+                   customer_id:customer_id,
+                  },
+                  success:function(data){
+                      console.log(data);
+
+                         $.each(data, function( index, value ) {
+
+                                  if(value.regis_date_doc==null){
+                                    $(".note_check_regis_doc").show();
+                                    $(".btn_btnsave").attr("disabled", true);
+                                  }else{
+                                    $(".note_check_regis_doc").hide();
+                                    $(".btn_btnsave").attr("disabled", false);
+                                  }
+
+                                  $(".myloading").hide();
+
+                            });
+
+
+
+                  },
+
+              });
+
+
+          });
+        });
+
 </script>
 @endsection
 

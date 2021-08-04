@@ -79,7 +79,7 @@
                        url: " {{ url('backend/ajaxSetSession') }} ", 
                        data:{ _token: '{{csrf_token()}}',session_menu_id:menu_id },
                         success:function(data){
-                             console.log(data); 
+                             // console.log(data); 
                              // return false;
                           },
                         error: function(jqXHR, textStatus, errorThrown) { 
@@ -87,15 +87,71 @@
                             console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         }
                   });                    
+   
+                $.ajax({
 
+                       type:'POST',
+                       url: " {{ url('backend/ajaxMenuPermissionControl') }} ", 
+                       data:{ _token: '{{csrf_token()}}',menu_id:menu_id },
+                        success:function(data){
+                             var d1 = JSON.stringify(data);
+                             var d2 = JSON.parse(d1);  
+                             sessionStorage.setItem("menu_id", d2.menu_id);
+                             sessionStorage.setItem("sPermission", d2.sPermission);
+                             sessionStorage.setItem("sC", d2.sC);
+                             sessionStorage.setItem("sU", d2.sU);
+                             sessionStorage.setItem("sD", d2.sD);
+                             sessionStorage.setItem("can_cancel_bill", d2.can_cancel_bill);
+                             sessionStorage.setItem("can_cancel_bill_across_day", d2.can_cancel_bill_across_day);
+                             sessionStorage.setItem("can_approve", d2.can_approve);
 
-                // alert(role_group_id+":"+menu_id);
-
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                        }
+                  });       
                 localStorage.clear();
-
             });
 
-            // console.log("jQuery version "+jQuery().jquery);
+           $(document).ready(function(){   
+
+              var menu_id = sessionStorage.getItem("menu_id");
+              var sPermission = "<?=@\Auth::user()->permission?>";
+              var sC = sessionStorage.getItem("sC");
+
+              if(sPermission==1){
+                var can_approve = 1;
+                var sC = 1;
+                var sU = 1;
+                var sD = 1;
+              }else{
+                var can_approve = sessionStorage.getItem("can_approve");
+              }
+
+              
+              console.log('menu_id : '+menu_id);
+              console.log('sPermission : '+sPermission);
+              console.log('can_approve : '+can_approve);
+              // console.log('sPermission : '+sPermission);
+              // console.log('sC : '+sC);
+              // console.log('sU : '+sU);
+              // console.log('sD : '+sD);
+              // console.log('can_cancel_bill : '+can_cancel_bill);
+              // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+              // $(".get_menu_id").val(menu_id);
+
+              if(sPermission!=1){
+
+                (sC==1)?($(".class_btn_add").show()):($(".class_btn_add").remove());
+                // เคสนี้ ต้องรับสินค้าครบทั้งหมดก่อนถึงจะมีสิทธิ์อนุมัติใบโอนได้ และค่อยดึงเข้าคลังต่อไปได้
+                (can_approve==1)?($(".div_approve_transfer_branch_get").show()):($(".div_approve_transfer_branch_get").remove());
+
+              }
+        
+
+           });
+
 
         </script>
 

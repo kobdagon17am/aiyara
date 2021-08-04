@@ -258,6 +258,7 @@ Route::post('salepage/save_url', 'Frontend\SalepageController@saveUrl')->name('s
 
 Route::get('salepage/vip-report', 'Frontend\VipReportController@index')->name('salepage.vip-report');
 Route::get('salepage/vip-report-datatable', 'Frontend\VipReportController@vipDatatable')->name('salepage.vip-report-datatable');
+Route::get('salepage/orders-datatable', 'Frontend\VipReportController@ordersDatatable')->name('salepage.orders-datatable');
 
 Route::post('check_shipping_cos','Frontend\Fc\ShippingCosController@check_shipping_cos')->name('check_shipping_cos');
 
