@@ -154,6 +154,7 @@ class FrontstorelistController extends Controller
       // dd();
 
       if(isset($request->product_plus)){
+
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
@@ -284,6 +285,32 @@ class FrontstorelistController extends Controller
                 DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
              }
           }
+
+
+                 DB::select(" UPDATE db_orders SET
+
+                  pay_type_id_fk='0',
+
+                  aicash_price='0',
+                  member_id_aicash='0',
+                  transfer_price='0',
+                  credit_price='0',
+
+                  charger_type='0',
+                  fee='0',
+                  fee_amt='0',
+                  sum_credit_price='0',
+                  account_bank_id='0',
+
+                  transfer_money_datetime=NULL ,
+                  file_slip=NULL,
+
+                  total_price='0',
+                  cash_price='0',
+                  cash_pay='0'
+                  
+                  WHERE id=$request->frontstore_id ");
+
 
       }
 
@@ -511,6 +538,7 @@ class FrontstorelistController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
+
             for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
                 // echo $Check_stock->product_id_fk;
@@ -601,6 +629,33 @@ class FrontstorelistController extends Controller
 
               // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
               // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+
+
+
+                 DB::select(" UPDATE db_orders SET
+
+                  pay_type_id_fk='0',
+
+                  aicash_price='0',
+                  member_id_aicash='0',
+                  transfer_price='0',
+                  credit_price='0',
+
+                  charger_type='0',
+                  fee='0',
+                  fee_amt='0',
+                  sum_credit_price='0',
+                  account_bank_id='0',
+
+                  transfer_money_datetime=NULL ,
+                  file_slip=NULL,
+
+                  total_price='0',
+                  cash_price='0',
+                  cash_pay='0'
+                  
+                  WHERE id=$request->frontstore_id ");
+                 
 
 
           }
@@ -795,9 +850,14 @@ class FrontstorelistController extends Controller
 
     public function DatatablePro(Request $req){
 
+// เอา รหัสคนซื้อ มาตรวจสอบกับเงื่อนไขของ promotions ทุกกรณีที่ระบุไว้ใน  http://localhost/aiyara.host/backend/promotions/1/edit
+
        $sTable = DB::select("
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
-          (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,'". $req->frontstore_id_fk."' as frontstore_id_fk
+
+          (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,
+          (SELECT customers_id_fk FROM `db_orders` WHERE id='". $req->frontstore_id_fk."'  limit 1) as customers_id_fk,
+          '". $req->frontstore_id_fk."' as frontstore_id_fk
           from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
            AND
             (
@@ -805,8 +865,12 @@ class FrontstorelistController extends Controller
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 6), ',', -1) OR
+              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 7), ',', -1)
             )
+            AND curdate() BETWEEN promotions.show_startdate and promotions.show_enddate
+            AND promotions.all_available_purchase > 0 
       ");
 
       $sQuery = \DataTables::of($sTable);

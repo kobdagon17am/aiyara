@@ -310,8 +310,6 @@ class FrontstoreController extends Controller
     public function edit($id)
     {
       // dd($id);
-
-
       $sRow = \App\Models\Backend\Frontstore::find($id);
       // dd($sRow);
       // dd($sRow->pv_total);
@@ -321,11 +319,24 @@ class FrontstoreController extends Controller
       }
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
+      // dd($sCustomer);
       @$CusName = (@$sCustomer[0]->user_name." : ".@$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".@$sCustomer[0]->last_name);
       @$user_name = @$sCustomer[0]->user_name;
 
-      $Cus_Aicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
-      $Cus_Aicash = @$Cus_Aicash[0]->ai_cash;
+      if(!empty($sRow->member_id_aicash)){
+          $sAicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
+          // dd($sAicash);
+          $Cus_Aicash = @$sAicash[0]->ai_cash;  
+          $Customer_id_Aicash = @$sRow->member_id_aicash;
+          $Customer_name_Aicash = (@$sAicash[0]->user_name." : ".@$sAicash[0]->prefix_name.$sAicash[0]->first_name." ".@$sAicash[0]->last_name);
+          // dd($Customer_name_Aicash);
+      }else{
+          $sAicash  = NULL;
+          $Cus_Aicash = "0.00";
+          $Customer_id_Aicash = "";
+          $Customer_name_Aicash = "";
+      }
+
 
       $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
       $BranchName = $sBranchs[0]->b_name;
@@ -479,7 +490,10 @@ class FrontstoreController extends Controller
            'agency'=>$agency,
            'CusName'=>$CusName,
            'user_name'=>$user_name,
+           'sAicash'=>$sAicash,
            'Cus_Aicash'=>$Cus_Aicash,
+           'Customer_id_Aicash'=>$Customer_id_Aicash,
+           'Customer_name_Aicash'=>$Customer_name_Aicash,
            'BranchName'=>$BranchName,
            'PurchaseName'=>$PurchaseName,
            'giftvoucher_this'=>$giftvoucher_this,
@@ -505,9 +519,26 @@ class FrontstoreController extends Controller
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
       @$CusName = (@$sCustomer[0]->user_name." : ".@$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".@$sCustomer[0]->last_name);
 
-      $Cus_Aicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
-      $Cus_Aicash = @$Cus_Aicash[0]->ai_cash;
 
+      // $sAicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
+      // $Cus_Aicash = @$sAicash[0]->ai_cash;
+      // $Cus_name_Aicash = (@$sAicash[0]->user_name." : ".@$sAicash[0]->prefix_name.$sAicash[0]->first_name." ".@$sAicash[0]->last_name);
+
+
+      if(!empty($sRow->member_id_aicash)){
+          $sAicash = DB::select(" select * from customers where id=".$sRow->member_id_aicash." ");
+          // dd($sAicash);
+          $Cus_Aicash = @$sAicash[0]->ai_cash;  
+          $Cus_Aicash = @$sRow->member_id_aicash;
+          $Cus_name_Aicash = (@$sAicash[0]->user_name." : ".@$sAicash[0]->prefix_name.$sAicash[0]->first_name." ".@$sAicash[0]->last_name);
+          // dd($Customer_name_Aicash);
+      }else{
+          $sAicash  = NULL;
+          $Cus_Aicash = "0.00";
+          $Cus_Aicash = "";
+          $Cus_name_Aicash = "";
+      }
+      
       $sBranchs = DB::select(" select * from branchs where id=".$sRow->branch_id_fk." ");
       $BranchName = $sBranchs[0]->b_name;
 
@@ -666,6 +697,7 @@ class FrontstoreController extends Controller
            'agency'=>$agency,
            'CusName'=>$CusName,
            'Cus_Aicash'=>$Cus_Aicash,
+           'Cus_name_Aicash'=>$Cus_name_Aicash,
            'BranchName'=>$BranchName,
            'PurchaseName'=>$PurchaseName,
            'giftvoucher_this'=>$giftvoucher_this,
@@ -984,7 +1016,7 @@ class FrontstoreController extends Controller
 
    public function form($id=NULL)
     {
-      // dd($request->all());
+      // dd($request->all());O
       \DB::beginTransaction();
       try {
           if( $id ){

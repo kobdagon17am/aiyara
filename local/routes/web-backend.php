@@ -333,20 +333,20 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCalPriceFrontstore04', 'AjaxController@ajaxCalPriceFrontstore04');
     Route::post('ajaxCalGiftVoucherPrice', 'AjaxController@ajaxCalGiftVoucherPrice');
 
-    Route::post('ajaxCalAicash', 'AjaxController@ajaxCalAicash');
+    Route::post('ajaxGetAicash', 'AjaxController@ajaxGetAicash');
 
     Route::post('ajaxCalAddAiCashFrontstore', 'AjaxController@ajaxCalAddAiCashFrontstore');
 
     Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
-    Route::post('ajaxCearCostFrontstore', 'AjaxController@ajaxCearCostFrontstore');
+    Route::post('ajaxClearCostFrontstore', 'AjaxController@ajaxClearCostFrontstore');
 
     Route::post('ajaxClearAfterSelChargerType', 'AjaxController@ajaxClearAfterSelChargerType');
     Route::post('ajaxClearAfterAddAiCash', 'AjaxController@ajaxClearAfterAddAiCash');
 
 
     Route::post('ajaxSaveGiftvoucherCode', 'AjaxController@ajaxSaveGiftvoucherCode');
-    Route::post('ajaxCalAicashAmt', 'AjaxController@ajaxCalAicashAmt');
+    Route::post('ajaxGetAicashAmt', 'AjaxController@ajaxGetAicashAmt');
 
     Route::post('ajaxGiftVoucherSaveDate', 'AjaxController@ajaxGiftVoucherSaveDate');
 
@@ -823,6 +823,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCancelSentMoney', 'AjaxController@ajaxCancelSentMoney');
 
     Route::post('ajaxCancelOrderBackend', 'AjaxController@ajaxCancelOrderBackend');
+    Route::post('ajaxDeLProductOrderBackend', 'AjaxController@ajaxDeLProductOrderBackend');
 
     Route::post('ajaxCourseCheckRegis', 'AjaxController@ajaxCourseCheckRegis');
     

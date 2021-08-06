@@ -67,8 +67,11 @@ class Add_ai_cashController extends Controller
       return $this->form();
     }
 
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
+
+        // dd($id);
+        // dd($request->all());
        $sRow = \App\Models\Backend\Add_ai_cash::find($id);
        $sPay_type = DB::select(" select * from dataset_pay_type where id in(5,7,8,10); ");
 
@@ -78,7 +81,7 @@ class Add_ai_cashController extends Controller
 
         $CustomerAicash = DB::select(" select * from customers where id=".$sRow->customer_id_fk." ");
         if($CustomerAicash){
-          $CustomerAicashName = $CustomerAicash[0]->prefix_name.$CustomerAicash[0]->first_name.' '.$CustomerAicash[0]->last_name;
+          $CustomerAicashName = $CustomerAicash[0]->user_name." : ".$CustomerAicash[0]->prefix_name.$CustomerAicash[0]->first_name.' '.$CustomerAicash[0]->last_name;
         }else{
           $CustomerAicashName = 'ไม่ระบุชื่อ';
         }

@@ -75,33 +75,45 @@
 
                       <div class="myBorder">
 
+                       
+                        <?php if(isset($_REQUEST['fromAddAiCash'])){ $customer_id = $_REQUEST['customer_id']; ?>
 
-                           <div class="form-group row">
+                          <div class="form-group row">
+                            <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
+                            <div class="col-md-8">
+                              <select id="customer_id_fk" class="form-control" required ></select> 
+                            </div>
+                          </div>
+
+                          <input type="hidden" name="customer_id_fk" value="<?=@$customer_id?>" >
+
+                       <?php }else{ ?>
+
+                         <?php $ch_dis = empty(@$sRow)?'required':'disabled'; ?>
+
+                          @if( empty(@$sRow) )
+                            <div class="form-group row">
                               <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                               <div class="col-md-8">
-
-                                  @if(!empty(@$sRow->customer_id_fk))
-
-                                    <input type="hidden" name="customer_id_fk" id="customer_id_fk" value="{{@$sRow->customer_id_fk}}" >
-
-                                    <select class="form-control select2-templating " disabled >
-                                       <option value="{{@$sRow->customer_id_fk}}" selected >{{@$CustomerAicashName}}</option>
-                                    </select> 
-
-                                  @else
-
-                                    <input type="hidden" name="customer_id_fk" id="customer_id_fk" >
-                                    <select id="aicash_choose" class="form-control "  >
-                                      <option value=""  >-Select-</option>
-                                    </select> 
-                                  @endif
-
-                                   <select id="customer_id_fk_select"  class="form-control"  ></select> 
-
+                                <select id="customer_id_fk" class="form-control"  name="customer_id_fk" required ></select> 
                               </div>
                             </div>
+                          @else
+                            <div class="form-group row">
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
+                              <div class="col-md-8">
+                                <input type="hidden" id="member_id_aicash" name="customer_id_fk" value="{{@$sRow->customer_id_fk}}">
+                                <select class="form-control select2-templating " disabled >
+                                  <option value="{{@$sRow->customer_id_fk}}" selected >{{@$CustomerAicashName}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          @endif
+                     
 
-                
+                        <?php } ?>
+
+
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่มี :</label>
                             <div class="col-md-8">
@@ -520,11 +532,11 @@
 
 
 
-            $(document).on('change', '#customer_id_fk', function(event) {
+            $(document).on('change', '#member_id_aicash', function(event) {
 
               $(".myloading").show();
 
-              var customer_id = $('#customer_id_fk').val();
+              var customer_id = $('#member_id_aicash').val();
 
               $.ajax({
                        type:'POST',
@@ -1033,12 +1045,12 @@
   
    $(document).ready(function(){   
 
-      $("#customer_id_fk_select").select2({
+      $("#customer_id_fk").select2({
           minimumInputLength: 3,
           allowClear: true,
           placeholder: '-Select-',
           ajax: {
-          url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
+          url: " {{ url('backend/ajaxGetCustomer') }} ",
           type  : 'POST',
           dataType : 'json',
           delay  : 250,
@@ -1056,60 +1068,6 @@
           }
          }
         });
-
-          $.fn.toggleSelect2 = function(state) {
-              return this.each(function() {
-                  $.fn[state ? 'show' : 'hide'].apply($(this).next('.select2-container'));
-              });
-          };
-
-       $('#customer_id_fk_select').toggleSelect2(false); //hide
-       $('#aicash_choose').show(); 
-
-
-       $(document).on('click', '#aicash_choose', function () {
-              $(this).hide();
-              $('#customer_id_fk_select').next(".select2-container").show();
-              $("#customer_id_fk_select").select2('open');
-       });
-
-        function formatNumber(num) {
-              return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-          }
-
-
-         $(document).on('change', '#customer_id_fk_select', function(event) {
-
-                  $(".myloading").show();
-
-                     var customer_id = $(this).val();
-
-                     $('#customer_id_fk').val($(this).val());
-                     $('#member_name_aicash').val('');
-
-                     $.ajax({
-                       type:'POST',
-                       dataType:'JSON',
-                       url: " {{ url('backend/ajaxGetAicash') }} ",
-                       data: { _token: '{{csrf_token()}}',customer_id:customer_id },
-                        success:function(data){
-                               console.log(data);
-                               // return false;
-                               $.each(data,function(key,value){
-                                  $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                  localStorage.setItem('aicash_remain', value.ai_cash);
-                                });
-
-                              $(".myloading").hide();
-                          },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $(".myloading").hide();
-                        }
-                    });
-
-
-              });
-
 
    });
 </script>

@@ -265,18 +265,26 @@
 
                               @if($ChangePurchaseType==1)
                                 
-                                <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating "  >
-                                      <option value="">Select</option>
-                                      @if(@$sPurchase_type)
-                                        @foreach(@$sPurchase_type AS $r)
-                                          @if($r->id<=3)
-                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                                            {{$r->orders_type}}
-                                          </option>
+                                         <!-- Gift Voucher -->
+                                      @if(!empty(@$sRow->purchase_type_id_fk) && @$sRow->purchase_type_id_fk==5)  
+                                           <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
+                                           <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
+                                      @ELSE
+                                     
+                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating "  >
+                                          <option value="">Select</option>
+                                          @if(@$sPurchase_type)
+                                            @foreach(@$sPurchase_type AS $r)
+                                              @if($r->id<=3)
+                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
+                                                {{$r->orders_type}}
+                                              </option>
+                                              @endif
+                                            @endforeach
                                           @endif
-                                        @endforeach
-                                      @endif
-                                    </select>
+                                        </select>
+
+                                    @ENDIF
 
                               @else
 
@@ -477,12 +485,16 @@
      </div>         
            
            @if($ChangePurchaseType==1)
-                    <div class="col-md-11 text-right">
-                      <br>
-                      <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ">
-                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
-                      </button> 
-                    </div>
+
+                     @if(@$sRow->purchase_type_id_fk==5)  
+                     @ELSE
+                          <div class="col-md-11 text-right">
+                            <br>
+                            <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ">
+                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
+                            </button> 
+                          </div>
+                     @ENDIF
            @endif
 <br>
 
@@ -549,11 +561,11 @@
                 <div class="table-responsive">
                   <table class="table table-striped mb-0">
 
-                    <?php $bg_00 = @$sRow->delivery_location==0?'background-color: #00e673;color:black;':''; ?>
-                    <?php $bg_01 = @$sRow->delivery_location==1?'background-color: #00e673;color:black;':''; ?>
-                    <?php $bg_02 = @$sRow->delivery_location==2?'background-color: #00e673;color:black;':''; ?>
-                    <?php $bg_03 = @$sRow->delivery_location==3?'background-color: #00e673;color:black;':''; ?>
-                    <?php $bg_04 = @$sRow->delivery_location==4?'background-color: #00e673;color:black;':''; ?>
+                    <?php $bg_00 = @$sRow->delivery_location==0?'background-color: #b3ffd9;color:black;':''; ?>
+                    <?php $bg_01 = @$sRow->delivery_location==1?'background-color: #b3ffd9;color:black;':''; ?>
+                    <?php $bg_02 = @$sRow->delivery_location==2?'background-color: #b3ffd9;color:black;':''; ?>
+                    <?php $bg_03 = @$sRow->delivery_location==3?'background-color: #b3ffd9;color:black;':''; ?>
+                    <?php $bg_04 = @$sRow->delivery_location==4?'background-color: #b3ffd9;color:black;':''; ?>
 
                     <thead>
                       <tr style="background-color: #f2f2f2;">
@@ -1073,20 +1085,14 @@
                   <div class="divTableRow show_div_aicash_price " style="<?=$show_div_aicash_price?>">
                       <div class="divTableCell" ></div>
                       <div class="divTH">
-                        <label for="aicash_price" class="" > ระบุรหัสสมาชิก Ai-cash :  </label>
+                        <label for="aicash_price" class="" > รหัสสมาชิก Ai-cash :  </label>
                       </div>
                       <div class="divTableCell">
 
-							<select  id="member_id_aicash" name="member_id_aicash" class="form-control select2-templating " disabled >
-                                <option value="">Select</option>
-                                  @if(@$Customer)
-                                    @foreach(@$Customer AS $r)
-                                      <option value="{{$r->id}}" {{ (@$r->id==@$sRow->member_id_aicash)?'selected':'' }} >
-                                        {{$r->user_name}} : {{$r->prefix_name}}{{$r->first_name}}
-                                        {{$r->last_name}}
+							               <select   class="form-control select2-templating " disabled >
+                                      <option value="" selected >
+                                        {{@$Cus_name_Aicash}}
                                       </option>
-                                    @endforeach
-                                  @endif
                              </select>
 
                       </div>
@@ -1099,7 +1105,7 @@
                         </div>
 
                         <div class="divTH">
-                          <label for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
+                          <label for="" class="" > ยอด Ai-Cash คงเหลือ : </label>
                         </div>
 
                         <div class="divTableCell">
@@ -1122,11 +1128,7 @@
                       </div>
                       <div class="divTableCell">
 
-						@IF(@$sRow->pay_type_id_fk==6)
-							<input class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
-						@ELSE
-							<input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
-						@ENDIF
+							<input class="form-control  input-airight f-ainumber-18-b "  value="{{number_format(@$sRow->aicash_price,2)}}" disabled >
 
                       </div>
                        <div class="divTableCell">
@@ -3932,7 +3934,7 @@ $(document).ready(function() {
                         $.ajax({
                            type:'POST',
                            dataType:'JSON',
-                           url: " {{ url('backend/ajaxCearCostFrontstore') }} ",
+                           url: " {{ url('backend/ajaxClearCostFrontstore') }} ",
                            data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
                            success:function(data){
                            },
@@ -4269,7 +4271,7 @@ $(document).ready(function() {
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalAicash') }} ",
+                       url: " {{ url('backend/ajaxGetAicash') }} ",
                        data: { _token: '{{csrf_token()}}',customer_id:customer_id },
                         success:function(data){
                                console.log(data);
