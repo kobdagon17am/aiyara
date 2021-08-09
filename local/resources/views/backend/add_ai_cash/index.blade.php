@@ -143,13 +143,13 @@
                 <!--  `bill_status` int(11) DEFAULT '0' COMMENT '1=รอชำระ,2=ชำระแล้ว,3=ยกเลิก', -->
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="bill_status" class="col-md-3 col-form-label"> สถานะบิล :  </label>
+                    <label for="approve_status" class="col-md-3 col-form-label"> สถานะ :  </label>
                     <div class="col-md-9">
-                      <select id="bill_status" name="bill_status" class="form-control select2-templating " >
+                      <select id="approve_status" name="approve_status" class="form-control select2-templating " >
                         <option value="">-Status-</option>
-                        <option value="1" > รอชำระ </option>
-                        <option value="2" > ชำระแล้ว </option>
-                        <option value="3" > ยกเลิก </option>
+                        <option value="1" > รออนุมัติ </option>
+                        <option value="2" > อนุมัติแล้ว </option>
+                        <!-- <option value="5" > ยกเลิก </option> -->
                       </select>
                     </div>
                   </div>
@@ -239,7 +239,7 @@
                         <i class="bx bx-search align-middle "></i> SEARCH
                       </a>
 
-                    <a class="btn btn-info btn-sm float-right " style="{{@$sC}}" href="{{ route('backend.add_ai_cash.create') }}">
+                    <a class="btn btn-info btn-sm float-right class_btn_add "  href="{{ route('backend.add_ai_cash.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle"></i>ADD
                     </a>
 
@@ -282,8 +282,6 @@
 
 <script>
 
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";  
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -324,7 +322,6 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            // {data: 'invoice_code', title :'<center>เลขออเดอร์ </center>', className: 'text-left'},
             {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
             {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
             {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
@@ -332,53 +329,57 @@ $(function() {
             {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-            //  {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-            //   if(d=="รออนุมัติ"){
-            //       return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-            //   }else{
-            //       return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
-            //   }
-            // }},
             {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
-
-            {data: 'updated_at', title :'<center>วันที่ </center>', className: 'text-center'},
-            // {data: 'aicash_amt',   title :'ยอด Ai-Cash ', className: 'text-center ',render: function(d) {
-            //     return (parseFloat(d)>0)?d:'-';
-            // }},
+            {data: 'updated_at', title :'<center>วันที่เติม Ai-Cash</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(aData['approve_status']==5){
-            for (var i = 0; i < 6; i++) {
-              $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
-            }
+          // console.log(aData['approve_status']);
 
-            // $('td:last-child', nRow).html('-ยกเลิก-');
-            $('td:last-child', nRow).html('-');
 
-          }else{
+              var sPermission = "<?=\Auth::user()->permission?>";
+              var sU = sessionStorage.getItem("sU");
+              var sD = sessionStorage.getItem("sD");
+              if(sPermission==1){
+                sU = 1;
+                sD = 1;
+              }
+              var str_U = '';
+              if(sU=='1'){
+                str_U = '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+              }
+              var str_D = '';
+              if(sD=='1'){
+                str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+              }
 
-                 if(sU!=''&&sD!=''){
-                          $('td:last-child', nRow).html('-');
-                      }else{ 
 
-                      $('td:last-child', nRow).html(''
-                        + '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                      ).addClass('input');
+              if(aData['approve_status']==5){
+                for (var i = 0; i < 6; i++) {
+                  $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
+                }
+                // $('td:last-child', nRow).html('-ยกเลิก-');
+                $('td:last-child', nRow).html('-');
 
-                    }
+              }else if(aData['approve_status']==2){
+                  $('td:last-child', nRow).html( str_U ).addClass('input');
+              }else{
 
-          }
 
-     
+                  if(sU!='1' && sD!='1'){
+                     $('td:last-child', nRow).html('-');
+                  }else{
+                    $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                  }
+
+
+              }
 
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+
+
 });
 
 
@@ -499,9 +500,9 @@ $(function() {
                   var customer_id_fk = $('#customer_id_fk').val();
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
-                  var bill_status = $('#bill_status').val();
+                  var approve_status = $('#approve_status').val();
                   var approver = $('#approver').val();
-                  var invoice_code = $('#invoice_code').val();
+                  // var invoice_code = $('#invoice_code').val();
 
                   if(business_location_id_fk==''){
                     $('#business_location_id_fk').select2('open');
@@ -516,9 +517,6 @@ $(function() {
                   }
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                   
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
                         var oTable;
                         $(function() {
                           $.fn.dataTable.ext.errMode = 'throw';
@@ -537,70 +535,65 @@ $(function() {
                                                 business_location_id_fk:business_location_id_fk,
                                                 branch_id_fk:branch_id_fk,
                                                 customer_id_fk:customer_id_fk,
+                                                approve_status:approve_status,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                // bill_status:bill_status,                                 
                                                 approver:approver,                                 
-                                                invoice_code:invoice_code,                                 
+                                                // invoice_code:invoice_code,                                 
                                               },
                                             method: 'POST',
                                           },
-                                columns: [
-                                    {data: 'id', title :'ID', className: 'text-center w50'},
-                                    {data: 'invoice_code', title :'<center>เลขออเดอร์ </center>', className: 'text-left'},
-                                    {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
-                                    {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
-                                    {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
-                                    {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-                                    {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
-                                    {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
-                                     {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-                                      if(d=="รออนุมัติ"){
-                                          return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-                                      }else{
-                                          return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
+                                   columns: [
+                                      {data: 'id', title :'ID', className: 'text-center w50'},
+                                      {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
+                                      {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
+                                      {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
+                                      {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
+                                      {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
+                                      {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
+                                      {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+                                      {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                                      {data: 'updated_at', title :'<center>วันที่เติม Ai-Cash</center>', className: 'text-center'},
+                                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                  ],
+                                  rowCallback: function(nRow, aData, dataIndex){
+
+                                    if(aData['approve_status']==5){
+                                      for (var i = 0; i < 6; i++) {
+                                        $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
                                       }
-                                    }},
-                                    {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                                      // $('td:last-child', nRow).html('-ยกเลิก-');
+                                      $('td:last-child', nRow).html('-');
 
-                                    {data: 'updated_at', title :'<center>วันที่ </center>', className: 'text-center'},
-                                    // {data: 'aicash_amt',   title :'ยอด Ai-Cash ', className: 'text-center ',render: function(d) {
-                                    //     return (parseFloat(d)>0)?d:'-';
-                                    // }},
-                                    {data: 'id', title :'Tools', className: 'text-center w60'}, 
-                                ],
-                                rowCallback: function(nRow, aData, dataIndex){
+                                    }else{
 
-                                  if(aData['approve_status']==5){
-                                    for (var i = 0; i < 6; i++) {
-                                      $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
-                                    }
-
-                                    // $('td:last-child', nRow).html('-ยกเลิก-');
-                                    $('td:last-child', nRow).html('-');
-
-                                  }else{
-
-                                         if(sU!=''&&sD!=''){
-                                                  $('td:last-child', nRow).html('-');
-                                              }else{ 
-
-                                              $('td:last-child', nRow).html(''
-                                                + '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                + '<a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                                              ).addClass('input');
-
+                                            var sPermission = "<?=\Auth::user()->permission?>";
+                                            var sU = sessionStorage.getItem("sU");
+                                            var sD = sessionStorage.getItem("sD");
+                                            if(sPermission==1){
+                                              sU = 1;
+                                              sD = 1;
+                                            }
+                                            var str_U = '';
+                                            if(sU=='1'){
+                                              str_U = '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                            }
+                                            var str_D = '';
+                                            if(sD=='1'){
+                                              str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+                                            }
+                                            if(sU!='1' && sD!='1'){
+                                               $('td:last-child', nRow).html('-');
+                                            }else{
+                                              $('td:last-child', nRow).html( str_U + str_D).addClass('input');
                                             }
 
+
+                                    }
+
                                   }
-
-                             
-
-                                }
                             });
-                            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                              oTable.draw();
-                            });
+                        
                         });
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@

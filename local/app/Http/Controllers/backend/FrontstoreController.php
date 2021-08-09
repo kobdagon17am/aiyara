@@ -755,6 +755,10 @@ class FrontstoreController extends Controller
               $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
               $sRow->account_bank_id = request('account_bank_id');
               $sRow->transfer_money_datetime = request('transfer_money_datetime');
+              $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02');
+              $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03');
+
+              $sRow->note_fullpayonetime = request('note_fullpayonetime');
 
               if(empty(request('shipping_price'))){
 
@@ -784,8 +788,29 @@ class FrontstoreController extends Controller
                   $sRow->file_slip = $image_path.$name;
                 }
 
-    
+               if ($request->hasFile('image02')) {
+                  @UNLINK(@$sRow->file_slip_02);
+                  $this->validate($request, [
+                    'image02' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image02');
+                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_02 = $image_path.$name;
+                }
 
+               if ($request->hasFile('image03')) {
+                  @UNLINK(@$sRow->file_slip_03);
+                  $this->validate($request, [
+                    'image03' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image03');
+                  $name = 'S3'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_03 = $image_path.$name;
+                }
               // PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
 
@@ -1427,6 +1452,14 @@ class FrontstoreController extends Controller
         $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::cart_check_register($row->id, 1 ,$row->user_name);
         return $CourseCheckRegis['status'];
       })
+      ->addColumn('cuase_cannot_buy', function($row) {
+        $c = 'Package ขั้นต่ำที่ซื้อได้,คุณวุฒิ reward ที่ซื้อได้,รักษาคุณสมบัติรายเดือน,รักษาคุณสมบัติท่องเที่ยว,aistockist,agency  ';
+        if($c){
+          return 'ไม่ผ่านเกณฑ์ '.$c;
+        }
+        
+      })
+      ->escapeColumns('cuase_cannot_buy')
       ->make(true);
     }
 

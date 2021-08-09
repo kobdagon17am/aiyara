@@ -14,6 +14,9 @@ class Transfer_branch_codeController extends Controller
     public function index(Request $request)
     {
 
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
+       $sBranchs = \App\Models\Backend\Branchs::get();
+
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
@@ -27,12 +30,13 @@ class Transfer_branch_codeController extends Controller
         $Shelf = \App\Models\Backend\Shelf::get();
 
         $User_branch_id = \Auth::user()->branch_id_fk;
-        $sBranchs = \App\Models\Backend\Branchs::get();      
 
 
         return View('backend.transfer_branch_code.index')->with(
         array(
-           'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
+           'sBusiness_location'=>$sBusiness_location,
+           'Products'=>$Products,
+           'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
         ) );
       
     }
@@ -297,28 +301,28 @@ class Transfer_branch_codeController extends Controller
           `note2` text COMMENT 'หมายเหตุของส่วนการอนุมัติ',
           `tr_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า  3=ใบโอน ที่ถูกยกเลิก',
           */
-        $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
-        if(@$sD){
-          if(@$sD[0]->approve_status==1){
-            return '<span style="color:green;">รับสินค้าแล้ว</span>';
-          }elseif(@$sD[0]->approve_status==5){
+        // $sD = DB::select(" select approve_status,note2,tr_status,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
+        // if(@$sD){
+        //   if(@$sD[0]->approve_status==1){
+        //     return '<span style="color:green;">รับสินค้าแล้ว</span>';
+        //   }elseif(@$sD[0]->approve_status==5){
 
-              $t = '';
-            if(@$sD[0]->approve_status_getback==1){
-              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
-            }elseif(@$sD[0]->approve_status_getback==5){
-              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
-            }
+        //       $t = '';
+        //     if(@$sD[0]->approve_status_getback==1){
+        //       $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+        //       $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+        //     }elseif(@$sD[0]->approve_status_getback==5){
+        //       $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+        //       $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+        //     }
 
-            $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
-            return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
+        //     $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
+        //     return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
 
-          }else{
-            return 'อยู่ระหว่างการโอน';
-          }
-        }
+        //   }else{
+        //     return 'อยู่ระหว่างการโอน';
+        //   }
+        // }
       })
       ->escapeColumns('status_get')
       ->addColumn('approve_date_get', function($row) {
@@ -328,6 +332,59 @@ class Transfer_branch_codeController extends Controller
         }
       })
       ->escapeColumns('approve_date_get')
+
+      ->addColumn('created_at', function($row) {
+        if(!is_null(@$row->created_at)){
+            return date("Y-m-d",strtotime(@$row->created_at));
+        }
+      })
+      ->escapeColumns('created_at')
+
+->addColumn('tr_status', function($row) {
+        if($row->tr_status){
+
+            $t1 = '';
+            $t2 = '';
+            $n1 = '';
+            $n2 = '';
+
+             $Transfer_branch_status_01 = \App\Models\Backend\Transfer_branch_status_01::where('id',$row->tr_status)->get();
+             $t1 .= @$Transfer_branch_status_01[0]->txt_desc;
+            
+
+              $sD = DB::select(" select approve_status,note2,tr_status,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
+
+              if(@$sD){
+                
+                 if(@$sD[0]->tr_status==4){
+
+                   $Transfer_branch_status_02 = \App\Models\Backend\Transfer_branch_status_02::where('id',$row->tr_status)->get();
+                   // $t .= ''.$Transfer_branch_status_02[0]->txt_desc.'<br>';
+                   $t2 .= '<span style="color:red">'.$Transfer_branch_status_02[0]->txt_desc.'</span><br>';
+
+                  // $t = '';
+                  // if(@$sD[0]->approve_status_getback==1){
+                  //   $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+                  //   $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+                  // }elseif(@$sD[0]->approve_status_getback==5){
+                  //   $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+                    $t2 .= '<span style="color:green">Note: '.@$sD[0]->note2.'</span><br>';
+                  // }
+
+                  // $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
+                  // return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
+
+                }else{
+                  // return 'อยู่ระหว่างการโอน';
+                }
+
+                return @$t2.@$t1;
+           }
+        }
+
+      })
+      ->escapeColumns('tr_status')
+      
       ->make(true);
     }
 

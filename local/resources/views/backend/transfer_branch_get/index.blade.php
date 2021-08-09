@@ -141,11 +141,14 @@
                     <label for="tr_status" class="col-md-3 col-form-label"> สถานะใบโอน :  </label>
                     <div class="col-md-9">
                       <select id="tr_status" name="tr_status" class="form-control select2-templating " >
-                        <option value="">-Status-</option>
-                        <option value="0" > อยู่ระหว่างการดำเนินการ </option>
-                        <option value="1" > ได้รับสินค้าครบแล้ว </option>
-                        <option value="2" > ยังค้างรับสินค้า </option>
-                        <option value="3" > ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
+                         <option value="">-Select-</option>
+                                 @if(@$Transfer_branch_status_02)
+                                  @foreach(@$Transfer_branch_status_02 AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->txt_desc}} 
+                                    </option>
+                                  @endforeach
+                                @endif
                       </select>
                     </div>
                   </div>
@@ -302,7 +305,7 @@ $(function() {
               if(sU=='1'){
                 console.log(aData['tr_status_code']);
                 // กรณีปฏิเสธการรับจากฝั่งรับ
-                if(aData['tr_status_code']==3){
+                if(aData['tr_status_code']==4){
                   str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                 }else{
                   str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
@@ -376,7 +379,6 @@ $(function() {
                                                 endDate:endDate,
                                                 action_user:action_user,                                 
                                                 tr_status:tr_status,                                 
-                                                supplier_id_fk:supplier_id_fk,                                 
                                               },
                                             method: 'POST',
                                           },
@@ -403,7 +405,7 @@ $(function() {
                                           if(sU=='1'){
                                             console.log(aData['tr_status_code']);
                                             // กรณีปฏิเสธการรับจากฝั่งรับ
-                                            if(aData['tr_status_code']==3){
+                                            if(aData['tr_status_code']==4){
                                               str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                                             }else{
                                               str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';

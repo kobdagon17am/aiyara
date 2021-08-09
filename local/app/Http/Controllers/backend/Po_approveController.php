@@ -11,8 +11,43 @@ class Po_approveController extends Controller
 
     public function index(Request $request)
     {
-        return view('backend.po_approve.index');
+        $sBusiness_location = \App\Models\Backend\Business_location::get();
+        $sBranchs = \App\Models\Backend\Branchs::get();
+      // $customer = DB::select(" SELECT
+      //         customers.user_name AS cus_code,
+      //         customers.prefix_name,
+      //         customers.first_name,
+      //         customers.last_name,
+      //         db_add_ai_cash.customer_id_fk
+      //         FROM
+      //         db_add_ai_cash
+      //         left Join customers ON db_add_ai_cash.customer_id_fk = customers.id
+      //         GROUP BY db_add_ai_cash.customer_id_fk
+      //         ");
+      // // $sPay_product_status = \App\Models\Backend\Pay_product_status::get();
+      // $sInvoice_code = DB::select(" SELECT
+      //   db_add_ai_cash.invoice_code
+      //   FROM
+      //   db_add_ai_cash where invoice_code is not null
+      //   ");
+
+      // $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
+   //   $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select approver from db_add_ai_cash) ");
+
+      // $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
+        $sDoc_id = DB::select(" select id from db_add_ai_cash WHERE pay_type_id_fk in (1,8,10,11,12) ");
+        $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
+
+        return View('backend.po_approve.index')->with(
+        array(
+           'sBusiness_location'=>$sBusiness_location,
+           'sBranchs'=>$sBranchs,
+           'sDoc_id'=>$sDoc_id,
+           'sApprover'=>$sApprover,
+        ) );
+
     }
+
 
     public function create()
     {
@@ -88,6 +123,34 @@ class Po_approveController extends Controller
 
     }
 
+    public function DatatableSet()
+    {
+        $sTable = \App\Models\Backend\Orders::search()->orderBy('id', 'asc');
+
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+            ->addColumn('price', function ($row) {
+              if ($row->purchase_type_id_fk == 7) {
+                return number_format($row->sum_price, 2);
+            } else if ($row->purchase_type_id_fk == 5) {
+                $total_price = $row->total_price - $row->gift_voucher_price;
+                return number_format($total_price, 2);
+            } else {
+                return number_format($row->sum_price + $row->shipping_price, 2);
+            }
+            })
+            ->addColumn('type', function ($row) {
+                $D = DB::table('dataset_orders_type')->where('group_id', '=', $row->purchase_type_id_fk)->get();
+                return @$D[0]->orders_type;
+            })
+            ->addColumn('date', function ($row) {
+                return date('d/m/Y H:i:s', strtotime($row->created_at));
+            })
+            ->make(true);
+    }
+
+
+
     public function Datatable()
     {
 
@@ -125,30 +188,5 @@ class Po_approveController extends Controller
             ->make(true);
     }
 
-    public function DatatableSet()
-    {
-        $sTable = \App\Models\Backend\Orders::search()->orderBy('id', 'asc');
-
-        $sQuery = \DataTables::of($sTable);
-        return $sQuery
-            ->addColumn('price', function ($row) {
-              if ($row->purchase_type_id_fk == 7) {
-                return number_format($row->sum_price, 2);
-            } else if ($row->purchase_type_id_fk == 5) {
-                $total_price = $row->total_price - $row->gift_voucher_price;
-                return number_format($total_price, 2);
-            } else {
-                return number_format($row->sum_price + $row->shipping_price, 2);
-            }
-            })
-            ->addColumn('type', function ($row) {
-                $D = DB::table('dataset_orders_type')->where('group_id', '=', $row->purchase_type_id_fk)->get();
-                return @$D[0]->orders_type;
-            })
-            ->addColumn('date', function ($row) {
-                return date('d/m/Y H:i:s', strtotime($row->created_at));
-            })
-            ->make(true);
-    }
 
 }

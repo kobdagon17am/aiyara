@@ -1036,7 +1036,10 @@
                               @endforeach
                             @endif
 
+                            
+
                           <div class="d-flex">
+
                            <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
@@ -1066,6 +1069,103 @@
                       <div class="divTableCell">
                       </div>
                     </div>
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                            <?php if(!empty(@$sRow->transfer_money_datetime_02)){
+                              $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
+                              $ds_02 = explode("-", $ds1_02);
+                              $ds_d_02 = $ds_02[2];
+                              $ds_m_02 = $ds_02[1];
+                              $ds_y_02 = $ds_02[0];
+                              $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
+                            }else{$ds_02='';} ?>
+                              <input class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_02" >
+                                @IF(!empty(@$sRow->file_slip_02))
+                                  <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                @ELSE
+                                  <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                            <?php if(!empty(@$sRow->transfer_money_datetime_03)){
+                              $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
+                              $ds_03 = explode("-", $ds1_03);
+                              $ds_d_03 = $ds_03[2];
+                              $ds_m_03 = $ds_03[1];
+                              $ds_y_03 = $ds_03[0];
+                              $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
+                            }else{$ds_03='';} ?>
+                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_03" >
+                                @IF(!empty(@$sRow->file_slip_03))
+                                  <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                @ELSE
+                                  <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input type="text" class="form-control NumberOnly " id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div>
+                      </div>
 
 
                    <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
@@ -2085,7 +2185,6 @@
                                 );
 
                           }
-
 
 
                       }
@@ -3186,8 +3285,10 @@
             var order_type = $("input[name=purchase_type_id_fk]").val();
             // alert(order_type);
 
+            var oTablefrontstorelistPro ;
+
             $(function() {
-              $('#data-table-list-pro').DataTable({
+              oTablefrontstorelistPro =  $('#data-table-list-pro').DataTable({
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                     processing: true,
                     serverSide: true,
@@ -3255,10 +3356,35 @@
                           }
 
 
+                            var cuase_cannot_buy = aData['cuase_cannot_buy'];
+
+                            console.log(cuase_cannot_buy);
+
+                           if(cuase_cannot_buy.length>0){
+                             $("td:eq(4)", nRow).html(
+                                '<input type="hidden" disabled ><div class="input-group inline-group"> '
+                                +' <div class="input-group-prepend"> '
+                                +'   <button class="btn btn-outline-secondary  " disabled > '
+                                +'     <i class="fa fa-minus"></i> '
+                                +'   </button>'
+                                +'   <input class=" quantity " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ '+aData['cuase_cannot_buy']+' " style="cursor:pointer;" >'
+                                +'   <div class="input-group-append"> '
+                                +'   <button  class="btn btn-outline-secondary  " disabled > '
+                                +'     <i class="fa fa-plus"></i> '
+                                +'    </button> '
+                                +'  </div> '
+                                +' </div> '
+                                );
+                           }
 
                       }
 
                 });
+
+               oTablefrontstorelistPro.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+                });
+
 
             });
 
@@ -3685,6 +3811,8 @@ $(document).ready(function() {
                                   }
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -3894,9 +4022,6 @@ $(document).ready(function() {
 
             // $(".ShippingCalculate02").trigger('click');
 
-                $('.btnUpSlip').on('click', function(e) {
-                      $("#image01").trigger('click');
-                });
 
                  $('#modalAddFromPromotion,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
                     $(".myloading").show();
@@ -3920,6 +4045,26 @@ $(document).ready(function() {
                     // }, 2000);
 
                 });
+
+          });
+
+
+     $(document).ready(function() {
+
+            // $(".ShippingCalculate02").trigger('click');
+
+                $('.btnUpSlip').on('click', function(e) {
+                      $("#image01").trigger('click');
+                });
+
+                $('.btnUpSlip_02').on('click', function(e) {
+                      $("#image02").trigger('click');
+                });
+
+               $('.btnUpSlip_03').on('click', function(e) {
+                      $("#image03").trigger('click');
+                });
+
 
           });
 
@@ -4029,6 +4174,8 @@ $(document).ready(function() {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" />
 
  <script>
+
+
       $('.transfer_money_datetime').datetimepicker({
           value: '',
           rtl: false,
@@ -4059,7 +4206,71 @@ $(document).ready(function() {
       });
 
 
+
+      $('.transfer_money_datetime_02').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'd/m/Y H:i',
+          formatTime: 'H:i',
+          formatDate: 'd/m/Y',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          minDate: 0,
+      });
+
+      $('.transfer_money_datetime_02').change(function(event) {
+        var d = $(this).val();
+        console.log(d);
+        var t = d.substring(d.length - 5);
+        console.log();
+        var d = d.substring(0, 10);
+        console.log();
+        var d = d.split("/").reverse().join("-");
+        console.log();
+        $('#transfer_money_datetime_02').val(d+' '+t);
+      });
+
+
+      $('.transfer_money_datetime_03').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'd/m/Y H:i',
+          formatTime: 'H:i',
+          formatDate: 'd/m/Y',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          minDate: 0,
+      });
+
+      $('.transfer_money_datetime_03').change(function(event) {
+        var d = $(this).val();
+        console.log(d);
+        var t = d.substring(d.length - 5);
+        console.log();
+        var d = d.substring(0, 10);
+        console.log();
+        var d = d.split("/").reverse().join("-");
+        console.log();
+        $('#transfer_money_datetime_03').val(d+' '+t);
+      });
+
+
 </script>
+
+
+
         <script type="text/javascript">
 
                 function showPreview_01(ele)
@@ -4071,6 +4282,34 @@ $(document).ready(function() {
                                 $('.span_file_slip').show();
                                 $('#imgAvatar_01').show();
                                 $('#imgAvatar_01').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(ele.files[0]);
+                    }
+                }
+
+                function showPreview_02(ele)
+                    {
+                        $('#image02').attr('src', ele.value); // for IE
+                        if (ele.files && ele.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.span_file_slip_02').show();
+                                $('#imgAvatar_02').show();
+                                $('#imgAvatar_02').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(ele.files[0]);
+                    }
+                }
+
+                function showPreview_03(ele)
+                    {
+                        $('#image03').attr('src', ele.value); // for IE
+                        if (ele.files && ele.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.span_file_slip_03').show();
+                                $('#imgAvatar_03').show();
+                                $('#imgAvatar_03').attr('src', e.target.result);
                             }
                             reader.readAsDataURL(ele.files[0]);
                     }
@@ -4091,6 +4330,50 @@ $(document).ready(function() {
                                     console.log(data);
                                     // location.reload();
                                     $(".span_file_slip").hide();
+                                  }
+                              });
+
+                          }
+
+                });
+
+
+                $(document).on('click', '.btnDelSlip_02', function(event) {
+                          var id = $(this).data('id');
+                          if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
+                              return false;
+                          }else{
+
+                              $.ajax({
+                                  type: "POST",
+                                  url: " {{ url('backend/ajaxDelFileSlip_02') }} ",
+                                   data:{ _token: '{{csrf_token()}}',id:id },
+                                  success: function(data){
+                                    console.log(data);
+                                    // location.reload();
+                                    $(".span_file_slip_02").hide();
+                                  }
+                              });
+
+                          }
+
+                });
+
+
+                $(document).on('click', '.btnDelSlip_03', function(event) {
+                          var id = $(this).data('id');
+                          if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
+                              return false;
+                          }else{
+
+                              $.ajax({
+                                  type: "POST",
+                                  url: " {{ url('backend/ajaxDelFileSlip_03') }} ",
+                                   data:{ _token: '{{csrf_token()}}',id:id },
+                                  success: function(data){
+                                    console.log(data);
+                                    // location.reload();
+                                    $(".span_file_slip_03").hide();
                                   }
                               });
 
@@ -4132,7 +4415,7 @@ $(document).ready(function() {
                     });
                 });
 
-              $(document).on('change', '.transfer_money_datetime', function(event) {
+              $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
                     event.preventDefault();
                     $(".myloading").show();
                     $('#transfer_price').attr('required', true);
@@ -4230,8 +4513,16 @@ $(document).ready(function() {
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
+
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   $(".transfer_money_datetime").val(value.transfer_money_datetime);
+
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $(".transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  $(".transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                       
                                 });
 
                                 $("input[name=_method]").val('PUT');
@@ -4419,6 +4710,71 @@ $(document).ready(function() {
 
             });
 
+
+      $(document).on('change', '.CalPrice', function(event) {
+
+              event.preventDefault();
+              $(".myloading").show();
+
+              var id = "{{@$sRow->id}}";
+
+
+              var pay_type_id_fk = $("#pay_type_id_fk").val();
+
+              if(pay_type_id_fk==''){
+                $("#cash_price").val('');
+                $("#cash_pay").val('');
+                $(".myloading").hide();
+                $(".show_div_cash_pay").hide();
+                return false;
+              }
+
+
+                  $("input[name=_method]").val('');
+
+                  $.ajax({
+                   type:'POST',
+                   dataType:'JSON',
+                   url: " {{ url('backend/ajaxCalPriceFrontstore02') }} ", 
+                   data: $("#frm-main").serialize()+"&id="+id,
+                    success:function(data){
+                          console.log(data); 
+
+                          // return false;
+
+                            $.each(data,function(key,value){
+                                  
+                                  $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
+                                  $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
+                                  $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+
+                                  if(pay_type_id_fk==''){
+                                     $("#cash_pay").val('');    
+                                  }else{
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                  }
+                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
+
+                                  $(".myloading").hide();
+
+                                });
+
+                                 $("input[name=_method]").val('PUT');
+
+                         
+                               $(".myloading").hide();
+
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              // console.log(JSON.stringify(jqXHR));
+                              // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                      });
+
+
+      });
 
               $(document).on('change', '.CalPriceAicash', function(event) {
 
@@ -4687,6 +5043,8 @@ $(document).ready(function() {
                                   }
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -4799,6 +5157,8 @@ $(document).ready(function() {
 
 
                                   $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -4885,12 +5245,16 @@ $(document).ready(function() {
                         // console.log(aData['CourseCheckRegis']);
                         // console.log(aData['user_name']);
 
+
                         $('td:last-child', nRow).html('');
 
                         if(aData['CourseCheckRegis']=="success"){
                              $("td:eq(7)", nRow).html('<center><input class="form-control amt_apply in-tx " type="number"  name="amt_apply[]" user_name="'+aData['user_name']+'" id_course="'+aData['id']+'" style="background-color:#e6ffff;border: 2px inset #EBE9ED;width:60%;text-align:center;" ><input type="hidden" name="id[]" value="'+(aData['id'])+'" >');
                         }else{
-                            $("td:eq(7)", nRow).html('<center><input class="form-control " type="text" style="background-color:#d9d9d9 !important;border: 1px inset #EBE9ED;width:60%;text-align:center;" readonly >');
+                            
+                            var cuase_cannot_buy = aData['cuase_cannot_buy'];
+
+                            $("td:eq(7)", nRow).html('<center><input class="form-control " type="text" style="background-color:#d9d9d9 !important;border: 1px inset #EBE9ED;width:60%;text-align:center;cursor:pointer;" readonly placeholder="ซื้อไม่ได้" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ '+aData['cuase_cannot_buy']+' "  >');
                               for (var i = 0; i < 7; i++) {
                                 // $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#cccccc','text-decoration':'line-through','font-style':'italic'});
                                 $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#999999','font-style':'italic'});
@@ -4900,6 +5264,11 @@ $(document).ready(function() {
                     }
 
                 });
+
+                    oTableChooseCourse.on( 'draw', function () {
+                      $('[data-toggle="tooltip"]').tooltip();
+                      });
+
               
             });
 
@@ -4982,50 +5351,72 @@ $(document).ready(function() {
 
          $(document).on('click', '.btnSave', function(event) {
             // alert("xx");
-            var pay_type_id_fk = $("#pay_type_id_fk").val();
-            var aicash_remain = parseFloat($("#aicash_remain").val());
-            var aicash_price = parseFloat($("#aicash_price").val());
+            event.preventDefault();
 
-            var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
+              Swal.fire({
+                title: 'ยืนยัน ! การบันทึกข้อมูลใบเสร็จ ',
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#556ee6',
+                cancelButtonColor: "#f46a6a"
+                }).then(function (result) {
+                  console.log(result);
+                    if (result.value) {
+                     // $("form").submit();
 
-            var gift_voucher_price = $("#gift_voucher_price").val();
-            var sum_price = $("#sum_price").val();
-            var shipping_price = $("#shipping_price").val();
+                     // location.reload();
+
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                              var pay_type_id_fk = $("#pay_type_id_fk").val();
+                              var aicash_remain = parseFloat($("#aicash_remain").val());
+                              var aicash_price = parseFloat($("#aicash_price").val());
+                              var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
+                              var gift_voucher_price = $("#gift_voucher_price").val();
+                              var sum_price = $("#sum_price").val();
+                              var shipping_price = $("#shipping_price").val();
+
+                              // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
+                              if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
+                                  // event.preventDefault();
+                                  $("#aicash_price").focus();
+                                if(aicash_price>=0 && aicash_remain<=0){
+                                  alert("! ยอด Ai-Cash ไม่เพียงพอต่อการชำระช่องทางนี้ กรุณาเติมยอด Ai-Cash ขอบคุณค่ะ");
+                                  return false;
+                                }else{
+                                  $('.btnSave').removeAttr("type").attr("type", "submit");
+                                  $('#frm-main').submit();
+
+                                }
+
+                              }else{
+                                // $('#member_id_aicash').attr('required', false);
+                                $('.btnSave').removeAttr("type").attr("type", "submit");
+                                 $('#frm-main').submit();
+                              }
 
 
-            // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
-            if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
-                // event.preventDefault();
-                $("#aicash_price").focus();
-              if(aicash_price>=0 && aicash_remain<=0){
-                alert("! ยอด Ai-Cash ไม่เพียงพอต่อการชำระช่องทางนี้ กรุณาเติมยอด Ai-Cash ขอบคุณค่ะ");
-                return false;
-              }else{
-                $('.btnSave').removeAttr("type").attr("type", "submit");
-              }
+                              if(purchase_type_id_fk==5){
 
-            }else{
-              // $('#member_id_aicash').attr('required', false);
-              $('.btnSave').removeAttr("type").attr("type", "submit");
-            }
+                                // console.log(gift_voucher_price);
+                                // console.log(sum_price);
+                                // console.log(shipping_price);
 
+                                if(gift_voucher_price == (+sum_price + +shipping_price)){
+                                  $('#pay_type_id_fk').attr('required', false);
+                                }else{
+                                  $('#pay_type_id_fk').attr('required', true);
+                                }
 
-            if(purchase_type_id_fk==5){
+                              }
 
-              console.log(gift_voucher_price);
-              console.log(sum_price);
-              console.log(shipping_price);
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-              if(gift_voucher_price == (+sum_price + +shipping_price)){
-                $('#pay_type_id_fk').attr('required', false);
-              }else{
-                $('#pay_type_id_fk').attr('required', true);
-              }
-
-            }
-
-                 // console.log("test");
-                 //         return false;
+                    }else{
+                       $(".myloading").hide();
+                       return false;
+                    }
+              });
 
 
          });

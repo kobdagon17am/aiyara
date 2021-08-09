@@ -174,16 +174,43 @@
 
       </div>
 
+<?php //echo $ch_get_products ; ?>
 
+@IF($ch_get_products==1)
 
             <div class="myBorder div_approve_transfer_branch_get " >
    
+              <h4><i class="bx bx-play"></i> อนุมัติสินค้าสินค้าที่โอนไม่สำเร็จ</h4>
+
             <form action="{{url('backend/transfer_branch_get/get_product_back')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="approve_getback" type="hidden" value="1">
                 {{ csrf_field() }}
+
+
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
+                    <div class="col-md-3 mt-2">
+                      <div class=" ">
+
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
+                          <label for="customSwitch1">อนุมัติ / Aproved (รับคืน)</label>
+
+                      </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-group row">
+                  <label for="note3" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" rows="3" id="note3" name="note3" required >{{ @$sRow->note3 }}</textarea>
+                  </div>
+                </div>
+
 
                  <div class="form-group row">
                       <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) การรับสินค้าคืน :</label>
@@ -198,36 +225,6 @@
                           
                       </div>
                   </div>
-
-                <div class="form-group row">
-                    <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
-                    <div class="col-md-3 mt-2">
-                      <div class=" ">
-
-                          <input type="radio" class="" id="customSwitch1" name="approve_status_getback" value="1" {{ ( @$sRow->approve_status_getback=='1')?'checked':'' }} required >
-                          <label for="customSwitch1">อนุมัติ / Aproved (รับคืน)</label>
-
-                      </div>
-                    </div>
-                     <div class="col-md-4 mt-2">
-                      <div class=" ">
-              
-                          <input type="radio" class="" id="customSwitch2" name="approve_status_getback" value="5" {{ ( @$sRow->approve_status_getback=='5')?'checked':'' }} required >
-                          <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved (ปฏิเสธการรับคืน)</label>
-
-                      </div>
-                    </div>
-
-                </div>
-
-                <div class="form-group row">
-                  <label for="note3" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
-                  <div class="col-md-8">
-                    <textarea class="form-control" rows="3" id="note3" name="note3" required >{{ @$sRow->note3 }}</textarea>
-                  </div>
-                </div>
-
-
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch_get") }}">
@@ -235,7 +232,8 @@
                 </a>
                   </div>
                   <div class="col-md-6 text-right">
-                  @IF(@$sRow->approve_status_getback=='')
+                  @IF(@$sRow->approve_status=='1')
+                  @ELSE
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก
                     </button>
@@ -247,7 +245,7 @@
       </form>
 
           </div>
-
+@ENDIF
         </div>
     </div> <!-- end col -->
 </div>
@@ -557,10 +555,16 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                    $('td:last-child', nRow).html(''
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                      ).addClass('input');
 
+                      if(aData['tr_status']>2){
+                              $('td:last-child', nRow).html('-');
+                          }else{
+
+                            $('td:last-child', nRow).html(''
+                                + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+
+                            }
                     }
                 });
       
@@ -798,8 +802,9 @@
             $(document).on('click', '.cDelete', function(event) {
             
                      setTimeout(function(){
-                         $('#data-table-01').DataTable().draw();
-                         $('#data-table-02').DataTable().draw();
+                         // $('#data-table-01').DataTable().draw();
+                         // $('#data-table-02').DataTable().draw();
+                           location.reload();
                       }, 1500);
        
            });

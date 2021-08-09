@@ -1892,6 +1892,34 @@ class AjaxController extends Controller
         }
     }
 
+    public function ajaxDelFileSlip_02(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip_02);
+              DB::select(" UPDATE db_orders SET file_slip_02='' where id=".$request->id."  ");
+            }
+        }
+    }
+
+    public function ajaxDelFileSlip_03(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip_03);
+              DB::select(" UPDATE db_orders SET file_slip_03='' where id=".$request->id."  ");
+            }
+        }
+    }
+
     public function ajaxDelFileSlipGiftVoucher(Request $request)
     {
         // return $request;

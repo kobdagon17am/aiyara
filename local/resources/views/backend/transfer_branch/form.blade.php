@@ -74,6 +74,8 @@
 
             <div class="myBorder">
 
+              <h4><i class="bx bx-play"></i> อนุมัติโอนสินค้า</h4>
+
                  <div class="form-group row">
                       <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติ (Admin Login) :</label>
                       <div class="col-md-6">
@@ -116,7 +118,7 @@
                         <div class="form-group row">
                           <label for="note" class="col-md-3 col-form-label required_star_red "><i class="bx bx-play"></i>หมายเหตุ :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" required >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
                           </div>
                         </div>
 

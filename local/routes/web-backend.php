@@ -70,6 +70,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('add_ai_cash', 'Add_ai_cashController');
     Route::post('add_ai_cash/datatable', 'Add_ai_cashController@Datatable')->name('add_ai_cash.datatable');
+    Route::post('add_ai_cash_02/datatable', 'Add_ai_cashController@Datatable02')->name('add_ai_cash_02.datatable');
 
 // สาขา / คลัง @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     Route::resource('branchs', 'BranchsController');
@@ -338,6 +339,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCalAddAiCashFrontstore', 'AjaxController@ajaxCalAddAiCashFrontstore');
 
     Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
+    Route::post('ajaxDelFileSlip_02', 'AjaxController@ajaxDelFileSlip_02');
+    Route::post('ajaxDelFileSlip_03', 'AjaxController@ajaxDelFileSlip_03');
+    
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
     Route::post('ajaxClearCostFrontstore', 'AjaxController@ajaxClearCostFrontstore');
 
@@ -576,6 +580,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('po_approve', 'Po_approveController');
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
     Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
+
+    Route::get('po_approve/form_aicash/{id}', 'Add_ai_cashController@approve');
 
 // คอร์สรออนุมัติ
     Route::resource('course_approve', 'Course_approveController');
