@@ -227,6 +227,159 @@ class Product extends Model
     }
 }
 
+public static function product_list_select_promotion_all($type,$customer_username){//เช่นทำคุณสมบัติ (dataset_orders_type->id),customer_username
+
+
+  $data_customers = DB::table('customers')
+  ->where('user_name', '=', $customer_username)
+  ->first();
+
+  if(empty($data_customers)){
+    $resule = ['status'=>'fail','message'=>'Customers is Null'];
+    return $resule;
+  }
+
+  $business_location_id = $data_customers->business_location_id;
+
+
+  $promotions = DB::table('promotions')
+  ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img','promotions_cost.selling_price','promotions_cost.pv')
+  ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
+  ->leftjoin('promotions_cost','promotions_cost.promotion_id_fk','=','promotions.id')
+  ->where('promotions_images.image_default','=',1)
+  ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
+  ->where('promotions.business_location','=',$business_location_id)
+  ->where('promotions_cost.business_location_id','=',$business_location_id)
+  ->where('promotions_cost.status','=',1)
+  ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
+  ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
+  ->where('promotions.status','=',1)
+  ->orderby('id','DESC')
+  ->get();
+
+    //dd($promotions);
+
+  if(count($promotions) <= 0 ){
+      $resule = ['status'=>'fail','message'=>'NUll Product'];
+
+  }else{
+
+     $customer_id = $data_customers->id;
+     $package_id = $data_customers->package_id;
+     $qualification_id = $data_customers->qualification_id;
+     $aistockist_status = $data_customers->aistockist_status;
+     $agency_status = $data_customers->agency_status;
+
+     $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
+     $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
+
+     $html='';
+
+     foreach ($promotions as $value){
+
+         $check_all_available_purchase = Promotion::all_available_purchase($value->id);
+         $count_per_promotion = Promotion::count_per_promotion($value->id);
+         $count_per_promotion_day = Promotion::count_per_promotion_day($value->id);
+
+
+          //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
+         if($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase']){
+             $arr[] = ['status'=>'fail','message'=>'การสั่งซื้อครบแล้ว'];
+         }
+
+         if($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
+             $arr[] = ['status'=>'fail','message'=>'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้'];
+
+         }
+
+         if($qualification_id < $value->reward_qualify_purchased and !empty($value->reward_qualify_purchased)) {
+
+             $arr[] = ['status'=>'fail','message'=>'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้','code'=>'e003'];
+         }
+
+         if($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail'){///ต้องรักษาคุณสมบัตรรายเดือน
+             $arr[] = ['status'=>'fail','message'=>$mt_active['message']];
+         }
+
+         if($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'N'){//ต้องรักษาคุณสมบัติรายเดือน
+             $arr[] = ['status'=>'fail','message'=>'ต้องมีการรักษาคุณสมบัติรายเดือน'];
+
+         }
+
+         if ($value->keep_personal_quality == 0 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') {//ไม่่ต้องรักษาคุณสมบัติรายเดือน
+             $arr[] = ['status'=>'fail','message'=>$mt_active['message']];
+
+         }
+
+         if ($value->keep_personal_quality == 0 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'Y') {//ไม่่ต้องรักษาคุณสมบัติรายเดือน
+             $arr[] = ['status'=>'fail','message'=>'ต้องไม่มีการรักษาคุณสมบัติรายเดือน'];
+
+         }
+
+         if($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $mt_active['status'] == 'fail'){
+             ///ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+            $arr[] = ['status'=>'fail','message'=>$tv_active['message']];
+
+        }
+
+        if($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $tv_active['type']=='N'){
+
+         $arr[] = ['status'=>'fail','message'=>'ต้องมีการรักษาคุณสมบัติท่องเที่ยว','code'=>'e009'];
+         }
+
+         if($value->maintain_travel_feature == 0 and !empty($value->maintain_travel_feature) and $tv_active['status'] == 'fail'){
+                         ///ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+        $arr[] = ['status'=>'fail','message'=>$tv_active['message']];
+      }
+
+    if($value->maintain_travel_feature == 0 and !empty($value->maintain_travel_feature) and $tv_active['type']=='Y'){
+     $arr[] = ['status'=>'fail','message'=>'ต้องไม่มีการรักษาคุณสมบัติท่องเที่ยว','code'=>'e011'];
+
+         }
+
+         if($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0 ){//เป็น aistockist
+             $arr[] = ['status'=>'fail','message'=>'ต้องเป็น Ai-Stockist '];
+
+         }
+
+         if($value->aistockist == 0 and !empty($value->aistockist) and $aistockist_status == 1){//ต้องไม่เป็น aistockist
+
+             $arr[] = ['status'=>'fail','message'=>'ต้องไม่เป็น Ai-Stockist'];
+
+         }
+
+         if($value->agency == 1 and !empty($value->agency) and $agency_status == 0 ){//เป็น aistockist
+             $arr[] = ['status'=>'fail','message'=>'ต้องเป็น Agency'];
+
+         }
+
+         if($value->agency == 0 and !empty($value->agency) and $agency_status == 1){//ต้องไม่เป็น aistockist
+             $arr[] = ['status'=>'fail','message'=>'ต้องไม่เป็น Agency'];
+
+         }
+
+         if($value->limited_amt_type == 1 ){
+     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
+             if($value->limited_amt_person <= $count_per_promotion['count']){
+                 $arr[] = ['status'=>'fail','message'=>'การซื้อเฉพาะต่อรอบโปรโมชั่นครบแล้ว'];
+             }
+         }
+
+         if($value->limited_amt_type == 2 ){
+             //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
+
+             if($value->limited_amt_person <= $count_per_promotion_day['count']){
+                 $arr[] = ['status'=>'fail','message'=>'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
+             }
+
+         }
+
+     }
+
+     return $arr;
+ }
+}
+
 
  public static function product_list_coupon($promotion_id,$type,$category_id){//$promotion_id,$types
      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
