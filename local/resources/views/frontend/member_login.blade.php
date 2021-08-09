@@ -64,11 +64,11 @@
 
 								<hr/>
 								<div class="input-group">
-									<input type="text" class="form-control" placeholder="User Name" name="username" value="A0000008" required="">
+									<input type="text" class="form-control" placeholder="User Name" name="username"  required="">
 									<span class="md-line"></span>
 								</div>
 								<div class="input-group">
-									<input type="password" class="form-control" placeholder="Password" name="password" value="123456" required="">
+									<input type="password" class="form-control" placeholder="Password" name="password" required="">
 									<span class="md-line"></span>
 								</div>
 								<div class="row m-t-25 text-left">

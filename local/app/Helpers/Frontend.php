@@ -260,6 +260,7 @@ class Frontend{
 		->where('package_id','!=',null)
 		->count();
 
+
 		$b =  DB::table('customers')
 		->where('customers.introduce_id','=',$customer_id)
 		->where('introduce_type','=','B')
@@ -282,13 +283,13 @@ class Frontend{
 			$reward_bonus =	'Five Star';
 		}elseif($b>=5 and $c>=5 ){
 			$reward_bonus =	'Five Star';
-		}if($a>=3 and $b>=3 ){
+		}elseif($a>=3 and $b>=3 ){
 			$reward_bonus =	'Triple Star';
 		}elseif($a>=3 and $c>=3 ){
 			$reward_bonus =	'Triple Star';
 		}elseif($b>=3 and $c>=3 ){
 			$reward_bonus =	'Triple Star';
-		}if($a>=1 and $b>=1 ){
+		}elseif($a>=1 and $b>=1 ){
 			$reward_bonus =	'Star';
 		}elseif($a>=1 and $c>=1 ){
 			$reward_bonus =	'Star';
@@ -300,6 +301,8 @@ class Frontend{
 
 		//dd($c);
 		$data = ['A'=>$a,'B'=>$b,'C'=>$c,'reward_bonus'=>$reward_bonus];
+
+		 
 		return $data;
 
 	}

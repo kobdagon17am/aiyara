@@ -16,35 +16,34 @@ class LineModel extends Model
 		}else{
 
 			$lv1 = DB::table('customers')
-			->select('*')
+			->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 			->where('user_name','=',$username)
 			->first();
 
 
 			$lv2_a = DB::table('customers')
-			->select('*')
+			->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 			->where('upline_id','=',$lv1->user_name)
 			->where('line_type','=','A')
 			->first();
 
 
-
 			if($lv2_a){
 
 				$lv3_a_a = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_a->user_name)
 				->where('line_type','=','A')
 				->first();
 
 				$lv3_a_b = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_a->user_name)
 				->where('line_type','=','B')
 				->first();
 
 				$lv3_a_c = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_a->user_name)
 				->where('line_type','=','C')
 				->first();
@@ -58,7 +57,7 @@ class LineModel extends Model
 
 
 			$lv2_b = DB::table('customers')
-			->select('*')
+			->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 			->where('upline_id','=',$lv1->user_name)
 			->where('line_type','=','B')
 			->first();
@@ -66,20 +65,20 @@ class LineModel extends Model
 			if($lv2_b){
 
 				$lv3_b_a = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_b->user_name)
 				->where('line_type','=','A')
 				->first();
 
 
 				$lv3_b_b = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_b->user_name)
 				->where('line_type','=','B')
 				->first();
 
 				$lv3_b_c = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_b->user_name)
 				->where('line_type','=','C')
 				->first();
@@ -92,7 +91,7 @@ class LineModel extends Model
 			}
 
 			$lv2_c = DB::table('customers')
-			->select('*')
+			->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 			->where('upline_id','=',$lv1->user_name)
 			->where('line_type','=','C')
 			->first();
@@ -100,21 +99,21 @@ class LineModel extends Model
 			if($lv2_c){
 
 				$lv3_c_a = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_c->user_name)
 				->where('line_type','=','A')
 				->first();
 
 
 				$lv3_c_b = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_c->user_name)
 				->where('line_type','=','B')
 				->first();
 
 
 				$lv3_c_c = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('upline_id','=',$lv2_c->user_name)
 				->where('line_type','=','C')
 				->first();
@@ -134,6 +133,8 @@ class LineModel extends Model
 			'lv3_c_a'=>$lv3_c_a,'lv3_c_b'=>$lv3_c_b,'lv3_c_c'=>$lv3_c_c
 		];
 
+
+
 		return $data;
 	}
 
@@ -152,28 +153,25 @@ public static function under_a($username=''){
 
 
 			$last_id_a = DB::table('customers')
-			->select('*')
+			->select('upline_id','user_name','upline_id')
 			->where('upline_id','=',$username)
 			->where('line_type','=','A')
-			->limit(1)
-			->get();
+			->first();
 
-			if(count($last_id_a)>0){
+			if($last_id_a){
 				$j = $j+$i;
-				$username	= $last_id_a[0]->user_name;
-
+				$username	= $last_id_a->user_name;
 
 			}else{
 				$j = 0;
 
 				$last_id_a = DB::table('customers')
-				->select('*')
+				->select('upline_id','user_name','upline_id')
 				->where('user_name','=',$username)
 				->where('line_type','=','A')
-				->limit(1)
-				->get();
+				->first();
+				return $last_id_a->upline_id;
 
-				return $last_id_a[0]->upline_id;
 			}
 
 		}
@@ -191,30 +189,24 @@ public static function under_b($username=''){
 
 		for ($i=1; $i<$j; $i++) {
 
-
 			$last_id_a = DB::table('customers')
-			->select('*')
+			->select('upline_id','user_name','upline_id')
 			->where('upline_id','=',$username)
 			->where('line_type','=','B')
-			->limit(1)
-			->get();
+			->first();
 
-			if(count($last_id_a)>0){
+			if($last_id_a){
 				$j = $j+$i;
-				$id	= $last_id_a[0]->id;
-
-
+				$username	= $last_id_a->user_name;
 			}else{
 				$j = 0;
 
 				$last_id_a = DB::table('customers')
-				->select('*')
+				->select('upline_id','user_name','upline_id')
 				->where('user_name','=',$username)
 				->where('line_type','=','B')
-				->limit(1)
-				->get();
-
-				return $last_id_a[0]->upline_id;
+				->first();
+				return $last_id_a->upline_id;
 			}
 
 		}
@@ -232,30 +224,23 @@ public static function under_c($username=''){
 
 		for ($i=1; $i<$j; $i++) {
 
-
 			$last_id_a = DB::table('customers')
-			->select('*')
+			->select('upline_id','user_name','upline_id')
 			->where('upline_id','=',$username)
 			->where('line_type','=','C')
-			->limit(1)
-			->get();
+			->first();
 
-			if(count($last_id_a)>0){
+			if($last_id_a){
 				$j = $j+$i;
-				$id	= $last_id_a[0]->id;
-
-
+				$username	= $last_id_a->user_name;
 			}else{
 				$j = 0;
-
 				$last_id_a = DB::table('customers')
-				->select('*')
+				->select('upline_id','user_name','upline_id')
 				->where('user_name','=',$username)
 				->where('line_type','=','C')
-				->limit(1)
-				->get();
-
-				return $last_id_a[0]->upline_id;
+				->first();
+				return $last_id_a->upline_id;
 			}
 
 		}
@@ -266,7 +251,7 @@ public static function under_c($username=''){
 public static function check_line($username){
 
 	$data_user = DB::table('customers')
-	->select('*')
+	->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 	->where('user_name','=',$username)
 	->first();
 
@@ -330,7 +315,7 @@ public static function check_line($username){
 public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
 
 	$data_user = DB::table('customers')
-	->select('*')
+	->select('upline_id','user_name','upline_id')
 	->where('user_name','=',$under_line_id)
 	->first();
 
@@ -348,7 +333,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
-				->select('*')
+				->select('upline_id','user_name','upline_id')
 				->where('user_name','=',$username)
 			//->where('upline_id','=',$use_id)
 				->first();
@@ -369,7 +354,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 				}else{
 
 					$data = DB::table('customers')
-					->select('*')
+					->select('upline_id','user_name','upline_id')
 					->where('id','=',$data->upline_id)
 					->first();
 
@@ -391,7 +376,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		if($resule['status'] == 'fail'){
 
 			$data_account = DB::table('customers')
-			->select('*')
+			->select('upline_id','user_name','upline_id')
 			->where('user_name','=',$introduce_id)
 			->first();
 
@@ -403,7 +388,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 					$j =0;
 				}else{
 					$data_account = DB::table('customers')
-					->select('*')
+					->select('upline_id','user_name','upline_id')
 					->where('user_name','=',$username)
 					->first();
 					$upline_id_arr[] = $data_account->user_name;
@@ -458,7 +443,7 @@ public static function check_line_aipocket($username){
 		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
-				->select('*')
+				->select('upline_id','user_name','upline_id')
 				->where('user_name','=',$username)
 			//->where('upline_id','=',$use_id)
 				->first();
@@ -478,7 +463,7 @@ public static function check_line_aipocket($username){
 				}else{
 
 					$data = DB::table('customers')
-					->select('*')
+					->select('upline_id','user_name','upline_id')
 					->where('user_name','=',$data->upline_id)
 					->first();
 
@@ -512,7 +497,7 @@ public static function check_line_aipocket($username){
 					$j =0;
 				}else{
 					$data_account = DB::table('customers')
-					->select('*')
+					->select('upline_id','user_name','upline_id')
 					->where('id','=',$id)
 					->first();
 					$upline_id_arr[] = $data_account->user_name;
