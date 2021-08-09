@@ -211,13 +211,13 @@ class Product extends Model
                     $resule = ['status'=>'fail','message'=>'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
                 }else{
                     $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
-                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,$category_id);
+                    $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,8);
                 }
 
             }else{
                 $resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
 
-                $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,$category_id);
+                $html .= ProductList::product_list_html($value->id,$type,$value->img_url,$value->promotion_img,$value->name_thai,$value->detail_thai,$icon='',$value->selling_price,$value->pv,8);
             }
 
 

@@ -359,7 +359,7 @@
       data: {'category_id':category,'type':'{{$type}}'},
     })
     .done(function(data){
-      $('#product_list').html(data);
+      $('#product_list').html(data['html']);
       $('#coupon_code').val('');
       console.log("success");
     })

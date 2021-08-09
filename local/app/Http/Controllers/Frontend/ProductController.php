@@ -21,8 +21,6 @@ class ProductController extends Controller
     public function product_list($type)
     {
 
-      $html = Product::product_list_select_promotion($type,Auth::guard('c_user')->user()->user_name);
-      dd($html);
 
         $categories = DB::table('categories')
             ->where('lang_id', '=', 2)
