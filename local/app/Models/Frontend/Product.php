@@ -88,8 +88,21 @@ class Product extends Model
 
     }
 
-    public static function product_list_select_promotion($category_id,$type){//$promotion_id,$types
-     $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+    public static function product_list_select_promotion($type,$customer_username){//เช่นทำคุณสมบัติ (dataset_orders_type->id),customer_username
+
+
+     $data_customers = DB::table('customers')
+     ->where('user_name', '=', $customer_username)
+     ->first();
+
+     if(empty($data_customers)){
+       $resule = ['status'=>'fail','message'=>'Customers is Null'];
+       return $resule;
+     }
+
+     $business_location_id = $data_customers->business_location_id;
+
+
      $promotions = DB::table('promotions')
      ->select('promotions.*','promotions_images.img_url','promotions_images.promotion_img','promotions_cost.selling_price','promotions_cost.pv')
      ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
@@ -109,13 +122,14 @@ class Product extends Model
 
      if(count($promotions) <= 0 ){
          $resule = ['status'=>'fail','message'=>'NUll Product'];
+
      }else{
 
-        $customer_id = Auth::guard('c_user')->user()->id;
-        $package_id = Auth::guard('c_user')->user()->package_id;
-        $qualification_id = Auth::guard('c_user')->user()->qualification_id;
-        $aistockist_status = Auth::guard('c_user')->user()->aistockist_status;
-        $agency_status = Auth::guard('c_user')->user()->agency_status;
+        $customer_id = $data_customers->id;
+        $package_id = $data_customers->package_id;
+        $qualification_id = $data_customers->qualification_id;
+        $aistockist_status = $data_customers->aistockist_status;
+        $agency_status = $data_customers->agency_status;
 
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
         $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
@@ -132,10 +146,10 @@ class Product extends Model
              //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
             if($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase']){
                 $resule = ['status'=>'fail','message'=>'การสั่งซื้อครบแล้ว'];
-            }elseif($package_id < $value->minimum_package_purchased and !empty($data_ce->minimum_package_purchased)) {
+            }elseif($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
                 $resule = ['status'=>'fail','message'=>'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้'];
 
-            }elseif($qualification_id < $value->reward_qualify_purchased and !empty($data_ce->reward_qualify_purchased)) {
+            }elseif($qualification_id < $value->reward_qualify_purchased and !empty($value->reward_qualify_purchased)) {
 
                 $resule = ['status'=>'fail','message'=>'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้','code'=>'e003'];
 
