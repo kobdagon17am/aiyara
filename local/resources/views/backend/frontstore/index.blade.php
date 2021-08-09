@@ -821,6 +821,10 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
                       }else{
               
+                          var str_V = '';
+
+                          str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
+
                           var str_U = '';
                           if(sU=='1'){
                             str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
@@ -832,7 +836,18 @@ Gift Voucher  <i class="fa fa-gift"></i>
                           if(sU!='1' && sD!='1'){
                              $('td:last-child', nRow).html('-');
                           }else{
-                            $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+
+                            console.log("invoice_code = "+aData['invoice_code']);
+
+                                   if(aData['invoice_code'] !== null){
+                                      
+                                      $('td:last-child', nRow).html(str_V + str_D).addClass('input');
+
+                                    }else{
+
+                                       $('td:last-child', nRow).html(str_U + str_D).addClass('input');
+
+                                    }
                           }
 
                     }
@@ -849,9 +864,9 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }
 
 
-            // console.log(aData['status_delivery']);
+            // console.log(aData['invoice_code']);
 
-            if(aData['status_delivery']=='1'  ){
+            if(aData['status_delivery']=='1'){
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> '
@@ -1608,6 +1623,9 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
       
       DB::select("TRUNCATE `db_sent_money_daily` ;");
+
+      DB::select("TRUNCATE `db_add_ai_cash` ;");
+      
       // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
 
       ?>

@@ -805,7 +805,7 @@ class AjaxController extends Controller
                              // ต่าง จ. กัน เช็คดูว่า อยู่ในเขตปริมณทฑลหรือไม่
                             $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
 
-                            $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=$province_id ");
+                            $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id =".$shipping_cost[0]->shipping_type_id." AND province_id_fk=$province_id ");
 
                             if(count($shipping_vicinity)>0){
 
@@ -1011,7 +1011,7 @@ class AjaxController extends Controller
 
     }
 
-    public function ajaxCearCostFrontstore(Request $request)
+    public function ajaxClearCostFrontstore(Request $request)
     {
           $frontstore_id_fk =  $request->frontstore_id_fk ;
 
@@ -1448,12 +1448,10 @@ class AjaxController extends Controller
 
 
 
-   public function ajaxCalAicash(Request $request)
+   public function ajaxGetAicash(Request $request)
     {
-        $rs =  DB::select(" select * from customers where id=".$request->customer_id." ");
-        // $Cus_Aicash = $sCustomer[0]->ai_cash;
+        $rs =  DB::select(" select ai_cash from customers where id=".$request->customer_id." ");
         return response()->json($rs);
-
     }
 
 
@@ -1909,7 +1907,7 @@ class AjaxController extends Controller
     }
 
 
-    public function ajaxCalAicashAmt(Request $request)
+    public function ajaxGetAicashAmt(Request $request)
     {
         // return $request;
         // dd();
@@ -4106,7 +4104,72 @@ class AjaxController extends Controller
        }
     }
 
-// 
+    public function ajaxDeLProductOrderBackend(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+
+          
+          DB::select(" DELETE FROM `db_order_products_list` where id=$request->id ");
+
+          // $sumprice = DB::select(" SELECT sum(total_price) as sumprice FROM `db_order_products_list` where frontstore_id_fk=$request->id ");
+
+          // $sumprice = $sumprice[0]->sumprice>0?$sumprice[0]->sumprice:0;
+
+          // DB::select(" UPDATE `db_orders` SET `cash_price`='$sumprice' WHERE (`id`=$request->frontstore_id_fk) ");
+          // clear เลย ให้ใส่ใหม่ 
+
+/*
+1 เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+12  Gift Voucher + เงินโอน
+13  Gift Voucher + บัตรเครดิต
+14  Gift Voucher + Ai-Cash
+15  PromptPay
+16  TrueMoney
+17  Gift Voucher + PromptPay
+18  Gift Voucher + TrueMoney
+*/
+
+       DB::select(" UPDATE db_orders SET
+
+            pay_type_id_fk='0',
+
+            aicash_price='0',
+            member_id_aicash='0',
+            transfer_price='0',
+            credit_price='0',
+
+            charger_type='0',
+            fee='0',
+            fee_amt='0',
+            sum_credit_price='0',
+            account_bank_id='0',
+
+            transfer_money_datetime=NULL ,
+            file_slip=NULL,
+
+            total_price='0',
+            cash_price='0',
+            cash_pay='0'
+
+            WHERE id=$request->frontstore_id_fk ");
+
+
+          // DB::select(" UPDATE `db_orders` SET `cash_price`='0' WHERE `id`=$request->frontstore_id_fk and pay_type_id_fk=5 ");
+
+       }
+    }
+
 
     public function ajaxCourseCheckRegis(Request $request)
     {

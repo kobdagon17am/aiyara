@@ -421,29 +421,29 @@ class Transfer_branch_get_productsController extends Controller
            return @$sBranchs[0]->b_name;
       })
       ->addColumn('approve_date_get', function($row) {
-            $sD = DB::select(" select approve_date from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
-           if(!is_null($sD[0]->approve_date)){
-                return date("Y-m-d",strtotime($sD[0]->approve_date))."<br>".date("H:i:s",strtotime($sD[0]->approve_date));
+            $sD = DB::select(" select approve_date from db_transfer_branch_get where id=".@$row->transfer_branch_get_id_fk." ");
+           if(!is_null(@$sD[0]->approve_date)){
+                return date("Y-m-d",strtotime(@$sD[0]->approve_date))."<br>".date("H:i:s",strtotime(@$sD[0]->approve_date));
             }
       })
       ->addColumn('approve_status_get', function($row) {
 
         $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where id=".$row->transfer_branch_get_id_fk." ");
-        if($sD){
-          if($sD[0]->approve_status==1){
+        if(@$sD){
+          if(@$sD[0]->approve_status==1){
             return '<span style="color:green;">รับสินค้าแล้ว</span>';
-          }elseif($sD[0]->approve_status==5){
+          }elseif(@$sD[0]->approve_status==5){
 
             $t = '';
-            if($sD[0]->approve_status_getback==1){
-              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
-            }elseif($sD[0]->approve_status_getback==5){
-              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
+            if(@$sD[0]->approve_status_getback==1){
+              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+            }elseif(@$sD[0]->approve_status_getback==5){
+              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
             }
 
-            $n = $sD[0]->note2?"<br>หมายเหตุ ".$sD[0]->note2:'';
+            $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
             return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
 
           }else{
@@ -514,68 +514,64 @@ class Transfer_branch_get_productsController extends Controller
         $w01 = [0] ;
         $w02 = [0] ;
       // กรณีมีการกรองด้วย สาขา 
-      if(isset($req->branch_id_fk)){ 
+      // if(isset($req->branch_id_fk)){ 
 
         
-            // ทั้งสาขาฝั่งส่ง และ ฝั่งรับ ก็ต้องแสดงทั้งสองฝั่ง 
-            // กรณีฝั่งส่่ง
-              $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where branch_id_fk in (".($req->branch_id_fk).") ");
-              $arr = [];
-              foreach ($db_transfer_branch_code as $key => $value) {
-                $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$value->tr_number."' ");
-                if(@$db_transfer_branch_get[0]->id){
-                    array_push($arr,@$db_transfer_branch_get[0]->id);
-                }
-              }
-              $w01 = $arr;
+      //       // ทั้งสาขาฝั่งส่ง และ ฝั่งรับ ก็ต้องแสดงทั้งสองฝั่ง 
+      //       // กรณีฝั่งส่่ง
+      //         $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where branch_id_fk in (".($req->branch_id_fk).") ");
+      //         $arr = [];
+      //         foreach ($db_transfer_branch_code as $key => $value) {
+      //           $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$value->tr_number."' ");
+      //           if(@$db_transfer_branch_get[0]->id){
+      //               array_push($arr,@$db_transfer_branch_get[0]->id);
+      //           }
+      //         }
+      //         $w01 = $arr;
 
-              // กรณีฝั่งรับ
-              $db_transfer_branch_details = DB::select(" select id from `db_transfer_branch_details` where branch_id_fk in (".($req->branch_id_fk).") ");
-              if(@$db_transfer_branch_details){
+      //         // กรณีฝั่งรับ
+      //         $db_transfer_branch_details = DB::select(" select id from `db_transfer_branch_details` where branch_id_fk in (".($req->branch_id_fk).") ");
+      //         if(@$db_transfer_branch_details){
 
-                $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where transfer_branch_code_id='".$db_transfer_branch_details[0]->id."' ");
-                $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$db_transfer_branch_code[0]->tr_number."' ");
-                $w02 = $db_transfer_branch_get[0]->id;  
-              }
+      //           $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where transfer_branch_code_id='".$db_transfer_branch_details[0]->id."' ");
+      //           $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$db_transfer_branch_code[0]->tr_number."' ");
+      //           $w02 = $db_transfer_branch_get[0]->id;  
+      //         }
 
        
 
-      }else{
+      // }else{
         
-          // ทั้งสาขาฝั่งส่ง และ ฝั่งรับ ก็ต้องแสดงทั้งสองฝั่ง 
-          // กรณีฝั่งส่่ง
-            $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where branch_id_fk in (".(\Auth::user()->branch_id_fk).") ");
-            $arr = [];
-            foreach ($db_transfer_branch_code as $key => $value) {
-              $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$value->tr_number."' ");
-              if(@$db_transfer_branch_get[0]->id){
-                  array_push($arr,@$db_transfer_branch_get[0]->id);
-              }
-            }
-            $w01 = $arr;
+      //     // ทั้งสาขาฝั่งส่ง และ ฝั่งรับ ก็ต้องแสดงทั้งสองฝั่ง 
+      //     // กรณีฝั่งส่่ง
+      //       $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where branch_id_fk in (".(\Auth::user()->branch_id_fk).") ");
+      //       $arr = [];
+      //       foreach ($db_transfer_branch_code as $key => $value) {
+      //         $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$value->tr_number."' ");
+      //         if(@$db_transfer_branch_get[0]->id){
+      //             array_push($arr,@$db_transfer_branch_get[0]->id);
+      //         }
+      //       }
+      //       $w01 = $arr;
 
-            // กรณีฝั่งรับ
-            $db_transfer_branch_details = DB::select(" select id from `db_transfer_branch_details` where branch_id_fk in (".(\Auth::user()->branch_id_fk).") ");
-            if(@$db_transfer_branch_details){
+      //       // กรณีฝั่งรับ
+      //       $db_transfer_branch_details = DB::select(" select id from `db_transfer_branch_details` where branch_id_fk in (".(\Auth::user()->branch_id_fk).") ");
+      //       if(@$db_transfer_branch_details){
 
-              $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where transfer_branch_code_id='".$db_transfer_branch_details[0]->id."' ");
-              $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$db_transfer_branch_code[0]->tr_number."' ");
-              $w02 = $db_transfer_branch_get[0]->id;  
-            }
+      //         $db_transfer_branch_code = DB::select(" select tr_number from `db_transfer_branch_code` where transfer_branch_code_id='".$db_transfer_branch_details[0]->id."' ");
+      //         $db_transfer_branch_get = DB::select(" select id from db_transfer_branch_get where tr_number='".$db_transfer_branch_code[0]->tr_number."' ");
+      //         $w02 = $db_transfer_branch_get[0]->id;  
+      //       }
 
 
-      }
+      // }
 
       //  `get_status` int(1) DEFAULT '0' COMMENT '1=ได้รับสินค้าครบแล้ว 2=ยังค้างรับสินค้า 3=ยกเลิกรายการสินค้านี้',
       $sTable = \App\Models\Backend\Transfer_branch_get_products::where('get_status','!=','1') // 2=ยังค้างรับสินค้า 3=ยกเลิกรายการสินค้านี้', 
-      // ->where('transfer_branch_get_id_fk',$Operator01,$w01)
-      // ->whereIn('transfer_branch_get_id_fk', ['1','2','3','4'])
-      ->where(function ($query) use ($w01,$w02) {
-          $query->whereIn('transfer_branch_get_id_fk', $w01)
-                ->orWhereIn('transfer_branch_get_id_fk', $w02);
-      })
-      // ->whereIn('transfer_branch_get_id_fk', $w01)
-      // ->orWhereIn('transfer_branch_get_id_fk', $w01)
+      // ->where(function ($query) use ($w01,$w02) {
+      //     $query->whereIn('transfer_branch_get_id_fk', $w01)
+      //           ->orWhereIn('transfer_branch_get_id_fk', $w02);
+      // })
       ->orderBy('updated_at', 'desc')
       ;
       // if(isset($req->branch_id_fk)){
@@ -610,11 +606,11 @@ class Transfer_branch_get_productsController extends Controller
       })
       ->addColumn('product_unit_desc', function($row) {
           $sP = \App\Models\Backend\Product_unit::find($row->product_unit);
-          return $sP->product_unit;
+          return @$sP->product_unit;
       })
       ->addColumn('get_status', function($row) {
-        if($row->product_amt==$row->product_amt_receive) @$get_status=1;
-        if($row->product_amt>$row->product_amt_receive) @$get_status=2;
+        if(@$row->product_amt==@$row->product_amt_receive) @$get_status=1;
+        if(@$row->product_amt>@$row->product_amt_receive) @$get_status=2;
         if(@$get_status==1){
           return '<font color=green>ได้รับสินค้าครบแล้ว</font>';
         }else if(@$get_status==2){
@@ -630,9 +626,9 @@ class Transfer_branch_get_productsController extends Controller
           return @$row->get_status;
       })
       ->addColumn('tr_status', function($row) {
-          $d = DB::select(" select tr_status from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
-          if($d){
-            return $d[0]->tr_status;
+          $d = DB::select(" select tr_status from db_transfer_branch_get where id=".@$row->transfer_branch_get_id_fk." ");
+          if(@$d){
+            return @$d[0]->tr_status;
           }else{
             return 0 ;
           }
@@ -657,7 +653,7 @@ class Transfer_branch_get_productsController extends Controller
 
                 $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
                 $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");
-                $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
+                $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".@$db_transfer_branch_code[0]->id."' ");
 
                 $Product_unit = \App\Models\Backend\Product_unit::find($row->product_unit);
 
@@ -675,7 +671,7 @@ class Transfer_branch_get_productsController extends Controller
           $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
           $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");
           $db_transfer_branch_details = DB::select(" select branch_id_fk from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
-          $sBranchs = DB::select(" select * from branchs where id=".$db_transfer_branch_details[0]->branch_id_fk." ");
+          $sBranchs = DB::select(" select * from branchs where id=".@$db_transfer_branch_details[0]->branch_id_fk." ");
           return @$sBranchs[0]->b_name;
       }) 
       ->escapeColumns('branch_name')
@@ -722,29 +718,29 @@ class Transfer_branch_get_productsController extends Controller
       })
       ->addColumn('approve_date_get', function($row) {
             $sD = DB::select(" select approve_date from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
-           if(!is_null($sD[0]->approve_date)){
-                return date("Y-m-d",strtotime($sD[0]->approve_date))."<br>".date("H:i:s",strtotime($sD[0]->approve_date));
+           if(!is_null(@$sD[0]->approve_date)){
+                return date("Y-m-d",strtotime(@$sD[0]->approve_date))."<br>".date("H:i:s",strtotime(@$sD[0]->approve_date));
             }
       })
       ->addColumn('approve_status_get', function($row) {
 
 
-        $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where id=".$row->transfer_branch_get_id_fk." ");
-        if($sD){
-          if($sD[0]->approve_status==1){
+        $sD = DB::select(" select approve_status,note2,tr_status,approve_status_getback,note3,updated_at from `db_transfer_branch_get` where id=".@$row->transfer_branch_get_id_fk." ");
+        if(@$sD){
+          if(@$sD[0]->approve_status==1){
             return '<span style="color:green;">รับสินค้าแล้ว</span>';
-          }elseif($sD[0]->approve_status==5){
+          }elseif(@$sD[0]->approve_status==5){
 
             $t = '';
-            if($sD[0]->approve_status_getback==1){
-              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
-            }elseif($sD[0]->approve_status_getback==5){
-              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime($sD[0]->updated_at)).')</span>';
-              $t .= '<br><span style="color:green">'.$sD[0]->note3.'</span>';
+            if(@$sD[0]->approve_status_getback==1){
+              $t .= '<br><span style="color:green">รับสินค้าคืนแล้ว ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
+            }elseif(@$sD[0]->approve_status_getback==5){
+              $t .= '<br><span style="color:green">ปฏิเสธการรับสินค้าคืน ('.date("Y-m-d",strtotime(@$sD[0]->updated_at)).')</span>';
+              $t .= '<br><span style="color:green">'.@$sD[0]->note3.'</span>';
             }
 
-            $n = $sD[0]->note2?"<br>หมายเหตุ ".$sD[0]->note2:'';
+            $n = @$sD[0]->note2?"<br>หมายเหตุ ".@$sD[0]->note2:'';
             return '<span style="color:red;">ปฏิเสธการรับสินค้า</span>'.$n.$t;
 
           }else{

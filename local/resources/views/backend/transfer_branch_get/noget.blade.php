@@ -267,11 +267,11 @@
       </div>
 
       <form action="{{ route('backend.transfer_branch_get_products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="text" name="save_set_to_warehouse_fromnoget" value="1" >
-            <input type="text" id="this_id" name="id" >
-            <input type="text" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk" >
-            <input type="text" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
-            <input type="text" id="product_id_fk" name="product_id_fk" >
+            <input type="hidden" name="save_set_to_warehouse_fromnoget" value="1" >
+            <input type="hidden" id="this_id" name="id" >
+            <input type="hidden" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk" >
+            <input type="hidden" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
+            <input type="hidden" id="product_id_fk" name="product_id_fk" >
             {{ csrf_field() }}
 
       <div class="modal-body">
