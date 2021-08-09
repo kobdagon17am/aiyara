@@ -133,7 +133,6 @@ class CourseCheckRegis extends Model
       ->first();
       $resule = array();
 
-
       $customer = DB::table('customers')
       ->where('user_name',$customer_username)
       ->first();

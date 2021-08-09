@@ -115,9 +115,6 @@ class KsherNotifyController extends Controller
               'pay_type_id_fk' =>  $pay_type_id_fk,
               'true_money_price' => $this->formatPrice($getKsherData->total_fee),
           ];
-
-
-
       }
 
       Log::info('>>>> Update Order After Ksher Insert <<<<');
@@ -149,7 +146,6 @@ class KsherNotifyController extends Controller
                 ]);
             }
 
-
         if ($getKsherData->channel == 'promptpay') {
 
           if($getOrderData->purchase_type_id_fk == '5'){
@@ -162,11 +158,25 @@ class KsherNotifyController extends Controller
               'pay_type_id_fk' =>  $pay_type_id_fk,
               'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
           ];
-        } else {
+        }
+
+        if($getKsherData->channel == 'truemoney'){
           if($getOrderData->purchase_type_id_fk == '5'){
             $pay_type_id_fk = 18;
           }else{
             $pay_type_id_fk = 15;
+          }
+          $payInfo = [
+              'pay_type_id_fk' =>  $pay_type_id_fk,
+              'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+          ];
+        }
+
+        if($getKsherData->channel == 'ktbcard'){
+          if($getOrderData->purchase_type_id_fk == '5'){
+            $pay_type_id_fk = 9;
+          }else{
+            $pay_type_id_fk = 2;
           }
           $payInfo = [
               'pay_type_id_fk' =>  $pay_type_id_fk,

@@ -521,8 +521,30 @@ class CartPaymentController extends Controller
                 return redirect('product-history')->withError('Payment Fail');
             }
 
-        } elseif ($request->submit == 'credit_card') {
-            dd('coming soon');
+        } elseif ($request->submit == 'Credit') {
+
+          $request['pay_type'] = 2;
+            $gateway_pay_data = array(
+                'mch_order_no' => $order_data->code_order,
+                "total_fee" => $total_price,
+                "fee_type" => 'THB',
+                "channel_list" => 'ktbcard',
+                'mch_code' => $order_data->code_order,
+                'product_name' => $order_data->type,
+            );
+
+            $data = KsherController::gateway_ksher($gateway_pay_data);
+            //targetUrl
+            if ($data['status'] == 'success') {
+                if ($order_data->purchase_type_id_fk == 5) {
+                    $update_order = DB::table('db_orders')
+                        ->where('id', $order_data->id)
+                        ->update(['pay_type_id_fk' => '2']);
+                }
+                return redirect($data['url']);
+            } else {
+                return redirect('product-history')->withError('Payment Fail');
+            }
 
         } elseif ($request->submit == 'ai_cash') {
             $resule = Payment::ai_cash($request);
