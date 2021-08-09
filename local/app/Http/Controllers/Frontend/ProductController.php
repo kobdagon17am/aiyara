@@ -21,6 +21,9 @@ class ProductController extends Controller
     public function product_list($type)
     {
 
+      $html = Product::product_list_select_promotion($type,Auth::guard('c_user')->user()->user_name);
+      dd($html);
+
         $categories = DB::table('categories')
             ->where('lang_id', '=', 2)
             ->where('status', '=', 1)
@@ -59,10 +62,10 @@ class ProductController extends Controller
             $c_id = $request->category_id;
 
             if ($c_id == 8) {
-                $html = Product::product_list_select_promotion($c_id, $type);
+                $html = Product::product_list_select_promotion($type,Auth::guard('c_user')->user()->user_name);
                 return $html;
             } else {
-                $data = Product::product_list_select($c_id, $type);
+                $data = Product::product_list_select($c_id,$type);
 
             }
         }

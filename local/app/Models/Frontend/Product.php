@@ -118,7 +118,7 @@ class Product extends Model
      ->orderby('id','DESC')
      ->get();
 
-       //dd($promotions);
+      //dd($promotions);
 
      if(count($promotions) <= 0 ){
          $resule = ['status'=>'fail','message'=>'NUll Product'];
@@ -222,13 +222,13 @@ class Product extends Model
 
 
         }
+        $data =['html'=>$html,'rs'=>$resule];
 
-        return $html;
+        return $data;
     }
 }
 
 public static function product_list_select_promotion_all($type,$customer_username){//เช่นทำคุณสมบัติ (dataset_orders_type->id),customer_username
-
 
   $data_customers = DB::table('customers')
   ->where('user_name', '=', $customer_username)
@@ -257,10 +257,10 @@ public static function product_list_select_promotion_all($type,$customer_usernam
   ->orderby('id','DESC')
   ->get();
 
-    //dd($promotions);
+
 
   if(count($promotions) <= 0 ){
-      $resule = ['status'=>'fail','message'=>'NUll Product'];
+      $resule = ['status'=>'fail','message'=>'ตอนนี้ไม่มี Promotions'];
 
   }else{
 
