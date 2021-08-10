@@ -323,7 +323,7 @@
         </div>
 
 
-                <!-- <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
+                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
 
               <div class="myBorder" style="margin-top: 2%;">

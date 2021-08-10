@@ -844,6 +844,10 @@ class FrontstorelistController extends Controller
           $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$row->frontstore_id_fk." GROUP BY frontstore_id_fk ");
           return @$total_price[0]->total;
       })
+      ->addColumn('pay_type', function($row) {
+          $pay_type = DB::select(" select pay_type_id_fk from db_orders WHERE id=".$row->frontstore_id_fk." ");
+          return @$pay_type[0]->pay_type_id_fk;
+      })
       ->make(true);
     }
 

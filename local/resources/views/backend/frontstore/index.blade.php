@@ -849,6 +849,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
                                     }
                           }
+// TEST
+                            $('td:last-child', nRow).html(str_U + str_D).addClass('input');
 
                     }
 
