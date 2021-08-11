@@ -1,6 +1,6 @@
 <?php
 use App\Helpers\Frontend;
-$customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->id);
+$customer_data = Frontend::get_customer(Auth::guard('c_user')->user()->user_name);
 $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 ?>

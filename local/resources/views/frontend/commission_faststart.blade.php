@@ -63,7 +63,7 @@
               url: "{!! route('dt_commission_faststart') !!}",
               type:'GET',
               data: function (d) {
-                d.customer_id = "{{ $data['customer_id'] }}";
+                d.customer_username = "{{ $data['customer_username'] }}";
                 d.date =  "{{ $data['date'] }}";
             }
               },

@@ -31,7 +31,7 @@ class CommissionController extends Controller
         $date_between = [$s_date, $e_date];
 
         $db_commission_bonus_transfer = DB::table('db_report_bonus_transfer')
-            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->where('customer_username', '=', Auth::guard('c_user')->user()->user_name)
             ->when($date_between, function ($query, $date_between) {
                 return $query->whereBetween('bonus_transfer_date', $date_between);
             })
@@ -106,7 +106,7 @@ class CommissionController extends Controller
     {
         $date = (date('Y-m-d', $rs->date));
         $data = DB::table('db_report_bonus_per_day')
-            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->where('customer_username', '=', Auth::guard('c_user')->user()->user_name)
             ->where('status_payment', '=', 1)
             ->wheredate('transfer_date', '=', $date)
             ->orderby('action_date', 'DESC')
@@ -115,7 +115,7 @@ class CommissionController extends Controller
         $total = DB::table('db_report_bonus_per_day')
             ->select(db::raw('sum(faststart) as faststart_total ,sum(tmb) as tmb_total,sum(booster) as booster_total
         ,sum(reward) as reward_total,sum(team_maker) as team_maker_total,sum(pro) as pro_total,sum(bonus_total) as sum_bonus_total'))
-            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->where('customer_username', '=', Auth::guard('c_user')->user()->user_name)
             ->where('status_payment', '=', 1)
             ->wheredate('transfer_date', '=', $date)
             ->orderby('action_date', 'DESC')
@@ -138,7 +138,7 @@ class CommissionController extends Controller
         $date_between = [$s_date, $e_date];
 
         $db_report_bonus_per_day = DB::table('db_report_bonus_per_day')
-            ->where('customer_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->where('customer_username', '=', Auth::guard('c_user')->user()->user_name)
             ->when($date_between, function ($query, $date_between) {
                 return $query->whereBetween('action_date', $date_between);
             })
@@ -217,7 +217,7 @@ class CommissionController extends Controller
             ->addColumn('faststart', function ($row) {
                 if ($row->faststart) {
                     // $row->action_date
-                    $url = route('commission_faststart', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
+                    $url = route('commission_faststart', ['customer_id' => $row->customer_username, 'date' => $row->action_date]);
                     return "<a href='" . $url . "' class='text-primary'>" . number_format($row->faststart) . "</a>";
                 } else {
                     return '-';
@@ -225,7 +225,7 @@ class CommissionController extends Controller
             })
             ->addColumn('matching', function ($row) {
                 if ($row->matching) {
-                    $url = route('commission_matching', ['customer_id' => $row->customer_id_fk, 'date' => $row->action_date]);
+                    $url = route('commission_matching', ['customer_id' => $row->customer_username, 'date' => $row->action_date]);
                     return "<a href='" . $url . "' class='text-primary'>" . number_format($row->matching) . "</a>";
 
                 } else {
@@ -267,13 +267,13 @@ class CommissionController extends Controller
             ->make(true);
     }
 
-    public function commission_faststart($customer_id, $date)
+    public function commission_faststart($customer_username, $date)
     {
-        if ($customer_id == '' || $date == '') {
+        if ($customer_username == '' || $date == '') {
             return redirect('commission_per_day')->withError('Data Is Null');
         } else {
             $date = date('Y-m-d', strtotime($date));
-            $data = ['customer_id' => $customer_id, 'date' => $date];
+            $data = ['customer_username' => $customer_username, 'date' => $date];
         }
 
         return view('frontend/commission_faststart', compact('data'));
@@ -282,22 +282,24 @@ class CommissionController extends Controller
     public function dt_commission_faststart(Request $rs)
     {
         $db_commission_faststart = DB::table('db_report_bonus_faststart')
-            ->where('customer_id_fk', '=', $rs->customer_id)
+            ->where('customer_username', '=', $rs->customer_username)
             ->wheredate('action_date', '=', $rs->date)
             ->orderby('action_date', 'DESC')
             ->get();
+
+
+
 
         //$customer_data = Frontend::get_customer('8');
         //dd($db_commission_faststart);
         $sQuery = Datatables::of($db_commission_faststart);
         return $sQuery
             ->addColumn('username', function ($row) {
-                $customer_data = Frontend::get_customer($row->customer_pay_id);
-                return $customer_data->user_name;
+                return $row->customer_pay_username;
             })
             ->addColumn('name', function ($row) {
-                if ($row->customer_pay_id) {
-                    $customer_data = Frontend::get_customer($row->customer_pay_id);
+                if ($row->customer_pay_username) {
+                    $customer_data = Frontend::get_customer($row->customer_pay_username);
                     return $customer_data->prefix_name . ' ' . $customer_data->first_name . ' ' . $customer_data->last_name;
                 } else {
                     return '-';
@@ -350,7 +352,7 @@ class CommissionController extends Controller
     public function dt_commission_matching(Request $rs)
     {
         $db_commission_matching = DB::table('db_report_bonus_matching')
-            ->where('customer_id_fk', '=', $rs->customer_id)
+            ->where('customer_username', '=', $rs->customer_username)
             ->wheredate('action_date', '=', $rs->date)
             ->orderby('action_date', 'DESC')
             ->get();
@@ -411,12 +413,12 @@ class CommissionController extends Controller
         } else {
             $e_date = '';
         }
-        $customer_id = Auth::guard('c_user')->user()->id;
+        $customer_username = Auth::guard('c_user')->user()->user_name;
 
         $sTable = DB::table('db_report_bonus_transfer_aistockist')
             ->select('db_report_bonus_transfer_aistockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-            ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_id_fk', '=', 'customers.id')
-            ->where('db_report_bonus_transfer_aistockist.customer_id_fk', '=', $customer_id)
+            ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_username', '=', 'customers.user_name')
+            ->where('db_report_bonus_transfer_aistockist.customer_username', '=', $customer_username)
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$s_date}' else 1 END"))
@@ -469,7 +471,7 @@ class CommissionController extends Controller
                     $status = 'ไม่อนุมัติ';
                 } else {
                     $status = '-';
-                } 
+                }
                 return $status;
             })
 
@@ -491,10 +493,10 @@ class CommissionController extends Controller
     {
 
         $date = (date('Y-m-d', $rs->date));
-        $customer_id = Auth::guard('c_user')->user()->id;
+        $customer_username = Auth::guard('c_user')->user()->user_name;
 
         $data_customer = DB::table('customers')
-            ->where('customers.id', '=', $customer_id)
+            ->where('customers.user_name', '=', $customer_username)
             ->first();
 
         $data = DB::table('ai_stockist')
@@ -502,10 +504,11 @@ class CommissionController extends Controller
             ->leftjoin('customers', 'ai_stockist.to_customer_id', '=', 'customers.id')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'ai_stockist.type_id')
             ->where('dataset_orders_type.lang_id', '=', $data_customer->business_location_id)
-            ->where('ai_stockist.customer_id', '=', $customer_id)
+            ->where('ai_stockist.customer_id', '=', $data_customer->id)
             ->where('ai_stockist.status_transfer', '=', 1)
             ->wheredate('ai_stockist.bonus_transfer_date', '=', $date)
             ->get();
+
 
         $vat_tax = DB::table('dataset_vat')
             ->where('business_location_id_fk', '=', $data_customer->business_location_id)
@@ -513,7 +516,7 @@ class CommissionController extends Controller
 
         $total = DB::table('ai_stockist')
             ->select(db::raw('sum(pv) as pv_total'))
-            ->where('ai_stockist.customer_id', '=', $customer_id)
+            ->where('ai_stockist.customer_id', '=', $data_customer->id)
             ->where('ai_stockist.status_transfer', '=', 1)
             ->wheredate('ai_stockist.bonus_transfer_date', '=', $date)
             ->first();
@@ -545,12 +548,12 @@ class CommissionController extends Controller
         } else {
             $e_date = '';
         }
-        $customer_id = Auth::guard('c_user')->user()->id;
+        $customer_username = Auth::guard('c_user')->user()->user_name;
 
         $sTable = DB::table('db_report_bonus_transfer_af')
             ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-            ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_id_fk', '=', 'customers.id')
-            ->where('db_report_bonus_transfer_af.customer_id_fk', '=', $customer_id)
+            ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_username', '=', 'customers.user_name')
+            ->where('db_report_bonus_transfer_af.customer_username', '=', $customer_username)
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
@@ -634,12 +637,12 @@ class CommissionController extends Controller
         } else {
             $e_date = '';
         }
-        $customer_id = Auth::guard('c_user')->user()->id;
+        $customer_username = Auth::guard('c_user')->user()->user_name;
 
         $sTable = DB::table('db_report_bonus_transfer_member')
             ->select('db_report_bonus_transfer_member.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_id_fk', '=', 'customers.id')
-            ->where('db_report_bonus_transfer_member.customer_id_fk', '=', $customer_id)
+            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_username', '=', 'customers.user_name')
+            ->where('db_report_bonus_transfer_member.customer_username', '=', $customer_username)
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_member.status_transfer = '{$rs->status_search}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$s_date}' else 1 END"))
