@@ -139,6 +139,36 @@
 						</ul>
 						<ul class="nav-right">
 
+              <li class="dropdown d-inline-block">
+                <button  class=" header-item waves-effect" style="line-height:0px;border: 0px;background: border-box;"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @IF(Session::get('locale')=='th')
+                    <img class="" src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='en')
+                    <img class="" src="{{ asset('backend/images/flags/us.jpg') }}" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='lo')
+                    <img class="" src="{{ asset('backend/images/flags/flag_laos.jpg') }}" alt="Language" height="16">
+                    @ELSE
+                    <img class="" src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="Language" height="16">
+                    @ENDIF
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <!-- item-->
+                    <a href="{{ URL('/lang/th') }}" class="dropdown-item notify-item">
+                        <img src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="user-image" class="mr-1" height="12"> <span style="color: black">Thai</span>
+                    </a>
+                    <!-- item-->
+                    <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
+                        <img src="{{ asset('backend/images/flags/us.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">US</span>
+                    </a>
+                     <!-- item-->
+                    <a href="{{ URL('/lang/lo') }}" class="dropdown-item notify-item">
+                        <img src="{{ asset('backend/images/flags/flag_laos.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">Laos</span>
+                    </a>
+
+                </div>
+            </li>
+
 							<li class="header menu-shope-pc">
 								@if(request()->is('product-list/1') || request()->is('cart/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1'))
 								<a href="{{route('cart',['type'=>1])}}" class="d-sm-block d-xs-block">
