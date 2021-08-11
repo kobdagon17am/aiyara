@@ -719,8 +719,8 @@ class AjaxController extends Controller
         if($request->ajax()){
 
             if(!empty($request->frontstore_id_fk)){
-                $rs = DB::select(" SELECT * FROM db_orders WHERE id=$request->frontstore_id_fk ");
-              return response()->json($rs);
+                $rs = DB::select(" SELECT * FROM db_orders WHERE id=".(@$request->frontstore_id_fk?@$request->frontstore_id_fk:0)." ");
+                return response()->json($rs);
             }
         }
        
@@ -1066,8 +1066,15 @@ class AjaxController extends Controller
 
             total_price='0',
             cash_price='0',
-            cash_pay='0'
+            cash_pay='0',
+
+            `check_press_save`='0'
+
             WHERE id=$frontstore_id_fk ");
+
+          // UPDATE `db_orders` SET `check_press_save`='0' WHERE (`id`='5')
+
+
     }
 
 
@@ -1938,6 +1945,9 @@ class AjaxController extends Controller
               $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
               @UNLINK(@$sRow[0]->file_slip);
               DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".$request->id."  ");
+              $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+              @UNLINK(@$r[0]->url.@$r[0]->file);
+              DB::select(" DELETE FROM `payment_slip` WHERE `order_id`=".$request->id." ");
             }
         }
     }
@@ -1952,6 +1962,9 @@ class AjaxController extends Controller
               $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
               @UNLINK(@$sRow[0]->file_slip_02);
               DB::select(" UPDATE db_orders SET file_slip_02='',transfer_money_datetime_02=NULL,note_fullpayonetime_02=NULL where id=".$request->id."  ");
+              $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+              @UNLINK(@$r[0]->url.@$r[0]->file);
+              DB::select(" DELETE FROM `payment_slip` WHERE `order_id`=".$request->id." ");
             }
         }
     }
@@ -1966,6 +1979,9 @@ class AjaxController extends Controller
               $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
               @UNLINK(@$sRow[0]->file_slip_03);
               DB::select(" UPDATE db_orders SET file_slip_03='',transfer_money_datetime_03=NULL,note_fullpayonetime_03=NULL where id=".$request->id."  ");
+              $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+              @UNLINK(@$r[0]->url.@$r[0]->file);
+              DB::select(" DELETE FROM `payment_slip` WHERE `order_id`=".$request->id." ");
             }
         }
     }
@@ -4196,7 +4212,23 @@ class AjaxController extends Controller
 
           // DB::select(" UPDATE `db_orders` SET `cash_price`='$sumprice' WHERE (`id`=$request->frontstore_id_fk) ");
           // clear เลย ให้ใส่ใหม่ 
+           $id=   @$request->frontstore_id_fk;
 
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           // dd($sFrontstoreDataTotal);
+           if($sFrontstoreDataTotal){
+              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+              $vat = $vat > 0  ? $vat : 0 ;
+              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+            }else{
+              DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+            }
+
+
+           
 /*
 1 เงินโอน
 2 บัตรเครดิต

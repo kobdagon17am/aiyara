@@ -971,7 +971,7 @@
                         <label for="" >ค่าธรรมเนียมบัตรเครดิต : </label>
                       </div>
                       <div class="divTableCell">
-                           <select {{@$disAfterSave}} id="fee" name="fee" class="form-control select2-templating " >
+                           <select id="fee" name="fee" class="form-control select2-templating " >
                                 <option value="">Select</option>
                                 @if(@$sFee)
                                 @foreach(@$sFee AS $r)
@@ -996,8 +996,8 @@
                       </div>
                       <div class="divTableCell div_charger_type " style="">
                           <?php $charger_type = @$sRow->charger_type==0||@$sRow->charger_type==''?"checked":''; ?>
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
+                            <input type="radio" class="" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" class="" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -1010,7 +1010,7 @@
                           <label for="" class="" > บัตรเครดิต  :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
+                          <input class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
                       </div>
                     </div>
 
@@ -1052,43 +1052,21 @@
                       <div class="divTableCell">
                               @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
-                                  <input {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
+                                  <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
                             @endif
 
-                     </div>
-                      </div>
-
-
-                   <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill==0||@$sRow->pay_with_other_bill==''?"display: none;":''; ?>
-                    <div class="divTableRow div_pay_with_other_bill " style="<?=$div_pay_with_other_bill?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
-                    
-                            <input {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
+                            <input type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
                             <label for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                             <br>
 
-                            <input {{@$disAfterSave}} type="text" class="form-control" id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}"> 
+                            <input type="text" class="form-control" id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}"> 
+                            <br>
 
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                      </div>
-
-                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
                               $ds = explode("-", $ds1);
@@ -1097,23 +1075,19 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip" >
-
                                 @IF(!empty(@$sRow->file_slip))
-
-                                 <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
-                                  
+                                  <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                  <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                          </span>
 
 
@@ -1123,7 +1097,6 @@
                     </div>
 
 
-
                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
                         <div class="divTableCell" ></div>
                         <div class="divTH">
@@ -1131,7 +1104,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1148,7 +1121,7 @@
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime_02)){
                               $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
                               $ds_02 = explode("-", $ds1_02);
@@ -1157,21 +1130,19 @@
                               $ds_y_02 = $ds_02[0];
                               $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
                             }else{$ds_02='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip_02" >
                                 @IF(!empty(@$sRow->file_slip_02))
                                   <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
-                                 
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                 <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                          </span>
 
 
@@ -1188,7 +1159,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1205,7 +1176,7 @@
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime_03)){
                               $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
                               $ds_03 = explode("-", $ds1_03);
@@ -1214,22 +1185,19 @@
                               $ds_y_03 = $ds_03[0];
                               $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
                             }else{$ds_03='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip_03" >
                                 @IF(!empty(@$sRow->file_slip_03))
                                   <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
-                                 
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                 <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-
                          </span>
 
 
@@ -1247,7 +1215,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1264,9 +1232,9 @@
                         <div class="divTableCell">
 
                             @IF(@$sRow->pay_type_id_fk==8)
-                            <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input {{@$disAfterSave}} class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -1290,7 +1258,7 @@
                           <input type="hidden" class="form-control" name="member_id_aicash" id="member_id_aicash" value="{{@$sRow->member_id_aicash}}" >
                           <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" value="{{@$Customer_name_Aicash}}" >
 
-                          <select {{@$disAfterSave}} id="aicash_choose" class="form-control "  >
+                          <select id="aicash_choose" class="form-control "  >
                              <option value="{{@$sRow->member_id_aicash}}" selected >{{@$Customer_name_Aicash}}</option>
                           </select> 
 
@@ -1302,7 +1270,7 @@
                           </select> 
                         @endif
 
-                         <select  id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select> 
+                         <select id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select> 
 
                       </div>
                        <div class="divTableCell">
@@ -1313,48 +1281,23 @@
                         <div class="divTableCell" >
                         </div>
 
-                        
-@IF(!empty(@$sRow->pay_type_id_fk))
-
-
-                      <div class="divTH">
-                      
-                        <label  for="" class="" > ยอด Ai-Cash คงเหลือ : </label>
+                        <div class="divTH">
+                          <label for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
                         </div>
 
                         <div class="divTableCell">
-                            <input  class="form-control f-ainumber-18 input-aireadonly  "  value="{{@$Cus_Aicash}}" readonly="" >
+                            <input class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
                         </div>
 
                         <div class="divTableCell">
 
                      
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14  " style="padding: 3px;">ดำเนินการ</button>
+                         <button type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
 
                         </div>
 
                       </div>
 
-@ELSE
-
-                      <div class="divTH">
-                      
-                        <label  for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
-                        </div>
-
-                        <div class="divTableCell">
-                            <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
-                        </div>
-
-                        <div class="divTableCell">
-
-                     
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
-
-                        </div>
-
-                      </div>
-@ENDIF
 
 
 
@@ -1364,11 +1307,11 @@
                         <label for="aicash_price" class="" > ยอด Ai-cash ที่ชำระ :  </label>
                       </div>
                       <div class="divTableCell">
-<!-- CalPriceAicash -->
+<!--  -->
             @IF(@$sRow->pay_type_id_fk==6)
-              <input {{@$disAfterSave}} class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
+              <input class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
             @ELSE
-              <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
+              <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
             @ENDIF
 
                       </div>
@@ -1452,9 +1395,23 @@
                         </div>
                         <div class="divTableCell">
 
+                        @IF(!empty(@$sRow->pay_type_id_fk))
+                        <!-- ไม่ต้องแสดงปุ่ม เลยดีกว่า และ เปลี่ยนเป็น ปุ่ม save เฉพาะกรณี อัพสลิป โอนเงิน เท่านั้น กรณีอื่นๆ ปิดปุ่มเลย -->
+                          <!--   <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 " disabled style="float: right;" >
+                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                            </button> -->
+
+                                <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave  " style="float: right;" {{@$disAfterSave}} >
+                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                </button>
+
+                        @ELSE
+                           <!-- แสดงแต่ยัง save ไม่ได้ ถ้ายังไม่ได้เลือกประเภทการชำระเงิน   ตอน pay_type_id_fk change ให้ addClass btnSave & enabled ปุ่ม -->
                                 <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button>
+                             
+                        @ENDIF
 
 
                         </div>
@@ -4594,7 +4551,7 @@ $(document).ready(function() {
 
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
-                        // event.preventDefault();
+                        event.preventDefault();
                         $(".myloading").show();
 
                         var pay_type_id_fk = $("#pay_type_id_fk").val();
@@ -4753,7 +4710,6 @@ $(document).ready(function() {
                               // $('input[name=account_bank_id]').prop('checked',false);
                               $('input[name=account_bank_id]').attr('required', true);
                               $(".div_account_bank_id").show();
-                              $(".div_pay_with_other_bill").show();
                               $("#transfer_price").val('');
                               $(".transfer_money_datetime").attr('required', true);
                               $("#transfer_price").removeAttr('required');
@@ -4801,7 +4757,6 @@ $(document).ready(function() {
                                 // $('input[name=account_bank_id]').prop('checked',false);
                                 $('input[name=account_bank_id]').attr('required', true);
                                 $(".div_account_bank_id").show();
-                                $(".div_pay_with_other_bill").show();
                                 $("#transfer_price").val('');
                                 $(".transfer_money_datetime").attr('required', true);
                                 $("#transfer_price").attr('required',true);
@@ -4821,7 +4776,6 @@ $(document).ready(function() {
                                   // $('input[name=account_bank_id]').prop('checked',false);
                                   $('input[name=account_bank_id]').attr('required', true);
                                   $(".div_account_bank_id").show();
-                                  $(".div_pay_with_other_bill").show();
                                   $("#transfer_price").val('');
                                   $(".transfer_money_datetime").attr('required', true);
                                   $("#transfer_price").attr('required',true);
@@ -4948,6 +4902,8 @@ $(document).ready(function() {
                 // return false;
 
                      $("input[name=_method]").val('');
+
+                      $(".myloading").show();
 
                      $.ajax({
                        type:'POST',
@@ -5511,122 +5467,314 @@ $(document).ready(function() {
 
 
 
-           $(document).on('click', '.btnSave', function(event) {
+         $(document).on('click', '.btnSave', function(event) {
             // alert("xx");
             event.preventDefault();
-             $("#frm-main").valid();
 
-                            Swal.fire({
-                                title: 'ยืนยัน ! การบันทึกข้อมูลใบเสร็จ ',
-                                type: 'info',
-                                showCancelButton: true,
-                                confirmButtonColor: '#556ee6',
-                                cancelButtonColor: "#f46a6a"
-                                }).then(function (result) {
-                                  // console.log(result);
-                                    if (result.value) {
-                                     // $("form").submit();
-                                     // $(".myloading").show();
-                                     // location.reload();
 
-                                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
-                                       $("#frm-main").valid();
-                                       $(".myloading").hide();
 
-                                                   // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
-                                        if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
-                                            // event.preventDefault();
-                                            $("#aicash_price").focus();
-                                          if(aicash_price>=0 && aicash_remain<=0){
-                                            alert("! ยอด Ai-Cash ไม่เพียงพอต่อการชำระช่องทางนี้ กรุณาเติมยอด Ai-Cash ขอบคุณค่ะ");
-                                            return false;
-                                          }else{
-                                            $('.btnSave').removeAttr("type").attr("type", "submit");
-                                            $('#frm-main').submit();
+                              var pay_type_id_fk = $("#pay_type_id_fk").val();
+                              var aicash_remain = parseFloat($("#aicash_remain").val());
+                              var aicash_price = parseFloat($("#aicash_price").val());
+                              var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
+                              var gift_voucher_price = $("#gift_voucher_price").val();
+                              var sum_price = $("#sum_price").val();
+                              var shipping_price = $("#shipping_price").val();
 
-                                          }
 
-                                        }else{
-                                          // $('#member_id_aicash').attr('required', false);
-                                          $('.btnSave').removeAttr("type").attr("type", "submit");
-                                           $('#frm-main').submit();
-                                        }
+                              /*
+1 เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
 
-                                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//////////////////////////////
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+//////////////////////////////
 
-                                    }else{
-                                       $(".myloading").hide();
-                                       return false;
-                                    }
-                              });
+12  Gift Voucher + เงินโอน
+13  Gift Voucher + บัตรเครดิต
+14  Gift Voucher + Ai-Cash
+15  PromptPay
+16  TrueMoney
+17  Gift Voucher + PromptPay
+18  Gift Voucher + TrueMoney
 
-                  
-         });
+ */
+                        // 1 เงินสด
+                          if(pay_type_id_fk==5){
+                              $(".show_div_cash_pay").show();
+                            }else
+                        // 2  เงินสด + Ai-Cash
+                            if(pay_type_id_fk==6){
 
-         $(document).ready(function() {
+                                $("#aicash_price").val('');
+                                $("#aicash_price").removeAttr('readonly');
+                                $('#aicash_price').attr('required', true);
+                                $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+                                $("#cash_pay").val('');
+                                $(".show_div_aicash_price").show();
+                                $(".show_div_cash_pay").show();
+                                $('#member_id_aicash_select').attr('required', true);
 
-                  var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
-                  // alert(fromAddAiCash);
-                  if(fromAddAiCash !=="" && fromAddAiCash==1){
+                            }else
+                        // 3  เครดิต + เงินสด
+                            if(pay_type_id_fk==7){
+                              // เครดิต
+                              $(".show_div_credit").show();
+                              $("#credit_price").attr('disabled', false);
+                              $("#credit_price").val('');
+                              $(".div_fee").show();
+                              $("#fee_amt").val('');
+                              $('#fee').attr('required', true);
+                              $("#sum_credit_price").val('');
+                              // เงินสด
+                              $(".show_div_cash_pay").show();
+                              $("#cash_pay").val('');
 
-                    var frontstore_id_fk = $("#frontstore_id_fk").val();
+                            }else
+                        // 4  เครดิต + เงินโอน
+                            if(pay_type_id_fk==8){
+                              // เครดิต
+                              $(".show_div_credit").show();
+                              $("#credit_price").val('');
+                              $("#credit_price").attr('disabled', false);
+                              $(".div_fee").show();
+                              $("#fee_amt").val('');
+                              $('#fee').val("").select2();
+                              $('#fee').attr('required', true);
+                              $("#sum_credit_price").val('');
+                              // เงินโอน
+                              $(".show_div_transfer_price").show();
+                              // $('input[name=account_bank_id]').prop('checked',false);
+                              $('input[name=account_bank_id]').attr('required', true);
+                              $(".div_account_bank_id").show();
+                              $("#transfer_price").val('');
+                              $(".transfer_money_datetime").attr('required', true);
+                              $("#transfer_price").removeAttr('required');
+                              $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
-                    // var customer_id = $('#member_id_aicash').val();
-                      if(frontstore_id_fk==''){
-                          return false;
-                      }else{
+                              $(".show_div_cash_pay").hide();
 
-                          $.ajax({
-                             type:'POST',
-                             url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ",
-                             data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
-                              success:function(data){
-                                     // console.log(data);
-                                     alert("Test");
-                                    $(".myloading").hide();
-                                },
+                            }else
+                        // 5  เครดิต + Ai-Cash
+                             if(pay_type_id_fk==9){
+                              // เครดิต
+                              $(".show_div_credit").show();
+                              $(".div_fee").show();
+                              $("#credit_price").val('');
+                              $("#credit_price").attr('disabled', false);
+                              $("#fee_amt").val('');
+                              $("#sum_credit_price").val('');
+                              $("#cash_pay").val('');
+                              $('#fee').val("").select2();
+                              $('#fee').attr('required', true);
+                              $('#charger_type:first-child').attr('checked',true);
 
-                          });
+                              // Ai-Cash
+                              $(".show_div_aicash_price").show();
+                              $("#aicash_price").removeClass('input-aifill').addClass('input-aireadonly');
+                              $("#aicash_price").val('');
+                              $("#aicash_price").attr('readonly',true);
 
-                          $('#pay_type_id_fk').val("").select2();
-                          $('#pay_type_id_fk').attr('required', true);
+                              $("#cash_pay").val('');
+                              $(".show_div_cash_pay").hide();
 
-                          $(".show_div_credit").hide();
-                          $(".div_fee").hide();
-                          $(".show_div_transfer_price").hide();
-                          $(".div_account_bank_id").hide();
-                          $(".show_div_aicash_price").hide();
+                              $('input[name=account_bank_id]').removeAttr('required');
+                              $(".transfer_money_datetime").removeAttr('required');
+                              $("#transfer_price").removeAttr('required');
+                              $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
-                          $("#cash_price").val('');
-                          $("#cash_pay").val('');
-                          $(".myloading").hide();
-                          $(".show_div_cash_pay").hide();
+                              $('#member_id_aicash').attr('required', true);
 
-                          $('#member_id_aicash').attr('required', false);
-                          $('#member_id_aicash').val("");
+                            }else
+                              // 6  เงินโอน + เงินสด
+                              if(pay_type_id_fk==10){
 
-                          $('#fee').removeAttr('required');
-                          $('input[name=account_bank_id]').removeAttr('required');
-                          $('.transfer_money_datetime').removeAttr('required');
-                          $('#aicash_price').removeAttr('required');
-                          $(".show_div_cash_pay").hide();
-                          $(".show_div_transfer_price").hide();
-                          $(".div_account_bank_id").hide();
+                                // เงินโอน
+                                $(".show_div_transfer_price").show();
+                                // $('input[name=account_bank_id]').prop('checked',false);
+                                $('input[name=account_bank_id]').attr('required', true);
+                                $(".div_account_bank_id").show();
+                                $("#transfer_price").val('');
+                                $(".transfer_money_datetime").attr('required', true);
+                                $("#transfer_price").attr('required',true);
+                                $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
 
-                      }
+                                $(".show_div_cash_pay").show();
+                                $('#fee').removeAttr('required');
+                                $('#aicash_price').removeAttr('required');
+                                $("#cash_pay").val('');
 
-                          setTimeout(function(){
-                              var uri = window.location.toString();
-                            if (uri.indexOf("?") > 0) {
-                              var clean_uri = uri.substring(0, uri.indexOf("?"));
-                              window.history.replaceState({}, document.title, clean_uri);
-                            }
-                         },3000);
+                              }else
+                                // 7  เงินโอน + Ai-Cash
+                                if(pay_type_id_fk==11){
 
+                                  // เงินโอน
+                                  $(".show_div_transfer_price").show();
+                                  // $('input[name=account_bank_id]').prop('checked',false);
+                                  $('input[name=account_bank_id]').attr('required', true);
+                                  $(".div_account_bank_id").show();
+                                  $("#transfer_price").val('');
+                                  $(".transfer_money_datetime").attr('required', true);
+                                  $("#transfer_price").attr('required',true);
+                                  $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+
+                                  // Ai-Cash
+                                  $(".show_div_aicash_price").show();
+                                  $("#aicash_price").removeClass('input-aifill').addClass('input-aireadonly');
+                                  $("#aicash_price").val('');
+                                  $("#aicash_price").attr('readonly',true);
+
+                                  $(".show_div_cash_pay").hide();
+                                  $('#fee').removeAttr('required');
+                                  $("#cash_pay").val('');
+
+                                  $('#member_id_aicash').attr('required', true);
+
+                              }else{
+                                  $('#fee').removeAttr('required');
+                                  $('input[name=account_bank_id]').removeAttr('required');
+                                  $('.transfer_money_datetime').removeAttr('required');
+                                  $('#aicash_price').removeAttr('required');
+                                  $(".show_div_cash_pay").hide();
+                                  $(".show_div_transfer_price").hide();
+                                  $(".div_account_bank_id").hide();
+
+                              }
+
+
+
+
+                              if(purchase_type_id_fk==5){
+
+                                // // console.log(gift_voucher_price);
+                                // // console.log(sum_price);
+                                // // console.log(shipping_price);
+
+                                if(gift_voucher_price == (+sum_price + +shipping_price)){
+                                  $('#pay_type_id_fk').attr('required', false);
+                                }else{
+                                  $('#pay_type_id_fk').attr('required', true);
+                                }
+
+                              }
+
+                                    Swal.fire({
+                title: 'ยืนยัน ! การบันทึกข้อมูลใบเสร็จ ',
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#556ee6',
+                cancelButtonColor: "#f46a6a"
+                }).then(function (result) {
+                  // console.log(result);
+                    if (result.value) {
+                     // $("form").submit();
+                     $(".myloading").show();
+                     // location.reload();
+
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
+                       $("#frm-main").valid();
+                       $(".myloading").hide();
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                    }else{
+                       $(".myloading").hide();
+                       return false;
                     }
+              });
 
+                              // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
+                              if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
+                                  // event.preventDefault();
+                                  $("#aicash_price").focus();
+                                if(aicash_price>=0 && aicash_remain<=0){
+                                  alert("! ยอด Ai-Cash ไม่เพียงพอต่อการชำระช่องทางนี้ กรุณาเติมยอด Ai-Cash ขอบคุณค่ะ");
+                                  return false;
+                                }else{
+                                  $('.btnSave').removeAttr("type").attr("type", "submit");
+                                  $('#frm-main').submit();
+
+                                }
+
+                              }else{
+                                // $('#member_id_aicash').attr('required', false);
+                                $('.btnSave').removeAttr("type").attr("type", "submit");
+                                 $('#frm-main').submit();
+                              }
 
          });
+
+         // $(document).ready(function() {
+
+         //          var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
+         //          // alert(fromAddAiCash);
+         //          if(fromAddAiCash==1){
+
+         //            var frontstore_id_fk = $("#frontstore_id_fk").val();
+
+         //            // var customer_id = $('#member_id_aicash').val();
+         //              if(frontstore_id_fk==''){
+         //                  return false;
+         //              }else{
+
+         //                  $.ajax({
+         //                     type:'POST',
+         //                     url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ",
+         //                     data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
+         //                      success:function(data){
+         //                             // console.log(data);
+         //                             alert("Test");
+         //                            $(".myloading").hide();
+         //                        },
+
+         //                  });
+
+         //                  $('#pay_type_id_fk').val("").select2();
+         //                  $('#pay_type_id_fk').attr('required', true);
+
+         //                  $(".show_div_credit").hide();
+         //                  $(".div_fee").hide();
+         //                  $(".show_div_transfer_price").hide();
+         //                  $(".div_account_bank_id").hide();
+         //                  $(".show_div_aicash_price").hide();
+
+         //                  $("#cash_price").val('');
+         //                  $("#cash_pay").val('');
+         //                  $(".myloading").hide();
+         //                  $(".show_div_cash_pay").hide();
+
+         //                  $('#member_id_aicash').attr('required', false);
+         //                  $('#member_id_aicash').val("");
+
+         //                  $('#fee').removeAttr('required');
+         //                  $('input[name=account_bank_id]').removeAttr('required');
+         //                  $('.transfer_money_datetime').removeAttr('required');
+         //                  $('#aicash_price').removeAttr('required');
+         //                  $(".show_div_cash_pay").hide();
+         //                  $(".show_div_transfer_price").hide();
+         //                  $(".div_account_bank_id").hide();
+
+         //              }
+
+         //                  setTimeout(function(){
+         //                      var uri = window.location.toString();
+         //                    if (uri.indexOf("?") > 0) {
+         //                      var clean_uri = uri.substring(0, uri.indexOf("?"));
+         //                      window.history.replaceState({}, document.title, clean_uri);
+         //                    }
+         //                 },3000);
+
+         //            }
+
+
+         // });
 
 
         $(document).ready(function() {
@@ -5783,7 +5931,6 @@ $(document).ready(function() {
         });
 
 
-
      $(document).ready(function() {
 
           $(document).on('submit', '#frm-main', function(event) {
@@ -5852,6 +5999,80 @@ $(document).ready(function() {
             });
 
 
+          // ไปเช็คตารางสินค้าด้วย ถ้ายังไม่มีการเลือกสินค้า ยังไม่ต้องเช็คเงื่อนไขนี้ แต่ถ้ามีการเลือกสินค้าแล้ว ค่อยตรวจสอบอีกครั้ง
+          // check_press_save => 0=ยังไม่ได้เลือกสินค้า 1=มีการเลือกสินค้าแล้ว 2=มีการกดปุ่ม save แล้ว (เอาไว้เช็คกรณีซื้อที่หลังบ้าน เพื่อไม่ให้การคำนวณเงินผิดเพี้ยนไปจากเดิม)
+          
+          if(check_press_save=='1' && check_product_value>0 ){
+
+                Swal.fire({
+                title: 'กรุณาตรวจสอบอีกครั้ง ! คุณยังไม่ได้ทำการบันทึกข้อมูลใบเสร็จ  ',
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#556ee6',
+                // cancelButtonColor: "#f46a6a"
+                }).then(function (result) {
+                  // console.log(result);
+                    // if (result.value) {
+                     // $("form").submit();
+                     // $(".myloading").show();
+                     // location.reload();
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+                     // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                    // }else{
+                       // $(".myloading").hide();
+
+                       // return false;
+                    // }
+
+                           $.ajax({
+                             type:'POST',
+                             dataType:'JSON',
+                             url: " {{ url('backend/ajaxClearPayTypeFrontstore') }} ",
+                             data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
+                             success:function(data){
+
+                             },
+                          });
+
+
+                       setTimeout(function(){
+
+                           //add this js script into the web page,
+                              //you want reload once after first load
+                              window.onload = function() {
+                                  //considering there aren't any hashes in the urls already
+                                  if(!window.location.hash) {
+                                      //setting window location
+                                      window.location = window.location + '#loaded';
+                                      //using reload() method to reload web page
+                                      window.location.reload();
+                                  }
+                              }
+
+                       //                 setTimeout(function(){
+                              
+                           $("#pay_type_id_fk").prop('disabled',false);
+                           $("#pay_type_id_fk").select2('destroy').val("").select2();
+                           $('#pay_type_id_fk').val("").trigger("change");
+                       //  },2500);
+
+                            // location.reload();
+
+                        },1500);
+
+              });
+
+          }
+
+          if(check_press_save=='2'){
+            $("#pay_type_id_fk").prop('disabled',true);
+          }
+
+
+
          // ถ้าไม่มีการเลือกรูปแบบการชำระเงินแล้ว และเช็คดูว่า เลือกรหัสอะไรไว้ ให้ทำการ onchange pay_type_id_fk อีกครั้ง เพื่อเรียกฟอร์มที่เกี่ยวข้องต่างๆ แสดงให้สอดคล้อง ไม่ให้มันหายไป
           // if ((pay_type_id_fk !== undefined) && (pay_type_id_fk !== null) && (pay_type_id_fk !== "")) {
           if ((pay_type_id_fk == undefined) && (pay_type_id_fk == null) && (pay_type_id_fk == "")) {
@@ -5868,55 +6089,6 @@ $(document).ready(function() {
                    },
                 });
           }
-
-
-          // ไปเช็คตารางสินค้าด้วย ถ้ายังไม่มีการเลือกสินค้า ยังไม่ต้องเช็คเงื่อนไขนี้ แต่ถ้ามีการเลือกสินค้าแล้ว ค่อยตรวจสอบอีกครั้ง
-          // check_press_save => 0=ยังไม่ได้เลือกสินค้า 1=มีการเลือกสินค้าแล้ว 2=มีการกดปุ่ม save แล้ว (เอาไว้เช็คกรณีซื้อที่หลังบ้าน เพื่อไม่ให้การคำนวณเงินผิดเพี้ยนไปจากเดิม)
-          if(check_press_save=='1' && check_product_value>0 ){
-                    Swal.fire({
-                      title: 'กรุณาตรวจสอบอีกครั้ง ! คุณยังไม่ได้ทำการบันทึกข้อมูลใบเสร็จ  ',
-                      type: 'info',
-                      showCancelButton: true,
-                      confirmButtonColor: '#556ee6',
-                      cancelButtonColor: "#f46a6a"
-                      }).then(function (result) {
-                        // console.log(result);
-                        $(".myloading").show();
-                          if (result.value) {
-                           // $("form").submit();
-                             
-                           // location.reload();
-                            // $(".btnBack").trigger('click');
-
-                           // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
-                            $.ajax({
-                               type:'POST',
-                               dataType:'JSON',
-                               url: " {{ url('backend/ajaxClearPayTypeFrontstore') }} ",
-                               data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
-                               success:function(data){
-
-                               },
-                            });  
-
-                             location.reload();  
-                             // $("#frm-main").valid();
-                             // $(".myloading").hide();
-                           // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-                          }else{
-                             location.replace("{{ url("backend/frontstore") }}")
-                             // $(".myloading").hide();
-                             return false;
-                          }
-                    });
-
-           }
-
-          if(check_press_save=='2'){
-            $("#pay_type_id_fk").prop('disabled',true);
-          }
-
 
 
             if(pay_type_id_fk==5){
@@ -5938,12 +6110,9 @@ $(document).ready(function() {
           $('#pay_with_other_bill').click(function(event) {
             if($('#pay_with_other_bill').is(':checked')==true){
                 $("#pay_with_other_bill_note").prop('required',true);
-                $("input[name='account_bank_id']").removeAttr("required");
-                $(".transfer_money_datetime").removeAttr("required");
                 $("#pay_with_other_bill_note").focus();
             }else{
                 $("#pay_with_other_bill_note").removeAttr("required");
-                $("input[name='account_bank_id']").prop('required',true);
                 $("#pay_with_other_bill_note").val("");
             }
         });
@@ -5959,3 +6128,4 @@ $(document).ready(function() {
 
 </script>
 @endsection
+

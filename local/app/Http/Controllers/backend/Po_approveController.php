@@ -59,7 +59,8 @@ class Po_approveController extends Controller
     public function edit($id)
     {
         $sRow = \App\Models\Backend\Orders::find($id);
-        $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'desc')->get();
+        $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
+        // dd($slip);
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
             'id' => $id,
@@ -151,8 +152,16 @@ class Po_approveController extends Controller
 
 
 
-    public function Datatable()
+    public function Datatable(Request $req)
     {
+
+        if(!empty($req->id)){
+            $w01 = $req->id;
+            $con01 = "=";
+        }else{
+            $w01 = "";
+            $con01 = "!=";
+        }
 
         $sTable = DB::table('db_orders')
             ->select('db_orders.*', 'db_orders.id as orders_id', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
@@ -163,7 +172,8 @@ class Po_approveController extends Controller
             ->where('dataset_orders_type.lang_id', '=', '1')
            // ->where('db_orders.purchase_type_id_fk', '!=', '6')
             ->where('db_orders.order_status_id_fk', '=', '2')
-            ->orderby('id', 'DESC')
+            ->where('db_orders.id', $con01, $w01)
+            ->orderby('id', 'ASC')
             ->get();
 
         $sQuery = \DataTables::of($sTable);
@@ -179,9 +189,35 @@ class Po_approveController extends Controller
                 }
 
             })
-            ->addColumn('date', function ($row) {
-                return date('d/m/Y H:i:s', strtotime($row->created_at));
-            })
+            // ->addColumn('date', function ($row) {
+            //     return date('d/m/Y H:i:s', strtotime($row->created_at));
+            // })
+             ->addColumn('customer_name', function($row) {
+                $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
+                return $Customer[0]->user_name." : ".$Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+              })
+
+             ->addColumn('note_fullpayonetime', function($row) {
+                $n = '';
+                $n .= $row->note_fullpayonetime_02."<br>";
+                $n .= $row->note_fullpayonetime_03."<br>";
+                return $row->note_fullpayonetime."<br>".$n;
+              })
+             ->escapeColumns('note_fullpayonetime')
+
+             ->addColumn('transfer_money_datetime', function($row) {
+                $n = '';
+                $n .= !empty($row->transfer_money_datetime_02)?$row->transfer_money_datetime_02."<br>":'';
+                $n .= !empty($row->transfer_money_datetime_03)?$row->transfer_money_datetime_03."<br>":'';
+                return $row->transfer_money_datetime."<br>".$n;
+              })
+             ->escapeColumns('transfer_money_datetime')
+
+             // ->addColumn('pay_with_other_bill_note', function($row) {
+             //    return $row->pay_with_other_bill_note;
+             //  })
+             // ->escapeColumns('pay_with_other_bill_note')
+
             ->addColumn('status', function ($row) {
                 return $row->detail;
             })
@@ -190,3 +226,5 @@ class Po_approveController extends Controller
 
 
 }
+
+

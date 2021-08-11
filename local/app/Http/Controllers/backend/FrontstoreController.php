@@ -721,8 +721,9 @@ class FrontstoreController extends Controller
           // dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
-
               // dd($sRow);
+              $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+              $sRow->code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
 
               if($sRow->invoice_code==""){
 
@@ -733,9 +734,7 @@ class FrontstoreController extends Controller
                   $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
                   $sRow->invoice_code = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
                 }
-
               }
-
               // dd("706");
               // dd($request->all());
 
@@ -756,9 +755,9 @@ class FrontstoreController extends Controller
               $sRow->sum_price    =  str_replace(',','',request('sum_price'));
               $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
               $sRow->account_bank_id = request('account_bank_id');
-              $sRow->transfer_money_datetime = request('transfer_money_datetime');
-              $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02');
-              $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03');
+              $sRow->transfer_money_datetime = request('transfer_money_datetime')?request('transfer_money_datetime'):NULL;
+              $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02')?request('transfer_money_datetime_02'):NULL;
+              $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03')?request('transfer_money_datetime_03'):NULL;
 
               $sRow->note_fullpayonetime = request('note_fullpayonetime');
               $sRow->note_fullpayonetime_02 = request('note_fullpayonetime_02');
@@ -784,6 +783,10 @@ class FrontstoreController extends Controller
               $sRow->action_user = \Auth::user()->id;
               $sRow->action_date = date('Y-m-d H:i:s');
 
+              $lastInsertId_01 = 0 ;
+              $lastInsertId_02 = 0 ;
+              $lastInsertId_03 = 0 ;
+
               $request = app('request');
               if ($request->hasFile('image01')) {
                   @UNLINK(@$sRow->file_slip);
@@ -795,6 +798,13 @@ class FrontstoreController extends Controller
                   $image_path = 'local/public/files_slip/'.date('Ym').'/';
                   $image->move($image_path, $name);
                   $sRow->file_slip = $image_path.$name;
+
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+
+                  $lastInsertId_01 = DB::getPdo()->lastInsertId();
+
                 }
 
                if ($request->hasFile('image02')) {
@@ -807,6 +817,10 @@ class FrontstoreController extends Controller
                   $image_path = 'local/public/files_slip/'.date('Ym').'/';
                   $image->move($image_path, $name);
                   $sRow->file_slip_02 = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+                  $lastInsertId_02 = DB::getPdo()->lastInsertId();
                 }
 
                if ($request->hasFile('image03')) {
@@ -819,6 +833,10 @@ class FrontstoreController extends Controller
                   $image_path = 'local/public/files_slip/'.date('Ym').'/';
                   $image->move($image_path, $name);
                   $sRow->file_slip_03 = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+                  $lastInsertId_03 = DB::getPdo()->lastInsertId();
                 }
               // PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
@@ -1055,7 +1073,12 @@ class FrontstoreController extends Controller
 
               // $sRow->approve_status = 9 ;
               $sRow->save();
-              DB::select(" UPDATE `db_orders` SET `code_order`=".$sRow->id." WHERE (`id`=".$sRow->id.") ");
+
+              DB::select(" UPDATE `db_orders` SET `code_order`='$sRow->code_order' WHERE (`id`=".$sRow->id.") ");
+              DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_01);");
+              DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_02);");
+              DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_03);");
+            
 
 // TEST
              // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));

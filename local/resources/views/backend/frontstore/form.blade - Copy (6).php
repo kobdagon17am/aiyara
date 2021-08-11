@@ -971,7 +971,7 @@
                         <label for="" >ค่าธรรมเนียมบัตรเครดิต : </label>
                       </div>
                       <div class="divTableCell">
-                           <select {{@$disAfterSave}} id="fee" name="fee" class="form-control select2-templating " >
+                           <select id="fee" name="fee" class="form-control select2-templating " >
                                 <option value="">Select</option>
                                 @if(@$sFee)
                                 @foreach(@$sFee AS $r)
@@ -996,8 +996,8 @@
                       </div>
                       <div class="divTableCell div_charger_type " style="">
                           <?php $charger_type = @$sRow->charger_type==0||@$sRow->charger_type==''?"checked":''; ?>
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
+                            <input type="radio" class="" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" class="" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -1010,7 +1010,7 @@
                           <label for="" class="" > บัตรเครดิต  :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
+                          <input class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
                       </div>
                     </div>
 
@@ -1052,43 +1052,21 @@
                       <div class="divTableCell">
                               @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
-                                  <input {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
+                                  <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
                             @endif
 
-                     </div>
-                      </div>
-
-
-                   <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill==0||@$sRow->pay_with_other_bill==''?"display: none;":''; ?>
-                    <div class="divTableRow div_pay_with_other_bill " style="<?=$div_pay_with_other_bill?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
-                    
-                            <input {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
+                            <input type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
                             <label for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                             <br>
 
-                            <input {{@$disAfterSave}} type="text" class="form-control" id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}"> 
+                            <input type="text" class="form-control" id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}"> 
+                            <br>
 
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                      </div>
-
-                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
                               $ds = explode("-", $ds1);
@@ -1097,23 +1075,19 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip" >
-
                                 @IF(!empty(@$sRow->file_slip))
-
-                                 <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
-                                  
+                                  <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                  <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                          </span>
 
 
@@ -1123,7 +1097,6 @@
                     </div>
 
 
-
                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
                         <div class="divTableCell" ></div>
                         <div class="divTH">
@@ -1131,7 +1104,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1148,7 +1121,7 @@
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime_02)){
                               $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
                               $ds_02 = explode("-", $ds1_02);
@@ -1157,21 +1130,19 @@
                               $ds_y_02 = $ds_02[0];
                               $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
                             }else{$ds_02='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip_02" >
                                 @IF(!empty(@$sRow->file_slip_02))
                                   <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
-                                 
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                 <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                          </span>
 
 
@@ -1188,7 +1159,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1205,7 +1176,7 @@
 
                           <div class="d-flex">
 
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime_03)){
                               $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
                               $ds_03 = explode("-", $ds1_03);
@@ -1214,22 +1185,19 @@
                               $ds_y_03 = $ds_03[0];
                               $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
                             }else{$ds_03='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
                           </div>
 
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
+                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
 
                          <span width="100" class="span_file_slip_03" >
                                 @IF(!empty(@$sRow->file_slip_03))
                                   <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
-                                 
+                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                 @ELSE
                                   <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
-
-                                 <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-
                          </span>
 
 
@@ -1247,7 +1215,7 @@
                         </div>
                         <div class="divTableCell">
 
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
+                             <input type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
 
                         </div>
                          <div class="divTableCell">
@@ -1264,9 +1232,9 @@
                         <div class="divTableCell">
 
                             @IF(@$sRow->pay_type_id_fk==8)
-                            <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input {{@$disAfterSave}} class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -1290,7 +1258,7 @@
                           <input type="hidden" class="form-control" name="member_id_aicash" id="member_id_aicash" value="{{@$sRow->member_id_aicash}}" >
                           <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" value="{{@$Customer_name_Aicash}}" >
 
-                          <select {{@$disAfterSave}} id="aicash_choose" class="form-control "  >
+                          <select id="aicash_choose" class="form-control "  >
                              <option value="{{@$sRow->member_id_aicash}}" selected >{{@$Customer_name_Aicash}}</option>
                           </select> 
 
@@ -1302,7 +1270,7 @@
                           </select> 
                         @endif
 
-                         <select  id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select> 
+                         <select id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select> 
 
                       </div>
                        <div class="divTableCell">
@@ -1313,48 +1281,23 @@
                         <div class="divTableCell" >
                         </div>
 
-                        
-@IF(!empty(@$sRow->pay_type_id_fk))
-
-
-                      <div class="divTH">
-                      
-                        <label  for="" class="" > ยอด Ai-Cash คงเหลือ : </label>
+                        <div class="divTH">
+                          <label for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
                         </div>
 
                         <div class="divTableCell">
-                            <input  class="form-control f-ainumber-18 input-aireadonly  "  value="{{@$Cus_Aicash}}" readonly="" >
+                            <input class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
                         </div>
 
                         <div class="divTableCell">
 
                      
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14  " style="padding: 3px;">ดำเนินการ</button>
+                         <button type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
 
                         </div>
 
                       </div>
 
-@ELSE
-
-                      <div class="divTH">
-                      
-                        <label  for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
-                        </div>
-
-                        <div class="divTableCell">
-                            <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
-                        </div>
-
-                        <div class="divTableCell">
-
-                     
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
-
-                        </div>
-
-                      </div>
-@ENDIF
 
 
 
@@ -1364,11 +1307,11 @@
                         <label for="aicash_price" class="" > ยอด Ai-cash ที่ชำระ :  </label>
                       </div>
                       <div class="divTableCell">
-<!-- CalPriceAicash -->
+<!--  -->
             @IF(@$sRow->pay_type_id_fk==6)
-              <input {{@$disAfterSave}} class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
+              <input class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
             @ELSE
-              <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
+              <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
             @ENDIF
 
                       </div>
@@ -1452,9 +1395,23 @@
                         </div>
                         <div class="divTableCell">
 
+                        @IF(!empty(@$sRow->pay_type_id_fk))
+                        <!-- ไม่ต้องแสดงปุ่ม เลยดีกว่า และ เปลี่ยนเป็น ปุ่ม save เฉพาะกรณี อัพสลิป โอนเงิน เท่านั้น กรณีอื่นๆ ปิดปุ่มเลย -->
+                          <!--   <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 " disabled style="float: right;" >
+                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                            </button> -->
+
+                                <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave  " style="float: right;" {{@$disAfterSave}} >
+                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                </button>
+
+                        @ELSE
+                           <!-- แสดงแต่ยัง save ไม่ได้ ถ้ายังไม่ได้เลือกประเภทการชำระเงิน   ตอน pay_type_id_fk change ให้ addClass btnSave & enabled ปุ่ม -->
                                 <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button>
+                             
+                        @ENDIF
 
 
                         </div>
@@ -2084,6 +2041,8 @@
 
            $(document).on('click', '.cCancel', function(event) {
 
+            event.preventDefault();
+
             var id = $(this).data('id');
             var frontstore_id_fk = $(this).attr('frontstore_id_fk');
          
@@ -2104,8 +2063,6 @@
                     // return false;
 
                      // 
-
-
 
                         var frontstore_id_fk = $("#frontstore_id_fk").val();
                         $.ajax({
@@ -4594,7 +4551,7 @@ $(document).ready(function() {
 
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
-                        // event.preventDefault();
+                        event.preventDefault();
                         $(".myloading").show();
 
                         var pay_type_id_fk = $("#pay_type_id_fk").val();
@@ -4753,7 +4710,6 @@ $(document).ready(function() {
                               // $('input[name=account_bank_id]').prop('checked',false);
                               $('input[name=account_bank_id]').attr('required', true);
                               $(".div_account_bank_id").show();
-                              $(".div_pay_with_other_bill").show();
                               $("#transfer_price").val('');
                               $(".transfer_money_datetime").attr('required', true);
                               $("#transfer_price").removeAttr('required');
@@ -4801,7 +4757,6 @@ $(document).ready(function() {
                                 // $('input[name=account_bank_id]').prop('checked',false);
                                 $('input[name=account_bank_id]').attr('required', true);
                                 $(".div_account_bank_id").show();
-                                $(".div_pay_with_other_bill").show();
                                 $("#transfer_price").val('');
                                 $(".transfer_money_datetime").attr('required', true);
                                 $("#transfer_price").attr('required',true);
@@ -4821,7 +4776,6 @@ $(document).ready(function() {
                                   // $('input[name=account_bank_id]').prop('checked',false);
                                   $('input[name=account_bank_id]').attr('required', true);
                                   $(".div_account_bank_id").show();
-                                  $(".div_pay_with_other_bill").show();
                                   $("#transfer_price").val('');
                                   $(".transfer_money_datetime").attr('required', true);
                                   $("#transfer_price").attr('required',true);
@@ -4882,6 +4836,7 @@ $(document).ready(function() {
 
 
               var pay_type_id_fk = $("#pay_type_id_fk").val();
+              console.log(pay_type_id_fk); 
 
               if(pay_type_id_fk==''){
                 $("#cash_price").val('');
@@ -4948,6 +4903,8 @@ $(document).ready(function() {
                 // return false;
 
                      $("input[name=_method]").val('');
+
+                      $(".myloading").show();
 
                      $.ajax({
                        type:'POST',
@@ -5135,7 +5092,9 @@ $(document).ready(function() {
                          data: $("#frm-main").serialize()+"&this_element="+this_element,
                           success:function(data){
                                  // console.log(data);
-                                 fnGetDBfrontstore();
+                                fnGetDBfrontstore();
+                                $('.class_btnSave').addClass(' btnSave ');
+                                $('.class_btnSave').removeAttr( "disabled" );
                                 $("input[name=_method]").val('PUT');
                                 $(".myloading").hide();
                             },
@@ -5511,10 +5470,9 @@ $(document).ready(function() {
 
 
 
-           $(document).on('click', '.btnSave', function(event) {
+         $(document).on('click', '.btnSave', function(event) {
             // alert("xx");
             event.preventDefault();
-             $("#frm-main").valid();
 
                             Swal.fire({
                                 title: 'ยืนยัน ! การบันทึกข้อมูลใบเสร็จ ',
@@ -5783,7 +5741,6 @@ $(document).ready(function() {
         });
 
 
-
      $(document).ready(function() {
 
           $(document).on('submit', '#frm-main', function(event) {
@@ -5881,10 +5838,9 @@ $(document).ready(function() {
                       cancelButtonColor: "#f46a6a"
                       }).then(function (result) {
                         // console.log(result);
-                        $(".myloading").show();
                           if (result.value) {
                            // $("form").submit();
-                             
+                             // $(".myloading").show();
                            // location.reload();
                             // $(".btnBack").trigger('click');
 
@@ -5899,7 +5855,7 @@ $(document).ready(function() {
                                },
                             });  
 
-                             location.reload();  
+                             // location.reload();  
                              // $("#frm-main").valid();
                              // $(".myloading").hide();
                            // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -5938,12 +5894,9 @@ $(document).ready(function() {
           $('#pay_with_other_bill').click(function(event) {
             if($('#pay_with_other_bill').is(':checked')==true){
                 $("#pay_with_other_bill_note").prop('required',true);
-                $("input[name='account_bank_id']").removeAttr("required");
-                $(".transfer_money_datetime").removeAttr("required");
                 $("#pay_with_other_bill_note").focus();
             }else{
                 $("#pay_with_other_bill_note").removeAttr("required");
-                $("input[name='account_bank_id']").prop('required',true);
                 $("#pay_with_other_bill_note").val("");
             }
         });
@@ -5959,3 +5912,4 @@ $(document).ready(function() {
 
 </script>
 @endsection
+

@@ -18,50 +18,63 @@
     </div>
     <!-- end page title -->
 
-    <div class="row">
-        <div class="col-10">
-            <div class="card">
-                <div class="card-body">
-                    <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
-                    </table>
-                </div>
-            </div>
-        </div> <!-- end col -->
-    </div> <!-- end row -->
+
+
 
     <div class="row">
-        <div class="col-10">
+        <div class="col-11">
             <div class="card">
                 <div class="card-body">
 
+     <div class="myBorder">
+      <div class="row">
+          <div class="col-12">
+              <div class="card">
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-8">
+                        </div>
+                      </div>
 
+                      <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                      </table>
+
+                  </div>
+              </div>
+          </div> <!-- end col -->
+      </div> <!-- end row -->
+</div>
 
                     <div class="myBorder">
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label">รูปใบเสร็จ :<br>(Mouse
-                                แตะที่รูปเพื่อขยาย)</label>
-                            <div class="col-md-6">
 
+                            @if(@$slip)
+                            @php 
+                            @$i = 1
+                            @endphp
+                                @foreach(@$slip AS $r)
+                                    <label for="example-text-input" class="col-md-1 col-form-label">Slip {{@$i}} </label>
+                                        <div class="col-md-3">
+                                            @if (!empty(@$r->file))
+                                                <img id="imgAvatar_01" src="{{ $r->url }}/{{ @$r->file }}" width="200px"
+                                                    class="grow">
+                                            @ELSE
+                                                <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}"
+                                                    class="grow" width="200px">
+                                            @ENDIF
 
-                                @if (!empty(@$slip[0]->file))
-                                    <img id="imgAvatar_01" src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}" width="200px"
-                                        class="grow">
-                                @ELSE
-                                    <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}"
-                                        class="grow" width="200px">
-                                @ENDIF
-
-                            </div>
-                        </div>
-                        <!--       <div class="form-group row">
-                                      <label class="col-md-3 col-form-label">ตรวจสอบแล้วทำการอนุมัติ :</label>
-                                      <div class="col-md-8 mt-2">
-                                        <div class="custom-control custom-switch">
-                                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status_slip" value="true" {{ @$sRow->status_slip == 'true' ? 'checked' : '' }}>
-                                          <label class="custom-control-label" for="customSwitch"> อนุมัติ </label>
                                         </div>
-                                      </div>
-                                    </div> -->
+                            @php 
+                            @$i++
+                            @endphp
+                                @endforeach
+                            @endif
+                            
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                   
                         <div class="form-group mb-0 row">
                             <div class="col-md-6">
                                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url('backend/po_approve') }}">
@@ -71,7 +84,7 @@
                             <div class="col-md-6 text-right">
 
                                 {{-- <button type="submit" name="approved" class="btn btn-primary btn-sm waves-effect font-size-16 " value='approved'>
-                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
+                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก
                             </button>
                             &nbsp;
                             &nbsp;
@@ -129,14 +142,56 @@
                                                             id="example-datetime-local-input" required>
                                                     </div>
 
-                                                    @if (!empty(@$slip[0]->file))
-                                                        <img src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}"
+                            <div class="col-md-12 mt-2 text-left">
+
+                                  @IF(!empty(@$sRow->pay_with_other_bill))
+
+                                                <h5 class="font-size-14">ชำระพร้อมบิลอื่น </h5>
+                                                <input class="form-control" type="text" name=""
+                                                    id="" value="{{@$sRow->pay_with_other_bill_note}}" >
+                                                <br>
+                                                <h5 class="font-size-14">ยอดโอน </h5>
+                                                <input class="form-control" type="text" name="" id="" value="{{@$sRow->note_fullpayonetime}}" >
+                                  @ENDIF                 
+
+                            @if(@$slip)
+                            @php 
+                            @$i = 1
+                            @endphp
+                                @foreach(@$slip AS $r)
+                                    <br><h5>Slip {{@$i}} </h5>
+                                            @if (!empty(@$r->file))
+                                                <img src="{{ $r->url }}/{{ @$r->file }}"
                                                             class="img-fluid" alt="Responsive image">
-                                                    @ELSE
-                                                        <img src="{{ asset('local/public/images/example_img.png') }}"
+                                            @ELSE
+                                                <img src="{{ asset('local/public/images/example_img.png') }}"
                                                             class="img-fluid" alt="Responsive image">
-                                                    @ENDIF
+                                            @ENDIF
+
+                                        @IF($i==2)
+                                                @IF(!empty(@$sRow->note_fullpayonetime_02))
+                                                    <input class="form-control" type="text" name="" id="" value="{{@$sRow->note_fullpayonetime_02}}" >
+                                                @endif
+                                        @endif
+
+                                        @IF($i==3)
+                                                @IF(!empty(@$sRow->note_fullpayonetime_03))
+                                                    <input class="form-control" type="text" name="" id="" value="{{@$sRow->note_fullpayonetime_03}}" >
+                                                @endif
+                                        @endif
+
+                            @php 
+                            @$i++
+                            @endphp
+                                @endforeach
+                            @endif
+                                                       
                                                 </div>
+
+                                                </div>
+
+                                             
+
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Close</button>
@@ -222,87 +277,56 @@
     <!-- Lightbox init js -->
     <script src="{{ URL::asset('backend/js/pages/lightbox.init.js') }}"></script>
 
-    <script>
-        var sU = "{{ @$sU }}";
-        var sD = "{{ @$sD }}";
-        var orders_id = "{{ @$sRow->id ? @$sRow->id : 0 }}";
-        // alert(orders_id);
-        var oTable;
-        $(function() {
-            oTable = $('#data-table').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
-                ordering: false,
-                "info": false,
-                "lengthChange": false,
-                "paging": false,
-                scrollY: '' + ($(window).height() - 370) + 'px',
-                ajax: {
-                    url: '{{ route('backend.po_approve_set.datatable') }}',
-                    data: function(d) {
-                        d.Where = {};
-                        d.Where['id'] = orders_id;
-                        oData = d;
-                    },
-                    method: 'POST',
-                },
+<script>
+var id = "{{@$sRow->id}}";
+var oTable;
+$(function() {
+    oTable = $('#data-table').DataTable({
+    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        scroller: true,
+        scrollCollapse: true,
+        scrollX: true,
+        ordering: false,
+        // scrollY: ''+($(window).height()-370)+'px',
+        // iDisplayLength: 25,
+        ajax: {
+                        url: '{{ route('backend.po_approve.datatable') }}',
+                        data :{
+                              id:id,
+                            },
+                          method: 'POST',
+                        },
+            
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+            {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+            {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+            {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
+            {data: 'transfer_money_datetime', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+            
+            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
+              if(d=='true'){
+                  return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
+              }else{
+                  return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
+              }
+            }},            
+      
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
 
-                columns: [{
-                        data: 'id',
-                        title: 'PO-ID',
-                        className: 'text-center w50'
-                    },
-                    {
-                        data: 'code_order',
-                        title: '<center>เลขใบสั่งซื้อ </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'price',
-                        title: '<center>ยอดชำระ </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'pv_total',
-                        title: '<center>PV </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'type',
-                        title: '<center>จุดประสงค์การสั่งซื้อ </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'status_slip',
-                        title: '<center>Status Slip</center>',
-                        className: 'text-center',
-                        render: function(d) {
-                            if (d == 'true') {
-                                return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
-                            } else {
-                                return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
-                            }
-                        }
-                    },
-                    {
-                        data: 'date',
-                        title: '<center>วันที่สั่งซื้อ </center>',
-                        className: 'text-center'
-                    },
-                ],
-                rowCallback: function(nRow, aData, dataIndex) {
+           
+        }
 
-                }
+    });
 
-            });
-            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-                oTable.draw();
-            });
-        });
+});
+</script>
 
-    </script>
 @endsection

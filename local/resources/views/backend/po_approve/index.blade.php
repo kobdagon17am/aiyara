@@ -173,10 +173,14 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> วันที่ออกบิล : </label>
+                    <label for="" class="col-md-3 col-form-label"> วันที่สั่งซื้อ : </label>
                      <div class="col-md-9 d-flex">
-                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
-                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
+                       <?php
+                          $first_day = date("Y-m-d",strtotime("-3 day"));
+                          $last_day  = date('Y-m-d');
+                         ?>
+                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="<?=$first_day?>" />
+                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="<?=$last_day?>" />
                     </div>
                   </div>
                 </div>
@@ -266,8 +270,6 @@
 @section('script')
 
 <script>
-var sU = "{{@$sU}}"; 
-var sD = "{{@$sD}}";  
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -307,12 +309,15 @@ $(function() {
         },
             
         columns: [
-            {data: 'id', title :'PO-ID', className: 'text-center w50'},
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
             {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
             {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-            {data: 'pv_total', title :'<center>PV </center>', className: 'text-center'},
-            {data: 'type', title :'<center>จุดประสงค์การสั่งซื้อ </center>', className: 'text-center'},
-            {data: 'date', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
+            {data: 'transfer_money_datetime', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+            
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
             {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
               if(d=='true'){
@@ -327,19 +332,11 @@ $(function() {
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(sU!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+              $('td:last-child', nRow).html(''
+              + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+              + ''
+            ).addClass('input');
 
-            if(aData['id']!=1){
-                  $('td:last-child', nRow).html(''
-                  + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  + ''
-                ).addClass('input');
-            }
-
-          }
-          
         }
 
     });
@@ -391,8 +388,8 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'created_at', title :'<center>วันที่ออกบิล </center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
+            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
             {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
             {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
             {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
@@ -454,12 +451,15 @@ $(function() {
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     <script>
-
+      var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
       $('#bill_sdate').datepicker({
           // format: 'dd/mm/yyyy',
           format: 'yyyy-mm-dd',
           uiLibrary: 'bootstrap4',
           iconsLibrary: 'fontawesome',
+          minDate: function () {
+                return today;
+          }
       });
 
       $('#bill_edate').datepicker({
@@ -709,7 +709,7 @@ $(function() {
                                           },
                                    columns: [
                                       {data: 'id', title :'ID', className: 'text-center w50'},
-                                      {data: 'created_at', title :'<center>วันที่ออกบิล </center>', className: 'text-center'},
+                                      {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
                                       {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
                                       {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
                                       {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},

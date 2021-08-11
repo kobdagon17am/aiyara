@@ -1627,6 +1627,7 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_sent_money_daily` ;");
 
       DB::select("TRUNCATE `db_add_ai_cash` ;");
+      DB::select("TRUNCATE `payment_slip` ;");
       
       // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
 
