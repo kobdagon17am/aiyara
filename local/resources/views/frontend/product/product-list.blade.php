@@ -115,7 +115,7 @@
           </div>
         </div>
         <?php
-        $customer_data = \App\Helpers\Frontend::get_customer(Auth::guard('c_user')->user()->id);
+        $customer_data = \App\Helpers\Frontend::get_customer(Auth::guard('c_user')->user()->user_name);
 
         ?>
         <p class="m-b-0" style="font-size: 16px"><b class="f-right"><i class="fa fa-star p-2 m-b-0"></i> {{ $customer_data->qualification_name }}</b></p>
