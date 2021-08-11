@@ -12,6 +12,8 @@ class Transfer_branchController extends Controller
 
     public function index(Request $request)
     {
+// dd();
+        $sBusiness_location = \App\Models\Backend\Business_location::get();
 
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -27,6 +29,8 @@ class Transfer_branchController extends Controller
         $Zone = \App\Models\Backend\Zone::get();
         $Shelf = \App\Models\Backend\Shelf::get();
 
+        $Transfer_branch_status_01 = \App\Models\Backend\Transfer_branch_status_01::get();
+
         $sTransfer_chooseAll = \App\Models\Backend\Transfer_choose_branch::where('action_user','=',(\Auth::user()->id))->get();
         // dd(count($sTransfer_chooseAll));
 
@@ -38,10 +42,21 @@ class Transfer_branchController extends Controller
         // dd($b_l[0]->business_location_id_fk);
         $business_location_id_fk = $b_l[0]->business_location_id_fk;
 
+        $tr_number = DB::select(" SELECT tr_number FROM `db_transfer_branch_code` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
+
+        // dd($tr_number);
+
+        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
+
         return View('backend.transfer_branch.index')->with(
         array(
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
-           'business_location_id_fk'=>$business_location_id_fk
+           'business_location_id_fk'=>$business_location_id_fk,
+           'sBusiness_location'=>$sBusiness_location,
+           'Transfer_branch_status_01'=>$Transfer_branch_status_01,
+           'tr_number'=>$tr_number,
+           'sAction_user'=>$sAction_user,
+
         ) );
       
     }
@@ -184,6 +199,10 @@ class Transfer_branchController extends Controller
          foreach ($rsBranch_details as $key => $value) {
               DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
          }
+
+
+         DB::select(" UPDATE `db_transfer_branch_code` SET `tr_status`='2' WHERE (`id`='".$rsBranch_details[0]->transfer_branch_code_id."') ");
+
 
       }
 

@@ -115,13 +115,13 @@
 
                 <div class="form-group row">
                     <label for="created_at" class="col-md-3 col-form-label">วันที่สร้างใบโอน :  </label>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                           <input class="form-control" autocomplete="off" id="created_at" name="created_at" value="{{@$sRow->created_at}}"  disabled  />
                     </div>
                 </div>
 
-                          <div class="form-group row">
-                            <label for="tr_status" class="col-md-3 col-form-label">สถานะใบโอน :</label>
+              <!--             <div class="form-group row">
+                            <label for="tr_status" class="col-md-3 col-form-label">สถานะ :</label>
                             <div class="col-md-6">
                                <select id="tr_status" name="tr_status" class="form-control select2-templating " >
                                 <option value="">-Status-</option>
@@ -131,12 +131,12 @@
                                 <option value="3" {{ (3==@$sRow->tr_status)?'selected':'' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
                               </select>
                             </div>
-                          </div>
+                          </div> -->
 
                 <div class="form-group row">
-                  <label for="note" class="col-md-3 col-form-label">หมายเหตุ (ถ้ามี) :</label>
+                  <label for="note" class="col-md-3 col-form-label">หมายเหตุ :</label>
                   <div class="col-md-6">
-                    <textarea class="form-control" rows="3" id="note" name="note" >{{ @$sRow->note }}</textarea>
+                    <textarea class="form-control" rows="3" id="note" name="note" readonly="" >{{ @$sRow->note }}</textarea>
                   </div>
                 </div>
 
@@ -164,9 +164,9 @@
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
-                        <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
+                <!--         <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                        </button>
+                        </button> -->
                     </div>
                 </div> 
 
@@ -245,6 +245,8 @@
 
 
             <div class="myBorder div_approve_transfer_branch_get " >
+
+               <h4><i class="bx bx-play"></i> อนุมัติรับสินค้าจากการโอน</h4>
         
               <form id="frm-main" action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
@@ -252,23 +254,16 @@
                 <input name="approved" type="hidden" value="1">
                 {{ csrf_field() }}
 
-                 <div class="form-group row">
-                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
-                      <div class="col-md-6">
-                        @if( empty(@$sRow->id) )
-                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
-                            @else
-                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                            <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
-                         @endif
-                          
-                      </div>
-                  </div>
 
                 <div class="form-group row">
                     <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
-                    <div class="col-md-3 mt-2">
+                   
+
+                        <?php //echo $sRow->tr_status; ?>
+                        <!-- รับสินค้าครบแล้ว -->
+                        @IF(@$sRow->tr_status==3)
+
+                         <div class="col-md-3 mt-2">
                       <div class=" ">
 
                           <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }} required >
@@ -276,6 +271,8 @@
 
                       </div>
                     </div>
+                        @ENDIF
+
                      <div class="col-md-4 mt-2">
                       <div class=" ">
               
@@ -293,6 +290,19 @@
                     <textarea class="form-control" rows="3" id="note2" name="note2" required >{{ @$sRow->note2 }}</textarea>
                   </div>
                 </div>
+                 <div class="form-group row">
+                      <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                      <div class="col-md-6">
+                        @if( empty(@$sRow->id) )
+                          <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
+                            @else
+                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
+                         @endif
+                          
+                      </div>
+                  </div>
 
 
                 <div class="form-group mb-0 row">
@@ -558,20 +568,25 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                      console.log(aData['get_status_2']);
+                      // console.log(aData['get_status_2']);
                       // console.log(aData['product_amt']);
                       // console.log(aData['product_amt_receive']);
                       // console.log(aData['product_details']);
-                      console.log(aData['tr_status']);
+                      // console.log(aData['tr_status']);
 
                       // if(aData['get_status_2']==2){
                       if(aData['product_amt']>aData['product_amt_receive']){
 
                         if(aData['get_status_2']==2){
 
+                          if(aData['tr_status']>2){
+                              $('td:last-child', nRow).html('-');
+                          }else{
+
                           $('td:last-child', nRow).html(''
                             + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
                           ).addClass('input');
+                        }
 
                         }else{
                           $('td:last-child', nRow).html('-');
@@ -629,11 +644,18 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                    $('td:last-child', nRow).html(''
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                      ).addClass('input');
+                      console.log(aData['tr_status']);
 
-                    }
+                          if(aData['tr_status']>2){
+                              $('td:last-child', nRow).html('-');
+                          }else{
+
+                              $('td:last-child', nRow).html(''
+                                  + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                ).addClass('input');
+
+                              }
+                      }
                 });
       
             });
@@ -870,8 +892,8 @@
             $(document).on('click', '.cDelete', function(event) {
             
                      setTimeout(function(){
-                         $('#data-table-01').DataTable().draw();
-                         $('#data-table-02').DataTable().draw();
+                         // $('#data-table-01').DataTable().draw();
+                         location.reload();
                       }, 1500);
        
            });

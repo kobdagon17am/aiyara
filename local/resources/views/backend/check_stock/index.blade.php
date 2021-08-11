@@ -563,21 +563,21 @@
                     columns: [
                         {data: 'id', title :'No.', className: 'text-center w50'},
                         {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center'},
-                        {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
-                        {data: 'lot_number_desc', title :'LOT<br>(Lot Expired date)', className: 'text-left'},
-                        {data: 'branch_source', title :'สาขาต้นทาง', className: 'text-left'},
-                        {data: 'product_amt', title :'จำนวน<br>ที่โอน', className: 'text-center'},
-                        {data: 'product_unit_desc', title :'หน่วย', className: 'text-center'},
-                        {data: 'branch_name', title :'สาขาปลายทาง', className: 'text-left'},
-                        {data: 'product_amt_receive', title :'จำนวน<br>ที่รับโอน', className: 'text-center'},
-                        {data: 'approve_status_get', title :'สถานะการรับ', className: 'text-left'},
-                        {data: 'approve_date_get', title :'วัน-เวลา<br>ดำเนินการฝั่งรับ', className: 'text-center'},
+                        {data: 'product_name', title :'รายการสินค้า', className: 'text-center'},
+                        {data: 'branch_from', title :'สาขาต้นทาง', className: 'text-center'},
+                        {data: 'branch_to', title :'สาขาปลายทาง', className: 'text-center'},
+                        {data: 'tr_status', title :'สถานะ', className: 'text-center'},
+                        {data: 'updated_at', title :'วัน-เวลา<br>ดำเนินการล่าสุด', className: 'text-center'},
 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
                     }
                 });
+
+                    oTable02.on( 'draw', function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                    });
          
             });
 

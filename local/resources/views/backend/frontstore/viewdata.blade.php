@@ -1026,7 +1026,7 @@
                             @endif
 
                           <div class="d-flex">
-                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                        <!--    <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button> -->
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
                               $ds = explode("-", $ds1);
@@ -1034,7 +1034,7 @@
                               $ds_m = $ds[1];
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>
+                            }else{$ds='';} ?>วัน เวลา ที่โอน
                               <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
@@ -1044,7 +1044,7 @@
                          <span width="100" class="span_file_slip" >
                                 @IF(!empty(@$sRow->file_slip))
                                   <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
-                                  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                             <!--      <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
                                 @ELSE
                                   <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                 @ENDIF
@@ -1055,6 +1055,103 @@
                       <div class="divTableCell">
                       </div>
                     </div>
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                       <!--     <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button> -->
+                            <?php if(!empty(@$sRow->transfer_money_datetime_02)){
+                              $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
+                              $ds_02 = explode("-", $ds1_02);
+                              $ds_d_02 = $ds_02[2];
+                              $ds_m_02 = $ds_02[1];
+                              $ds_y_02 = $ds_02[0];
+                              $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
+                            }else{$ds_02='';} ?>วัน เวลา ที่โอน
+                              <input class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_02" >
+                                @IF(!empty(@$sRow->file_slip_02))
+                                  <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
+                                 <!--  <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
+                                @ELSE
+                                  <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                         <!--   <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button> -->
+                            <?php if(!empty(@$sRow->transfer_money_datetime_03)){
+                              $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
+                              $ds_03 = explode("-", $ds1_03);
+                              $ds_d_03 = $ds_03[2];
+                              $ds_m_03 = $ds_03[1];
+                              $ds_y_03 = $ds_03[0];
+                              $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
+                            }else{$ds_03='';} ?>วัน เวลา ที่โอน
+                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" /> 
+                              <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_03" >
+                                @IF(!empty(@$sRow->file_slip_03))
+                                  <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
+                               <!--    <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
+                                @ELSE
+                                  <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input type="text" class="form-control "  placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" data-toggle='tooltip' data-placement='top' title='ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว'  >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div>
+                      </div>
 
 
                    <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
@@ -1104,13 +1201,6 @@
                         <div class="divTableCell" >
                         </div>
 
-                        <div class="divTH">
-                          <label for="" class="" > ยอด Ai-Cash คงเหลือ : </label>
-                        </div>
-
-                        <div class="divTableCell">
-                            <input class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
-                        </div>
 
                         <div class="divTableCell">
                           <button type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;display: none;">ดำเนินการ</button>

@@ -455,6 +455,7 @@ class FrontstoreController extends Controller
         }
 
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
+        // dd($sAccount_bank);
 
       $business_location_id = $sRow->business_location_id;
       $type = $sRow->purchase_type_id_fk;
@@ -736,6 +737,7 @@ class FrontstoreController extends Controller
               }
 
               // dd("706");
+              // dd($request->all());
 
               $sRow->charger_type    = request('charger_type');
               $sRow->credit_price    = str_replace(',','',request('credit_price'));
@@ -755,6 +757,17 @@ class FrontstoreController extends Controller
               $sRow->cash_pay    =  str_replace(',','',request('cash_pay'));
               $sRow->account_bank_id = request('account_bank_id');
               $sRow->transfer_money_datetime = request('transfer_money_datetime');
+              $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02');
+              $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03');
+
+              $sRow->note_fullpayonetime = request('note_fullpayonetime');
+              $sRow->note_fullpayonetime_02 = request('note_fullpayonetime_02');
+              $sRow->note_fullpayonetime_03 = request('note_fullpayonetime_03');
+
+              $sRow->pay_with_other_bill = request('pay_with_other_bill');
+              $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
+
+              $sRow->check_press_save = '2';
 
               if(empty(request('shipping_price'))){
 
@@ -784,8 +797,29 @@ class FrontstoreController extends Controller
                   $sRow->file_slip = $image_path.$name;
                 }
 
-    
+               if ($request->hasFile('image02')) {
+                  @UNLINK(@$sRow->file_slip_02);
+                  $this->validate($request, [
+                    'image02' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image02');
+                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_02 = $image_path.$name;
+                }
 
+               if ($request->hasFile('image03')) {
+                  @UNLINK(@$sRow->file_slip_03);
+                  $this->validate($request, [
+                    'image03' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image03');
+                  $name = 'S3'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_03 = $image_path.$name;
+                }
               // PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
 
@@ -984,26 +1018,49 @@ class FrontstoreController extends Controller
 16  TrueMoney
 17  Gift Voucher + PromptPay
 18  Gift Voucher + TrueMoney
-*/
-// `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
 
-    // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
+`approve_status` int(11) DEFAULT '0' COMMENT 'Ref>dataset_approve_status>id',
+1 รออนุมัติ
+2 อนุมัติแล้ว
+3 รอชำระ
+4 รอจัดส่ง
+5 ยกเลิก
+6 ไม่อนุมัติ
+9 Finished
+
+`order_status_id_fk` int(11) DEFAULT NULL COMMENT '(ยึดตาม* dataset_order_status )',
+1 รอส่งเอกสารการชำระ
+2 รอตรวจสอบการชำระ
+3 เอกสารไม่ผ่านการตรวจสอบ
+5 กำลังจัดเตรียมสินค้า
+6 กำลังจัดส่งสินค้า
+7 ได้รับสินค้าแล้ว
+4 รับสินค้าที่สาขา
+8 ยกเลิก(Cancel)
+
+*/
+
+ // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
 // dd(request('pay_type_id_fk'));
               if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                   $sRow->approve_status = 1  ;
+                  $sRow->order_status_id_fk = 2  ;
               // }else if(request('pay_type_id_fk')==5 || request('pay_type_id_fk')==6 || request('pay_type_id_fk')==7 || request('pay_type_id_fk')==9){
                 // dd(request('pay_type_id_fk'));
                   // $sRow->approve_status = 2  ;
               }else{
                   $sRow->approve_status = 4 ;
+                  $sRow->order_status_id_fk = 5  ;
               }
 
               // $sRow->approve_status = 9 ;
-
               $sRow->save();
+              DB::select(" UPDATE `db_orders` SET `code_order`=".$sRow->id." WHERE (`id`=".$sRow->id.") ");
 
+// TEST
              // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
+
 
         }else{
 
@@ -1016,7 +1073,7 @@ class FrontstoreController extends Controller
 
    public function form($id=NULL)
     {
-      // dd($request->all());O
+      // dd($request->all());
       \DB::beginTransaction();
       try {
           if( $id ){
@@ -1427,6 +1484,14 @@ class FrontstoreController extends Controller
         $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::cart_check_register($row->id, 1 ,$row->user_name);
         return $CourseCheckRegis['status'];
       })
+      ->addColumn('cuase_cannot_buy', function($row) {
+        $c = 'Package ขั้นต่ำที่ซื้อได้,คุณวุฒิ reward ที่ซื้อได้,รักษาคุณสมบัติรายเดือน,รักษาคุณสมบัติท่องเที่ยว,aistockist,agency  ';
+        if($c){
+          return 'ไม่ผ่านเกณฑ์ '.$c;
+        }
+        
+      })
+      ->escapeColumns('cuase_cannot_buy')
       ->make(true);
     }
 

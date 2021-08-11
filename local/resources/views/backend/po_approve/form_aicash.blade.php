@@ -12,12 +12,12 @@
 <div class="row">
     <div class="col-7">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> เติม Ai-Cash </h4>
+            <h4 class="mb-0 font-size-18"> อนุมัติ Ai-Cash </h4>
 
             <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
               
             <?php }else{ ?>
-                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/add_ai_cash") }}">
+                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">
                       <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
                 </a>
             <?php } ?>
@@ -117,19 +117,6 @@
                             </div>
                           </div>
 
-     @if(empty(@$sRow))
-                    <div class="form-group row" style="padding: 1%;">
-                            <label for="" class="col-md-4 col-form-label"></label>
-                            <div class="col-md-8 text-right" style="background-color: #e6e6e6;padding: 1%;">
-
-                                <input type="hidden" name="save_new" value="1" >
-                                <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                                <i class="bx bx-save font-size-18 align-middle mr-2"></i><span style="font-size: 14px;">บันทึกข้อมูล</span>
-                                </button>
-
-                            </div>
-                       </div>
-     @ENDIF
 
                    </div>
 
@@ -295,49 +282,10 @@
                           </div>
                         </div>
 
-      
- @IF(@$sRow->approve_status >= 2)
- @ELSE
-
-                          <div class="form-group row" style="padding: 1%;">
-                            <label for="" class="col-md-4 col-form-label"></label>
-                            <div class="col-md-8 text-right" style="background-color: #e6e6e6;padding: 1%;">
-
-                                <input type="hidden" value="<?=@$_REQUEST['fromAddAiCash']?>" name="fromAddAiCash" >
-                                <input type="hidden" value="<?=@$_REQUEST['frontstore_id_fk']?>" name="frontstore_id_fk" >
-
-                                @if( !empty($sRow) )
-                                <input type="hidden" name="save_update" value="1" >
-                                <button type="submit" class="btn btn-primary btn-sm waves-effect" >
-                                <i class="bx bx-save font-size-18 align-middle mr-2"></i><span style="font-size: 14px;">บันทึกข้อมูล</span>
-                                </button>
-                                @endif
-
-                          <!--       <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/{{@$sRow->id}}" target=_blank style="float: right;" >
-                                  <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ </span></a>
-                                  
- -->
-                            </div>
-                       </div>
-   @ENDIF                 
-                       <div class="form-group row" style="text-align: right;">
-                            <label for="" class="col-md-4 col-form-label"></label>
-                            <div class="col-md-8" >
-                            <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
-                            <hr>
-                                <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
-                                      <span style="font-size: 14px;">ย้อนกลับไปออกบิลต่อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-1"></i> 
-                                </a>
-                            <?php } ?>
-
-                            </div>
-                       </div>
 
               </form>
               </div>
 
- @IF(@$sRow->approve_status >= 2)
- @ELSE
 
                   @if( !empty(@$sRow->id) )
                   @if( $sPermission==1 || @$menu_permit->can_approve==1 )
@@ -393,14 +341,17 @@
                                     </div>
                                   </div>
 
-
+                      @IF(@$sRow->approve_status >= 2)
+                      @ELSE
                                   <div class="form-group row" style="padding: 1%;">
                                     <div class="col-md-4">
-                                      <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/add_ai_cash") }}">
+                                      <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">
                                         <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
                                      </a>
                                     </div>
                                     <div class="col-md-8 text-right" style="background-color: #e6e6e6;padding: 1%;">
+
+                                      <input type="hidden" name="from_approve_aicash" value="1">
 
                                       <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
                                       <i class="bx bx-save font-size-18 align-middle mr-1"></i>  บันทึก > การอนุมัติ
@@ -408,7 +359,7 @@
 
                                     </div>
                                   </div>
-
+                       @ENDIF 
                               </form>
 
                             </div>
@@ -417,7 +368,6 @@
                   @ENDIF 
                   @ENDIF 
               
-  @ENDIF
   @ENDIF
 
         </div>

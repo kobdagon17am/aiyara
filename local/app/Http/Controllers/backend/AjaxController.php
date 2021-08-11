@@ -715,12 +715,15 @@ class AjaxController extends Controller
 
    public function ajaxGetDBfrontstore(Request $request)
     {
-            $id = $request->frontstore_id_fk;
-            if($id){
-              $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
+
+        if($request->ajax()){
+
+            if(!empty($request->frontstore_id_fk)){
+                $rs = DB::select(" SELECT * FROM db_orders WHERE id=$request->frontstore_id_fk ");
               return response()->json($rs);
             }
-            
+        }
+       
     }
 
 
@@ -978,26 +981,26 @@ class AjaxController extends Controller
         }
 
 
-        DB::select(" UPDATE db_orders SET
+        // DB::select(" UPDATE db_orders SET
 
-            aicash_price='0',
-            member_id_aicash='0',
-            transfer_price='0',
-            credit_price='0',
+        //     aicash_price='0',
+        //     member_id_aicash='0',
+        //     transfer_price='0',
+        //     credit_price='0',
 
-            charger_type='0',
-            fee='0',
-            fee_amt='0',
-            sum_credit_price='0',
-            account_bank_id='0',
+        //     charger_type='0',
+        //     fee='0',
+        //     fee_amt='0',
+        //     sum_credit_price='0',
+        //     account_bank_id='0',
 
-            transfer_money_datetime=NULL ,
-            file_slip=NULL,
+        //     transfer_money_datetime=NULL ,
+        //     file_slip=NULL,
 
-            total_price='0',
-            cash_price='0',
-            cash_pay='0'
-            WHERE id=$frontstore_id ");
+        //     total_price='0',
+        //     cash_price='0',
+        //     cash_pay='0'
+        //     WHERE id=$frontstore_id ");
 
 
         DB::select(" UPDATE db_orders SET pay_type_id_fk=($pay_type_id_fk) WHERE id=$frontstore_id ");
@@ -1037,6 +1040,48 @@ class AjaxController extends Controller
             WHERE id=$frontstore_id_fk ");
     }
 
+
+
+    public function ajaxClearPayTypeFrontstore(Request $request)
+    {
+          $frontstore_id_fk =  $request->frontstore_id_fk ;
+
+          DB::select(" UPDATE db_orders SET
+
+            pay_type_id_fk='0',
+
+            aicash_price='0',
+            member_id_aicash='0',
+            transfer_price='0',
+            credit_price='0',
+
+            charger_type='0',
+            fee='0',
+            fee_amt='0',
+            sum_credit_price='0',
+            account_bank_id='0',
+
+            transfer_money_datetime=NULL ,
+            file_slip=NULL,
+
+            total_price='0',
+            cash_price='0',
+            cash_pay='0'
+            WHERE id=$frontstore_id_fk ");
+    }
+
+
+
+    public function ajaxForCheck_press_save(Request $request)
+    {
+          // return $request->frontstore_id_fk;
+        if(!empty($request->frontstore_id_fk)){
+            DB::select(" UPDATE db_orders set check_press_save='1' where product_value>0 and check_press_save<>'2' and id=".$request->frontstore_id_fk."
+             ");
+        }
+          
+          // return response()->json($rs);
+    }
 
 
    public function ajaxCalPriceFrontstore02(Request $request)
@@ -1089,7 +1134,8 @@ class AjaxController extends Controller
             }
 
             $cash_pay = is_numeric(@$sum_price) - is_numeric($aicash_price) ;
-            DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+            $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+            DB::select(" UPDATE db_orders SET member_id_aicash=".$member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
         if($pay_type_id_fk==7){
@@ -1252,7 +1298,9 @@ class AjaxController extends Controller
                             $credit_price = $credit_price ;
                         }
 
-                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                        $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+
+                        DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,member_id_aicash=".$member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
                     }
 
                 }else{
@@ -1272,10 +1320,11 @@ class AjaxController extends Controller
 
 
                         if($credit_price==$sum_price){
-                            DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,member_id_aicash=".$request->member_id_aicash.",aicash_price=$fee_amt WHERE id=$frontstore_id ");
+                            $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+                            DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,member_id_aicash=".$member_id_aicash.",aicash_price=$fee_amt WHERE id=$frontstore_id ");
                         }else{
-
-                           DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,member_id_aicash=".$request->member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                           $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+                           DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,member_id_aicash=".$member_id_aicash.",aicash_price=($AiCash),cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
                         }
 
@@ -1309,7 +1358,8 @@ class AjaxController extends Controller
                     $transfer_price = str_replace(',','',$request->transfer_price);
                     $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
                     $transfer_money_datetime = $request->transfer_money_datetime;
-                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,aicash_price=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',member_id_aicash=".$request->member_id_aicash.",cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
+                    $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,aicash_price=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime',member_id_aicash=".$member_id_aicash.",cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
          }
 
@@ -1331,10 +1381,11 @@ class AjaxController extends Controller
                 $cash_pay = $sum_price-$aicash_price;
 
                 if($aicash_price>$sum_price){
-
-                    DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
+                    $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+                    DB::select(" UPDATE db_orders SET member_id_aicash=".$member_id_aicash.",aicash_price=$sum_price, cash_price=0, cash_pay=0,total_price=($sum_price) WHERE id=$frontstore_id ");
                 }else{
-                    DB::select(" UPDATE db_orders SET member_id_aicash=".$request->member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
+                    $member_id_aicash = !empty(@$request->member_id_aicash)?@$request->member_id_aicash:0;
+                    DB::select(" UPDATE db_orders SET member_id_aicash=".$member_id_aicash.",aicash_price=$aicash_price, cash_price=$cash_pay, cash_pay=$cash_pay,total_price=($sum_price) WHERE id=$frontstore_id ");
                 }
 
 
@@ -1882,12 +1933,39 @@ class AjaxController extends Controller
     {
         // return $request;
         // dd();
-
         if($request->ajax()){
             if($request->id){
               $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
               @UNLINK(@$sRow[0]->file_slip);
-              DB::select(" UPDATE db_orders SET file_slip='' where id=".$request->id."  ");
+              DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".$request->id."  ");
+            }
+        }
+    }
+
+    public function ajaxDelFileSlip_02(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip_02);
+              DB::select(" UPDATE db_orders SET file_slip_02='',transfer_money_datetime_02=NULL,note_fullpayonetime_02=NULL where id=".$request->id."  ");
+            }
+        }
+    }
+
+    public function ajaxDelFileSlip_03(Request $request)
+    {
+        // return $request;
+        // dd();
+
+        if($request->ajax()){
+            if($request->id){
+              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
+              @UNLINK(@$sRow[0]->file_slip_03);
+              DB::select(" UPDATE db_orders SET file_slip_03='',transfer_money_datetime_03=NULL,note_fullpayonetime_03=NULL where id=".$request->id."  ");
             }
         }
     }

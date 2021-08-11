@@ -134,9 +134,9 @@
               console.log('sPermission : '+sPermission);
               console.log('can_approve : '+can_approve);
               // console.log('sPermission : '+sPermission);
-              // console.log('sC : '+sC);
-              // console.log('sU : '+sU);
-              // console.log('sD : '+sD);
+              console.log('sC : '+sC);
+              console.log('sU : '+sU);
+              console.log('sD : '+sD);
               // console.log('can_cancel_bill : '+can_cancel_bill);
               // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
               // $(".get_menu_id").val(menu_id);

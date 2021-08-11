@@ -4,6 +4,18 @@
 
 @section('css')
 <style>
+    .select2-selection {height: 34px !important;margin-left: 3px;}
+    .border-left-0 {height: 67%;}
+
+    .form-group {
+        margin-bottom: 0rem  !important; 
+     }
+
+    .btn-outline-secondary {
+        margin-bottom: 36% !important;
+    }
+</style>
+<style>
     @media screen and (min-width: 676px) {
         .modal-dialog {
           max-width: 1200px !important; /* New width for default modal */
@@ -16,7 +28,7 @@
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -83,6 +95,183 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
+
+
+<div class="row" >
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+
+
+              <div class="row" >
+
+                 <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location</label>
+                        <div class="col-md-9">
+                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                              <option value="">-Business Location-</option>
+                              @if(@$sBusiness_location)
+                                @foreach(@$sBusiness_location AS $r)
+                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
+                                @endforeach
+                              @endif
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                            <div class="col-md-9">
+
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                   @if($sPermission==1)
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @else 
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @endif
+                                  @endforeach
+                                @endif
+                              </select>
+
+                            </div>
+                          </div>
+                    </div>
+
+               </div>
+
+              <div class="row" >
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="to_branch" class="col-md-3 col-form-label"> โอนไปให้สาขา : </label>
+                    <div class="col-md-9">
+                      <select name="to_branch" id="to_branch" class="form-control select2-templating " required >
+                              <option value="">-Select-</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->b_name}} 
+                                    </option>
+                                  @endforeach
+                                @endif
+                            </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="tr_status" class="col-md-3 col-form-label"> สถานะ :  </label>
+                    <div class="col-md-9">
+                      <select id="tr_status" name="tr_status" class="form-control select2-templating " >
+                         <option value="">-Select-</option>
+                                 @if(@$Transfer_branch_status_01)
+                                  @foreach(@$Transfer_branch_status_01 AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->txt_desc}} 
+                                    </option>
+                                  @endforeach
+                                @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <div class="row" >
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่สร้างใบโอน : </label>
+                     <div class="col-md-9 d-flex">
+                      <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
+                      <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="tr_number" class="col-md-3 col-form-label"> รหัสใบโอน : </label>
+                     <div class="col-md-9 ">
+                      <select id="tr_number" name="tr_number" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                        @if(@$tr_number)
+                        @foreach(@$tr_number AS $r)
+                        <option value="{{$r->tr_number}}" >
+                          {{$r->tr_number}}
+                        </option>
+                        @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+            <div class="row" style="margin-bottom: 2% !important;"  >
+                <div class="col-md-6 " style="margin-top: -1% !important;" >
+                  <div class="form-group row">
+                    <label for="action_user" class="col-md-3 col-form-label"> พนักงานที่ทำการโอน : </label>
+                    <div class="col-md-9">
+                     <select id="action_user" name="action_user" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                        @if(@$sAction_user)
+                        @foreach(@$sAction_user AS $r)
+                        <option value="{{$r->id}}" >
+                           {{$r->name}}
+                        </option>
+                        @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+    
+                <div class="col-md-6 " style="margin-top: -0.5% !important;" >
+                  <div class="form-group row">
+                    <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
+                     <div class="col-md-9" >
+                     <a class="btn btn-info btn-sm btnSearch01 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
+                        <i class="bx bx-search align-middle "></i> SEARCH
+                      </a>
+
+
+                <!--     <a class="btn btn-info btn-sm float-right " style="{{@$sC}}" href="{{ route('backend.transfer_branch_get.create') }}">
+                      <i class="bx bx-plus font-size-20 align-middle"></i>ADD สร้างใบรับสินค้าจาก PO
+                    </a> -->
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+      <div class="myBorder">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 font-size-18"><i class="bx bx-play"></i> รายการใบโอน </h4>
+                      </div>
+                    </div>
+                  </div>
+
+                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  </table>
+                </div>
+
+
 
 <!-- display: none; -->
  <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
@@ -205,73 +394,18 @@
 
           </form>
 
-			 </div>
+       </div>
 
 
-                <div class="myBorder">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0 font-size-18"><i class="bx bx-play"></i> รายการใบโอน </h4>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-                      <div class="col-md-3 ">
-                        <div class="form-group row">
-                          <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
-                            <option value="">สาขา</option>
-                            @if(@$sBranchs)
-                            @foreach(@$sBranchs AS $r)
-                            <option value="{{$r->id}}"  >
-                              {{$r->b_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group row">
-                          <select id="warehouse_id_search" name="warehouse_id_search" class="form-control select2-templating "  >
-                            <option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-1">
-                        <div class="form-group row">
-                          <select id="status_search" name="status_search" class="form-control select2-templating " >
-                            <!--   `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ', -->
-                            <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
-                  </table>
-                </div>
 
 
             </div>
+            </div>
+
+
+
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
@@ -790,7 +924,8 @@
 
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                  {data: 'action_date', title :'<center>วันที่<br>ดำเนินการ </center>', className: 'text-center'},
+                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
                   // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
                   {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
@@ -812,8 +947,9 @@
                   // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                   //     return d ;
                   // }},
-                  {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
-                  {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
+                  {data: 'tr_status', title :'<center> สถานะ </center>', className: 'text-center'},
+                  // {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
+                  // {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
                   {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               rowCallback: function(nRow, aData, dataIndex){
@@ -873,52 +1009,53 @@
 
             $("#spinner_frame").show();
 
-  					var oTable;
-  					$(function() {
+            var oTable;
+            $(function() {
 
-  					    oTable = $('#data-table-choose').DataTable({
-  					    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-  					        processing: true,
-  					        serverSide: true,
-  					        ordering: false,
-  					        "info":     false,
-  					        destroy: true,
-  					        searching: false,
-  					        // paging: false,
-  					        ajax: {
-  					          url: '{{ route('backend.check_stock.datatable') }}',
-  					          data: function ( d ) {
-  					            d.Where={};
-  					            d.Where['branch_id_fk'] = branch_id_fk ;
+                oTable = $('#data-table-choose').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ordering: false,
+                    "info":     false,
+                    destroy: true,
+                    searching: false,
+                    // paging: false,
+                    ajax: {
+                      url: '{{ route('backend.check_stock.datatable') }}',
+                      data: function ( d ) {
+                        d.Where={};
+                        d.Where['branch_id_fk'] = branch_id_fk ;
                         d.Where['product_id_fk'] = product_id ;
-  					            oData = d;
-  					          },
-  					          method: 'POST'
-  					        },
-  					        columns: [
-  					            {data: 'id', title :'ID', className: 'text-center w50'},
-  					            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-  					            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-  					            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-  					            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
+                        oData = d;
+                      },
+                      method: 'POST'
+                    },
+                    columns: [
+                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+                        {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+                        {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+                        {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
                         {data: 'amt',   title :'<center>จำนวนที่มีในคลัง</center>', className: 'text-center',render: function(d) {
                            return '<center>'+(d)+'<input type="hidden" class="amt_in_warehouse" value="'+(d)+'" > ' ;
                         }},
-  					            {data: 'id',   title :'<center>จำนวนโอน</center>', className: 'text-center',render: function(d) {
-  					               return '<center><input class="form-control amt_to_transfer in-tx  " type="number"  name="amt_transfer[]" style="background-color:#e6ffff;border: 2px inset #EBE9ED;width:60%;text-align:center;" ><input type="hidden" name="id[]" value="'+(d)+'" >' ;
-  					            }},
+                        {data: 'id',   title :'<center>จำนวนโอน</center>', className: 'text-center',render: function(d) {
+                           return '<center><input class="form-control amt_to_transfer in-tx  " type="number"  name="amt_transfer[]" style="background-color:#e6ffff;border: 2px inset #EBE9ED;width:60%;text-align:center;" ><input type="hidden" name="id[]" value="'+(d)+'" >' ;
+                        }},
 
-  					        ],
+                    ],
 
-  					    });
-  					  
-  					});
+                });
+              
+            });
 
-            			$('#exampleModalCenter').modal('show');
+                  $('#exampleModalCenter').modal('show');
           }
           
         });
     });
+
 
 
     $('#exampleModalCenter').on('focus', function () {
@@ -1027,6 +1164,154 @@
     });
 
 </script>
+
+
+
+<script>
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.btnSearch01', function(event) {
+
+                  event.preventDefault();
+                  $(".myloading").show();
+
+                  var business_location_id_fk = $('#business_location_id_fk').val();
+                  var branch_id_fk = $('#branch_id_fk').val();
+                  var tr_number = $('#tr_number').val();
+                  var startDate = $('#startDate').val();
+                  var endDate = $('#endDate').val();
+                  var action_user = $('#action_user').val();
+                  var tr_status = $('#tr_status').val();
+                  // console.log(tr_status);
+                  if(business_location_id_fk==''){
+                    $('#business_location_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+                  // alert(branch_id_fk);
+                  if(branch_id_fk=='' || branch_id_fk === null ){
+                    $('#branch_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                      
+                      var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+                      var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+                      var sU = ''; // "{{@$sU}}"; //alert(sU);
+                      var sD = ''; // "{{@$sD}}"; //alert(sD);
+                      var oTable;
+                      $(function() {
+                          oTable = $('#data-table-transfer-list').DataTable({
+                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                              processing: true,
+                              serverSide: true,
+                              scroller: true,
+                              scrollCollapse: true,
+                              scrollX: true,
+                              ordering: false,
+                              destroy: true,
+                              // scrollY: ''+($(window).height()-370)+'px',
+                              iDisplayLength: 25,
+                              ajax: {
+                                url: '{{ route('backend.transfer_branch_code.datatable') }}',
+                                data: function ( d ) {
+                                  d.Where={};
+                                  $('.myWhere').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                                    }
+                                  });
+                                  d.Like={};
+                                  $('.myLike').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                                    }
+                                  });
+                                  d.Custom={};
+                                  $('.myCustom').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                                    }
+                                  });
+                                  oData = d;
+                                },
+                                method: 'POST'
+                              },
+
+                              columns: [
+                                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
+                                  {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
+                                  {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                                    if(d==1){
+                                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                                    }else if(d==2){
+                                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+                                    }else if(d==3){
+                                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+                                    }else{
+                                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+                                    }
+                                  }},
+                                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
+                                  {data: 'id',   title :'พิมพ์<br>ใบโอน', className: 'text-center ',render: function(d) {
+                                      return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                                  }},
+                                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                                  //     return d ;
+                                  // }},
+                                  {data: 'tr_status', title :'<center> สถานะ </center>', className: 'text-center'},
+                                  // {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
+                                  // {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
+                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                              ],
+                              rowCallback: function(nRow, aData, dataIndex){
+
+                                if(sU!=''&&sD!=''){
+                                    $('td:last-child', nRow).html('-');
+                                }else{ 
+
+                                  if(aData['approve_status']!=0){
+
+                                    // $('td:eq(6)', nRow).html( '' );
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                       + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
+                                    ).addClass('input');
+
+                                  }else{
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
+                                    ).addClass('input');
+
+                                  }
+
+
+                                }
+                              }
+                          });
+                          });
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                setTimeout(function(){
+                   $(".myloading").hide();
+                }, 1500);
+
+               
+            });
+          });
+
+    </script>
+    
+
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -1281,28 +1566,34 @@
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script>
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-        $('#startDate').datepicker({
-             format: 'dd/mm/yyyy',
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome',
-            // minDate: today,
-            // maxDate: function () {
-            //     return $('#endDate').val();
-            // }
-        });
-        $('#endDate').datepicker({
-            format: 'dd/mm/yyyy',
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome',
-            minDate: function () {
-                return $('#startDate').val();
-            }
-        });
+      $('#startDate').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+      });
 
-         $('#startDate').change(function(event) {
-           $('#endDate').val($(this).val());
-         });
+      $('#endDate').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          minDate: function () {
+              return $('#startDate').val();
+          }
+      });
+
+
+      $('#startDate').change(function(event) {
+
+        if($('#endDate').val()>$(this).val()){
+        }else{
+          $('#endDate').val($(this).val());
+        }
+
+      });   
          
+
         $(document).ready(function() {
           
             $(document).on('click', '.btnSearchInList', function(event) {
@@ -1370,7 +1661,8 @@
                                },
                               columns: [
                                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                                  {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                  // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
                                   // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
                                   {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
                                   {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
@@ -1459,6 +1751,43 @@
           <?php
       }
     ?>
+
+
+    <script type="text/javascript">
+
+           $('#business_location_id_fk').change(function(){
+
+            $('.myloading').show();
+
+              var business_location_id_fk = this.value;
+              // alert(warehouse_id_fk);
+               if(business_location_id_fk != ''){
+                 $.ajax({
+                      url: " {{ url('backend/ajaxGetBranch') }} ",
+                      method: "post",
+                      data: {
+                        business_location_id_fk:business_location_id_fk,
+                        "_token": "{{ csrf_token() }}",
+                      },
+                      success:function(data)
+                      {
+                       if(data == ''){
+                           alert('ไม่พบข้อมูลสาขา !!.');
+                       }else{
+                           var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                           $.each(data,function(key,value){
+                            layout += '<option value='+value.id+'>'+value.b_name+'</option>';
+                           });
+                           $('#branch_id_fk').html(layout);
+                       }
+                       $('.myloading').hide();
+                      }
+                    })
+               }
+
+          });
+
+    </script> 
 
 
 @endsection
