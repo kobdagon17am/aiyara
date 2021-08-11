@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class AicashConfirmeController extends Controller
 {
 
-    public static function aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme)//$type_user_confirme = "'customer','admin'"
+    public static function aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme,$comment='',$pay_type_id)//$type_user_confirme = "'customer','admin'"
     {
       DB::BeginTransaction();
       $db_add_ai_cash = DB::table('db_add_ai_cash')
@@ -50,19 +50,15 @@ class AicashConfirmeController extends Controller
                 'aicash_banlance' =>$banlance,
                 'action_user' => $customer_or_admin_id,
                 'date_setting_code' => date('ym'),
-                'approve_status' => 1,
+                'approve_status' => 2,
                 'order_type_id_fk' => 7,
                 'order_status_id_fk' => 7,
                 'upto_customer_status' => 1,
                 'cancel_expiry_date'=>$cancel_expiry_date,
-                // 'note' => 'Add Ai-Cash',
+                 'note' => $comment,
                 'type_user' => $type_user_confirme,
             ]);
 
-
-        $id_add_ai_cash = DB::table('customers')
-        ->where('id',$db_add_ai_cash->customer_id_fk)
-        ->update(['ai_cash' => $banlance]);
 
         $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
           'customer_id_fk' => $db_add_ai_cash->customer_id_fk,
@@ -75,7 +71,8 @@ class AicashConfirmeController extends Controller
           'aicash_banlance' => $banlance,
           'order_code' =>  $db_add_ai_cash->code_order,
           'order_type_id_fk' => 7,
-          'pay_type_id_fk' => $db_add_ai_cash->pay_type_id,
+
+          'pay_type_id_fk' => $pay_type_id,
           'type' => 'add_aicash',
           // 'detail'=>'Add Ai-Cash ',
       ]);

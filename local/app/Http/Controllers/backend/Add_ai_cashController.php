@@ -165,32 +165,39 @@ class Add_ai_cashController extends Controller
 
     public function update(Request $request, $id)
     {
-      // dd($request->all());
+
       if(isset($request->approved)){
           // dd($request->all());
-            $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
-            $sRow->approver = \Auth::user()->id;
-            $sRow->approve_status = $request->approve_status ;
-            $sRow->approve_date = date('Y-m-d');
-            $sRow->note = $request->note;
-            $sRow->save();
+            // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
+            // $sRow->approver = \Auth::user()->id;
+            // $sRow->approve_status = $request->approve_status ;
+            // $sRow->approve_date = date('Y-m-d');
+            // $sRow->note = $request->note;
+            // $sRow->save();
 
-            DB::select("
-                UPDATE
-                customers
-                Inner Join db_add_ai_cash ON customers.id = db_add_ai_cash.customer_id_fk
-                SET customers.ai_cash=(customers.ai_cash + db_add_ai_cash.aicash_amt)
-                WHERE customers.id='".$sRow->customer_id_fk."' AND db_add_ai_cash.upto_customer_status=0 ;
-             ");
+            // DB::select("
+            //     UPDATE
+            //     customers
+            //     Inner Join db_add_ai_cash ON customers.id = db_add_ai_cash.customer_id_fk
+            //     SET customers.ai_cash=(customers.ai_cash + db_add_ai_cash.aicash_amt)
+            //     WHERE customers.id='".$sRow->customer_id_fk."' AND db_add_ai_cash.upto_customer_status=0 ;
+            //  ");
 
-            DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".$sRow->customer_id_fk."' ");
+            // DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".$sRow->customer_id_fk."' ");
+            $admin_id = \Auth::user()->id;
+            $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id,$admin_id,'admin',$request->note,$pay_type_id = '1');
 
+            dd($add_aicash);
+            // if(isset($request->from_approve_aicash)){
+            //     return redirect()->to(url("backend/po_approve"));
+            // }
 
-            if(isset($request->from_approve_aicash)){
-                return redirect()->to(url("backend/po_approve"));
+            if($add_aicash['status'] == 'success'){
+              return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
+            }else{
+              return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
             }
             // return redirect()->to(url("backend/add_ai_cash/".$request->id."/edit"));
-            return redirect()->to(url("backend/add_ai_cash"));
 
       }else{
            return $this->form($id);

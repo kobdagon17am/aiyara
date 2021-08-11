@@ -77,6 +77,7 @@ class AiCashController extends Controller
                         'transfer_price' => $price,
                         'credit_price' => 0,
                         'total_amt' => $price,
+                        'account_bank_id' => 1,
                         'approve_status' => 0,
                         'order_status_id_fk' => 1,
                         'upto_customer_status' => 0,
@@ -368,7 +369,7 @@ class AiCashController extends Controller
               $f_name = date('YmdHis') . '_' . $ai_cash->customer_id_fk . '.' . $file_slip->getClientOriginalExtension();
               if ($file_slip->move($url, $f_name)) {
                   DB::table('payment_slip')
-                      ->insert(['customer_id' => $ai_cash->customer_id_fk,'url' => $url,'file' => $f_name, 'order_id' => $ai_cash->id,'code_order' => $ai_cash->id, 'type' => 'ai-cash']);
+                      ->insert(['customer_id' => $ai_cash->customer_id_fk,'url' => $url,'file' => $f_name, 'order_id' => $ai_cash->id,'code_order' =>$request->code_order, 'type' => 'ai-cash']);
 
                       $update_aicash = DB::table('db_add_ai_cash')
                       ->where('id',$ai_cash->id)

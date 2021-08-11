@@ -47,7 +47,7 @@ class PaymentAiCash extends Model
               $f_name = date('YmdHis') . '_' . $customer_id . '.' . $file_slip->getClientOriginalExtension();
               if ($file_slip->move($url, $f_name)) {
                   DB::table('payment_slip')
-                      ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $id, 'type' => 'ai-cash']);
+                      ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $id,'code_order' =>$code_order, 'type' => 'ai-cash']);
               }
           }
 
