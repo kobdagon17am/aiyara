@@ -22,6 +22,8 @@ class AiCashController extends Controller
 
     public function index()
     {
+      $rs = \App\Models\Frontend\CourseCheckRegis::check_register_all('1','A0000008');
+      dd($rs);
 
 
         // $rs= AicashConfirmeController::aicash_confirme($aicash_id='41',$customer_or_admin_id='99',$type_user_confirme='admin');//$type_user_confirme = "'customer','admin'"

@@ -131,7 +131,7 @@ class CourseCheckRegis extends Model
       $data_ce = DB::table('course_event')
       ->where('id',$course_id)
       ->first();
-      $resule = array();
+
 
       $customer = DB::table('customers')
       ->where('user_name',$customer_username)
@@ -157,8 +157,7 @@ class CourseCheckRegis extends Model
       $ce_register_per_customer_course = \App\Helpers\Frontend::get_ce_register_per_customer_percourse($course_id,$customer_id);//จำนวนที่จองคอสนี้ต่อ Course
       $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
       $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
-
-
+      $resule = array();
       if($count_ce >=  $data_ce->ce_max_ticket){
           $resule[] = ['status'=>'fail','message'=>'Ticket Full','code'=>'e001'];
         }
@@ -225,27 +224,21 @@ class CourseCheckRegis extends Model
           if($data_ce->ce_limit == '1' and $ce_register_per_customer_perday >= $data_ce->ce_can_reserve){//ต่อวัน
               $resule[] = ['status'=>'fail','message'=>'การสมัครต่อวันครบแล้ว','code'=>'e01'];
 
-          }elseif($data_ce->ce_limit == '2' and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
-              $resule[] = ['status'=>'fail','message'=>'การสมัครต่อกิจกรรมครบแล้ว','code'=>'e02'];
-
-
-          }elseif($data_ce->ce_limit == Null and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
-              $resule[] = ['status'=>'fail','message'=>'คุณใช้สิทธิ์การจองครบแล้ว','code'=>'e03'];
-
-          }else{
-
-              $resule[] = ['status'=>'success','message'=>'Register open','code'=>'0'];
-
           }
 
-      }else{
+          if($data_ce->ce_limit == '2' and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
+              $resule[] = ['status'=>'fail','message'=>'การสมัครต่อกิจกรรมครบแล้ว','code'=>'e02'];
+          }
 
+        if($data_ce->ce_limit == Null and $ce_register_per_customer_course >= $data_ce->ce_can_reserve){//ต่อกิจกรรม
+              $resule[] = ['status'=>'fail','message'=>'คุณใช้สิทธิ์การจองครบแล้ว','code'=>'e03'];
 
-          $resule[] = ['status'=>'success','message'=>'Register open','code'=>'0'];
+        }
 
       }
+      $data = ['status'=>'success','rs'=>$resule];
 
-      return $resule;
+      return $data;
 
   }
 

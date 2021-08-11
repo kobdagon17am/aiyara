@@ -12,6 +12,7 @@ class Product extends Model
 {
 	public static function product_list($type){
 
+
         $data_type = DB::table('dataset_orders_type')
         ->where('lang_id', '=', 1)
         ->where('group_id', '=',$type)

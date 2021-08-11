@@ -91,7 +91,9 @@ class KsherNotifyController extends Controller
 
             if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
 
-                 $res = AicashConfirmeController::aicash_confirme($getOrderData->id, $getOrderData->customers_id_fk,'customer');
+                // $res = AicashConfirmeController::aicash_confirme($getOrderData->id, $getOrderData->customers_id_fk,'customer',$pay_type_id);
+
+
 
             }
 
