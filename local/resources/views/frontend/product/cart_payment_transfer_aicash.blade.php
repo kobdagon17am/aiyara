@@ -212,6 +212,50 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-6 col-lg-6">
+                                              <div class="card">
+                                                  <div class="card-block text-center">
+                                                      <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
+                                                          class="img-fluid" alt="credit">
+                                                      <a class="btn btn-primary btn-md mt-2"
+                                                          class="btn btn-primary btn-md mt-2" data-toggle="modal"
+                                                          style="color: aliceblue" data-target="#confirm_credit">
+                                                          ชำระด้วย Credit/Debit </a>
+
+                                                      <div class="modal fade" id="confirm_credit" tabindex="-1"
+                                                          role="dialog">
+                                                          <div class="modal-dialog" role="document">
+                                                              <div class="modal-content">
+                                                                  <div class="modal-header">
+                                                                      <h4 class="modal-title">ยืนยันการชำระเงินด้วย
+                                                                        Credit/Debit</h4>
+                                                                      <button type="button" class="close"
+                                                                          data-dismiss="modal" aria-label="Close">
+                                                                          <span aria-hidden="true">&times;</span>
+                                                                      </button>
+                                                                  </div>
+                                                                  <div class="modal-body">
+                                                                      {{-- <h5>Static Modal</h5> --}}
+                                                                      <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
+                                                                          class="img-fluid" alt="ชำระด้วย Credit/Debit">
+
+                                                                  </div>
+                                                                  <div class="modal-footer">
+                                                                      <button type="button"
+                                                                          class="btn btn-default waves-effect "
+                                                                          data-dismiss="modal">Close</button>
+                                                                      <button class="btn btn-success md-auto"
+                                                                          name="submit" value="Credit"
+                                                                          type="submit">Confirm</button>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+
+                                                  </div>
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
 

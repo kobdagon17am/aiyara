@@ -236,7 +236,13 @@ class CourseCheckRegis extends Model
         }
 
       }
-      $data = ['status'=>'success','rs'=>$resule];
+
+      if($resule){
+        $data = ['status'=>'fail','rs'=>$resule];
+      }else{
+        $data = ['status'=>'success','rs'=>'สามารถสั่งซื้อ Couse ได้ '];
+      }
+
 
       return $data;
 

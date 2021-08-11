@@ -22,9 +22,8 @@ class AiCashController extends Controller
 
     public function index()
     {
-      $rs = \App\Models\Frontend\CourseCheckRegis::check_register_all('1','A0000008');
-      dd($rs);
-
+      // $rs = \App\Models\Frontend\CourseCheckRegis::check_register_all('1','A0000008');
+      // dd($rs);
 
         // $rs= AicashConfirmeController::aicash_confirme($aicash_id='41',$customer_or_admin_id='99',$type_user_confirme='admin');//$type_user_confirme = "'customer','admin'"
         // dd($rs);
@@ -442,8 +441,30 @@ class AiCashController extends Controller
                 return redirect('product-history')->withError('Payment Fail');
             }
 
-        } elseif ($request->submit == 'credit_card') {
-            dd('coming soon');
+        } elseif ($request->submit == 'Credit') {
+
+            $gateway_pay_data = array(
+              'mch_order_no' => $ai_cash->code_order,
+              "total_fee" => $ai_cash->total_amt,
+              "fee_type" => 'THB',
+              "channel_list" => 'ktbcard',
+              'mch_code' => $ai_cash->code_order,
+              'product_name' => 'Add Ai Cash',
+            );
+
+          $data = KsherController::gateway_ksher($gateway_pay_data);
+          //targetUrl
+          if ($data['status'] == 'success') {
+
+                $update_order = DB::table('db_add_ai_cash')
+                ->where('id', $ai_cash->id)
+                ->update(['pay_type_id_fk' => '2']);
+
+              return redirect($data['url']);
+          } else {
+              return redirect('product-history')->withError('Payment Fail');
+          }
+
         }else {
             return redirect('product-history')->withError('Payment submit Fail');
         }

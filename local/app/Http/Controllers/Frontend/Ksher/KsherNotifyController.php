@@ -79,6 +79,33 @@ class KsherNotifyController extends Controller
             ->first();
         $type_code = substr($getKsherData->mch_order_no,0,1);
 
+
+        if ($getKsherData->channel == 'promptpay') {
+
+          $pay_type_id_fk = 15;
+
+          $payInfo = [
+              'pay_type_id_fk' =>  $pay_type_id_fk,
+              'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
+          ];
+        }
+
+        if($getKsherData->channel == 'truemoney'){
+          $pay_type_id_fk = 16;
+          $payInfo = [
+              'pay_type_id_fk' =>  $pay_type_id_fk,
+              'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+          ];
+      }
+
+      if($getKsherData->channel == 'ktbcard'){
+        $pay_type_id_fk = 2;
+        $payInfo = [
+            'prompt_pay_price' =>  $pay_type_id_fk,
+            'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+        ];
+    }
+
         if ($type_code == 'W') {
           $getOrderData = DB::table('db_add_ai_cash')
           ->where('code_order', Arr::get($response, 'data.mch_order_no'))
@@ -91,9 +118,7 @@ class KsherNotifyController extends Controller
 
             if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
 
-                // $res = AicashConfirmeController::aicash_confirme($getOrderData->id, $getOrderData->customers_id_fk,'customer',$pay_type_id);
-
-
+              $res = AicashConfirmeController::aicash_confirme($getOrderData->id, $getOrderData->customers_id_fk,'customer','',$pay_type_id_fk);
 
             }
 
@@ -103,21 +128,7 @@ class KsherNotifyController extends Controller
             ]);
         }
 
-        if ($getKsherData->channel == 'promptpay') {
 
-          $pay_type_id_fk = 15;
-
-          $payInfo = [
-              'pay_type_id_fk' =>  $pay_type_id_fk,
-              'prompt_pay_price' => $this->formatPrice($getKsherData->total_fee),
-          ];
-        } else {
-          $pay_type_id_fk = 16;
-          $payInfo = [
-              'pay_type_id_fk' =>  $pay_type_id_fk,
-              'true_money_price' => $this->formatPrice($getKsherData->total_fee),
-          ];
-      }
 
       Log::info('>>>> Update Order After Ksher Insert <<<<');
       Log::info($dataUpdate->merge($payInfo));
@@ -182,7 +193,7 @@ class KsherNotifyController extends Controller
           }
           $payInfo = [
               'pay_type_id_fk' =>  $pay_type_id_fk,
-              'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+              'credit_price' => $this->formatPrice($getKsherData->total_fee),
           ];
         }
 
