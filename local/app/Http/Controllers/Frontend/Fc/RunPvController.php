@@ -13,8 +13,9 @@ class RunPvController extends Controller
 
     {
 
+
         $user = DB::table('customers') //อัพ Pv ของตัวเอง
-            ->select('id')
+            ->select('id','pv')
             ->where('user_name', '=', $username)
             ->first();
 

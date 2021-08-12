@@ -249,6 +249,8 @@ class PvPayment extends Model
                         ->where('user_name', '=', $customer_update->user_name)
                         ->first();
 
+                    $add_pv = $data_user->pv + $pv;;
+
                     $order_update->pv_old = $data_user->pv;
                     $order_update->pv_banlance = $add_pv;
                     $order_update->approve_date =  date('Y-m-d H:i:s');
