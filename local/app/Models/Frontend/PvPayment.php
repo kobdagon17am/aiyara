@@ -8,6 +8,7 @@ use App\Models\Frontend\Customer;
 use App\Models\Frontend\Order;
 use App\Models\Db_Movement_ai_cash;
 use App\Models\Db_Course_event_regis;
+use App\Http\Controllers\Frontend\Fc\RunPvController;
 class PvPayment extends Model
 {
 
@@ -62,7 +63,7 @@ class PvPayment extends Model
 
                   $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
                   ->select('ai_cash')
-                  ->where('id', '=', $customer_id)
+                  ->where('user_name', '=', $customer_update->user_name)
                   ->first();
 
                   $update_icash =  $check_aicash->ai_cash - $order_data->aicash_price;
@@ -82,8 +83,6 @@ class PvPayment extends Model
 
                     }
 
-
-
                     $movement_ai_cash->customer_id_fk = $customer_id;
                     $movement_ai_cash->order_id_fk =$order_id;
                       //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
@@ -99,7 +98,6 @@ class PvPayment extends Model
                       $movement_ai_cash->detail = $movement_detail;
 
                   $customer_update->ai_cash = $update_icash;
-
 
                   }else{
 
@@ -247,29 +245,22 @@ class PvPayment extends Model
 
                 if ($type_id == 1) { //ทำคุณสมบติ
                     $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('*')
-                        ->where('id', '=', $customer_id)
+                        ->select('pv','line_type','upline_id','pv_mt','status_pv_mt','pv_mt_active','user_name')
+                        ->where('user_name', '=', $customer_update->user_name)
                         ->first();
-
-
-                    $add_pv = $data_user->pv + $pv;
-                    $customer_update->pv = $add_pv;
 
                     $order_update->pv_old = $data_user->pv;
                     $order_update->pv_banlance = $add_pv;
                     $order_update->approve_date =  date('Y-m-d H:i:s');
 
-                    //ทำคุณสมบัติตัวเอง
-                    $upline_type = $data_user->line_type;
-                    $upline_id = $data_user->upline_id;
-                    $customer_id = $upline_id;
-                    $last_upline_type = $upline_type;
+
+                    $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
                     $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('*')
-                        ->where('id', '=', $customer_id)
+                        ->select('pv','line_type','upline_id','pv_mt','status_pv_mt','pv_mt_active')
+                        ->where('user_name', '=', $customer_update->user_name)
                         ->first();
 
                     $active_mt_old_date = $data_user->pv_mt_active;
@@ -337,10 +328,7 @@ class PvPayment extends Model
                             $order_update->active_mt_date =  date('Y-m-t', strtotime($start_month));
                         }
 
-                        $upline_type = $data_user->line_type;
-                        $upline_id = $data_user->upline_id;
-                        $customer_id = $upline_id;
-                        $last_upline_type = $upline_type;
+                        $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                     } else {
                         $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
@@ -392,19 +380,16 @@ class PvPayment extends Model
 
                         }
 
-                        $upline_type = $data_user->line_type;
-                        $upline_id = $data_user->upline_id;
-                        $customer_id = $upline_id;
-                        $last_upline_type = $upline_type;
+                        $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                     }
 
                 } elseif ($type_id == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
-                    $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('*')
-                        ->where('id', '=', $customer_id)
-                        ->first();
+                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
+                  ->select('pv','line_type','upline_id','pv_tv','pv_tv_active')
+                  ->where('user_name', '=', $customer_update->user_name)
+                  ->first();
 
                     $active_tv_old_date = $data_user->pv_tv_active;
 
@@ -458,18 +443,14 @@ class PvPayment extends Model
 
                   }
 
-
-                    $upline_type = $data_user->line_type;
-                    $upline_id = $data_user->upline_id;
-                    $customer_id = $upline_id;
-                    $last_upline_type = $upline_type;
+                  $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                 }elseif($type_id == 4) { //เติม Aipocket
 
-                    $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('*')
-                        ->where('id', '=', $customer_id)
-                        ->first();
+                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
+                  ->select('pv','line_type','upline_id','pv_aistockist')
+                  ->where('user_name', '=', $customer_update->user_name)
+                  ->first();
                     //dd($data_user);
 
                     $add_pv_aipocket = $data_user->pv_aistockist + $pv;
@@ -479,10 +460,7 @@ class PvPayment extends Model
                         ->where('order_id_fk', $order_id)
                         ->update(['status' => 'success', 'pv_aistockist' => $add_pv_aipocket]);
 
-                    $upline_type = $data_user->line_type;
-                    $upline_id = $data_user->upline_id;
-                    $customer_id = $upline_id;
-                    $last_upline_type = $upline_type;
+                    $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                 } elseif ($type_id == 5) { // Ai Voucher
 
@@ -495,26 +473,22 @@ class PvPayment extends Model
                     //ไม่เข้าสถานะต้อง Approve
                 } elseif ($type_id == 6) { //couse อบรม
 
-                    $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('*')
-                        ->where('id', '=', $customer_id)
-                        ->first();
+                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
+                  ->select('pv','line_type','upline_id')
+                  ->where('user_name', '=', $customer_update->user_name)
+                  ->first();
+
                         $update_couse = DB::table('course_event_regis')
                         ->where('order_id_fk', $order_id)
                         ->update(['status_register' => '2']);
 
                     $add_pv = $data_user->pv + $pv;;
-                    $customer_update->pv = $add_pv;
 
                     $order_update->pv_old = $data_user->pv;
                     $order_update->pv_banlance =$add_pv;
                     $order_update->action_date =date('Y-m-d H:i:s');
 
-                    $upline_type = $data_user->line_type;
-                    $upline_id = $data_user->upline_id;
-                    $customer_id = $upline_id;
-
-                    $last_upline_type = $upline_type;
+                    $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
 
                 } else { //ไม่เข้าเงื่อนไขได้เลย
                     $resule = ['status' => 'fail', 'message' => 'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];
@@ -523,105 +497,9 @@ class PvPayment extends Model
                 }
 
                 //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
-
                 if($order_data->pv_total > 10000){
                   $customer_update->aistockist_status = 1;
                   $customer_update->aistockist_date =  date('Y-m-d h:i:s');
-                }
-
-                if ($customer_id != 'AA' and $pv > 0) {
-                    $j = 2;
-                    for ($i = 1; $i <= $j; $i++) {
-
-                        $data_user = DB::table('customers')
-                            ->where('id', '=', $customer_id)
-                            ->first();
-
-                        // $upline_type = $data_user->line_type;
-                        $upline_type = 1 ;
-                        // $upline_id = $data_user->upline_id;
-                        $upline_id = 1 ;
-
-                        if ($upline_id == 'AA') {
-
-                            if ($last_upline_type == 'A') {
-
-                                $add_pv = $data_user->pv_a + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_a' => $add_pv]);
-
-                                $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
-                                $j = 0;
-
-                            } elseif ($last_upline_type == 'B') {
-                                $add_pv = $data_user->pv_b + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_b' => $add_pv]);
-
-                                $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
-                                $j = 0;
-
-                            } elseif ($last_upline_type == 'C') {
-                                $add_pv = $data_user->pv_c + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_c' => $add_pv]);
-
-                                $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
-                                $j = 0;
-
-                            } else {
-                                $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID Type AA'];
-                                $j = 0;
-                            }
-
-                        } else {
-
-                            if ($last_upline_type == 'A') {
-
-                                $add_pv = $data_user->pv_a + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_a' => $add_pv]);
-
-                                $customer_id = $upline_id;
-                                $last_upline_type = $upline_type;
-                                $j = $j + 1;
-
-                            } elseif ($last_upline_type == 'B') {
-                                $add_pv = $data_user->pv_b + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_b' => $add_pv]);
-
-                                $customer_id = $upline_id;
-                                $last_upline_type = $upline_type;
-                                $j = $j + 1;
-
-                            } elseif ($last_upline_type == 'C') {
-                                $add_pv = $data_user->pv_c + $pv;
-                                $update_pv = DB::table('customers')
-                                    ->where('id', $customer_id)
-                                    ->update(['pv_c' => $add_pv]);
-
-                                $customer_id = $upline_id;
-                                $last_upline_type = $upline_type;
-                                $j = $j + 1;
-
-                            } else {
-                                $resule = ['status' => 'fail', 'message' => 'Data Null Not Upline ID'];
-                                $j = 0;
-                            }
-
-                        }
-
-                    }
-
-                } else {
-                    $resule = ['status' => 'success', 'message' => 'Payment Success'];
-
                 }
 
                 if ($resule['status'] == 'success') {

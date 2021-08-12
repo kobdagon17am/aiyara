@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Helpers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\LineModel;
-use App\Models\Frontend\Runpv;
+use App\Models\Frontend\Runpv_AiStockis;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -229,14 +229,16 @@ class AipocketController extends Controller
     {
         $type = $request->type;
         $pv = str_replace(',', '', $request->pv);
-        $username = $request->username;
+        $to_customer_user = $request->username;
 
         if ($pv > Auth::guard('c_user')->user()->pv_aistockist) {
             return redirect('ai-stockist')->withError('PV Ai-Stockist ของคุณมีไม่เพียงพอ ');
 
         } else {
             if ($type == 1) {
-                $resule = Runpv::run_pv($type, $pv, $username);
+                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
+
+
                 //dd($resule);
                 if ($resule['status'] == 'success') {
                     return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
@@ -245,7 +247,7 @@ class AipocketController extends Controller
                 }
 
             } elseif ($type == 2) {
-                $resule = Runpv::run_pv($type, $pv, $username);
+                $resule =  Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
                 //dd($resule);
                 if ($resule['status'] == 'success') {
                     return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
@@ -254,7 +256,7 @@ class AipocketController extends Controller
                 }
 
             } elseif ($type == 3) {
-                $resule = Runpv::run_pv($type, $pv, $username);
+                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
                 //dd($resule);
                 if ($resule['status'] == 'success') {
                     return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
