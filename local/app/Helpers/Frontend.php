@@ -191,35 +191,27 @@ class Frontend{
 
 	}
 
-	public static function check_mt_active($customer_id){
-		$data = DB::table('customers')
-		->where('id','=',$customer_id)
-		->first();
+	public static function check_mt_active($pv_mt_active){
 
-		if(empty($data)){
-			$resule = ['status'=>'fail','message'=>'User is Null'];
-			return $resule;
+			if(empty($pv_mt_active) || (strtotime($pv_mt_active) < strtotime(date('Ymd')))){
 
-		}else{
-			if(empty($data->pv_mt_active) || (strtotime($data->pv_mt_active) < strtotime(date('Ymd')))){
-
-				if(empty($data->pv_mt_active)){
+				if(empty($pv_mt_active)){
 					$date_mt_active= 'Not Active';
 				}else{
-					$date_mt_active= date('d/m/Y',strtotime($data->pv_mt_active));
+					$date_mt_active= date('d/m/Y',strtotime($pv_mt_active));
 				}
 
 				$resule = ['status'=>'success','type'=>'N','message'=>'Not Active','date'=>$date_mt_active];
 
 				return $resule;
 			}else{
-				$date_mt_active= date('d/m/Y',strtotime($data->pv_mt_active));
+				$date_mt_active= date('d/m/Y',strtotime($pv_mt_active));
 				$resule = ['status'=>'success','type'=>'Y','message'=>'Active Success','date'=>$date_mt_active];
 				return $resule;
 
 			}
 
-		}
+
 
 	}
 
@@ -250,10 +242,10 @@ class Frontend{
 
 	}
 
-	public static function check_customer_directsponsor($customer_id){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C
+	public static function check_customer_directsponsor($user_name){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C
 
 		$a =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id)
+		->where('customers.introduce_id','=',$user_name)
 		->where('introduce_type','=','A')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')
@@ -262,7 +254,7 @@ class Frontend{
 
 
 		$b =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id)
+		->where('customers.introduce_id','=',$user_name)
 		->where('introduce_type','=','B')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')
@@ -270,7 +262,7 @@ class Frontend{
 		->count();
 
 		$c =  DB::table('customers')
-		->where('customers.introduce_id','=',$customer_id)
+		->where('customers.introduce_id','=',$user_name)
 		->where('introduce_type','=','C')
 		->whereDate('pv_mt_active','>=',now())
 		->where('package_id','!=','')

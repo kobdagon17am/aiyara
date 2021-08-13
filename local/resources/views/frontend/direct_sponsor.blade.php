@@ -53,38 +53,33 @@ $count_sponser = 0;
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $i=0; ?>
-                    @foreach($customers as $value)
+                    <?php //$i=0; ?>
+                    {{-- @foreach($customers as $value) --}}
 
                     <?php
-                    $data_customer = Frontend::get_customer($value->upline_id);
-                    if(empty($data_customer)){
-                      $upline = '-';
-                  }else{
-                      $upline = @$data_customer->user_name.'/'.$value->line_type;
-                  }
 
-                  $check_active_mt = Frontend::check_mt_active($value->id);
-                  if($check_active_mt['status'] == 'success'){
-                    if($check_active_mt['type'] == 'Y'){
-                        $active_mt = "<span class='label label-inverse-success'><b>"
-                        .$check_active_mt['date']."</b></span>";
-                    }else{
-                        $active_mt = "<span class='label label-inverse-info-border'><b>"
-                        .$check_active_mt['date']."</b></span>";
 
-                    }
+                //   $check_active_mt = Frontend::check_mt_active($value->pv_mt_active);
+                //   if($check_active_mt['status'] == 'success'){
+                //     if($check_active_mt['type'] == 'Y'){
+                //         $active_mt = "<span class='label label-inverse-success'><b>"
+                //         .$check_active_mt['date']."</b></span>";
+                //     }else{
+                //         $active_mt = "<span class='label label-inverse-info-border'><b>"
+                //         .$check_active_mt['date']."</b></span>";
 
-                }else{
-                    $active_mt = "<span class='label label-inverse-info-border'><b> Not Active </b></span>";
-                }
+                //     }
 
-                $count_directsponsor = Frontend::check_customer_directsponsor($value->id);
+                // }else{
+                //     $active_mt = "<span class='label label-inverse-info-border'><b> Not Active </b></span>";
+                // }
+
+                // $count_directsponsor = Frontend::check_customer_directsponsor($value->user_name);
 
 
                 ?>
 
-                <tr >
+                {{-- <tr >
                     <th style="font-size: 14px;">{{ $i }}</th>
                     <th style="font-size: 14px;"><b>{{ $value->introduce_type }}</b></th>
                     <th style="font-size: 14px;">{{ $value->user_name }}</th>
@@ -96,7 +91,7 @@ $count_sponser = 0;
                      {{ $value->dt_package }}
                      @endif
                  </th>
-                 <th style="font-size: 14px;">{{ $upline }}</th>
+                 <th style="font-size: 14px;">{{ @$value->user_name }} / {{ @$value->line_type }}</th>
                  <th style="font-size: 14px;">{!! $active_mt !!}</th>
                  <th style="font-size: 14px;">{{ $count_directsponsor['A'] }}</th>
                  <th style="font-size: 14px;">{{ $count_directsponsor['B'] }}</th>
@@ -111,9 +106,9 @@ $count_sponser = 0;
                 </th>
                 <th style="font-size: 14px;">{{ $value->code_name }}</th>
                 <th style="font-size: 14px;">{{ $value->max_code_name }}</th>
-                <?php $i++; ?>
+                <?php //$i++; ?>
             </tr>
-            @endforeach
+            @endforeach --}}
         </tbody>
     </table>
 </div>
@@ -122,7 +117,7 @@ $count_sponser = 0;
 </div>
 </div>
 </div>
-
+{{--
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -161,7 +156,7 @@ $count_sponser = 0;
                     $date_remine = ($end_date - $start_date)/  ( 60 * 60 * 24 );  // 1 day = 60*60*24
                     $remine = ceil($date_remine);
 
-                    $directsponsor = DirectSponsor::sponsor_get_directsponsor($value_sponser->id);
+                    $directsponsor = DirectSponsor::sponsor_get_directsponsor($value_sponser->user_name);
                     $count_directsponsor = count($directsponsor);
                     if($count_directsponsor > 0){
                         $num_row = $count_directsponsor+1;
@@ -237,7 +232,7 @@ $count_sponser = 0;
 </div>
 </div>
 </div>
-</div>
+</div> --}}
 
 @endsection
 @section('js')

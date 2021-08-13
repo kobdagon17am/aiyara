@@ -26,7 +26,6 @@ class ProfileController extends Controller
      */
     public function index()
     {
-     $rs = \App\Http\Controllers\Frontend\Fc\RunPvController::Runpv('A0000008',100,1);
 
       return view('frontend/profile');
     }
