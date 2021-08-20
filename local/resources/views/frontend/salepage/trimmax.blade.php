@@ -29,72 +29,72 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-01.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/1.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-02.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/2.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-03.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/3.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-04.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/4.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-05.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/5.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-06.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/6.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-07.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/7.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-08.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/8.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-09.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/9.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/10.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-11.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/11.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-12.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/12.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม-13.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax/13.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
           </a>
         </div>
@@ -109,12 +109,22 @@
         </p>
 
         <div class="row text-center mb-2">
+          <div class="col-6 col-sm-6 col-lg-4">
+            <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
+              <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR03.png') }}" class="img-fluid"
+                  alt="Responsive image">
+            </a>
+              <h3 class="mb-0">ราคา 420 บาท</h3>
+              <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
+              <p><a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank"  style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
+          </div><!-- /.col-lg-4 -->
+
             <div class="col-6 col-sm-6 col-lg-4 mt-2">
               <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
                 <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR_01.png') }}" class="img-fluid" alt="Responsive image">
               </a>
-                <h3 class="mb-0">ราคา 420 บาท</h3>
-                <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
+                <h3 class="mb-0">ราคา 450 บาท</h3>
+                <p class="mt-0" style="font-size: 18px">จำนวน 10 ซอง</p>
 
                 <a class="btn btn-success btn-md"  href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a>
             </div><!-- /.col-lg-4 -->
@@ -123,23 +133,15 @@
                 <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR02.png') }}" class="img-fluid"
                     alt="Responsive image">
               </a>
-                <h3 class="mb-0">ราคา 450 บาท</h3>
-                <p class="mt-0" style="font-size: 18px">จำนวน 10 ซอง</p>
+                <h3 class="mb-0">ราคา 580 บาท</h3>
+                <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
 
                 <p>
                   <a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ
                   </a>
                 </p>
             </div><!-- /.col-lg-4 -->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
-                <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR03.png') }}" class="img-fluid"
-                    alt="Responsive image">
-              </a>
-                <h3 class="mb-0">ราคา 580 บาท</h3>
-                <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
-                <p><a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank"  style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
-            </div><!-- /.col-lg-4 -->
+
 
         </div><!-- /.row -->
 

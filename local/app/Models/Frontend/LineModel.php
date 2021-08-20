@@ -8,16 +8,56 @@ use Auth;
 class LineModel extends Model
 {
 
-	public static function line_all($username=''){
+	public static function line_all($username,$line_type=''){
 		$data =array();
 
-		if (empty($username)) {
+
+    if (!empty($username) and !empty($line_type)){
+      $i =1;
+      $j = 2;
+
+      for ($i; $i<$j; $i++) {
+
+        $last_id = DB::table('customers')
+        ->select('upline_id','user_name')
+		    ->where('line_type','=',$line_type)
+        ->where('upline_id','=',$username)
+        ->first();
+
+        if($last_id){
+          $i = 1;
+          $j = 3;
+          $username	= $last_id->user_name;
+        }else{
+          $i = 1;
+          $j = 0;
+          $last_id = DB::table('customers')
+          ->select('upline_id','user_name')
+		      ->where('line_type','=',$line_type)
+          ->where('user_name','=',$username)
+          ->first();
+
+          $last_id = $last_id->upline_id;
+
+        }
+
+      }
+
+    }else{
+
+      $last_id = $username;
+    }
+
+
+
+		if (empty($last_id)) {
 			return null;
 		}else{
 
+
 			$lv1 = DB::table('customers')
 			->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
-			->where('user_name','=',$username)
+			->where('user_name','=',$last_id)
 			->first();
 
 
@@ -140,113 +180,8 @@ class LineModel extends Model
 
 }
 
-public static function under_a($username=''){
 
 
-	if (empty($username)) {
-
-		return null;
-	}else{
-		$j = 2;
-
-		for ($i=1; $i<$j; $i++) {
-
-
-			$last_id_a = DB::table('customers')
-			->select('upline_id','user_name','upline_id')
-			->where('upline_id','=',$username)
-			->where('line_type','=','A')
-			->first();
-
-			if($last_id_a){
-				$j = $j+$i;
-				$username	= $last_id_a->user_name;
-
-			}else{
-				$j = 0;
-
-				$last_id_a = DB::table('customers')
-				->select('upline_id','user_name','upline_id')
-				->where('user_name','=',$username)
-				->where('line_type','=','A')
-				->first();
-				return $last_id_a->upline_id;
-
-			}
-
-		}
-
-	}
-}
-
-public static function under_b($username=''){
-
-	if (empty($username)) {
-
-		return null;
-	}else{
-		$j = 2;
-
-		for ($i=1; $i<$j; $i++) {
-
-			$last_id_a = DB::table('customers')
-			->select('upline_id','user_name','upline_id')
-			->where('upline_id','=',$username)
-			->where('line_type','=','B')
-			->first();
-
-			if($last_id_a){
-				$j = $j+$i;
-				$username	= $last_id_a->user_name;
-			}else{
-				$j = 0;
-
-				$last_id_a = DB::table('customers')
-				->select('upline_id','user_name','upline_id')
-				->where('user_name','=',$username)
-				->where('line_type','=','B')
-				->first();
-				return $last_id_a->upline_id;
-			}
-
-		}
-
-	}
-}
-
-public static function under_c($username=''){
-
-	if (empty($username)) {
-
-		return null;
-	}else{
-		$j = 2;
-
-		for ($i=1; $i<$j; $i++) {
-
-			$last_id_a = DB::table('customers')
-			->select('upline_id','user_name','upline_id')
-			->where('upline_id','=',$username)
-			->where('line_type','=','C')
-			->first();
-
-			if($last_id_a){
-				$j = $j+$i;
-				$username	= $last_id_a->user_name;
-			}else{
-				$j = 0;
-				$last_id_a = DB::table('customers')
-				->select('upline_id','user_name','upline_id')
-				->where('user_name','=',$username)
-				->where('line_type','=','C')
-				->first();
-				return $last_id_a->upline_id;
-			}
-
-		}
-
-	}
-}
 
 public static function check_line($username){
 
@@ -289,7 +224,7 @@ public static function check_line($username){
 				}else{
 
 					$data = DB::table('customers')
-					->select('*')
+					->select('upline_id','user_name')
 					->where('user_name','=',$data->upline_id)
 					->first();
 

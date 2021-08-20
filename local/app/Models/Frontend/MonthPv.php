@@ -6,10 +6,10 @@ use DB;
 use Auth;
 class MonthPv extends Model
 {
-	public static function get_month_pv($customer_id){
+	public static function get_month_pv($user_name){
 		$data_customer = DB::table('customers')
 		->select('month_pv_a','month_pv_b','month_pv_c')
-		->where('id','=',$customer_id)
+		->where('user_name','=',$user_name)
 		->first();
 
 		if(empty($data_customer->month_pv_a)){
@@ -32,14 +32,14 @@ class MonthPv extends Model
 
 		$array_mount_pv = ['A'=>$a,'B'=>$b,'C'=>$c];
 		asort($array_mount_pv);
- 
+
 		$i = 0;
 		foreach($array_mount_pv as $key => $value) {
 			$i++;
 			if($i == 2){
-				$data = ['type'=>$key,'pv_month'=>$value]; 
+				$data = ['type'=>$key,'pv_month'=>$value];
 			}
-			
+
 		}
 
 		$resule = array('data_all'=>$data_customer,'data_avg_pv'=>$data);
@@ -49,4 +49,4 @@ class MonthPv extends Model
 }
 
 
-?> 
+?>

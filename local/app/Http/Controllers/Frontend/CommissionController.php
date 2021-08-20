@@ -639,16 +639,16 @@ class CommissionController extends Controller
         }
         $customer_username = Auth::guard('c_user')->user()->user_name;
 
-        $sTable = DB::table('db_report_bonus_transfer_member')
-            ->select('db_report_bonus_transfer_member.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
-            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_username', '=', 'customers.user_name')
-            ->where('db_report_bonus_transfer_member.customer_username', '=', $customer_username)
+        $sTable = DB::table('db_report_bonus_transfer_corp')
+            ->select('db_report_bonus_transfer_corp.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name')
+            ->leftjoin('customers', 'db_report_bonus_transfer_corp.customer_username', '=', 'customers.user_name')
+            ->where('db_report_bonus_transfer_corp.customer_username', '=', $customer_username)
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else customers.business_location_id = '{$rs->business_location}' END"))
-            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_member.status_transfer = '{$rs->status_search}' END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$s_date}' else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_member.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$e_date}' else 1 END"))
-            ->orderby('db_report_bonus_transfer_member.bonus_transfer_date', 'DESC')
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_corp.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_corp.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_corp.bonus_transfer_date', 'DESC')
             ->get();
 
         $sQuery = DataTables::of($sTable);

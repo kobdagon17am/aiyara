@@ -28,28 +28,28 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-01.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-01.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-02.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-02.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-03.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-03.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-04.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-04.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-05.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-05.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
           </a>
 
@@ -57,45 +57,45 @@
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/3/30/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-06.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-06.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/3/24/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-07.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-07.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/3/31/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-08.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-08.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/3/27/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-09.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-09.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
 
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-10.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-10.jpg') }}" class="img-fluid"
             alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
 
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-11.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-11.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Alada/เพราะผิวหน้าเราควบคุมไม่ได้-12.jpg') }}" class="img-fluid"
+            <img src="{{ asset('frontend/salepage/Alada/SalePage_AILADA-CR-12.jpg') }}" class="img-fluid"
                 alt="เพราะผิวหน้าเราควบคุมไม่ได้ Alada">
         </div>
 
@@ -141,9 +141,9 @@
 
                     <div class="card-body pt-0">
 
-                        <p class="card-text">Ailada Nutrients<br>Luminous Serum
+                        <p class="card-text">Ailada Nutrients<br>Water Balance
                         </p>
-                        <h5> ราคา 1,500 บาท </h5>
+                        <h5> ราคา 1,100 บาท </h5>
                         <div class="text-center">
                           <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
                             <img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
@@ -160,9 +160,9 @@
                         alt="Responsive image">
 
                     <div class="card-body pt-0">
-                        <p class="card-text">Ailada Nutrients<br>Water Balance
+                        <p class="card-text">Ailada Nutrients<br>Luminous Serum
                         </p>
-                        <h5> ราคา 1,100 บาท </h5>
+                        <h5> ราคา 1,500 บาท </h5>
                         <div class="text-center">
                           <a href="{{ $url }}/aiyarashop/product-detail/3/30/{{ $rs['data']->user_name }}" target="_blank" ><img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>

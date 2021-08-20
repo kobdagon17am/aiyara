@@ -73,7 +73,7 @@ Route::post('search','Frontend\HomeController@search')->name('search');
 Route::get('modal_tree','Frontend\HomeController@modal_tree')->name('modal_tree');
 Route::get('modal_add','Frontend\HomeController@modal_add')->name('modal_add');
 Route::get('tree_view','Frontend\HomeController@index')->name('tree_view');
-Route::get('home_type_tree','Frontend\HomeController@home_type_tree')->name('home_type_tree');
+Route::post('up_step','Frontend\HomeController@up_step')->name('up_step');
 Route::post('tree_view','Frontend\HomeController@index')->name('tree_view');
 
 Route::post('login','Frontend\LoginController@login')->name('login');
@@ -207,7 +207,7 @@ Route::get('modal_qr_ce','Frontend\CourseEventController@modal_qr_ce')->name('mo
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
 
 Route::get('direct-sponsor','Frontend\DirectSponsorController@index')->name('direct-sponsor');
-Route::post('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
+Route::get('c','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
 
 Route::get('commission-per-day','Frontend\CommissionController@commission_per_day')->name('commission-per-day');
 Route::post('dt_commission_perday','Frontend\CommissionController@dt_commission_perday')->name('dt_commission_perday');
@@ -245,12 +245,12 @@ Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
-Route::get('s1/{user_name?}','Frontend\SalepageController@aiyara')->name('s1');
-Route::get('s2/{user_name?}','Frontend\SalepageController@aimmura')->name('s2');
-Route::get('s3/{user_name?}','Frontend\SalepageController@cashewy')->name('s3');
-Route::get('s4/{user_name?}','Frontend\SalepageController@aifacad')->name('s4');
-Route::get('s5/{user_name?}','Frontend\SalepageController@ailada')->name('s5');
-Route::get('s6/{user_name?}','Frontend\SalepageController@trimmax')->name('s6');
+Route::get('aiyara/{user_name?}','Frontend\SalepageController@aiyara')->name('aiyara');
+Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
+Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
+Route::get('aifacad/{user_name?}','Frontend\SalepageController@aifacad')->name('aifacad');
+Route::get('ailada/{user_name?}','Frontend\SalepageController@ailada')->name('ailada');
+Route::get('trimmax/{user_name?}','Frontend\SalepageController@trimmax')->name('trimmax');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');

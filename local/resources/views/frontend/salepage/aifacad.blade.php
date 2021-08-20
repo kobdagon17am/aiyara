@@ -28,57 +28,57 @@ AIFACAD
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/Aifacad/01.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-01.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/02.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-02.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/03.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-03.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/04.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-04.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/05.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-05.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/06.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-06.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/07.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-07.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/08.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-08.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/09.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-09.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aifacad/10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-10.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/1/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aifacad/11.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aifacad/AIFACA_CR-11.jpg') }}"
               class="img-fluid" alt="CashewyDrink">
           </a>
 

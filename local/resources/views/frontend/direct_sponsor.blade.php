@@ -26,7 +26,6 @@ $count_sponser = 0;
 
             <div class="dt-responsive table-responsive">
                 <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
-
                     <thead>
                       <tr class="info" style='text-align:center;'>
                         <th class="text-center" rowspan="2" >#</th>
@@ -237,22 +236,102 @@ $count_sponser = 0;
 @endsection
 @section('js')
 <!-- data-table js -->
-  <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-  <script src="{{asset('frontend/assets/pages/data-table/js/jszip.min.js')}}"></script>
-  <script src="{{asset('frontend/assets/pages/data-table/js/pdfmake.min.js')}}"></script>
-  <script src="{{asset('frontend/assets/pages/data-table/js/vfs_fonts.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-  <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
-  <!-- Custom js -->
-  <script src="{{asset('frontend/assets/pages/data-table/js/data-table-custom.js')}}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>
+<script src="{{ asset('frontend/assets/pages/data-table/js/pdfmake.min.js') }}"></script>
+<script src="{{ asset('frontend/assets/pages/data-table/js/vfs_fonts.js') }}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
+</script>
+<script src="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
+</script>
+
   <script>
-    var data = {{ $count_sponser }};
-    $('#count_sponser').html(data);
+    // var data = {{ $count_sponser }};
+    // $('#count_sponser').html(data);
   </script>
+
+<script type="text/javascript">
+
+  var oTable;
+  $(function() {
+      oTable = $('#multi-colum-dt').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+          ajax: {
+              url: '{{ route("dt_sponsor") }}',
+              // data: function(d) {
+              //     d.startDate = $('#startDate').val();
+              //     d.endDate = $('#endDate').val();
+              // },
+              method: 'get'
+          },
+
+
+          columns: [
+              {
+                  data: 'id',
+
+              },
+              {
+                  data: 'introduce_type',
+              },
+              {
+                  data: 'user_name',
+              },
+              {
+                  data: 'business_name',
+              },
+              {
+                  data: 'dt_package',
+              },
+              {
+                  data: 'upline',
+              },
+              {
+                  data: 'pv_mt_active',
+              },
+              {
+                  data: 'count_directsponsor_a',
+              },
+              {
+                  data: 'count_directsponsor_b',
+              },
+              {
+                  data: 'count_directsponsor_c',
+
+              },
+              {
+                  data: 'reward_bonus',
+              },
+              {
+                  data: 'reward_max_id',
+              },
+              {
+                  data: 'code_name',
+              },
+              {
+                  data: 'max_code_name',
+              },
+
+          ]
+      });
+      $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+          oTable.draw();
+      });
+
+      $('#search-form').on('click', function(e) {
+          oTable.draw();
+          e.preventDefault();
+      });
+  });
+
+
+</script>
   @endsection
 
 

@@ -58,6 +58,12 @@
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
+<div class="row justify-content-center mt-2">
+          <a href="#!" target="_blank" >
+            <img src="{{ asset('frontend/salepage/Aimmura/Sale_Page_Aimmura-CR-07.jpg') }}"
+                class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
+          </a>
+        </div>
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/18/{{ $rs['data']->user_name }}" target="_blank" >
             <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-07.jpg') }}"
@@ -97,6 +103,14 @@
         </p>
 
         <div class="row text-center mt-2 mb-5">
+          <div class="col-6 col-sm-6 col-lg-3">
+            <img src="{{ asset('frontend/salepage/Aimmura/aimmura_19.png') }}" class="img-fluid" alt="Responsive image">
+            <h2>2,100 บาท</h2>
+
+            <a class="btn btn-success btn-md" href="#!" style="font-size: 23px"> สั่งซื้อ </a>
+        </div><!-- /.col-lg-4 -->
+
+
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura.png') }}" class="img-fluid" alt="Responsive image">
                 <h2>1,550 บาท</h2>

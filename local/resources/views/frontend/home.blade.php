@@ -42,18 +42,18 @@
           <div class="row">
             <div class="col-md-8">
               <a class="btn hor-grd btn-primary btn-outline-primary waves-effect md-trigger btn-sm btn-round m-t-5" href="{{route('tree_view')}}" style="color: black;font-size: 16px;"><i class="fa fa-user" ></i> <b class="font-primary">You</b></a>
-              <?php //dd($data['lv1']);?>
+
+
               @if($data['lv1']->user_name == Auth::guard('c_user')->user()->user_name)
               <button class="btn btn-success btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px">
-                <i class="fa fa-sort-up"></i> <b>Up one step</b></button>
+                <i class="fa fa-sort-up"></i> <b>Up One Step</b></button>
                 @else
 
-                <a href="#"  onclick="event.preventDefault();
-                document.getElementById('upline_id').submit();"
-                class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></a>
-                <form id="upline_id" action="{{ route('tree_view') }}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv1']->upline_id}}">
+                <form id="upline_id" action="{{ route('up_step') }}" style="display: initial;" method="POST"  >
                   @csrf
+                  <input type="hidden" name="user_name" value="{{$data['lv1']->upline_id}}">
+
+                  <button type="submit" class="btn hor-grd btn-success btn-sm m-t-5" style=" color: #FFF;font-size: 16px"><i class="fa fa-sort-up"></i> <b>Up one step</b></button>
                 </form>
                 @endif
 
@@ -61,12 +61,13 @@
                 <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
 
                 @else
-                <a href="#" onclick="event.preventDefault();
-                document.getElementById('under_a').submit();" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</a>
 
-                <form id="under_a" action="{{ route('under_a') }}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_a_a']->user_name}}">
+
+                <form id="under_a" action="{{ route('under_a') }}" style="display: initial;" method="POST">
                   @csrf
+                  <input type="hidden" name="user_name" value="{{$data['lv3_a_a']->user_name}}">
+                  <input type="hidden" name="line_type" value="A">
+                  <button type="submit" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
                 </form>
 
                 @endif
@@ -76,12 +77,12 @@
                 <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
 
                 @else
-                <a href="#" onclick="event.preventDefault();
-                document.getElementById('under_b').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</a>
 
-                <form id="under_b" action="{{ route('under_b') }}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_b_b']->user_name}}">
+                <form id="under_b" action="{{ route('under_b') }}" style="display: initial;" method="POST" >
                   @csrf
+                  <input type="hidden" name="user_name" value="{{$data['lv3_b_b']->user_name}}">
+                  <input type="hidden" name="line_type" value="B">
+                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
                 </form>
                 @endif
 
@@ -89,12 +90,12 @@
                 <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
 
                 @else
-                <a href="#" onclick="event.preventDefault();
-                document.getElementById('under_c').submit();" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</a>
 
-                <form id="under_c" action="{{route('under_c')}}" method="POST" style="display: none;">
-                  <input type="hidden" name="id" value="{{$data['lv3_c_c']->user_name}}">
+                <form id="under_c" action="{{route('under_c')}}" style="display: initial;" method="POST">
                   @csrf
+                  <input type="hidden" name="user_name" value="{{$data['lv3_c_c']->user_name}}">
+                  <input type="hidden" name="line_type" value="C">
+                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
                 </form>
 
                 @endif
@@ -151,10 +152,10 @@
                       @if($data['lv1'])
                       @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
 
-                      <a href="#" onclick="modal_tree({{ $data['lv1']->id }})">
+                      <a href="#" onclick="modal_tree('{{ $data['lv1']->user_name }})'">
                         <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
                         @else
-                        <a href="#" onclick="modal_tree({{ $data['lv1']->id }})">
+                        <a href="#" onclick="modal_tree('{{ $data['lv1']->user_name }}')">
                           <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
 
                           @endif
@@ -189,7 +190,7 @@
                           ?>
                           @if($data_lv2)
                           <li data-jstree='{"opened":true}'>
-                           <a href="#" onclick="modal_tree({{ $data_lv2->id }})"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
+                           <a href="#" onclick="modal_tree('{{ $data_lv2->user_name }}')"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
                            <ul>
                             @for($j=1;$j<=3;$j++)
                             <?php
@@ -213,7 +214,7 @@
 
                             ?>
                             @if($data_lv3)
-                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree({{ $data_lv3->id }})">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree('{{ $data_lv3->user_name }}')">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
                             @else
                             <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add({{ $data_lv2->id }},'{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
                             @endif
@@ -252,7 +253,7 @@
                   <ul>
                     <li>
                         @if ($data['lv1'])
-                          <a href="javascript:void(0);" onclick="modal_tree({{ $data['lv1']->id }})">
+                          <a href="javascript:void(0);" onclick="modal_tree('{{ $data['lv1']->user_name }}')">
                             <div class="member-view-box">
                                 <div class="member-image">
                                     @if($data['lv1']->profile_img)
@@ -299,7 +300,7 @@
                             @endphp
                             <li>
                               @if ($data_lv2)
-                                <a href="javascript:void(0);" onclick="modal_tree({{ $data_lv2->id }})">
+                                <a href="javascript:void(0);" onclick="modal_tree('{{ $data_lv2->user_name }}')">
                                   <div class="member-view-box">
                                       <div class="member-image">
                                           @if ($data_lv2->profile_img)
@@ -363,7 +364,7 @@
                                   @endphp
                                   <li>
                                     @if ($data_lv3)
-                                      <a href="javascript:void(0);" onclick="modal_tree({{ $data_lv3->id }})">
+                                      <a href="javascript:void(0);" onclick="modal_tree('{{ $data_lv3->user_name }}')">
                                         <div class="member-view-box">
                                             <div class="member-image">
                                                 @if ($data_lv3->profile_img)
@@ -488,12 +489,12 @@
 
     });
 
-     function modal_tree(id){
+     function modal_tree(user_name){
 
       $.ajax({
         url: '{{ route('modal_tree') }}',
         type: 'GET',
-        data: {id:id},
+        data: {user_name:user_name},
       })
       .done(function(data) {
         console.log("success");

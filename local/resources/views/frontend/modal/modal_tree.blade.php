@@ -1,8 +1,8 @@
 <?php
- 
+
 use App\Helpers\Frontend;
 use App\Models\Frontend\MonthPv;
-$count_directsponsor = Frontend::check_customer_directsponsor($data->id);
+$count_directsponsor = Frontend::check_customer_directsponsor($data->user_name);
 
 ?>
 <div class="modal fade" id="modal_tree_show" tabindex="-1" role="dialog">
@@ -67,7 +67,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
     <tr>
       <td><strong>ทีมกลางคือทีม</strong></td>
 
-    <?php $get_month_pv = MonthPv::get_month_pv($data->id); ?>
+    <?php $get_month_pv = MonthPv::get_month_pv($data->user_name); ?>
       <td>
         @if($get_month_pv['data_avg_pv']['pv_month'] <= 0)
         -
@@ -97,11 +97,11 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->id);
 <div class="modal-footer">
   <p class="m-b-0 text-left" style="font-size: 12px"> ข้อมูลวันที่ :{{ date('d/m/Y') }} </p>
   <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
-  <button type="button"  onclick="event.preventDefault();
-  document.getElementById('line_id_v1').submit();" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
-  <form id="line_id_v1" action="{{route('tree_view')}}" method="POST" style="display: none;">
+
+  <form id="line_id_v1" action="{{route('tree_view')}}" method="POST">
     <input type="hidden" name="id" value="{{$data->user_name}}">
     @csrf
+    <button type="submit" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
   </form>
 
 

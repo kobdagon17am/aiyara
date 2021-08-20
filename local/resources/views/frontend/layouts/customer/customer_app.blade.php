@@ -598,49 +598,49 @@
 			<ul class="pcoded-submenu">
 				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
 
-        <li class="{{ (request()->is('s1*') ) ? 'active' : '' }}">
-					<a href="{{route('s1',['user_name'=>$user_name])}}" target="_blank">
+        <li class="{{ (request()->is('aiyara*') ) ? 'active' : '' }}">
+					<a href="{{route('aiyara',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aiyara</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('s2') ) ? 'active' : '' }}">
-					<a href="{{route('s2',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
+					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aimmura</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('s3*') ) ? 'active' : '' }}">
-					<a href="{{route('s3',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('cashewy*') ) ? 'active' : '' }}">
+					<a href="{{route('cashewy',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Cashewy Drink</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-        <li class="{{ (request()->is('s4*') ) ? 'active' : '' }}">
-					<a href="{{route('s4',['user_name'=>$user_name])}}" target="_blank">
+        <li class="{{ (request()->is('aifacad*') ) ? 'active' : '' }}">
+					<a href="{{route('aifacad',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aifacad</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('s5*') ) ? 'active' : '' }}">
-					<a href="{{route('s5',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('ailada*') ) ? 'active' : '' }}">
+					<a href="{{route('ailada',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Alada</span>
+						<span class="pcoded-mtext">Ailada</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
 
-				<li class="{{ (request()->is('s6*') ) ? 'active' : '' }}">
-					<a href="{{route('s6',['user_name'=>$user_name])}}" target="_blank">
+				<li class="{{ (request()->is('trimmax*') ) ? 'active' : '' }}">
+					<a href="{{route('trimmax',['user_name'=>$user_name])}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">TrimMax</span>
 						<span class="pcoded-mcaret"></span>

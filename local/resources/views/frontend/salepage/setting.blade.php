@@ -71,7 +71,7 @@
             </div>
 
             {{-- Card Form URL name --}}
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
@@ -81,11 +81,11 @@
 
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s1)) {
-                                  $url_s1 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s1 = $data->name_s1;
-                              }
+                              // if (empty($data->name_s1)) {
+                              //     $url_s1 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s1 = $data->name_s1;
+                              // }
 
                               ?>
                                 <label>Aiyara</label> <code>{{ route('s1', $url_s1) }}</code>
@@ -114,11 +114,11 @@
 
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s2)) {
-                                  $url_s2 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s2 = $data->name_s2;
-                              }
+                              // if (empty($data->name_s2)) {
+                              //     $url_s2 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s2 = $data->name_s2;
+                              // }
 
                               ?>
                                 <label>Aimmura</label><code>{{ route('s2', $url_s2) }}</code>
@@ -144,11 +144,11 @@
                             </div>
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s3)) {
-                                  $url_s3 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s3 = $data->name_s3;
-                              }
+                              // if (empty($data->name_s3)) {
+                              //     $url_s3 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s3 = $data->name_s3;
+                              // }
 
                               ?>
                                 <label>Cashewy Drink</label> <code>{{ route('s3', $url_s3) }}</code>
@@ -174,11 +174,11 @@
                             </div>
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s4)) {
-                                  $url_s4 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s4 = $data->name_s4;
-                              }
+                              // if (empty($data->name_s4)) {
+                              //     $url_s4 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s4 = $data->name_s4;
+                              // }
 
                               ?>
                                 <label>Aifacad</label> <code>{{ route('s4', $url_s4) }}</code>
@@ -204,11 +204,11 @@
                             </div>
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s5)) {
-                                  $url_s5 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s5 = $data->name_s5;
-                              }
+                              // if (empty($data->name_s5)) {
+                              //     $url_s5 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s5 = $data->name_s5;
+                              // }
 
                               ?>
 
@@ -236,11 +236,11 @@
                             </div>
                             <div class="form-group">
                               <?php
-                              if (empty($data->name_s6)) {
-                                  $url_s6 = Auth::guard('c_user')->user()->user_name;
-                              } else {
-                                  $url_s6 = $data->name_s6;
-                              }
+                              // if (empty($data->name_s6)) {
+                              //     $url_s6 = Auth::guard('c_user')->user()->user_name;
+                              // } else {
+                              //     $url_s6 = $data->name_s6;
+                              // }
 
                               ?>
                                 <label>TrimMax</label> <code>{{ route('s6', $url_s6) }}</code>
@@ -268,7 +268,89 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
+
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
+                      </div>
+                      <div class="card-block">
+                        <div class="form-group">
+                          <?php
+                          if (empty($data->name_s1)) {
+                              $url_s1 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s1 = $data->name_s1;
+                          }
+
+                          ?>
+                            <label>Example Url :</label> <code>{{ route('s1', $url_s1) }}</code>
+                            <div class="input-group input-group-button mb-0">
+
+                                <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Edit Name Url"
+                                    value="{{ $url_s1 }}">
+                                <span class="input-group-addon btn btn-primary btn-save-url">
+                                    <span class="">Edit Url</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <?php
+                          if (empty($data->name_s1)) {
+                              $url_s1 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s1 = $data->name_s1;
+                          }
+
+                          if (empty($data->name_s2)) {
+                              $url_s2 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s2 = $data->name_s2;
+                          }
+
+                          if (empty($data->name_s3)) {
+                              $url_s3 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s3 = $data->name_s3;
+                          }
+
+                          if (empty($data->name_s4)) {
+                              $url_s4 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s4 = $data->name_s4;
+                          }
+
+                          if (empty($data->name_s5)) {
+                              $url_s5 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s5 = $data->name_s5;
+                          }
+
+                          if (empty($data->name_s6)) {
+                              $url_s6 = Auth::guard('c_user')->user()->user_name;
+                          } else {
+                              $url_s6 = $data->name_s6;
+                          }
+
+                          ?>
+                          <hr>
+                           <p> <label>1. Aiyara</label> <code>{{ route('s1', $url_s1) }}</code> <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard" href="#!" data-url="{{ route('s1', $url_s1) }}">Copy</a><br>
+                            <label>2. Aimmura</label> <code>{{ route('s2', $url_s2) }}</code><br>
+                            <label>3. Cashewy Drink</label> <code>{{ route('s3', $url_s3) }}</code><br>
+                            <label>4. Aifacad</label> <code>{{ route('s4', $url_s4) }}</code><br>
+                            <label>5. Alada</label> <code>{{ route('s5', $url_s5) }}</code><br>
+                            <label>6. TrimMax</label> <code>{{ route('s6', $url_s6) }}</code></p>
+
+
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
 
         </div>
 
@@ -524,7 +606,12 @@
                 _token: "{{ csrf_token() }}"
             }
 
-            data[input.attr('name')] = value
+            data['name_s1'] = value;
+            data['name_s2'] = value;
+            data['name_s3'] = value;
+            data['name_s4'] = value;
+            data['name_s5'] = value;
+            data['name_s6'] = value;
 
             Swal.fire({
                     title: 'Do you want to save the changes?',
@@ -543,6 +630,9 @@
                                     input.removeClass('is-invalid')
                                     input.parent().parent().find('.invalid-feedback').remove();
                                     location.reload();
+                                }
+                                if (response.fail) {
+                                   alert('fails')
                                 }
                             },
                             error: function(response) {

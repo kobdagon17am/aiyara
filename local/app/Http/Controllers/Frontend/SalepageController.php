@@ -222,6 +222,7 @@ public function aiyara($user_name=''){
 
 	public function saveUrl(Request $request)
 	{
+
 		$key = collect($request->except('_token'))->keys()->first();
 		$rules = [
 			'max:20',
