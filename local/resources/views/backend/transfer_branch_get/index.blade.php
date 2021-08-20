@@ -57,9 +57,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-      $sPermission = \Auth::user()->permission ;
-   ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -138,14 +136,14 @@
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="tr_status" class="col-md-3 col-form-label"> สถานะใบโอน :  </label>
+                    <label for="tr_status_get" class="col-md-3 col-form-label"> สถานะใบโอน :  </label>
                     <div class="col-md-9">
-                      <select id="tr_status" name="tr_status" class="form-control select2-templating " >
+                      <select id="tr_status_get" name="tr_status_get" class="form-control select2-templating " >
                          <option value="">-Select-</option>
-                                 @if(@$Transfer_branch_status_02)
-                                  @foreach(@$Transfer_branch_status_02 AS $r)
+                                 @if(@$Transfer_branch_status)
+                                  @foreach(@$Transfer_branch_status AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->txt_desc}} 
+                                      {{$r->txt_to}} 
                                     </option>
                                   @endforeach
                                 @endif
@@ -291,10 +289,13 @@ $(function() {
             {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
-            {data: 'tr_status', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
+            {data: 'tr_status_get', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
+
+          // console.log(aData['tr_status_get']);
+          // console.log(aData['tr_status_code']);
     
               var sPermission = "<?=\Auth::user()->permission?>";
               var sU = sessionStorage.getItem("sU");
@@ -303,9 +304,9 @@ $(function() {
               }
               var str_U = '';
               if(sU=='1'){
-                console.log(aData['tr_status_code']);
+                
                 // กรณีปฏิเสธการรับจากฝั่งรับ
-                if(aData['tr_status_code']==4){
+                if(aData['tr_status_code']=='5'){
                   str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                 }else{
                   str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
@@ -333,8 +334,9 @@ $(function() {
 
             $(document).on('click', '.btnSearch01', function(event) {
                   event.preventDefault();
-                  $('#data-table').DataTable().clear();
+
                   $(".myloading").show();
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var get_from_branch_id_fk = $('#get_from_branch_id_fk').val();
@@ -342,9 +344,9 @@ $(function() {
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var action_user = $('#action_user').val();
-                  var tr_status = $('#tr_status').val();
-                  var supplier_id_fk = $('#supplier_id_fk').val();
-                  console.log(tr_status);
+                  var tr_status_get = $('#tr_status_get').val();
+
+
                   if(business_location_id_fk==''){
                     $('#business_location_id_fk').select2('open');
                     $(".myloading").hide();
@@ -378,50 +380,52 @@ $(function() {
                                                 startDate:startDate,
                                                 endDate:endDate,
                                                 action_user:action_user,                                 
-                                                tr_status:tr_status,                                 
+                                                tr_status_get:tr_status_get,                                 
                                               },
                                             method: 'POST',
                                           },
-                                    columns: [
-                                        {data: 'id', title :'ID', className: 'text-center w50'},
-                                        {data: 'tr_number', title :'<center>รหัสใบโอน </center>', className: 'text-center'},
-                                        {data: 'get_from_branch', title :'<center>รับจากสาขา</center>', className: 'text-center'},
-                                        {data: 'action_user', title :'<center>ผู้รับใบโอน </center>', className: 'text-center'},
-                                        {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
-                                        {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-                                        {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
-                                        {data: 'tr_status', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
-                                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                    ],
-                                  rowCallback: function(nRow, aData, dataIndex){
-                              
- 
-                                          var sPermission = "<?=\Auth::user()->permission?>";
-                                          var sU = sessionStorage.getItem("sU");
-                                          if(sPermission==1){
-                                            sU = 1;
-                                          }
-                                          var str_U = '';
-                                          if(sU=='1'){
-                                            console.log(aData['tr_status_code']);
-                                            // กรณีปฏิเสธการรับจากฝั่งรับ
-                                            if(aData['tr_status_code']==4){
-                                              str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                            }else{
-                                              str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                     columns: [
+                                          {data: 'id', title :'ID', className: 'text-center w50'},
+                                          {data: 'tr_number', title :'<center>รหัสใบโอน </center>', className: 'text-center'},
+                                          {data: 'get_from_branch', title :'<center>รับจากสาขา</center>', className: 'text-center'},
+                                          {data: 'action_user', title :'<center>ผู้รับใบโอน </center>', className: 'text-center'},
+                                          {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                          {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                          {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
+                                          {data: 'tr_status_get', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
+                                          {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                      ],
+                                      rowCallback: function(nRow, aData, dataIndex){
+
+                                        console.log(aData['tr_status_get']);
+                                        console.log(aData['tr_status_code']);
+                                  
+                                            var sPermission = "<?=\Auth::user()->permission?>";
+                                            var sU = sessionStorage.getItem("sU");
+                                            if(sPermission==1){
+                                              sU = 1;
                                             }
-                                            
-                                          }
-                                
-                                          if(sU!='1'){
-                                             $('td:last-child', nRow).html('-');
-                                          }else{
-                                            $('td:last-child', nRow).html( str_U ).addClass('input');
-                                          }
+                                            var str_U = '';
+                                            if(sU=='1'){
+                                              // console.log(aData['tr_status_code']);
+                                              // กรณีปฏิเสธการรับจากฝั่งรับ
+                                              if(aData['tr_status_code']==5){
+                                                str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                              }else{
+                                                str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                              }
+                                              
+                                            }
+                                  
+                                            if(sU!='1'){
+                                               $('td:last-child', nRow).html('-');
+                                            }else{
+                                              $('td:last-child', nRow).html( str_U ).addClass('input');
+                                            }
 
 
-                                  }
-                              });
+                                      }
+                                  });
                         });
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -468,16 +472,11 @@ $(function() {
         }
         $('#startPayDate').val('');
         $('#endPayDate').val('');
-        $('#btnSearch03').val('0');
 
       });        
 
 
-      $('#endDate').change(function(event) {
-        $('#btnSearch03').val('0');
-      });  
-
-
+ 
     </script>
     <script>
 

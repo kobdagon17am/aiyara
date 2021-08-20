@@ -41,6 +41,14 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Check Stock </h4>
+            <h4 class="mb-0 font-size-18">  
+
+             <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;" >
+                            <i class="bx bx-cog align-middle "></i> Process Stock movement
+                          </a>
+
+                          </h4>
+
         </div>
     </div>
 </div>
@@ -76,22 +84,53 @@
                         <label for="" class="col-md-3 col-form-label">Business Location : </label>
                         <div class="col-md-9">
                           <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" <?=$dis01?> >
-                              <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                @IF(empty(@$sRow->condition_business_location))
-                                <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @ELSE 
-                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @ENDIF 
-                                @endforeach
-                              @endif
-                            </select>
+
+
+                              <?php if(@\Auth::user()->permission==1){ ?>
+                                     
+                                      <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
+                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" <?=$dis01?> >
+                                            <option value="">-Business Location-</option>
+                                            @if(@$sBusiness_location)
+                                              @foreach(@$sBusiness_location AS $r)
+                                              @IF(empty(@$sRow->condition_business_location))
+                                              <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
+                                                {{$r->txt_desc}}
+                                              </option>
+                                              @ELSE 
+                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
+                                                {{$r->txt_desc}}
+                                              </option>
+                                              @ENDIF 
+                                              @endforeach
+                                            @endif
+                                          </select>
+
+                              <?php }else{ ?>
+
+                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " disabled >
+                                        <option value="">-Business Location-</option>
+                                        @if(@$sBusiness_location)
+                                          @foreach(@$sBusiness_location AS $r)
+                                          @IF(empty(@$sRow->condition_business_location))
+                                          <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
+                                            {{$r->txt_desc}}
+                                          </option>
+                                          @ELSE 
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
+                                            {{$r->txt_desc}}
+                                          </option>
+                                          @ENDIF 
+                                          @endforeach
+                                        @endif
+                                      </select>
+
+                              <?php } ?>
+
+
+
+
+
                         </div>
                       </div>
                     </div>
@@ -101,22 +140,22 @@
                             <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
                             <div class="col-md-10">
 
-                              <?php if(!empty(@$sRow->condition_branch)){ ?>
-                                  <select class="form-control select2-templating " disabled="" >
+                              <?php if(@\Auth::user()->permission==1){ ?>
+                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
                                       @if(@$sBranchs)
                                         @foreach(@$sBranchs AS $r)
-                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_branch)?'selected':'' }} >
+                                          <option value="{{$r->id}}" >
                                             {{$r->b_name}}
                                           </option>
                                         @endforeach
                                       @endif
                                   </select>
                               <?php }else{ ?>
-                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " >
+                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled="" >
                                      <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
                                      @if(@$sBranchs)
                                         @foreach(@$sBranchs AS $r)
-                                          <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
+                                          <option value="{{$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >
                                             {{$r->b_name}}
                                           </option>
                                         @endforeach
@@ -137,21 +176,27 @@
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : </label>
                             <div class="col-md-9">
 
-                              <?php if(!empty(@$sRow->condition_warehouse)){ ?>
-                                  <select class="form-control select2-templating " disabled="" >
+                              <?php if(@\Auth::user()->permission==1){ ?>
+
+                                 <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating " required >
+                                     <option disabled selected>กรุณาเลือกสาขาก่อน</option>
+                                  </select>
+
+                              <?php }else{ ?>
+
+                                  <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating " required >
+                                      <option value="" >-select-</option>
                                       @if(@$Warehouse)
                                         @foreach(@$Warehouse AS $r)
-                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_warehouse)?'selected':'' }} >
+                                          <option value="{{$r->id}}"  >
                                             {{$r->w_name}}
                                           </option>
                                         @endforeach
                                       @endif
                                   </select>
-                              <?php }else{ ?>
-                                  <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating " required >
-                                     <option disabled selected>กรุณาเลือกสาขาก่อน</option>
-                                  </select>
+
                               <?php } ?>
+
 
                             </div>
                           </div>
@@ -367,6 +412,8 @@
 
                   $("#spinner_frame").show();
 
+                  // return false;
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var start_date = $('#start_date').val();
@@ -452,7 +499,7 @@
                                                        return d;
                                               }},
                                               {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-                                              // {data: 'lot_number', title :'STOCK CARD', className: 'text-center w200'},
+                                              {data: 'stock_card', title :'STOCK CARD', className: 'text-center w150'},
                                           ],
                                           // order: [[1, 'asc']],
                                           // columnDefs: [
@@ -481,7 +528,9 @@
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;"  > STOCK CARD </a> </td>' );
+                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a> </td>' );
+
+
                                                   
                                               }else{
                                                    return $('<tr>')
@@ -492,37 +541,18 @@
                                                   
                                               
                                           },
-                                          // dataSrc: "product_name"
                                           dataSrc: [  "product_name", "lot_number" ]
                                       },
                                  
                                          rowCallback: function(nRow, aData, dataIndex){
 
-                                         //      if(sU!=''&&sD!=''){
-                                         //          $('td:last-child', nRow).html('-');
-                                         //      }else{
-                                         //            $('td:last-child', nRow).html(''
-                                         //              + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;" target=_blank > STOCK CARD </a>  '
+                                           $('td:last-child', nRow).html(''
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>  '
 
-                                         //            ).addClass('input');
-                                         //      } 
-
+                                                    ).addClass('input');
 
                                          },
 
-                                          // drawCallback: function ( settings ) {
-                                          //         var api = this.api();
-                                          //         var rows = api.rows( {page:'current'} ).nodes();
-                                          //         var last=null;
-                                          //         api.column(groupColumn, {page:'current'} ).data().each( function ( group, i  ) {
-                                          //             if ( last !== group ) {
-                                          //                 $(rows).eq( i ).before(
-                                          //                   '<tr><td colspan=6 ></td><td rowspan=2 width=100 >STOCK CARD</td></tr>'
-                                          //                 );
-                                          //                 last = group;
-                                          //             }
-                                          //         } );
-                                          //     },
 
                                   });
 
@@ -563,10 +593,11 @@
                     columns: [
                         {data: 'id', title :'No.', className: 'text-center w50'},
                         {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center'},
-                        {data: 'product_name', title :'รายการสินค้า', className: 'text-center'},
+                        {data: 'product_name', title :'<center>รายการสินค้า', className: 'text-left'},
                         {data: 'branch_from', title :'สาขาต้นทาง', className: 'text-center'},
                         {data: 'branch_to', title :'สาขาปลายทาง', className: 'text-center'},
-                        {data: 'tr_status', title :'สถานะ', className: 'text-center'},
+                        {data: 'tr_status_from', title :'ฝั่งส่ง', className: 'text-center'},
+                        {data: 'tr_status_to', title :'ฝั่งรับ', className: 'text-center'},
                         {data: 'updated_at', title :'วัน-เวลา<br>ดำเนินการล่าสุด', className: 'text-center'},
 
                     ],
@@ -588,6 +619,8 @@
 
 
        $('#business_location_id_fk').change(function(){
+
+
 
           var business_location_id_fk = this.value;
           // alert(warehouse_id_fk);
@@ -623,6 +656,8 @@
 
        $('#branch_id_fk').change(function(){
 
+          $("#spinner_frame").show();
+
           var branch_id_fk = this.value;
           // alert(warehouse_id_fk);
 
@@ -647,6 +682,9 @@
                        $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                        $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
                    }
+
+                   $("#spinner_frame").hide();
+
                   }
                 })
            }
@@ -655,6 +693,8 @@
 
 
        $('#warehouse_id_fk').change(function(){
+
+        $("#spinner_frame").show();
 
           var warehouse_id_fk = this.value;
           // alert(warehouse_id_fk);
@@ -679,6 +719,9 @@
                        $('#zone_id_fk').html(layout);
                        $('#shelf_id_fk').html('กรุณาเลือกโซนก่อน');
                    }
+
+                   $("#spinner_frame").hide();
+
                   }
                 })
            }
@@ -687,6 +730,8 @@
 
 
        $('#zone_id_fk').change(function(){
+
+          $("#spinner_frame").show();
 
           var zone_id_fk = this.value;
           // alert(zone_id_fk);
@@ -710,6 +755,8 @@
                        });
                        $('#shelf_id_fk').html(layout);
                    }
+                   $("#spinner_frame").hide();
+
                   }
                 })
            }
@@ -792,5 +839,204 @@
   });
 </script>
 
+
+  <script>
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.btnStockMovement', function(event) {
+                  event.preventDefault();
+
+                  $("#spinner_frame").show();
+
+
+                   $.ajax({
+                       url: " {{ url('backend/truncateStockMovement') }} ",
+                      method: "post",
+                      data: {
+                        "_token": "{{ csrf_token() }}",
+                      },
+                      success:function(data)
+                      {
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            setTimeout(function(){
+
+                                 $.ajax({
+                                     url: " {{ url('backend/insertStockMovement_From_db_general_receive') }} ",
+                                    method: "post",
+                                    data: {
+                                      "_token": "{{ csrf_token() }}",
+                                    },
+                                    success:function(data)
+                                    {
+
+                                      console.log(data);
+                                      $("#spinner_frame").hide();
+                                
+                                    }
+                                  });
+
+
+                            },1000);
+
+                          setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_general_takeout') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+
+                          },1000);
+
+
+                          setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_stocks_account') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+
+                          },1000);
+ 
+                           setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_products_borrow_code') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+
+                          },1000);
+
+                           setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_transfer_warehouses_code') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+
+                          },1000);
+
+                           setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_transfer_branch_code') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+
+                          },1000);
+
+                                                                                                       
+                          setTimeout(function(){
+
+                               $.ajax({
+                                   url: " {{ url('backend/insertStockMovement_From_db_pay_product_receipt_001') }} ",
+                                  method: "post",
+                                  data: {
+                                    "_token": "{{ csrf_token() }}",
+                                  },
+                                  success:function(data)
+                                  {
+
+                                    console.log(data);
+                                    $("#spinner_frame").hide();
+                              
+                                  }
+                                });
+
+                          },1000);
+
+
+                      setTimeout(function(){
+
+                           $.ajax({
+                               url: " {{ url('backend/insertStockMovement_From_db_stocks_return') }} ",
+                              method: "post",
+                              data: {
+                                "_token": "{{ csrf_token() }}",
+                              },
+                              success:function(data)
+                              {
+
+                                console.log(data);
+                                $("#spinner_frame").hide();
+                          
+                              }
+                            });
+
+                      },1000);
+
+        // จ่ายสินค้าตามใบเบิก
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                      }
+                    });
+
+          
+
+
+
+
+
+
+             });
+
+        });
+    </script>
 
 @endsection

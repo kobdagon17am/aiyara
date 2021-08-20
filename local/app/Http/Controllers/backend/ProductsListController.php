@@ -40,27 +40,8 @@ class ProductsListController extends Controller
 
     public function Datatable(Request $req){
 
-      // ประเภทการสั่งซื้อ $order_type
-      /*
-        1 ทำคุณสมบัติ
-        2 รักษาคุณสมบัติรายเดือน
-        3 รักษาคุณสมบัติท่องเที่ยว
-        4 เติม Ai-Stockist
-        5 แลก  Ai Voucher
-        */
-       // if($req->order_type){
-       //  $order_type = $req->order_type;
-       //  $wh_order_type = " AND
-       //      (
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
-       //        $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
-       //      ) ";
-       //  }else{
-       //      $wh_order_type = ' ' ;
-       //  }
+      // return $req->order_type;
+
 
       switch ($req->category_id) {
          case '1':
@@ -83,6 +64,8 @@ class ProductsListController extends Controller
           $category_id = '';
           break;
       }
+
+      $order_type = !empty($req->order_type) ? $req->order_type : 0 ;
 
       $sTable = DB::select("
             SELECT
@@ -113,13 +96,13 @@ class ProductsListController extends Controller
             WHERE products_cost.business_location_id = 1
              AND
             (
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
-              ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
+              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1) OR
+              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+              $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
             )
-            ".$category_id."
+            $category_id
             ORDER BY pn
         ");
       $sQuery = \DataTables::of($sTable);

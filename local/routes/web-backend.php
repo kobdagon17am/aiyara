@@ -286,6 +286,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCustomerNameOnly', 'AjaxController@ajaxGetCustomerNameOnly');
     
     Route::post('ajaxGetCustomerForFrontstore', 'AjaxController@ajaxGetCustomerForFrontstore');
+    Route::post('ajaxGetCustomerForAicashSelect', 'AjaxController@ajaxGetCustomerForAicashSelect');
+    
+    Route::post('fnCheckStock', 'AjaxController@fnCheckStock');
     
     Route::post('ajaxGetBusinessName', 'AjaxController@ajaxGetBusinessName');
     Route::post('ajaxGetIntroduce_id', 'AjaxController@ajaxGetIntroduce_id');
@@ -337,6 +340,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetAicash', 'AjaxController@ajaxGetAicash');
 
     Route::post('ajaxCalAddAiCashFrontstore', 'AjaxController@ajaxCalAddAiCashFrontstore');
+    Route::post('ajaxCalSaveTransferType', 'AjaxController@ajaxCalSaveTransferType');
 
     Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
     Route::post('ajaxDelFileSlip_02', 'AjaxController@ajaxDelFileSlip_02');
@@ -450,6 +454,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
     Route::get('pay_product_receipt/scan_qr/{id}', 'Check_stock_accountController@ScanQr');
 
+
+
+
     Route::post('pay_product_receipt_send/datatable', 'Products_fifo_billController@DatatableToSend1')->name('pay_product_receipt_send.datatable');
 
     Route::post('pay_product_receipt_tb4/datatable', 'Pay_product_receipt_001Controller@Datatable004')->name('pay_product_receipt_tb4.datatable');    
@@ -492,6 +499,20 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxPackingFinished', 'AjaxController@ajaxPackingFinished');
     Route::post('ajaxShippingFinished', 'AjaxController@ajaxShippingFinished');
     Route::post('cancel-status-packing-sent', 'AjaxController@ajaxCacelStatusPackingSent');
+
+// 
+
+// @@@@@@@@@@@@@@@@@@@ StockMovement @@@@@@@@@@@@@@@@@@@
+    Route::post('truncateStockMovement', 'AjaxController@truncateStockMovement');
+    Route::post('insertStockMovement_From_db_general_receive', 'AjaxController@insertStockMovement_From_db_general_receive');
+    Route::post('insertStockMovement_From_db_general_takeout', 'AjaxController@insertStockMovement_From_db_general_takeout');
+    Route::post('insertStockMovement_From_db_stocks_account', 'AjaxController@insertStockMovement_From_db_stocks_account');
+    Route::post('insertStockMovement_From_db_products_borrow_code', 'AjaxController@insertStockMovement_From_db_products_borrow_code');
+    Route::post('insertStockMovement_From_db_transfer_warehouses_code', 'AjaxController@insertStockMovement_From_db_transfer_warehouses_code');
+    Route::post('insertStockMovement_From_db_transfer_branch_code', 'AjaxController@insertStockMovement_From_db_transfer_branch_code');
+    Route::post('insertStockMovement_From_db_pay_product_receipt_001', 'AjaxController@insertStockMovement_From_db_pay_product_receipt_001');
+    Route::post('insertStockMovement_From_db_stocks_return', 'AjaxController@insertStockMovement_From_db_stocks_return');
+
 
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
@@ -670,16 +691,23 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('transfer_branch_get', 'Transfer_branch_getController');
     Route::post('transfer_branch_get/datatable', 'Transfer_branch_getController@Datatable')->name('transfer_branch_get.datatable');
 
+
+    Route::post('transfer_branch_product/datatable', 'Transfer_branchController@DatatableProduct')->name('transfer_branch_product.datatable');
+
+
     Route::get('transfer_branch_get/noget/{id}', 'Transfer_branch_getController@noget');
     
     Route::resource('transfer_branch_get_products', 'Transfer_branch_get_productsController');
+
     Route::post('transfer_branch_get_products/datatable', 'Transfer_branch_get_productsController@Datatable')->name('transfer_branch_get_products.datatable');
+
     Route::post('transfer_branch_get_products_03/datatable', 'Transfer_branch_get_productsController@Datatable03')->name('transfer_branch_get_products_03.datatable');
 
     Route::post('transfer_branch_get_products_receive/datatable', 'Transfer_branch_get_productsController@Datatable02')->name('transfer_branch_get_products_receive.datatable');
 
     Route::post('ajaxCheckAmt_get_transfer_branch_get_products', 'AjaxController@ajaxCheckAmt_get_transfer_branch_get_products');
 
+    Route::post('transfer_branch_get_products_back/datatable', 'Transfer_branch_get_productsController@DatatableBack')->name('transfer_branch_get_products_back.datatable');
 
 // End รับสินค้าเข้าจากการโอนระหว่างสาขา 
 
@@ -690,7 +718,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
     Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
     Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
-
+    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
 
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');

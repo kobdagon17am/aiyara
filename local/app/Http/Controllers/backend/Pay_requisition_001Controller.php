@@ -10,6 +10,7 @@ use PDF;
 use Redirect;
 use Session;
 use PDO;
+use App\Http\Controllers\backend\AjaxController;
 
 class Pay_requisition_001Controller extends Controller
 {
@@ -1516,6 +1517,24 @@ class Pay_requisition_001Controller extends Controller
    
 
               foreach ($db_select as $key => $v) {
+
+                     // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
+                      $fnCheckStock = new  AjaxController();
+                       $r_check_stcok = $fnCheckStock->fnCheckStock(
+                        $sRow->branch_id_fk,
+                        $v->product_id_fk,
+                        $v->amt_get,
+                        $v->lot_number,
+                        $v->lot_expired_date,
+                        $v->warehouse_id_fk,
+                        $v->zone_id_fk,
+                        $v->shelf_id_fk,
+                        $v->shelf_floor);
+                      // return $r_check_stcok;
+                      if($r_check_stcok==0){
+                        return redirect()->to(url("backend/pay_product_receipt_001"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+                      }
+
               
                        $_choose=DB::table('db_stocks')
                       ->where('product_id_fk', $v->product_id_fk)

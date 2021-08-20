@@ -66,7 +66,31 @@
 
 
 <!-- end page title -->
+  <?php 
 
+    // echo Session::get('session_menu_id');
+
+      $sPermission = \Auth::user()->permission ;
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
+      if($sPermission==1){
+        $sC = '';
+        $sU = '';
+        $sD = '';
+        $role_group_id = '%';
+      }else{
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        // echo $role_group_id;
+        // echo $menu_id;     
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+        $sC = @$menu_permit->c==1?'':'display:none;';
+        $sU = @$menu_permit->u==1?'':'display:none;';
+        $sD = @$menu_permit->d==1?'':'display:none;';
+      }
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;     
+   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -80,7 +104,7 @@
 
 
 
-              <div class="row div_TransferList " >
+              <div class="row" >
 
                  <div class="col-md-6 " >
                       <div class="form-group row">
@@ -103,7 +127,7 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                              <select id="from_branch_id_fk"  name="from_branch_id_fk" class="form-control select2-templating "  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
                                  <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
@@ -126,7 +150,7 @@
 
                </div>
 
-              <div class="row div_TransferList " >
+              <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="to_branch" class="col-md-3 col-form-label"> โอนไปให้สาขา : </label>
@@ -147,14 +171,14 @@
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="tr_status_from" class="col-md-3 col-form-label"> สถานะ (ฝั่งส่ง) :  </label>
+                    <label for="tr_status" class="col-md-3 col-form-label"> สถานะ :  </label>
                     <div class="col-md-9">
-                      <select id="tr_status_from" name="tr_status_from" class="form-control select2-templating " >
+                      <select id="tr_status" name="tr_status" class="form-control select2-templating " >
                          <option value="">-Select-</option>
-                                 @if(@$Transfer_branch_status)
-                                  @foreach(@$Transfer_branch_status AS $r)
+                                 @if(@$Transfer_branch_status_01)
+                                  @foreach(@$Transfer_branch_status_01 AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->txt_from}} 
+                                      {{$r->txt_desc}} 
                                     </option>
                                   @endforeach
                                 @endif
@@ -164,7 +188,7 @@
                 </div>
               </div>
 
-            <div class="row div_TransferList " >
+            <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่สร้างใบโอน : </label>
@@ -194,7 +218,7 @@
               </div>
               
 
-            <div class="row div_TransferList " style="margin-bottom: 2% !important;"  >
+            <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                   <div class="form-group row">
                     <label for="action_user" class="col-md-3 col-form-label"> พนักงานที่ทำการโอน : </label>
@@ -232,6 +256,21 @@
                   </div>
                 </div>
               </div>
+
+
+      <div class="myBorder">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 font-size-18"><i class="bx bx-play"></i> รายการใบโอน </h4>
+                      </div>
+                    </div>
+                  </div>
+
+                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  </table>
+                </div>
+
 
 
 <!-- display: none; -->
@@ -302,7 +341,8 @@
 
                   </div>
 
-                  <div class="form-group row" style="margin-bottom: 1% !important;" >
+             
+                  <div class="form-group row">
                     <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>หมายเหตุ (ถ้ามี) :</label>
                     <div class="col-md-9">
                       <textarea class="form-control" rows="3" id="note" name="note" ></textarea>
@@ -357,18 +397,6 @@
        </div>
 
 
-      <div class="myBorder div_TransferList ">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0 font-size-18"><i class="bx bx-play"></i> รายการใบโอน </h4>
-                      </div>
-                    </div>
-                  </div>
-
-                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
-                  </table>
-                </div>
 
 
 
@@ -399,25 +427,25 @@
             <input type="hidden" id="branch_id_select_to_transfer_to" name="branch_id_select_to_transfer_to" >
             {{ csrf_field() }}
 
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;">
-                         </table>
-              </div>
-            </div>
-          </div>
-        </div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;">
+                 				 </table>
+							</div>
+						</div>
+					</div>
+				</div>
 
-         <div class="row">
+				 <div class="row">
                     <div class="col-md-12 text-center  "  >
                        <button type="submit" class="btn btn-primary" style="width: 10%;" >Save</button>
                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 1%;">Close</button>
                     </div>
                   </div>
-      </div>
+			</div>
             <div class="modal-footer">
               <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
               <!-- <button type="submit" class="btn btn-primary">Save</button> -->
@@ -645,6 +673,20 @@
 
 <script type="text/javascript">
 
+/*
+        sessionStorage.setItem("role_group_id", role_group_id);
+        var role_group_id = sessionStorage.getItem("role_group_id");
+        var menu_id = sessionStorage.getItem("menu_id");
+        // alert(sessionStorage.getItem("menu_id"));
+          window.onload = function() {
+          if(!window.location.hash) {
+             window.location = window.location + '?role_group_id=' + role_group_id + '&menu_id=' + sessionStorage.getItem("menu_id") + '#menu_id=' + sessionStorage.getItem("menu_id") ;
+          }
+          // $(".btnSearch").trigger('click');
+        }
+*/
+
+
 
        $('#branch_id_fk_c').change(function(){
 
@@ -838,7 +880,10 @@
  
       });
 
-
+      var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+      var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+      var sU = ''; // "{{@$sU}}"; //alert(sU);
+      var sD = ''; // "{{@$sD}}"; //alert(sD);
       var oTable;
       $(function() {
           oTable = $('#data-table-transfer-list').DataTable({
@@ -879,7 +924,9 @@
 
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                  {data: 'action_date', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
                   {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
                     if(d==1){
@@ -897,34 +944,48 @@
                   {data: 'id',   title :'พิมพ์<br>ใบโอน', className: 'text-center ',render: function(d) {
                       return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   }},
-                  {data: 'tr_status_from', title :'<center> ฝั่งส่ง </center>', className: 'text-center'},
-                  {data: 'tr_status_to', title :'<center> ฝั่งรับ </center>', className: 'text-center'},
+                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                  //     return d ;
+                  // }},
+                  {data: 'tr_status', title :'<center> สถานะ </center>', className: 'text-center'},
+                  // {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
+                  // {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
                   {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               rowCallback: function(nRow, aData, dataIndex){
 
+                if(sU!=''&&sD!=''){
+                    $('td:last-child', nRow).html('-');
+                }else{ 
+
                   if(aData['approve_status']!=0){
 
+                    // $('td:eq(6)', nRow).html( '' );
+
                     $('td:last-child', nRow).html(''
-                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
                        + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
                     ).addClass('input');
 
                   }else{
 
                     $('td:last-child', nRow).html(''
-                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
                       + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
                     ).addClass('input');
 
                   }
 
+
+                }
               }
           });
-     
+          $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+            oTable.draw();
+          });
       });
 
-    
+  	
 
     $(document).ready(function() {
         $(document).on('click', '.btnSearch', function(event) {
@@ -1001,7 +1062,10 @@
         $("#spinner_frame").hide();
     });
 
-
+    var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+    var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+    var sU = ''; // "{{@$sU}}"; alert(sU);
+    var sD = ''; // "{{@$sD}}"; alert(sD);
     var oTable;
     $(function() {
         oTable = $('#data-table-to-transfer').DataTable({
@@ -1040,12 +1104,12 @@
             },
 
            columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50'},
-                  {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
-                  {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
-                  {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                  {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
-                  {data: 'amt', title :'<center>จำนวนที่ต้องการโอน </center>', className: 'text-center'},
+    	            {data: 'id', title :'ID', className: 'text-center w50'},
+    	            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
+    	            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
+    	            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
+    	            {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
+    	            {data: 'amt', title :'<center>จำนวนที่ต้องการโอน </center>', className: 'text-center'},
                   {data: 'branch_to',   title :'<center>โอนย้ายไปที่สาขา</center>', className: 'text-center',render: function(d) {
                       if(d!='0'){
                          return d;
@@ -1053,21 +1117,25 @@
                           return  "<span style='color:red;'>* รอเลือกสาขาปลายทาง </span>";
                        }
                   }},
-                  {data: 'id', title :'Tools', className: 'text-center w150'}, 
-                ],
-                rowCallback: function(nRow, aData, dataIndex){
-               
+    	          	{data: 'id', title :'Tools', className: 'text-center w150'}, 
+    		        ],
+    		        rowCallback: function(nRow, aData, dataIndex){
+    		          // if(sU!=''&&sD!=''){
+    		          //     $('td:last-child', nRow).html('-');
+    		          // }else{ 
 
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="transfer_choose_id[]" value="'+aData['id']+'"> '
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose_branch.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
-                      
+    		              
 
-          });
-        
-      });
+    		        // }
+
+    	    });
+    	  
+    	});
 
 
     $(document).ready(function() {
@@ -1110,14 +1178,11 @@
 
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
-                  var to_branch = $('#to_branch').val();
-                  var tr_status_from = $('#tr_status_from').val();
-
                   var tr_number = $('#tr_number').val();
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var action_user = $('#action_user').val();
-                  var tr_status_from = $('#tr_status_from').val();
+                  var tr_status = $('#tr_status').val();
                   // console.log(tr_status);
                   if(business_location_id_fk==''){
                     $('#business_location_id_fk').select2('open');
@@ -1132,6 +1197,10 @@
                   }
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                       
+                      var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+                      var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+                      var sU = ''; // "{{@$sU}}"; //alert(sU);
+                      var sD = ''; // "{{@$sD}}"; //alert(sD);
                       var oTable;
                       $(function() {
                           oTable = $('#data-table-transfer-list').DataTable({
@@ -1145,68 +1214,91 @@
                               destroy: true,
                               // scrollY: ''+($(window).height()-370)+'px',
                               iDisplayLength: 25,
-                              
                               ajax: {
-                                      url: '{{ route('backend.transfer_branch_code.datatable') }}',
-                                      data :{
-                                        _token: '{{csrf_token()}}',
-                                            business_location_id_fk:business_location_id_fk,
-                                            branch_id_fk:branch_id_fk,
-                                            to_branch:to_branch,
-                                            tr_status_from:tr_status_from,
-                                            startDate:startDate,
-                                            endDate:endDate,
-                                            tr_number:tr_number,
-                                            action_user:action_user,                                 
-                                          },
-                                        method: 'POST',
-                                      },
-
-                               columns: [
-                                    {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                                    {data: 'action_date', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
-                                    {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
-                                    {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
-                                      if(d==1){
-                                          return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
-                                      }else if(d==2){
-                                          return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
-                                      }else if(d==3){
-                                          return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
-                                      }else{
-                                          return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
-                                      }
-                                    }},
-                                    {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-                                    {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
-                                    {data: 'id',   title :'พิมพ์<br>ใบโอน', className: 'text-center ',render: function(d) {
-                                        return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                                    }},
-                                    {data: 'tr_status_from', title :'<center> ฝั่งส่ง </center>', className: 'text-center'},
-                                    {data: 'tr_status_to', title :'<center> ฝั่งรับ </center>', className: 'text-center'},
-                                    {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                ],
-                                rowCallback: function(nRow, aData, dataIndex){
-
-                                    if(aData['approve_status']!=0){
-
-                                      $('td:last-child', nRow).html(''
-                                        + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
-                                         + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
-                                      ).addClass('input');
-
-                                    }else{
-
-                                      $('td:last-child', nRow).html(''
-                                        + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
-                                        + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
-                                      ).addClass('input');
-
+                                url: '{{ route('backend.transfer_branch_code.datatable') }}',
+                                data: function ( d ) {
+                                  d.Where={};
+                                  $('.myWhere').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Where[$(this).attr('name')] = $.trim($(this).val());
                                     }
+                                  });
+                                  d.Like={};
+                                  $('.myLike').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                                    }
+                                  });
+                                  d.Custom={};
+                                  $('.myCustom').each(function() {
+                                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                                    }
+                                  });
+                                  oData = d;
+                                },
+                                method: 'POST'
+                              },
+
+                              columns: [
+                                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
+                                  {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
+                                  {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                                    if(d==1){
+                                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                                    }else if(d==2){
+                                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+                                    }else if(d==3){
+                                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+                                    }else{
+                                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+                                    }
+                                  }},
+                                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
+                                  {data: 'id',   title :'พิมพ์<br>ใบโอน', className: 'text-center ',render: function(d) {
+                                      return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                                  }},
+                                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                                  //     return d ;
+                                  // }},
+                                  {data: 'tr_status', title :'<center> สถานะ </center>', className: 'text-center'},
+                                  // {data: 'status_get', title :'<center> สถานะ<br>ฝั่งรับโอน </center>', className: 'text-center'},
+                                  // {data: 'approve_date_get', title :'<center> วัน-เวลา <br> ดำเนินการ <br> ฝั่งรับโอน </center>', className: 'text-center'},
+                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                              ],
+                              rowCallback: function(nRow, aData, dataIndex){
+
+                                if(sU!=''&&sD!=''){
+                                    $('td:last-child', nRow).html('-');
+                                }else{ 
+
+                                  if(aData['approve_status']!=0){
+
+                                    // $('td:eq(6)', nRow).html( '' );
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                       + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
+                                    ).addClass('input');
+
+                                  }else{
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_branch.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
+                                    ).addClass('input');
+
+                                  }
+
 
                                 }
-                            });
-                            });
+                              }
+                          });
+                          });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){
@@ -1292,7 +1384,6 @@
             setTimeout(function(){
               // $(".divAddTransferItem").show();
               $(".divAddTransferItem").toggle();
-              $(".div_TransferList").toggle();
               $("#spinner_frame").hide();
             }, 500);
             // $(".divAddTransferItem").toggle();
@@ -1501,11 +1592,145 @@
         }
 
       });   
+         
+
+        $(document).ready(function() {
+          
+            $(document).on('click', '.btnSearchInList', function(event) {
+                  // event.preventDefault();
+                  var branch_id_search = $('#branch_id_search').val();
+                  var warehouse_id_search = $('#warehouse_id_search').val();
+                  var warehouse_id_search = warehouse_id_search==null?"":warehouse_id_search;
+                  var status_search = $('#status_search').val();
+                  // var startDated = $('#startDate').val();
+
+                  var s_date = $('#startDate').val();
+                  var startDated = s_date.split("/").reverse().join("-");
+                  var e_date = $('#endDate').val();
+                  var endDate = e_date.split("/").reverse().join("-");
+                  
+                  console.log(branch_id_search);
+                  console.log(warehouse_id_search);
+                  console.log(status_search);
+                  console.log(startDated);
+                  console.log(endDate);
+
+                  // return false;
 
 
-     $(document).on('click', '.test_clear_data_transfer_branch', function(event) {
-        location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
-      });
+                        var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+                        var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+                        var sU = "{{@$sU}}"; //alert(sU);
+                        var sD = "{{@$sD}}"; //alert(sD);
+                        var oTable;
+                        $(function() {
+
+                          var branch_id_fk = branch_id_search?branch_id_search:0; //alert(branch_id_fk); // 0 = All
+                          var approve_status = status_search; //alert(branch_id_fk); // 0 = All
+
+                          oTable = $('#data-table-transfer-list').DataTable({
+                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                              processing: true,
+                              serverSide: true,
+                              scroller: true,
+                              scrollCollapse: true,
+                              scrollX: true,
+                              ordering: false,
+                              destroy: true,
+                              scrollY: ''+($(window).height()-370)+'px',
+                              iDisplayLength: 25,
+                              ajax: {
+                                url: '{{ route('backend.transfer_branch_code.datatable') }}',
+                                data :{
+                                  branch_id:branch_id_fk,
+                                  approve_status:approve_status,
+                                  startDated:startDated,
+                                  endDate:endDate,
+                                },
+                                // กรณีนี้จะไม่ทำงาน ถ้าเป็น Datatable คิวรี่แบบธรรมดา  $sTable = DB::select();
+                                // จะใช้ได้กับแบบที่เป็น Models => $sTable = \App\Models\Backend\;
+                                // data: function ( d ) {
+                                //   d.myWhere={};
+                                //   d.myWhere['branch_id_fk'] = branch_id_fk ;
+                                //   d.myWhere['approve_status'] = approve_status ;
+                                //   d.myWhere['action_date'] = startDated+":"+endDate ;
+                                //   oData = d;
+                                  // $("#spinner_frame").hide();
+                                // },
+                                 method: 'POST',
+                               },
+                              columns: [
+                                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                                  {data: 'created_at', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                  // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
+                                  {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
+                                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                                    if(d==1){
+                                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                                    }else if(d==2){
+                                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+                                    }else if(d==3){
+                                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+                                    }else{
+                                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+                                    }
+                                  }},
+                                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
+                                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
+                                      return '<center><a href="{{ URL::to('backend/transfer_warehouses/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                                  }},
+                                  // {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                                  //     return d ;
+                                  // }},
+                                  {data: 'status_get', title :'<center> สถานะฝั่งรับโอน </center>', className: 'text-center'},
+                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                              ],
+                              rowCallback: function(nRow, aData, dataIndex){
+
+                                // if(sU!=''&&sD!=''){
+                                //     $('td:last-child', nRow).html('-');
+                                // }else{ 
+
+                                  if(aData['approve_status']==2){
+
+                                    // $('td:eq(6)', nRow).html( '' );
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_warehouses.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary" style="font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);"  class="btn btn-sm btn-secondary " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle" style="color:#bfbfbf;"></i></a>'
+                                    ).addClass('input');
+
+                                  }else{
+
+                                    $('td:last-child', nRow).html(''
+                                      + '<a href="{{ route('backend.transfer_warehouses.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'&list_id='+aData['id']+'" class="btn btn-sm btn-primary " style=" font-size:16px;padding-top:0px !important;padding-bottom:0px !important;" ><i class="mdi mdi-eye-outline align-middle" ></i></a> '
+                                      + '<a href="javascript: void(0);" data-id="'+aData['id']+'" class="btn btn-sm btn-danger cCancel " title="ยกเลิก" ><i class="bx bx-x font-size-18 font-weight-bold align-middle"></i></a>'
+                                    ).addClass('input');
+
+                                  }
+
+                                // }
+                              },
+                              drawCallback : function( settings ) {
+                                  var api = this.api();
+                                  // Output the data for the visible rows to the browser's console
+                                  console.log( api.rows( {page:'current'} ).data() );
+                                   $("#spinner_frame").hide();
+                              }
+                          });
+              
+                      });
+
+
+            });
+
+        }); 
+
+
+           $(document).on('click', '.test_clear_data_transfer_branch', function(event) {
+              location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
+            });
 
 
     </script>
@@ -1513,9 +1738,7 @@
     <?php 
     if(isset($_REQUEST['test_clear_data_transfer_branch'])){
 
-          DB::select("TRUNCATE `db_transfer_choose_branch`;");
           DB::select("TRUNCATE `db_transfer_branch_details`;");
-          DB::select("TRUNCATE `db_transfer_branch_details_log`;");
           DB::select("TRUNCATE `db_transfer_branch_code`;");
           DB::select("TRUNCATE `db_transfer_branch_get`;");
           DB::select("TRUNCATE `db_transfer_branch_get_products`;");
@@ -1555,7 +1778,7 @@
                            $.each(data,function(key,value){
                             layout += '<option value='+value.id+'>'+value.b_name+'</option>';
                            });
-                           $('#from_branch_id_fk').html(layout);
+                           $('#branch_id_fk').html(layout);
                        }
                        $('.myloading').hide();
                       }

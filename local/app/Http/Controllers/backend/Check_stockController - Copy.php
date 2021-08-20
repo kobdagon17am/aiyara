@@ -46,8 +46,6 @@ class Check_stockController extends Controller
 
     }
 
-
-
     public function stock_card(Request $request,$id)
     {
         // dd($request->lot_number);
@@ -89,49 +87,32 @@ class Check_stockController extends Controller
 
     }
 
-
-    public function stock_card_01(Request $request,$id)
+    public function create()
     {
-        // dd($request->lot_number);
-        // dd($request->date);
-        // dd($id);
-        // dd($request);
-          $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE products.id=".$id." AND lang_id=1");
+    }
+    public function store(Request $request)
+    {
+    }
 
-            $lot_number = $request->lot_number;
-            $d_ch = explode(":",$request->date);
+    public function edit($id)
+    {
+    }
 
-         $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' AND lot_expired_date <= '".$d_ch[1]."' ");
+    public function update(Request $request, $id)
+    {
+    }
 
-         // dd($sBalance);
+   public function form($id=NULL)
+    {
+    }
 
-        $sRow = \App\Models\Backend\Check_stock::where('id',$id)->get();
-        // dd($sRow);
-
-        $b = DB::select(" select * from branchs where id=".$sRow[0]->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$sRow[0]->warehouse_id_fk." ");
-        $zone = DB::select(" select * from zone where id=".$sRow[0]->zone_id_fk." ");
-        $shelf = DB::select(" select * from shelf where id=".$sRow[0]->shelf_id_fk." ");
-        $wh = @$b[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$sRow[0]->shelf_floor;
-
-         return View('backend.check_stock.stock_card_01')->with(
-         array(
-           'Products'=>$Products,
-           'lot_number'=>$lot_number,
-           'sBalance'=>$sBalance,
-           'date_s_e'=>$request->date,
-           'wh'=>$wh,
-         ));
-
+    public function destroy($id)
+    {
     }
 
     public function Datatable(Request $req){
+
+      
 
       if(isset($req->id)){
         $sTable = \App\Models\Backend\Check_stock::where('id',$req->id)->orderBy('product_id_fk', 'asc')->orderBy('lot_number', 'asc');
@@ -171,10 +152,9 @@ class Check_stockController extends Controller
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
       })      
-      ->addColumn('stock_card', function($row) {
-        // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
+      ->addColumn('updated_at', function($row) {
+        return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
-      ->escapeColumns('stock_card')
       ->make(true);
     }
 

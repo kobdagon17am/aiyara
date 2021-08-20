@@ -3187,6 +3187,7 @@ if($frontstore[0]->check_press_save==2){
                   updated_at as action_date
                   FROM db_stocks_return
                   WHERE
+                  db_stocks_return.status_cancel=1 AND 
                   product_id_fk='".$request->product_id_fk."' AND
                   lot_number='".$request->lot_number."' AND
                   DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  
@@ -3211,6 +3212,7 @@ if($frontstore[0]->check_press_save==2){
                         updated_at as action_date
                         FROM db_stocks_return
                         WHERE
+                        db_stocks_return.status_cancel=1 AND 
                         product_id_fk='".$request->product_id_fk."' AND
                         lot_number='".$request->lot_number."' AND
                         DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
@@ -3235,6 +3237,7 @@ if($frontstore[0]->check_press_save==2){
                         updated_at as action_date
                         FROM db_stocks_return
                         WHERE
+                        db_stocks_return.status_cancel=1 AND 
                         product_id_fk='".$request->product_id_fk."' AND
                         lot_number='".$request->lot_number."' AND
                         DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
@@ -4554,6 +4557,8 @@ if($frontstore[0]->check_press_save==2){
       // return ($request);
       if($request->ajax()){
       DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
+      $r = DB::select(" select invoice_code from db_orders where id=$request->id ");
+      DB::select(" UPDATE db_stocks_return SET status_cancel=1 where invoice_code='".$r[0]->invoice_code."' ");
       // return response()->json(\App\Models\Alert::Msg('success'));
        // return redirect()->to(url("backend/frontstore"));
        }
@@ -4679,10 +4684,6 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
-  public function truncateStockMovement(){
-        DB::select(" TRUNCATE db_stock_movement; ");
-   }
-
   public function insertStockMovement($data){
         DB::table('db_stock_movement')->insert($data);
    }
@@ -4693,11 +4694,10 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-        // ดึงจากตารางรับเข้า > db_general_receive
         $Data = DB::select("
                 SELECT po_invoice_no as doc_no,db_general_receive.created_at as doc_date,branch_id_fk,
-                db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd
+                db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status,
+                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at
                 FROM
                 db_general_receive 
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
@@ -4706,29 +4706,26 @@ if($frontstore[0]->check_press_save==2){
           foreach ($Data as $key => $value) {
 
                $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
+                  "doc_no" =>  @$value->doc_no,
+                  "doc_date" =>  @$value->doc_date,
+                  "branch_id_fk" =>  @$value->branch_id_fk,
+                  "product_id_fk" =>  @$value->product_id_fk,
+                  "lot_number" =>  @$value->lot_number,
+                  "lot_expired_date" =>  @$value->lot_expired_date,
+                  "amt" =>  @$value->amt,
+                  "in_out" =>  @$value->in_out,
+                  "product_unit_id_fk" =>  @$value->product_unit_id_fk,
+                  "warehouse_id_fk" =>  @$value->warehouse_id_fk,
+                  "zone_id_fk" =>  @$value->zone_id_fk,
+                  "shelf_id_fk" =>  @$value->shelf_id_fk,
+                  "shelf_floor" =>  @$value->shelf_floor,
+                  "status" =>  @$value->status,
+                  "note" =>  @$value->note,
+                  "created_at" =>now());
 
                 AjaxController::insertStockMovement($insertData);
         
             }
-
-            return "(1) รับเข้า : db_general_receive => success";
 
 
       }
@@ -4736,565 +4733,6 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
-
-  public function insertStockMovement_From_db_general_takeout(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจากตารางรับเข้า > db_general_receive
-        $Data = DB::select("
-                SELECT db_general_takeout.id as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
-                db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd
-                FROM
-                db_general_takeout 
-                left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-             return "(2) นำสินค้าออกทั่วไป : db_general_takeout => success";
-
-
-      }
-
-    }
-
-
-
-
-  public function insertStockMovement_From_db_stocks_account(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจากตารางกาปรับยอดคลัง > db_stocks_account_code , db_stocks_account
-        // ปรับปรุงยอด (ลด)
-        $Data = DB::select("
-                SELECT
-                run_code as doc_no,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
-                db_stocks_account.product_id_fk, db_stocks_account.lot_number,lot_expired_date,
-                (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END) as amt,
-                2 as 'in_out',product_unit_id_fk,
-                warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
-                'ปรับปรุงยอด (ลด)' as note, 
-                 db_stocks_account_code.updated_at as dd
-                FROM
-                db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
-                WHERE
-                db_stocks_account.amt_diff<0
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-            // ปรับปรุงยอด (เพิ่ม)
-                $Data = DB::select("
-                        SELECT
-                        run_code as doc_no,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
-                        db_stocks_account.product_id_fk, db_stocks_account.lot_number,lot_expired_date,
-                        db_stocks_account.amt_diff as amt,
-                        1 as 'in_out',product_unit_id_fk,
-                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
-                        'ปรับปรุงยอด (เพิ่ม)' as note, 
-                         db_stocks_account_code.updated_at as dd
-                        FROM
-                        db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
-                        WHERE
-                        db_stocks_account.amt_diff>0
-                  ");
-
-                  foreach ($Data as $key => $value) {
-
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
-
-                        AjaxController::insertStockMovement($insertData);
-                
-                    }
-
-             return "(3) ปรับปรุงยอด (ลด) / ปรับปรุงยอด (เพิ่ม) : db_stocks_account => success";
-
-
-      }
-
-    }
-
-
-
-
-
-  public function insertStockMovement_From_db_products_borrow_code(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
-        $Data = DB::select("
-                 SELECT 
-                borrow_number as doc_no,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
-
-                db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
-                db_products_borrow_details.amt,2 as 'in_out',product_unit_id_fk
-                ,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_products_borrow_code.approve_status as status,
-                 'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd
-                FROM
-                db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-             return "(4) การเบิก/ยืม : db_products_borrow_code => success";
-
-
-      }
-
-    }
-
-
-
-
-
-  public function insertStockMovement_From_db_transfer_warehouses_code(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจาก การโอนภายในสาขา > db_transfer_warehouses_code > db_transfer_warehouses_details
-        $Data = DB::select("
-
-                SELECT
-                db_transfer_warehouses_code.tr_number as doc_no,
-                db_transfer_warehouses_code.updated_at as doc_date,
-                db_transfer_warehouses_code.branch_id_fk,
-                db_transfer_warehouses_details.product_id_fk,
-                db_transfer_warehouses_details.lot_number,
-                db_transfer_warehouses_details.lot_expired_date,
-                db_transfer_warehouses_details.amt,
-                2 as 'in_out',
-                product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
-
-                'โอนภายในสาขา' as note,
-                db_transfer_warehouses_code.updated_at as dd
-                FROM
-                db_transfer_warehouses_details
-                Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
-
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-             return "(5) โอนภายในสาขา : db_transfer_warehouses_code => success";
-
-
-      }
-
-    }
-
-
-
-  public function insertStockMovement_From_db_transfer_branch_code(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจาก การโอนระหว่างสาขา > db_transfer_branch_code > db_transfer_branch_details
-        // โอนออก 
-        $Data = DB::select("
-
-                SELECT
-                db_transfer_branch_code.tr_number as doc_no,
-                db_transfer_branch_code.updated_at as doc_date,
-                db_transfer_branch_code.branch_id_fk,
-                db_transfer_branch_details.product_id_fk,
-                db_transfer_branch_details.lot_number,
-                db_transfer_branch_details.lot_expired_date,
-                db_transfer_branch_details.amt,
-                2 as 'in_out',
-                product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_branch_code.approve_status as status,
-
-                'โอนระหว่างสาขา (จ่ายออกจากการโอน)' as note,
-                db_transfer_branch_code.updated_at as dd
-                FROM
-                db_transfer_branch_details
-                Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
-
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-
-     // รับเข้าจากการโอน 
-        $Data = DB::select("
-                SELECT
-                db_transfer_branch_get.tr_number as doc_no,
-                db_transfer_branch_get.updated_at as doc_date,
-                db_transfer_branch_get.branch_id_fk,
-                db_transfer_branch_get_products_receive.product_id_fk,
-                db_transfer_branch_get_products_receive.lot_number,
-                db_transfer_branch_get_products_receive.lot_expired_date,
-                db_transfer_branch_get_products_receive.amt_get as amt,1 as 'in_out',
-                product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_branch_get.approve_status as status
-                ,(case WHEN db_transfer_branch_get.tr_status_get=6 THEN 'โอนระหว่างสาขา (รับคืนจากการฏิเสธการรับ)'
-                ELSE 'โอนระหว่างสาขา (รับเข้าจากการโอน)' END) as note,
-                db_transfer_branch_get.updated_at as dd
-                FROM
-                db_transfer_branch_get_products_receive
-                Left Join db_transfer_branch_get ON db_transfer_branch_get_products_receive.transfer_branch_get_id_fk = db_transfer_branch_get.id
-
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-             return "(6) โอนระหว่างสาขา (จ่ายออกจากการโอน) / (รับเข้าจากการโอน) : db_transfer_branch_code => success";
-
-
-      }
-
-    }
-
-
-
-
-
-  public function insertStockMovement_From_db_pay_product_receipt_001(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // ดึงจาก จ่ายสินค้าตามใบเสร็จ db_pay_product_receipt_001 
-        $Data = DB::select("
-
-            SELECT 
-            invoice_code  as doc_no,
-            (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
-                db_pay_product_receipt_002.branch_id_fk,
-            product_id_fk,
-            lot_number,
-            lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
-            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-            (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
-            'จ่ายสินค้าตามใบเสร็จ' as note,
-            db_pay_product_receipt_002.updated_at as dd
-            FROM db_pay_product_receipt_002
-
-          ");
-
-        if(count($Data) == 1){
-
-                    $Data1 = DB::select("
-
-                    SELECT 
-                    invoice_code  as doc_no,
-                    (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
-                        db_pay_product_receipt_002.branch_id_fk,
-                    product_id_fk,
-                    lot_number,
-                    lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
-                    warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                    (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
-                    'จ่ายสินค้าตามใบเสร็จ' as note,
-                    db_pay_product_receipt_002.updated_at as dd
-                    FROM db_pay_product_receipt_002
-
-                  ");
-
-
-                  foreach ($Data1 as $key => $value) {
-
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
-
-                        AjaxController::insertStockMovement($insertData);
-
-                }
-
-        }else{
-
-             if(count($Data) > 0 ){
-
-
-                    $Data1 = DB::select("
-
-                    SELECT 
-                    invoice_code  as doc_no,
-                    (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
-                        db_pay_product_receipt_002.branch_id_fk,
-                    product_id_fk,
-                    lot_number,
-                    lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
-                    warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                    (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
-                    concat('จ่ายสินค้าตามใบเสร็จ  ครั้งที่ '  , time_pay) as note,
-                    db_pay_product_receipt_002.updated_at as dd
-                    FROM db_pay_product_receipt_002
-
-                  ");
-
-
-                  foreach ($Data1 as $key => $value) {
-
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
-
-                        AjaxController::insertStockMovement($insertData);
-                }          
-             }          
-
-      }
-
-      return "(7) จ่ายสินค้าตามใบเสร็จ : db_pay_product_receipt_001 => success";
-
-      }
-    }
-
-
-
-
-
-  public function insertStockMovement_From_db_stocks_return(Request $request)
-    {
-
-      if($request->ajax()){
-
-        // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
-        $Data = DB::select("
-                SELECT 
-                db_stocks_return.invoice_code as doc_no,
-                db_stocks_return.updated_at as doc_date,
-                db_stocks_return.branch_id_fk,
-                product_id_fk,
-                lot_number,
-                lot_expired_date,
-                amt,
-                1 as 'in_out',
-                product_unit_id_fk,
-                warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
-                'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
-                updated_at as dd
-                FROM db_stocks_return
-                WHERE
-                db_stocks_return.status_cancel=1
-
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockMovement($insertData);
-        
-            }
-
-             return "(8) รับคืนจากการยกเลิกใบสั่งซื้อ : db_stocks_return => success";
-
-
-      }
-
-    }
 
 
 

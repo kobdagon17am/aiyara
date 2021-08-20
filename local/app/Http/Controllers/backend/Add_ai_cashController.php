@@ -165,7 +165,7 @@ class Add_ai_cashController extends Controller
 
     public function update(Request $request, $id)
     {
-
+// dd($request->all());
       if(isset($request->approved)){
           // dd($request->all());
             // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
@@ -187,7 +187,7 @@ class Add_ai_cashController extends Controller
             $admin_id = \Auth::user()->id;
             $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id,$admin_id,'admin',$request->note,$pay_type_id = '1');
 
-            dd($add_aicash);
+            // dd($add_aicash);
             // if(isset($request->from_approve_aicash)){
             //     return redirect()->to(url("backend/po_approve"));
             // }

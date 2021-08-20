@@ -65,6 +65,25 @@
             <div class="card-body">
               @if( empty(@$sRow) )
               <form id="frm-main" action="{{ route('backend.add_ai_cash.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+
+
+                    <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+                          $frontstore_id_fk = @$_REQUEST['frontstore_id_fk'];
+                       ?>
+                       <div class="text-right">
+
+                <input name="fromAddAiCash" type="hidden" value="{{@$_REQUEST['fromAddAiCash']}}">
+                <input name="frontstore_id_fk" type="hidden" value="{{@$_REQUEST['frontstore_id_fk']}}">
+
+                        <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
+                              <span style="font-size: 14px;">ย้อนกลับหน้าซื้อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-2"></i> 
+                        </a>
+                        <br>
+                        <br>
+                        </div>
+                    <?php } ?>
+
+
               @else
               <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
@@ -81,6 +100,9 @@
                               <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
                               <div class="col-md-8">
 
+                        
+
+
                                   @if(!empty(@$sRow->customer_id_fk))
 
                                     <input type="hidden" name="customer_id_fk" id="customer_id_fk" value="{{@$sRow->customer_id_fk}}" >
@@ -91,13 +113,32 @@
 
                                   @else
 
-                                    <input type="hidden" name="customer_id_fk" id="customer_id_fk" >
-                                    <select id="aicash_choose" class="form-control "  >
-                                      <option value=""  >-Select-</option>
-                                    </select> 
+                                      <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+                                        $customer_id = $_REQUEST['customer_id'];
+                                        $CustomerAicashName = $_REQUEST['member_name_aicash'];
+                                      ?>
+                                            <input type="hidden" name="customer_id_fk" id="customer_id_fk" value="{{@$customer_id}}" >
+                                            <select class="form-control select2-templating " disabled >
+                                               <option value="{{@$customer_id}}" selected >{{@$CustomerAicashName}}</option>
+                                            </select> 
+
+                                             <select id="customer_id_fk_select"  class="form-control" ></select> 
+                                          
+                                      <?php }else{ ?>
+
+                                             <input type="hidden" name="customer_id_fk" id="customer_id_fk" >
+                                              <select id="aicash_choose" class="form-control "  >
+                                                <option value=""  >-Select-</option>
+                                              </select> 
+
+                                               <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select> 
+
+                                      <?php } ?>
+
+                                   
                                   @endif
 
-                                   <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select> 
+                                  
 
                               </div>
                             </div>
@@ -139,7 +180,12 @@
                           <div class="form-group row">
                             <label for="pay_type_id_fk" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
                             <div class="col-md-8">
-                               <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
+                               @IF(@$sRow->approve_status >= 2)
+                                     <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " disabled="" >
+                               @ELSE
+                                   <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
+                               @ENDIF
+                              
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -323,7 +369,11 @@
                        <div class="form-group row" style="text-align: right;">
                             <label for="" class="col-md-4 col-form-label"></label>
                             <div class="col-md-8" >
-                            <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
+                            <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+
+                              $frontstore_id_fk = $_REQUEST['frontstore_id_fk'];
+
+                               ?>
                             <hr>
                                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
                                       <span style="font-size: 14px;">ย้อนกลับไปออกบิลต่อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-1"></i> 
@@ -441,6 +491,10 @@
                 if(fromAddAiCash==1){
 
                     var customer_id = "<?=@$_REQUEST['customer_id']?>";
+                    var frontstore_id_fk = "<?=@$_REQUEST['frontstore_id_fk']?>";
+
+                     $("#customer_id_fk").val(customer_id);
+                     $('#aicash_choose').val(customer_id).select2().trigger("change");
 
                     // alert(customer_id);
 
@@ -448,7 +502,7 @@
                                type:'POST',
                                dataType:'JSON',
                                url: " {{ url('backend/ajaxGetAicash') }} ", 
-                               data: { _token: '{{csrf_token()}}', customer_id:customer_id },
+                               data: { _token: '{{csrf_token()}}', customer_id:customer_id,frontstore_id_fk:frontstore_id_fk },
                                 success:function(data){
                                        console.log(data); 
                                        $.each(data,function(key,value){
@@ -1090,13 +1144,13 @@
                        type:'POST',
                        dataType:'JSON',
                        url: " {{ url('backend/ajaxGetAicash') }} ",
-                       data: { _token: '{{csrf_token()}}',customer_id:customer_id },
+                       data: { _token: '{{csrf_token()}}',customer_id:customer_id,frontstore_id_fk:'0' },
                         success:function(data){
                                console.log(data);
                                // return false;
                                $.each(data,function(key,value){
                                   $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                  localStorage.setItem('aicash_remain', value.ai_cash);
+                                  // localStorage.setItem('aicash_remain', value.ai_cash);
                                 });
 
                               $(".myloading").hide();

@@ -147,18 +147,19 @@
             <div class="card-body">
               @if( empty(@$sRow) )
               <form id="frm-main" action="{{ route('backend.frontstore.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-
               @else
               <form id="frm-main"  action="{{ route('backend.frontstore.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
 
                 <!-- @method('PUT') -->
 
+
                       <input id="frontstore_id_fk" name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
                       <input name="receipt_save_list" type="hidden" value="1">
                       <input name="invoice_code" type="hidden" value="{{@$sRow->invoice_code}}">
                       <input name="customers_id_fk" type="hidden" value="{{@$sRow->customers_id_fk}}">
                       <input name="this_branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
+
 
 
               @endif
@@ -623,50 +624,14 @@
 
                        <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
-
-                          @IF(@$sRow->shipping_special == 1)
-                           <input disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
-                          @ELSE
-
                           <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
-                          @ENDIF
-                          
                         </th>
                       </tr>
 
 
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
-                          @IF(@$sRow->shipping_special == 1)
-
-                           <input disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
-
-                            <div class="col-md-6">
-                             <select disabled id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
-                              @if(@$sBranchs)
-                                @foreach(@$sBranchs AS $r)
-                                  @if(@$r->id==@$sRow->branch_id_fk)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @elseif(@$r->id==$User_branch_id)
-                                  <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @endif
-                                @endforeach
-                              @endif
-                             </select>
-                           </div>
-
-
-                          @ELSE
-                           <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
-
+                          <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
                             <div class="col-md-6">
                              <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
@@ -688,10 +653,6 @@
                               @endif
                              </select>
                            </div>
-
-                          @ENDIF
-                         
-                           
 
                         </th>
                       </tr>
@@ -895,7 +856,7 @@
                       </div>
                       <div class="divTableCell">
 
-                        <input class="form-control f-ainumber-18 input-aireadonly " id="pv_total" name="pv_total" value="{{@$sRow->pv_total>0?number_format(@$sRow->pv_total,2):'0.00'}}" readonly="" />
+                        <input class="form-control f-ainumber-18 input-aireadonly " id="pv_total" name="pv_total" value="{{@$sRow->pv_total>0?number_format(@$sRow->pv_total,2):''}}" readonly="" />
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -1018,32 +979,8 @@
                         @ENDIF
                       </div>
                       <div class="divTableCell">
-<!-- ===================================
-1 เงินโอน
-8 เครดิต + เงินโอน
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-12  Gift Voucher + เงินโอน
-===================================
-3 Ai-Cash
-6 เงินสด + Ai-Cash
-9 เครดิต + Ai-Cash
-=================================== -->
-                        @if(@$sRow->check_press_save==2 && (@$sRow->purchase_type_id_fk==1 || @$sRow->purchase_type_id_fk==8 || @$sRow->purchase_type_id_fk==10 || @$sRow->purchase_type_id_fk==11 || @$sRow->purchase_type_id_fk==12))
 
-                          @php
-                          $disAfterSave = ' disabled '
-                          @endphp
-
-                        @ELSE
-
-                          @php
-                          $disAfterSave = ''
-                          @endphp
-
-                        @ENDIF
-
-                             <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
+                          <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required >
                               <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -1053,9 +990,6 @@
                                       @endforeach
                                     @endif
                               </select>
-
-
-                     
 
                       </div>
                       <div class="divTableCell">
@@ -1121,7 +1055,7 @@
                         <label for="" class="" > ค่าธรรมเนียมบัตร :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly " id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt,2)}}" readonly  />
+                          <input class="form-control f-ainumber-18 input-aireadonly " id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt,2)}}" readonly />
                       </div>
 
                     </div>
@@ -1133,7 +1067,7 @@
                         <label for="" class="" > หักจากบัตรเครดิต :  </label>
                       </div>
                       <div class="divTableCell">
-                       <input {{@$disAfterSave}} class="form-control f-ainumber-18-b input-aireadonly " id="sum_credit_price" name="sum_credit_price" value="{{number_format(@$sRow->sum_credit_price,2)}}" readonly />
+                       <input class="form-control f-ainumber-18-b input-aireadonly " id="sum_credit_price" name="sum_credit_price" value="{{number_format(@$sRow->sum_credit_price,2)}}" readonly />
                       </div>
 
                       <div class="divTableCell">
@@ -1364,9 +1298,9 @@
                         <div class="divTableCell">
 
                             @IF(@$sRow->pay_type_id_fk==8)
-                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input {{@$disAfterSave}} class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -1419,17 +1353,17 @@
 
                       <div class="divTH">
                       
-                        <label  for="" class="btnAddAiCashModal02" > ยอด Ai-Cash คงเหลือ : </label>
+                        <label  for="" class="" > ยอด Ai-Cash คงเหลือ : </label>
                         </div>
 
                         <div class="divTableCell">
-                            <input  class="form-control f-ainumber-18 input-aireadonly  "  value="{{@$Cus_Aicash}}" id="aicash_remain"  readonly="" >
+                            <input  class="form-control f-ainumber-18 input-aireadonly  "  value="{{@$Cus_Aicash}}" readonly="" >
                         </div>
 
                         <div class="divTableCell">
 
                      
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
+                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14  " style="padding: 3px;">ดำเนินการ</button>
 
                         </div>
 
@@ -1551,20 +1485,11 @@
                           <label class="" > </label>
                         </div>
                         <div class="divTableCell">
-<!-- 
-                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
-                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                </button> -->
 
-                             <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;display: none;" disabled >
+                                <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;display: none;" disabled >
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                </button> 
-<?php //echo $sRow->check_press_save ;?>
+                                </button>
 
-                                 <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSaveTransferType " style="float: right;display: none;"  >
-                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                </button> 
- 
 
                         </div>
                       </div>
@@ -1994,7 +1919,7 @@
 
 
 
-<div id="modalAddAiCash" tabindex="-1" role="dialog" aria-labelledby="modalAddAiCash" aria-hidden="true" class="modal fade" data-backdrop="static">
+<div class="modal fade" id="modalAddAiCash" tabindex="-1" role="dialog" aria-labelledby="modalAddAiCash" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -2007,8 +1932,8 @@
 
    <form  id="frmAddAiCash" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
       <!-- <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}"> -->
-      <input name="add_ai_cash" type="text" value="add_ai_cash">
-      <input name="member_id_aicash_modal" id="member_id_aicash_modal" type="text" >
+      <input name="add_ai_cash" type="hidden" value="add_ai_cash">
+      <input name="customer_id" type="hidden" value="{{@$sRow->customers_id_fk}}">
       {{ csrf_field() }}
 
       <div class="modal-body">
@@ -2163,8 +2088,8 @@
                         $("td:eq(4)", nRow).html("คอร์ส");
                       }
 
-                      // // // // console.log(frontstore_id_fk);
-                      // // // console.log(aData['pay_type']);
+                      // // console.log(frontstore_id_fk);
+                      // console.log(aData['pay_type']);
 
                       if(aData['pay_type'] !== "" && aData['pay_type'] !== 0){
 
@@ -2204,10 +2129,10 @@
                var purchase_type_id_fk = $("#purchase_type_id_fk").val();
                var aistockist = $("#aistockist").val();
                var agency = $("#agency").val();
-               // // // console.log(orders_id_fk);
-               // // // console.log(purchase_type_id_fk);
-               // // // console.log(aistockist);
-               // // // console.log(agency);
+               console.log(orders_id_fk);
+               console.log(purchase_type_id_fk);
+               console.log(aistockist);
+               console.log(agency);
 
                          Swal.fire({
                           title: 'ยืนยัน ? การแก้ไขข้อมูล ',
@@ -2216,7 +2141,7 @@
                           confirmButtonColor: '#556ee6',
                           cancelButtonColor: "#f46a6a"
                           }).then(function (result) {
-                            // // // console.log(result);
+                            console.log(result);
                               if (result.value) {
                                  $(".myloading").show();
                                      $.ajax({
@@ -2229,7 +2154,7 @@
                                            agency:agency,
                                         },
                                         success:function(data){
-                                               // // console.log(data);
+                                               console.log(data);
                                                 setTimeout(function(){
                                                     $(".myloading").hide();
                                                     location.reload();
@@ -2263,7 +2188,7 @@
                   },
                   success:function(data)
                   { 
-                    // // // // console.log(data);
+                    // // console.log(data);
                     // return false;
 
                      // 
@@ -2276,10 +2201,10 @@
                              url: " {{ url('backend/ajaxForCheck_press_save') }} ", 
                              data:{ _token: '{{csrf_token()}}',frontstore_id_fk:frontstore_id_fk},
                               success:function(data){
-                                   // // console.log(data); 
+                                   console.log(data); 
                                 },
                               error: function(jqXHR, textStatus, errorThrown) { 
-                                  // // console.log(JSON.stringify(jqXHR));
+                                  console.log(JSON.stringify(jqXHR));
                               }
                           });
 
@@ -2598,17 +2523,17 @@
         $(document).on('change', '#branch_id_fk', function(event) {
             event.preventDefault();
             var id = $(this).val();
-            // localStorage.setItem('branch_id_fk', id);
+            localStorage.setItem('branch_id_fk', id);
         });
 
-        // if(localStorage.getItem('branch_id_fk')){
-        //     $('#branch_id_fk').val(localStorage.getItem('branch_id_fk')).select2();
-        // }
+        if(localStorage.getItem('branch_id_fk')){
+            $('#branch_id_fk').val(localStorage.getItem('branch_id_fk')).select2();
+        }
 
 
-        // if(localStorage.getItem('aicash_remain')){
-        //   $('#aicash_remain').val(localStorage.getItem('aicash_remain'));
-        // }
+        if(localStorage.getItem('aicash_remain')){
+          $('#aicash_remain').val(localStorage.getItem('aicash_remain'));
+        }
 
 
         if($("#aicash_remain").val()>0){
@@ -2625,7 +2550,7 @@
                  url: " {{ url('backend/ajaxGetVoucher') }} ",
                  data:{ _token: '{{csrf_token()}}',id:id },
                   success:function(data){
-                      // // // // console.log(data);
+                      // // console.log(data);
                        $.each(data,function(key,value){
                           // $(".label_money_cash").html("ยอด"+value.pay_type+" :");
                           $("#gift_voucher_cost").val(value.banlance);
@@ -2633,8 +2558,8 @@
                        $("#spinner_frame").hide();
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
-                      // // // // console.log(JSON.stringify(jqXHR));
-                      // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                      // // console.log(JSON.stringify(jqXHR));
+                      // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                       $("#spinner_frame").hide();
                   }
               });
@@ -2651,26 +2576,26 @@
 // รับสินค้าด้วยตัวเอง 
        $(document).on('click', '#addr_00', function(event) {
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
               $("#addr_05").prop("disabled", true);
         });
 // ที่อยู่ตามบัตร ปชช.
        $(document).on('click', '#addr_01', function(event) {
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
               $("#addr_05").prop("disabled", false);
         });
 // ที่อยู่จัดส่งไปรษณีย์
        $(document).on('click', '#addr_02', function(event) {
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
               $("#addr_05").prop("disabled", false);
         });
 
 // ที่อยู่การจัดส่ง (กำหนดเอง)
        $(document).on('click', '#addr_03', function(event) {
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
               if(v==3){
                 $('#modalDelivery').modal('show');
               }
@@ -2679,13 +2604,13 @@
 // จัดส่งพร้อมบิลอื่น
        $(document).on('click', '#addr_04', function(event) { 
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
               $("#addr_05").prop("disabled", true);
         });
 // ส่งแบบพิเศษ / Premium       
        $(document).on('click', '#addr_05', function(event) {
               var v = $(this).val();
-              // // // console.log(v);
+              // console.log(v);
             if (this.checked) {
               $("#addr_04").prop("disabled", true);
               $("#addr_00").prop("disabled", true);
@@ -2698,13 +2623,13 @@
         });
 
 
-        // $('#note').change(function() {
-        //     localStorage.setItem('note', this.value);
-        // });
+        $('#note').change(function() {
+            localStorage.setItem('note', this.value);
+        });
 
-        // if(localStorage.getItem('note')){
-        //   $('#note').val(localStorage.getItem('note'));
-        // }
+        if(localStorage.getItem('note')){
+          $('#note').val(localStorage.getItem('note'));
+        }
 
         $(document).on('click', '.btn-plus', function(e) {
           // event.preventDefault();
@@ -2728,8 +2653,8 @@
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       // // // // console.log(response);
-                       // // // // console.log(frontstore_id_fk);
+                       // // console.log(response);
+                       // // console.log(frontstore_id_fk);
                        // return false;
                         var oTable;
 
@@ -2835,8 +2760,8 @@
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                    // // // // console.log(JSON.stringify(jqXHR));
-                    // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    // // console.log(JSON.stringify(jqXHR));
+                    // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }
             });
 
@@ -2869,7 +2794,7 @@
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       // // // // console.log(response);
+                       // // console.log(response);
 
                         var oTable;
                             $(function() {
@@ -2973,8 +2898,8 @@
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                    // // // // console.log(JSON.stringify(jqXHR));
-                    // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    // // console.log(JSON.stringify(jqXHR));
+                    // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }
             });
 
@@ -3012,8 +2937,8 @@
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                         // // // // console.log(response);
-                         // // // // console.log(frontstore_id_fk);
+                         // // console.log(response);
+                         // // console.log(frontstore_id_fk);
                          // return false;
 
                           var oTable;
@@ -3117,8 +3042,8 @@
 
                   },
                   error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                      // // // // console.log(JSON.stringify(jqXHR));
-                      // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                      // // console.log(JSON.stringify(jqXHR));
+                      // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                   }
               });
 
@@ -3156,8 +3081,8 @@
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                         // // // // console.log(response);
-                         // // // // console.log(frontstore_id_fk);
+                         // // console.log(response);
+                         // // console.log(frontstore_id_fk);
                          // return false;
 
                           var oTable;
@@ -3254,8 +3179,8 @@
 
                   },
                   error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                      // // // // console.log(JSON.stringify(jqXHR));
-                      // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                      // // console.log(JSON.stringify(jqXHR));
+                      // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                   }
               });
 
@@ -3480,7 +3405,7 @@
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
 
-                            // // // console.log(cuase_cannot_buy);
+                            // console.log(cuase_cannot_buy);
 
                            if(cuase_cannot_buy.length>0){
                              $("td:eq(4)", nRow).html(
@@ -3535,7 +3460,7 @@
                url: " {{ url('backend/ajaxCheckCouponUsed') }} ",
                data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                 success:function(msg){
-                     // // // // console.log(msg);
+                     // // console.log(msg);
                      // return false;
 
                      if(msg=="InActive"){
@@ -3555,7 +3480,7 @@
                              url: " {{ url('backend/ajaxGetPromotionCode') }} ",
                              data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                               success:function(data){
-                                   // // // // console.log(data);
+                                   // // console.log(data);
 
                                     $("#promotion_id_fk").val(data);
 
@@ -3602,8 +3527,8 @@
 
                                 },
                               error: function(jqXHR, textStatus, errorThrown) {
-                                  // // // // console.log(JSON.stringify(jqXHR));
-                                  // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  // // console.log(JSON.stringify(jqXHR));
+                                  // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               }
                           });
 
@@ -3613,7 +3538,7 @@
                              url: " {{ url('backend/ajaxGetPromotionName') }} ",
                              data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                               success:function(data){
-                                   // // // // console.log(data);
+                                   // // console.log(data);
                                      $.each(data,function(key,value){
                                       $("#pro_name").val("ชื่อโปร : "+value.pro_name);
                                       $("#limited_amt_person").val(value.limited_amt_person);
@@ -3629,8 +3554,8 @@
 
                                 },
                               error: function(jqXHR, textStatus, errorThrown) {
-                                  // // // // console.log(JSON.stringify(jqXHR));
-                                  // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  // // console.log(JSON.stringify(jqXHR));
+                                  // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                   $("#pro_name").hide();
                               }
                           });
@@ -3702,7 +3627,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxGetProduct') }} ",
                        data:{ _token: '{{csrf_token()}}',product_id_fk:product_id_fk,frontstore_id:frontstore_id },
                         success:function(data){
-                             // // // // console.log(data);
+                             // // console.log(data);
                              // location.reload();
                              $('#show_product').html(data);
                              // $('#modalAddList').modal('show');
@@ -3712,8 +3637,8 @@ $(document).ready(function() {
 
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            // // // // console.log(JSON.stringify(jqXHR));
-                            // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                            // // console.log(JSON.stringify(jqXHR));
+                            // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                             $("#spinner_frame").hide();
                         }
                     });
@@ -3761,7 +3686,7 @@ $(document).ready(function() {
                          // data:{ d:d , _token: '{{csrf_token()}}' },
                           data: $("#frmFrontstoreAddList").serialize(),
                           success: function(response){ // What to do if we succeed
-                                 // // // // console.log(response);
+                                 // // console.log(response);
                                   var oTable;
 
                                     $(function() {
@@ -3854,8 +3779,8 @@ $(document).ready(function() {
 
                               },
                               error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                                  // // // // console.log(JSON.stringify(jqXHR));
-                                  // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                  // // console.log(JSON.stringify(jqXHR));
+                                  // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               }
                           });
 
@@ -4081,7 +4006,7 @@ $(document).ready(function() {
                         },
                         success:function(data)
                         {
-                          // // // // console.log(data);
+                          // // console.log(data);
                          if(data == ''){
                              alert('ไม่พบข้อมูลรหัส ปณ. !!.');
                          }else{
@@ -4099,104 +4024,10 @@ $(document).ready(function() {
 
             $(document).ready(function() {
 
-
-                    var pay_type_id_fk =  $('#pay_type_id_fk').val();
-                                  // กรณีเงินโอน ไปอีกช่องทางนึง
-                    if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
-
-                      // คำนวณ บวกเงินค่าขนส่ง ใส่เข้าไปในยอด โอน หรือ เงินสด บิลเดิมนี้ด้วย 
-                      // $('#pay_type_id_fk').prop('disabled',true);
-                      // $('.class_btnSaveTransferType').removeAttr( "disabled" );
-                      $('.class_btnSaveTransferType').show();
-
-
-                    }
-
-
-
-                     $(document).on('change', '#transfer_price', function(event) {
-
-                              // เปลี่ยนปุ่ม save เฉพาะกิจ
-
-                              $('.class_btnSaveTransferType').removeAttr( "disabled" );
-
-                
-
-                    });
-
-
-                $(document).on('click', '.class_btnSaveTransferType', function(event) {
-
-                    $('.myloading').show();
-
-                  // เปลี่ยนปุ่ม save เฉพาะกิจ
-                      var frontstore_id_fk = "{{@$sRow->id}}";
-                      let transfer_price =  $('#transfer_price').val();
-                      let cash_pay =  $('#cash_pay').val();
-
-                         $.ajax({
-                            url: "{{ url('backend/ajaxCalSaveTransferType') }}",
-                            type: "POST",
-                            data: {_token: '{{csrf_token()}}', 
-                            frontstore_id_fk:frontstore_id_fk,
-                            transfer_price:transfer_price,
-                            cash_pay:cash_pay,
-                          },
-                            success:function(data){
-                                // // console.log(data);
-                                // location.reload();
-                            }
-                        });
-
-                        setTimeout(function(){
-                          // $('#frm-main').attr('action', "{{ url('backend/test1') }}").submit();
-                          location.replace("{{url('backend/frontstore')}}");
-                        },2000);
-
-
-                });
-
-
                 $('.ShippingCalculate').on('click change', function(e) {
 
                     var v = $(this).val();
                     // alert(v);
-
-                    var frontstore_id_fk = "{{@$sRow->id}}";
-
-                    var pay_type_id_fk =  $('#pay_type_id_fk').val()?$('#pay_type_id_fk').val():0;
-
-                    // // console.log(pay_type_id_fk);
-
-                     $('#pay_type_id_fk').val("").select2();
-                     $('#pay_type_id_fk').val("").trigger("change");
-/*
-
-1 เงินโอน
-2 บัตรเครดิต
-3 Ai-Cash
-4 Gift Voucher
-==============================
-5 เงินสด
-6 เงินสด + Ai-Cash
-7 เครดิต + เงินสด
-8 เครดิต + เงินโอน
-9 เครดิต + Ai-Cash
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-===============================
-12  Gift Voucher + เงินโอน
-13  Gift Voucher + บัตรเครดิต
-14  Gift Voucher + Ai-Cash
-15  PromptPay
-16  TrueMoney
-17  Gift Voucher + PromptPay
-18  Gift Voucher + TrueMoney
-
-กรณีเงินโอน ได้แก่ 1,8,10,11,12
-
-*/
-                    // return false;
                     // $(".show_div_credit").hide();
                     // $(".div_fee").hide();
                     // $(".show_div_transfer_price").hide();
@@ -4207,88 +4038,19 @@ $(document).ready(function() {
                     
                     // $('.class_btnSave').addClass(' btnSave ');
                     // $('.class_btnSave').removeAttr( "disabled" );
-                    $('.class_btnSave').hide();
 
                     // var pay_type_id_fk =  $('#pay_type_id_fk').val();
                     // $('#pay_type_id_fk').val(pay_type_id_fk).trigger("change");
 
-                    // กรณีเงินโอน ไปอีกช่องทางนึง
-                    if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
-
-                      // คำนวณ บวกเงินค่าขนส่ง ใส่เข้าไปในยอด โอน หรือ เงินสด บิลเดิมนี้ด้วย 
-
-                      // $('#pay_type_id_fk').prop('disabled',true);
-
-                      // $('.class_btnSaveTransferType').removeAttr( "disabled" );
-                      $('.class_btnSaveTransferType').show();
-
-                      // $("#cash_pay").load(location.href + " #cash_pay");
-                      
-                      location.reload();
-                      
-
-
-                      // let shipping_price =  parseFloat($('#shipping_price').val().replace(",", ""));
-                      // let transfer_price =  parseFloat($('#transfer_price').val().replace(",", ""));
-                      // let cash_pay =  parseFloat($('#cash_pay').val().replace(",", ""));
-
-                      // // // console.log("shipping_price : "+shipping_price);
-                      // // // console.log("transfer_price : "+transfer_price);
-                      // // // console.log("cash_pay : "+cash_pay);
-
-                      // 1 เงินโอน
-                      // 8 เครดิต + เงินโอน
-                      // 9 เครดิต + Ai-Cash
-                      // 10  เงินโอน + เงินสด
-                      // 11  เงินโอน + Ai-Cash
-                      // 12  Gift Voucher + เงินโอน
-
-                      // 10  เงินโอน + เงินสด
-                      // if(pay_type_id_fk==10){
-                      //     let res =  (+cash_pay+shipping_price);
-                      //     $('#cash_pay').val(res.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                      // }
-
-                      // $('#transfer_price').removeAttr( "disabled" );
-                      // $('#transfer_price').val("");
-                      // $('#cash_pay').val("");
-
-                      // $('.class_btnSave').addClass(' btnSave ');
-                    // $('.class_btnSave').removeAttr( "disabled" );
-
-                        //  $.ajax({
-                        //     url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
-                        //     type: "POST",
-                        //     data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
-                        //     success: function () {
-                        //       // $('#pay_type_id_fk').val("").select2();
-                        //       // $('#pay_type_id_fk').val("").trigger("change");
-                        //       location.reload(true);
-                        //     }
-                        // });
-
-                      }else if(pay_type_id_fk==5){
-
-                        $('#pay_type_id_fk').attr("disabled", false);
-                        $('#pay_type_id_fk').val("").select2();
-                        $('#pay_type_id_fk').val("").trigger("change");
-
-
-                    }else{
-
-                           $.ajax({
-                              url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
-                              type: "POST",
-                              data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
-                              success: function (data) {
-                                // // console.log(data);
-                                // $('#pay_type_id_fk').val("").select2();
-                                // $('#pay_type_id_fk').val("").trigger("change");
-                                // location.reload(true);
-                              }
-                          });
-
-                    }
+                    //  $.ajax({
+                    //     url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
+                    //     type: "POST",
+                    //     data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
+                    //     success: function () {
+                    //       $('#pay_type_id_fk').val("").select2();
+                    //       $('#pay_type_id_fk').val("").trigger("change");
+                    //     }
+                    // });
 
 
                     if(v!=5){
@@ -4416,7 +4178,7 @@ $(document).ready(function() {
                              frontstore_id_fk:frontstore_id_fk,
                             },
                           success:function(d){
-                             // // // console.log(d);
+                             // console.log(d);
                             if(d){
                               $.each(d,function(key,value){
 
@@ -4449,15 +4211,14 @@ $(document).ready(function() {
 
              $("input[name=_method]").val('');
              var province_id = $province_id?$province_id:0;
-             var pay_type_id_fk = $("#pay_type_id_fk").val();
 
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
                        url: " {{ url('backend/ajaxShippingCalculate') }} ",
-                       data: $("#frm-main").serialize()+"&province_id="+$province_id+"&pay_type_id_fk="+pay_type_id_fk,
+                       data: $("#frm-main").serialize()+"&province_id="+$province_id,
                         success:function(data){
-                            // // console.log(data);
+                            // console.log(data);
                             // return false;
 
                             $("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
@@ -4505,13 +4266,13 @@ $(document).ready(function() {
 
       $('.transfer_money_datetime').change(function(event) {
         var d = $(this).val();
-        // // // console.log(d);
+        // console.log(d);
         var t = d.substring(d.length - 5);
-        // // // console.log();
+        // console.log();
         var d = d.substring(0, 10);
-        // // // console.log();
+        // console.log();
         var d = d.split("/").reverse().join("-");
-        // // // console.log();
+        // console.log();
         $('#transfer_money_datetime').val(d+' '+t);
       });
 
@@ -4536,13 +4297,13 @@ $(document).ready(function() {
 
       $('.transfer_money_datetime_02').change(function(event) {
         var d = $(this).val();
-        // // // console.log(d);
+        // console.log(d);
         var t = d.substring(d.length - 5);
-        // // // console.log();
+        // console.log();
         var d = d.substring(0, 10);
-        // // // console.log();
+        // console.log();
         var d = d.split("/").reverse().join("-");
-        // // // console.log();
+        // console.log();
         $('#transfer_money_datetime_02').val(d+' '+t);
       });
 
@@ -4566,13 +4327,13 @@ $(document).ready(function() {
 
       $('.transfer_money_datetime_03').change(function(event) {
         var d = $(this).val();
-        // // // console.log(d);
+        // console.log(d);
         var t = d.substring(d.length - 5);
-        // // // console.log();
+        // console.log();
         var d = d.substring(0, 10);
-        // // // console.log();
+        // console.log();
         var d = d.split("/").reverse().join("-");
-        // // // console.log();
+        // console.log();
         $('#transfer_money_datetime_03').val(d+' '+t);
       });
 
@@ -4637,7 +4398,7 @@ $(document).ready(function() {
                                   url: " {{ url('backend/ajaxDelFileSlip') }} ",
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
-                                    // // // console.log(data);
+                                    // console.log(data);
                                     // location.reload();
                                     $(".span_file_slip").hide();
                                     $(".transfer_money_datetime").val('');
@@ -4661,7 +4422,7 @@ $(document).ready(function() {
                                   url: " {{ url('backend/ajaxDelFileSlip_02') }} ",
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
-                                    // // // console.log(data);
+                                    // console.log(data);
                                     // location.reload();
                                     $(".span_file_slip_02").hide();
                                     $(".transfer_money_datetime_02").val('');
@@ -4685,7 +4446,7 @@ $(document).ready(function() {
                                   url: " {{ url('backend/ajaxDelFileSlip_03') }} ",
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
-                                    // // // console.log(data);
+                                    // console.log(data);
                                     // location.reload();
                                     $(".span_file_slip_03").hide();
                                     $(".transfer_money_datetime_03").val('');
@@ -4753,52 +4514,30 @@ $(document).ready(function() {
 
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-
-
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
                         // event.preventDefault();
                         $("#spinner_frame").show();
 
                         var pay_type_id_fk = $("#pay_type_id_fk").val();
-                        localStorage.setItem('pay_type_id_fk', pay_type_id_fk);
-
                         var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}";
                         var gift_voucher_price = $("#gift_voucher_price").val();
+                   
                         var frontstore_id_fk = $("#frontstore_id_fk").val();
-
-                        var user_name = '{{@$user_name}}' ;
-
-                        // // // console.log(pay_type_id_fk);
-                        // // // console.log(frontstore_id_fk);
-                        // // // console.log(user_name);
-
-                        // return false;
 
                         // $("input[name=_method]").val('');
 
-                        // หลังเคลียร์เสร็จ เอา pay_type_id_fk ไปเก็บไว้ก่อน เคลียร์์ค่าอื่นๆ 
-                         $.ajax({
-                              url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
-                              type: "POST",
-                              data: {_token: '{{csrf_token()}}', 
-                              pay_type_id_fk:pay_type_id_fk,
-                              frontstore_id_fk:frontstore_id_fk,
-                              user_name:user_name,
-                            },
-                              success: function (dd) {
-                                // // // console.log(dd);
-                                // return false;
-                                // $('#pay_type_id_fk').val("").select2();
-                                // $('#pay_type_id_fk').val("").trigger("change");
-                              }
-                          });
+                        // //alert(frontstore_id_fk);
+                        // $.ajax({
+                        //    type:'POST',
+                        //    dataType:'JSON',
+                        //    url: " {{ url('backend/ajaxClearCostFrontstore') }} ",
+                        //    data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
+                        //    success:function(data){
+                        //    },
+                        // });
 
-
-                        $('#member_id_aicash_select').toggleSelect2(false); //hide
-                        $('#aicash_choose').show(); 
                      
-                        $("#aicash_remain").val("");
                         $(".show_div_cash_pay").hide();
                         $(".show_div_credit").hide();
                         $(".div_fee").hide();
@@ -4819,39 +4558,6 @@ $(document).ready(function() {
                         $("#transfer_price").attr('required',false);
                         $("#credit_price").attr('disabled', true);
                         $(".div_pay_with_other_bill").hide();
-
-                        // $(".show_div_aicash_price").html('');
-
-/*
-1 เงินโอน
-2 บัตรเครดิต
-3 Ai-Cash
-4 Gift Voucher
-
-//////////////////////////////
-5 เงินสด
-6 เงินสด + Ai-Cash
-7 เครดิต + เงินสด
-8 เครดิต + เงินโอน
-9 เครดิต + Ai-Cash
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-//////////////////////////////
-
-12  Gift Voucher + เงินโอน
-13  Gift Voucher + บัตรเครดิต
-14  Gift Voucher + Ai-Cash
-15  PromptPay
-16  TrueMoney
-17  Gift Voucher + PromptPay
-18  Gift Voucher + TrueMoney
-
- */
-
-                        // check เป็นกรณีๆ ไป จับคู่ แล้ว localStorage เป็นเรื่องๆ ไป
-                        // เอากรณี Ai-cash ก่อน 6,9,11
-                        // 6 เงินสด + Ai-Cash
-                        
 
 
                         if(purchase_type_id_fk==5){
@@ -4878,7 +4584,7 @@ $(document).ready(function() {
                          url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
                          data: $("#frm-main").serialize(),
                           success:function(data){
-                                // // // console.log(data);
+                                // console.log(data);
                                 // return false;
                                 $.each(data,function(key,value){
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
@@ -4897,7 +4603,31 @@ $(document).ready(function() {
                                 });
 
                                 $("input[name=_method]").val('PUT');
+/*
+1 เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
 
+//////////////////////////////
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+//////////////////////////////
+
+12  Gift Voucher + เงินโอน
+13  Gift Voucher + บัตรเครดิต
+14  Gift Voucher + Ai-Cash
+15  PromptPay
+16  TrueMoney
+17  Gift Voucher + PromptPay
+18  Gift Voucher + TrueMoney
+
+ */
                         // 1 เงินสด
                           if(pay_type_id_fk==5){
                               $(".show_div_cash_pay").show();
@@ -5052,8 +4782,8 @@ $(document).ready(function() {
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
-                              // // // // console.log(JSON.stringify(jqXHR));
-                              // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              // // console.log(JSON.stringify(jqXHR));
+                              // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               $("#spinner_frame").hide();
                           }
                       });
@@ -5066,15 +4796,13 @@ $(document).ready(function() {
             });
 
 
-
-
-
       $(document).on('change', '.CalPrice', function(event) {
 
               event.preventDefault();
               $("#spinner_frame").show();
 
               var id = "{{@$sRow->id}}";
+
 
               var pay_type_id_fk = $("#pay_type_id_fk").val();
 
@@ -5093,9 +4821,9 @@ $(document).ready(function() {
                    type:'POST',
                    dataType:'JSON',
                    url: " {{ url('backend/ajaxCalPriceFrontstore02') }} ", 
-                   data: $("#frm-main").serialize()+"&id="+id+"&pay_type_id_fk="+pay_type_id_fk,
+                   data: $("#frm-main").serialize()+"&id="+id,
                     success:function(data){
-                          console.log(data); 
+                          // console.log(data); 
 
                           // return false;
 
@@ -5124,8 +4852,8 @@ $(document).ready(function() {
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) { 
-                              // // // // console.log(JSON.stringify(jqXHR));
-                              // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              // // console.log(JSON.stringify(jqXHR));
+                              // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               $("#spinner_frame").hide();
                           }
                       });
@@ -5152,12 +4880,7 @@ $(document).ready(function() {
                         success:function(data){
                                // // console.log(data);
                                // return false;
-                               fnGetDBfrontstore();
-
-                               $('.class_btnSave').addClass(' btnSave ');
-                                $('.class_btnSave').removeAttr( "disabled" );
-                                $('.class_btnSave').show();
-
+                               //fnGetDBfrontstore();
                               $("input[name=_method]").val('PUT');
                               $("#spinner_frame").hide();
                           },
@@ -5187,7 +4910,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxCalGiftVoucherPrice') }} ",
                        data: $("#frm-main").serialize()+"&this_element="+this_element,
                         success:function(data){
-                               // // // console.log(data);
+                               // console.log(data);
                                // //fnGetDBfrontstore();
                                $.each(data,function(key,value){
                                    $("#gift_voucher_price").val(value.gift_voucher_price);
@@ -5224,7 +4947,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ",
                        data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
                         success:function(data){
-                               // // // console.log(data);
+                               // console.log(data);
 
                                // $.each(data,function(key,value){
                                //    if(value.ai_cash==0){
@@ -5248,28 +4971,28 @@ $(document).ready(function() {
 
 
 
-              // $(document).on('change', '#member_id_aicash_select', function(event) {
-              //     event.preventDefault();
+              $(document).on('change', '#member_id_aicash_select', function(event) {
+                  event.preventDefault();
 
-              //     $("#aicash_price").val('');
-              //     $("#cash_pay").val('');
-              //     $("#aicash_remain").val('');
+                  $("#aicash_price").val('');
+                  $("#cash_pay").val('');
+                  $("#aicash_remain").val('');
 
-              //     var id = $(this).val();
-              //     localStorage.setItem('member_id_aicash', id);
-              // });
+                  var id = $(this).val();
+                  localStorage.setItem('member_id_aicash', id);
+              });
 
-
+              if(localStorage.getItem('member_id_aicash')){
+                  $('#member_id_aicash').val(localStorage.getItem('member_id_aicash'));
+                  $('#member_id_aicash_select').val(localStorage.getItem('member_id_aicash_select')).select2();
+              }
 
 
               $(document).on('change', '#member_id_aicash_select', function(event) {
 
                   $("#spinner_frame").show();
 
-                      var customer_id = $(this).val();
-                      var frontstore_id_fk = $("#frontstore_id_fk").val();
-                      // alert(customer_id);
-                     // // // console.log(customer_id);
+                     var customer_id = $(this).val();
 
                       if(customer_id==''){
                           alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
@@ -5278,37 +5001,33 @@ $(document).ready(function() {
                       }
 
                      $('#member_id_aicash').val($(this).val());
-
-                     // localStorage.setItem('member_id_aicash', member_id_aicash);
-
                      $('#member_name_aicash').val('');
 
                      $.ajax({
                        type:'POST',
                        dataType:'JSON',
                        url: " {{ url('backend/ajaxGetAicash') }} ",
-                       data: { _token: '{{csrf_token()}}',customer_id:customer_id,frontstore_id_fk:frontstore_id_fk },
+                       data: { _token: '{{csrf_token()}}',customer_id:customer_id },
                         success:function(data){
-                               // // console.log(data);
+                               // console.log(data);
                                // return false;
                                $.each(data,function(key,value){
                                   // $("#aicash_remain").val(value.ai_cash);
                                   if(value.ai_cash==0 || value.ai_cash=="0.00" ){
-                                      // alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
+                                      alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
                                       $("#spinner_frame").hide();
                                       $(".btnCalAddAicash").hide();
                                       $(".btnSave").attr("disabled", true);
                                       $("#aicash_price").attr("disabled", true);
                                   }else{
                                      $(".btnCalAddAicash").show();
-                                     $(".btnCalAddAicash").attr("disabled", false);
                                      $(".btnSave").attr("disabled", false);
                                      $("#aicash_price").attr("disabled", false);
                                   }
 
                                   $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
 
-                                  // localStorage.setItem('aicash_remain', value.ai_cash);
+                                  localStorage.setItem('aicash_remain', value.ai_cash);
 
                                 });
 
@@ -5332,28 +5051,14 @@ $(document).ready(function() {
                               // alert(this_element);
                        $("input[name=_method]").val('');
 
-                       // เช็คก่อนว่า จับคุณกับอะไร
-                       var pay_type_id_fk = $("#pay_type_id_fk").val();
-                       var aicash_remain = $("#aicash_remain").val();
-                       var member_id_aicash = $("#member_id_aicash").val();
-                       // console.log(aicash_remain);
-                       // return false;
-
                        $.ajax({
                          type:'POST',
                          dataType:'JSON',
                          url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
-                         data: $("#frm-main").serialize()+"&this_element="+this_element+"&aicash_remain="+aicash_remain+"&member_id_aicash="+member_id_aicash,
+                         data: $("#frm-main").serialize()+"&this_element="+this_element,
                           success:function(data){
                                  // console.log(data);
-                                 // return false;
-
-                                 fnGetDBfrontstore();
-
-                                 $('.class_btnSave').addClass(' btnSave ');
-                                $('.class_btnSave').removeAttr( "disabled" );
-                                $('.class_btnSave').show();
-
+                                 //fnGetDBfrontstore();
                                 $("input[name=_method]").val('PUT');
                                 $("#spinner_frame").hide();
                             },
@@ -5382,9 +5087,6 @@ $(document).ready(function() {
                              frontstore_id_fk:frontstore_id_fk,
                             },
                           success:function(d){
-
-                            // console.log(d);
-                            // return false;
 
                             if(d){
 
@@ -5489,7 +5191,7 @@ $(document).ready(function() {
                           success:function(d){
 
                             if(d){
-                              // // // // console.log(d);
+                              // // console.log(d);
                               /*
 
                               1 เงินสด
@@ -5579,8 +5281,8 @@ $(document).ready(function() {
 
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                // // // // console.log(JSON.stringify(jqXHR));
-                                // // // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                // // console.log(JSON.stringify(jqXHR));
+                                // // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                 $("#spinner_frame").hide();
                             }
                       });
@@ -5625,8 +5327,8 @@ $(document).ready(function() {
                         {data: 'id', title :'', className: 'text-center w2 '},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
-                        // // // // console.log(aData['CourseCheckRegis']);
-                        // // // // console.log(aData['user_name']);
+                        // // console.log(aData['CourseCheckRegis']);
+                        // // console.log(aData['user_name']);
 
 
                         $('td:last-child', nRow).html('');
@@ -5668,9 +5370,9 @@ $(document).ready(function() {
              let amt_apply = $(this).val();
              let id_course = $(this).attr('id_course');
              let user_name = $(this).attr('user_name');
-             // // // console.log(amt_apply);
-             // // // console.log(id_course);
-             // // // console.log(user_name);
+             // console.log(amt_apply);
+             // console.log(id_course);
+             // console.log(user_name);
 
              // $request->id_course,$request->amt_apply ,$request->user_name);
 
@@ -5683,7 +5385,7 @@ $(document).ready(function() {
                    user_name:user_name,
                   },
                   success:function(data){
-                         // // // console.log(data);
+                         // console.log(data);
                          // alert("Test");
                          if(data=="fail"){
                           alert("! ไม่สามารถสมัครคอร์สนี้ได้ เนื่องจากไม่เข้าเงื่อนไขเกณฑ์ที่กำหนด โปรดตรวจสอบอีกครั้ง");
@@ -5708,32 +5410,16 @@ $(document).ready(function() {
         <script>
 
 
-      //   $(document).on('click', '.btnAddAiCashModal02', function(event) {
-            // event.preventDefault();
-
-            // $("#spinner_frame").show();
-            // var member_id_aicash = $("#member_id_aicash").val();
-            // if(member_id_aicash==''){
-            //   alert("! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ");
-            //   $("#spinner_frame").hide();
-            //   return false;
-            // }
-
+         $(document).on('click', '.btnAddAiCashModal', function(event) {
+            event.preventDefault();
             // $('#modalAddAiCash').modal('show');
-            // $("#member_id_aicash_modal").val(member_id_aicash);
-            // $("#spinner_frame").hide();
-
-   //      });
+         });
 
          $(document).on('click', '.btnAddAiCashModal02', function(event) {
             event.preventDefault();
              $("#spinner_frame").show();
             // var customer_id = "{{@$sRow->customers_id_fk}}";
             var customer_id = $("#member_id_aicash").val();
-            var member_name_aicash = $("#member_name_aicash").val();
-            // alert(member_name_aicash);
-            // return false;
-
             if(customer_id==''){
               alert("! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ");
               $("#spinner_frame").hide();
@@ -5742,7 +5428,7 @@ $(document).ready(function() {
             var frontstore_id_fk = $("#frontstore_id_fk").val();
             // alert(customer_id);
             setTimeout(function(){
-              location.replace("{{ url('backend/add_ai_cash/create') }}"+"/?customer_id="+customer_id+"&frontstore_id_fk="+frontstore_id_fk+"&member_name_aicash="+member_name_aicash+"&fromAddAiCash=1");
+              location.replace("{{ url('backend/add_ai_cash/create') }}"+"/?customer_id="+customer_id+"&frontstore_id_fk="+frontstore_id_fk+"&fromAddAiCash=1");
             }, 1000);
          });
 
@@ -5760,7 +5446,7 @@ $(document).ready(function() {
                                 confirmButtonColor: '#556ee6',
                                 cancelButtonColor: "#f46a6a"
                                 }).then(function (result) {
-                                  // // // console.log(result);
+                                  // console.log(result);
                                     if (result.value) {
                                      // $("form").submit();
                                      // $("#spinner_frame").show();
@@ -5800,70 +5486,70 @@ $(document).ready(function() {
                   
          });
 
-         // $(document).ready(function() {
+         $(document).ready(function() {
 
-         //          var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
-         //          // alert(fromAddAiCash);
-         //          if(fromAddAiCash !=="" && fromAddAiCash==1){
+                  var fromAddAiCash = "<?=@$_REQUEST['fromAddAiCash']?>";
+                  // alert(fromAddAiCash);
+                  if(fromAddAiCash !=="" && fromAddAiCash==1){
 
-         //            var frontstore_id_fk = $("#frontstore_id_fk").val();
+                    var frontstore_id_fk = $("#frontstore_id_fk").val();
 
-         //            // var customer_id = $('#member_id_aicash').val();
-         //              if(frontstore_id_fk==''){
-         //                  return false;
-         //              }else{
+                    // var customer_id = $('#member_id_aicash').val();
+                      if(frontstore_id_fk==''){
+                          return false;
+                      }else{
 
-         //                  $.ajax({
-         //                     type:'POST',
-         //                     url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ",
-         //                     data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
-         //                      success:function(data){
-         //                             // // // console.log(data);
-         //                             // alert("Test");
-         //                            $("#spinner_frame").hide();
-         //                        },
+                          $.ajax({
+                             type:'POST',
+                             url: " {{ url('backend/ajaxClearAfterAddAiCash') }} ",
+                             data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
+                              success:function(data){
+                                     // console.log(data);
+                                     alert("Test");
+                                    $("#spinner_frame").hide();
+                                },
 
-         //                  });
+                          });
 
-         //                  $('#pay_type_id_fk').val("").select2();
-         //                  $('#pay_type_id_fk').attr('required', true);
+                          $('#pay_type_id_fk').val("").select2();
+                          $('#pay_type_id_fk').attr('required', true);
 
-         //                  $(".show_div_credit").hide();
-         //                  $(".div_fee").hide();
-         //                  $(".show_div_transfer_price").hide();
-         //                  $(".div_account_bank_id").hide();
-         //                  $(".show_div_aicash_price").hide();
+                          $(".show_div_credit").hide();
+                          $(".div_fee").hide();
+                          $(".show_div_transfer_price").hide();
+                          $(".div_account_bank_id").hide();
+                          $(".show_div_aicash_price").hide();
 
-         //                  $("#cash_price").val('');
-         //                  $("#cash_pay").val('');
-         //                  $("#spinner_frame").hide();
-         //                  $(".show_div_cash_pay").hide();
+                          $("#cash_price").val('');
+                          $("#cash_pay").val('');
+                          $("#spinner_frame").hide();
+                          $(".show_div_cash_pay").hide();
 
-         //                  $('#member_id_aicash').attr('required', false);
-         //                  $('#member_id_aicash').val("");
+                          $('#member_id_aicash').attr('required', false);
+                          $('#member_id_aicash').val("");
 
-         //                  $('#fee').removeAttr('required');
-         //                  $('input[name=account_bank_id]').removeAttr('required');
-         //                  $('.transfer_money_datetime').removeAttr('required');
-         //                  $('#aicash_price').removeAttr('required');
-         //                  $(".show_div_cash_pay").hide();
-         //                  $(".show_div_transfer_price").hide();
-         //                  $(".div_account_bank_id").hide();
+                          $('#fee').removeAttr('required');
+                          $('input[name=account_bank_id]').removeAttr('required');
+                          $('.transfer_money_datetime').removeAttr('required');
+                          $('#aicash_price').removeAttr('required');
+                          $(".show_div_cash_pay").hide();
+                          $(".show_div_transfer_price").hide();
+                          $(".div_account_bank_id").hide();
 
-         //              }
+                      }
 
-         //                  setTimeout(function(){
-         //                      var uri = window.location.toString();
-         //                    if (uri.indexOf("?") > 0) {
-         //                      var clean_uri = uri.substring(0, uri.indexOf("?"));
-         //                      window.history.replaceState({}, document.title, clean_uri);
-         //                    }
-         //                 },3000);
+                          setTimeout(function(){
+                              var uri = window.location.toString();
+                            if (uri.indexOf("?") > 0) {
+                              var clean_uri = uri.substring(0, uri.indexOf("?"));
+                              window.history.replaceState({}, document.title, clean_uri);
+                            }
+                         },3000);
 
-         //            }
+                    }
 
 
-         // });
+         });
 
 
         $(document).ready(function() {
@@ -5925,7 +5611,7 @@ $(document).ready(function() {
     //             "_token": "{{ csrf_token() }}",
     //           },
     //           success:function(data){
-    //              // // // console.log(data);
+    //              // console.log(data);
     //              response( data );
     //              $("#spinner_frame").hide();
 
@@ -5945,59 +5631,33 @@ $(document).ready(function() {
 
 <script type="text/javascript">
   
-         $(document).ready(function(){   
+   $(document).ready(function(){   
 
-            $("#customers_id_fk").select2({
-                minimumInputLength: 3,
-                allowClear: true,
-                placeholder: '-Select-',
-                ajax: {
-                url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
-                type  : 'POST',
-                dataType : 'json',
-                delay  : 250,
-                cache: false,
-                data: function (params) {
-                 return {          
-                  term: params.term  || '',   // search term
-                  page: params.page  || 1
-                 };
-                },
-                processResults: function (data, params) {
-                 return {
-                  results: data
-                 };
-                }
-               }
-              });
+      $("#customers_id_fk,#member_id_aicash_select").select2({
+          minimumInputLength: 3,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
 
-
-            $("#member_id_aicash_select").select2({
-                minimumInputLength: 3,
-                allowClear: true,
-                placeholder: '-Select-',
-                ajax: {
-                url: " {{ url('backend/ajaxGetCustomerForAicashSelect') }} ",
-                type  : 'POST',
-                dataType : 'json',
-                delay  : 250,
-                cache: false,
-                data: function (params) {
-                 return {          
-                  term: params.term  || '',   // search term
-                  page: params.page  || 1
-                 };
-                },
-                processResults: function (data, params) {
-                 return {
-                  results: data
-                 };
-                }
-               }
-              });
-
-
-         });
+   });
 
  
 
@@ -6013,7 +5673,7 @@ $(document).ready(function() {
                              customer_id:customer_id,
                             },
                             success:function(data){
-                                  // // // // console.log(data);
+                                  // // console.log(data);
                                    $.each(data, function( index, value ) {
 
                                             if(value.regis_date_doc==null){
@@ -6046,24 +5706,8 @@ $(document).ready(function() {
         });
 
 
-// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
      $(document).ready(function() {
-
-
-          if(localStorage.getItem('pay_type_id_fk')){
-              $('#pay_type_id_fk').val(localStorage.getItem('pay_type_id_fk')).select2();
-          }
-
-
-          // if(localStorage.getItem('member_id_aicash')){
-              // $('#member_id_aicash').val(localStorage.getItem('member_id_aicash'));
-              // $('#member_id_aicash_select').val(localStorage.getItem('member_id_aicash')).select2();
-          // }
-          // var member_id_aicash = $('#member_id_aicash').val();
-          // console.log(member_id_aicash);
-          
-          // var member_id_aicash_select = $('#member_id_aicash_select').val();
-          // console.log(member_id_aicash_select);
 
           $(document).on('submit', '#frm-main', function(event) {
               $("#spinner_frame").show();
@@ -6080,9 +5724,9 @@ $(document).ready(function() {
 
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var pay_type_id_fk = $("#pay_type_id_fk").val();
-          console.log(pay_type_id_fk);
           var cash_pay = $("#cash_pay").val();
-          // // // console.log(cash_pay);
+          // console.log(pay_type_id_fk);
+          // console.log(cash_pay);
 /*
 1 เงินโอน
 2 บัตรเครดิต
@@ -6107,8 +5751,8 @@ $(document).ready(function() {
 
            var check_press_save = "{{@$sRow->check_press_save}}";
            var check_product_value = "{{@$sRow->product_value}}";
-           // // // console.log(check_press_save);
-           // // // console.log(check_product_value);
+           // console.log(check_press_save);
+           // console.log(check_product_value);
 
           if(check_product_value>0){
               $(".div_gift_set").show();
@@ -6123,10 +5767,10 @@ $(document).ready(function() {
                url: " {{ url('backend/ajaxForCheck_press_save') }} ", 
                data:{ _token: '{{csrf_token()}}',frontstore_id_fk:frontstore_id_fk},
                 success:function(data){
-                     // // // console.log(data); 
+                     // console.log(data); 
                   },
                 error: function(jqXHR, textStatus, errorThrown) { 
-                    // // console.log(JSON.stringify(jqXHR));
+                    console.log(JSON.stringify(jqXHR));
                 }
             });
 
@@ -6134,7 +5778,7 @@ $(document).ready(function() {
          // ถ้าไม่มีการเลือกรูปแบบการชำระเงินแล้ว และเช็คดูว่า เลือกรหัสอะไรไว้ ให้ทำการ onchange pay_type_id_fk อีกครั้ง เพื่อเรียกฟอร์มที่เกี่ยวข้องต่างๆ แสดงให้สอดคล้อง ไม่ให้มันหายไป
           // if ((pay_type_id_fk !== undefined) && (pay_type_id_fk !== null) && (pay_type_id_fk !== "")) {
           if ((pay_type_id_fk == undefined) && (pay_type_id_fk == null) && (pay_type_id_fk == "")) {
-             // // console.log(pay_type_id_fk);
+             console.log(pay_type_id_fk);
              // $("#pay_type_id_fk").select2('destroy').val("").select2();
                $('#pay_type_id_fk').val(pay_type_id_fk).trigger("change");
             // ถ้าไม่ได้เลือก รูปแบบการชำระเงิน แล้ว รีเฟรชเพ็จ
@@ -6155,15 +5799,15 @@ $(document).ready(function() {
           if(check_press_save=='1'){
 
 
-               // $.ajax({
-               //        url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
-               //        type: "POST",
-               //        data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
-               //        success: function () {
-               //          $('#pay_type_id_fk').val("").select2();
-               //          $('#pay_type_id_fk').val("").trigger("change");
-               //        }
-               //    });
+               $.ajax({
+                                                url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
+                                                type: "POST",
+                                                data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
+                                                success: function () {
+                                                  $('#pay_type_id_fk').val("").select2();
+                                                  $('#pay_type_id_fk').val("").trigger("change");
+                                                }
+                                            });
 
 
 
@@ -6262,7 +5906,7 @@ $(document).ready(function() {
                     //   confirmButtonColor: '#556ee6',
                     //   cancelButtonColor: "#f46a6a"
                     //   }).then(function (result) {
-                    //     // // // console.log(result);
+                    //     // console.log(result);
                     //     $("#spinner_frame").show();
                     //       if (result.value) {
                     //        // $("form").submit();
@@ -6298,9 +5942,9 @@ $(document).ready(function() {
 
            }
 
-          // if(check_press_save=='2'){
-          //   $("#pay_type_id_fk").prop('disabled',true);
-          // }
+          if(check_press_save=='2'){
+            $("#pay_type_id_fk").prop('disabled',true);
+          }
 
 
 
@@ -6308,7 +5952,6 @@ $(document).ready(function() {
               // ยอดเงินสดที่ต้องชำระ ต้องไม่เป็น 0 ถ้าเป็น 0 ให้ pay_type_id reset 
                if(cash_pay=="0.00"){
                  $("#pay_type_id_fk").select2('destroy').val("").select2();
-                 $(".show_div_cash_pay ").hide();
                }
             }
 

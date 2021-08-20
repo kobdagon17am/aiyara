@@ -717,7 +717,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }},
             {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
             {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
-            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+            {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
                }else{
@@ -837,20 +837,22 @@ Gift Voucher  <i class="fa fa-gift"></i>
                              $('td:last-child', nRow).html('-');
                           }else{
 
-                            console.log("invoice_code = "+aData['invoice_code']);
+                            // console.log("invoice_code = "+aData['invoice_code']);
 
-                                   if(aData['invoice_code'] !== null){
+                                   // if(aData['invoice_code'] !== null){
                                       
-                                      $('td:last-child', nRow).html(str_V + str_D).addClass('input');
+                                   //    $('td:last-child', nRow).html(str_V + str_D).addClass('input');
 
-                                    }else{
+                                   //  }else{
 
-                                       $('td:last-child', nRow).html(str_U + str_D).addClass('input');
+                                   //     $('td:last-child', nRow).html(str_U + str_D).addClass('input');
 
-                                    }
+                                   //  }
+                                      $('td:last-child', nRow).html( str_U + str_D).addClass('input');
                           }
 // TEST
-                            $('td:last-child', nRow).html(str_U + str_D).addClass('input');
+                            // $('td:last-child', nRow).html(str_V + str_U + str_D).addClass('input');
+                            // $('td:last-child', nRow).html( str_U + str_D).addClass('input');
 
                     }
 

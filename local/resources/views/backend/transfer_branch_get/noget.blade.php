@@ -92,23 +92,11 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                  <label for="tr_status" class="col-md-3 col-form-label">สถานะใบโอน :</label>
-                  <div class="col-md-6">
-                     <select id="tr_status" name="tr_status" class="form-control select2-templating " disabled >
-                      <option value="">-Status-</option>
-                      <option value="0" {{ (0==@$sRow->tr_status)?'selected':'' }}> อยู่ระหว่างการดำเนินการ </option>
-                      <option value="1" {{ (1==@$sRow->tr_status)?'selected':'' }}> ได้รับสินค้าครบแล้ว </option>
-                      <option value="2" {{ (2==@$sRow->tr_status)?'selected':'' }}> ยังค้างรับสินค้า </option>
-                      <option value="3" {{ (3==@$sRow->tr_status)?'selected':'' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
-                    </select>
-                  </div>
-                </div>
 
                 <div class="form-group row">
                   <label for="note" class="col-md-3 col-form-label">หมายเหตุ  :</label>
                   <div class="col-md-6">
-                    <textarea class="form-control" rows="3" id="note" name="note" readonly="" >{{ @$sRow->note }}</textarea>
+                    <textarea class="form-control" rows="3" readonly="" >{{ @$sRow->note2 }}</textarea>
                   </div>
                 </div>
 
@@ -465,7 +453,7 @@
                     scrollY: ''+($(window).height()-370)+'px',
                     iDisplayLength: 5,
                     ajax: {
-                            url: '{{ route('backend.transfer_branch_get_products.datatable') }}',
+                            url: '{{ route('backend.transfer_branch_get_products_back.datatable') }}',
                             data: function ( d ) {
                                     d.Where={};
                                     d.Where['transfer_branch_get_id_fk'] = transfer_branch_get_id_fk ;
@@ -483,22 +471,28 @@
                         {data: 'get_status', title :'สถานะ', className: 'text-center'},
                         {data: 'id', title :'Tools', className: 'text-center w80'}, 
                     ],
-                    rowCallback: function(nRow, aData, dataIndex){
+                       rowCallback: function(nRow, aData, dataIndex){
 
-                      console.log(aData['get_status_2']);
+                      // console.log(aData['get_status_2']);
                       // console.log(aData['product_amt']);
                       // console.log(aData['product_amt_receive']);
                       // console.log(aData['product_details']);
-                      console.log(aData['tr_status']);
+                      // console.log(aData['tr_status']);
 
                       // if(aData['get_status_2']==2){
                       if(aData['product_amt']>aData['product_amt_receive']){
 
                         if(aData['get_status_2']==2){
 
+                          if(aData['tr_status']>2){
+                              $('td:last-child', nRow).html('-');
+                          }else{
+
                           $('td:last-child', nRow).html(''
-                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_sent_name']+'" branch_id_this="'+aData['branch_sent_id']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
+                            + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> รับคืน </a> '
                           ).addClass('input');
+                        }
+
                         }else{
                           $('td:last-child', nRow).html('-');
                         }
@@ -556,7 +550,7 @@
                     rowCallback: function(nRow, aData, dataIndex){
 
 
-                      if(aData['tr_status']>2){
+                      if(aData['tr_status_get']==6){
                               $('td:last-child', nRow).html('-');
                           }else{
 

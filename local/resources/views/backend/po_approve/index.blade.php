@@ -276,11 +276,11 @@ $(function() {
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
+        // scroller: true,
+        // scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
+        // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
           url: '{{ route('backend.po_approve.datatable') }}',
@@ -315,7 +315,8 @@ $(function() {
             {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
             {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
             {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
-            {data: 'transfer_money_datetime', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            // {data: 'transfer_money_datetime', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
             {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
             
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
@@ -325,24 +326,42 @@ $(function() {
               }else{
                   return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
               }
-            }},            
+            }},   
+            {data: 'approval_amount_transfer', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},         
+            {data: 'transfer_amount_approver', title :'<center>ยอด<br>อนุมัติ </center>', className: 'text-center'},         
+           
             {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
                return d!=1?d:'';
             }},
         ],
-        rowCallback: function(nRow, aData, dataIndex){
+   
+         rowCallback: function ( nRow, aData, start, end, display ) {
 
-              $('td:last-child', nRow).html(''
+
+             $('td:last-child', nRow).html(''
               + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               + ''
             ).addClass('input');
 
+             console.log(aData['sum_amount_transfer']);
+               if(aData['remark']==2){
+                    for (var i = 0; i < 9; i++) {
+                          $('td:eq( '+i+')', nRow).html("");
+                    }
+                    if(aData['sum_amount_transfer']){
+                      $('td:eq(9)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
+                      $('td:eq(10)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['sum_amount_transfer']+'</span>');
+                    }
+
+                    $('td:eq(11)', nRow).html("");
+                    $('td:eq(12)', nRow).html("");
+              }
+
+
         }
 
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+
 });
 
 
@@ -587,25 +606,30 @@ $(function() {
                                               },
                                             method: 'POST',
                                           }, 
-                                      columns: [
-                                          {data: 'id', title :'PO-ID', className: 'text-center w50'},
-                                          {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
-                                          {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-                                          {data: 'pv_total', title :'<center>PV </center>', className: 'text-center'},
-                                          {data: 'type', title :'<center>จุดประสงค์การสั่งซื้อ </center>', className: 'text-center'},
-                                          {data: 'date', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-                                          {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                                          {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
-                                            if(d=='true'){
-                                                return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
-                                            }else{
-                                                return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
-                                            }
-                                          }},            
-                                          {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
-                                             return d!=1?d:'';
-                                          }},
-                                      ],
+                                          columns: [
+                                              {data: 'id', title :'ID', className: 'text-center w50'},
+                                              {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+                                              {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+                                              {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+                                              {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+                                              {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
+                                              {data: 'transfer_money_datetime', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
+                                              {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+                                              
+                                              {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+                                              {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
+                                                if(d=='true'){
+                                                    return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
+                                                }else{
+                                                    return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
+                                                }
+                                              }},   
+                                              {data: 'approval_amount_transfer', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},         
+                                              {data: 'transfer_amount_approver', title :'<center>ยอด<br>อนุมัติ </center>', className: 'text-center'},         
+                                              {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
+                                                 return d!=1?d:'';
+                                              }},
+                                          ],
                                       rowCallback: function(nRow, aData, dataIndex){
 
                                         if(sU!=''){

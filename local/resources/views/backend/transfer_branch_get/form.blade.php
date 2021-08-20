@@ -134,9 +134,9 @@
                           </div> -->
 
                 <div class="form-group row">
-                  <label for="note" class="col-md-3 col-form-label">หมายเหตุ :</label>
+                  <label for="note1" class="col-md-3 col-form-label">หมายเหตุ :</label>
                   <div class="col-md-6">
-                    <textarea class="form-control" rows="3" id="note" name="note" readonly="" >{{ @$sRow->note }}</textarea>
+                    <textarea class="form-control" rows="3" id="note1" name="note1" readonly="" >{{ @$sRow->note1 }}</textarea>
                   </div>
                 </div>
 
@@ -251,7 +251,7 @@
               <form id="frm-main" action="{{ route('backend.transfer_branch_get.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
-                <input name="approved" type="hidden" value="1">
+                <input name="approved_getproduct" type="hidden" value="1">
                 {{ csrf_field() }}
 
 
@@ -259,9 +259,8 @@
                     <label class="col-md-4 col-form-label">สถานะการอนุมัติ :</label>
                    
 
-                        <?php //echo $sRow->tr_status; ?>
                         <!-- รับสินค้าครบแล้ว -->
-                        @IF(@$sRow->tr_status==3)
+                        @IF(@$sRow->tr_status_get == 4)
 
                          <div class="col-md-3 mt-2">
                       <div class=" ">
@@ -644,9 +643,9 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                      console.log(aData['tr_status']);
+                      console.log(aData['tr_status_get']);
 
-                          if(aData['tr_status']>2){
+                          if(aData['tr_status_get']>2){
                               $('td:last-child', nRow).html('-');
                           }else{
 

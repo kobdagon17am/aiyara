@@ -138,9 +138,38 @@
                                                     <div class="col-md-12 mt-2 mb-2 text-left">
                                                         <h5 class="font-size-14">วันที่สั่งซื้อในสลิป <span
                                                                 class="text-danger">*</span></h5>
-                                                        <input class="form-control" type="datetime-local" name="slip_date"
-                                                            id="example-datetime-local-input" required>
+                                                        <input class="form-control" type="datetime-local" 
+                                                            required>
                                                     </div>
+
+                                                <div class="col-md-12 mt-2 mb-2 text-left">
+                                                    <div class="row form-group " >
+                                                        <div class="col-md-6 text-left">
+                                                            <h5 class="font-size-14">ยอดชำระ </h5>
+                                                            <input class="form-control" type="text" value="{{@$price}}" >
+                                                        </div>
+                                                        <div class="col-md-6 text-left">
+                                                            <h5 class="font-size-14">ยอดโอน <span
+                                                                class="text-danger">*</span></h5>
+                                                            <input class="form-control" type="text" name="note_fullpayonetime" value="{{@$note_fullpayonetime}}" required="" > 
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                 <div class="col-md-12 mt-2 mb-2 text-left">
+                                                    <div class="row form-group " >
+                                                        <div class="col-md-7 text-left">
+                                                            <h5 class="font-size-14">ยอดอนุมัติ (กรอกยืนยันยอดอีกครั้ง) <span
+                                                                class="text-danger">*</span></h5>
+                                                            </div>
+                                                      <div class="col-md-5 text-left">
+                                                            <input class="form-control" type="text" name="approval_amount_transfer" value="{{@$approval_amount_transfer}}" required="" >
+                                                        </div>
+                                                       
+                                                    </div>
+                                                </div>
+
+
 
                             <div class="col-md-12 mt-2 text-left">
 
@@ -150,8 +179,8 @@
                                                 <input class="form-control" type="text" name=""
                                                     id="" value="{{@$sRow->pay_with_other_bill_note}}" >
                                                 <br>
-                                                <h5 class="font-size-14">ยอดโอน </h5>
-                                                <input class="form-control" type="text" name="" id="" value="{{@$sRow->note_fullpayonetime}}" >
+                                                <h5 class="font-size-14">ชำระร่วม </h5>
+                                                <input class="form-control" type="text" name="" id="" value="{{@$sRow->pay_with_other_bill_note}}" >
                                   @ENDIF                 
 
                             @if(@$slip)

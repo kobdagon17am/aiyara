@@ -138,16 +138,16 @@ class Transfer_corporate_membersController extends Controller
           $e_date = '';
       }
 
-        $sTable = DB::table('db_report_bonus_transfer_corp')
-            ->select('db_report_bonus_transfer_corp.*', 'customers.user_name','customers.business_name','customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
-            ->leftjoin('customers', 'db_report_bonus_transfer_corp.customer_id_fk', '=', 'customers.id')
-            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer_corp.business_location_id_fk')
-            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_corp.business_location_id_fk = '{$rs->business_location}' END"))
-            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_corp.status_transfer = '{$rs->status_search}' END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) = '{$s_date}' else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_corp.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_corp.bonus_transfer_date) = '{$e_date}' else 1 END"))
-            ->orderby('db_report_bonus_transfer_corp.bonus_transfer_date', 'DESC')
+        $sTable = DB::table('db_report_bonus_transfer_member')
+            ->select('db_report_bonus_transfer_member.*', 'customers.user_name','customers.business_name','customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+            ->leftjoin('customers', 'db_report_bonus_transfer_member.customer_id_fk', '=', 'customers.id')
+            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer_member.business_location_id_fk')
+            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_member.business_location_id_fk = '{$rs->business_location}' END"))
+            ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_member.status_transfer = '{$rs->status_search}' END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_member.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_member.bonus_transfer_date) = '{$e_date}' else 1 END"))
+            ->orderby('db_report_bonus_transfer_member.bonus_transfer_date', 'DESC')
             ->get();
 
         $sQuery = \DataTables::of($sTable);

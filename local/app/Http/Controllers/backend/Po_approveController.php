@@ -61,15 +61,32 @@ class Po_approveController extends Controller
         $sRow = \App\Models\Backend\Orders::find($id);
         $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
         // dd($slip);
+
+        $price = 0;
+        if ($sRow->purchase_type_id_fk == 7) {
+            $price = number_format($sRow->sum_price, 2);
+        } else if ($sRow->purchase_type_id_fk == 5) {
+            $total_price = $sRow->total_price - $sRow->gift_voucher_price;
+            $price = number_format($total_price, 2);
+        } else {
+            $price = number_format($sRow->sum_price + $sRow->shipping_price, 2);
+        }
+
+        // dd($price);
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
             'id' => $id,
             'slip' => $slip,
+            'price' => $price,
+            'note_fullpayonetime' => $sRow->note_fullpayonetime,
+            'approval_amount_transfer' => $sRow->approval_amount_transfer>0?$sRow->approval_amount_transfer:"",
         ]);
     }
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
+
         \DB::beginTransaction();
         try {
 
@@ -88,6 +105,9 @@ class Po_approveController extends Controller
                 $date = str_replace("T", " ", $request->slip_date);
                 $sRow->account_bank_name_customer = $request->bank_name;
                 $sRow->transfer_money_datetime = $date;
+                $sRow->note_fullpayonetime = $request->note_fullpayonetime;
+                $sRow->approval_amount_transfer = $request->approval_amount_transfer;
+                $sRow->transfer_amount_approver = \Auth::user()->id;
                 //$sRow->date_action_pv  = now();
             }
 
@@ -163,18 +183,34 @@ class Po_approveController extends Controller
             $con01 = "!=";
         }
 
-        $sTable = DB::table('db_orders')
-            ->select('db_orders.*', 'db_orders.id as orders_id', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
-            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
-            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
-            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
-            ->where('dataset_order_status.lang_id', '=', '1')
-            ->where('dataset_orders_type.lang_id', '=', '1')
-           // ->where('db_orders.purchase_type_id_fk', '!=', '6')
-            ->where('db_orders.order_status_id_fk', '=', '2')
-            ->where('db_orders.id', $con01, $w01)
-            ->orderby('id', 'ASC')
-            ->get();
+        // $sTable = DB::table('db_orders')
+        //     ->select('db_orders.*', 'db_orders.id as orders_id', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
+        //     ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+        //     ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+        //     ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+        //     ->where('dataset_order_status.lang_id', '=', '1')
+        //     ->where('dataset_orders_type.lang_id', '=', '1')
+        //    // ->where('db_orders.purchase_type_id_fk', '!=', '6')
+        //     // ->where('db_orders.order_status_id_fk', '=', '2')
+        //     ->where('db_orders.id', $con01, $w01)
+        //     ->orderby('id', 'ASC')
+        //     ->toSql(); 
+
+        // return $sTable;
+
+       $sTable =     DB::select("
+
+                (select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk` where `dataset_order_status`.`lang_id` = 1 and `dataset_orders_type`.`lang_id` = 1 and `db_orders`.`id` != 0)
+
+                UNION ALL
+
+                (select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,sum(approval_amount_transfer) as sum_approval_amount_transfer,2 as remark from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk` where `dataset_order_status`.`lang_id` = 1 and `dataset_orders_type`.`lang_id` = 1 and `db_orders`.`id` != 0 limit 1
+                )
+
+
+                ");
+
+            
 
         $sQuery = \DataTables::of($sTable);
         return $sQuery
@@ -213,10 +249,39 @@ class Po_approveController extends Controller
               })
              ->escapeColumns('transfer_money_datetime')
 
-             // ->addColumn('pay_with_other_bill_note', function($row) {
-             //    return $row->pay_with_other_bill_note;
-             //  })
-             // ->escapeColumns('pay_with_other_bill_note')
+             ->addColumn('approval_amount_transfer', function($row) {
+                if(@$row->approval_amount_transfer>0){
+                    return number_format($row->approval_amount_transfer,2);
+                }else{
+                    return "-";
+                }
+                
+              })
+             ->escapeColumns('approval_amount_transfer')
+
+             ->addColumn('sum_amount_transfer', function($row) {
+                if(@$row->approval_amount_transfer>0){
+                    return number_format($row->approval_amount_transfer,2);
+                }else{
+                    return "-";
+                }
+                
+              })
+             ->escapeColumns('sum_amount_transfer')
+
+
+             ->addColumn('transfer_amount_approver', function($row) {
+                if(@$row->transfer_amount_approver>0 && @$row->transfer_amount_approver!=""){
+
+                    $sD = DB::select(" select * from ck_users_admin where id=".$row->transfer_amount_approver." ");
+                    return @$sD[0]->name;
+
+                }else{
+                    return "-";
+                }
+                
+              })
+             ->escapeColumns('transfer_amount_approver')
 
             ->addColumn('status', function ($row) {
                 return $row->detail;

@@ -107,7 +107,7 @@ class Check_stock_accountController extends Controller
           }
 
           
-          $inv = DB::select(" SELECT run_code,SUBSTR(run_code,-5) AS REF_NO FROM DB_STOCKS_ACCOUNT ORDER BY run_code DESC LIMIT 1 ");
+          $inv = DB::select(" SELECT run_code,SUBSTR(run_code,-5) AS REF_NO FROM db_stocks_account ORDER BY run_code DESC LIMIT 1 ");
           if($inv){
                 $REF_CODE = 'A'.$branchs[0]->business_location_id_fk.date("ymd");
                 $REF_NO = intval(@$inv[0]->REF_NO);
@@ -484,7 +484,7 @@ class Check_stock_accountController extends Controller
 
 
         // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
-              $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
+              $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM db_stocks_account_code ORDER BY REF_CODE DESC LIMIT 1 ");
               if($REF_CODE){
                   $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
               }else{

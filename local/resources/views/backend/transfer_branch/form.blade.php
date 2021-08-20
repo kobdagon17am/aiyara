@@ -46,24 +46,25 @@
 
 
             <div class="myBorder">
-              <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;">
                   </table>
             </div>
 
             <div class="myBorder">
-              <table id="data-table-to-transfer" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
                  </table>
             </div>
 
 
               @if( empty(@$sRow) )
               <form action="{{ route('backend.transfer_branch.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <input name="id" type="hidden" value="{{@$_REQUEST['list_id']}}">
+               
 
               @else
               <form action="{{ route('backend.transfer_branch.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+                 <input name="id" type="hidden" value="{{@$sRow->id}}">
+                 <input name="approve_transfer_branch_code" type="hidden" value="1">
                 <input name="_method" type="hidden" value="PUT">
-                <input name="id" type="hidden" value="{{@$_REQUEST['list_id']}}">
               @endif
                 {{ csrf_field() }}
 
@@ -116,9 +117,9 @@
                 </div>
 
                         <div class="form-group row">
-                          <label for="note" class="col-md-3 col-form-label required_star_red "><i class="bx bx-play"></i>หมายเหตุ :</label>
+                          <label for="approve_note" class="col-md-3 col-form-label required_star_red "><i class="bx bx-play"></i>หมายเหตุ :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="approve_note" name="approve_note" required minlength="5" >{{ @$sRow->approve_note }}</textarea>
                           </div>
                         </div>
 
@@ -173,14 +174,65 @@
 
 <script type="text/javascript">
 
-    var list_id = "{{@$_REQUEST['list_id']}}";
-    var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-    var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-    var sU = "{{@$sU}}"; //alert(sU);
-    var sD = "{{@$sD}}"; //alert(sD);
-    var oTable;
+
+      var transfer_branch_code_id = "{{@$sRow->id}}";
+
+      var oTable01;
+      $(function() {
+          oTable01 = $('#data-table-01').DataTable({
+          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                "info":     false,
+                "lengthChange": false,
+                "paging":   false,
+                scrollY: ''+($(window).height()-370)+'px',
+                ajax: {
+                      url: '{{ route('backend.transfer_branch_code.datatable') }}',
+                      data :{
+                            id:transfer_branch_code_id,
+                          },
+                        method: 'POST',
+                      },
+              columns: [
+                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                  {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
+                  {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
+                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                    if(d==1){
+                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                    }else if(d==2){
+                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
+                    }else if(d==3){
+                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
+                    }else{
+                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
+                    }
+                  }},
+                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
+                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
+                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
+                      return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                  }},
+                  {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
+                      return d ;
+                  }},
+              ],
+              rowCallback: function(nRow, aData, dataIndex){
+              }
+          });
+       
+      });
+
+
+    var transfer_branch_code_id = "{{@$sRow->id}}";
+    var oTable02;
     $(function() {
-        oTable = $('#data-table-to-transfer').DataTable({
+        oTable02 = $('#data-table-02').DataTable({
         "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
               processing: true,
               serverSide: true,
@@ -192,15 +244,13 @@
               "lengthChange": false,
               "paging":   false,
               scrollY: ''+($(window).height()-370)+'px',
-              ajax: {
-              url: '{{ route('backend.transfer_branch.datatable') }}',
-              data: function ( d ) {
-                  d.Where={};
-                  d.Where['transfer_branch_code_id'] = list_id ;
-                  oData = d;
-                },
-                 method: 'POST',
-               },
+               ajax: {
+                      url: '{{ route('backend.transfer_branch_product.datatable') }}',
+                      data :{
+                            transfer_branch_code_id:transfer_branch_code_id,
+                          },
+                        method: 'POST',
+                      },
              columns: [
                   {data: 'id', title :'ลำดับ', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
@@ -226,65 +276,6 @@
         
       });
 
-       // alert(list_id);
-
-      var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-      var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-      var sU = "{{@$sU}}"; //alert(sU);
-      var sD = "{{@$sD}}"; //alert(sD);
-      var oTable;
-      $(function() {
-          oTable = $('#data-table-transfer-list').DataTable({
-          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
-                ordering: false,
-                "info":     false,
-                "lengthChange": false,
-                "paging":   false,
-                scrollY: ''+($(window).height()-370)+'px',
-                ajax: {
-                      url: '{{ route('backend.transfer_branch_code.datatable') }}',
-                      data :{
-                            id:list_id,
-                          },
-                        method: 'POST',
-                      },
-              columns: [
-                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
-                  {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
-                  // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
-                  {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},
-                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
-                    if(d==1){
-                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
-                    }else if(d==2){
-                        return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
-                    }else if(d==3){
-                        return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">ไม่อนุมัติ</span>';
-                    }else{
-                        return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">รออนุมัติ</span>';
-                    }
-                  }},
-                  {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-                  {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
-                  {data: 'id',   title :'พิมพ์ใบโอน', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/transfer_branch/print_transfer') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
-                      return d ;
-                  }},
-              ],
-              rowCallback: function(nRow, aData, dataIndex){
-              }
-          });
-          $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-            oTable.draw();
-          });
-      });
 
 
 

@@ -24,8 +24,8 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
               
-          <!--     &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-               <i class="bx bx-play"></i> {{@$wh}}  -->
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <i class="bx bx-play"></i> {{@$wh}} 
 
              </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
