@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -83,7 +83,7 @@ class LanguageController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('lang', function($row) {
-          // $sLang = \App\Models\Backend\Language::find($row->lang_id);
+          // $sLang = \App\Models\Backend\language::find($row->lang_id);
           // return $sLang->txt_desc;
       })
       ->addColumn('updated_at', function($row) {

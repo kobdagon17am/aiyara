@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,7 +20,7 @@ class Product_unitController extends Controller
       $sRowGroup = \App\Models\Backend\Product_unit::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\Language::get();
+      $sLanguage = \App\Models\Backend\language::get();
       return View('backend.product_unit.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
@@ -34,7 +34,7 @@ class Product_unitController extends Controller
        $sRowGroup = \App\Models\Backend\Product_unit::find($id);
        $sRow = \App\Models\Backend\Product_unit::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\Language::get();
+       $sLanguage = \App\Models\Backend\language::get();
        return View('backend.product_unit.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

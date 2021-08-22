@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,7 +20,7 @@ class Faq_topicController extends Controller
       $sRowGroup = \App\Models\Backend\Faq_topic::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\Language::get();
+      $sLanguage = \App\Models\Backend\language::get();
       return View('backend.faq_topic.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
@@ -34,7 +34,7 @@ class Faq_topicController extends Controller
        $sRowGroup = \App\Models\Backend\Faq_topic::find($id);
        $sRow = \App\Models\Backend\Faq_topic::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\Language::get();
+       $sLanguage = \App\Models\Backend\language::get();
        return View('backend.faq_topic.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

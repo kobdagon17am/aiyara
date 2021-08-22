@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use DB;
@@ -22,7 +22,7 @@ class Total_thai_cambodiaController extends Controller
         $sRowGroup = \App\Models\Backend\Total_thai_cambodia::orderBy('group_id', 'desc')->limit(1)->get();
         $groupMaxID = $sRowGroup[0]->group_id + 1;
         // dd($groupMaxID);
-        $sLanguage = \App\Models\Backend\Language::get();
+        $sLanguage = \App\Models\Backend\language::get();
 
         $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -41,7 +41,7 @@ class Total_thai_cambodiaController extends Controller
         $sRowGroup = \App\Models\Backend\Total_thai_cambodia::find($id);
         $sRow = \App\Models\Backend\Total_thai_cambodia::where('group_id', $sRowGroup->group_id)->get();
         // dd($sRow[0]->status);
-        $sLanguage = \App\Models\Backend\Language::get();
+        $sLanguage = \App\Models\Backend\language::get();
         return View('backend.total_thai_cambodia.form')->with(array('sRow' => $sRow, 'id' => $id, 'sLanguage' => $sLanguage));
     }
 

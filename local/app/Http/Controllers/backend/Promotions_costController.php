@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -52,7 +52,7 @@ class Promotions_costController extends Controller
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sCountry = \App\Models\Backend\Country::get();
        $sCurrency = \App\Models\Backend\Currency::get();
-       $sLang = \App\Models\Backend\Language::get();
+       $sLang = \App\Models\Backend\language::get();
        $sRow = \App\Models\Backend\Promotions_cost::find($id);
        return View('backend.promotions_cost.form')->with(array(
         'sRow'=>$sRow ,'sRowNew'=>$sRowNew , 'id'=>$id, 'sLang'=>$sLang ,'sBusiness_location'=>$sBusiness_location,'sCountry'=>$sCountry,'sCurrency'=>$sCurrency,
