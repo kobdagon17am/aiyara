@@ -277,8 +277,8 @@ class CancelOrderController extends Controller
                         for ($i = 1; $i <= $j; $i++) {
 
                             $data_user = DB::table('customers')
-                                ->where('id', '=', $customer_id)
-                                ->first();
+                            ->where('user_name', '=', $customer_id)
+                            ->first();
 
                             $upline_type = $data_user->line_type;
                             $upline_id = $data_user->upline_id;
@@ -289,7 +289,7 @@ class CancelOrderController extends Controller
 
                                     $add_pv = $data_user->pv_a - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_a' => $add_pv]);
 
                                     $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
@@ -297,7 +297,7 @@ class CancelOrderController extends Controller
                                 } elseif ($last_upline_type == 'B') {
                                     $add_pv = $data_user->pv_b - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_b' => $add_pv]);
 
                                     $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
@@ -305,7 +305,7 @@ class CancelOrderController extends Controller
                                 } elseif ($last_upline_type == 'C') {
                                     $add_pv = $data_user->pv_c - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_c' => $add_pv]);
 
                                     $resule = ['status' => 'success', 'message' => 'Pv Remove upline Success'];
@@ -320,7 +320,7 @@ class CancelOrderController extends Controller
 
                                     $add_pv = $data_user->pv_a - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_a' => $add_pv]);
 
                                     $customer_id = $upline_id;
@@ -329,7 +329,7 @@ class CancelOrderController extends Controller
                                 } elseif ($last_upline_type == 'B') {
                                     $add_pv = $data_user->pv_b - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_b' => $add_pv]);
 
                                     $customer_id = $upline_id;
@@ -338,7 +338,7 @@ class CancelOrderController extends Controller
                                 } elseif ($last_upline_type == 'C') {
                                     $add_pv = $data_user->pv_c - $pv_total;
                                     $update_pv = DB::table('customers')
-                                        ->where('id', $customer_id)
+                                        ->where('user_name', '=', $customer_id)
                                         ->update(['pv_c' => $add_pv]);
 
                                     $customer_id = $upline_id;
