@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class Commission_transfer_afController extends Controller
       $sRowGroup = \App\Models\Backend\Commission_transfer_af::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\Language::get();
+      $sLanguage = \App\Models\Backend\language::get();
 
       $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -42,7 +42,7 @@ class Commission_transfer_afController extends Controller
        $sRowGroup = \App\Models\Backend\Commission_transfer_af::find($id);
        $sRow = \App\Models\Backend\Commission_transfer_af::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\Language::get();
+       $sLanguage = \App\Models\Backend\language::get();
        return View('backend.commission_transfer_af.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

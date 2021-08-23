@@ -20,7 +20,7 @@ class CategoriesController extends Controller
       $sRowCat = \App\Models\Backend\Categories::orderBy('category_id','desc')->limit(1)->get();
       $catMax = $sRowCat[0]->category_id+1;
       // dd($catMax);
-      $sLanguage = \App\Models\Backend\Language::get();
+      $sLanguage = \App\Models\Backend\language::get();
       return View('backend.categories.form')->with(array('sLanguage'=>$sLanguage,'catMax'=>$catMax ) );
     }
 
@@ -34,7 +34,7 @@ class CategoriesController extends Controller
        $sRowCat = \App\Models\Backend\Categories::find($id);
        $sRow = \App\Models\Backend\Categories::where('category_id', $sRowCat->category_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\Language::get();
+       $sLanguage = \App\Models\Backend\language::get();
        return View('backend.categories.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

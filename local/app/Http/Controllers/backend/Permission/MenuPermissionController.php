@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Permission;
+namespace App\Http\Controllers\backend\Permission;
 
 use App\Model\MenuModel;
 use Illuminate\Http\Request;

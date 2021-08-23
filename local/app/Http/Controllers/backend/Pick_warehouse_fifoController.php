@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -125,7 +125,9 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
 
           $TABLES = DB::select(" SHOW TABLES ");
-          // return $TABLES;
+          return $TABLES;
+          dd();
+          
           $array_TABLES = [];
           foreach($TABLES as $t){
             // print_r($t->Tables_in_aiyara_db);

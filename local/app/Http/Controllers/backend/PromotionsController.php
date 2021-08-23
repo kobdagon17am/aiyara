@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,7 +29,7 @@ class PromotionsController extends Controller
           $sProduct_unit = \App\Models\Backend\Product_unit::get();
           $sBusiness_location = \App\Models\Backend\Business_location::get();
           $sProduct_group = \App\Models\Backend\Product_group::get();
-          $sLang = \App\Models\Backend\Language::get();
+          $sLang = \App\Models\Backend\language::get();
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
       return View('backend.promotions.form')->with(
         array(
@@ -66,7 +66,7 @@ class PromotionsController extends Controller
           $sProduct_unit = \App\Models\Backend\Product_unit::get();
           $sBusiness_location = \App\Models\Backend\Business_location::get();
           $sProduct_group = \App\Models\Backend\Product_group::get();
-          $sLang = \App\Models\Backend\Language::get();
+          $sLang = \App\Models\Backend\language::get();
           $sRow = \App\Models\Backend\Promotions::find($id);
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
        return View('backend.promotions.form')->with(
@@ -175,7 +175,7 @@ class PromotionsController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('lang', function($row) {
-          // $sLang = \App\Models\Backend\Language::find($row->lang_id);
+          // $sLang = \App\Models\Backend\language::find($row->lang_id);
           // return $sLang->txt_desc;
       })
       ->addColumn('updated_at', function($row) {

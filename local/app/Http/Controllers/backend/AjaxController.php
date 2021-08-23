@@ -4680,11 +4680,12 @@ if($frontstore[0]->check_press_save==2){
 
 
   public function truncateStockMovement(){
+        DB::select(" TRUNCATE db_stock_movement_tmp; ");
         DB::select(" TRUNCATE db_stock_movement; ");
    }
 
   public function insertStockMovement($data){
-        DB::table('db_stock_movement')->insert($data);
+        DB::table('db_stock_movement_tmp')->insert($data);
    }
 
 
@@ -5295,6 +5296,158 @@ if($frontstore[0]->check_press_save==2){
       }
 
     }
+
+
+
+
+  public function insertStockMovement_From_db_pay_requisition_001(Request $request)
+    {
+
+      if($request->ajax()){
+
+        // ดึงจาก จ่ายสินค้าตามใบเบิก db_pay_requisition_001 
+        $Data = DB::select("
+
+            SELECT 
+            id as doc_no,
+            updated_at as doc_date,
+            db_pay_requisition_002.branch_id_fk,
+            product_id_fk,
+            db_pay_requisition_002.lot_number,
+            db_pay_requisition_002.lot_expired_date,
+            amt_get as amt,
+            2 as 'in_out',
+            db_pay_requisition_002.product_unit_id_fk,
+            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+            (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+            concat('จ่ายสินค้าตามใบเบิก') as note,
+            (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+            FROM db_pay_requisition_002
+
+          ");
+
+        if(count($Data) == 1){
+
+                    $Data1 = DB::select("
+
+                        SELECT 
+                        id as doc_no,
+                        updated_at as doc_date,
+                        db_pay_requisition_002.branch_id_fk,
+                        product_id_fk,
+                        db_pay_requisition_002.lot_number,
+                        db_pay_requisition_002.lot_expired_date,
+                        amt_get as amt,
+                        2 as 'in_out',
+                        db_pay_requisition_002.product_unit_id_fk,
+                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+                        concat('จ่ายสินค้าตามใบเบิก') as note,
+                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+                        FROM db_pay_requisition_002
+
+                  ");
+
+
+                  foreach ($Data1 as $key => $value) {
+
+                       $insertData = array(
+                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                          "amt" =>  @$value->amt?$value->amt:0,
+                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                          "status" =>  @$value->status?$value->status:0,
+                          "note" =>  @$value->note?$value->note:NULL,
+                          "created_at" =>@$value->dd?$value->dd:NULL
+                      );
+
+                        AjaxController::insertStockMovement($insertData);
+
+                }
+
+        }else{
+
+             if(count($Data) > 0 ){
+
+
+                    $Data1 = DB::select("
+
+
+                        SELECT 
+                        id as doc_no,
+                        updated_at as doc_date,
+                        db_pay_requisition_002.branch_id_fk,
+                        product_id_fk,
+                        db_pay_requisition_002.lot_number,
+                        db_pay_requisition_002.lot_expired_date,
+                        amt_get as amt,
+                        2 as 'in_out',
+                        db_pay_requisition_002.product_unit_id_fk,
+                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+                        concat('จ่ายสินค้าตามใบเบิก ครั้งที่ ', time_pay) as note,
+                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+                        FROM db_pay_requisition_002
+
+                  ");
+
+
+                  foreach ($Data1 as $key => $value) {
+
+                       $insertData = array(
+                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                          "amt" =>  @$value->amt?$value->amt:0,
+                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                          "status" =>  @$value->status?$value->status:0,
+                          "note" =>  @$value->note?$value->note:NULL,
+                          "created_at" =>@$value->dd?$value->dd:NULL
+                      );
+
+                        AjaxController::insertStockMovement($insertData);
+                }          
+             }          
+
+      }
+
+      return "(9) จ่ายสินค้าตามใบเบิก : db_pay_requisition_001 => success";
+
+      }
+    }
+
+
+
+
+  public function insertStockMovement_Final(Request $request)
+    {
+
+      if($request->ajax()){
+
+         DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+         return "(10) insertStockMovement_Final => success";
+
+      }
+    }
+
+
 
 
 
