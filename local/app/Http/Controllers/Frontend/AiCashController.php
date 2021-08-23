@@ -62,6 +62,9 @@ class AiCashController extends Controller
             DB::BeginTransaction();
             $price = str_replace(',', '', $rs->price);
             $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+            if(empty($business_location_id)){
+              $business_location_id = 1;
+            }
             $customer_id = Auth::guard('c_user')->user()->id;
             $code_order = RunNumberPayment::run_number_aicash($business_location_id);
             try {
@@ -100,6 +103,9 @@ class AiCashController extends Controller
     {
         $customer_id = Auth::guard('c_user')->user()->id;
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
 
         $ai_cash = DB::table('db_add_ai_cash')
             ->select('db_add_ai_cash.*', 'dataset_pay_type.detail as pay_type', 'dataset_order_status.detail as order_status', 'dataset_order_status.css_class')
@@ -187,6 +193,9 @@ class AiCashController extends Controller
     {
         $customer_id = Auth::guard('c_user')->user()->id;
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
 
         $movement_ai_cash = DB::table('db_movement_ai_cash')
             ->select('db_movement_ai_cash.*', 'dataset_pay_type.detail as pay_type',
@@ -347,6 +356,9 @@ class AiCashController extends Controller
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
 
         $ai_cash = DB::table('db_add_ai_cash')
             ->select('db_add_ai_cash.*', 'dataset_pay_type.detail as pay_type', 'dataset_order_status.detail as order_status', 'dataset_order_status.css_class')

@@ -14,6 +14,10 @@ class PaymentAiCash extends Model
       DB::BeginTransaction();
       $price = str_replace(',', '', $rs->price);
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      ห
+      if(empty($business_location_id)){
+        $business_location_id = 1;
+      }
       $customer_id = Auth::guard('c_user')->user()->id;
       $code_order = RunNumberPayment::run_number_aicash($business_location_id);
 

@@ -32,6 +32,9 @@ class CartPaymentController extends Controller
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $location = Location::location($business_location_id, $business_location_id);
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
@@ -64,14 +67,20 @@ class CartPaymentController extends Controller
             ->where('customer_id', '=', $customer_id)
             ->first();
 
-        $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id, $province_data->province_id_fk, $price);
+        if(@$province_data->province_id_fk){
+          $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id, $province_data->province_id_fk, $price);
+          $shipping = $data_shipping['data']->shipping_cost;
+        }else{
+          $shipping = 0;
+        }
+
 
         $vat = DB::table('dataset_vat')
             ->where('business_location_id_fk', '=', $business_location_id)
             ->first();
 
         $vat = $vat->vat;
-        $shipping = $data_shipping['data']->shipping_cost;
+
 
         //vatใน 7%
         $p_vat = $price * ($vat / (100 + $vat));
@@ -134,6 +143,7 @@ class CartPaymentController extends Controller
             ->where('customer_id', '=', $customer_id)
             ->first();
 
+
         $address_card = DB::table('customers_address_card')
             ->select('customers_address_card.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as card_provinces_name', 'dataset_amphures.name_th as card_amphures_name', 'dataset_amphures.id as card_amphures_id', 'dataset_districts.id as card_district_id', 'dataset_districts.name_th as card_district_name')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_address_card.card_province_id_fk')
@@ -141,6 +151,7 @@ class CartPaymentController extends Controller
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_address_card.card_district_id_fk')
             ->where('customer_id', '=', $customer_id)
             ->first();
+
 
         $provinces = DB::table('dataset_provinces')
             ->select('*')
@@ -153,6 +164,9 @@ class CartPaymentController extends Controller
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $location = Location::location($business_location_id, $business_location_id);
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
@@ -267,6 +281,9 @@ class CartPaymentController extends Controller
 
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $customer_id = Auth::guard('c_user')->user()->id;
 
         $code_order = RunNumberPayment::run_number_order($business_location_id);
@@ -431,6 +448,9 @@ class CartPaymentController extends Controller
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
 
         $order_data = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')

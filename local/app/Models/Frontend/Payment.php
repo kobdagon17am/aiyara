@@ -19,6 +19,9 @@ class Payment extends Model
 
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $customer_id = Auth::guard('c_user')->user()->id;
         // เลขใบเสร็จ
         // ปีเดือน[รันเลข]
@@ -66,6 +69,9 @@ class Payment extends Model
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $customer_id = Auth::guard('c_user')->user()->id;
 
         $db_orders = DB::table('db_orders')
@@ -81,6 +87,9 @@ class Payment extends Model
     {
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $customer_id = Auth::guard('c_user')->user()->id;
         DB::BeginTransaction();
         try {

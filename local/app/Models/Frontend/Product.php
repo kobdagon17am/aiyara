@@ -381,6 +381,9 @@ class Product extends Model
     public static function product_list_coupon($promotion_id, $type, $category_id)
     { //$promotion_id,$types
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $promotions = DB::table('promotions')
             ->select('promotions.*', 'promotions_images.img_url', 'promotions_images.promotion_img', 'promotions_cost.selling_price', 'promotions_cost.pv')
             ->leftjoin('promotions_images', 'promotions_images.promotion_id_fk', '=', 'promotions.id')

@@ -185,6 +185,9 @@ class HistoryController extends Controller
     public function datatable(Request $request)
     {
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
         $orders = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class',
                 'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
@@ -502,6 +505,9 @@ class HistoryController extends Controller
 
 
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if(empty($business_location_id)){
+        $business_location_id = 1;
+      }
       $order_data = DB::table('db_orders')
         ->select('db_orders.*','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
         ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
