@@ -80,6 +80,7 @@ class Check_stockController extends Controller
 
          return View('backend.check_stock.stock_card')->with(
          array(
+           'sRow'=>$sRow,
            'Products'=>$Products,
            'lot_number'=>$lot_number,
            'sBalance'=>$sBalance,
@@ -122,6 +123,7 @@ class Check_stockController extends Controller
 
          return View('backend.check_stock.stock_card_01')->with(
          array(
+           'sRow'=>$sRow,
            'Products'=>$Products,
            'lot_number'=>$lot_number,
            'sBalance'=>$sBalance,

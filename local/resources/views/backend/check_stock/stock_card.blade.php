@@ -80,7 +80,8 @@
 
                     <div class="col-md-4">
                       <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
-                        ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
+                        <!-- number_format(@$sBalance[0]->amt,0) -->
+                        ยอดคงเหลือ = 
                       </div>
                     </div>
 
@@ -137,7 +138,9 @@ $(document).ready(function() {
               if(end_date==''){
                 $('#end_date').focus();
                 return false;
-              }        
+              }     
+
+              // alert(start_date);   
 
               $(".myloading").show();
 
@@ -156,6 +159,7 @@ $(document).ready(function() {
                           success:function(data)
                           { 
                             console.log(data);
+                            // return false;
                                 /* datatables */
                                   var oTable;
                                   $(function() {
@@ -209,9 +213,9 @@ $(document).ready(function() {
                                         ],
                                           columns: [
                                               {data: 'id', title :'Row(s)', className: 'text-center w50'},
-                                              {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
+                                              {data: 'doc_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
                                               {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
-                                              {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
+                                              {data: 'doc_no', title :'<center>Reference code  </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
                                               {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
@@ -220,9 +224,10 @@ $(document).ready(function() {
                                               {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
                                                     return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
                                               }},
-                                              {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
-                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
-                                              }},
+                                              // {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
+                                              //       return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              // }},
+                                              {data: 'remain', title :'<center>ยอดคงเหลือ</center>', className: 'text-center'},
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
                                             var info = $(this).DataTable().page.info();
@@ -245,7 +250,7 @@ $(document).ready(function() {
                                                 $(".btnPrint").show();
                                             }
 
-                                            $(".amt_remain").load(location.href + " .amt_remain");
+                                            // $(".amt_remain").load(location.href + " .amt_remain");
 
 
                                           }

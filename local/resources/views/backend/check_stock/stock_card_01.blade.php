@@ -24,8 +24,8 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
               
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <i class="bx bx-play"></i> {{@$wh}} 
+               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+               <i class="bx bx-play"></i> {{@$wh}}  
 
              </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
@@ -80,7 +80,8 @@
 
                     <div class="col-md-4">
                       <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
-                        ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
+                        <!-- number_format(@$sBalance[0]->amt,0) -->
+                        ยอดคงเหลือ = 
                       </div>
                     </div>
 
@@ -126,6 +127,11 @@ $(document).ready(function() {
            
               var product_id_fk =  "{{@$Products[0]->product_id}}";
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              var warehouse_id_fk =  "{{@$sRow[0]->warehouse_id_fk}}"; //alert(branch_id_fk);
+              var zone_id_fk =  "{{@$sRow[0]->zone_id_fk}}"; //alert(branch_id_fk);
+              var shelf_id_fk =  "{{@$sRow[0]->shelf_id_fk}}"; //alert(branch_id_fk);
+              var shelf_floor =  "{{@$sRow[0]->shelf_floor}}"; //alert(branch_id_fk);
 
               var start_date =  $('#start_date').val();
               if(start_date==''){
@@ -151,11 +157,17 @@ $(document).ready(function() {
                             lot_number:lot_number,
                             start_date:start_date,
                             end_date:end_date,
+                            branch_id_fk:branch_id_fk,
+                            warehouse_id_fk:warehouse_id_fk,
+                            zone_id_fk:zone_id_fk,
+                            shelf_id_fk:shelf_id_fk,
+                            shelf_floor:shelf_floor,
                             "_token": "{{ csrf_token() }}", 
                           },
                           success:function(data)
                           { 
                             console.log(data);
+                            // return false;
                                 /* datatables */
                                   var oTable;
                                   $(function() {
@@ -175,7 +187,7 @@ $(document).ready(function() {
                                           paging: false,
                                           iDisplayLength: -1,
                                           ajax: {
-                                            url: '{{ route('backend.stock_card.datatable') }}',
+                                            url: '{{ route('backend.stock_card_01.datatable') }}',
                                             data: function ( d ) {
                                               d.Where={};
                                               $('.myWhere').each(function() {
@@ -209,9 +221,9 @@ $(document).ready(function() {
                                         ],
                                           columns: [
                                               {data: 'id', title :'Row(s)', className: 'text-center w50'},
-                                              {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
+                                              {data: 'doc_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
                                               {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
-                                              {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
+                                              {data: 'doc_no', title :'<center>Reference code  </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
                                               {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
@@ -220,9 +232,10 @@ $(document).ready(function() {
                                               {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
                                                     return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
                                               }},
-                                              {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
-                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
-                                              }},
+                                              // {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
+                                              //       return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              // }},
+                                              {data: 'remain', title :'<center>ยอดคงเหลือ</center>', className: 'text-center'},
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
                                             var info = $(this).DataTable().page.info();
@@ -245,7 +258,7 @@ $(document).ready(function() {
                                                 $(".btnPrint").show();
                                             }
 
-                                            $(".amt_remain").load(location.href + " .amt_remain");
+                                            // $(".amt_remain").load(location.href + " .amt_remain");
 
 
                                           }

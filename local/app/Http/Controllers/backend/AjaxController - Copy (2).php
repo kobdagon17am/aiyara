@@ -2809,6 +2809,647 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
+    public function ajaxProcessStockcard(Request $request)
+    {
+        // return  $request->product_id_fk ;
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
+        // dd();
+
+        DB::select(" TRUNCATE db_stock_card; ");
+        DB::select(" TRUNCATE db_stock_card_tmp; ");
+
+        if($request->ajax()){
+              // DB::select(" TRUNCATE db_stock_card; ");
+              DB::select(" INSERT INTO db_stock_card_tmp (details) VALUES ('ยอดคงเหลือยกมา') ") ;
+
+           if($request->product_id_fk){
+          // ดึงจากตารางรับเข้า > db_general_receive
+               $value=DB::table('db_general_receive')
+                ->where('product_id_fk', $request->product_id_fk)
+                ->where('lot_number', $request->lot_number)
+                ->where('approve_status', '1')
+                ->whereBetween('pickup_firstdate', [$request->start_date, $request->end_date])
+                ->get();
+                if($value->count() > 0){
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                  SELECT
+                  db_general_receive.product_id_fk, db_general_receive.lot_number, concat('รับเข้า > ',dataset_product_in_cause.txt_desc), db_general_receive.id, db_general_receive.amt,db_general_receive.recipient,db_general_receive.approver, db_general_receive.created_at
+                  FROM
+                  db_general_receive 
+                  left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
+                  WHERE product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' AND approve_status=1 AND pickup_firstdate between '".$request->start_date."' AND '".$request->end_date."' ") ;
+                }
+            }
+
+            if($request->product_id_fk){
+          // ดึงจากตารางนำออก > db_general_takeout
+               $value=DB::table('db_general_takeout')
+                ->where('product_id_fk', $request->product_id_fk)
+                ->where('lot_number', $request->lot_number)
+                ->where('approve_status', '1')
+                ->whereBetween('pickup_firstdate', [$request->start_date, $request->end_date])
+                ->get();
+                if($value->count() > 0){
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                  SELECT
+                  db_general_takeout.product_id_fk, db_general_takeout.lot_number, concat('นำออก > ',dataset_product_out_cause.txt_desc), db_general_takeout.id, db_general_takeout.amt,db_general_takeout.recipient,db_general_takeout.approver, db_general_takeout.created_at
+                  FROM
+                  db_general_takeout 
+                  Left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
+                  WHERE product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' AND approve_status=1 AND pickup_firstdate between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+                }              
+              
+            }
+
+            if($request->product_id_fk){
+          // ดึงจากตารางกาปรับยอดคลัง > db_stocks_account_code , db_stocks_account
+
+              $value=DB::select("
+                SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (ลด)', db_stocks_account_code.id,
+                  (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END)
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff<0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."'
+                ");
+
+              if(count($value) > 0){
+                  DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                  SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (ลด)', db_stocks_account_code.id,
+                  (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END)
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff<0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+                }
+              
+            }
+
+            if($request->product_id_fk){     
+
+                $value=DB::select("
+                SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (เพิ่ม)', db_stocks_account_code.id,
+                  db_stocks_account.amt_diff
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff>0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."'
+                ");
+
+                if(count($value) > 0){
+                  
+                   DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                  SELECT
+                  db_stocks_account.product_id_fk, db_stocks_account.lot_number, 'ปรับปรุงยอด (เพิ่ม)', db_stocks_account_code.id,
+                  db_stocks_account.amt_diff
+                  ,db_stocks_account_code.action_user,db_stocks_account_code.approver, db_stocks_account_code.updated_at
+                  FROM
+                  db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
+                  WHERE
+                  db_stocks_account.amt_diff>0
+                  AND
+                  db_stocks_account.product_id_fk='".$request->product_id_fk."' AND db_stocks_account.lot_number='".$request->lot_number."' AND db_stocks_account_code.status_accepted=3 AND DATE(db_stocks_account_code.action_date) between '".$request->start_date."' AND '".$request->end_date."' ") ; 
+
+              }
+
+            }
+
+          if($request->product_id_fk){
+          // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
+            $value=DB::select("
+              SELECT
+              db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number, 'เบิก/ยืม', db_products_borrow_code.borrow_number,
+              db_products_borrow_details.amt
+              ,db_products_borrow_code.action_user,db_products_borrow_code.approver, db_products_borrow_code.created_at
+              FROM
+              db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+              WHERE
+              db_products_borrow_code.approve_status=1 AND 
+              db_products_borrow_code.created_at BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+              db_products_borrow_details.product_id_fk='".$request->product_id_fk."' AND db_products_borrow_details.lot_number='".$request->lot_number."'
+                ");
+
+                if(count($value) > 0){
+
+                     DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                      SELECT
+                        db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number, 'เบิก/ยืม', db_products_borrow_code.borrow_number,
+                        db_products_borrow_details.amt
+                        ,db_products_borrow_code.action_user,db_products_borrow_code.approver, db_products_borrow_code.created_at
+                        FROM
+                        db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+                        WHERE
+                        db_products_borrow_code.approve_status=1 AND 
+                        db_products_borrow_code.created_at BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                        db_products_borrow_details.product_id_fk='".$request->product_id_fk."' AND db_products_borrow_details.lot_number='".$request->lot_number."' ") ; 
+                }                
+          } 
+
+          if($request->product_id_fk){
+           // ดึงจาก การโอนภายในสาขา > db_transfer_warehouses_code > db_transfer_warehouses_details
+            $value=DB::select("
+              SELECT
+              db_transfer_warehouses_details.product_id_fk,
+              db_transfer_warehouses_details.lot_number
+              ,'โอนภายในสาขา',
+              db_transfer_warehouses_details.id,
+              db_transfer_warehouses_details.amt,
+              db_transfer_warehouses_details.action_user,
+              db_transfer_warehouses_details.approver,
+              db_transfer_warehouses_details.updated_at
+              FROM
+              db_transfer_warehouses_details
+              Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+              WHERE
+              db_transfer_warehouses_code.approve_status=1 AND 
+              db_transfer_warehouses_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+              db_transfer_warehouses_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_warehouses_details.lot_number='".$request->lot_number."'
+                ");
+
+                if(count($value) > 0){
+                      
+                      DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                      SELECT
+                      db_transfer_warehouses_details.product_id_fk,
+                      db_transfer_warehouses_details.lot_number
+                      ,'โอนภายในสาขา',
+                      db_transfer_warehouses_code.id,
+                      db_transfer_warehouses_details.amt,
+                      db_transfer_warehouses_details.action_user,
+                      db_transfer_warehouses_code.approver,
+                      db_transfer_warehouses_code.updated_at
+                      FROM
+                      db_transfer_warehouses_details
+                      Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                      WHERE
+                      db_transfer_warehouses_code.approve_status=1 AND 
+                      db_transfer_warehouses_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                      db_transfer_warehouses_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_warehouses_details.lot_number='".$request->lot_number."' 
+
+                      ") ; 
+
+                }                
+
+          }               
+              
+       if($request->product_id_fk){
+           // ดึงจาก การโอนระหว่างสาขา > db_transfer_branch_code > db_transfer_branch_details
+            // โอนออก 
+             $value=DB::select("
+                    SELECT
+                    db_transfer_branch_details.product_id_fk,
+                    db_transfer_branch_details.lot_number
+                    ,'โอนระหว่างสาขา',
+                    db_transfer_branch_code.id,
+                    db_transfer_branch_details.amt,
+                    db_transfer_branch_details.action_user,
+                    db_transfer_branch_code.approver,
+                    db_transfer_branch_code.updated_at
+                    FROM
+                    db_transfer_branch_details
+                    Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
+                    WHERE
+                    db_transfer_branch_code.approve_status=1 AND
+                    db_transfer_branch_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                      db_transfer_branch_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_details.lot_number='".$request->lot_number."' 
+                ");
+
+                if(count($value) > 0){
+                       DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                        SELECT
+                        db_transfer_branch_details.product_id_fk,
+                        db_transfer_branch_details.lot_number
+                        ,'โอนระหว่างสาขา (จ่ายออกจากการโอน)',
+                        db_transfer_branch_code.id,
+                        db_transfer_branch_details.amt,
+                        db_transfer_branch_details.action_user,
+                        db_transfer_branch_code.approver,
+                        db_transfer_branch_code.updated_at
+                        FROM
+                        db_transfer_branch_details
+                        Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
+                        WHERE
+                        db_transfer_branch_code.approve_status=1 AND
+                        db_transfer_branch_code.action_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                          db_transfer_branch_details.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_details.lot_number='".$request->lot_number."' 
+
+                      ") ; 
+                      
+                }                
+
+          } 
+
+
+
+        if($request->product_id_fk){
+           // ดึงจาก การโอนระหว่างสาขา > db_transfer_branch_code > db_transfer_branch_details_log
+            // โอนเข้า  รับเข้าจากการโอนระหว่างสาขา
+              $value=DB::select("
+                   SELECT
+                    db_transfer_branch_get_products_receive.product_id_fk,
+                    db_transfer_branch_get_products_receive.lot_number
+                    ,'โอนระหว่างสาขา',
+                    db_transfer_branch_get.id,
+                    db_transfer_branch_get_products_receive.amt_get,
+                    db_transfer_branch_get_products_receive.action_user,
+                    db_transfer_branch_get.approver,
+                    db_transfer_branch_get.updated_at
+                    FROM
+                    db_transfer_branch_get_products_receive
+                    Left Join db_transfer_branch_get ON db_transfer_branch_get_products_receive.transfer_branch_get_id_fk = db_transfer_branch_get.id
+                    WHERE
+                    db_transfer_branch_get.approve_status=1 AND
+                    db_transfer_branch_get.approve_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                      db_transfer_branch_get_products_receive.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_get_products_receive.lot_number='".$request->lot_number."' 
+                ");
+
+                if(count($value) > 0){
+                       DB::select(" INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                        SELECT
+                        db_transfer_branch_get_products_receive.product_id_fk,
+                        db_transfer_branch_get_products_receive.lot_number
+                        ,'โอนระหว่างสาขา (รับเข้าจากการโอน)',
+                        db_transfer_branch_get.id,
+                        db_transfer_branch_get_products_receive.amt_get,
+                        db_transfer_branch_get_products_receive.action_user,
+                        db_transfer_branch_get.approver,
+                        db_transfer_branch_get.updated_at
+                        FROM
+                        db_transfer_branch_get_products_receive
+                        Left Join db_transfer_branch_get ON db_transfer_branch_get_products_receive.transfer_branch_get_id_fk = db_transfer_branch_get.id
+                        WHERE
+                        db_transfer_branch_get.approve_status=1 AND
+                        db_transfer_branch_get.approve_date BETWEEN '".$request->start_date."' AND '".$request->end_date."' AND
+                          db_transfer_branch_get_products_receive.product_id_fk='".$request->product_id_fk."' AND db_transfer_branch_get_products_receive.lot_number='".$request->lot_number."' 
+
+                      ") ; 
+                      
+                }                
+
+          } 
+
+
+         if($request->product_id_fk){
+           // ดึงจาก จ่ายสินค้าตามใบเสร็จ
+             $value=DB::select("
+                    SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('จ่ายสินค้าตามใบเสร็จ  ครั้งที่ '  , time_pay) as details,
+                          invoice_code,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as action_user,
+                          (SELECT pay_user from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as approver,
+                          (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as pay_date
+                          FROM db_pay_product_receipt_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_product_receipt_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                ");
+// AND
+                          // invoice_code in (SELECT invoice_code FROM db_pay_product_receipt_001 WHERE status_sent<>1 GROUP BY invoice_code)
+                if(count($value) == 1){
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                          SELECT 
+                          product_id_fk,
+                          lot_number,
+                          'จ่ายสินค้าตามใบเสร็จ' as details,
+                          invoice_code,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as action_user,
+                          (SELECT pay_user from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as approver,
+                          (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as pay_date
+                          FROM db_pay_product_receipt_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_product_receipt_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+         
+                      ") ; 
+                      
+                }else{
+
+                    if(count($value) > 0 ){
+
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                          SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('จ่ายสินค้าตามใบเสร็จ  ครั้งที่ '  , time_pay) as details,
+                          invoice_code,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_product_receipt_001 WHERE time_pay=db_pay_product_receipt_002.time_pay AND invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as action_user,
+                          (SELECT pay_user from db_pay_product_receipt_001 WHERE time_pay=db_pay_product_receipt_002.time_pay AND invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as approver,
+                          (SELECT pay_date from db_pay_product_receipt_001 WHERE time_pay=db_pay_product_receipt_002.time_pay AND invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as pay_date
+                          FROM db_pay_product_receipt_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_product_receipt_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+         
+                      ") ; 
+
+                     }
+                }                
+
+          } 
+
+
+         if($request->product_id_fk){
+           // ดึงเข้าคลังคืนจากการยกเลิกใบสั่งซื้อ
+              $value=DB::select("
+
+                  SELECT 
+                  product_id_fk,
+                  lot_number,
+                  'รับคืนจากการยกเลิกใบสั่งซื้อ' as details,
+                  invoice_code,
+                  amt,
+                  (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as action_user,
+                  (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as approver,
+                  updated_at as action_date
+                  FROM db_stocks_return
+                  WHERE
+                  product_id_fk='".$request->product_id_fk."' AND
+                  lot_number='".$request->lot_number."' AND
+                  DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  
+                  AND invoice_code is not null
+
+                ");
+              // AND
+                  // invoice_code in (SELECT invoice_code FROM db_pay_product_receipt_001 WHERE status_sent=4 GROUP BY invoice_code)
+
+                if(count($value) == 1){
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                        SELECT 
+                        product_id_fk,
+                        lot_number,
+                        'รับคืนจากการยกเลิกใบสั่งซื้อ' as details,
+                        invoice_code,
+                        amt,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as action_user,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as approver,
+                        updated_at as action_date
+                        FROM db_stocks_return
+                        WHERE
+                        product_id_fk='".$request->product_id_fk."' AND
+                        lot_number='".$request->lot_number."' AND
+                        DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                        AND invoice_code is not null
+                      ") ; 
+                      
+                }else{
+
+                    if(count($value) > 0 ){
+
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                        SELECT 
+                        product_id_fk,
+                        lot_number,
+                        concat('รับคืนจากการยกเลิกใบสั่งซื้อ  ครั้งที่ '  , time_pay) as details,
+                        invoice_code,
+                        amt,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as action_user,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE invoice_code=db_stocks_return.invoice_code limit 1) as approver,
+                        updated_at as action_date
+                        FROM db_stocks_return
+                        WHERE
+                        product_id_fk='".$request->product_id_fk."' AND
+                        lot_number='".$request->lot_number."' AND
+                        DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                        AND invoice_code is not null
+                      ") ; 
+
+                     }
+
+                }                        
+
+          } 
+
+           if($request->product_id_fk){
+           // ดึงจาก จ่ายสินค้าตามใบเบิก
+             $value=DB::select("
+                    SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('จ่ายสินค้าตามใบเบิก'  , time_pay) as details,
+                          pick_pack_requisition_code_id_fk,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                          (SELECT pay_user from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as approver,
+                          (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as pay_date
+                          FROM db_pay_requisition_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_requisition_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                ");
+
+               // "P2".sprintf("%05d",pick_pack_packing_code_id_fk)
+
+                if(count($value) == 1){
+                       $pp = "P2".sprintf("%05d", $value[0]->pick_pack_requisition_code_id_fk);
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                        SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('จ่ายสินค้าตามใบเบิก') as details,
+                          '$pp' ,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                          (SELECT pay_user from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as approver,
+                          (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as pay_date
+                          FROM db_pay_requisition_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_requisition_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+         
+                      ") ; 
+                      
+                }else{
+
+                     if(count($value) > 0 ){
+
+                        $pp = "P2".sprintf("%05d", $value[0]->pick_pack_requisition_code_id_fk);
+
+                        DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_out,action_user,approver, action_date) 
+                          SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('จ่ายสินค้าตามใบเบิก  ครั้งที่ '  , time_pay) as details,
+                          '$pp' ,
+                          amt_get as amt,
+                          (SELECT action_user from db_pay_requisition_001 WHERE time_pay=db_pay_requisition_002.time_pay AND pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                          (SELECT pay_user from db_pay_requisition_001 WHERE time_pay=db_pay_requisition_002.time_pay AND pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as approver,
+                          (SELECT pay_date from db_pay_requisition_001 WHERE time_pay=db_pay_requisition_002.time_pay AND pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as pay_date
+                          FROM db_pay_requisition_002
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_pay_requisition_002.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+         
+                      ") ; 
+
+                     }
+                }                
+
+          } 
+
+
+         if($request->product_id_fk){
+           // ดึงเข้าคลังคืนจากการยกเลิกใบเบิก
+              $value=DB::select("
+
+                  SELECT 
+                  product_id_fk,
+                  lot_number,
+                  'รับคืนจากการยกเลิกใบเบิก' as details,
+                  pick_pack_requisition_code_id_fk,
+                  amt,
+                  (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                  (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as approver,
+                  updated_at as action_date
+                  FROM db_stocks_return
+                  WHERE
+                  product_id_fk='".$request->product_id_fk."' AND
+                  lot_number='".$request->lot_number."' AND
+                  DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  
+                  AND pick_pack_requisition_code_id_fk > 0
+
+                ");
+
+                if(count($value) == 1){
+
+                  // return "A";
+
+                       $pp = "P2".sprintf("%05d", $value[0]->pick_pack_requisition_code_id_fk);
+
+                       DB::select(" 
+
+                        INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                        SELECT 
+                        product_id_fk,
+                        lot_number,
+                        'รับคืนจากการยกเลิกใบเบิก' as details,
+                        '$pp',
+                        amt,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                        (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as approver,
+                        updated_at as action_date
+                        FROM db_stocks_return
+                        WHERE
+                        product_id_fk='".$request->product_id_fk."' AND
+                        lot_number='".$request->lot_number."' AND
+                        DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                        AND pick_pack_requisition_code_id_fk > 0
+                      ") ; 
+                      
+                }else{
+
+                  // return "B";
+
+                     if(count($value) > 0){
+
+                        // return "C";
+
+                        $pp = "P2".sprintf("%05d", $value[0]->pick_pack_requisition_code_id_fk);
+                     
+                         DB::select(" 
+
+                          INSERT INTO db_stock_card_tmp (product_id_fk, lot_number, details, ref_inv, amt_in,action_user,approver, action_date) 
+                          SELECT 
+                          product_id_fk,
+                          lot_number,
+                          concat('รับคืนจากการยกเลิกใบเบิก  ครั้งที่ '  , time_pay) as details,
+                          '$pp',
+                          amt,
+                          (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as action_user,
+                          (SELECT action_user from db_pay_product_receipt_001 WHERE pick_pack_requisition_code_id_fk=db_stocks_return.pick_pack_requisition_code_id_fk limit 1) as approver,
+                          updated_at as action_date
+                          FROM db_stocks_return
+                          WHERE
+                          product_id_fk='".$request->product_id_fk."' AND
+                          lot_number='".$request->lot_number."' AND
+                          DATE(db_stocks_return.updated_at) BETWEEN '".$request->start_date."' AND '".$request->end_date."' 
+                          AND pick_pack_requisition_code_id_fk > 0
+                        ") ; 
+
+                     }
+
+                      // return "D";
+
+                }                        
+
+          } 
+
+          // ยอดยกมา
+
+              $x = DB::select(" SELECT sum(amt) as amt  FROM db_stocks_in WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc ; ");
+
+              $d_x = DB::select(" SELECT action_date FROM db_stocks_in WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc LIMIT 1; ");
+
+              $y = DB::select(" SELECT sum(amt) as amt  FROM db_stocks_out WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc ; ");
+
+              $d_y = DB::select(" SELECT action_date FROM db_stocks_out WHERE date(action_date) < '".$request->start_date."' AND  product_id_fk = '".$request->product_id_fk."' AND lot_number ='".$request->lot_number."' ORDER BY action_date desc LIMIT 1; ");
+
+              $r = $x[0]->amt - $y[0]->amt ;
+
+              $d = @$d_x[0]->action_date > @$d_y[0]->action_date ? @$d_x[0]->action_date : @$d_y[0]->action_date;
+
+              if(!empty($d)){
+                DB::select(" UPDATE db_stock_card_tmp SET action_date='$d' ,amt_in='$r' WHERE (id='1') ; ");
+              }else{
+                DB::select(" UPDATE db_stock_card_tmp SET action_date=NULL ,amt_in='$r' WHERE (id='1') ; ");
+              }
+
+           // final > นำเข้าตารางจริง   
+              DB::select(" INSERT IGNORE INTO db_stock_card select * from db_stock_card_tmp order by action_date ; ");
+
+              // ยอดคงเหลือยกมา ต้องหาวันก่อนหน้าย้อนไป order by desc date limit 1,1 
+              // SELECT amt FROM `db_stocks` WHERE date(updated_at) < '2021-05-28' AND product_id_fk='1' AND lot_number='lot6666' ORDER BY updated_at DESC limit 1
+
+// TEST sBalance
+              $r_amt_in_02 = DB::select(" SELECT amt_in from db_stock_card_tmp where id=2 ; ");
+              $r_amt_out_02 = DB::select(" SELECT amt_out from db_stock_card_tmp where id=2 ; ");
+
+              $amt_in_02 = @$r_amt_in_02[0]->amt_in?@$r_amt_in_02[0]->amt_in:0;
+              $amt_out_02 = @$r_amt_out_02[0]->amt_in?@$r_amt_out_02[0]->amt_in:0;
+
+              $sBalance = DB::select(" SELECT sum(amt) + $amt_in_02 - $amt_out_02 as amt FROM db_stocks WHERE product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' AND date(lot_expired_date) <= '".$request->end_date."' ");
+
+             $sBalance = @$sBalance[0]->amt?@$sBalance[0]->amt:0;
+
+             DB::select(" UPDATE db_stock_card SET amt_in= $sBalance + case when (SELECT amt FROM `db_stocks` WHERE date(lot_expired_date) < '".$request->start_date."' AND product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' ORDER BY updated_at DESC limit 1) > 0 THEN (SELECT amt FROM `db_stocks` WHERE date(lot_expired_date) <= '".$request->end_date."' AND product_id_fk='".$request->product_id_fk."' AND lot_number='".$request->lot_number."' ORDER BY updated_at DESC limit 1) ELSE 0 END where details='ยอดคงเหลือยกมา' ; ");
+
+        }
+    }
+
 
 
 
@@ -4035,113 +4676,6 @@ if($frontstore[0]->check_press_save==2){
                       }
 
 
-    }
-
-   public function insertStockCard($data){
-        DB::table('db_stock_card')->insert($data);
-   }
-
-
-    public function ajaxProcessStockcard(Request $request)
-    {
-        // return  $request ;
-        // dd();
-
-/*
-{product_id_fk: "1", lot_number: "lot1111", start_date: "2021-08-01", end_date: "2021-08-31", _token: "ARAtoYAya4uQooep7bnTwH8uJMAsqhdYAQVYVRlO"}
-end_date: "2021-08-31"
-lot_number: "lot1111"
-product_id_fk: "1"
-start_date: "2021-08-01"
-
-*/
-
-        if(isset($request->product_id_fk)){
-            $w01 = " AND  product_id_fk =".$request->product_id_fk."  " ;
-        }else{
-            $w01 = '';
-        }
-
-
-        if(isset($request->product_id_fk)){
-            $w02 = " AND  lot_number ='".$request->lot_number."'  " ;
-        }else{
-            $w02 = '';
-        }
-
-        $d2 = 0;
-        if(isset($request->start_date) && isset($request->end_date)){
-           $w03 = " and date(db_stock_movement.doc_date) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  " ;
-
-           $d1 =  DB::select(" SELECT date(doc_date) as doc_date  FROM `db_stock_movement` WHERE product_id_fk=".$request->product_id_fk." and lot_number='".$request->lot_number."' and date(doc_date)<='".$request->start_date."' ORDER BY doc_date DESC limit 1 ;");
-           if($d1){
-            $d2 =  DB::select(" SELECT sum(CASE WHEN in_out=1 THEN amt ELSE amt*(-1) END) as s FROM `db_stock_movement` WHERE product_id_fk=".$request->product_id_fk." and lot_number='".$request->lot_number."' and date(doc_date)='".$d1[0]->doc_date."' GROUP BY product_id_fk,lot_number ;");
-            $d2 = @$d2[0]->s;
-           }
-
-        }else{
-           $w03 = "";
-           $d2 = 0;
-        }
-
-
-// branch_id_fk:branch_id_fk,
-// warehouse_id_fk:warehouse_id_fk,
-// zone_id_fk:zone_id_fk,
-// shelf_id_fk:shelf_id_fk,
-// shelf_floor:shelf_floor,
-
-        if(isset($request->branch_id_fk)){
-          //  $w04 = " AND  branch_id_fk ='".$request->branch_id_fk."' AND  warehouse_id_fk ='".$request->warehouse_id_fk."' AND  zone_id_fk ='".$request->zone_id_fk."' AND  shelf_id_fk ='".$request->shelf_id_fk."' AND  shelf_floor ='".$request->shelf_floor."' " ;
-            $w04 = " AND  branch_id_fk ='".$request->branch_id_fk."' AND  warehouse_id_fk ='".$request->warehouse_id_fk."' AND  zone_id_fk ='".$request->zone_id_fk."' " ;
-        }else{
-            $w04 = '';
-        }
-
-
-        DB::select(" TRUNCATE db_stock_card; ");
-
-        if($request->ajax()){
-          
-          DB::select(" INSERT INTO db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
-
-          $Data = DB::select("
-                SELECT * FROM db_stock_movement where 1 $w01 $w02 $w03 $w04
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "details" =>  @$value->note?$value->note:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "amt_in" =>  @$value->in_out==1?$value->amt:0,
-                  "amt_out" =>  @$value->in_out==2?$value->amt:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  // "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                AjaxController::insertStockCard($insertData);
-        
-            }
-
-            return "db_stock_card => success";
-
-
-
-        }
     }
 
 
