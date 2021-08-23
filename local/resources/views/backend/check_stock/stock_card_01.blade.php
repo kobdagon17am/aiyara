@@ -81,7 +81,7 @@
                     <div class="col-md-4">
                       <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
                         <!-- number_format(@$sBalance[0]->amt,0) -->
-                        ยอดคงเหลือ = 
+                        ยอดคงเหลือ = {{number_format(@$total,0)}}
                       </div>
                     </div>
 

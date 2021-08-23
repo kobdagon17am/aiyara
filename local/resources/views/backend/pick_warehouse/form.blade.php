@@ -127,7 +127,8 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
 
           <div class="col-6">
-            <h4 class="font-size-18 test_clear_data "> เบิกจ่ายสินค้าจากคลัง  </h4>
+            <h4 class="font-size-18  "> เบิกจ่ายสินค้าจากคลัง  </h4>
+            <!-- test_clear_data -->
           </div>
           
           <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">

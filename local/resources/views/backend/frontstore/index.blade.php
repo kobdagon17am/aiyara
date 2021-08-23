@@ -83,7 +83,7 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
-            <!-- <input type="text" class="get_menu_id"> -->
+            <!-- <input type="text" class="get_menu_id">   test_clear_data -->
         </div>
     </div>
 </div>
@@ -1665,8 +1665,8 @@ $(document).ready(function() {
                   },
                   success:function(data)
                   { 
-                    // console.log(data);
-                    // return false;
+                    console.log(data);
+                    return false;
                         Swal.fire({
                           type: 'success',
                           title: 'ทำการยกเลิกรายการสั่งซื้อที่ระบุเรียบร้อยแล้ว',

@@ -23,6 +23,8 @@ class PvPayment extends Model
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
 
+        // dd($movement_ai_cash);
+
         if (empty($order_data)) {
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
             return $resule;
@@ -249,14 +251,21 @@ class PvPayment extends Model
                         ->where('user_name', '=', $customer_update->user_name)
                         ->first();
 
+                        // dd($data_user);
+
                     $add_pv = $data_user->pv + $pv;;
 
                     $order_update->pv_old = $data_user->pv;
                     $order_update->pv_banlance = $add_pv;
                     $order_update->approve_date =  date('Y-m-d H:i:s');
+                    
+                    // dd($customer_update->user_name);
+                    // dd($pv);
 
 
                     $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
+
+                    // dd($resule);
 
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
 

@@ -33,7 +33,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data_transfer_branch " > โอนระหว่างสาขา </h4>
+            <h4 class="mb-0 font-size-18  " > โอนระหว่างสาขา </h4>
+            <!-- test_clear_data_transfer_branch -->
 
            <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
               <button type="button" class="btn btn-primary btn-sm btnAddTransferItem " style="font-size: 14px !important;" >

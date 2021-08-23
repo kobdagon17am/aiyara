@@ -63,6 +63,7 @@ class Check_stockController extends Controller
             WHERE products.id=".$id." AND lang_id=1");
 
             $lot_number = $request->lot_number;
+            $total = @$request->total;
             $d_ch = explode(":",$request->date);
 
          $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' AND lot_expired_date <= '".$d_ch[1]."' ");
@@ -86,6 +87,7 @@ class Check_stockController extends Controller
            'sBalance'=>$sBalance,
            'date_s_e'=>$request->date,
            'wh'=>$wh,
+           'total'=>$total,
          ));
 
     }
@@ -106,6 +108,7 @@ class Check_stockController extends Controller
             WHERE products.id=".$id." AND lang_id=1");
 
             $lot_number = $request->lot_number;
+            $total = $request->total;
             $d_ch = explode(":",$request->date);
 
          $sBalance = DB::select(" SELECT sum(amt) as amt FROM db_stocks WHERE product_id_fk='".$id."' AND lot_number='".$request->lot_number."' AND lot_expired_date <= '".$d_ch[1]."' ");
@@ -129,6 +132,7 @@ class Check_stockController extends Controller
            'sBalance'=>$sBalance,
            'date_s_e'=>$request->date,
            'wh'=>$wh,
+           'total'=>$total,
          ));
 
     }

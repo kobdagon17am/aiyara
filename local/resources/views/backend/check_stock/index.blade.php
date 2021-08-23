@@ -528,8 +528,7 @@
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a> </td>' );
-
+                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'/'+sTotal.trim()+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a> </td>' );
 
                                                   
                                               }else{
@@ -547,7 +546,7 @@
                                          rowCallback: function(nRow, aData, dataIndex){
 
                                            $('td:last-child', nRow).html(''
-                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>  '
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'/'+aData['amt']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>  '
 
                                                     ).addClass('input');
 

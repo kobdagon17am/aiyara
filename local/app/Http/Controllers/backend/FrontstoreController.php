@@ -21,6 +21,10 @@ class FrontstoreController extends Controller
 
     public function index(Request $request)
     {
+
+      // $r = RunNumberPayment::run_number_order(1);
+      // dd($r);
+
       // dd($request);
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
@@ -802,6 +806,8 @@ class FrontstoreController extends Controller
               // dd($sRow);
               $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
 
+              // dd($branchs[0]->business_location_id_fk);
+
               $sRow->date_setting_code = date('ym');
 
              
@@ -814,8 +820,8 @@ class FrontstoreController extends Controller
                   // $sRow->invoice_code = '' ;
                 }else{
                   $table = 'db_orders';
-                  $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                  $sRow->invoice_code = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+                  // $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+                  // $sRow->invoice_code = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
 
                 }
               }
@@ -1171,29 +1177,38 @@ class FrontstoreController extends Controller
 
               $sRow->save();
 
-              $sRow->code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+             
+              // dd(RunNumberPayment::run_number_order(1));
 
+              $date_setting_code = date('ym');
 
+              DB::select(" UPDATE `db_orders` SET date_setting_code='$date_setting_code' WHERE (`id`=".$sRow->id.") ");
 
-              DB::select(" UPDATE `db_orders` SET `code_order`='$sRow->code_order' WHERE (`id`=".$sRow->id.") ");
+              $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+
+              DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
+              DB::select(" UPDATE `db_orders` SET `invoice_code`='$code_order' WHERE `id`=".$sRow->id." and pay_type_id_fk not in(8,10,11) ");
+
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_01);");
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_02);");
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_03);");
 
               // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
-              // // dd($data);
+              // dd($data);
               // return $data;
               // dd();
 
-              // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($sRow->id, '1', '0', 'admin');
+              // cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
+
+              // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($sRow->id, \Auth::user()->id , 'customer', 'admin');
               // dd($cancel);
               // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               // dd($data);
 
 
 // TEST
-             // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
-             return redirect()->to(url("backend/frontstore"));
+             return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
+             // return redirect()->to(url("backend/frontstore"));
 
 
         }else{
@@ -1212,7 +1227,7 @@ class FrontstoreController extends Controller
       try {
           if( $id ){
             $sRow = \App\Models\Backend\Frontstore::find($id);
-            $invoice_code = $sRow->invoice_code;
+            // $invoice_code = $sRow->invoice_code;
 
               // $sRow->cash_price    = str_replace(',','',request('cash_price')) ;
               // $sRow->fee_amt    = str_replace(',','',request('fee_amt')) ;
@@ -1262,7 +1277,8 @@ class FrontstoreController extends Controller
 
           \DB::commit();
 
-           return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
+           // return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
+           return redirect()->to(url("backend/frontstore"));
 
 
       } catch (\Exception $e) {
