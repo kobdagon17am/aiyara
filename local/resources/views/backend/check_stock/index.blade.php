@@ -1021,7 +1021,43 @@
                       },1000);
 
         // จ่ายสินค้าตามใบเบิก
+                      setTimeout(function(){
 
+                           $.ajax({
+                               url: " {{ url('backend/insertStockMovement_From_db_pay_requisition_001') }} ",
+                              method: "post",
+                              data: {
+                                "_token": "{{ csrf_token() }}",
+                              },
+                              success:function(data)
+                              {
+
+                                console.log(data);
+                                $("#spinner_frame").hide();
+                          
+                              }
+                            });
+
+                      },1000);
+
+                      setTimeout(function(){
+
+                           $.ajax({
+                               url: " {{ url('backend/insertStockMovement_Final') }} ",
+                              method: "post",
+                              data: {
+                                "_token": "{{ csrf_token() }}",
+                              },
+                              success:function(data)
+                              {
+
+                                console.log(data);
+                                $("#spinner_frame").hide();
+                          
+                              }
+                            });
+
+                      },1000);
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                       }

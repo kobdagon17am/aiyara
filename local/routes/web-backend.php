@@ -512,6 +512,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('insertStockMovement_From_db_transfer_branch_code', 'AjaxController@insertStockMovement_From_db_transfer_branch_code');
     Route::post('insertStockMovement_From_db_pay_product_receipt_001', 'AjaxController@insertStockMovement_From_db_pay_product_receipt_001');
     Route::post('insertStockMovement_From_db_stocks_return', 'AjaxController@insertStockMovement_From_db_stocks_return');
+    Route::post('insertStockMovement_From_db_pay_requisition_001', 'AjaxController@insertStockMovement_From_db_pay_requisition_001');
+    
+    Route::post('insertStockMovement_Final', 'AjaxController@insertStockMovement_Final');
 
 
 
