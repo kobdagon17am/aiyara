@@ -513,7 +513,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('insertStockMovement_From_db_pay_product_receipt_001', 'AjaxController@insertStockMovement_From_db_pay_product_receipt_001');
     Route::post('insertStockMovement_From_db_stocks_return', 'AjaxController@insertStockMovement_From_db_stocks_return');
     Route::post('insertStockMovement_From_db_pay_requisition_001', 'AjaxController@insertStockMovement_From_db_pay_requisition_001');
-    
+
     Route::post('insertStockMovement_Final', 'AjaxController@insertStockMovement_Final');
 
 
@@ -743,6 +743,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('stock_card', 'Stock_cardController');
     Route::post('stock_card/datatable', 'Stock_cardController@Datatable')->name('stock_card.datatable');
+    Route::post('stock_card_01/datatable', 'Stock_cardController@Datatable01')->name('stock_card_01.datatable');
 
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
     Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');
