@@ -198,7 +198,7 @@
                                              <div class="radio radio-inline" id="i_sent_address_card">
                                                  <label>
                                                      <input type="radio" id="sent_address_card_check"
-                                                         onchange="sent_address('sent_address_card',{{ $address_card->provinces_id }})"
+                                                         onchange="sent_address('sent_address_card',{{ @$address_card->provinces_id }})"
                                                          name="receive" value="sent_address_card">
                                                      <i class="helper"></i><b>ตามบัตรประชาชน</b>
                                                  </label>
@@ -226,98 +226,112 @@
                                      </div>
                                  </div>
 
+
+                                 @if($address)
                                  <div id="sent_address">
-                                     <div class="row m-t-5">
-                                         <div class="col-md-6 col-sm-6 col-6">
-                                             <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="ชื่อผู้รับ" name="name"
-                                                 value="{{ $customer->prefix_name }} {{ $customer->first_name }} {{ $customer->last_name }}"
-                                                 readonly="">
-                                         </div>
-                                         <div class="col-md-6 col-sm-6 col-6">
-                                             <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="เบอร์โทรศัพท์" name="tel_mobile"
-                                                 value="{{ $address->tel_mobile }}" readonly="">
-                                         </div>
-                                     </div>
-                                     <div class="row m-t-5">
-                                         <div class="col-md-6 col-sm-6 col-6">
-                                             <label>Email </label>
-                                             <input type="email" class="form-control form-control-bold" placeholder="Email"
-                                                 name="email" value="{{ $customer->email }}" readonly="">
-                                         </div>
+                                  <div class="row m-t-5">
+                                      <div class="col-md-6 col-sm-6 col-6">
+                                          <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="ชื่อผู้รับ" name="name"
+                                              value="{{ $customer->prefix_name }} {{ $customer->first_name }} {{ $customer->last_name }}"
+                                              readonly="">
+                                      </div>
+                                      <div class="col-md-6 col-sm-6 col-6">
+                                          <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="เบอร์โทรศัพท์" name="tel_mobile"
+                                              value="{{  $address->tel_mobile }}" readonly="">
+                                      </div>
+                                  </div>
+                                  <div class="row m-t-5">
+                                      <div class="col-md-6 col-sm-6 col-6">
+                                          <label>Email </label>
+                                          <input type="email" class="form-control form-control-bold" placeholder="Email"
+                                              name="email" value="{{ $customer->email }}" readonly="">
+                                      </div>
 
-                                     </div>
+                                  </div>
 
-                                     <div class="row m-t-5">
-                                         <div class="col-md-3 col-sm-4 col-4">
-                                             <label>บ้านเลขที่ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="บ้านเลขที่" name="house_no"
-                                                 value="{{ $address->house_no }}" readonly="">
-                                         </div>
-                                         <div class="col-md-5 col-sm-8 col-8">
-                                             <label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="หมู่บ้าน/อาคาร" name="house_name"
-                                                 value="{{ $address->house_name }}" readonly="">
-                                         </div>
-                                         <div class="col-md-3 col-sm-12 col-12">
-                                             <label>หมู่ที่ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold" placeholder="หมู่ที่"
-                                                 name="moo" value="{{ $address->moo }}" readonly="">
-                                         </div>
+                                  <div class="row m-t-5">
+                                      <div class="col-md-3 col-sm-4 col-4">
+                                          <label>บ้านเลขที่ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="บ้านเลขที่" name="house_no"
+                                              value="{{ @$address->house_no }}" readonly="">
+                                      </div>
+                                      <div class="col-md-5 col-sm-8 col-8">
+                                          <label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="หมู่บ้าน/อาคาร" name="house_name"
+                                              value="{{ $address->house_name }}" readonly="">
+                                      </div>
+                                      <div class="col-md-3 col-sm-12 col-12">
+                                          <label>หมู่ที่ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold" placeholder="หมู่ที่"
+                                              name="moo" value="{{ $address->moo }}" readonly="">
+                                      </div>
 
-                                     </div>
-                                     <div class="row m-t-5">
-                                         <div class="col-sm-4">
-                                             <label>ถนน</label>
-                                             <input type="text" class="form-control form-control-bold" placeholder="ถนน"
-                                                 name="road" value="{{ $address->road }}" readonly="">
-                                         </div>
+                                  </div>
+                                  <div class="row m-t-5">
+                                      <div class="col-sm-4">
+                                          <label>ถนน</label>
+                                          <input type="text" class="form-control form-control-bold" placeholder="ถนน"
+                                              name="road" value="{{ $address->road }}" readonly="">
+                                      </div>
 
-                                         <div class="col-sm-4">
-                                             <label>ตรอก/ซอย </label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="ตรอก/ซอย" name="soi" value="{{ $address->soi }}"
-                                                 readonly="">
-                                         </div>
+                                      <div class="col-sm-4">
+                                          <label>ตรอก/ซอย </label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="ตรอก/ซอย" name="soi" value="{{ $address->soi }}"
+                                              readonly="">
+                                      </div>
 
-                                         <div class="col-sm-4">
-                                             <label>จังหวัด <b class="text-danger">*</b></label>
-                                             <input type="text" id="provinces_address"
-                                                 class="form-control form-control-bold" placeholder="จังหวัด"
-                                                 value="{{ $address->provinces_name }}" readonly="">
-                                             <input type="hidden" name="province" value="{{ $address->province_id_fk }}">
-                                         </div>
+                                      <div class="col-sm-4">
+                                          <label>จังหวัด <b class="text-danger">*</b></label>
+                                          <input type="text" id="provinces_address"
+                                              class="form-control form-control-bold" placeholder="จังหวัด"
+                                              value="{{ $address->provinces_name }}" readonly="">
+                                          <input type="hidden" name="province" value="{{ $address->province_id_fk }}">
+                                      </div>
 
-                                         <div class="col-sm-4">
-                                             <label>เขต/อำเภอ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="เขต/อำเภอ" value="{{ $address->amphures_name }}"
-                                                 readonly="">
-                                             <input type="hidden" name="amphures" value="{{ $address->amphures_id_fk }}">
-                                         </div>
-                                         <div class="col-sm-4">
-                                             <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="แขวง/ตำบล" value="{{ $address->district_name }}"
-                                                 readonly="">
-                                             <input type="hidden" name="district" value="{{ $address->district_id_fk }}">
-                                         </div>
+                                      <div class="col-sm-4">
+                                          <label>เขต/อำเภอ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="เขต/อำเภอ" value="{{ $address->amphures_name }}"
+                                              readonly="">
+                                          <input type="hidden" name="amphures" value="{{ $address->amphures_id_fk }}">
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="แขวง/ตำบล" value="{{ $address->district_name }}"
+                                              readonly="">
+                                          <input type="hidden" name="district" value="{{ $address->district_id_fk }}">
+                                      </div>
 
-                                         <div class="col-sm-4">
-                                             <label>รหัสไปษณีย์ <b class="text-danger">*</b></label>
-                                             <input type="text" class="form-control form-control-bold"
-                                                 placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $address->zipcode }}"
-                                                 readonly="">
-                                         </div>
-                                     </div>
+                                      <div class="col-sm-4">
+                                          <label>รหัสไปษณีย์ <b class="text-danger">*</b></label>
+                                          <input type="text" class="form-control form-control-bold"
+                                              placeholder="รหัสไปษณีย์" name="zipcode" value="{{ $address->zipcode }}"
+                                              readonly="">
+                                      </div>
+                                  </div>
+
+                              </div>
+                                 @else
+                                 <div id="sent_address">
+
+                                  <div class="alert alert-warning icons-alert">
+
+                                    <p><strong>Warning!</strong> <code>ไม่มีข้อมูลที่อยู่การจัดส่งสินค้า กรุณาตั้งค่าก่อนชำระเงิน</code>  <a href="{{ route('') }}" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
+                                  </div>
 
                                  </div>
 
+                                 @endif
+
+                                 @if($address_card)
                                  <div id="sent_address_card" style="display: none;">
                                      <div class="row m-t-5">
                                          <div class="col-md-6 col-sm-6 col-6">
@@ -331,7 +345,7 @@
                                              <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
                                              <input type="text" class="form-control form-control-bold"
                                                  placeholder="เบอร์โทรศัพท์" name="card_tel_mobile"
-                                                 value="{{ $address->tel_mobile }}" readonly="">
+                                                 value="{{ @$address->tel_mobile }}" readonly="">
                                          </div>
                                      </div>
                                      <div class="row m-t-5">
@@ -411,6 +425,14 @@
                                      </div>
 
                                  </div>
+                                 @else
+                                 <div id="sent_address_card" style="display: none;">
+
+                                  <div class="alert alert-warning icons-alert">
+                                    <p><strong>Warning!</strong> <code>ไม่มีข้อมูลที่อยู่ตามบัตรประชาชน กรุณาใช้ที่อยู่การจัดส่งรูปแบบอื่น </code>  </p>
+                                  </div>
+                                </div>
+                                 @endif
 
                                  <div id="sent_office" style="display: none;">
                                      <div class="row m-t-5">
@@ -818,8 +840,8 @@
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
      <script type="text/javascript">
-         var address_provinces_id = {{ $address->provinces_id }};
-         check_shipping({{ $address->provinces_id }});
+         var address_provinces_id = '{{ @$address->provinces_id }}';
+         check_shipping({{ @$address->provinces_id }});
          var type = '{{ $bill['type'] }}';
 
           var premium = document.getElementById('checkbox13').checked;
@@ -847,11 +869,11 @@
              }
 
              if (sent_address) {
-                 check_shipping({{ $address->provinces_id }});
+                 check_shipping({{ @$address->provinces_id }});
              }
              if (sent_address_card) {
                  var sent_address = document.getElementById('sent_address_check').checked;
-                 check_shipping({{ $address_card->provinces_id }});
+                 check_shipping({{ @$address_card->provinces_id }});
              }
 
              if (sent_other) {
@@ -862,7 +884,10 @@
              }
          }
 
-         function check_shipping(provinces_id, type_sent = '') {
+         function check_shipping(provinces_id='', type_sent = '') {
+           if(provinces_id == ''){
+             return '';
+           }
              var location_id = '{{ $bill['location_id'] }}';
              var price = '{{ $bill['price'] }}';
 
@@ -927,7 +952,7 @@
 
              if (type_sent == 'sent_address') {
 
-                 check_shipping({{ $address->provinces_id }});
+                 check_shipping({{ @$address->provinces_id }});
                  document.getElementById("sent_address").style.display = 'block';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
@@ -989,7 +1014,7 @@
 
              if (data == '1') {
 
-                 check_shipping({{ $address->provinces_id }});
+                 check_shipping({{ @$address->provinces_id }});
                  document.getElementById("cart_payment_tranfer").style.display = "block";
                  document.getElementById("cart_payment_credit_card").style.display = "none";
                  document.getElementById("cart_payment_aicash").style.display = "none";
@@ -1017,7 +1042,7 @@
              } else if (data == '3') {
 
 
-               var ai_cash = {{ Auth::guard('c_user')->user()->ai_cash }};
+               var ai_cash = '{{ Auth::guard('c_user')->user()->ai_cash }}';
                var price_total = $('#price_total').val();
 
                if(ai_cash < price_total){
