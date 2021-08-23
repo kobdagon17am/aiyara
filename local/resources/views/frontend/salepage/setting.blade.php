@@ -70,206 +70,6 @@
                 </div>
             </div>
 
-            {{-- Card Form URL name --}}
-            {{-- <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
-                        </div>
-                        <div class="card-block">
-
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s1)) {
-                              //     $url_s1 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s1 = $data->name_s1;
-                              // }
-
-                              ?>
-                                <label>Aiyara</label> <code>{{ route('s1', $url_s1) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-
-                                    <div class="input-group-btn">
-                                      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                          aria-haspopup="true" aria-expanded="false">
-                                         Action
-                                      </button>
-                                      <div class="dropdown-menu" x-placement="bottom-start">
-                                          <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s1', $url_s1) }}">Copy URL</a>
-                                          <a class="dropdown-item" href="{{ route('s1', $url_s1) }}" target="_blank">Preview</a>
-
-                                      </div>
-                                  </div>
-
-                                    <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Aiyara"
-                                        value="{{ $url_s1 }}">
-                                    <span class="input-group-addon btn btn-primary btn-save-url">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s2)) {
-                              //     $url_s2 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s2 = $data->name_s2;
-                              // }
-
-                              ?>
-                                <label>Aimmura</label><code>{{ route('s2', $url_s2) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-                                       <div class="input-group-btn">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                           Action
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                            <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s2', $url_s2) }}">Copy URL</a>
-                                            <a class="dropdown-item" href="{{ route('s2', $url_s2) }}" target="_blank">Preview</a>
-
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control" name="name_s2" id="name_s2"
-                                        placeholder="Aimmura" value="{{ $url_s2 }}">
-                                    <span class="input-group-addon btn btn-primary btn-save-url">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s3)) {
-                              //     $url_s3 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s3 = $data->name_s3;
-                              // }
-
-                              ?>
-                                <label>Cashewy Drink</label> <code>{{ route('s3', $url_s3) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-                                       <div class="input-group-btn">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                           Action
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                            <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s3', $url_s3) }}">Copy URL</a>
-                                            <a class="dropdown-item" href="{{ route('s3', $url_s3) }}" target="_blank">Preview</a>
-
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control" name="name_s3" id="name_s3"
-                                        placeholder="Cashewy Drink" value="{{ $url_s3 }}">
-                                    <span class="input-group-addon btn btn-primary btn-save-url">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s4)) {
-                              //     $url_s4 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s4 = $data->name_s4;
-                              // }
-
-                              ?>
-                                <label>Aifacad</label> <code>{{ route('s4', $url_s4) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-                                        <div class="input-group-btn">
-                                          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                              aria-haspopup="true" aria-expanded="false">
-                                             Action
-                                          </button>
-                                          <div class="dropdown-menu" x-placement="bottom-start">
-                                              <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s4', $url_s4) }}">Copy URL</a>
-                                              <a class="dropdown-item" href="{{ route('s4', $url_s4) }}" target="_blank">Preview</a>
-
-                                          </div>
-                                      </div>
-                                    <input type="text" class="form-control" name="name_s4" id="name_s4"
-                                        placeholder="Aifacad" value="{{ $url_s4 }}">
-                                    <span class="input-group-addon btn btn-primary btn-save-url">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s5)) {
-                              //     $url_s5 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s5 = $data->name_s5;
-                              // }
-
-                              ?>
-
-
-                                <label>Alada</label> <code>{{ route('s5', $url_s5) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-                                    <div class="input-group-btn">
-                                      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                          aria-haspopup="true" aria-expanded="false">
-                                         Action
-                                      </button>
-                                      <div class="dropdown-menu" x-placement="bottom-start">
-                                          <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s5', $url_s5) }}">Copy URL</a>
-                                          <a class="dropdown-item" href="{{ route('s5', $url_s5) }}" target="_blank">Preview</a>
-
-                                      </div>
-                                  </div>
-                                    <input type="text" class="form-control" name="name_s5" id="name_s5" placeholder="Alada"
-                                        value="{{ $url_s5 }}">
-                                    <span class="input-group-addon btn btn-primary btn-save-url">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                              <?php
-                              // if (empty($data->name_s6)) {
-                              //     $url_s6 = Auth::guard('c_user')->user()->user_name;
-                              // } else {
-                              //     $url_s6 = $data->name_s6;
-                              // }
-
-                              ?>
-                                <label>TrimMax</label> <code>{{ route('s6', $url_s6) }}</code>
-                                <div class="input-group input-group-button mb-0">
-
-                                       <div class="input-group-btn">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                           Action
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start">
-                                            <a class="dropdown-item copy-to-clipboard" href="#!" data-url="{{ route('s6', $url_s6) }}">Copy URL</a>
-                                            <a class="dropdown-item" href="{{ route('s6', $url_s6) }}" target="_blank">Preview</a>
-
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control" name="name_s6 btn-save-url" id="name_s6"
-                                        placeholder="TrimMax" value="{{ $url_s6 }}">
-                                    <span class="input-group-addon btn btn-primary">
-                                        <span class="">Save</span>
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-
             <div class="row">
               <div class="col-md-12">
                   <div class="card">
@@ -279,6 +79,7 @@
                       <div class="card-block">
                         <div class="form-group">
                           <?php
+
                           if (empty($data->name_s1)) {
                               $url_s1 = Auth::guard('c_user')->user()->user_name;
                           } else {
@@ -286,7 +87,7 @@
                           }
 
                           ?>
-                            <label>Example Url :</label> <code>{{ route('s1', $url_s1) }}</code>
+                            <label>Example Url :</label> <code>{{ route('aiyara', $url_s1) }}</code>
                             <div class="input-group input-group-button mb-0">
 
                                 <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Edit Name Url"
@@ -337,12 +138,59 @@
 
                           ?>
                           <hr>
-                           <p> <label>1. Aiyara</label> <code>{{ route('s1', $url_s1) }}</code> <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard" href="#!" data-url="{{ route('s1', $url_s1) }}">Copy</a><br>
-                            <label>2. Aimmura</label> <code>{{ route('s2', $url_s2) }}</code><br>
-                            <label>3. Cashewy Drink</label> <code>{{ route('s3', $url_s3) }}</code><br>
-                            <label>4. Aifacad</label> <code>{{ route('s4', $url_s4) }}</code><br>
-                            <label>5. Alada</label> <code>{{ route('s5', $url_s5) }}</code><br>
-                            <label>6. TrimMax</label> <code>{{ route('s6', $url_s6) }}</code></p>
+                          <div class="row">
+                            <div class="col-md-6">
+
+
+
+                              <p> <label>1. Aiyara</label>
+
+
+                              {{-- <button type="button" class="btn btn-default waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="tooltip on top">Top
+                              </button> --}}
+
+                                {{-- <code>{{ route('aiyara', $url_s1) }}</code> --}}
+                                <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aiyara', $url_s1) }}"  href="#!" data-url="{{ route('aiyara', $url_s1) }}"><b stye="color:#000">Copy Url</b></a>
+                                <br>
+                                <label>2. Aimmura</label>
+                                {{-- <code>{{ route('aimmura', $url_s2) }}</code> --}}
+                                <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aimmura', $url_s2) }}" href="#!" data-url="{{ route('aimmura', $url_s2) }}"><b stye="color:#000">Copy Url</b></a>
+                                <br>
+
+                                <label>3. Cashewy Drink</label>
+                                {{-- <code>{{ route('cashewy', $url_s3) }}</code> --}}
+                                 <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+
+                                 data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('cashewy', $url_s3) }}" href="#!" data-url="{{ route('cashewy', $url_s3) }}"><b stye="color:#000">Copy Url</b></a><br>
+
+
+                            </div>
+
+                            <div class="col-md-6">
+                              <p>
+                              <label>4. Aifacad</label>
+                              {{-- <code>{{ route('aifacad', $url_s4) }}</code> --}}
+                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aifacad', $url_s4) }}" href="#!" data-url="{{ route('aifacad', $url_s4) }}" href="#!" data-url="{{ route('aifacad', $url_s4) }}"><b stye="color:#000">Copy Url</b></a>
+                              <br>
+
+                              <label>5. Alada</label>
+                              {{-- <code>{{ route('ailada', $url_s5) }}</code>  --}}
+                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('ailada', $url_s5) }}" href="#!" data-url="{{ route('ailada', $url_s5) }}"><b stye="color:#000">Copy Url</b></a>
+                              <br>
+                              <label>6. TrimMax</label>
+                              {{-- <code>{{ route('trimmax', $url_s6) }}</code>  --}}
+                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('trimmax', $url_s6) }}" href="#!" data-url="{{ route('trimmax', $url_s6) }}"><b stye="color:#000">Copy Url</b></a>
+                              <br>
+                              </p>
+
+                            </div>
+                          </div>
 
 
                         </div>
@@ -584,6 +432,8 @@
                 el.select();
                 document.execCommand('copy');
                 document.body.removeChild(el);
+
+                Swal.fire('Copy Url',el.value, 'success');
             })
         })
 

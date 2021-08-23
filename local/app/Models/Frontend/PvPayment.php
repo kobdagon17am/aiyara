@@ -504,6 +504,8 @@ class PvPayment extends Model
                   $customer_update->aistockist_date =  date('Y-m-d h:i:s');
                 }
 
+
+
                 if ($resule['status'] == 'success') {
                   $movement_ai_cash->save();
                   $customer_update->save();
