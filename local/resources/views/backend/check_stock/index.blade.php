@@ -43,7 +43,7 @@
             <h4 class="mb-0 font-size-18"> Check Stock </h4>
             <h4 class="mb-0 font-size-18">  
 
-             <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;" >
+             <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;display: none;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
                           </a>
 
@@ -835,7 +835,15 @@
 <script>
   /** It is done after the page load is complete . **/
   $(document).ready(function(){
-    $('.btnSearch').trigger('click');
+    
+    setTimeout(function(){
+       $('.btnStockMovement').trigger('click');
+    },1500);
+
+    setTimeout(function(){
+       $('.btnSearch').trigger('click');
+    },1500);
+
   });
 </script>
 
