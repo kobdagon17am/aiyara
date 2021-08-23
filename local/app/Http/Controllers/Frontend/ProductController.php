@@ -86,6 +86,9 @@ class ProductController extends Controller
     public function product_detail($type, $id, $category_id = '')
     {
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if(empty($business_location_id)){
+        $business_location_id = 1;
+      }
 
         if (empty($id) || empty($type)) {
             return redirect('product-list/1')->withError('No Product');

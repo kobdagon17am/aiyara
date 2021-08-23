@@ -13,6 +13,12 @@ class PaymentCourse extends Model
   public static function transfer_course($rs){
 	DB::BeginTransaction();
 	$business_location_id = Auth::guard('c_user')->user()->business_location_id;
+  if(empty($business_location_id)){
+    $business_location_id = 1;
+  }
+  if(empty($business_location_id)){
+    $business_location_id = 1;
+  }
 	$customer_id = Auth::guard('c_user')->user()->id;
 	$code_order = RunNumberPayment::run_number_order($business_location_id);
 
