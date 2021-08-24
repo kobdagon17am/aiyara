@@ -9,7 +9,8 @@
       </div>
       <div class="modal-body">
         <h5>เพิ่ม {{ $type }}</h5>
-        <p>ภายใต้ @if($data->business_name){{ $data->business_name }}@else {{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} @endif</p>
+
+        <p>ภายใต้ @if(@$data->business_name){{ $data->business_name }}@else {{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} @endif</p>
       </div>
       <div class="modal-footer">
         @if($canAccess)

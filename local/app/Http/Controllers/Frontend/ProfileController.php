@@ -70,13 +70,27 @@ class ProfileController extends Controller
         'district_id_fk' => trim($request->district),
         'road' => trim($request->road),
         'province_id_fk' => trim($request->province),
-        'zipcode' => trim($request->zipcode)
+        'zipcode' => trim($request->zipcode),
+        'customer_id' => Auth::guard('c_user')->user()->id,
+
       );
 
        try {
-         $update = DB::table('customers_detail')
+
+        $customers_detail = DB::table('customers_detail')
          ->where('customer_id','=',Auth::guard('c_user')->user()->id)
-         ->update($data);
+         ->first();
+
+         if($customers_detail){
+          $update = DB::table('customers_detail')
+          ->where('customer_id','=',Auth::guard('c_user')->user()->id)
+          ->update($data);
+         }else{
+
+          $insert =  DB::table('customers_detail')->insert($data);
+
+
+         }
 
          return redirect('profile_address')->withSuccess('Update Address Success');
 

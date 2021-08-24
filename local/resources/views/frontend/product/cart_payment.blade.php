@@ -324,7 +324,7 @@
 
                                   <div class="alert alert-warning icons-alert">
 
-                                    <p><strong>Warning!</strong> <code>ไม่มีข้อมูลที่อยู่การจัดส่งสินค้า กรุณาตั้งค่าก่อนชำระเงิน</code>  <a href="{{ route('') }}" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
+                                    <p><strong>Warning!</strong> <code>ไม่มีข้อมูลที่อยู่การจัดส่งสินค้า กรุณาตั้งค่าก่อนชำระเงิน</code>  <a href="{{ route('profile_address') }}" class="pcoded-badge label label-warning ">ตั้งค่า คลิ๊ก!!</a></p>
                                   </div>
 
                                  </div>
@@ -736,7 +736,7 @@
 
                   @endif
 
-                  <button type="button" onclick="submit_address()"
+                  <button type="button" id="btn_pay" onclick="submit_address()"
                   class="btn btn-success waves-effect waves-light btn-block mt-2"><i
                       class="fa fa-credit-card-alt"></i> ชำระเงิน</button>
 
@@ -952,7 +952,8 @@
 
              if (type_sent == 'sent_address') {
 
-                 check_shipping({{ @$address->provinces_id }});
+
+                 check_shipping(provinces_id);
                  document.getElementById("sent_address").style.display = 'block';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
@@ -961,8 +962,14 @@
                  document.getElementById("html_shipping_premium").style.display = 'block';
                  document.getElementById("sent_address_check").checked = true;
 
-             } else if (type_sent == 'sent_address_card') {
+                 if(provinces_id == ''){
+                   document.getElementById("btn_pay").style.display = 'none';
+                  }else{
+                    document.getElementById("btn_pay").style.display = 'block';
+                  }
 
+             } else if (type_sent == 'sent_address_card') {
+               console.log(provinces_id)
                  check_shipping(provinces_id);
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'block';
@@ -970,6 +977,13 @@
                  document.getElementById("sent_office").style.display = 'none';
                  $('.sent_address_other').prop('required', false);
                  document.getElementById("html_shipping_premium").style.display = 'block';
+                 if(provinces_id == ''){
+
+                  document.getElementById("btn_pay").style.display = 'none';
+                 }else{
+                  document.getElementById("btn_pay").style.display = 'block';
+
+                 }
 
              } else if (type_sent == 'sent_office') {
                  check_shipping(provinces_id = '', type_sent);

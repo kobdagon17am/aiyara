@@ -215,6 +215,7 @@ class Product extends Model
                 }
 
             }
+
             $data = ['html' => $html, 'rs' => $resule];
             return $data;
         }
@@ -251,7 +252,7 @@ class Product extends Model
             ->get();
 
         if (count($promotions) <= 0) {
-            $resule = ['status' => 'fail', 'message' => 'ตอนนี้ไม่มี Promotions'];
+            $arr = ['status' => 'fail', 'message' => 'ตอนนี้ไม่มี Promotions'];
 
         } else {
 

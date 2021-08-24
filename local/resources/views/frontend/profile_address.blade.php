@@ -22,28 +22,28 @@
  			<div class="form-group row">
  				<div class="col-sm-2">
  					<label>บ้านเลขที่ <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{$customer->house_no}}" required="">
+ 					<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{@$customer->house_no}}" required="">
  				</div>
 
  				<div class="col-sm-3">
  					<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ $customer->house_name }}" required="">
+ 					<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ @$customer->house_name }}" required="">
  				</div>
 
  				<div class="col-sm-2">
  					<label>หมู่ที่ <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ $customer->moo }}" required="">
+ 					<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ @$customer->moo }}" required="">
  				</div>
 
  				<div class="col-sm-2">
  					<label>ตรอก/ซอย </label>
- 					<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ $customer->soi }}" >
+ 					<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ @$customer->soi }}" >
  				</div>
 
 
  				<div class="col-sm-3">
  					<label>ถนน</label>
- 					<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ $customer->road }}">
+ 					<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ @$customer->road }}">
  				</div>
  			</div>
 
@@ -51,7 +51,12 @@
  				<div class="col-sm-3">
  					<label>จังหวัด <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
- 						<option value="{{ $customer->provinces_id }}" >{{ $customer->provinces_name }}</option>
+             @if(@$customer->provinces_id)
+                <option value="{{ @$customer->provinces_id }}" >{{ @$customer->provinces_name }}</option>
+             @else
+             <option value="" > เลือกจังหวัด </option>
+             @endif
+
  						@foreach($provinces as $value_provinces)
  						<option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
  						@endforeach
@@ -60,7 +65,12 @@
  				<div class="col-sm-3">
  					<label>เขต/อำเภอ <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
- 						<option value="{{ $customer->amphures_id_fk }}">{{ $customer->amphures_name }}</option>
+            @if(@$customer->amphures_id_fk)
+            <option value="{{ @$customer->amphures_id_fk}}" >{{ @$customer->amphures_name }}</option>
+            @else
+            <option value="" > เขต/อำเภอ </option>
+            @endif
+
  					</select>
  					{{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="district" name="district" value="{{ old('district') }}"> --}}
  				</div>
@@ -68,20 +78,23 @@
  				<div class="col-sm-3">
  					<label>แขวง/ตำบล <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
- 						<option value="{{ $customer->district_name }}">{{ $customer->district_name }}</option>
- 						{{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district" name="district" value="{{ old('district') }}"> --}}
+            @if(@$customer->district_name)
+            <option value="{{ @$customer->district_name}}" >{{ @$customer->district_name }}</option>
+            @else
+            <option value="" > แขวง/ตำบล </option>
+            @endif
  					</select>
  				</div>
 
  			{{-- 	<div class="col-sm-3">
  					<label>จังหวัด <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ $customer->province }}" required="">
+ 					<input type="text" class="form-control form-control-bold" placeholder="จังหวัด" name="province" value="{{ @$customer->province }}" required="">
  				</div> --}}
 
 
  				<div class="col-sm-3">
  					<label>รหัสไปษณีย์</label>
- 					<input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ $customer->zipcode }}">
+ 					<input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
  				</div>
  			</div>
 

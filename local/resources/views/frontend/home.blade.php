@@ -216,7 +216,7 @@
                             @if($data_lv3)
                             <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree('{{ $data_lv3->user_name }}')">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
                             @else
-                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add({{ $data_lv2->id }},'{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add('{{ $data_lv2->user_name }}','{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
                             @endif
                             @endfor
 
@@ -224,7 +224,7 @@
                         </li>
                         @else
                         <li data-jstree='{"opened":true}'>
-                          <a href="#" onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
+                          <a href="#" onclick="modal_add('{{ $data['lv1']->user_name }}','{{ $line_lv2 }}')"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
                           <ul>
                             <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
                             <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
@@ -322,7 +322,7 @@
                                   </div>
                                 </a>
                               @else
-                                <a href="javascript:void(0);" onclick="modal_add({{ $data['lv1']->id }},'{{ $line_lv2 }}')">
+                                <a href="javascript:void(0);" onclick="modal_add('{{ $data['lv1']->user_name }}','{{ $line_lv2 }}')">
                                   <div class="member-view-box">
                                     <div class="member-image">
                                       <img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img">
@@ -387,7 +387,7 @@
                                       </a>
                                     @else
                                       @if ($data_lv2)
-                                        <a href="javascript:void(0);" onclick="modal_add({{ $data_lv2->id }},'{{ $line_lv3 }}')">
+                                        <a href="javascript:void(0);" onclick="modal_add('{{ $data_lv2->user_name }}','{{ $line_lv3 }}')">
                                           <div class="member-view-box">
                                               <div class="member-image">
                                                 <img src="{{ asset('frontend/assets/icon/add_user.png') }}" alt="img" class="img-radius img-60 zoom">
@@ -510,11 +510,11 @@
 
     }
 
-    function modal_add(id,type){
+    function modal_add(user_name,type){
       $.ajax({
         url: '{{ route('modal_add') }}',
         type: 'GET',
-        data: {id:id,type:type},
+        data: {user_name:user_name,type:type},
       })
       .done(function(data) {
         console.log("success");

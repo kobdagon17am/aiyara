@@ -55,6 +55,7 @@ class HomeController extends Controller
   }
 
   public function modal_add(Request $request){
+
     $user_name = $request->user_name;
     $type = $request->type;
     $data = DB::table('customers')
