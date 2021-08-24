@@ -36,6 +36,17 @@ class Promotions_productsController extends Controller
       return $this->form();
     }
 
+
+    public function show($id)
+    {
+       $sRow = \App\Models\Backend\Promotions_products::find($id);
+       $sRowNew = \App\Models\Backend\Promotions::find($sRow->promotion_id_fk);
+       $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
+       // dd($sProduct);
+       $sProductUnit = \App\Models\Backend\Product_unit::get();
+       return View('backend.promotions_products.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sRowNew'=>$sRowNew ,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit ) );
+    }
+
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Promotions_products::find($id);
@@ -104,7 +115,7 @@ class Promotions_productsController extends Controller
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-                  products_cost.selling_price,
+                  products_cost.member_price,
                   products_cost.pv
                   FROM
                   products_details

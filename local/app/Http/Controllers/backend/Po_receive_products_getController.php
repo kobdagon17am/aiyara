@@ -252,7 +252,7 @@ class Po_receive_products_getController extends Controller
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-                  products_cost.selling_price,
+                  products_cost.member_price,
                   products_cost.pv
                   FROM
                   products_details

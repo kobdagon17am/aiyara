@@ -654,7 +654,7 @@ class AjaxController extends Controller
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-                  products_cost.selling_price,
+                  products_cost.member_price,
                   products_cost.pv
                   FROM
                   products_details
@@ -666,7 +666,7 @@ class AjaxController extends Controller
 
             $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
             $pv = @$Products[0]->pv;
-            $selling_price = @$Products[0]->selling_price;
+            $member_price = @$Products[0]->member_price;
 
 
             $p_unit = DB::select("
@@ -684,7 +684,7 @@ class AjaxController extends Controller
               WHERE product_id_fk = ".$request->product_id_fk." AND frontstore_id_fk=".$request->frontstore_id." ");
             $p_amt =  @$p_amt[0]->amt;
 
-            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$member_price." ";
 
             $tb = '<textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
             <input type="hidden" id="p_amt" value="'.$p_amt.'">';
@@ -1770,7 +1770,7 @@ if($frontstore[0]->check_press_save==2){
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-                  products_cost.selling_price,
+                  products_cost.member_price,
                   products_cost.pv
                   FROM
                   products_details
@@ -1782,9 +1782,9 @@ if($frontstore[0]->check_press_save==2){
 
             $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
             $pv = @$Products[0]->pv;
-            $selling_price = @$Products[0]->selling_price;
+            $member_price = @$Products[0]->member_price;
 
-            $v = "รหัส : ชื่อสินค้า : ".$pn." \rPV : ".$pv." \rราคาขาย (บาท) : ".$selling_price." ";
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rPV : ".$pv." \rราคาขาย (บาท) : ".$member_price." ";
 
             $tb = '<textarea class="form-control" rows="4" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
             ';
@@ -3927,6 +3927,24 @@ if($frontstore[0]->check_press_save==2){
        }
     }
 
+    public function ajaxDelUser(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+           DB::select(" DELETE FROM ck_users_admin where id=$request->id ");
+       }
+    }
+
+
+    public function ajaxDelPromoProduct(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+           DB::select(" DELETE FROM `promotions_products` where id=$request->id ");
+       }
+    }
+
+
     public function ajaxDeLProductOrderBackend(Request $request)
     {
       // return ($request);
@@ -3952,6 +3970,7 @@ if($frontstore[0]->check_press_save==2){
               $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
               $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
               DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
             }else{
               DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
             }

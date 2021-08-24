@@ -8,6 +8,7 @@ use DB;
 use File;
 use PDO;
 use App\Models\Frontend\RunNumberPayment;
+use App\Models\Frontend\Product;
 
 class FrontstorelistController extends Controller
 {
@@ -48,10 +49,10 @@ class FrontstorelistController extends Controller
                   \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
                         [
                           'amt' => @$request->quantity[$i] ,
-                          'selling_price' => @$Promotions_cost[0]->selling_price ,
+                          'selling_price' => @$Promotions_cost[0]->member_price ,
                           'pv' => $pv ,
                           'total_pv' => $pv * @$request->quantity[$i] ,
-                          'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
+                          'total_price' => @$Promotions_cost[0]->member_price * @$request->quantity[$i] ,
                         ]
                     );
 
@@ -77,10 +78,10 @@ class FrontstorelistController extends Controller
                 $sRow->add_from    = '2';
                 $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
 
-                $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
+                $sRow->selling_price    = @$Promotions_cost[0]->member_price;
                 $sRow->pv    = $pv ;
                 $sRow->total_pv    =  $pv * @$request->quantity[$i];
-                $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity[$i];
+                $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$i];
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
@@ -89,6 +90,25 @@ class FrontstorelistController extends Controller
               }
 
           }
+
+
+             $id= @$request->frontstore_id;
+
+             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+             // dd($sFrontstoreDataTotal);
+             if($sFrontstoreDataTotal){
+                    $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+                    $vat = $vat > 0  ? $vat : 0 ;
+                    $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+                    $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+                    $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+                    DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+                    DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
+              }else{
+                DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+              }
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         }
@@ -124,17 +144,34 @@ class FrontstorelistController extends Controller
                   \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
                         [
                           'amt' => @$request->quantity[$i] ,
-                          'selling_price' => @$Promotions_cost[0]->selling_price ,
+                          'selling_price' => @$Promotions_cost[0]->member_price ,
                           'pv' => $pv ,
                           'total_pv' => $pv * @$request->quantity[$i] ,
-                          'total_price' => @$Promotions_cost[0]->selling_price * @$request->quantity[$i] ,
+                          'total_price' => @$Promotions_cost[0]->member_price * @$request->quantity[$i] ,
                         ]
                     );
 
 
           }
 
-           DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
+           $id=   @$request->frontstore_id;
+
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           // dd($sFrontstoreDataTotal);
+           if($sFrontstoreDataTotal){
+              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+              $vat = $vat > 0  ? $vat : 0 ;
+              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+            }else{
+              DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+            }
+
+
+            DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -176,7 +213,7 @@ class FrontstorelistController extends Controller
                 products_details
                 WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
                 ) as pn,
-                products_cost.selling_price,
+                products_cost.member_price,
                 products_cost.pv
                 FROM
                 products
@@ -207,7 +244,7 @@ class FrontstorelistController extends Controller
                           // 'frontstore_id_fk' => request('frontstore_id') ,
                           'amt' => @$request->quantity[$i] ,
                           'total_pv' => $pv ,
-                          'total_price' => @$sProducts[0]->selling_price * @$request->quantity[$i] ,
+                          'total_price' => @$sProducts[0]->member_price * @$request->quantity[$i] ,
                           // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                           'product_unit_id_fk' => @$sProducts[0]->product_unit,
                         ]
@@ -227,12 +264,12 @@ class FrontstorelistController extends Controller
                 $sRow->frontstore_id_fk    = request('frontstore_id') ;
                 $sRow->product_id_fk    = @$request->product_id_fk[$i];
                 $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
-                $sRow->selling_price    = @$sProducts[0]->selling_price;
+                $sRow->selling_price    = @$sProducts[0]->member_price;
                 $sRow->pv    = $pv ;
                 $sRow->amt    =  @$request->quantity[$i];
                 $sRow->product_unit_id_fk    =  @$sProducts[0]->product_unit ;
                 $sRow->total_pv    =  $pv * @$request->quantity[$i];
-                $sRow->total_price    =  @$sProducts[0]->selling_price * @$request->quantity[$i];
+                $sRow->total_price    =  @$sProducts[0]->member_price * @$request->quantity[$i];
                 $sRow->created_at = date('Y-m-d H:i:s');
                 if(!empty(request('quantity')[$i])){
                   if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
@@ -269,6 +306,7 @@ class FrontstorelistController extends Controller
               $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
               $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
               DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
         }else{
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
@@ -368,6 +406,7 @@ class FrontstorelistController extends Controller
                     $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
                     $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
                     DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+                    DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
               }else{
                 DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
               }
@@ -516,10 +555,10 @@ class FrontstorelistController extends Controller
                 $sRow->promotion_id_fk    = @$request->promotion_id_fk;
                 $sRow->promotion_code    = @$request->txtSearchPro;
 
-                $sRow->selling_price    = @$Promotions_cost[0]->selling_price;
+                $sRow->selling_price    = @$Promotions_cost[0]->member_price;
                 $sRow->pv    = $pv;
                 $sRow->total_pv    =  $pv * @$request->quantity;
-                $sRow->total_price    =  @$Promotions_cost[0]->selling_price * @$request->quantity;
+                $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
@@ -567,7 +606,7 @@ class FrontstorelistController extends Controller
                     LEFT JOIN dataset_product_unit on dataset_product_unit.id=products_units.product_unit_id_fk
                     WHERE products_units.product_id_fk=products.id
                     ) as product_unit,
-                    products_cost.selling_price,
+                    products_cost.member_price,
                     products_cost.pv
                     FROM
                     products
@@ -596,7 +635,7 @@ class FrontstorelistController extends Controller
                                 // 'frontstore_id_fk' => request('frontstore_id') ,
                                 'amt' => @$request->quantity[$i] ,
                                 'total_pv' => $pv * @$request->quantity[$i] ,
-                                'total_price' => @$sProducts[0]->selling_price * @$request->quantity[$i] ,
+                                'total_price' => @$sProducts[0]->member_price * @$request->quantity[$i] ,
                                 // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk ,
                                 // 'product_unit_id_fk' => @$sProducts[0]->product_unit,
                               ]
@@ -874,9 +913,9 @@ class FrontstorelistController extends Controller
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 7), ',', -1)
             )
             AND curdate() BETWEEN promotions.show_startdate and promotions.show_enddate
-            AND promotions.all_available_purchase > 0 
+            
       ");
-
+// AND promotions.all_available_purchase > 0 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
   ->addColumn('product_name', function($row) {
@@ -932,7 +971,7 @@ class FrontstorelistController extends Controller
       })
       ->addColumn('selling_price', function($row) {
           $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',$row->id)->get();
-          return @$Promotions_cost[0]->selling_price;
+          return @$Promotions_cost[0]->member_price;
       })
       ->addColumn('select_amt', function($row) {
           return $row->id.":".$row->limited_amt_person;
@@ -948,12 +987,31 @@ class FrontstorelistController extends Controller
           $d = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
           return $d[0]->approve_status;
       })
-       ->addColumn('cuase_cannot_buy', function($row) {
-        $c = 'Package ขั้นต่ำที่ซื้อได้,คุณวุฒิ reward ที่ซื้อได้,รักษาคุณสมบัติรายเดือน,รักษาคุณสมบัติท่องเที่ยว,aistockist,agency  ';
-        if($c){
-          return 'ไม่ผ่านเกณฑ์ '.$c;
-        }
-        
+        ->addColumn('cuase_cannot_buy', function($row) {
+           $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
+           $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
+           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
+           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+          //  if($Check){
+          //     $arr = [];
+          //     for ($i=0; $i < count(@$Check) ; $i++) { 
+          //          $c = array_column($Check,$i);
+          //          foreach ($c as $key => $value) {
+          //           if($value['status'] == "fail"){
+          //              array_push($arr,$value['message']);
+          //           }
+          //          }
+          //          $im = implode(',',$arr);
+          //     }
+          //     return $im;
+          // }
+           // return @$d->customers_id_fk;
+          // return $row->frontstore_id_fk;
+          // return $d1[0]->customers_id_fk;
+          // return $d2[0]->user_name;
+          // return $d1[0]->purchase_type_id_fk;
+          // return "No Buy";
+           return 0;
       })
       ->escapeColumns('cuase_cannot_buy')
       ->make(true);

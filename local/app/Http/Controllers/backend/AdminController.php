@@ -68,20 +68,25 @@ class AdminController extends Controller
         }
         $branch_id_fk = \App\Models\Backend\Branchs::find(request('branch_id_fk'));
 
-        $sRow->name    = request('name');
-        $sRow->email    = request('email');
-        $sRow->tel    = request('tel');
-        $sRow->branch_id_fk    = request('branch_id_fk');
-        $sRow->business_location_id_fk    = $branch_id_fk->business_location_id_fk;
-        $sRow->department    = request('department');
-        $sRow->position    = request('position');
-        $sRow->position_level    = request('position_level');
-        
-        $sRow->permission    = request('permission')?request('permission'):'0';
+        if(\Auth::user()->permission==1){
 
-        $sRow->role_group_id_fk    = request('role_group_id_fk');
+              $sRow->name    = request('name');
+              $sRow->email    = request('email');
+              $sRow->tel    = request('tel');
+              $sRow->branch_id_fk    = request('branch_id_fk');
+              $sRow->business_location_id_fk    = $branch_id_fk->business_location_id_fk;
+              $sRow->department    = request('department');
+              $sRow->position    = request('position');
+              $sRow->position_level    = request('position_level');
+              $sRow->permission    = request('permission')?request('permission'):'0';
+              $sRow->role_group_id_fk    = request('role_group_id_fk');
+              $sRow->isActive    = request('active')?request('active'):'N';
 
-        $sRow->isActive    = request('active')?request('active'):'N';
+        }else{
+
+              $sRow->tel    = request('tel');
+
+        }
 
         if( request('password') ){
           $sRow->password    = \Hash::make( request('password') );
@@ -90,7 +95,10 @@ class AdminController extends Controller
         $sRow->save();
         \DB::commit();
 
-      return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+         return redirect()->to(url("backend/permission/".$sRow->id."/edit"));
+
+         // return redirect()->action('backend\AdminController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
+
     } catch (\Exception $e) {
       echo $e->getMessage();
       \DB::rollback();

@@ -77,7 +77,7 @@ class GiftvoucherCusController extends Controller
                     products_details
                     WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
                     ) as pn,
-                    products_cost.selling_price,
+                    products_cost.member_price,
                     products_cost.pv
                     FROM
                     products
@@ -103,7 +103,7 @@ class GiftvoucherCusController extends Controller
                               // 'frontstore_id_fk' => request('frontstore_id') ,
                               'amt' => @$request->quantity[$i] ,
                               'total_pv' => @$sProducts[0]->pv * @$request->quantity[$i] ,
-                              'total_price' => @$sProducts[0]->selling_price * @$request->quantity[$i] ,
+                              'total_price' => @$sProducts[0]->member_price * @$request->quantity[$i] ,
                               // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                               'product_unit_id_fk' => @$sProducts[0]->product_unit,
                             ]
@@ -117,12 +117,12 @@ class GiftvoucherCusController extends Controller
                     $sRow->frontstore_id_fk    = request('frontstore_id') ;
                     $sRow->product_id_fk    = @$request->product_id_fk[$i];
                     $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
-                    $sRow->selling_price    = @$sProducts[0]->selling_price;
+                    $sRow->selling_price    = @$sProducts[0]->member_price;
                     $sRow->pv    = @$sProducts[0]->pv;
                     $sRow->amt    =  @$request->quantity[$i];
                     $sRow->product_unit_id_fk    =  @$sProducts[0]->product_unit ;
                     $sRow->total_pv    =  @$sProducts[0]->pv * @$request->quantity[$i];
-                    $sRow->total_price    =  @$sProducts[0]->selling_price * @$request->quantity[$i];
+                    $sRow->total_price    =  @$sProducts[0]->member_price * @$request->quantity[$i];
                     $sRow->created_at = date('Y-m-d H:i:s');
                     if(!empty(request('quantity')[$i])){
                       if(@$request->product_id_fk[$i] == request('product_id_fk_this')){

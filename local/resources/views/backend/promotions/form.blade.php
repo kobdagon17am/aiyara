@@ -499,7 +499,7 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.promotions_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger  cCancel " data-id="'+aData['id']+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
                 });
@@ -614,8 +614,50 @@
             });
 
 
+      </script>
 
-            </script>
+      <script>
+      $(document).ready(function() {
 
+
+          $(document).on('click', '.cCancel', function(event) {
+
+            var id = $(this).data('id');
+         
+              if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
+                  return false;
+              }else{
+              $.ajax({
+                  url: " {{ url('backend/ajaxDelPromoProduct') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", id:id,
+                  },
+                  success:function(data)
+                  { 
+                    // console.log(data);
+                    // return false;
+                        Swal.fire({
+                          type: 'success',
+                          title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+
+                        setTimeout(function () {
+                          // $('#data-table').DataTable().clear().draw();
+                          location.reload();
+                        }, 1500);
+                  }
+                });
+
+            }
+
+              
+            });
+                
+      });
+
+    </script>
 
 @endsection

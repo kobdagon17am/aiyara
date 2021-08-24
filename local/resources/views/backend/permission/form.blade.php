@@ -21,7 +21,7 @@
 <!-- end page title -->
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-7">
         <div class="card">
             <div class="card-body">
               @if( empty($sRow) )
@@ -37,8 +37,8 @@
 
             @if(empty(\Auth::user()->locale_id))
                 <div class="form-group row">
-                    <label for="example-email-input" class="col-md-2 col-form-label">Language</label>
-                    <div class="col-md-10">
+                    <label for="example-email-input" class="col-md-4 col-form-label">Language</label>
+                    <div class="col-md-7">
                       <select class="form-control" name="locale_id">
                         @if($sLocale->count())
                           @foreach($sLocale ?? '' AS $r)
@@ -51,49 +51,58 @@
             @endif
 
                 <div class="form-group row">
-                    <label for="example-email-input" class="col-md-2 col-form-label">Email</label>
-                    <div class="col-md-10">
+                    <label for="example-email-input" class="col-md-4 col-form-label">Email</label>
+                    <div class="col-md-7">
                         <input class="form-control" type="email" value="{{ $sRow->email??'' }}" name="email" {{ isset($sRow)?'readonly':'required' }}>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-password-input" class="col-md-2 col-form-label">Password</label>
-                    <div class="col-md-10">
+                    <label for="example-password-input" class="col-md-4 col-form-label">Password</label>
+                    <div class="col-md-7">
                         <input class="form-control" type="text" name="password" placeholder="{{@$placeholder}}">
                     </div>
                 </div>
+                <?php 
+
+                    if(\Auth::user()->permission==1){
+                        $dis = "";
+                    }else{
+                        $dis = "disabled";
+                    }
+
+                ?>
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ชื่อผู้ใช้ที่แสดงในระบบ</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ $sRow->name??'' }}" name="name" required>
+                    <label for="example-text-input" class="col-md-4 col-form-label">ชื่อผู้ใช้ที่แสดงในระบบ</label>
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" value="{{ $sRow->name??'' }}" name="name" <?=$dis?> required >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">เบอร์โทรศัพท์ :</label>
-                    <div class="col-md-10">
+                    <label for="example-text-input" class="col-md-4 col-form-label">เบอร์โทรศัพท์ :</label>
+                    <div class="col-md-7">
                         <input class="form-control" type="text" value="{{ @$sRow->tel }}" name="tel" >
                     </div>
                 </div>
                <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ตำแหน่ง :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->position }}" name="position" >
+                    <label for="example-text-input" class="col-md-4 col-form-label">ตำแหน่ง :</label>
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" value="{{ @$sRow->position }}" name="position" <?=$dis?> >
                     </div>
                 </div>
 
                                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">แผนก :</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" value="{{ @$sRow->department }}" name="department" >
+                    <label for="example-text-input" class="col-md-4 col-form-label">แผนก :</label>
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" value="{{ @$sRow->department }}" name="department" <?=$dis?> >
                     </div>
                 </div>
 
 
                 <div class="form-group row">
-                   <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
-                        <div class="col-md-6">
-                          <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
+                   <label for="branch_id_fk" class="col-md-4 col-form-label"> สาขา : </label>
+                        <div class="col-md-7">
+                          <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " <?=$dis?> >
                              <option value="0">Select</option>
                              @if(@$sBranchs)
                               @foreach(@$sBranchs AS $r)
@@ -110,9 +119,9 @@
  
 
                <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์ในระบบ : * </label>
-                  <div class="col-md-6">
-                    <select name="permission" class="form-control select2-templating " required >
+                  <label for="example-text-input" class="col-md-4 col-form-label"> ระดับสิทธิ์ในระบบ : * </label>
+                  <div class="col-md-7">
+                    <select name="permission" class="form-control select2-templating " required <?=$dis?> >
                       <option value="">Select</option>
                          <option value="1" {{ (@$sRow->permission==1)?'selected':'' }} >Super Admin</option>
                          <option value="0" {{ (@$sRow->permission==0)?'selected':'' }} >User </option>
@@ -122,9 +131,9 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> ระดับสิทธิ์งานขาย : * </label>
-                  <div class="col-md-6">
-                     <select id="position_level" name="position_level" class="form-control select2-templating " >
+                  <label for="example-text-input" class="col-md-4 col-form-label"> ระดับสิทธิ์งานขาย : * </label>
+                  <div class="col-md-7">
+                     <select id="position_level" name="position_level" class="form-control select2-templating " <?=$dis?> >
                              <option value="0">Select</option>
                              @if(@$position_level)
                               @foreach(@$position_level AS $r)
@@ -140,9 +149,9 @@
            
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label"> กลุ่มสิทธิ์การเข้าถึงเมนู : * </label>
-                  <div class="col-md-6">
-                    <select name="role_group_id_fk" class="form-control select2-templating " required >
+                  <label for="example-text-input" class="col-md-4 col-form-label"> กลุ่มสิทธิ์การเข้าถึงเมนู : * </label>
+                  <div class="col-md-7">
+                    <select name="role_group_id_fk" class="form-control select2-templating " required <?=$dis?> >
                       <option value="">Select</option>
                         @if(@$sRole_group)
                           @foreach(@$sRole_group AS $r)
@@ -154,10 +163,10 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Active</label>
-                    <div class="col-md-10 mt-2">
+                    <label class="col-md-4 col-form-label">Active</label>
+                    <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="active" value="Y" {{ (isset($sRow) && $sRow->isActive=='Y')?'checked':'' }}>
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="active" value="Y" {{ (isset($sRow) && $sRow->isActive=='Y')?'checked':'' }}  <?=$dis?> >
                           <label class="custom-control-label" for="customSwitch">ใช้งานปกติ</label>
                       </div>
                     </div>

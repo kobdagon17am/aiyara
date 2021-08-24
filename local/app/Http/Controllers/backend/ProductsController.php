@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Redirect;
 
 class ProductsController extends Controller
 {
@@ -135,10 +136,32 @@ class ProductsController extends Controller
         $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
+      // return redirect()->to(url("backend/products"));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Products::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+      // $sTable = \App\Models\Backend\Products::search()->orderBy('id', 'asc');
+      // $sTable = DB::table("products")->orderBy('id', 'asc')->get();
+      if(isset($req->product_code)){
+        $w01 = " and product_code LIKE '%".$req->product_code."%' ";
+      }else{
+        $w01 = "";
+      }
+
+      if(isset($req->product_name)){
+        $w02 = " and (select product_name from products_details where product_id_fk=products.id limit 1) LIKE '%".$req->product_name."%' ";
+      }else{
+        $w02 = "";
+      }
+
+      if(isset($req->product_cat)){
+        $w03 = " and (select category_name from categories where category_id=products.category_id limit 1) LIKE '%".$req->product_cat."%' ";
+      }else{
+        $w03 = "";
+      }
+
+
+      $sTable = DB::select("select * from products where 1 $w01 $w02 $w03 order by updated_at desc ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('pname', function($row) {

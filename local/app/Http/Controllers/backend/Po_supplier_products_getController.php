@@ -139,32 +139,6 @@ class Po_supplier_products_getController extends Controller
       $sTable = \App\Models\Backend\Po_supplier_products_get::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('product_name', function($row) {
-      //             // return $row->product_unit_id_fk;
-      //   if(!empty($row->product_id_fk)){
-
-      //     $Products = DB::select(" 
-      //           SELECT products.id as product_id,
-      //             products.product_code,
-      //             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-      //             products_cost.selling_price,
-      //             products_cost.pv
-      //             FROM
-      //             products_details
-      //             Left Join products ON products_details.product_id_fk = products.id
-      //             LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-      //             WHERE lang_id=1 AND products.id= ".$row->product_id_fk."
-
-      //      ");
-
-      //      return  @$Products[0]->product_code." : ".@$Products[0]->product_name;
-
-      //    }
-      // })
-      // ->addColumn('product_unit_desc', function($row) {
-      //     $sP = \App\Models\Backend\Product_unit::find($row->product_unit);
-      //     return $sP->product_unit;
-      // })
       ->addColumn('get_status', function($row) {
         if($row->get_status==1){
           return 'ได้รับสินค้าครบแล้ว';

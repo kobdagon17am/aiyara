@@ -5,7 +5,9 @@ namespace App\Http\Controllers\backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use PDO;
 use File;
+use Session;
 
 class PromotionCodeController extends Controller
 {
@@ -48,9 +50,10 @@ class PromotionCodeController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('promotion_name', function($row) {
-        if($row->promotion_id_fk){
-          $d = \App\Models\Backend\Promotions::find($row->promotion_id_fk);
-          return $d->name_thai;
+        if(@$row->promotion_id_fk){
+          // $d = \App\Models\Backend\Promotions::find($row->promotion_id_fk)->get();
+          $d = DB::select(" select * from promotions where id=".$row->promotion_id_fk." ");
+          return @$d[0]->name_thai;
         }
       })
       ->addColumn('pro_sdate', function($row) {

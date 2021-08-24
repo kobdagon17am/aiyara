@@ -499,6 +499,7 @@ class PagesController extends Controller{
 
                        $promotion_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //ce_id_fk
                        $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
+                       $user_name = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //user_name
 
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
@@ -510,6 +511,7 @@ class PagesController extends Controller{
                          "promotion_code_id_fk"=>@$sRow->id,
                          "promotion_code"=>@$request->prefix_coupon.@$promotion_code,
                          "customer_id_fk"=>@$customers_id_fk,
+                         "user_name"=>@$user_name,
                          "pro_status"=> '4' ,
                          "created_at"=>now());
                        PromotionCode_add::insertData($insertData);
@@ -517,6 +519,13 @@ class PagesController extends Controller{
                        $i++;
 
                   }
+
+                  DB::select(" DELETE FROM `db_promotion_cus` WHERE user_name is null; ");
+                  // DB::select(" UPDATE
+                  //   db_promotion_cus
+                  //   Left Join customers ON db_promotion_cus.user_name = customers.user_name
+                  //   SET
+                  //   db_promotion_cus.customer_id_fk=customers.id ");
 
                   Session::flash('message','Import Successful.');
 

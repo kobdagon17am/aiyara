@@ -83,7 +83,7 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
-            <!-- <input type="text" class="get_menu_id">   test_clear_data -->
+            <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
 </div>
@@ -800,7 +800,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
                       var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
                       var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-                      console.log('sPermission : '+sPermission);
+                      // console.log('sPermission : '+sPermission);
 
                       if(sPermission==1){
                         sU = 1;
@@ -808,10 +808,10 @@ Gift Voucher  <i class="fa fa-gift"></i>
                         can_cancel_bill = 1;
                         can_cancel_bill_across_day = 1;
                       }
-                      console.log('sU : '+sU);
-                      console.log('sD : '+sD);
-                      // console.log('can_cancel_bill : '+can_cancel_bill);
-                      // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+                      // console.log('sU : '+sU);
+                      // console.log('sD : '+sD);
+                      // // console.log('can_cancel_bill : '+can_cancel_bill);
+                      // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
         	          if(sU!='1'&&sD!='1'){
         	              $('td:last-child', nRow).html('-');
@@ -837,7 +837,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
                              $('td:last-child', nRow).html('-');
                           }else{
 
-                            // console.log("invoice_code = "+aData['invoice_code']);
+                            // // console.log("invoice_code = "+aData['invoice_code']);
 
                                    // if(aData['invoice_code'] !== null){
                                       
@@ -857,7 +857,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
                     }
 
 
-                    // console.log(aData['purchase_type_id_fk']);
+                    // // console.log(aData['purchase_type_id_fk']);
                     if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
                        $("td:eq(8)", nRow).html('Success');
                     }
@@ -868,7 +868,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }
 
 
-            // console.log(aData['invoice_code']);
+            // // console.log(aData['invoice_code']);
 
             if(aData['status_delivery']=='1'){
 
@@ -881,8 +881,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
             if( aData['approve_status']==9 ){
 
-              // console.log(can_cancel_bill);
-              // console.log(can_cancel_bill_across_day);
+              // // console.log(can_cancel_bill);
+              // // console.log(can_cancel_bill_across_day);
 
               if(can_cancel_bill==1){
                  $('td:last-child', nRow).html(''
@@ -898,7 +898,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
             }
     
-              // console.log(aData['approve_status']);
+              // // console.log(aData['approve_status']);
 
               if(aData['approve_status']==0){
                 $("td:eq(10)", nRow).html('');
@@ -908,8 +908,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
                 $("td:eq(8)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
                 $("td:eq(9)", nRow).html('');
               }
-              // console.log(aData['type']);
-              // console.log(aData['status_sent_money']);
+              // // console.log(aData['type']);
+              // // console.log(aData['status_sent_money']);
               if(aData['type']=="เติม Ai-Cash"){
                 // $("td:eq(9)", nRow).html('');
                 $("td:eq(10)", nRow).html('');
@@ -1003,7 +1003,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // console.log(data);
+                                  // // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -1056,7 +1056,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // console.log(data);
+                                  // // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -1124,8 +1124,8 @@ $(document).ready(function() {
          $(document).on('click', '.btnSearchSub', function(event) {
               var d = $(this).data('attr');
               var v = $("#"+d).val();
-              // console.log(d);
-              // console.log(v);
+              // // console.log(d);
+              // // console.log(v);
               
               $("input").val('');
               $("select").select2('destroy').val("").select2();
@@ -1149,7 +1149,7 @@ $(document).ready(function() {
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
 
-                  // console.log(status_sent_money);
+                  // // console.log(status_sent_money);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           					var oTable;
@@ -1287,10 +1287,10 @@ $(document).ready(function() {
                                                   can_cancel_bill = 1;
                                                   can_cancel_bill_across_day = 1;
                                                 }
-                                                // console.log('sU : '+sU);
-                                                // console.log('sD : '+sD);
-                                                // console.log('can_cancel_bill : '+can_cancel_bill);
-                                                // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+                                                // // console.log('sU : '+sU);
+                                                // // console.log('sD : '+sD);
+                                                // // console.log('can_cancel_bill : '+can_cancel_bill);
+                                                // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
                                               if(sU!='1'&&sD!='1'){
                                                   $('td:last-child', nRow).html('-');
@@ -1318,7 +1318,7 @@ $(document).ready(function() {
 
                                             }
 
-                                             // console.log(aData['status_delivery']);
+                                             // // console.log(aData['status_delivery']);
 
                                             if(aData['status_delivery']=='1'){
 
@@ -1364,7 +1364,7 @@ $(document).ready(function() {
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();
                   let ViewCondition = $(this).data('id');
-                  // console.log(ViewCondition);
+                  // // console.log(ViewCondition);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
               					var oTable;
@@ -1494,10 +1494,10 @@ $(document).ready(function() {
                                                   can_cancel_bill = 1;
                                                   can_cancel_bill_across_day = 1;
                                                 }
-                                                // console.log('sU : '+sU);
-                                                // console.log('sD : '+sD);
-                                                // console.log('can_cancel_bill : '+can_cancel_bill);
-                                                // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+                                                // // console.log('sU : '+sU);
+                                                // // console.log('sD : '+sD);
+                                                // // console.log('can_cancel_bill : '+can_cancel_bill);
+                                                // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
                                               if(sU!='1'&&sD!='1'){
                                                   $('td:last-child', nRow).html('-');
@@ -1526,7 +1526,7 @@ $(document).ready(function() {
                                             }
 
 
-                                             // console.log(aData['status_delivery']);
+                                             // // console.log(aData['status_delivery']);
 
                                             if(aData['status_delivery']=='1'){
 
@@ -1565,9 +1565,14 @@ $(document).ready(function() {
 // Clear data in View page  
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
-              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+
+                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
+                      return false;
+                  }else{
+                  
+                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+                  }
+   
             });
                 
       });
@@ -1625,6 +1630,7 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_delivery_packing` ;");
       DB::select("TRUNCATE `db_delivery_packing_code` ;");
       DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+      DB::select("TRUNCATE  db_consignments;");
       
       DB::select("TRUNCATE `db_sent_money_daily` ;");
 
@@ -1665,7 +1671,7 @@ $(document).ready(function() {
                   },
                   success:function(data)
                   { 
-                    console.log(data);
+                    // console.log(data);
                     return false;
                         Swal.fire({
                           type: 'success',
