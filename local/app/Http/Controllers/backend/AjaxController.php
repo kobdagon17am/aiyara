@@ -14,6 +14,7 @@ use Auth;
 use App\Models\Backend\PromotionCode_add;
 use App\Models\Backend\GiftvoucherCode_add;
 use App\Models\Frontend\CourseCheckRegis;
+use App\Models\Frontend\PvPayment;
 
 class AjaxController extends Controller
 {
@@ -3912,7 +3913,15 @@ if($frontstore[0]->check_press_save==2){
     {
       // return ($request);
       if($request->ajax()){
-      DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
+
+           $r = DB::select(" select * from db_orders where id=$request->id ");
+
+           // dd($r[0]->id);
+
+           // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($r[0]->id, \Auth::user()->id , 'admin', 'admin');
+           // dd($cancel);
+
+           DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
       // return response()->json(\App\Models\Alert::Msg('success'));
        // return redirect()->to(url("backend/frontstore"));
        }

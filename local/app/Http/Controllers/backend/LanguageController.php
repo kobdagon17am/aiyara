@@ -27,9 +27,15 @@ class LanguageController extends Controller
       return $this->form();
     }
 
+    public function show($id)
+    {
+       $sRow = \App\Models\Backend\Language::find($id);
+       return View('backend.language.form')->with(array('sRow'=>$sRow , 'id'=>$id ) );
+    }
+
     public function edit($id)
     {
-       $sRow = \App\Models\Backend\language::find($id);
+       $sRow = \App\Models\Backend\Language::find($id);
        return View('backend.language.form')->with(array('sRow'=>$sRow , 'id'=>$id ) );
     }
 
@@ -45,9 +51,9 @@ class LanguageController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\language::find($id);
+            $sRow = \App\Models\Backend\Language::find($id);
           }else{
-            $sRow = new \App\Models\Backend\language;
+            $sRow = new \App\Models\Backend\Language;
           }
 
           $sRow->txt_desc    = request('txt_desc');
@@ -71,7 +77,7 @@ class LanguageController extends Controller
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\language::find($id);
+      $sRow = \App\Models\Backend\Language::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
@@ -79,11 +85,11 @@ class LanguageController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\language::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Language::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('lang', function($row) {
-          // $sLang = \App\Models\Backend\language::find($row->lang_id);
+          // $sLang = \App\Models\Backend\Language::find($row->lang_id);
           // return $sLang->txt_desc;
       })
       ->addColumn('updated_at', function($row) {

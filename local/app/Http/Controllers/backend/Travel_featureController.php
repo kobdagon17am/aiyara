@@ -19,7 +19,7 @@ class Travel_featureController extends Controller
 
  public function create()
     {
-      $sLang = \App\Models\Backend\language::get();
+      $sLang = \App\Models\Backend\Language::get();
       return View('backend.travel_feature.form')->with(array('sLang'=>$sLang) );
     }
 
@@ -28,9 +28,17 @@ class Travel_featureController extends Controller
       return $this->form();
     }
 
+    public function show($id)
+    {
+       $sLang = \App\Models\Backend\Language::get();
+       $sRow = \App\Models\Backend\Travel_feature::find($id);
+       return View('backend.travel_feature.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ) );
+    }
+
+
     public function edit($id)
     {
-       $sLang = \App\Models\Backend\language::get();
+       $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Travel_feature::find($id);
        return View('backend.travel_feature.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ) );
     }
@@ -85,7 +93,7 @@ class Travel_featureController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('lang', function($row) {
-          $sLang = \App\Models\Backend\language::find($row->lang_id);
+          $sLang = \App\Models\Backend\Language::find($row->lang_id);
           return $sLang->txt_desc;
       })
       ->addColumn('updated_at', function($row) {

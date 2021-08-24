@@ -719,10 +719,18 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+
     Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
     Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+
+    Route::post('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
+
     Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
     Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
+
+    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
 
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');

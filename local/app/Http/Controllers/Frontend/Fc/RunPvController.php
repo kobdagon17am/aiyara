@@ -13,6 +13,9 @@ class RunPvController extends Controller
 
     {
 
+        // dd($type);
+        // dd($username);
+        // dd($pv);
 
         $user = DB::table('customers') //อัพ Pv ของตัวเอง
             ->select('id','pv')
@@ -36,10 +39,17 @@ class RunPvController extends Controller
         $customer_id = $upline_id;
         $last_upline_type = $upline_type;
 
+        // dd($last_upline_type);
+
         try {
             DB::BeginTransaction();
 
+
+
             if ($customer_id != 'AA') { //run pv
+
+                // dd($customer_id);
+                
                 $j = 2;
                 for ($i = 1; $i <= $j; $i++) {
 
@@ -85,7 +95,11 @@ class RunPvController extends Controller
                             $j = 0;
                         }
 
+                        // dd();
+
                     } else {
+
+                        // dd();
 
                         if ($last_upline_type == 'A') {
 
@@ -128,7 +142,10 @@ class RunPvController extends Controller
                 }
 
             } else {
+
                 $resule = ['status' => 'success', 'message' => 'Pv add Type AA Success'];
+
+                // dd($resule);
 
             }
 
