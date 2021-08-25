@@ -12,36 +12,41 @@ class Promotion extends Model
 
 
     $all_available_purchase = DB::table('db_order_products_list')
+    ->select(db::raw('sum(amt) as amt_all'))
     ->where('promotion_id_fk', '=', $promotion_id)
     ->where('type_product', '=','promotion')
-    ->count();
+    ->first();
 
-		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$all_available_purchase];
+
+
+		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$all_available_purchase->amt_all];
 		return $resule;
 	}
 
 	public static function count_per_promotion($promotion_id,$customer_id){//เฉพาะต่อรอบโปรโมชั่น
 
     $count_per_promotion = DB::table('db_order_products_list')
+    ->select(db::raw('sum(amt) as amt_all'))
     ->where('promotion_id_fk', '=', $promotion_id)
     ->where('type_product', '=','promotion')
-    ->where('customer_id_fk', '=',$customer_id)
-    ->count();
+    ->where('customers_id_fk', '=',$customer_id)
+    ->first();
 
-		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion];
+		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
 		return $resule;
 	}
 
 	public static function count_per_promotion_day($promotion_id,$customer_id){//ต่อวันภายในรอบโปรโมชั่น
     $date_now = date('Y-m-d');
     $count_per_promotion = DB::table('db_order_products_list')
+    ->select(db::raw('sum(amt) as amt_all'))
     ->where('promotion_id_fk', '=', $promotion_id)
     ->where('type_product', '=','promotion')
-    ->where('customer_id_fk', '=',$customer_id)
+    ->where('customers_id_fk', '=',$customer_id)
     ->wheredate('created_at', '=',$date_now)
-    ->count();
+    ->first();
 
-		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion];
+		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
 		return $resule;
 	}
 

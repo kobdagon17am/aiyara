@@ -141,7 +141,7 @@ class Product extends Model
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
                 if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
-                    $resule = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.'รายการแล้ว'];
+                    $resule = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.' ชิ้นแล้ว'];
                 } elseif ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
                     $resule = ['status' => 'fail', 'message' => 'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้'];
 
@@ -276,7 +276,7 @@ class Product extends Model
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
                 if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
-                    $arr[] = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.'รายการแล้ว'];
+                    $arr[] = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.' ชิ้นการแล้ว'];
                 }
 
                 if ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
