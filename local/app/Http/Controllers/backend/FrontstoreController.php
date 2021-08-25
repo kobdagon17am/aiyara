@@ -339,6 +339,9 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
+      // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+      // dd($Check);
+
       // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme('9','1','1','admin');
       // dd($data);
 
@@ -1184,6 +1187,7 @@ class FrontstoreController extends Controller
 
               DB::select(" UPDATE `db_orders` SET date_setting_code='$date_setting_code' WHERE (`id`=".$sRow->id.") ");
 
+
               $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
 
               DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
@@ -1205,10 +1209,12 @@ class FrontstoreController extends Controller
               // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               // dd($data);
 
+              DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
+
 
 // TEST
-             return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
-             // return redirect()->to(url("backend/frontstore"));
+             // return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
+             return redirect()->to(url("backend/frontstore"));
 
 
         }else{
@@ -1222,7 +1228,7 @@ class FrontstoreController extends Controller
 
    public function form($id=NULL)
     {
-      // dd($request->all());
+      // dd($id);
       \DB::beginTransaction();
       try {
           if( $id ){
@@ -1255,7 +1261,7 @@ class FrontstoreController extends Controller
           }
           // 5=เงินสด,2=บัตรเครดิต
  
-            $fee = request('fee');
+          $fee = request('fee');
 
           // clear ออกก่อน แล้วค่อยคำนวณใหม่
           // $sRow->invoice_code    = $invoice_code ;
@@ -1275,10 +1281,12 @@ class FrontstoreController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
+          DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
+
           \DB::commit();
 
-           // return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
-           return redirect()->to(url("backend/frontstore"));
+           return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));
+           // return redirect()->to(url("backend/frontstore"));
 
 
       } catch (\Exception $e) {

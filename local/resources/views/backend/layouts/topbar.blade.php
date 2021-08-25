@@ -174,6 +174,7 @@
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ url('/backend/permission/'.\Auth::user()->id.'/edit') }}"><i class="fa fa-user font-size-16 align-middle mr-1"></i> PROFILE </a>
                     <a class="dropdown-item" href="{{ url('/config-cache') }}"><i class="fas fa-sync font-size-16 align-middle mr-1"></i> Clear Cache</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="backend/logout"><i class="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i> {{ __('Logout') }} </a>

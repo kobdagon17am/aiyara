@@ -143,7 +143,7 @@ $(function() {
 	            }else{
 	                $('td:last-child', nRow).html(''
 	                + '<a title="แก้ไข" href="{{ route('backend.permission.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-	                + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger cDelete" style="'+sD+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+	                + '<a href="javascript: void(0);" data-url="" class="btn btn-sm btn-danger  cCancel " data-id="'+aData['id']+'" style="'+sD+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 	              ).addClass('input');
 	            }
                
@@ -162,15 +162,48 @@ $(function() {
 </script>
 
 
-<script type="text/javascript">
-/*	
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
+      <script>
+      $(document).ready(function() {
+
+
+          $(document).on('click', '.cCancel', function(event) {
+
+            var id = $(this).data('id');
+         
+              if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
+                  return false;
+              }else{
+              $.ajax({
+                  url: " {{ url('backend/ajaxDelUser') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", id:id,
+                  },
+                  success:function(data)
+                  { 
+                    // console.log(data);
+                    // return false;
+                        Swal.fire({
+                          type: 'success',
+                          title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+
+                        setTimeout(function () {
+                          // $('#data-table').DataTable().clear().draw();
+                          location.reload();
+                        }, 1500);
+                  }
+                });
+
+            }
+
+              
+            });
+                
+      });
+
+    </script>
 @endsection
 

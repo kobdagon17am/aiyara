@@ -92,7 +92,8 @@
     .select2-container--default .select2-selection--single{ font-weight: bold !important;}
 
 /*My Style new define */
-      input:read-only {
+    
+     input[type=text]:read-only {
         background-color: #defbde !important;
         border: 1px solid #cccccc;
       }

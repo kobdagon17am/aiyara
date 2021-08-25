@@ -118,7 +118,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-             <h4 class="mb-0 font-size-18"> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+             <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
 
                     <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ url("backend/frontstore") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
@@ -892,6 +892,7 @@
                       <div class="divTableCell" >&nbsp; </div>
                       <div class="divTH">
                         <label for="" >รวม PV : </label>
+                        <!-- <input type="button" class="btnClickRefresh" value="R"> -->
                       </div>
                       <div class="divTableCell">
 
@@ -1644,11 +1645,11 @@
                 <input id="pro_name" type="text" readonly="" style="border: 0px solid transparent;width: 100%;font-weight: bold;font-size: 18px;display: none;">
                 </div>
 
-                <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
+                 <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table> 
 
                 <table id="data-table-promotions-cost" class="table table-bordered dt-responsive" style="width: 100%;">
-                </table>
+                </table> 
 
                 <br>
 
@@ -1721,8 +1722,8 @@
                   <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
                   <input name="product_plus" type="hidden" value="1">
                   {{ csrf_field() }}
-                  <table id="data-table-products-list" class="table table-bordered dt-responsive" style="width: 100%;">
-                  </table>
+                   <table id="data-table-products-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  </table> 
                 </form>
 
                  <form  class="frmFrontstorelistPro" action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -2342,7 +2343,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        url: '{{ route('backend.frontstorelist_pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
                               order_type:order_type,
@@ -2351,7 +2352,11 @@
                         },
                     columns: [
                         {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
+                           if(d==null){
+                              return '';
+                           }else{
+                            return '<img src='+d+' width="80">';
+                           } 
                         }},
                         {data: 'product_name',   title :'<center>รายการโปร</center>', className: 'text-left',render: function(d) {
                           return d;
@@ -2461,7 +2466,11 @@
                         },
                     columns: [
                         {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
+                           if(d==null){
+                              return '';
+                           }else{
+                            return '<img src='+d+' width="80">';
+                           } 
                         }},
                         {data: 'pn', title :'<center>ชื่อสินค้า </center>', className: 'text-left'},
                         {data: 'pv', title :'<center>PV </center>', className: 'text-left w50 '},
@@ -2549,8 +2558,21 @@
 
 
             $('#modalAddFromProductsList,#modalAddList').on('hidden.bs.modal', function () {
-                window.location.reload(true);
-            })
+                $("#spinner_frame").show();
+                // $(".myloading").show();
+                setTimeout(function(){
+                  window.location.reload(true);
+                },1000);
+                
+            });
+
+
+             $(document).on('click', '.btnClickRefresh', function () {
+                  $(".myloading").show();
+                  location.reload();
+              });
+
+
 
 
 
@@ -3294,11 +3316,7 @@
               4 เติม Ai-Stockist
               5 แลก  Ai Voucher
             */
-            // if(order_type==5){
-            //   $(".btnPromotion8").hide();
-            // }else{
-            //   $(".btnPromotion8").show();
-            // }
+       
 
             var oTable;
             $(function() {
@@ -3327,7 +3345,11 @@
                         },
                     columns: [
                         {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
+                         if(d==null){
+                              return '';
+                           }else{
+                            return '<img src='+d+' width="80">';
+                           } 
                         }},
                         {data: 'pn', title :'<center>ชื่อสินค้า </center>', className: 'text-left'},
                         {data: 'pv', title :'<center>PV </center>', className: 'text-left w50 '},
@@ -3416,7 +3438,7 @@
                     serverSide: true,
                     destroy:true,
                     ajax: {
-                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        url: '{{ route('backend.frontstorelist_pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
                               order_type:order_type,
@@ -3425,7 +3447,11 @@
                         },
                     columns: [
                         {data: 'p_img',   title :'<center>รูป</center>', className: 'text-center w100 ',render: function(d) {
-                           return '<img src='+d+' width="80">';
+                          if(d==null){
+                              return '';
+                           }else{
+                            return '<img src='+d+' width="80">';
+                           } 
                         }},
                         {data: 'product_name',   title :'<center>รายการโปร</center>', className: 'text-left',render: function(d) {
                           return d;
@@ -3479,8 +3505,7 @@
 
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
-
-                            // // // console.log(cuase_cannot_buy);
+                            console.log(cuase_cannot_buy);
 
                            if(cuase_cannot_buy.length>0){
                              $("td:eq(4)", nRow).html(
@@ -3878,7 +3903,7 @@ $(document).ready(function() {
 
                         $("#spinner_frame").show();
 
-  setTimeout(function(){
+                     setTimeout(function(){
 
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                     var frontstore_id_fk = $("#frontstore_id_fk").val();
@@ -6335,7 +6360,7 @@ $(document).ready(function() {
         });
 
 
-
+            fnGetDBfrontstore();
      
 
      });
@@ -6358,5 +6383,92 @@ $(document).ready(function() {
 
 </script>
 
+
+
+      <script>
+// Clear data in View page  
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+
+                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
+                      return false;
+                  }else{
+                  
+                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+                  }
+   
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+      
+      DB::select("TRUNCATE customers_addr_sent;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
+
+      DB::select("TRUNCATE `db_orders`;");
+      DB::select("TRUNCATE `db_orders_tmp`;");
+      DB::select("TRUNCATE `db_order_products_list`;");
+      DB::select("TRUNCATE `db_order_products_list_tmp`;");
+      
+      DB::select("TRUNCATE `db_delivery` ;");
+      DB::select("TRUNCATE `db_delivery_packing` ;");
+      DB::select("TRUNCATE `db_delivery_packing_code` ;");
+      DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+      DB::select("TRUNCATE  db_consignments;");
+      
+      DB::select("TRUNCATE `db_sent_money_daily` ;");
+
+      DB::select("TRUNCATE `db_add_ai_cash` ;");
+      DB::select("TRUNCATE `payment_slip` ;");
+      
+      // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
+
+      ?>
+          <script>
+          location.replace( "{{ url('backend/frontstore') }}");
+          </script>
+          <?php
+      }
+    ?>
 
 @endsection

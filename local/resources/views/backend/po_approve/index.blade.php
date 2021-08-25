@@ -990,22 +990,7 @@ $(document).ready(function() {
       });
 
     </script>
-   
 
-
-      <script>
-// Clear data in View page  
-      $(document).ready(function() {
-            $(".test_clear_data").on('click',function(){
-              
-              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
-            });
-                
-      });
-
-    </script>
-   
 
 @endsection
 

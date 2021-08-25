@@ -814,7 +814,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('frontstorelist', 'FrontstorelistController');
     Route::post('frontstorelist/datatable', 'FrontstorelistController@Datatable')->name('frontstorelist.datatable');
-    Route::post('frontstorelist/datatablePro', 'FrontstorelistController@DatatablePro')->name('frontstorelist-pro.datatable');
+    Route::post('frontstorelist/datatablePro', 'FrontstorelistController@DatatablePro')->name('frontstorelist_pro.datatable');
     Route::post('frontstorelist/plus', 'FrontstorelistController@plus');
     Route::post('frontstorelist/plusPromotion', 'FrontstorelistController@plusPromotion');
     Route::post('frontstorelist/minusPromotion', 'FrontstorelistController@minusPromotion');
@@ -874,6 +874,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxCancelOrderBackend', 'AjaxController@ajaxCancelOrderBackend');
     Route::post('ajaxDeLProductOrderBackend', 'AjaxController@ajaxDeLProductOrderBackend');
+    
+    Route::post('ajaxDelUser', 'AjaxController@ajaxDelUser');
+    Route::post('ajaxDelPromoProduct', 'AjaxController@ajaxDelPromoProduct');
 
     Route::post('ajaxCourseCheckRegis', 'AjaxController@ajaxCourseCheckRegis');
     

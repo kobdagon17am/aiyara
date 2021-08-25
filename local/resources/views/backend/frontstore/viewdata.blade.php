@@ -1879,7 +1879,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        url: '{{ route('backend.frontstorelist_pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
                               order_type:order_type,
@@ -3025,7 +3025,7 @@
                     serverSide: true,
                     destroy:true,
                     ajax: {
-                        url: '{{ route('backend.frontstorelist-pro.datatable') }}',
+                        url: '{{ route('backend.frontstorelist_pro.datatable') }}',
                         data :{
                               frontstore_id_fk:frontstore_id_fk,
                               order_type:order_type,

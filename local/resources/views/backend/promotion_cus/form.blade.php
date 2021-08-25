@@ -3,14 +3,11 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<style type="text/css">
-  .border-left-0 {height: 34px;}
-</style>
+
 @endsection
 
 @section('content')
 <div class="myloading"></div>
-<!-- start page title -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
@@ -18,25 +15,7 @@
         </div>
     </div>
 </div>
-<!-- end page title -->
 
-  <?php 
-      $sPermission = \Auth::user()->permission ;
-      $menu_id = @$_REQUEST['menu_id'];
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-   ?>
-
-<?php//echo  @$sRow ?>
   @if( empty(@$sRow) )
   <form id="frmGen" action="{{ route('backend.promotion_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
   @else
@@ -45,9 +24,6 @@
   @endif
     {{ csrf_field() }}
 
-<!-- 
- <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data" autocomplete="off">
-    {{ csrf_field() }} -->
 
       <div class="myBorder" >
         <div class="container">
@@ -96,7 +72,11 @@
                          <input id="pro_sdate" name="pro_sdate" type="hidden" value="{{ @$sRow->pro_sdate }}" />
                          <input id="pro_edate" name="pro_edate" type="hidden" value="{{ @$sRow->pro_edate }}" />
 
-                         <input type='button' class="btn btn-success btnSaveDate " value='บันทึกแก้ไขวันที่'>
+                         @IF(!empty(@$sRow->promotion_id_fk))
+                         <input type='button' class="btn btn-success btnSaveDate " value='บันทึกแก้ไขวันที่' >
+                         @ELSE
+                         <input type='button' class="btn btn-success btnSaveDate " value='บันทึกแก้ไขวันที่' disabled="">
+                         @ENDIF
 
                       </div>
 
@@ -339,10 +319,6 @@
 <script>
 
           $('.myLike').on('change', function(e){
-
-
-          var sU = "{{@$sU}}"; //alert(sU);
-          var sD = "{{@$sD}}"; //alert(sD);
           var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
           var oTable2;
           $(function() {
@@ -416,8 +392,6 @@
 
           });
 
-    var sU = "{{@$sU}}"; //alert(sU);
-    var sD = "{{@$sD}}"; //alert(sD);
     var promotion_code_id_fk = "{{@$sRow->id}}"; //alert(promotion_code_id_fk);
     var oTable1;
     $(function() {

@@ -39,7 +39,9 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w130 myLike" placeholder="Product Code" name="product_code">
+                    <input type="text" class="form-control float-left text-center w130 myLike product_code " placeholder="Product Code" >
+                    <input type="text" class="form-control float-left text-center w250 myLike product_name " placeholder="Product Name" style="margin-left: 1%;" >
+                    <input type="text" class="form-control float-left text-center w250 myLike product_cat " placeholder="Category" style="margin-left: 1%;" >
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}" >
@@ -65,6 +67,7 @@
 <script>
 var sU = "{{@$sU}}"; 
 var sD = "{{@$sD}}";
+var product_code = $(".product_code").val();
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -75,33 +78,18 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        destroy: true,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
-          url: '{{ route('backend.products.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
+              url: '{{ route('backend.products.datatable') }}',
+              data :{
+                _token: '{{csrf_token()}}',
+                  product_code:product_code,
+                  },
+                method: 'POST',
+              },
+
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'product_code', title :'<center>Product Code</center>', className: 'text-center'},
@@ -126,20 +114,93 @@ $(function() {
           }
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
-    });
+    // $('.myLike').on('change', function(e){
+    //   var product_code = $(".product_code").val();
+    //   alert(product_code);
+    //   oTable.draw();
+    // });
 });
 </script>
-<script type="text/javascript">
-	/*
-  var menu_id = sessionStorage.getItem("menu_id");
-    window.onload = function() {
-    if(!window.location.hash) {
-       window.location = window.location + '?menu_id=' + menu_id + '#menu_id=' + menu_id ;
-    }
-  }
-  */
-</script>
+
+  <script>
+        $(document).ready(function() {
+          
+            $(document).on('change', '.myLike', function(event) {
+                  event.preventDefault();
+
+                  $(".myloading").show();
+ // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                    var sU = "{{@$sU}}"; 
+                    var sD = "{{@$sD}}";
+                    var product_code = $(".product_code").val();
+                    var product_name = $(".product_name").val();
+                    var product_cat = $(".product_cat").val();
+                    var oTable;
+                    $(function() {
+                        oTable = $('#data-table').DataTable({
+                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                            processing: true,
+                            serverSide: true,
+                            scroller: true,
+                            scrollCollapse: true,
+                            scrollX: true,
+                            ordering: false,
+                            destroy: true,
+                            scrollY: ''+($(window).height()-370)+'px',
+                            iDisplayLength: 25,
+
+                              ajax: {
+                                  url: '{{ route('backend.products.datatable') }}',
+                                  data :{
+                                    _token: '{{csrf_token()}}',
+                                      product_code:product_code,
+                                      product_name:product_name,
+                                      product_cat:product_cat,
+                                      },
+                                    method: 'POST',
+                                  },
+
+                            columns: [
+                                {data: 'id', title :'ID', className: 'text-center w50'},
+                                {data: 'product_code', title :'<center>Product Code</center>', className: 'text-center'},
+                                {data: 'pname', title :'<center>Product Name</center>', className: 'text-left'},
+                                {data: 'Categories', title :'<center>Category</center>', className: 'text-left'},
+                                {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
+                                   return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
+                                }},
+                                {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                            ],
+                            rowCallback: function(nRow, aData, dataIndex){
+
+                              if(sU!=''&&sD!=''){
+                                  $('td:last-child', nRow).html('-');
+                              }else{ 
+
+                              $('td:last-child', nRow).html(''
+                                + '<a href="{{ route('backend.products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+
+                              }
+                            }
+                        });
+                        // $('.myLike').on('change', function(e){
+                        //   var product_code = $(".product_code").val();
+                        //   alert(product_code);
+                        //   oTable.draw();
+                        // });
+                    });
+          // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+          setTimeout(function(){
+             $(".myloading").hide();
+          }, 1500);
+
+               
+            });
+
+        }); 
+    </script>
+
 @endsection
 
