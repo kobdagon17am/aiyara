@@ -361,7 +361,7 @@
     .done(function(data){
       $('#product_list').html(data['html']);
       $('#coupon_code').val('');
-      console.log("success");
+      //console.log("success");
     })
     .fail(function() {
       $('#coupon_code').val('');
@@ -369,7 +369,7 @@
     })
     .always(function() {
       $('#coupon_code').val('');
-      console.log("complete");
+      //console.log("complete");
     });
   }
 
@@ -400,6 +400,7 @@
       data: {'coupon_code':coupon_code,'type':'{{$type}}'},
     })
      .done(function(data){
+
       if(data['status'] == 'fail'){
        Swal.fire({
         icon: 'error',
@@ -409,18 +410,12 @@
             })
 
      }else {
-       $('#product_list').html(data['html']);
-
+       $('#product_list').html(data['html']['html']);
      }
 
-      //$('#product_list').html(data);
-      console.log("success");
     })
      .fail(function() {
       console.log("error");
-    })
-     .always(function() {
-      console.log("complete");
     });
    }
 

@@ -382,6 +382,8 @@ class Product extends Model
 
     public static function product_list_coupon($promotion_id, $type, $category_id)
     { //$promotion_id,$types
+
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
@@ -391,7 +393,7 @@ class Product extends Model
             ->leftjoin('promotions_images', 'promotions_images.promotion_id_fk', '=', 'promotions.id')
             ->leftjoin('promotions_cost', 'promotions_cost.promotion_id_fk', '=', 'promotions.id')
             ->where('promotions_images.image_default', '=', 1)
-        // ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
+            ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
             ->where('promotions.business_location', '=', $business_location_id)
             ->where('promotions_cost.business_location_id', '=', $business_location_id)
             ->where('promotions.promotion_coupon_status', '=', 1)
@@ -399,9 +401,17 @@ class Product extends Model
             ->orderby('id', 'DESC')
             ->first();
 
-        //$resule = ['status'=>'success','message'=>'สามารถซื้อได้'];
-        $html = ProductList::product_list_html($promotions->id, $type, $promotions->img_url, $promotions->promotion_img, $promotions->name_thai, $promotions->detail_thai, $icon = '', $promotions->selling_price, $promotions->pv, $category_id);
-        return $html;
+            if($promotions){
+              $html = ProductList::product_list_html($promotions->id, $type, $promotions->img_url, $promotions->promotion_img, $promotions->name_thai,
+              $promotions->detail_thai, $icon = '', $promotions->selling_price, $promotions->pv, $category_id);
+
+              $resule = ['status'=>'success','message'=>'สามารถซื้อได้','html'=>$html];
+
+            }else{
+              $resule = ['status'=>'fail','message'=>'ไม่มีรายการ Coupon ที่ท่านเลือก'];
+
+            }
+        return  $resule;
     }
 
 }

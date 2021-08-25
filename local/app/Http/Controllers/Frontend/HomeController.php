@@ -22,9 +22,6 @@ class HomeController extends Controller
 
   public function index(Request $request){
 
-    $rs =  Product::product_list_select_promotion_all('1','A0000008');
-
-dd($rs);
   	if($request->id){
   		$id = $request->id;
   	}else{

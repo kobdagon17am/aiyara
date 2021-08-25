@@ -39,7 +39,7 @@ class ProductController extends Controller
                 ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
                 ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
                 ->where('db_promotion_code.approve_status', '=', 1)
-                ->where('db_promotion_code.pro_edate', '=>', now())
+                ->whereDate('db_promotion_code.pro_edate', '>=',now())
                 ->where('db_promotion_cus.customer_id_fk', '=', Auth::guard('c_user')->user()->id)
                 ->where('db_promotion_cus.pro_status', '=', 1)
                 ->orderby('db_promotion_cus.pro_status', 'ASC')
