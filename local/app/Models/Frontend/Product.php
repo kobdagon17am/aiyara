@@ -136,12 +136,12 @@ class Product extends Model
             foreach ($promotions as $value) {
 
                 $check_all_available_purchase = Promotion::all_available_purchase($value->id);
-                $count_per_promotion = Promotion::count_per_promotion($value->id);
-                $count_per_promotion_day = Promotion::count_per_promotion_day($value->id);
+                $count_per_promotion = Promotion::count_per_promotion($value->id,$customer_id);
+                $count_per_promotion_day = Promotion::count_per_promotion_day($value->id,$customer_id);
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
-                if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase']) {
-                    $resule = ['status' => 'fail', 'message' => 'การสั่งซื้อครบแล้ว'];
+                if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
+                    $resule = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.'รายการแล้ว'];
                 } elseif ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
                     $resule = ['status' => 'fail', 'message' => 'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้'];
 
@@ -191,7 +191,7 @@ class Product extends Model
                 } elseif ($value->limited_amt_type == 1) {
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
                     if ($value->limited_amt_person <= $count_per_promotion['count']) {
-                        $resule = ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบแล้ว'];
+                        $resule = ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     } else {
                         $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
 
@@ -202,7 +202,7 @@ class Product extends Model
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
 
                     if ($value->limited_amt_person <= $count_per_promotion_day['count']) {
-                        $resule = ['status' => 'fail', 'message' => 'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
+                        $resule = ['status' => 'fail', 'message' => 'การซื้อโปรโมชั่นต่อวันครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     } else {
                         $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
                         $html .= ProductList::product_list_html($value->id, $type, $value->img_url, $value->promotion_img, $value->name_thai, $value->detail_thai, $icon = '', $value->selling_price, $value->pv, 8);
@@ -271,12 +271,12 @@ class Product extends Model
             foreach ($promotions as $value) {
 
                 $check_all_available_purchase = Promotion::all_available_purchase($value->id);
-                $count_per_promotion = Promotion::count_per_promotion($value->id);
-                $count_per_promotion_day = Promotion::count_per_promotion_day($value->id);
+                $count_per_promotion = Promotion::count_per_promotion($value->id,$customer_id);
+                $count_per_promotion_day = Promotion::count_per_promotion_day($value->id,$customer_id);
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
-                if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase']) {
-                    $arr[] = ['status' => 'fail', 'message' => 'การสั่งซื้อครบแล้ว'];
+                if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
+                    $arr[] = ['status' => 'fail', 'message' => 'การสั่งซื้อของโปรโมชั่นนี้ครบ '.$value->all_available_purchase.'รายการแล้ว'];
                 }
 
                 if ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
@@ -353,7 +353,7 @@ class Product extends Model
                 if ($value->limited_amt_type == 1) {
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
                     if ($value->limited_amt_person <= $count_per_promotion['count']) {
-                        $arr[] = ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบแล้ว'];
+                        $arr[] =  ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     }
                 }
 
@@ -361,7 +361,7 @@ class Product extends Model
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
 
                     if ($value->limited_amt_person <= $count_per_promotion_day['count']) {
-                        $arr[] = ['status' => 'fail', 'message' => 'การซื้อโปรโมชั่นต่อวันครบแล้ว'];
+                        $arr[] = ['status' => 'fail', 'message' => 'การซื้อโปรโมชั่นต่อวันครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     }
 
                 }
