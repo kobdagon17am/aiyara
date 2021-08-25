@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Frontend\LineModel;
+use App\Models\Frontend\Product;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 //use App\Http\Controllers\Session;
@@ -20,6 +21,10 @@ class HomeController extends Controller
   }
 
   public function index(Request $request){
+
+    $rs =  Product::product_list_select_promotion_all('1','A0000008');
+
+    dd($rs);
 
   	if($request->id){
   		$id = $request->id;

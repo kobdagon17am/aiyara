@@ -224,6 +224,7 @@ class Product extends Model
     public static function product_list_select_promotion_all($type, $customer_username)
     { //เช่นทำคุณสมบัติ (dataset_orders_type->id),customer_username
 
+
         $arr = array();
         $data_customers = DB::table('customers')
             ->where('user_name', '=', $customer_username)
@@ -252,7 +253,7 @@ class Product extends Model
             ->get();
 
         if (count($promotions) <= 0) {
-            $arr = ['status' => 'fail', 'message' => 'ตอนนี้ไม่มี Promotions'];
+          $arr[] = ['status' => 'fail', 'message' => 'ตอนนี้ไม่มี Promotions'];
 
         } else {
 

@@ -198,7 +198,7 @@
                                              <div class="radio radio-inline" id="i_sent_address_card">
                                                  <label>
                                                      <input type="radio" id="sent_address_card_check"
-                                                         onchange="sent_address('sent_address_card',{{ @$address_card->provinces_id }})"
+                                                         onchange="sent_address('sent_address_card','{{ @$address_card->provinces_id }}')"
                                                          name="receive" value="sent_address_card">
                                                      <i class="helper"></i><b>ตามบัตรประชาชน</b>
                                                  </label>
@@ -969,7 +969,7 @@
                   }
 
              } else if (type_sent == 'sent_address_card') {
-               console.log(provinces_id)
+
                  check_shipping(provinces_id);
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'block';
@@ -997,6 +997,7 @@
                  document.getElementById('shipping').textContent = 0;
                  document.getElementById("html_shipping_premium").style.display = 'none';
                  document.getElementById("checkbox13").checked = false;
+                 document.getElementById("btn_pay").style.display = 'block';
 
              } else if (type_sent == 'sent_other') {
                  document.getElementById("sent_address").style.display = 'none';
@@ -1009,6 +1010,7 @@
                  $('.sent_address_other').prop('required', true);
                  document.getElementById("checkbox13").checked = false;
                  document.getElementById("sent_other").checked = true;
+                 document.getElementById("btn_pay").style.display = 'block';
 
              } else {
 
