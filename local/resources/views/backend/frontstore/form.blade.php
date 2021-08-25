@@ -141,6 +141,42 @@
   @endphp
 @ENDIF
 
+
+
+ <?php 
+
+ /*
+ 1  เงินโอน
+2 บัตรเครดิต
+3 Ai-Cash
+4 Gift Voucher
+
+5 เงินสด
+6 เงินสด + Ai-Cash
+7 เครดิต + เงินสด
+8 เครดิต + เงินโอน
+9 เครดิต + Ai-Cash
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+
+12  Gift Voucher + เงินโอน
+13  Gift Voucher + บัตรเครดิต
+14  Gift Voucher + Ai-Cash
+15  PromptPay
+16  TrueMoney
+17  Gift Voucher + PromptPay
+18  Gift Voucher + TrueMoney
+
+*/
+
+    if(@$sRow->pay_type_id_fk==6||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11){
+      $pay_type_transfer_aicash = " disabled ";
+    }else{
+      $pay_type_transfer_aicash = "";
+    }
+
+ ?>
+
 <div class="row" style="margin-bottom: -4.1%;" >
     <div class="col-12">
         <div class="card">
@@ -625,10 +661,10 @@
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
 
                           @IF(@$sRow->shipping_special == 1)
-                           <input disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                           <input {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ELSE
 
-                          <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ENDIF
                           
                         </th>
@@ -639,10 +675,10 @@
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           @IF(@$sRow->shipping_special == 1)
 
-                           <input disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select disabled id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$pay_type_transfer_aicash}} disabled id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$r->id==@$sRow->branch_id_fk)
@@ -665,10 +701,10 @@
 
 
                           @ELSE
-                           <input type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$pay_type_transfer_aicash}} id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$r->id==@$sRow->branch_id_fk)
@@ -743,7 +779,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_01?>">
-                          <input type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -795,7 +831,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
-                          <input type="radio" province_id="<?=@$addr[0]->province?>"
+                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
                            class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
                         </th>
@@ -828,7 +864,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -838,14 +874,14 @@
           @if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
                       <tr>
                         <th scope="row"  style="">
-                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
                     @ELSE
                   <tr>
                         <th scope="row"  style="">
-                          <input type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
@@ -1258,7 +1294,7 @@
                               $ds_y_02 = $ds_02[0];
                               $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
                             }else{$ds_02='';} ?>
-                              <input class="form-control transfer_money_datetime_02" autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_02 class_transfer_edit " autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
                           </div>
 
@@ -1306,7 +1342,7 @@
 
                           <div class="d-flex">
 
-                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03  " style="">อัพไฟล์สลิป (ถ้ามี)</button>
                             <?php if(!empty(@$sRow->transfer_money_datetime_03)){
                               $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
                               $ds_03 = explode("-", $ds1_03);
@@ -1315,7 +1351,7 @@
                               $ds_y_03 = $ds_03[0];
                               $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
                             }else{$ds_03='';} ?>
-                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime_03 class_transfer_edit " autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
                           </div>
 
@@ -1365,9 +1401,9 @@
                         <div class="divTableCell">
 
                             @IF(@$sRow->pay_type_id_fk==8)
-                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly  class_transfer_edit " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill class_transfer_edit " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -1557,15 +1593,29 @@
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button> -->
 
-                             <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;display: none;" disabled >
-                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                </button> 
-<?php //echo $sRow->check_press_save ;?>
+                    <?php 
+                                // ประเภทโอน
+                    if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
+                    ?>
 
-                                 <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSaveTransferType " style="float: right;display: none;"  >
+                         <input type="hidden" name="pay_type_transfer_slip" value="1">
+
+                          <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                          </button> 
+
+                    <?php }else{ ?>
+
+                          <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                          </button>                       
+
+                    <?php }?>
+
+                              <!--    <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSaveTransferType " style="float: right;display: none;"  >
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button> 
- 
+  -->
 
                         </div>
                       </div>
@@ -4132,22 +4182,22 @@ $(document).ready(function() {
                       // คำนวณ บวกเงินค่าขนส่ง ใส่เข้าไปในยอด โอน หรือ เงินสด บิลเดิมนี้ด้วย 
                       // $('#pay_type_id_fk').prop('disabled',true);
                       // $('.class_btnSaveTransferType').removeAttr( "disabled" );
-                      $('.class_btnSaveTransferType').show();
+                      // $('.class_btnSaveTransferType').show();
 
 
                     }
 
 
 
-                     $(document).on('change', '#transfer_price', function(event) {
+                     // $(document).on('change', '#transfer_price', function(event) {
 
                               // เปลี่ยนปุ่ม save เฉพาะกิจ
 
-                              $('.class_btnSaveTransferType').removeAttr( "disabled" );
+                              // $('.class_btnSaveTransferType').removeAttr( "disabled" );
 
                 
 
-                    });
+                    // });
 
 
                 $(document).on('click', '.class_btnSaveTransferType', function(event) {
@@ -4245,7 +4295,7 @@ $(document).ready(function() {
                       // $('#pay_type_id_fk').prop('disabled',true);
 
                       // $('.class_btnSaveTransferType').removeAttr( "disabled" );
-                      $('.class_btnSaveTransferType').show();
+                      // $('.class_btnSaveTransferType').show();
 
                       // $("#cash_pay").load(location.href + " #cash_pay");
                       
@@ -6058,12 +6108,13 @@ $(document).ready(function() {
 
 
 
-             $(document).on('change', '#transfer_price', function(event) {
+             $(document).on('change', '.class_transfer_edit', function(event) {
 
                         $("#spinner_frame").show();
                         $(".btnCalAddAicash").trigger('click');
+                        $('.class_btnSave').addClass(' btnSave ');
+                        $('.class_btnSave').removeAttr( "disabled" );
 
-                      
               });
 
 

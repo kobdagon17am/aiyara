@@ -12,10 +12,15 @@ class PromotionsController extends Controller
 
     public function index(Request $request)
     {
-
-      return view('backend.promotions.index');
-
+      $sPromotions = \App\Models\Backend\Promotions::get();
+      // dd($sPromotions);
+      return View('backend.promotions.index')->with(
+        array(
+          'sPromotions'=>$sPromotions,
+        ) 
+      );
     }
+
 
     public function create()
     {
@@ -170,16 +175,49 @@ class PromotionsController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Promotions::search()->orderBy('id', 'asc');
+    public function Datatable(Request $req){
+      // $sTable = \App\Models\Backend\Promotions::search()->orderBy('id', 'asc');
+        if(!empty($req->startDate) && !empty($req->endDate)){
+           $w01 = " and date(promotions.show_startdate) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+        }else{
+           $w01 = "";
+        }
+
+        if(!empty($req->pcode)){
+           $w02 = " and promotions.pcode = '".$req->pcode."' " ;
+        }else{
+           $w02 = "";
+        }
+
+        if(isset($req->status)){
+           $w03 = " and promotions.status = '".$req->status."' " ;
+        }else{
+           $w03 = "";
+        }
+
+      $sTable = DB::select(" SELECT promotions.*,promotions_cost.member_price as proprice,promotions_cost.pv
+        FROM
+        promotions
+        left Join promotions_cost ON promotions.id = promotions_cost.promotion_id_fk 
+        WHERE 1
+        ".$w01."
+        ".$w02."
+        ".$w03."
+
+        ");
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('lang', function($row) {
-          // $sLang = \App\Models\Backend\Language::find($row->lang_id);
-          // return $sLang->txt_desc;
+      ->addColumn('prodate', function($row) {
+          return $row->show_startdate.' To '.$row->show_enddate;
       })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
+      ->addColumn('proprice', function($row) {
+        if(@$row->proprice){
+          return number_format($row->proprice,0,'.',',')." / ".number_format($row->pv,0,'.',',');
+        }else{
+          return "";
+        }
+        
       })
       ->make(true);
     }

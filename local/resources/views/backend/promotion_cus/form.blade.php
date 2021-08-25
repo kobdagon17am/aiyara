@@ -350,7 +350,15 @@
                       {data: 'id', title :'ID', className: 'text-center w50'},
                       {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
                       // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-                      {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                      {data: 'customer_id_fk',   title :'<center>User ID </center>', className: 'text-center',render: function(d) {
+                         //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==0){
+                            return '-';
+                        }else{
+                            return d;
+                        }
+                      }}, 
+                      {data: 'user_name',   title :'<center>รหัสสมาชิก </center>', className: 'text-center',render: function(d) {
                         //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
                         if(d==0){
                             return '-';
@@ -375,6 +383,16 @@
                             return d;
                         }
                       }},
+                      {data: 'used',   title :'<center>ถูกใช้แล้ว</center>', className: 'text-center',render: function(d) {
+                  //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==1){
+                            return 'Y';
+                        }else{
+                            return 'N';
+                        }
+                }},
+                {data: 'used_user_name', title :'<center>รหัสคนนำไปใช้</center>', className: 'text-center'},
+                {data: 'used_date', title :'<center>วันที่ใช้</center>', className: 'text-center'},
                   ],
 
                   fnRowCallback: function (nRow, aData, iDisplayIndex) {
@@ -425,15 +443,22 @@
             columns: [
                 {data: 'id', title :'ID', className: 'text-center w50'},
                 {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
-                // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-                {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
-                  //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
-                  if(d==0){
-                      return '-';
-                  }else{
-                      return d;
-                  }
-                }},            
+                 {data: 'customer_id_fk',   title :'<center>User ID </center>', className: 'text-center',render: function(d) {
+                         //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==0){
+                            return '-';
+                        }else{
+                            return d;
+                        }
+                      }}, 
+                      {data: 'user_name',   title :'<center>รหัสสมาชิก </center>', className: 'text-center',render: function(d) {
+                        //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==0){
+                            return '-';
+                        }else{
+                            return d;
+                        }
+                      }},            
                 // {data: 'pro_status', title :'<center>สถานะ </center>', className: 'text-center'},
                 {data: 'pro_status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                   //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
@@ -451,6 +476,16 @@
                             return d;
                         }
                 }},
+                {data: 'used',   title :'<center>ถูกใช้แล้ว</center>', className: 'text-center',render: function(d) {
+                  //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
+                        if(d==1){
+                            return 'Y';
+                        }else{
+                            return 'N';
+                        }
+                }},
+                {data: 'used_user_name', title :'<center>รหัสคนนำไปใช้</center>', className: 'text-center'},
+                {data: 'used_date', title :'<center>วันที่ใช้</center>', className: 'text-center'},
             ],
              fnRowCallback: function (nRow, aData, iDisplayIndex) {
                  var info = $(this).DataTable().page.info();
@@ -611,9 +646,12 @@ $(document).ready(function() {
                   alert("! จำนวนหลักไม่พอ");
                   location.reload();
                   return false;
+                 }else{
+                   $(".myloading").hide();
+                   location.replace('backend/promotion_cus/'+data+'/edit');
                  }
-                 $(".myloading").hide();
-                 location.reload();
+                
+                 // location.reload();
                  // location.replace('backend/promotion_cus/'+data+'/edit');
                  // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
               },

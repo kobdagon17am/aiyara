@@ -339,7 +339,7 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
-      // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+      // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A56');
       // dd($Check);
 
       // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme('9','1','1','admin');
@@ -802,7 +802,55 @@ class FrontstoreController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
-         if(isset($request->receipt_save_list)){
+         if(isset($request->pay_type_transfer_slip)){
+
+             $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+
+             if ($request->hasFile('image02')) {
+                  @UNLINK(@$sRow->file_slip_02);
+                  $this->validate($request, [
+                    'image02' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image02');
+                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_02 = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+                  $lastInsertId_02 = DB::getPdo()->lastInsertId();
+                }
+
+               if ($request->hasFile('image03')) {
+                  @UNLINK(@$sRow->file_slip_03);
+                  $this->validate($request, [
+                    'image03' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image03');
+                  $name = 'S3'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip_03 = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+                  $lastInsertId_03 = DB::getPdo()->lastInsertId();
+                }
+
+              $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02')?request('transfer_money_datetime_02'):NULL;
+              $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03')?request('transfer_money_datetime_03'):NULL;
+              $sRow->note_fullpayonetime_02 = request('note_fullpayonetime_02');
+              $sRow->note_fullpayonetime_03 = request('note_fullpayonetime_03');
+
+
+                $sRow->save();
+
+                // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
+             return redirect()->to(url("backend/frontstore"));
+  
+
+         }else if(isset($request->receipt_save_list)){
           // dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);

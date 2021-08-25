@@ -1672,7 +1672,7 @@ $(document).ready(function() {
                   success:function(data)
                   { 
                     // console.log(data);
-                    return false;
+                    // return false;
                         Swal.fire({
                           type: 'success',
                           title: 'ทำการยกเลิกรายการสั่งซื้อที่ระบุเรียบร้อยแล้ว',

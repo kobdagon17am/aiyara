@@ -165,13 +165,13 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+        <!--         <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">PV :</label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->pv }}" name="pv" >
                     </div>
                 </div>
-
+ -->
                 <div class="form-group row">
                   <label for="" class="col-md-3 col-form-label">หน่วยนับ : * </label>
                   <div class="col-md-8">
@@ -477,8 +477,8 @@
                     scrollCollapse: true,
                     scrollX: true,
                     ordering: false,
-                    scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 5,
+                    // scrollY: ''+($(window).height()-370)+'px',
+                    // iDisplayLength: 5,
                     ajax: {
                             url: '{{ route('backend.promotions_products.datatable') }}',
                             data: function ( d ) {

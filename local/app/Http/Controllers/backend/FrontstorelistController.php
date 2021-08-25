@@ -901,7 +901,10 @@ class FrontstorelistController extends Controller
           (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,
           (SELECT customers_id_fk FROM `db_orders` WHERE id='". $req->frontstore_id_fk."'  limit 1) as customers_id_fk,
           '". $req->frontstore_id_fk."' as frontstore_id_fk
-          from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
+          from promotions 
+          where promotions.status=1 AND 
+          promotions.promotion_coupon_status=0
+          
            AND
             (
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
@@ -990,28 +993,28 @@ class FrontstorelistController extends Controller
         ->addColumn('cuase_cannot_buy', function($row) {
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
-           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
-           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
-          //  if($Check){
-          //     $arr = [];
-          //     for ($i=0; $i < count(@$Check) ; $i++) { 
-          //          $c = array_column($Check,$i);
-          //          foreach ($c as $key => $value) {
-          //           if($value['status'] == "fail"){
-          //              array_push($arr,$value['message']);
-          //           }
-          //          }
-          //          $im = implode(',',$arr);
-          //     }
-          //     return $im;
-          // }
+           $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
+           @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+           if($Check){
+              $arr = [];
+              for ($i=0; $i < count(@$Check) ; $i++) { 
+                   $c = array_column($Check,$i);
+                   foreach ($c as $key => $value) {
+                    if($value['status'] == "fail"){
+                       array_push($arr,$value['message']);
+                    }
+                   }
+                   $im = implode(',',$arr);
+              }
+              return $im;
+          }
            // return @$d->customers_id_fk;
           // return $row->frontstore_id_fk;
           // return $d1[0]->customers_id_fk;
           // return $d2[0]->user_name;
           // return $d1[0]->purchase_type_id_fk;
           // return "No Buy";
-           return 0;
+           // return 0;
       })
       ->escapeColumns('cuase_cannot_buy')
       ->make(true);

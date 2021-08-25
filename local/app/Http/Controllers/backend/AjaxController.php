@@ -1810,112 +1810,114 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGenPromotionCode(Request $request)
     {
 
-           // return($request->all());
-           // dd();
+         
+            // if($request->promotion_id_fk){
+            // $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_id_fk);
+            // }else{
+            // $sRow = new \App\Models\Backend\PromotionCode;
+            // }
+            // $sRow->promotion_id_fk = $request->promotion_id_fk;
+            // $sRow->pro_sdate = $request->pro_sdate;
+            // $sRow->pro_edate = $request->pro_edate;
+            // $sRow->created_at = date('Y-m-d H:i:s');
+            // $sRow->save();
 
-         if($request->promotion_id_fk){
-            $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_id_fk);
-          }else{
-            $sRow = new \App\Models\Backend\PromotionCode;
-          }
-           // return($request->promotion_id_fk);
-           // dd();
-            $sRow->promotion_id_fk = $request->promotion_id_fk;
-            $sRow->pro_sdate = $request->pro_sdate;
-            $sRow->pro_edate = $request->pro_edate;
-            // $sRow->pro_status = 5 ;
-            $sRow->created_at = date('Y-m-d H:i:s');
-            $sRow->save();
+            // return "this";
+            // dd();
+
+        // return ($request->promotion_id_fk);
+
+            $sRow = DB::select("SELECT * FROM `db_promotion_code` where promotion_id_fk = ".$request->promotion_id_fk." order by id desc limit 1 ");
 
 
-         try {
-             $obtion = array(PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8',);
-             $conn = new PDO('mysql:host=localhost;dbname=aiyara_db', 'root', '',$obtion);
-             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-         } catch(Exception $e) {
-              exit('Unable to connect to database.');
-         }
+              $value=DB::table('db_promotion_code')
+              ->where('promotion_id_fk', $request->promotion_id_fk)
+              ->get();
 
-                $conn->prepare(" TRUNCATE rand_code ; ")->execute();
-                $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+              if($value->count() == 0){
+                       DB::table('db_promotion_code')->insert(array(
+                        'promotion_id_fk' =>  $request->promotion_id_fk,
+                        'pro_sdate' =>  $request->pro_sdate,
+                        'pro_edate' =>  $request->pro_edate,
+                        'status' =>  1 ,
+                        'created_at' => date("Y-m-d H:i:s"),
+                      ));
+              }else{
+               $value=   DB::table('db_promotion_code')
+                    ->where('promotion_id_fk', $request->promotion_id_fk)
+                    ->update(array(
+                        'pro_sdate' =>  $request->pro_sdate,
+                        'pro_edate' =>  $request->pro_edate,
+                        'status' =>  1 ,
+                        'created_at' => date("Y-m-d H:i:s"),
+                    ));
+              }
 
-                $str_digit = $request->amt_random ;
-                $amt = $request->GenAmt;
-                $percent = $amt * (20/100);
+            DB::select(" TRUNCATE rand_code ; ");
+            $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+            $str_digit = $request->amt_random ;
+            $amt = $request->GenAmt;
+            $percent = $amt * (20/100);
 
         // return $amt.":".$str_digit.":".$percent;
         // dd();
 
 
-        $arr = [];
-        for ($i=1; $i <= ($amt + $percent) ; $i++) {
-            array_push($arr,$this->generate_string($permitted_chars, $str_digit));
-        }
+            $arr = [];
+            for ($i=1; $i <= ($amt + $percent) ; $i++) {
+                array_push($arr,$this->generate_string($permitted_chars, $str_digit));
+            }
 
         // return $arr;
         // dd();
 
-        $unique = array_unique($arr);
-        $duplicates = array_diff_assoc($arr, $unique);
-        $result = array_unique($arr);
-        $ch1 = (intval($amt)-intval(sizeof($result)));
-        if($ch1>0){
-            for ($i=1; $i <= $ch1 ; $i++) {
-                array_push($result,$this->generate_string($permitted_chars, $str_digit));
+            $unique = array_unique($arr);
+            $duplicates = array_diff_assoc($arr, $unique);
+            $result = array_unique($arr);
+            $ch1 = (intval($amt)-intval(sizeof($result)));
+            if($ch1>0){
+                for ($i=1; $i <= $ch1 ; $i++) {
+                    array_push($result,$this->generate_string($permitted_chars, $str_digit));
+                }
+
+                $unique = array_unique($result);
+                $duplicates = array_diff_assoc($result, $unique);
+
             }
 
-            $unique = array_unique($result);
-            $duplicates = array_diff_assoc($result, $unique);
-
-        }
-
-        $r = array_slice($unique, 0, $amt);
+            $r = array_slice($unique, 0, $amt);
 
             foreach ($r as $key => $value) {
-                 $conn->prepare(" INSERT IGNORE INTO rand_code (rand_code) VALUES ('".$value."')  ")->execute();
+                 DB::select(" INSERT IGNORE INTO rand_code (rand_code) VALUES ('".$value."')  ");
             }
 
-        $sql = " SELECT * FROM rand_code ";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $num_rows = $stmt->rowCount();
+            // return "to this";
+            // dd();
 
-        $sql = " SELECT * FROM rand_code ";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $num_rows = $stmt->rowCount();
-        // echo " ข้อมูลที่ต้องการ = ".$amt." ข้อมูลในตาราง = ".$num_rows;
-
-        if($num_rows < $amt){
+        $rand_code = DB::select(" SELECT * FROM rand_code ");
+        if(count($rand_code) < $amt){
             // echo " จำนวนหลักไม่พอ";
             return 'x';
-            exit;
         }
+
+
+    // return "to this";
+            // dd();
 
         $rows = DB::select(" SELECT * from rand_code ");
 
         foreach ($rows as $key => $value) {
               $insertData = array(
-                 "promotion_code_id_fk"=>$sRow->id,
+                 "promotion_code_id_fk"=>$sRow[0]->id,
                  "promotion_code"=>@$request->prefix_coupon.($value->rand_code).@$request->suffix_coupon,
                  "customer_id_fk"=>'0',
+                 "user_name"=>'0',
                  "pro_status"=> '5' ,
                  "created_at"=>now());
                PromotionCode_add::insertData($insertData);
         }
 
-        // for ($i=1; $i <= $amt ; $i++) {
-
-        //       $insertData = array(
-        //          "promotion_code_id_fk"=>$sRow->id,
-        //          "promotion_code"=>@$request->prefix_coupon.strtoupper(generate_string($permitted_chars, $str_digit)).@$request->suffix_coupon,
-        //          "customer_id_fk"=>'0',
-        //          "pro_status"=> '5' ,
-        //          "created_at"=>now());
-        //        PromotionCode_add::insertData($insertData);
-        // }
-
-        // return $sRow->id ;
+        return $sRow[0]->id;
 
 
     }
