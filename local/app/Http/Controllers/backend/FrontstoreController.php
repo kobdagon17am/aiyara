@@ -374,11 +374,8 @@ class FrontstoreController extends Controller
 
       $sRow = \App\Models\Backend\Frontstore::find($id);
       // dd($sRow);
-      // dd($sRow->pv_total);
-
-      if(!$sRow){
-        return redirect()->to(url("backend/frontstore"));
-      }
+      // dd($sRow->business_location_id_fk);
+ 
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
       // dd($sCustomer);
@@ -519,12 +516,30 @@ class FrontstoreController extends Controller
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
         // dd($sAccount_bank);
 
-      $business_location_id = $sRow->business_location_id;
-      $type = $sRow->purchase_type_id_fk;
+      // $type = $sRow->purchase_type_id_fk;
       $pv_total = $sRow->pv_total;
-      $customer_pv = \Auth::user()->pv;
-      $check_giveaway = GiveawayController::check_giveaway($business_location_id,$type,$customer_pv,$pv_total);
+      $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
+      $check_giveaway = GiveawayController::check_giveaway($sRow->business_location_id_fk,$sRow->purchase_type_id_fk,$customer_pv,$pv_total);
+      // dd($sRow->business_location_id_fk);
+      // dd($sRow->purchase_type_id_fk);
+      // dd($customer_pv);
+      // dd($pv_total);
+      if($check_giveaway){
+              $arr = [];
+              for ($i=0; $i < count($check_giveaway) ; $i++) { 
+                   $c = array_column($check_giveaway,$i);
+                   foreach ($c as $key => $value) {
+                   //  // if($value['status'] == "fail"){
+                       // array_push($arr,$value->status);
+                   //  // }
+                   }
+                   // $im = implode(',',$arr);
+              }
+              // print_r($im);
+      }
+
       // dd($check_giveaway);
+
 
       $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
 

@@ -312,13 +312,28 @@ $value = DB::select("
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
-                echo "<b>ชื่อ - ที่อยู่จัดส่ง</b>"."<br>";
-                echo  @$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name;
-
-
+                  echo "<b>ชื่อ - ที่อยู่จัดส่ง</b>"."<br>";
+                
                       if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
-                        echo " รับสินค้าด้วยตัวเอง </span> ";
+                       
+                        $cus = DB::select(" 
+                            SELECT
+                            customers.user_name,
+                            customers.prefix_name,
+                            customers.first_name,
+                            customers.last_name
+                            FROM
+                            db_orders 
+                            Left Join customers ON db_orders.customers_id_fk = customers.id
+                            where db_orders.id = ".$data[0]."
+                              ");
+                        
+                         echo  @$cus[0]->user_name.' : '.@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
+                         echo "<br>( รับสินค้าด้วยตัวเอง ) ";
+
                       }else{
+
+                        echo  @$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name;
 
 
                         if(@$sRow->delivery_location==1){
@@ -487,7 +502,7 @@ $value = DB::select("
 
                      ?>
       </td>
-      <td style="width:10%;vertical-align: top;font-weight: bold;" >
+      <td style="width:20%;vertical-align: top;font-weight: bold;" >
         เลขที่ / No. <?=@$value->invoice_code?><br>
         วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
       </td>

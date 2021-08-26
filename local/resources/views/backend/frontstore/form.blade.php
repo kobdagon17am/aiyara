@@ -590,12 +590,11 @@
 
               @if(@$sRow->purchase_type_id_fk!=6) 
 
-                @IF(@$check_giveaway['status']=="fail")
-                   <div class="div_gift_set" style="margin-left:3%;"> * {{@$check_giveaway['message']}} </div>
-                 @ELSE
-                    <div class="div_gift_set" style="margin-left:3%;"> * ของแถม > {{@$check_giveaway['f_data']}} {{@$check_giveaway['s_data']}} </div>
-                @ENDIF
+                @IF(@$check_giveaway)
+
               
+                @ENDIF
+
               @ENDIF
 
             </div>

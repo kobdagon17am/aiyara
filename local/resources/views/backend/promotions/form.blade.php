@@ -35,7 +35,7 @@
                 {{ csrf_field() }}
 
                 <div class="form-group row">
-                  <label for="" class="col-md-3 col-form-label">Business Location : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">Business Location : </label>
                   <div class="col-md-8">
                     <select name="business_location" class="form-control select2-templating " required >
                       <option value="">Select</option>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-3 col-form-label">ประเภทสินค้า : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">ประเภทสินค้า : </label>
                   <div class="col-md-8">
                     <select name="product_type" class="form-control select2-templating " required >
                       <option value="">Select</option>
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-3 col-form-label">Orders Type : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">Orders Type : </label>
                   <div class="col-md-8">
                   @php
                         $v_orders_type_id = explode(",",@$sRow->orders_type_id);
@@ -86,44 +86,51 @@
                         @endforeach
                   </div>
                 </div>
-                
+
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">รหัส : * </label>
+                    <label for="coupon_terms" class="col-md-3 col-form-label required_star_red ">เงื่อนไขการได้รับคูปอง : </label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" value="{{ @$sRow->coupon_terms }}" name="coupon_terms" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label required_star_red ">รหัส : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->pcode }}" name="pcode" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อภาษาไทย : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อภาษาไทย : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_thai }}" name="name_thai" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อภาษาอังกฤษ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อภาษาอังกฤษ : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_eng }}" name="name_eng" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อภาษาลาว : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อภาษาลาว : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_laos }}" name="name_laos" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อภาษาพม่า : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อภาษาพม่า : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_burma }}" name="name_burma" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อภาษากัมพูชา : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อภาษากัมพูชา : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->name_cambodia }}" name="name_cambodia" required>
                     </div>
@@ -173,7 +180,7 @@
                 </div>
  -->
                 <div class="form-group row">
-                  <label for="" class="col-md-3 col-form-label">หน่วยนับ : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">หน่วยนับ : </label>
                   <div class="col-md-8">
                     <select name="main_unit" class="form-control select2-templating " required >
                       <option value="">Select</option>
@@ -187,14 +194,14 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">วันเริ่มต้นการแสดง :</label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">วันเริ่มต้นการแสดง :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->show_startdate }}" name="show_startdate" required >
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">วันสิ้นสุดการแสดง :</label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">วันสิ้นสุดการแสดง :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->show_enddate }}" name="show_enddate" required >
                     </div>
@@ -208,7 +215,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="" class="col-md-3 col-form-label">ประเภทจำนวนจำกัด : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">ประเภทจำนวนจำกัด : </label>
                   <div class="col-md-8">
                     <select name="limited_amt_type" class="form-control select2-templating " required >
                       <option value="">Select</option>

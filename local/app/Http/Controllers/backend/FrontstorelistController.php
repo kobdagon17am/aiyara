@@ -94,7 +94,7 @@ class FrontstorelistController extends Controller
 
              $id= @$request->frontstore_id;
 
-             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
              // dd($sFrontstoreDataTotal);
              if($sFrontstoreDataTotal){
                     $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
@@ -156,7 +156,7 @@ class FrontstorelistController extends Controller
 
            $id=   @$request->frontstore_id;
 
-           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
            // dd($sFrontstoreDataTotal);
            if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
@@ -297,7 +297,7 @@ class FrontstorelistController extends Controller
 
        $id=   @$request->frontstore_id;
 
-       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
        if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
@@ -397,7 +397,7 @@ class FrontstorelistController extends Controller
 
              $id=   request('frontstore_id');
 
-             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
              // dd($sFrontstoreDataTotal);
              if($sFrontstoreDataTotal){
                     $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
@@ -575,6 +575,22 @@ class FrontstorelistController extends Controller
                 DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
                 DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
 
+           $id =   @$request->frontstore_id;
+
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
+           // dd($sFrontstoreDataTotal);
+           if($sFrontstoreDataTotal){
+              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+              $vat = $vat > 0  ? $vat : 0 ;
+              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+            }else{
+              DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+            }
+
+
 // UPDATE `db_order_products_list` SET `type_product`='promotion' WHERE (`id`='1')
 // UPDATE `db_order_products_list` SET `total_pv`='1000' WHERE (`id`='1')
 // UPDATE `db_order_products_list` SET `pv`='1000' WHERE (`id`='1')
@@ -671,7 +687,7 @@ class FrontstorelistController extends Controller
 
            $id=   @$request->frontstore_id;
 
-           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
+           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
            // dd($sFrontstoreDataTotal);
            if($sFrontstoreDataTotal){
               $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
@@ -1013,7 +1029,7 @@ class FrontstorelistController extends Controller
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
            $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
-           @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
            if($Check){
               $arr = [];
               for ($i=0; $i < count(@$Check) ; $i++) { 
