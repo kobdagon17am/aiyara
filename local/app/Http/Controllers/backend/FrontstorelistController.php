@@ -542,12 +542,16 @@ class FrontstorelistController extends Controller
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
+                // dd($Promotions_cost);
+
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
-                  $pv = @$sProducts[0]->pv ;
+                  $pv = @$Promotions_cost[0]->pv ;
                 }
         //     return @$Promotions_cost[0]->pv;
+                // dd($pv);
+
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
                 $sRow->amt    = @$request->quantity;
@@ -559,10 +563,25 @@ class FrontstorelistController extends Controller
                 $sRow->pv    = $pv;
                 $sRow->total_pv    =  $pv * @$request->quantity;
                 $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
+                $sRow->type_product    =  "promotion";
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
                 $sRow->save();
+
+                $dbOrder = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+                $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
+
+                DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
+                DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
+
+// UPDATE `db_order_products_list` SET `type_product`='promotion' WHERE (`id`='1')
+// UPDATE `db_order_products_list` SET `total_pv`='1000' WHERE (`id`='1')
+// UPDATE `db_order_products_list` SET `pv`='1000' WHERE (`id`='1')
+// UPDATE `db_orders` SET `pv_total`='1000' WHERE (`id`='1')
+// UPDATE `db_promotion_cus` SET `pro_status`='2' WHERE (`id`='1')
+
+
         }
 
        return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
@@ -901,7 +920,10 @@ class FrontstorelistController extends Controller
           (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,
           (SELECT customers_id_fk FROM `db_orders` WHERE id='". $req->frontstore_id_fk."'  limit 1) as customers_id_fk,
           '". $req->frontstore_id_fk."' as frontstore_id_fk
-          from promotions where promotions.status=1 AND promotions.promotion_coupon_status=0
+          from promotions 
+          where promotions.status=1 AND 
+          promotions.promotion_coupon_status=0
+          
            AND
             (
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
@@ -990,28 +1012,28 @@ class FrontstorelistController extends Controller
         ->addColumn('cuase_cannot_buy', function($row) {
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
-           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
-           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
-          //  if($Check){
-          //     $arr = [];
-          //     for ($i=0; $i < count(@$Check) ; $i++) { 
-          //          $c = array_column($Check,$i);
-          //          foreach ($c as $key => $value) {
-          //           if($value['status'] == "fail"){
-          //              array_push($arr,$value['message']);
-          //           }
-          //          }
-          //          $im = implode(',',$arr);
-          //     }
-          //     return $im;
-          // }
+           $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
+           @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
+           if($Check){
+              $arr = [];
+              for ($i=0; $i < count(@$Check) ; $i++) { 
+                   $c = array_column($Check,$i);
+                   foreach ($c as $key => $value) {
+                    if($value['status'] == "fail"){
+                       array_push($arr,$value['message']);
+                    }
+                   }
+                   $im = implode(',',$arr);
+              }
+              return $im;
+          }
            // return @$d->customers_id_fk;
           // return $row->frontstore_id_fk;
           // return $d1[0]->customers_id_fk;
           // return $d2[0]->user_name;
           // return $d1[0]->purchase_type_id_fk;
           // return "No Buy";
-           return 0;
+           // return 0;
       })
       ->escapeColumns('cuase_cannot_buy')
       ->make(true);

@@ -97,21 +97,34 @@
               <div class="panel-body">
       
                   <div class="form-group row">
+                    <div class="col-md-3"></div>
                     
-                    <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
+                    <div class="col-md-3">
+                    <label for="receipt" class="col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
+                    </div>
+                    <div class="col-md-4 " style="" >
+                    <label for="receipt" class="col-form-label"><span class="dLexam" style="cursor: pointer;">[Download ตัวอย่างโครงสร้างไฟล์เพื่อใช้นำเข้า]</span></label>
+                    </div>
+                    
+                  </div>
+                  
+                   <div class="form-group row">
+                    
+                    <div class="col-md-3"></div>
                     <div class="col-md-3">
                       <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
                     </div>
-                    <div class="col-md-3" style="text-align: right;" >
+                    <div class="col-md-4 " style="" >
                       <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='Import'>
                       &nbsp;
                       &nbsp;
                       &nbsp;
                        <input type='button' class="btn btn-danger btnClearImport " value='Clear data Import' >
+                 
                     </div>
                     
                   </div>
-                  
+
                   @if(Session::has('message'))
                   <div class="form-group row ">
                     <label for="receipt" class="col-md-2 col-form-label"></label>
@@ -169,7 +182,7 @@
                     <div class="col-md-3" >
                       <input type="text" class="form-control" id="suffix_coupon"  name="suffix_coupon" >
                     </div>
-                    <div class="col-md-3" style="text-align: right;" >
+                    <div class="col-md-3" style="" >
                       <!-- <input type='button' class="btn btn-primary btnPrefixCoupon " value='เพิ่มรหัส Prefix Coupon' > -->
                       <input type='button' class="btn btn-primary btnGenCode " value='GEN รหัส'>
                       &nbsp;
@@ -203,7 +216,7 @@
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                     <input type='button' class="btn btn-success btnExportExls " value='Export Excel' >
+                     <input type='button' class="btn btn-info btnExportExls " value='Export Excel' >
                
                   @endif
 
@@ -349,8 +362,7 @@
                   columns: [
                       {data: 'id', title :'ID', className: 'text-center w50'},
                       {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
-                      // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-                      {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                      {data: 'user_name',   title :'<center>รหัสสมาชิก </center>', className: 'text-center',render: function(d) {
                         //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
                         if(d==0){
                             return '-';
@@ -368,13 +380,16 @@
                         }else if(d==1){
                             return 'ใช้งานได้';
                         }else if(d==2){
-                            return 'ถูกใช้แล้ว';
+                            return '<span style="color:red;">ถูกใช้แล้ว</span>';
                         }else if(d==3){
-                            return 'หมดอายุแล้ว';
+                            return '<span style="color:red;">Expired/หมดอายุ</span>';
                         }else{
                             return d;
                         }
                       }},
+              
+                {data: 'used_user_name', title :'<center>รหัสคนนำไปใช้</center>', className: 'text-center'},
+                {data: 'used_date', title :'<center>วันที่ใช้</center>', className: 'text-center'},
                   ],
 
                   fnRowCallback: function (nRow, aData, iDisplayIndex) {
@@ -425,8 +440,7 @@
             columns: [
                 {data: 'id', title :'ID', className: 'text-center w50'},
                 {data: 'promotion_code', title :'<center>รหัสคูปอง</center>', className: 'text-left'},
-                // {data: 'customer_id_fk', title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center'},
-                {data: 'customer_id_fk',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                {data: 'user_name',   title :'<center>รหัสสมาชิก </center>', className: 'text-center',render: function(d) {
                   //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
                   if(d==0){
                       return '-';
@@ -444,13 +458,15 @@
                         }else if(d==1){
                             return 'ใช้งานได้';
                         }else if(d==2){
-                            return 'ถูกใช้แล้ว';
+                            return '<span style="color:red;">ถูกใช้แล้ว</span>';
                         }else if(d==3){
-                            return 'หมดอายุแล้ว';
+                            return '<span style="color:red;">Expired/หมดอายุ</span>';
                         }else{
                             return d;
                         }
                 }},
+                {data: 'used_user_name', title :'<center>รหัสคนนำไปใช้</center>', className: 'text-center'},
+                {data: 'used_date', title :'<center>วันที่ใช้</center>', className: 'text-center'},
             ],
              fnRowCallback: function (nRow, aData, iDisplayIndex) {
                  var info = $(this).DataTable().page.info();
@@ -611,9 +627,12 @@ $(document).ready(function() {
                   alert("! จำนวนหลักไม่พอ");
                   location.reload();
                   return false;
+                 }else{
+                   $(".myloading").hide();
+                   location.replace('backend/promotion_cus/'+data+'/edit');
                  }
-                 $(".myloading").hide();
-                 location.reload();
+                
+                 // location.reload();
                  // location.replace('backend/promotion_cus/'+data+'/edit');
                  // return redirect()->to(url("backend/promotion_cus/".$sRow->id."/edit"));
               },
@@ -687,11 +706,14 @@ $(document).ready(function() {
     $(".btnExportExls").click(function(event) {
         /* Act on the event */
         $(".myloading").show();
+
+        var promotion_code_id_fk = "{{@$sRow->id}}";
+
         $.ajax({
 
                type:'POST',
                url: " {{ url('backend/excelExportPromotionCus') }} ", 
-               data:{ _token: '{{csrf_token()}}' },
+               data:{ _token: '{{csrf_token()}}',promotion_code_id_fk:promotion_code_id_fk },
                 success:function(data){
                      console.log(data); 
                      // location.reload();
@@ -942,6 +964,16 @@ $(document).ready(function() {
 
         });
 
+
+
+      $(".dLexam").click(function(event) {
+          $(".myloading").show();
+          setTimeout(function(){
+              var url='local/public/uploads/exam.xlsx';
+              window.open(url, 'Download');  
+              $(".myloading").hide();
+          },500);
+      });
 
 </script>
 
