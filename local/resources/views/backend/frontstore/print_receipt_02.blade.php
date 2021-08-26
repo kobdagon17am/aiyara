@@ -202,11 +202,24 @@ for ($j=1; $j <= $amt_page ; $j++) {
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
-                 echo "<span style='font-size:24px;'>".@$value[0]->cus_code." <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</span><br>";
-
                       if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
-                        echo " รับสินค้าด้วยตัวเอง ";
+                        $cus = DB::select(" 
+                            SELECT
+                            customers.user_name,
+                            customers.prefix_name,
+                            customers.first_name,
+                            customers.last_name
+                            FROM
+                            db_orders 
+                            Left Join customers ON db_orders.customers_id_fk = customers.id
+                            where db_orders.id = ".$data[0]."
+                              ");
+                        
+                         echo "<span style='font-size:24px;'>".@$cus[0]->cus_code." <br> ".@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name."</span><br>";
+                         echo "<br>( รับสินค้าด้วยตัวเอง ) ";
                       }else{
+
+                        echo "<span style='font-size:24px;'>".@$value[0]->cus_code." <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</span><br>";
 
                         if(@$sRow->delivery_location==1){
 

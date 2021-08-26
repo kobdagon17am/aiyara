@@ -13,7 +13,7 @@ class GiveawayController extends Controller
                     ->wheredate('start_date','<=',now())
                     ->wheredate('end_date','>=',now())
                     ->get();
-                    //dd($data);
+                    // dd($data);
     if(count($data)>0){
       $i=0;
       $s_data = array();
