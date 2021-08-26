@@ -542,12 +542,16 @@ class FrontstorelistController extends Controller
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
+                // dd($Promotions_cost);
+
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
-                  $pv = @$sProducts[0]->pv ;
+                  $pv = @$Promotions_cost[0]->pv ;
                 }
         //     return @$Promotions_cost[0]->pv;
+                // dd($pv);
+
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
                 $sRow->amt    = @$request->quantity;
@@ -559,10 +563,25 @@ class FrontstorelistController extends Controller
                 $sRow->pv    = $pv;
                 $sRow->total_pv    =  $pv * @$request->quantity;
                 $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
+                $sRow->type_product    =  "promotion";
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
                 $sRow->save();
+
+                $dbOrder = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+                $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
+
+                DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
+                DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
+
+// UPDATE `db_order_products_list` SET `type_product`='promotion' WHERE (`id`='1')
+// UPDATE `db_order_products_list` SET `total_pv`='1000' WHERE (`id`='1')
+// UPDATE `db_order_products_list` SET `pv`='1000' WHERE (`id`='1')
+// UPDATE `db_orders` SET `pv_total`='1000' WHERE (`id`='1')
+// UPDATE `db_promotion_cus` SET `pro_status`='2' WHERE (`id`='1')
+
+
         }
 
        return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));

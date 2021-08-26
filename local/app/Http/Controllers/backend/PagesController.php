@@ -498,8 +498,8 @@ class PagesController extends Controller{
                   for ($row = 1; $row <= $highestRow; ++$row) {
 
                        $promotion_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //ce_id_fk
-                       $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
-                       $user_name = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //user_name
+                       // $customers_id_fk = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //customers_id_fk
+                       $user_name = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //user_name
 
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
@@ -510,7 +510,7 @@ class PagesController extends Controller{
                        $insertData = array(
                          "promotion_code_id_fk"=>@$sRow->id,
                          "promotion_code"=>@$request->prefix_coupon.@$promotion_code,
-                         "customer_id_fk"=>@$customers_id_fk,
+                         // "customer_id_fk"=>@$customers_id_fk,
                          "user_name"=>@$user_name,
                          "pro_status"=> '4' ,
                          "created_at"=>now());

@@ -13,6 +13,7 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> คูปอง </h4>
+       
         </div>
     </div>
 </div>
@@ -88,6 +89,8 @@ $(function() {
             {data: 'promotion_name', title :'<center>ชื่อคูปอง</center>', className: 'text-left'},
             {data: 'pro_sdate', title :'<center>วันเริ่มต้นโปร</center>', className: 'text-center'},
             {data: 'pro_edate', title :'<center>วันสิ้นสุดโปร</center>', className: 'text-center'},
+            // `status` int(1) DEFAULT '1' COMMENT 'การใช้งาน/การแสดงผล 1=แสดงผล,0=ปิดการแสดง',
+            {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
             // {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
             //    return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             // }},    

@@ -2314,12 +2314,8 @@
                   },
                   success:function(data)
                   { 
-                    // // // // console.log(data);
+                    console.log(data);
                     // return false;
-
-                     // 
-
-
 
                         var frontstore_id_fk = $("#frontstore_id_fk").val();
                         $.ajax({
@@ -3610,7 +3606,7 @@
                url: " {{ url('backend/ajaxCheckCouponUsed') }} ",
                data:{ _token: '{{csrf_token()}}',txtSearchPro:txtSearchPro},
                 success:function(msg){
-                     // // // // console.log(msg);
+                     console.log(msg);
                      // return false;
 
                      if(msg=="InActive"){

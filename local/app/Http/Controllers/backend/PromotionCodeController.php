@@ -61,7 +61,25 @@ class PromotionCodeController extends Controller
       })
       ->addColumn('pro_edate', function($row) {
         $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
-      })      
+      })     
+      ->addColumn('status', function($row) {
+          //  `pro_status` int(1) DEFAULT '1' COMMENT '1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code',
+            // $sRowProCus = \App\Models\Backend\PromotionCus::where('promotion_code_id_fk', $row->id)->get();
+            // if(@$sRowProCus[0]->pro_status==3){
+            //    return "<span style='color:red;'>Expired/หมดอายุ</span>";
+            // }else{
+              // `status` int(1) DEFAULT '1' COMMENT 'การใช้งาน/การแสดงผล 1=แสดงผล,0=ปิดการแสดง',
+               if( @$row->pro_edate < date("Y-m-d") ){
+                  return "<span style='color:red;'>Expired/หมดอายุ</span>";
+               }elseif(@$row->status==1){
+                  return "ใช้งานได้";
+               }else{
+                  return "ปิดการใช้งาน";
+               }
+            // }
+            // return $row->status;
+      })  
+      ->escapeColumns('status')
       ->make(true);
     }
 

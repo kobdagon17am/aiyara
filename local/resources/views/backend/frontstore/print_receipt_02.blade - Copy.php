@@ -115,19 +115,11 @@ $Count_Product_list_add_from_1 = DB::select("
 $Count_Product_list_add_from_2 = DB::select("
    SELECT count(id) as cnt from db_order_products_list WHERE frontstore_id_fk = ".$data[0]." and add_from=2 GROUP BY promotion_id_fk,promotion_code
 ");
-$Count = 0 ;
-if(@$Count_Product_list_add_from_1[0]->cnt>0){
-  $Count = @$Count_Product_list_add_from_1[0]->cnt;
-}elseif(@$Count_Product_list_add_from_2[0]->cnt>0){
-  $Count = @$Count_Product_list_add_from_2[0]->cnt;
-}else{
-  $Count = 0 ;
-}
 
 
 $LIMIT_RANGE = 7 ;
 
-$amt_list = $Count ;
+$amt_list =  @$Count_Product_list_add_from_1[0]->cnt;
 $amt_page = ceil($amt_list / $LIMIT_RANGE) ;
 // echo $amt_page;
 

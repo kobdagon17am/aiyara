@@ -82,8 +82,8 @@
                     <div class="col-md-9">
                       <select id="pstatus" name="pstatus" class="form-control select2-templating " >
                          <option value="">-Select-</option>
-                         <option value="1">Active / เปิดใช้งาน</option>
-                         <option value="0">In-Active / ปิดใช้งาน</option>
+                         <option value="1">Show / แสดงใช้งาน</option>
+                         <option value="0">Not Show / ไม่แสดง</option>
                       </select>
                     </div>
                   </div>
@@ -176,7 +176,7 @@ $(function() {
             {data: 'prodate', title :'<center> Promotion date</center>', className: 'text-center'},
             {data: 'proprice', title :'<center> Promotion Price / PV </center>', className: 'text-center'},
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
-               return d==1?'<span style="color:blue">Active</span>':'<span style="color:red">In-Active</span>';
+               return d==1?'<span style="color:blue">แสดงใช้งาน</span>':'<span style="color:red">ปิด/ไม่แสดง</span>';
             }},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],

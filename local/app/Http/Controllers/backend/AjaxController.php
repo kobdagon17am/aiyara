@@ -1848,7 +1848,7 @@ if($frontstore[0]->check_press_save==2){
                     ->update(array(
                         'pro_sdate' =>  $request->pro_sdate,
                         'pro_edate' =>  $request->pro_edate,
-                        'status' =>  1 ,
+                        'status' => 1 ,
                         'created_at' => date("Y-m-d H:i:s"),
                     ));
               }
@@ -1960,17 +1960,38 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
+    public function ajaxGetPromotionCode(Request $request)
+    {
+        // return $request->txtSearchPro;
+        $rs = DB::select("
+            select * from db_promotion_cus
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' AND promotions.status=1
+            AND date(db_promotion_code.pro_edate) >= curdate() ;
+          ");
+        return $rs[0]->promotion_code_id_fk;
+    }
+
+
     public function ajaxCheckCouponUsed(Request $request)
     {
 
         // return($request);
         // dd();
         // return $request->txtSearchPro;
+
+        // check แค่ตารางเดียว ก็น่าจะจบนะ 
+
         $promotion_cus = DB::select("
+
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_cus.pro_status=1 ; ");
+            WHERE db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_cus.pro_status=1 
+            AND date(db_promotion_code.pro_edate) >= curdate() ;
+
+            ");
         // return $promotion_cus[0]->promotion_code_id_fk;
 
         // // return $promotion_cus;
@@ -1979,37 +2000,40 @@ if($frontstore[0]->check_press_save==2){
 
         if( count($promotion_cus) == 0){
             return "InActive";
+            
         }else{
 
             // return @$promotion_cus[0]->promotion_code_id_fk;
             // dd();
 
-                $promotion_code = DB::select("
-                    select * from db_promotion_code
-                    Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-                    WHERE db_promotion_code.promotion_id_fk='".@$promotion_cus[0]->promotion_code_id_fk."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_code.approve_status=1
-                    ; ");
+            // สรุปล่าสุดว่า ไม่ต้องดักคนใช้
+
+                // $promotion_code = DB::select("
+                //     select * from db_promotion_code
+                //     Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+                //     WHERE db_promotion_code.promotion_id_fk='".@$promotion_cus[0]->promotion_code_id_fk."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_code.approve_status=1
+                //     ; ");
 
                 // return count($promotion_code) ;
                 // dd();
 
-            if( count($promotion_code) == 0){
-                return "InActive";
-            }else{
+            // if( count($promotion_code) == 0){
+            //     return "InActive";
+            // }else{
 
-                    $rs = DB::select(" select count(*) as cnt from db_order_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
+                    // $rs = DB::select(" select count(*) as cnt from db_order_products_list WHERE promotion_code='".$request->txtSearchPro."' ; ");
                     // return $rs[0]->cnt;
                     // dd();
 
-                    if($rs[0]->cnt > 0){
-                        return "InActive";
-                    }else if(@$promotion_code[0]->approve_status==0){
-                        return "InActive";
-                    }else{
+                    // if($rs[0]->cnt > 0){
+                        // return "InActive";
+                    // }else if(@$promotion_code[0]->approve_status==0){
+                        // return "InActive";
+                    // }else{
                         return true;
-                    }
+                    // }
 
-            }
+            // }
         }
 
 
@@ -2019,7 +2043,7 @@ if($frontstore[0]->check_press_save==2){
     {
         DB::select("
             UPDATE db_promotion_cus  SET pro_status=1
-            WHERE promotion_code_id_fk = '".$request->promotion_code_id_fk."' AND pro_status = 5 ;
+            WHERE promotion_code_id_fk = '".$request->promotion_code_id_fk."' AND pro_status in (4,5) ;
           ");
 
     }
@@ -2033,17 +2057,6 @@ if($frontstore[0]->check_press_save==2){
 
     }
 
-    public function ajaxGetPromotionCode(Request $request)
-    {
-        // return $request->txtSearchPro;
-        $rs = DB::select("
-            select * from db_promotion_cus
-            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
-            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE db_promotion_cus.promotion_code='".$request->txtSearchPro."' AND promotions.status=1 ;
-          ");
-        return $rs[0]->promotion_code_id_fk;
-    }
 
     public function ajaxGetPromotionName(Request $request)
     {
@@ -3916,9 +3929,15 @@ if($frontstore[0]->check_press_save==2){
       // return ($request);
       if($request->ajax()){
 
-           $r = DB::select(" select * from db_orders where id=$request->id ");
+          // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1 
+            $Frontstorelist = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',$request->id)->get();
+            foreach ($Frontstorelist as $key => $v) {
 
-           // dd($r[0]->id);
+                 if($v->promotion_code!=""){
+                        DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$v->promotion_code."') ");
+                  }
+
+            }
 
            // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($r[0]->id, \Auth::user()->id , 'admin', 'admin');
            // dd($cancel);
@@ -3950,9 +3969,17 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxDeLProductOrderBackend(Request $request)
     {
       // return ($request);
+      // dd();
+
       if($request->ajax()){
 
-          
+            // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1 
+            $Frontstorelist = \App\Models\Backend\Frontstorelist::find($request->id);
+            if($Frontstorelist->promotion_code){
+                DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$Frontstorelist->promotion_code."') ");
+            }
+
+
           DB::select(" DELETE FROM `db_order_products_list` where id=$request->id ");
 
           // $sumprice = DB::select(" SELECT sum(total_price) as sumprice FROM `db_order_products_list` where frontstore_id_fk=$request->id ");

@@ -275,7 +275,7 @@
 			}
 
 
-				public function excelExportPromotionCus()
+				public function excelExportPromotionCus(Request $request)
 					{	
 
 						$spreadsheet = new Spreadsheet();
@@ -291,15 +291,17 @@
 							$sheet = $spreadsheet->getActiveSheet();
 							$sheet->setTitle("Sheet".($j+1));
 
-							$sRow = \App\Models\Backend\PromotionCus::get();
+							$sRow = \App\Models\Backend\PromotionCus::where('promotion_code_id_fk',$request->promotion_code_id_fk)->get();
 
 							$sheet->setCellValue('A1', 'promotion_code');
-							$sheet->setCellValue('B1', 'customer_id_fk');
+							// $sheet->setCellValue('B1', 'customer_id_fk');
+							$sheet->setCellValue('B1', 'user_name');
 							$sheet->setCellValue('C1', 'created_at');
 
 							for ($i=0; $i < count($sRow) ; $i++) { 
 								$sheet->setCellValue('A'.($i+2), $sRow[$i]->promotion_code);
-								$sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_id_fk);
+								// $sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_id_fk);
+								$sheet->setCellValue('B'.($i+2), $sRow[$i]->user_name);
 								$sheet->setCellValue('C'.($i+2), $sRow[$i]->created_at);
 							}
 
