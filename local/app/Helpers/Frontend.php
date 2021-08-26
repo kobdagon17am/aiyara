@@ -42,14 +42,20 @@ class Frontend{
 		->first();
 
     if($customer){
-      $rs = ['status'=>'success','message'=>''];
-    }else{
-      $rs = ['status'=>'fail','message'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
-    'html'=>' <div class="alert alert-warning icons-alert">
+      $html = '<div class="alert alert-success background-success">
+        <i class="fa fa-check text-white"></i>
+      </button>
+      <strong> SUCCESS </strong> <code> เอกสารผ่านการตรวจสอบเรียบร้อย </code>
+      </div>';
 
-    <p><strong>Warning!</strong> <code>คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
-    </div>
-    '];
+      $rs = ['status'=>'success','message'=>'เอกสารผ่านเเล้ว','html'=>$html];
+    }else{
+      $html = '<div class="alert alert-warning icons-alert">
+       <p><strong>Warning!</strong> <code>คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
+      </div>';
+
+    $rs = ['status'=>'fail','message'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
+    'html'=>$html];
     }
     return $rs;
 
