@@ -269,6 +269,8 @@
         console.log("complete");
     });
 }
+
+
 </script>
 
 @endsection

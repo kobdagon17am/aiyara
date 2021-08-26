@@ -353,15 +353,16 @@
 <script type="text/javascript">
   function select_category(category_id){
     var category = category_id;
+
     $.ajax({
       url: '{{route('product_list_select')}}',
       type: 'GET',
       data: {'category_id':category,'type':'{{$type}}'},
     })
     .done(function(data){
-      $('#product_list').html(data['html']);
+      $('#product_list').html(data);
       $('#coupon_code').val('');
-      //console.log("success");
+      // console.log("success");
     })
     .fail(function() {
       $('#coupon_code').val('');
