@@ -380,7 +380,7 @@ class Product extends Model
 
     }
 
-    public static function product_list_coupon($promotion_id, $type, $category_id)
+    public static function product_list_coupon($promotion_id, $type, $category_id,$coupon_code)
     { //$promotion_id,$types
 
 
@@ -403,7 +403,7 @@ class Product extends Model
 
             if($promotions){
               $html = ProductList::product_list_html($promotions->id, $type, $promotions->img_url, $promotions->promotion_img, $promotions->name_thai,
-              $promotions->detail_thai, $icon = '', $promotions->selling_price, $promotions->pv, $category_id);
+              $promotions->detail_thai, $icon = '', $promotions->selling_price, $promotions->pv, $category_id,$coupon_code);
 
               $resule = ['status'=>'success','message'=>'สามารถซื้อได้','html'=>$html];
 

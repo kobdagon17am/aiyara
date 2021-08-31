@@ -62,6 +62,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @foreach($bill['data'] as $value)
                                     <?php
 
@@ -81,9 +82,9 @@
                                             @if($value['attributes']['promotion_detail'])
                                             <ul>
                                                 @foreach($value['attributes']['promotion_detail'] as $promotion_product)
-                                                <li style="font-size: 12px">
-                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
-                                                </li>
+                                                {{-- <li style="font-size: 12px">
+                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
+                                                </li> --}}
 
                                                 @endforeach
                                             </ul>

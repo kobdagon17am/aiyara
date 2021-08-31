@@ -21,7 +21,6 @@ class ProductController extends Controller
     public function product_list($type)
     {
 
-
         $categories = DB::table('categories')
             ->where('lang_id', '=', 2)
             ->where('status', '=', 1)
@@ -39,7 +38,7 @@ class ProductController extends Controller
                 ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
                 ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
                 ->where('db_promotion_code.approve_status', '=', 1)
-                ->whereDate('db_promotion_code.pro_edate', '>=',now())
+                ->whereDate('db_promotion_code.pro_edate', '>=', now())
                 ->where('db_promotion_cus.customer_id_fk', '=', Auth::guard('c_user')->user()->id)
                 ->where('db_promotion_cus.pro_status', '=', 1)
                 ->orderby('db_promotion_cus.pro_status', 'ASC')
@@ -60,10 +59,10 @@ class ProductController extends Controller
             $c_id = $request->category_id;
 
             if ($c_id == 8) {
-                $html = Product::product_list_select_promotion($type,Auth::guard('c_user')->user()->user_name);
+                $html = Product::product_list_select_promotion($type, Auth::guard('c_user')->user()->user_name);
                 return $html;
             } else {
-                $data = Product::product_list_select($c_id,$type);
+                $data = Product::product_list_select($c_id, $type);
 
             }
         }
@@ -83,12 +82,12 @@ class ProductController extends Controller
         return $html;
     }
 
-    public function product_detail($type, $id, $category_id = '')
+    public function product_detail($type, $id, $category_id = '', $coupong = '')
     {
-      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
-      if(empty($business_location_id)){
-        $business_location_id = 1;
-      }
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if (empty($business_location_id)) {
+            $business_location_id = 1;
+        }
 
         if (empty($id) || empty($type)) {
             return redirect('product-list/1')->withError('No Product');
@@ -142,7 +141,7 @@ class ProductController extends Controller
                             ->get();
                     }
 
-                    $data = ['product_data' => $product, 'img' => $img, 'type' => $type, 'category_id' => $category_id];
+                    $data = ['product_data' => $product, 'img' => $img, 'type' => $type, 'category_id' => $category_id, 'coupong' => $coupong];
 
                 } else {
                     $product = DB::table('products')
@@ -150,7 +149,7 @@ class ProductController extends Controller
                             'products.id as products_id',
                             'products_details.*',
                             'products_cost.*',
-                            'dataset_currency.*','products_units.product_unit_id_fk','dataset_product_unit.product_unit as product_unit_name')
+                            'dataset_currency.*', 'products_units.product_unit_id_fk', 'dataset_product_unit.product_unit as product_unit_name')
                         ->leftjoin('products_details', 'products.id', '=', 'products_details.product_id_fk')
                     // ->leftjoin('products_images', 'products.id', '=', 'products_images.product_id_fk')
                         ->leftjoin('products_cost', 'products.id', '=', 'products_cost.product_id_fk')
@@ -160,7 +159,7 @@ class ProductController extends Controller
                         ->where('products.id', '=', $id)
                         ->where('products_units.status', '=', 1)
                     // ->where('products_images.image_default', '=', 1)
-                        ->where('products_details.lang_id', '=',  $business_location_id)
+                        ->where('products_details.lang_id', '=', $business_location_id)
                         ->where('products_cost.business_location_id', '=', $business_location_id)
                         ->first();
 
@@ -184,15 +183,30 @@ class ProductController extends Controller
 
     public function add_cart(Request $request)
     {
+
         if ($request->category_id == 8) { //promotion
             $id = 'P' . $request->id;
-
             $location_id = Auth::guard('c_user')->user()->business_location_id;
             $data = \App\Helpers\Frontend::get_promotion_detail($request->id, $location_id);
 
         } else {
             $id = $request->id;
             $data = '';
+        }
+        $coupong = $request->coupong;
+        if ($coupong) {
+            $cartCollection = Cart::session($request->type)->getContent();
+            $data = $cartCollection->toArray();
+
+            if ($data) {
+                foreach ($data as $value) {
+
+                    if ($value['attributes']['coupong'] == $coupong) {
+                        $data = ['status' => 'fail', 'message' => 'Coupong Code สามารถใช้งานได้เพียง 1 ครั้ง ต่อ 1 Code เท่านั้น'];
+                        return $data;
+                    }
+                }
+            }
         }
 
         Cart::session($request->type)->add(array(
@@ -203,18 +217,21 @@ class ProductController extends Controller
             'attributes' => array(
                 'pv' => $request->pv,
                 'img' => $request->img,
-                'product_unit_id'=>$request->product_unit_id,
-                'product_unit_name'=>$request->product_unit_name,
-                'promotion' => $request->promotion,
+                'product_unit_id' => $request->product_unit_id,
+                'product_unit_name' => $request->product_unit_name,
+                'coupong' => $coupong,
                 'promotion_id' => $request->id,
                 'promotion_detail' => $data,
                 'category_id' => $request->category_id,
             ),
         ));
+
         $getTotalQuantity = Cart::session($request->type)->getTotalQuantity();
-
         // $item = Cart::session($request->type)->getContent();
-        return $getTotalQuantity;
+        //return $getTotalQuantity;
+        $data = ['status' => 'success', 'message' => 'สั่งซื้อสำเร็จ', 'getTotalQuantity' => $getTotalQuantity];
 
+
+        return $data;
     }
 }

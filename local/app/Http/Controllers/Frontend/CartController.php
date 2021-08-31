@@ -21,7 +21,6 @@ class CartController extends Controller
 
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
-
         $quantity = Cart::session($type)->getTotalQuantity();
         if ($data) {
             foreach ($data as $value) {

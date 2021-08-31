@@ -17,14 +17,21 @@ class CouponCodeController extends Controller
 
    public static function coupon(Request $request){
 
+
        $coupon =  DB::table('db_promotion_cus')
         ->select('db_promotion_code.promotion_id_fk','db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
-       ->where('db_promotion_code.approve_status','=',1)
-       // ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
-       //->where('db_promotion_cus.pro_status','=',1)
-      ->where('db_promotion_cus.promotion_code','=',$request->coupon_code)
+
+       ->where('promotions.orders_type_id','LIKE','%'.$request->type.'%')
+       ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
+       ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
+       ->wheredate('promotions.promotion_coupon_status','=',1)//คูปองเท่านั้น
+       ->wheredate('promotions.status','=',1)//แสดงผล
+       ->wheredate('db_promotion_code.pro_sdate','<=',date('Y-m-d'))
+       ->wheredate('db_promotion_code.pro_edate','>=',date('Y-m-d'))
+       ->where('db_promotion_cus.pro_status','=',1)//อนุมัติ code นี้ใช้ได้
+       ->where('db_promotion_cus.promotion_code','=',$request->coupon_code)
        ->first();
 
        if($coupon){
@@ -40,8 +47,8 @@ class CouponCodeController extends Controller
               $resule = ['status'=>'fail','massage'=>'Promotions หมดอายุการใช้งานแล้ว'];
             }else{
                $category_id = 9;//coupon type
-               $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id);
-               $resule = ['status'=>'success','massage'=>'success','html'=>$html];
+               $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id,$request->coupon_code);
+               $resule = ['status'=>'success','massage'=>'success','html'=>$html,'coupon'=>$request->coupon_code];
                return $resule;
             }
 

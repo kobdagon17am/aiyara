@@ -7,10 +7,10 @@ use DB;
 use Auth;
 class ProductList extends Model
 {
-	public static function product_list_html($products_id,$type,$img_url,$product_img,$product_name,$title,$icon,$member_price,$pv,$category_id =''){ 
+	public static function product_list_html($products_id,$type,$img_url,$product_img,$product_name,$title,$icon,$member_price,$pv,$category_id ='',$coupong=''){
 
-        if($category_id == 9){//coupong 
-            $promotion = '<div class="p-new" ><a href="" style="background: #f44336;"> CouPon </a></div>';
+        if($category_id == 9){//coupong
+            $promotion = '<div class="p-new" ><a href="" style="background: #f44336;"> '.$coupong.' </a></div>';
         }elseif ($category_id == 8) {//promotion
             $promotion = '<div class="p-new" ><a href="" > Promotion </a></div>';
         }else{
@@ -23,10 +23,10 @@ class ProductList extends Model
         <div class="prod-item text-center">
         <div class="prod-img">
         <div class="option-hover">
-        <a href="'.route("product-detail",['type'=>$type,'id'=>$products_id,'category_id'=>$category_id]).'" type="button" 
+        <a href="'.route("product-detail",['type'=>$type,'id'=>$products_id,'category_id'=>$category_id,'coupong'=>$coupong]).'" type="button"
         class="btn btn-success btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon"> <i class="icofont icofont-cart-alt f-20"></i></a>
 
-        <a href="'.route("product-detail",['type'=>$type,'id'=>$products_id,'category_id'=>$category_id]).'"
+        <a href="'.route("product-detail",['type'=>$type,'id'=>$products_id,'category_id'=>$category_id,'coupong'=>$coupong]).'"
         class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
         <i class="icofont icofont-eye-alt f-20"></i>
         </a>
@@ -39,7 +39,7 @@ class ProductList extends Model
         </a>'.$promotion.'
         </div>
         <div class="prod-info">
-        <a href="'.route('product-detail',['type'=>$type,'id'=>$products_id,'category_id'=>$category_id]).'" class="txt-muted">
+        <a href="'.route('product-detail',['type'=>$type,'id'=>$products_id,'category_id'=>$category_id,'coupong'=>$coupong]).'" class="txt-muted">
         <h5 style="font-size: 15px">'.$product_name.'</h5>
         <p class="text-left p-2 m-b-0" style="font-size: 12px">'.$title.'</p>
         </a>
@@ -57,4 +57,4 @@ class ProductList extends Model
 
     }
 
-} 
+}

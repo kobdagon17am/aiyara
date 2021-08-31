@@ -135,7 +135,7 @@ Route::get('product_list_select','Frontend\ProductController@product_list_select
 
 Route::get('product-list/{type}','Frontend\ProductController@product_list')->name('product-list');
 
-Route::get('product-detail/{type}/{id?}/{category_id?}','Frontend\ProductController@product_detail')->name('product-detail');
+Route::get('product-detail/{type}/{id?}/{category_id?}/{coupong?}','Frontend\ProductController@product_detail')->name('product-detail');
 
 Route::get('cart/{type}','Frontend\CartController@cart')->name('cart');
 
