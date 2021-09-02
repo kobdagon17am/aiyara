@@ -331,7 +331,7 @@
                         @else
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
                         @endif
-                          <label class="custom-control-label" for="customSwitch">การใช้งาน/การแสดงผล</label>
+                          <label class="custom-control-label" for="customSwitch">ใช้ / ไม่ใช้ </label>
                       </div>
                     </div>
                 </div>
@@ -342,7 +342,7 @@
                     <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="promotion_coupon_status" name="promotion_coupon_status" value="1" {{ ( @$sRow->promotion_coupon_status=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="promotion_coupon_status"><b>promotion coupon status</b></label>
+                          <label class="custom-control-label" for="promotion_coupon_status"><b>ทั่วไป / เฉพาะผู้มีคูปอง</b></label>
                       </div>
                     </div>
                 </div>

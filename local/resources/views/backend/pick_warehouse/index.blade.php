@@ -293,33 +293,6 @@
  </div>
 
 
-<!-- <div class="myBorder" style="" >
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-
-          <div class="form-group row">
-            <div class="col-md-12">
-              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าสำหรับนำออกจากคลังตามใบเบิก  </span>
-              <input type="hidden" id="pick_pack_requisition_code_id_fk">
-            </div>
-          </div>
-          
-          <div class="form-group row  " >
-            <div class="col-md-12 ">
-              <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 80%;" ></table>
-            </div>
-          </div>
-
-         </div>
-
-
-      </div>
-    </div>
-  </div>
-  </div> 
- -->
 
 <div class="myBorder" style="" >
   <div class="row">

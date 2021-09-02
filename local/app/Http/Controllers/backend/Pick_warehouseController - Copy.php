@@ -723,7 +723,7 @@ where db_pay_requisition_001.id =$id ");
             <div class="divTableCell" style="width:200px;font-weight:bold;">รายการสินค้า </div>
             <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
             <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วยนับ </div>
-            <div class="divTableCell" style="width:250px;text-align:left;font-weight:bold;"> รหัสใบเสร็จ </div>
+            <div class="divTableCell" style="width:250px;text-align:left;font-weight:bold;"> รหัสใบเบิก (รหัสใบเสร็จ) </div>
             </div>
             ';
 
@@ -735,52 +735,42 @@ where db_pay_requisition_001.id =$id ");
               array_push($arr1,$v->orders_id_fk);
             }
             $orders_id_fk = implode(',',$arr1);
+
+            // $pn .= '<div>'.$row->pick_pack_packing_code_id_fk.'</div>';  
+            // $pn .= '<div>'.$orders_id_fk.'</div>';  
+
             // สินค้า รวมกัน ทั้งหมด ได้แก่  ซื้อปกติ ซื้อโปรโมชั่น ซื้อคูปอง เป็นต้น 
             $Products = DB::select("
-
-                (
-                SELECT 
-                db_order_products_list.product_id_fk,
-                db_order_products_list.product_name,
-                SUM(db_order_products_list.amt) AS amt ,
-                dataset_product_unit.product_unit,
-                db_orders.code_order
-                from db_order_products_list
-                LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-                WHERE db_orders.id in  ($orders_id_fk) AND add_from=1
-                GROUP BY db_order_products_list.product_id_fk,db_order_products_list.type_product
-                )
-                UNION
-                (
-                SELECT
-                promotions_products.product_id_fk,
-                CONCAT(
-                (SELECT product_code FROM products LEFT JOIN products_details on products.id=products_details.product_id_fk WHERE products.id=promotions_products.product_id_fk and lang_id=1 limit 1),' : ',
-                (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
-                sum(db_order_products_list.amt*promotions_products.product_amt) as amt ,
-                dataset_product_unit.product_unit,
-                db_orders.code_order
-                FROM
-                db_order_products_list
-                Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
-                Left Join promotions ON db_order_products_list.promotion_id_fk = promotions.id
-                Inner Join promotions_products ON promotions.id = promotions_products.promotion_id_fk
-                Left Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
-                WHERE db_orders.id in ($orders_id_fk) AND add_from=2
-                GROUP BY promotions_products.product_id_fk,db_order_products_list.type_product
-                )
-
-                ORDER BY product_name
-
-             ");
+            SELECT 
+            db_order_products_list.product_id_fk,
+            db_order_products_list.product_name,
+            db_order_products_list.product_unit_id_fk,
+            SUM(db_order_products_list.amt) AS amt ,
+            dataset_product_unit.product_unit
+            from db_order_products_list
+            LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+            LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+            WHERE db_orders.id in  (".$orders_id_fk.") AND type_product='product'
+            GROUP BY db_order_products_list.product_id_fk
+            ORDER BY db_order_products_list.product_id_fk ");
 
               $sum_amt = 0 ;
-
               foreach ($Products as $key => $value) {
+                $product_id_fk = @$value->product_id_fk?$value->product_id_fk:0;
+                $arr_inv = [];
+                $arr_inv2 = [];
+                $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+                LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+                WHERE frontstore_id_fk in (".$orders_id_fk.") AND db_order_products_list.product_id_fk=".$product_id_fk." ");
+                foreach ($r_invoice_code as $inv) {
+                    array_push($arr_inv,$inv->invoice_code);
+                    array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+                }
 
+                $invoice_code = implode(",",$arr_inv);
                 $sum_amt += $value->amt;
-        
+                if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
+                if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
@@ -788,7 +778,7 @@ where db_pay_requisition_001.id =$id ");
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
-                <div class="divTableCell" style="text-align:left;">'.$value->code_order.'</div> 
+                <div class="divTableCell" style="text-align:left;">'.$requisition_code.'<br>('.$invoice_code.')</div> 
                 ';
 
                 $pn .= '</div>';  
@@ -807,6 +797,7 @@ where db_pay_requisition_001.id =$id ");
           $pn .= '</div>';  
           return $pn;
 
+       
 
       })
       ->escapeColumns('column_002')  

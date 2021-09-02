@@ -204,24 +204,24 @@ for ($j=1; $j <= $amt_page ; $j++) {
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
+                 $cus = DB::select(" 
+                    SELECT
+                    customers.user_name,
+                    customers.prefix_name,
+                    customers.first_name,
+                    customers.last_name
+                    FROM
+                    db_orders 
+                    Left Join customers ON db_orders.customers_id_fk = customers.id
+                    where db_orders.id = ".$data[0]."
+                      ");
+                
+                  echo "<span style='font-size:24px;'>".@$cus[0]->user_name." <br> ".@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name."</span><br>";
+
+
                       if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
-                        $cus = DB::select(" 
-                            SELECT
-                            customers.user_name,
-                            customers.prefix_name,
-                            customers.first_name,
-                            customers.last_name
-                            FROM
-                            db_orders 
-                            Left Join customers ON db_orders.customers_id_fk = customers.id
-                            where db_orders.id = ".$data[0]."
-                              ");
-                        
-                         echo "<span style='font-size:24px;'>".@$cus[0]->cus_code." <br> ".@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name."</span><br>";
                          // echo "<br>( รับสินค้าด้วยตัวเอง ) ";
                       }else{
-
-                        echo "<span style='font-size:24px;'>".@$value[0]->cus_code." <br> ".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</span><br>";
 
                         if(@$sRow->delivery_location==1){
 
@@ -259,7 +259,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
                           if(@$addr[0]->provname!=''){
 
                               @$address = "";
-                              @$address .=  "ที่อยู่ : ". @$addr[0]->card_house_no ;
+                              @$address .=  @$addr[0]->card_house_no ;
                               @$address .=  " ต.". @$addr[0]->tamname . "  ";
                               @$address .=  " อ.". @$addr[0]->ampname;
                               @$address .=  " จ.". @$addr[0]->provname;
@@ -308,7 +308,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                   @$address .=  " ต.". @$addr[0]->tambon_name;
                                   @$address .=  " อ.". @$addr[0]->amp_name;
                                   @$address .=  " จ.". @$addr[0]->province_name;
-                                  @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode." </span> ";
+                                  @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
 
                                   // echo @$address;
                               }else{
@@ -352,7 +352,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
-                                @$address .= " รหัส ปณ. ". @$addr[0]->zipcode. " </span> ";
+                                @$address .= " รหัส ปณ. ". @$addr[0]->zipcode;
 
                                 // echo @$address;
 
@@ -370,8 +370,8 @@ for ($j=1; $j <= $amt_page ; $j++) {
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
                                 // print_r(@$addr);
-                                @$address = "ชื่อผู้รับ : ". @$addr[0]->recipient_name;
-                                @$address .= "ที่อยู่ : ". @$addr[0]->addr_no;
+                                @$address = @$addr[0]->recipient_name;
+                                @$address .= ' '.@$addr[0]->addr_no;
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
@@ -507,11 +507,13 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
             if($v->promotion_id_fk!='' && $v->promotion_code!=''){
                 $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$v->promotion_id_fk."' ");
-                $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name ."</br>";
+                // $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name ."</br>";
+                $pn =  @$promotions[0]->pro_name ."</br>";
                 $pn_pname =  "รหัสคูปอง : ".($v->promotion_code);
             }else{
                 $promotions = DB::select(" SELECT pcode,name_thai as pro_name FROM promotions WHERE id='".$v->promotion_id_fk."' ");
-                $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name ."</br>";
+                // $pn =  "ชื่อโปร : ".@$promotions[0]->pro_name ."</br>";
+                $pn =  @$promotions[0]->pro_name ."</br>";
                 $pn_pname =  "รหัสโปร : ".(@$promotions[0]->pcode);
             }
 
@@ -536,17 +538,17 @@ for ($j=1; $j <= $amt_page ; $j++) {
             foreach ($Products as $key => $value) {
              $pn .=
                   '
-                  <div class="divTableRow" style="font-size:15px !important;">
+                  <div class="divTableRow">
                   <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
                   <div class="divTableCell"><center>'.$value->product_amt.' x '.$v->amt.'= '.($value->product_amt*$v->amt).'</div>
-                  <div class="divTableCell">'.$value->product_unit.'</div>
+                  <div class="divTableCell">&nbsp;'.$value->product_unit.'</div>
                   </div>
                   ';
              }
 
              $pn .=
                   '
-                  <div class="divTableRow" style="font-size:15px !important;" >
+                  <div class="divTableRow">
                   <div class="divTableCell">'.$pn_pname.'</div>
                   <div class="divTableCell"></div>
                   <div class="divTableCell"></div>
@@ -648,7 +650,11 @@ for ($j=1; $j <= $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td style="text-align: left;" colspan="4" style="font-size: 10px !important;" > {{@$address}} </td>
+      @IF(@$address)
+        <td style="text-align: left;" colspan="4"><span style="font-size: 14px !important;" >ชื่อ-ที่อยู่ผู้รับ: {{@$address}}</span></td>
+      @ELSE
+        <td style="text-align: left;" colspan="4"><span style="font-size: 14px !important;" ></span></td>
+      @ENDIF
     </tr>
 
 @ELSE

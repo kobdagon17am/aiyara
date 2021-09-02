@@ -367,10 +367,14 @@ class FrontstorelistController extends Controller
         // dd($request->all());
         if(isset($request->add_course)){
 
-            $business_location_id = \Auth::user()->business_location_id;
-            $code_order = RunNumberPayment::run_number_order($business_location_id);
 
             $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+            if($sFrontstore->check_press_save!=2){
+                $business_location_id = \Auth::user()->business_location_id;
+                $code_order = RunNumberPayment::run_number_order($business_location_id);
+            }else{
+                $code_order = $sFrontstore->code_order;
+            }
 
             $id = request('id');
 
@@ -595,10 +599,19 @@ class FrontstorelistController extends Controller
                 }
         //     return @$Promotions_cost[0]->pv;
                 // dd($pv);
+                $sPromotions = \App\Models\Backend\Promotions::find(@$request->promotion_id_fk);
+                // dd($sPromotions->limited_amt_person);
+                if(@$request->quantity>$sPromotions->limited_amt_person){
+                  $amt = @$sPromotions->limited_amt_person;
+                }else{
+                  $amt = @$request->quantity;
+                }
+
+                // dd($amt);
 
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
-                $sRow->amt    = @$request->quantity;
+                $sRow->amt    = @$amt;
                 $sRow->add_from    = '2';
                 $sRow->promotion_id_fk    = @$request->promotion_id_fk;
                 $sRow->promotion_code    = @$request->txtSearchPro;
