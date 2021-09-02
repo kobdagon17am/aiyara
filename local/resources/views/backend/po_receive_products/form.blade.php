@@ -72,7 +72,7 @@
                       <!-- <option value="">Select</option> -->
                         @if(@$sProductUnit)
                           @foreach(@$sProductUnit AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }} >{{$r->product_unit}}</option>
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_unit)?'selected':'' }} >{{$r->product_unit}}</option>
                           @endforeach
                         @endif
                     </select>

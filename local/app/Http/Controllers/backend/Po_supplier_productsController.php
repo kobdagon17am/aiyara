@@ -77,8 +77,8 @@ class Po_supplier_productsController extends Controller
           $sRow->po_supplier_id_fk    = request('po_supplier_id_fk');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_amt    = request('product_amt');
-          // $sRow->product_unit    = request('product_unit');
-          $sRow->product_unit    = 4 ;
+          $sRow->product_unit    = request('product_unit');
+          // $sRow->product_unit    = 4 ;
           $sRow->get_status    = request('get_status');
           
           $sRow->created_at = date('Y-m-d H:i:s');

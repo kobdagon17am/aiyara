@@ -56,7 +56,7 @@ class Stock_cardController extends Controller
       //      as remain FROM db_stock_card ORDER BY action_date;
       //     ");
       $sTable = DB::select(" 
-          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY doc_date;
+          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -76,13 +76,7 @@ class Stock_cardController extends Controller
           return '';
         }
       })   
-      // ->addColumn('remain', function($row) {
-      //   if(!empty(@$row->remain) && @$row->remain>0 ){
-      //      return @$row->remain;
-      //   }else{
-      //      return  0 ;
-      //   }
-      // })   
+
       ->make(true);
     }
 
@@ -93,7 +87,7 @@ class Stock_cardController extends Controller
       DB::select(" SET @csum := 0; ");
 
       $sTable = DB::select(" 
-          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY doc_date;
+          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery

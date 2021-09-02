@@ -48,7 +48,7 @@ class Pick_warehouse_fifoController extends Controller
 
       // return ($request->picking_id);
       // return ($picking[0]);
-      // $picking = explode(",", $picking[0]);
+      $picking = explode(",", $picking[0]);
 
       // return gettype($picking);
       // return ($picking[0]);
@@ -73,21 +73,31 @@ class Pick_warehouse_fifoController extends Controller
       $row_id = implode(',', $picking);
       
       // return gettype($row_id);
+      // return $arr_picking_id;
       // dd();
       if(isset($request->picking_id)){
 
           $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in ($arr_picking_id) ; ");
+
+          // return $r_db_pick_pack_packing_code;
+          // dd();
           
           $arr_00 = [];
           $arr_receipt = [];
           foreach ($r_db_pick_pack_packing_code as $key => $value) {
-            array_push($arr_00,$value->orders_id_fk);
+            if($value->orders_id_fk!="") array_push($arr_00,$value->orders_id_fk);
             array_push($arr_receipt,$value->receipt);
           }
           $receipts = implode(",",$arr_receipt);
+          
+          $orders_id_fk = array_filter($arr_00);
+          $orders_id_fk = implode(",",$orders_id_fk);
+          // return $arr_00;
+          // dd();
 
-          $orders_id_fk = implode(",",$arr_00);
           $r_db_orders = DB::select(" SELECT * FROM db_orders WHERE id in ($orders_id_fk) ");
+
+          // return $r_db_orders;
 
           $arr_02 = [];
           foreach ($r_db_orders as $key => $value) {
@@ -96,18 +106,44 @@ class Pick_warehouse_fifoController extends Controller
           $id = implode(",",$arr_02);
           // return $id;
           // dd();
-          $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($id) ");
+          $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($id) "); 
           // return $r_db_order_products_list;
-          // dd();
+          // return ($id);
+     
+
+          // check กรณีสินค้าที่เกิดขจากการซื้อโปร ด้วย ถ้าซื้อโปร รหัสสินค้าจะไม่มีในฃตาราง db_order_products_list ต้อง join หาอีกที
+
     //  ดึง product_id_fk ออกมารวมกัน 
           $arr_03 = [];
+          $arr_04 = [];
           foreach ($r_db_order_products_list as $key => $value) {
             array_push($arr_03,$value->product_id_fk);
+            array_push($arr_04,$value->promotion_id_fk);
+          }
+
+          $arr_promotion = array_unique($arr_04);
+          $arr_promotion = array_filter($arr_promotion);
+          $arr_promotion = implode(",",$arr_promotion);
+          $arr_promotion = $arr_promotion?$arr_promotion:0;
+
+          // return $id." : ".$arr_promotion;
+          // dd();
+
+          if(@$arr_promotion){
+            $r_promo_product = DB::select(" SELECT product_id_fk FROM `promotions_products` where promotion_id_fk in ($arr_promotion)  ");
+            if(@$r_promo_product){
+                foreach ($r_promo_product as $key => $v) {
+                  array_push($arr_03,$v->product_id_fk);
+                }
+            }
           }
 
           $arr_product_id_fk = array_unique($arr_03);
+          $arr_product_id_fk = array_filter($arr_product_id_fk);
           $arr_product_id_fk = implode(",",$arr_product_id_fk);
-          // return $id." : ".$arr_product_id_fk;
+          $arr_product_id_fk = $arr_product_id_fk?$arr_product_id_fk:0;
+
+          // return $arr_product_id_fk;
           // dd();
 
           $business_location_id_fk = \Auth::user()->business_location_id_fk;
@@ -125,13 +161,13 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
 
           $TABLES = DB::select(" SHOW TABLES ");
-          return $TABLES;
-          dd();
+          // return $TABLES;
+          // dd();
           
           $array_TABLES = [];
           foreach($TABLES as $t){
-            // print_r($t->Tables_in_aiyara_db);
-            array_push($array_TABLES, $t->Tables_in_aiyara_db);
+            // print_r($t->Tables_in_aiyaraco_v3);
+            array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
           }
 
           if(in_array($temp_db_stocks,$array_TABLES)){
@@ -141,22 +177,31 @@ class Pick_warehouse_fifoController extends Controller
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
           }
+          
+          // return $temp_db_stocks;
+          // return $arr_product_id_fk;
+          // return $business_location_id_fk;
+          // return $branch_id_fk;
+          // return $temp_db_stocks;
+          // dd();
 
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
-
-      $TABLES = DB::select(" SHOW TABLES ");
+// dd();
+      // $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
-      $array_TABLES = [];
-      foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
-      }
+
+      // $array_TABLES = [];
+      // foreach($TABLES as $t){
+        // echo ($t->Tables_in_aiyaraco_v3);
+        // array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
+      // }
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
       DB::select(" CREATE TABLE $temp_db_stocks_check LIKE temp_db_stocks_check_template ");
-
+      
+      // return $temp_db_stocks_check;
       // dd();
 
     // return $request;
@@ -166,14 +211,12 @@ class Pick_warehouse_fifoController extends Controller
     // $invoice_code = $request->txtSearch;
 
    // $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code in ($receipt) AND branch_id_fk <> sentto_branch_id ");
-    $r01 = DB::select(" SELECT * FROM db_orders where id in ($id) ");
-
     // return $r01;
     // return $r01[0]->invoice_code;
     // return $receipt;
 // dd();
 
-    if($r01){
+    if($r_db_orders){
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_001; ");
         DB::select(" CREATE TABLE $temp_ppp_001 LIKE db_orders ");
@@ -203,36 +246,41 @@ class Pick_warehouse_fifoController extends Controller
 
 
         // return "OK";
+        // return $temp_ppp_002;
         // dd();
 
 
    // Qry > product_id_fk from $temp_ppp_002
-        $product = DB::select(" select product_id_fk from $temp_ppp_002 ");
+        // $product = DB::select(" select product_id_fk from $temp_ppp_002 ");
         // return $product;
 
-        $product_id_fk = [];
-        foreach ($product as $key => $value) {
-           array_push($product_id_fk,$value->product_id_fk);
-        }
-        // return $product_id_fk;
-        $arr_product_id_fk = implode(',',$product_id_fk);
+        // $product_id_fk = [];
+        // foreach ($product as $key => $value) {
+        //    array_push($product_id_fk,$value->product_id_fk);
+        // }
+        // // return $product_id_fk;
+        // $arr_product_id_fk = array_filter($product_id_fk);
+        // $arr_product_id_fk = implode(',',$arr_product_id_fk);
         // return $arr_product_id_fk;
         // dd();
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
         DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
+       // กรณี product
         DB::select(" INSERT IGNORE INTO $temp_ppp_002 
         SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
+
 
           DB::select(" ALTER TABLE $temp_ppp_002
           ADD COLUMN pick_pack_packing_code_id_fk  int(11) NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_packing_code>id' AFTER id ");
 
         DB::select(" ALTER TABLE $temp_ppp_002
         ADD COLUMN pick_pack_requisition_code_id_fk  int NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_requisition_code>id' AFTER id ");
-          // DB::select(" UPDATE $temp_ppp_002 SET pick_pack_packing_code_id_fk=".$request->picking_id." WHERE product_id_fk in ($arr_product_id_fk) ");
         DB::select(" UPDATE $temp_ppp_002 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
 
           // return $arr_product_id_fk;
+          // return $lastInsertId01;
+          // return $temp_ppp_002;
 
         $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_0022; ");
@@ -241,6 +289,37 @@ class Pick_warehouse_fifoController extends Controller
         DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) 
          SELECT $lastInsertId01, product_id_fk, product_name, sum(amt), product_unit_id_fk FROM $temp_ppp_002 WHERE product_id_fk in ($arr_product_id_fk) GROUP BY pick_pack_packing_code_id_fk,product_id_fk");
 
+        // กรณี promotion
+
+        if(@$arr_promotion){
+            $r_promo_product = DB::select(" SELECT product_id_fk,sum(product_amt) as product_amt,product_unit FROM `promotions_products` where promotion_id_fk in ($arr_promotion) GROUP BY product_id_fk  ");
+            if(@$r_promo_product){
+                foreach ($r_promo_product as $key => $v) {
+
+                    $Products = DB::select("
+                        SELECT products.id as product_id,
+                          products.product_code,
+                          (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                          products_cost.member_price,
+                          products_cost.pv
+                          FROM
+                          products_details
+                          Left Join products ON products_details.product_id_fk = products.id
+                          LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                          WHERE lang_id=1 AND products.id= ".$v->product_id_fk."
+
+                   ");
+
+                    $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+                    DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $v->product_id_fk,'$pn', $v->product_amt, $v->product_unit)
+                     ");
+                }
+            }
+          }
+        
+
+// return $temp_ppp_002;
 
              // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppp_003
                 DB::select(" DROP TABLE IF EXISTS $temp_ppp_003; ");
@@ -254,16 +333,16 @@ class Pick_warehouse_fifoController extends Controller
               // return $Data;
       // FIFO 
 
-                  if(in_array($temp_db_stocks,$array_TABLES)){
-                    // return "IN";
-                    DB::select(" TRUNCATE TABLE $temp_db_stocks  ");
-                  }else{
-                    // return "Not";
-                    DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
-                  }
+                  // if(in_array($temp_db_stocks,$array_TABLES)){
+                  //   // return "IN";
+                  //   DB::select(" TRUNCATE TABLE $temp_db_stocks  ");
+                  // }else{
+                  //   // return "Not";
+                  //   DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
+                  // }
 
-                DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
-                WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+                // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+                // WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
                  DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare; ");
 
@@ -280,6 +359,7 @@ class Pick_warehouse_fifoController extends Controller
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
             return $lastInsertId01 ;
+            // dd();
 // Close > if($r01)
             // กรณีหาแล้วไม่เจอ 
           }else{
@@ -731,8 +811,8 @@ class Pick_warehouse_fifoController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 
@@ -804,7 +884,6 @@ class Pick_warehouse_fifoController extends Controller
 
           ");
 
-
             $arr_pick_pack_packing_code_id_fk = explode(',',$row->pick_pack_packing_code_id_fk);
 
             $sTable1 = DB::select(" SELECT * FROM $temp_ppp_001 WHERE `pick_pack_packing_code_id_fk` in(".$row->pick_pack_packing_code_id_fk.") ");
@@ -862,15 +941,30 @@ class Pick_warehouse_fifoController extends Controller
           foreach ($Products as $key => $value) {
 
             // return $value->amt;
-           $arr_inv = [];
+                $arr_inv = [];
                 $arr_inv2 = [];
                 $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                WHERE frontstore_id_fk in (".$orders_id_fk.") AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
+                WHERE frontstore_id_fk in ($orders_id_fk) AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
                 foreach ($r_invoice_code as $inv) {
                     array_push($arr_inv,$inv->invoice_code);
                     array_push($arr_inv2,'"'.$inv->invoice_code.'"');
                 }
+
+               // รวม product promotion ด้วย (ถ้ามี)
+                $sPromotion = DB::select("
+                  SELECT db_orders.code_order,promotions_products.product_id_fk FROM promotions_products 
+                  LEFT JOIN promotions on promotions.id=promotions_products.promotion_id_fk
+                  JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions.id
+                  LEFT JOIN db_orders on db_orders.id=db_order_products_list.frontstore_id_fk
+                  WHERE db_order_products_list.frontstore_id_fk in ($orders_id_fk) and promotions_products.product_id_fk=".$value->product_id_fk." ;
+                ");
+                if($sPromotion){
+                        foreach ($sPromotion as $v) {
+                            array_push($arr_inv,$v->code_order);
+                        }
+                }
+
 
                 $invoice_code = implode("<br>",$arr_inv);
 
@@ -883,7 +977,6 @@ class Pick_warehouse_fifoController extends Controller
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
-
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
@@ -1416,8 +1509,8 @@ class Pick_warehouse_fifoController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
@@ -1439,7 +1532,8 @@ class Pick_warehouse_fifoController extends Controller
     foreach ($tb2 as $key => $v) {
       array_push($arr1,$v->orders_id_fk);
     }
-    $orders_id_fk = implode(',',$arr1);
+    $orders_id_fk = array_filter($arr1);
+    $orders_id_fk = implode(',',$orders_id_fk);
     // return $orders_id_fk;
     $r01 = DB::select(" SELECT invoice_code FROM db_orders where id in ($orders_id_fk) ");
 
@@ -1491,6 +1585,7 @@ class Pick_warehouse_fifoController extends Controller
             }
             // return $product_id_fk;
             $arr_product_id_fk = array_unique($product_id_fk);
+            $arr_product_id_fk = array_filter($arr_product_id_fk);
             $arr_product_id_fk = implode(',',$arr_product_id_fk);
             // return $arr_product_id_fk;
 
@@ -1567,8 +1662,8 @@ class Pick_warehouse_fifoController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 
@@ -2219,8 +2314,8 @@ class Pick_warehouse_fifoController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 

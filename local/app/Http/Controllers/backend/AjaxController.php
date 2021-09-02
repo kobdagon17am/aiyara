@@ -61,9 +61,9 @@ class AjaxController extends Controller
             'sC' => $sC,
             'sU' => $sU,
             'sD' => $sD,
-            'can_cancel_bill' => $can_cancel_bill,
-            'can_cancel_bill_across_day' => $can_cancel_bill_across_day,
-            'can_approve' => $can_approve,
+            'can_cancel_bill' => @$can_cancel_bill,
+            'can_cancel_bill_across_day' => @$can_cancel_bill_across_day,
+            'can_approve' => @$can_approve,
         ]);
 
     }
@@ -743,6 +743,13 @@ class AjaxController extends Controller
         $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
 
 
+        // return $sum_price;
+        // return $frontstore_id;
+        // return $delivery_location;
+        // return $frontstore;
+        // return $frontstore[0]->check_press_save;
+
+
 if($frontstore[0]->check_press_save==2){
 
      /*
@@ -845,16 +852,42 @@ if($frontstore[0]->check_press_save==2){
             $province_id = 0 ;
         }
 
+// return $request->shipping_special;
 
         if(!empty($request->shipping_special)){
 
+            $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
+            if($frontstore){
+
             // return $province_id;
+            // return $frontstore;
+            // return $frontstore[0]->business_location_id_fk;
             // dd();
 
-            $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=4 ");
-            DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1,transfer_price=(transfer_price+".$shipping[0]->shipping_cost.") WHERE id=$frontstore_id ");
+            if(!empty($frontstore[0]->business_location_id_fk) && $frontstore[0]->business_location_id_fk>0){
+                @$business_location_id_fk = @$frontstore[0]->business_location_id_fk?@$frontstore[0]->business_location_id_fk:@\Auth::user()->business_location_id_fk;
+                // return @$business_location_id_fk;
+                $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".@$business_location_id_fk."' AND shipping_type_id=4 ");
+                // return $shipping;
+                if($shipping){
+                     DB::select(" UPDATE db_orders SET delivery_location=@$delivery_location , delivery_province_id=@$province_id , shipping_price='".@$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1,transfer_price=(transfer_price+".@$shipping[0]->shipping_cost.") WHERE id=$frontstore_id ");
 
-            return $shipping[0]->shipping_cost;
+                     return @$shipping[0]->shipping_cost;
+                     // exit;
+                }else{
+                    return 0;
+                }
+               
+                // dd();
+            }else{
+                return 0;
+                // dd();
+            }
+
+        }else{
+            return 0;
+        }
+
             // dd();
 
         }else{
@@ -1926,15 +1959,23 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxGenPromotionSaveDate(Request $request)
     {
-
+// 
         // return $request;
         // dd();
          if($request->id){
+
             $sRow = \App\Models\Backend\PromotionCode::find($request->id);
             $sRow->promotion_id_fk = $request->promotion_id_fk;
+            $sRow->coupon_terms = $request->coupon_terms;
             $sRow->pro_sdate = $request->pro_sdate;
             $sRow->pro_edate = $request->pro_edate;
-            $sRow->save();
+            $sRow->status = 1;
+            // $sRow->save();
+            if($sRow->save()){
+              DB::select(" UPDATE db_promotion_cus SET pro_status=1 WHERE promotion_code_id_fk=".$request->id." AND pro_status<>2 ; ");
+            }
+
+
           }
 
     }
@@ -1970,7 +2011,7 @@ if($frontstore[0]->check_press_save==2){
             WHERE db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' AND promotions.status=1
             AND date(db_promotion_code.pro_edate) >= curdate() ;
           ");
-        return $rs[0]->promotion_code_id_fk;
+        return $rs[0]->promotion_id_fk;
     }
 
 
@@ -2061,7 +2102,8 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGetPromotionName(Request $request)
     {
         // return $request->txtSearchPro;
-        $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')  ");
+        // $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')  ");
+        $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_id_fk from db_promotion_code WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')) ");
 
         return response()->json($rs);
 
@@ -2406,7 +2448,7 @@ if($frontstore[0]->check_press_save==2){
     {
         // return $request;
         // dd();
-
+      // return ($request->purchase_type_id_fk);
 
     if($request->purchase_type_id_fk!=5){
     }else{
@@ -2435,6 +2477,10 @@ if($frontstore[0]->check_press_save==2){
             $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
             $gift_voucher_price = $gift_voucher_price>$gift_voucher_cost?$gift_voucher_cost:$gift_voucher_price;
             $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
+
+
+            // return ($sum_price);
+            // return ($gift_voucher_cost);
 
 
             if($gift_voucher_price>0){
@@ -3397,6 +3443,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       // return($request);
+      // dd();
       /*
       agency: "A0002"
       aistockist: "A0001"
@@ -3409,21 +3456,28 @@ if($frontstore[0]->check_press_save==2){
         
            $r1 =  DB::select(" SELECT * FROM `db_orders` WHERE id=".$request->orders_id_fk." AND purchase_type_id_fk=".$request->purchase_type_id_fk." ");
            if($r1){
-                  
-                  DB::select(" UPDATE `db_orders` 
-                  SET 
-                  aistockist = '".$request->aistockist."',
-                  agency = '".$request->agency."'
-                  WHERE id=".$request->orders_id_fk." ");
+
+            // return ($request->aistockist);
+            // dd();
+
+                  // agency = '".($request->agency?$request->agency:0)."'
+                    if(!empty($request->aistockist)){
+                          DB::select(" UPDATE `db_orders` 
+                          SET 
+                          aistockist = '".$request->aistockist."',
+                          agency = '".$request->agency."'
+                          WHERE id=".$request->orders_id_fk." ");
+                    }
 
                return "ไม่มีการเปลี่ยนแปลง ประเภทการซื้อ";
+
            }else{
 
                 DB::select(" UPDATE `db_orders` 
                   SET purchase_type_id_fk=".$request->purchase_type_id_fk." ,
-                  aistockist = '".$request->aistockist."',
-                  agency = '".$request->agency."'
-                  WHERE id=".$request->orders_id_fk." ");
+                     aistockist = '".$request->aistockist."',
+                      agency = '".$request->agency."'
+                      WHERE id=".$request->orders_id_fk." ");
 
                 return "มีการเปลี่ยนแปลง ประเภทการซื้อ";
            }
@@ -3682,6 +3736,64 @@ if($frontstore[0]->check_press_save==2){
     }    
 
 
+    public function ajaxGetCustomerAistockist(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->where('aistockist_status', '1')
+                ->take(15)
+                ->get();
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }   
+
+
+
+    public function ajaxGetCustomerAgency(Request $request)
+    {
+        if($request->ajax()){
+            
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+                $customers = DB::table('customers')
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->where('agency_status', '1')
+                ->take(15)
+                ->get();
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }   
+
+
+
      public function fnSearchIntroduceId($user_name) {
 
             $sql =  DB::select("  SELECT * FROM customers where user_name ='$user_name' ");
@@ -3725,8 +3837,9 @@ if($frontstore[0]->check_press_save==2){
 
    public function ajaxGetAicash(Request $request)
     {
+
         DB::select(" UPDATE db_orders set member_id_aicash=".$request->customer_id." where id=".$request->frontstore_id_fk." ");
-        $rs =  DB::select(" select ai_cash from customers where id=".$request->customer_id." ");
+        $rs =  DB::select(" select ai_cash,user_name,prefix_name,first_name,last_name from customers where id=".$request->customer_id." ");
         return response()->json($rs);
     }
 
@@ -3957,6 +4070,59 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
+    public function ajaxDelPickpack(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+
+         $id = $request->id;
+
+          $delivery_id_fk = DB::select(" SELECT * FROM db_pick_pack_packing WHERE packing_code_id_fk=$id ");
+          $arr_delivery_id_fk = [];
+          foreach ($delivery_id_fk as $key => $value) {
+              array_push($arr_delivery_id_fk,$value->delivery_id_fk);
+          }
+          $arr_delivery_id_fk = implode(',', $arr_delivery_id_fk);
+
+          DB::update(" UPDATE db_delivery SET status_pick_pack='0' WHERE id in (".$arr_delivery_id_fk.")");
+
+          DB::update(" DELETE FROM db_pick_pack_packing WHERE packing_code = $id  ");
+
+          $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
+          if( $sRow ){
+            $sRow->forceDelete();
+          }
+
+
+       }
+    }
+
+
+
+    public function ajaxDelDelivery(Request $request)
+    {
+      // return ($request);
+      if($request->ajax()){
+
+          $id = $request->id;
+
+          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$id)->get();
+          foreach ($DP as $key => $value) {
+              DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
+          }
+
+          DB::update(" DELETE FROM db_delivery_packing WHERE packing_code_id_fk = $id  ");
+
+          $sRow = \App\Models\Backend\DeliveryPackingCode::find($id);
+          if( $sRow ){
+            $sRow->forceDelete();
+          }
+
+
+       }
+    }
+
+
     public function ajaxDelPromoProduct(Request $request)
     {
       // return ($request);
@@ -4094,6 +4260,21 @@ if($frontstore[0]->check_press_save==2){
 
     }
 
+
+    public function ajaxCheckDescGiftvoucher(Request $request)
+    {
+
+          $_check=DB::table('db_giftvoucher_code')
+              ->where('descriptions', $request->descriptions)
+              ->get();
+              if($_check->count() > 0){
+                return 1;
+              }else{
+                return 0;
+              }
+
+    }
+
    public function insertStockCard($data){
         DB::table('db_stock_card')->insert($data);
    }
@@ -4155,6 +4336,8 @@ start_date: "2021-08-01"
             $w04 = '';
         }
 
+        // return "to here" ;
+        // dd();
 
         DB::select(" TRUNCATE db_stock_card; ");
 
@@ -4162,30 +4345,39 @@ start_date: "2021-08-01"
           
           DB::select(" INSERT INTO db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
 
+        // return "to here" ;
+        // dd();
+
+
           $Data = DB::select("
                 SELECT * FROM db_stock_movement where 1 $w01 $w02 $w03 $w04
           ");
 
+
+        // return  $Data ;
+        // return "to here" ;
+        // dd();
+
           foreach ($Data as $key => $value) {
 
                $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "ref_inv" =>  @$value->doc_no?$value->doc_no:NULL,
+                  "action_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  // "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                  // "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
                   "details" =>  @$value->note?$value->note:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                  // "amt" =>  @$value->amt?$value->amt:0,
+                  // "in_out" =>  @$value->in_out?$value->in_out:0,
                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
+                  // "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                  // "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                  // "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                  // "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                  // "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                  // "status" =>  @$value->status?$value->status:0,
                   // "note" =>  @$value->note?$value->note:NULL,
                   "created_at" =>@$value->dd?$value->dd:NULL
               );

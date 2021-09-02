@@ -29,35 +29,8 @@
 </div>
 <!-- end page title -->
   <?php 
-    
-    // print_r(\Auth::user()->business_location_id_fk);
-    // print_r(\Auth::user()->branch_id_fk);
-
     $sPermission = \Auth::user()->permission ;
-    // print_r($sPermission);
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      // print_r($menu_id);
-
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-    }else{
-      $role_group_id = \Auth::user()->role_group_id_fk;
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      // $menu_permit = DB::select(" select * from role_permit where role_group_id_fk=2 AND menu_id_fk=34 ");
-      // print_r($menu_permit);
-      // print_r($role_group_id);
-      // print_r($menu_id);
-      // print_r($menu_permit);
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sU = @$menu_permit->u==1?'':'display:none;';
-      $sD = @$menu_permit->d==1?'':'display:none;';
-    }
    ?>
-
-
 
 <div class="row">
     <div class="col-7">

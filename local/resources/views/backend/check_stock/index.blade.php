@@ -468,15 +468,15 @@
                                       url: '{{ route('backend.check_stock.datatable') }}',
                                       data: function ( d ) {
                                           d.myWhereStock={};
-                                          d.myWhereStock['business_location_id_fk'] = business_location_id_fk ;
-                                          d.myWhereStock['product_id_fk'] = product ;
-                                          d.myWhereStock['lot_number'] = lot_number ;
-                                          d.myWhereStock['branch_id_fk'] = branch_id_fk ;
-                                          d.myWhereStock['warehouse_id_fk'] = warehouse_id_fk ;
-                                          d.myWhereStock['zone_id_fk'] = zone_id_fk ;
-                                          d.myWhereStock['shelf_id_fk'] = shelf_id_fk ;
-                                          d.myWhereStock['shelf_floor'] = shelf_floor ;
-                                          d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
+                                          // d.myWhereStock['business_location_id_fk'] = business_location_id_fk ;
+                                          // d.myWhereStock['product_id_fk'] = product ;
+                                          // d.myWhereStock['lot_number'] = lot_number ;
+                                          // d.myWhereStock['branch_id_fk'] = branch_id_fk ;
+                                          // d.myWhereStock['warehouse_id_fk'] = warehouse_id_fk ;
+                                          // d.myWhereStock['zone_id_fk'] = zone_id_fk ;
+                                          // d.myWhereStock['shelf_id_fk'] = shelf_id_fk ;
+                                          // d.myWhereStock['shelf_floor'] = shelf_floor ;
+                                          // d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
                                           oData = d;
                                         },
                                          method: 'POST',
@@ -528,7 +528,7 @@
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'/'+sTotal.trim()+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a> </td>' );
+                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'/'+sTotal.trim()+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a> </td>' );
 
                                                   
                                               }else{

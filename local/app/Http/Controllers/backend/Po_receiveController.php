@@ -80,7 +80,120 @@ class Po_receiveController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
-      return $this->form($id);
+       if(isset($request->approved)){
+
+            $sRow = \App\Models\Backend\Po_supplier::find($request->id);
+            $sRow->approver = \Auth::user()->id;
+            $sRow->approve_status = request('approve_status') ;
+            $sRow->approve_date = date('Y-m-d');
+            $sRow->note2 = request('note2');
+            $sRow->save();
+
+            // เมื่ออนุมัติ == 1 ตัดเข้าคลังอีกครั้ง
+            if(request('approve_status')==1){
+
+                $sRowA = \App\Models\Backend\Po_supplier::find($request->id);
+                $sRowA->po_status = 1 ;
+                $sRowA->save();
+
+
+// นำเข้า Stock
+                 $products = DB::select("
+
+                    SELECT
+                    sum(amt_get) AS sum_amt,
+                    db_po_supplier_products_receive.id,
+                    db_po_supplier_products_receive.po_supplier_products_id_fk,
+                    db_po_supplier_products_receive.branch_id_fk,
+                    db_po_supplier_products_receive.product_id_fk,
+                    db_po_supplier_products_receive.lot_number,
+                    db_po_supplier_products_receive.lot_expired_date,
+                    db_po_supplier_products_receive.amt_get,
+                    db_po_supplier_products_receive.product_unit_id_fk,
+                    db_po_supplier_products_receive.branch_id_fk,
+                    db_po_supplier_products_receive.warehouse_id_fk,
+                    db_po_supplier_products_receive.zone_id_fk,
+                    db_po_supplier_products_receive.shelf_id_fk,
+                    db_po_supplier_products_receive.shelf_floor,
+                    db_po_supplier_products_receive.action_user,
+                    db_po_supplier_products_receive.action_date,
+                    db_po_supplier_products_receive.approver,
+                    db_po_supplier_products_receive.approve_status,
+                    db_po_supplier_products_receive.approve_date,
+                    db_po_supplier_products_receive.created_at,
+                    db_po_supplier_products_receive.updated_at,
+                    db_po_supplier_products_receive.deleted_at
+                    from db_po_supplier_products_receive
+                    WHERE db_po_supplier_products_receive.po_supplier_products_id_fk in (".$request->id.")
+                    GROUP BY po_supplier_products_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
+
+                    ");
+
+// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add 
+
+                 foreach ($products as $key => $p) {
+
+                          $_check=DB::table('db_stocks')
+                          ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                          ->where('branch_id_fk', $p->branch_id_fk)
+                          ->where('product_id_fk', $p->product_id_fk)
+                          ->where('lot_number', $p->lot_number)
+                          ->where('lot_expired_date', $p->lot_expired_date)
+                          ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                          ->where('zone_id_fk', $p->zone_id_fk)
+                          ->where('shelf_id_fk', $p->shelf_id_fk)
+                          ->where('shelf_floor', $p->shelf_floor)
+                          ->get();
+                          if($_check->count() == 0){
+
+                              $stock = new  \App\Models\Backend\Check_stock;
+                              $stock->business_location_id_fk = $sRow->business_location_id_fk ;
+                              $stock->product_id_fk = $p->product_id_fk ;
+                              $stock->lot_number = $p->lot_number ;
+                              $stock->lot_expired_date = $p->lot_expired_date ;
+                              $stock->amt = $p->sum_amt ;
+                              $stock->product_unit_id_fk = $p->product_unit_id_fk ;
+                              $stock->branch_id_fk = $p->branch_id_fk ;
+                              $stock->warehouse_id_fk = $p->warehouse_id_fk ;
+                              $stock->zone_id_fk = $p->zone_id_fk ;
+                              $stock->shelf_id_fk = $p->shelf_id_fk ;
+                              $stock->shelf_floor = $p->shelf_floor ;
+                              $stock->date_in_stock = date("Y-m-d");
+                              $stock->created_at = date("Y-m-d H:i:s");
+                              $stock->save();
+
+
+                          }else{
+
+                                DB::table('db_stocks')
+                                ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                                  ->where('branch_id_fk', $p->branch_id_fk)
+                                  ->where('product_id_fk', $p->product_id_fk)
+                                  ->where('lot_number', $p->lot_number)
+                                  ->where('lot_expired_date', $p->lot_expired_date)
+                                  ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                  ->where('zone_id_fk', $p->zone_id_fk)
+                                  ->where('shelf_id_fk', $p->shelf_id_fk)
+                                  ->where('shelf_floor', $p->shelf_floor)
+                                ->update(array(
+                                  'amt' => DB::raw( ' amt + '.$p->sum_amt )
+                                ));
+
+
+                          }
+                    }
+                          
+                      
+
+                 }
+
+
+           return redirect()->to(url("backend/po_receive"));
+
+      }else{
+            return $this->form($id);
+      }
+      
     }
 
    public function form($id=NULL)
@@ -106,7 +219,7 @@ class Po_receiveController extends Controller
 
           \DB::commit();
 
-           return redirect()->to(url("backend/po_supplier/".$sRow->id."/edit"));
+           return redirect()->to(url("backend/po_receive/".$sRow->id."/edit"));
            
 
       } catch (\Exception $e) {

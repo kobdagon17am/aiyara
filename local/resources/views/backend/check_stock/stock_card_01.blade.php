@@ -221,9 +221,9 @@ $(document).ready(function() {
                                         ],
                                           columns: [
                                               {data: 'id', title :'Row(s)', className: 'text-center w50'},
-                                              {data: 'doc_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
+                                              {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
                                               {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
-                                              {data: 'doc_no', title :'<center>Reference code  </center>', className: 'text-center'},
+                                              {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
                                               {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {

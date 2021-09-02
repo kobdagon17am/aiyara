@@ -57,9 +57,8 @@
 
         <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.js" type="text/javascript"></script>
 
-
-
         <script type="text/javascript">
+
 
             $(document).on('click', '.click_link', function(event) {
 
@@ -164,6 +163,22 @@
         <script src="{{ URL::asset('backend/js/pages/sweet-alerts.init.js')}}"></script> 
         <script src="{{ URL::asset('backend/js/pages/jquery.idle.js')}}"></script> 
 
+
+   
+          <script>    
+              $(document).ready(function(){
+                var fp = "{{@$page}}";
+                console.log(fp);
+                  if(!fp){
+                    $('body').toggleClass('vertical-collpsed');
+                    $(".btnHome").show();
+                    $(".btn_mega").show();
+                  }else{
+                    $(".btnHome").hide();
+                    $(".btn_mega").hide();
+                  }
+              });
+          </script>
 
         @yield('script')
         @yield('script-bottom')

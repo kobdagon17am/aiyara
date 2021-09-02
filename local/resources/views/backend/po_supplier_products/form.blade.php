@@ -68,11 +68,11 @@
                 <div class="form-group row">
                   <label for="example-text-input" class="col-md-2 col-form-label">หน่วยนับ : * </label>
                   <div class="col-md-10">
-                    <select name="product_unit" class="form-control select2-templating " disabled="" >
-                      <!-- <option value="">Select</option> -->
+                    <select name="product_unit" class="form-control select2-templating " required  >
+                      <option value="">Select</option>
                         @if(@$sProductUnit)
                           @foreach(@$sProductUnit AS $r)
-                            <option value="{{$r->id}}" {{ (@$r->id==4)?'selected':'' }} >{{$r->product_unit}}</option>
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_)?'selected':'' }} >{{$r->product_unit}}</option>
                           @endforeach
                         @endif
                     </select>

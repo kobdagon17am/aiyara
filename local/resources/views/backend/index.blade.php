@@ -8,6 +8,8 @@
 
 @section('content')
 
+@php ($page = "firstpage")
+
                        <!-- start page title -->
                         <div class="row">
                             <div class="col-12">

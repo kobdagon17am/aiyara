@@ -87,12 +87,12 @@
                   </div>
                 </div>
 
-                <div class="form-group row">
+        <!--         <div class="form-group row">
                     <label for="coupon_terms" class="col-md-3 col-form-label required_star_red ">เงื่อนไขการได้รับคูปอง : </label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->coupon_terms }}" name="coupon_terms" required>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label required_star_red ">รหัส : </label>

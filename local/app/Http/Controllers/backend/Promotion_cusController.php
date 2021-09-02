@@ -18,7 +18,9 @@ class Promotion_cusController extends Controller
     public function create(Request $request)
     {
 
-      $sPromotions = \App\Models\Backend\Promotions::get();
+      // $sPromotions = \App\Models\Backend\Promotions::get();
+      // dd($sPromotions);
+      $sPromotions = DB::select("SELECT * from promotions WHERE curdate() BETWEEN show_startdate and show_enddate AND product_type=4 AND promotion_coupon_status=1 AND status=1 ");
       // dd($sPromotions);
 
       $Products = DB::select("SELECT products.id as product_id,

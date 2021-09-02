@@ -54,11 +54,13 @@ class Pick_packController extends Controller
                 array_push($arr_orders_id_fk,$value->orders_id_fk);
                 array_push($arr_receipt,$value->receipt);
             }
-            $orders_id_fk = implode(',',$arr_orders_id_fk);
+            $orders_id_fk = array_filter($arr_orders_id_fk);
+            // dd($orders_id_fk);
+            $orders_id_fk = implode(',',$orders_id_fk);
             $receipt = implode(',',$arr_receipt);
         }
 
-        // dd($receipt);
+        // dd($orders_id_fk);
 
         DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE id in ($arr)  ");
 

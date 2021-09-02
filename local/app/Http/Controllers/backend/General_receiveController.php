@@ -232,7 +232,7 @@ class General_receiveController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\General_receive::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\General_receive::search()->orderBy('updated_at', 'desc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {

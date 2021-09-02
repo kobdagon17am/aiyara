@@ -303,7 +303,7 @@
 
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-          var id = "{{$id}}";
+          var id = "{{$id}}"; // alert(id);
           var packing_id = "{{$pick_pack_requisition_code_id_fk}}";// alert(packing_id);
           var oTable0001;
           $(function() {

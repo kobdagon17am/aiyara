@@ -20,23 +20,6 @@
 </div>
 <!-- end page title -->
 
-  <?php
-      $sPermission = \Auth::user()->permission ;
-      $menu_id = @$_REQUEST['menu_id'];
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-   ?>
-
-<?php//echo  @$sRow ?>
   @if( empty(@$sRow) )
   <form id="frmGen" action="{{ route('backend.giftvoucher_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
   @else
@@ -45,9 +28,6 @@
   @endif
     {{ csrf_field() }}
 
-<!--
- <form  method="POST" action="backend/uploadPromotionCus" enctype="multipart/form-data" autocomplete="off">
-    {{ csrf_field() }} -->
 
       <div class="myBorder" >
         <div class="container">
@@ -195,7 +175,6 @@
                     @if( !empty(@$sRowGiftvoucherCus) )
                     &nbsp;
                     <input type='button' class="btn btn-success font-size-16 btnExportExls " value='Export Excel' >
-                    <!--     <input type='button' class="btn btn-success btnExportChart " value='Export Chart' > -->
                     @endif
 
                 </div>
@@ -304,8 +283,6 @@
 
 <script>
 
-    var sU = "{{@$sU}}"; //alert(sU);
-    var sD = "{{@$sD}}"; //alert(sD);
     var giftvoucher_code_id_fk = "{{@$sRow->id}}"; //alert(giftvoucher_code_id_fk);
     var oTable1;
     $(function() {
@@ -366,14 +343,12 @@
                  var info = $(this).DataTable().page.info();
                  $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
 
-                  if(sU!=''&&sD!=''){
-                      $('td:last-child', nRow).html('-');
-                  }else{
+           
 
                     if(aData['pro_status']!=2){
 
                       $('td:last-child', nRow).html(''
-                        + '<a href="javascript: void(0);" data-id="'+aData['id']+'"  class="btn btn-sm btn-danger cDeleteByCase " style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-id="'+aData['id']+'"  class="btn btn-sm btn-danger cDeleteByCase "  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
                       ).addClass('input');
 
@@ -381,7 +356,6 @@
                       $('td:last-child', nRow).html('');
                     }
 
-                }
 
 
              },
@@ -657,36 +631,6 @@ $(document).ready(function() {
 
 
 
-    // $(".btnExportChart").click(function(event) {
-    //     /* Act on the event */
-
-
-    //     $(".myloading").show();
-    //     $.ajax({
-
-    //            type:'POST',
-    //            url: " {{ url('backend/excelExportChart') }} ",
-    //            data:{ _token: '{{csrf_token()}}' },
-    //             success:function(data){
-    //                  console.log(data);
-    //                  // location.reload();
-
-    //                  setTimeout(function(){
-    //                     var url='local/public/excel_files/export_chart.xlsx';
-    //                     window.open(url, 'Download');
-    //                     $(".myloading").hide();
-    //                 },3000);
-
-    //               },
-    //             error: function(jqXHR, textStatus, errorThrown) {
-    //                 console.log(JSON.stringify(jqXHR));
-    //                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-    //                 $(".myloading").hide();
-    //             }
-    //         });
-    // });
-
-
       $(".btnPrefixCoupon").click(function(event) {
           var v = $("input[name=prefix_coupon]").val();
           if(v=='' || v==0){
@@ -721,8 +665,45 @@ $(document).ready(function() {
         $('#modalAddList').modal('show');
     });
 
+    $(document).on('change', '#descriptions', function(event) {
+        $(".myloading").show();
+
+        var descriptions = $(this).val();
+        console.log(descriptions);
+
+        $.ajax({
+           type:'POST',
+           url: " {{ url('backend/ajaxCheckDescGiftvoucher') }} ",
+           data:{ _token: '{{csrf_token()}}' , descriptions:descriptions },
+            success:function(data){
+                 console.log(data);
+                 // location.reload();
+                 if(data==1){
 
 
+                      Swal.fire({
+                        type: 'warning',
+                        title: '! พบรายการ Descriptions  ซ้ำ ',
+                        showConfirmButton: false,
+                        timer: 2000
+                      });
+                      $("#descriptions").val('');
+                      $("#descriptions").focus();
+                      $(".myloading").hide();
+
+                 }else{
+                   $(".myloading").hide();
+                 }
+              },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(JSON.stringify(jqXHR));
+                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                $(".myloading").hide();
+            }
+        });
+
+
+    });
 
 });
 

@@ -297,8 +297,7 @@
                                 <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label"> ประเภทการซื้อ : * </label>
                                   <div class="col-md-7">
-<?php //echo @$sRow->purchase_type_id_fk; ?>
-<?php //echo $ChangePurchaseType ?>
+
                          @if($ChangePurchaseType==1)
                                 
                                          <!-- Gift Voucher -->
@@ -306,17 +305,8 @@
                                            <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                            <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
                                       @ELSE
-<?php //echo @$sRow->purchase_type_id_fk;
-  
-   if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6){
-      $disAiStockist = " disabled ";
-   }else{
-      $disAiStockist = " ";
-   }
-
- ?>
                                      
-                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  >
+                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating "  >
                                           <option value="">Select</option>
                                           @if(@$sPurchase_type)
                                             @foreach(@$sPurchase_type AS $r)
@@ -329,19 +319,11 @@
 
                                              @else
 
-                                                @IF(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6)
-                                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }}  >
-                                                  {{$r->orders_type}}
-                                                 </option>
-                                                @ELSE
-
-                                                  @if($r->id<=3)
+                                                @if($r->id<=3)
                                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
                                                   {{$r->orders_type}}
                                                 </option>
                                                 @endif
-
-                                                @ENDIF
 
                                              @ENDIF
 
@@ -386,26 +368,32 @@
                                   <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
                                   <div class="col-md-6">
 
-                                    @if($ChangePurchaseType==1)
-                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
-                                       @IF(@$sRow->aistockist!=="")
-                                          <select id="aistockist" class="form-control select2-templating "  >
-                                                  <option  selected >
-                                                    {{@$CusAistockistName}}
-                                                  </option>
-                                          </select>
-                                        @ELSE
-                                         <select id="aistockist" class="form-control select2-templating "  >
-                                         </select> 
-                                        @ENDIF
-                                    @else
-                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
-                                         <select id="aistockist" class="form-control select2-templating " disabled >
-                                                  <option  selected >
-                                                    {{@$CusAistockistName}}
-                                                  </option>
-                                          </select>
-                                     @endif
+                        @if($ChangePurchaseType==1)
+                              <select id="aistockist" name="aistockist" class="form-control select2-templating "  >
+                                  <option value="">-</option>
+                                  @if(@$aistockist)
+                                    @foreach(@$aistockist AS $r)
+                                      <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
+                                        {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                      </option>
+                                    @endforeach
+                                  @endif
+                                </select>
+
+                        @else
+                             
+                                  <select id="aistockist" name="aistockist" class="form-control select2-templating " disabled >
+                                    <option value="">-</option>
+                                    @if(@$aistockist)
+                                      @foreach(@$aistockist AS $r)
+                                        <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->aistockist)?'selected':'' }} >
+                                          {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                        </option>
+                                      @endforeach
+                                    @endif
+                                  </select>
+
+                         @endif
            
 
                                   </div>
@@ -430,26 +418,30 @@
                                   <label for="" class="col-md-4 col-form-label"> Agency : </label>
                                   <div class="col-md-6" >
 
-                                    @if($ChangePurchaseType==1)
-                                         <input type="hidden" class="agency" name="agency" value="{{@$sRow->agency}}"  >
-                                       @IF(@$sRow->agency!=="")
-                                          <select id="agency" class="form-control select2-templating "  >
-                                                  <option  selected >
-                                                    {{@$CusAgencyName}}
-                                                  </option>
-                                          </select>
-                                        @ELSE
-                                         <select id="agency" class="form-control select2-templating "  >
-                                         </select> 
-                                        @ENDIF
-                                    @else
-                                         <input type="hidden" class="agency" name="agency" value="{{@$sRow->agency}}"  >
-                                         <select id="agency" class="form-control select2-templating " disabled >
-                                                  <option  selected >
-                                                    {{@$CusAgencyName}}
-                                                  </option>
-                                          </select>
-                                     @endif
+                           @if($ChangePurchaseType==1)
+
+                                      <select id="agency" name="agency" class="form-control select2-templating "   >
+                                      <option value="">-</option>
+                                      @if(@$agency)
+                                        @foreach(@$agency AS $r)
+                                          <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
+                                            {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+                            @else
+                                      <select id="agency" name="agency" class="form-control select2-templating "  disabled >
+                                      <option value="">-</option>
+                                      @if(@$agency)
+                                        @foreach(@$agency AS $r)
+                                          <option value="{{$r->user_name}}" {{ (@$r->user_name==@$sRow->agency)?'selected':'' }} >
+                                            {{$r->user_name}} : {{$r->first_name}} {{$r->last_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+                            @endif
 
 
                                   </div>
@@ -1440,8 +1432,6 @@
 
                         @else
 
-                        <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" >
-
                           <input type="hidden" name="member_id_aicash" id="member_id_aicash" >
                           <select id="aicash_choose" class="form-control "  >
                             <option value=""  >-Select-</option>
@@ -2215,7 +2205,7 @@
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
                       if(aData['add_from']==2){
-                        $("td:eq(1)", nRow).html("Promotion");
+                        $("td:eq(1)", nRow).html("โปรแกรมโมชั่นคูปอง");
                         $("td:eq(4)", nRow).html("ชุด");
                       }
 
@@ -2262,15 +2252,12 @@
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
                var orders_id_fk = "{{@$sRow->id}}";
                var purchase_type_id_fk = $("#purchase_type_id_fk").val();
-               var aistockist = $("input[name=aistockist]").val();
-               var agency = $("input[name=agency]").val();
-
-               console.log(orders_id_fk);
-               console.log(purchase_type_id_fk);
-               console.log(aistockist);
-               console.log(agency);
-
-               // return false;
+               var aistockist = $("#aistockist").val();
+               var agency = $("#agency").val();
+               // // // console.log(orders_id_fk);
+               // // // console.log(purchase_type_id_fk);
+               // // // console.log(aistockist);
+               // // // console.log(agency);
 
                          Swal.fire({
                           title: 'ยืนยัน ? การแก้ไขข้อมูล ',
@@ -2292,9 +2279,7 @@
                                            agency:agency,
                                         },
                                         success:function(data){
-                                               
-                                                console.log(data);
-
+                                               // // console.log(data);
                                                 setTimeout(function(){
                                                     $(".myloading").hide();
                                                     location.reload();
@@ -2622,18 +2607,9 @@
                 // $(".myloading").show();
                 setTimeout(function(){
                   window.location.reload(true);
-                },500);
+                },1000);
                 
             });
-
-          $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
-                $("#spinner_frame").show();
-                setTimeout(function(){
-                  $("#addr_00").trigger('click');
-                },500);
-                
-            });
-
 
 
              $(document).on('click', '.btnClickRefresh', function () {
@@ -3572,8 +3548,9 @@
 
                           }
 
+
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
-                            // console.log(cuase_cannot_buy);
+                            console.log(cuase_cannot_buy);
 
                            if(cuase_cannot_buy.length>0){
                              $("td:eq(4)", nRow).html(
@@ -3830,16 +3807,8 @@ $(document).ready(function() {
 
         $(document).on('change', '#amt', function(event) {
             event.preventDefault();
-            $("#spinner_frame").show();
+            // $('.btnSaveAddlist ').focus();
             $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
-        });
-
-        $(document).on('click', '.btnSaveAddlist', function(event) {
-            event.preventDefault();
-            $("#spinner_frame").show();
-            $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
         });
 
 
@@ -3862,7 +3831,7 @@ $(document).ready(function() {
                          // data:{ d:d , _token: '{{csrf_token()}}' },
                           data: $("#frmFrontstoreAddList").serialize(),
                           success: function(response){ // What to do if we succeed
-                                console.log(response);
+                                 // // // // console.log(response);
                                   var oTable;
 
                                     $(function() {
@@ -4558,7 +4527,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxShippingCalculate') }} ",
                        data: $("#frm-main").serialize()+"&province_id="+$province_id+"&pay_type_id_fk="+pay_type_id_fk,
                         success:function(data){
-                            // console.log(data);
+                            // // console.log(data);
                             // return false;
 
                             $("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
@@ -5239,13 +5208,7 @@ $(document).ready(function() {
                 $("#spinner_frame").show();
 
                 var this_element = $(this).attr('id');
-                var aicash_remain = $('#aicash_remain').val();
-                // alert(aicash_remain);
-
-                if(aicash_remain==0){
-                  alert("! ยอด Ai-Cash ไม่เพียงพอชำระ กรุณาเติมยอด Ai-Cash ก่อน");
-                  $(this).val(0);
-                }
+                // alert(this_element);
 
                 // return false;
 
@@ -5294,23 +5257,10 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxCalGiftVoucherPrice') }} ",
                        data: $("#frm-main").serialize()+"&this_element="+this_element,
                         success:function(data){
-                              console.log(data);
+                               // // // console.log(data);
                                // //fnGetDBfrontstore();
                                $.each(data,function(key,value){
-
-                                  if(value.gift_voucher_price==null){
-
-                                    Swal.fire({
-                                          type: 'warning',
-                                          title: '! กรุณาเติมยอด Ai Voucher ก่อนทำการชำระเงิน ',
-                                          showConfirmButton: false,
-                                          timer: 3000
-                                        });
-
-                                  }else{
-                                    $("#gift_voucher_price").val(value.gift_voucher_price);
-                                  }
-
+                                   $("#gift_voucher_price").val(value.gift_voucher_price);
                                 });
 
                               $("input[name=_method]").val('PUT');
@@ -5386,12 +5336,12 @@ $(document).ready(function() {
 
                   $("#spinner_frame").show();
 
-                      var member_id_aicash = $(this).val();
+                      var customer_id = $(this).val();
                       var frontstore_id_fk = $("#frontstore_id_fk").val();
-                      // alert(member_id_aicash);
+                      // alert(customer_id);
                      // // // console.log(customer_id);
 
-                      if(member_id_aicash==''){
+                      if(customer_id==''){
                           alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
                           $("#spinner_frame").hide();
                           return false;
@@ -5407,7 +5357,7 @@ $(document).ready(function() {
                        type:'POST',
                        dataType:'JSON',
                        url: " {{ url('backend/ajaxGetAicash') }} ",
-                       data: { _token: '{{csrf_token()}}',customer_id:member_id_aicash,frontstore_id_fk:frontstore_id_fk},
+                       data: { _token: '{{csrf_token()}}',customer_id:customer_id,frontstore_id_fk:frontstore_id_fk },
                         success:function(data){
                                // // console.log(data);
                                // return false;
@@ -5427,10 +5377,6 @@ $(document).ready(function() {
                                   }
 
                                   $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-
-                                     var Customer_name_Aicash = value.user_name+" : "+value.prefix_name+''+value.first_name+" "+value.last_name;
-
-                                   $('#member_name_aicash').val(Customer_name_Aicash);
 
                                   // localStorage.setItem('aicash_remain', value.ai_cash);
 
@@ -6071,7 +6017,6 @@ $(document).ready(function() {
   
          $(document).ready(function(){   
 
-
             $("#customers_id_fk").select2({
                 minimumInputLength: 3,
                 allowClear: true,
@@ -6122,70 +6067,7 @@ $(document).ready(function() {
               });
 
 
-
-            $("#aistockist").select2({
-                minimumInputLength: 3,
-                allowClear: true,
-                placeholder: '-Select-',
-                ajax: {
-                url: " {{ url('backend/ajaxGetCustomerAistockist') }} ",
-                type  : 'POST',
-                dataType : 'json',
-                delay  : 250,
-                cache: false,
-                data: function (params) {
-                 return {          
-                  term: params.term  || '',   // search term
-                  page: params.page  || 1
-                 };
-                },
-                processResults: function (data, params) {
-                 return {
-                  results: data
-                 };
-                }
-               }
-              });
-
-             $(document).on('change', '#aistockist', function(event) {
-
-                    $('.aistockist').val($(this).val());
-                     
-              });
-      
-
-             $("#agency").select2({
-                minimumInputLength: 3,
-                allowClear: true,
-                placeholder: '-Select-',
-                ajax: {
-                url: " {{ url('backend/ajaxGetCustomerAgency') }} ",
-                type  : 'POST',
-                dataType : 'json',
-                delay  : 250,
-                cache: false,
-                data: function (params) {
-                 return {          
-                  term: params.term  || '',   // search term
-                  page: params.page  || 1
-                 };
-                },
-                processResults: function (data, params) {
-                 return {
-                  results: data
-                 };
-                }
-               }
-              });
-
-             $(document).on('change', '#agency', function(event) {
-
-                    $('.agency').val($(this).val());
-                     
-              });
-      
-
-       });
+         });
 
  
 

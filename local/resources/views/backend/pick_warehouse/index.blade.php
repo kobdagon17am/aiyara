@@ -578,16 +578,16 @@
                                    url: " {{ url('backend/calFifo') }} ", 
                                    data: $("#frm-packing").serialize()+"&picking_id="+picking_id,
                                     success: function(response){ // What to do if we succeed
-                                      // console.log(response);
+                                      console.log(response);
                                       // return false;
-
-                                      // console.log(ids[0]);
 
                                       $("#pick_pack_requisition_code_id_fk").val(response);
                                       var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
                                       // return false;
                                    
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
+                                  // console.log(picking_id);
                     
                                         $.fn.dataTable.ext.errMode = 'throw';
                                         var oTable0002;
@@ -683,8 +683,8 @@
                                    url: " {{ url('backend/calFifo') }} ", 
                                    data: $("#frm-packing").serialize()+"&picking_id="+picking_id,
                                     success: function(response){ // What to do if we succeed
-                                      console.log(response);
-                                       return false;
+                                      // console.log(response);
+                                       // return false;
                                       // console.log(ids[0]);
 
                                       $("#pick_pack_requisition_code_id_fk").val(response);

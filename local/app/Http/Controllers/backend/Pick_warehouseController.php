@@ -382,7 +382,7 @@ where db_pay_requisition_001.id =$id ");
             db_pay_requisition_002.*,sum(amt_get) as sum_amt_get
             FROM
             db_pay_requisition_002 
-            WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ");
+            WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ORDER BY product_name ");
 
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
@@ -749,18 +749,18 @@ where db_pay_requisition_001.id =$id ");
             from db_order_products_list
             LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
             LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-            WHERE db_orders.id in  (".$orders_id_fk.")
+            WHERE db_orders.id in  (".$orders_id_fk.") AND type_product='product'
             GROUP BY db_order_products_list.product_id_fk
             ORDER BY db_order_products_list.product_id_fk ");
 
               $sum_amt = 0 ;
               foreach ($Products as $key => $value) {
-
+                $product_id_fk = @$value->product_id_fk?$value->product_id_fk:0;
                 $arr_inv = [];
                 $arr_inv2 = [];
                 $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                WHERE frontstore_id_fk in (".$orders_id_fk.") AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
+                WHERE frontstore_id_fk in (".$orders_id_fk.") AND db_order_products_list.product_id_fk=".$product_id_fk." ");
                 foreach ($r_invoice_code as $inv) {
                     array_push($arr_inv,$inv->invoice_code);
                     array_push($arr_inv2,'"'.$inv->invoice_code.'"');
@@ -795,6 +795,23 @@ where db_pay_requisition_001.id =$id ");
 
           $pn .= '</div>';  
           return $pn;
+
+          // รวม product promotion ด้วย (ถ้ามี)
+          $sPromotion = DB::select("
+            SELECT db_orders.code_order,promotions_products.product_id_fk FROM promotions_products 
+            LEFT JOIN promotions on promotions.id=promotions_products.promotion_id_fk
+            JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions.id
+            LEFT JOIN db_orders on db_orders.id=db_order_products_list.frontstore_id_fk
+            WHERE db_order_products_list.frontstore_id_fk in ($orders_id_fk) and promotions_products.product_id_fk=".$product_id_fk." ;
+          ");
+          if($sPromotion){
+              foreach ($sPromotion as $v) {
+                
+              }
+          }
+
+
+
       })
       ->escapeColumns('column_002')  
       ->make(true);

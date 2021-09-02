@@ -120,7 +120,7 @@ class PromotionsController extends Controller
           $sRow->business_location    = request('business_location');
           $sRow->product_type    = request('product_type');
           $sRow->pcode    = request('pcode');
-          $sRow->coupon_terms    = request('coupon_terms');
+          // $sRow->coupon_terms    = request('coupon_terms');
           $sRow->name_thai    = request('name_thai');
           $sRow->name_eng    = request('name_eng');
           $sRow->name_laos    = request('name_laos');

@@ -32,7 +32,11 @@ class Po_supplierController extends Controller
     {
        $po_supplier = DB::select(" SELECT CONVERT(SUBSTRING(po_number, -3),UNSIGNED INTEGER) AS cnt FROM db_po_supplier WHERE po_number is not null  order by po_number desc limit 1  ");
        // dd($po_supplier[0]->cnt);
-       $po_runno = "PO".date("ymd").sprintf("%03d", $po_supplier[0]->cnt + 1);
+       if(empty($po_supplier[0]->cnt)){
+          $po_runno = "PO".date("ymd").sprintf("%03d", 1);
+       }else{
+           $po_runno = "PO".date("ymd").sprintf("%03d", $po_supplier[0]->cnt + 1);
+       }
        // dd($po_runno);
 
        $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -77,7 +81,21 @@ class Po_supplierController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
-      return $this->form($id);
+      if(isset($request->approved)){
+
+            $sRow = \App\Models\Backend\Po_supplier::find($request->id);
+            $sRow->approver = \Auth::user()->id;
+            $sRow->approve_status = request('approve_status') ;
+            $sRow->approve_date = date('Y-m-d');
+            $sRow->note2 = request('note2');
+            $sRow->save();
+
+           return redirect()->to(url("backend/po_supplier"));
+
+      }else{
+            return $this->form($id);
+      }
+      
     }
 
    public function form($id=NULL)

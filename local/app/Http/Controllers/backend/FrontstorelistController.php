@@ -53,6 +53,7 @@ class FrontstorelistController extends Controller
                           'pv' => $pv ,
                           'total_pv' => $pv * @$request->quantity[$i] ,
                           'total_price' => @$Promotions_cost[0]->member_price * @$request->quantity[$i] ,
+                          'type_product' => 'promotion' ,
                         ]
                     );
 
@@ -82,6 +83,7 @@ class FrontstorelistController extends Controller
                 $sRow->pv    = $pv ;
                 $sRow->total_pv    =  $pv * @$request->quantity[$i];
                 $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$i];
+                $sRow->type_product    =  'promotion' ;
 
                 $sRow->action_date    =  date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
@@ -223,6 +225,9 @@ class FrontstorelistController extends Controller
             ");
               // echo ($sProducts[0]->product_unit);
 
+              // return $sProducts;
+              // dd();
+
            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -247,6 +252,7 @@ class FrontstorelistController extends Controller
                           'total_price' => @$sProducts[0]->member_price * @$request->quantity[$i] ,
                           // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                           'product_unit_id_fk' => @$sProducts[0]->product_unit,
+                          'type_product' => 'product' ,
                         ]
                     );
 
@@ -270,6 +276,7 @@ class FrontstorelistController extends Controller
                 $sRow->product_unit_id_fk    =  @$sProducts[0]->product_unit ;
                 $sRow->total_pv    =  $pv * @$request->quantity[$i];
                 $sRow->total_price    =  @$sProducts[0]->member_price * @$request->quantity[$i];
+                $sRow->type_product    =  'product' ;
                 $sRow->created_at = date('Y-m-d H:i:s');
                 if(!empty(request('quantity')[$i])){
                   if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
@@ -420,7 +427,7 @@ class FrontstorelistController extends Controller
 
        if(isset($request->add_delivery_custom)){
 
-            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+            DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
               VALUES
               ('".$request->frontstore_id."',
                '".$request->customers_id_fk."',
@@ -454,7 +461,7 @@ class FrontstorelistController extends Controller
 
        	    if(count($ch)==0){
 
-       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+       	    	DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
 		              VALUES
 		              ('".$request->customers_addr_frontstore_id."',
 		               '".$request->customers_id_fk."',
@@ -472,7 +479,27 @@ class FrontstorelistController extends Controller
 
        	    }else{
 
-       	    	 DB::insert(" UPDATE customers_addr_frontstore
+
+// array:14 [▼
+//   "update_delivery_custom" => "1"
+//   "customers_addr_frontstore_id" => "34"
+//   "invoice_code" => null
+//   "frontstore_id" => "34"
+//   "customers_id_fk" => "150736"
+//   "_token" => "aVOig3fJv8OOmrcwqXpqbTEEcNne4ikLDwZWhkE6"
+//   "delivery_cusname" => "ศิริศักดิ์ ประพฤติ"
+//   "delivery_addr" => "206 ม.5 ซ.ประมง 7"
+//   "delivery_province" => "31"
+//   "delivery_amphur" => "460"
+//   "delivery_tambon" => "430116"
+//   "delivery_zipcode" => "43000"
+//   "delivery_tel" => "0864594116"
+//   "delivery_tel_home" => "-"
+
+
+              // dd($request->all());
+
+       	    	 DB::select(" UPDATE customers_addr_frontstore
 	              SET recipient_name = '".$request->delivery_cusname."',
 	              addr_no = '".$request->delivery_addr."',
 	              province_id_fk  = '".$request->delivery_province."',
@@ -486,10 +513,13 @@ class FrontstorelistController extends Controller
 
             }
 
+
+
             // ค่าขนส่ง
 
              $frontstore = DB::select("SELECT * FROM db_orders WHERE id=".$request->frontstore_id." ");
              $branchs = DB::select("SELECT * FROM branchs WHERE id=".$frontstore[0]->branch_id_fk." ");
+             // dd($request->all());
              // dd($frontstore[0]->branch_id_fk);
              // dd($branchs[0]->province_id_fk);
              // dd($request->delivery_province);
@@ -497,24 +527,35 @@ class FrontstorelistController extends Controller
                     DB::select("UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
                 }else{
                      // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
-                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=2  ");
+                    $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
 
-                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_cost_id_fk =".$shipping_cost[0]->id." AND province_id_fk=".($request->delivery_province?$request->delivery_province:0)." ");
-                    if(count($shipping_vicinity)>0){
+                    // dd($shipping_cost);
+                    // dd($shipping_cost[0]->id);
+                    // dd($request->delivery_province);
+
+                    $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where shipping_type_id =".$shipping_cost[0]->id." AND province_id_fk=".($request->delivery_province?$request->delivery_province:0)." ");
+
+                    // dd($shipping_vicinity);
+
+                    if(!empty($shipping_vicinity)){
 
                         DB::select("UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
                         // return $shipping_cost[0]->shipping_cost;
                     }else{
-                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type=1 AND shipping_cost<>0 ");
 
-                        DB::select("UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                        $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=1 AND shipping_cost<>0 ");
+
+                        // dd($shipping_cost);
+                        if(!empty($shipping_cost)){
+                           DB::select("UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+                         }
                         // return $shipping_cost[0]->shipping_cost;
 
                     }
 
                 }
 
-
+// dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
@@ -539,6 +580,9 @@ class FrontstorelistController extends Controller
 
 
         if(isset($request->product_plus_pro)){
+
+          // dd($request->all());
+
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
@@ -977,24 +1021,27 @@ class FrontstorelistController extends Controller
 
             $pn = '<div class="divTable"><div class="divTableBody">';
 
-            foreach ($Products as $key => $value) {
-             $pn .=
-                  '<div class="divTableRow">
-                  <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
-                  <div class="divTableCell"><center>'.$value->product_amt.'</div>
-                  <div class="divTableCell">'.$value->product_unit.'</div>
-                  </div>
-                  ';
+            if(!empty($Products)){
+
+              foreach ($Products as $key => $value) {
+               $pn .=
+                    '<div class="divTableRow">
+                    <div class="divTableCell">[Pro'.$value->product_code.'] '.$value->product_name.'</div>
+                    <div class="divTableCell"><center>'.$value->product_amt.'</div>
+                    <div class="divTableCell">'.$value->product_unit.'</div>
+                    </div>
+                    ';
+               }
              }
 
               $pn .= '</div></div>';
 
-            $sD = '';
+              $sD = '';
 
-            if($row->id!=''){
-                $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->id."' ");
-                $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " <br> รหัสโปร : ".$row->pcode."</br>";
-            }
+              if($row->id!=''){
+                  $promotions = DB::select(" SELECT name_thai as pro_name FROM promotions WHERE id='".$row->id."' ");
+                  $sD .=  "ชื่อโปร : ".@$promotions[0]->pro_name . " <br> รหัสโปร : ".@$row->pcode."</br>";
+              }
 
 
             $sD .=  $pn;
@@ -1012,7 +1059,12 @@ class FrontstorelistController extends Controller
           return @$Promotions_cost[0]->member_price;
       })
       ->addColumn('select_amt', function($row) {
-          return $row->id.":".$row->limited_amt_person;
+        // if(!empty($row->limited_amt_person)){
+        //   return $row->id.":".$row->limited_amt_person;
+        // }else{
+        //   return $row->id.":1";
+        // }
+        return $row->id.":".(@$row->limited_amt_person?$row->limited_amt_person:1);
       })
       ->addColumn('p_img', function($row) {
         if($row->p_img!=""){
@@ -1029,7 +1081,6 @@ class FrontstorelistController extends Controller
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
            $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
-           // @$Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A0000008');
            if($Check){
               $arr = [];
               for ($i=0; $i < count(@$Check) ; $i++) { 
@@ -1042,14 +1093,10 @@ class FrontstorelistController extends Controller
                    $im = implode(',',$arr);
               }
               return $im;
+          }else{
+            return 0;
           }
-           // return @$d->customers_id_fk;
-          // return $row->frontstore_id_fk;
-          // return $d1[0]->customers_id_fk;
-          // return $d2[0]->user_name;
-          // return $d1[0]->purchase_type_id_fk;
-          // return "No Buy";
-           // return 0;
+         
       })
       ->escapeColumns('cuase_cannot_buy')
       ->make(true);

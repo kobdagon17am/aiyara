@@ -353,8 +353,8 @@ class Products_fifo_billController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 
@@ -989,8 +989,8 @@ class Products_fifo_billController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
@@ -1122,8 +1122,8 @@ class Products_fifo_billController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 
@@ -1779,8 +1779,8 @@ class Products_fifo_billController extends Controller
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyara_db);
-        array_push($array_TABLES, $t->Tables_in_aiyara_db);
+        // print_r($t->Tables_in_aiyaraco_v3);
+        array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
       // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
 

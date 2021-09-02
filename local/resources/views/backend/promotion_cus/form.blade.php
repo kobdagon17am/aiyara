@@ -33,7 +33,7 @@
               <div class="panel-body">
      
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">เลือกโปรโมชั่น :</label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">เลือกโปรโมชั่น :</label>
                     <div class="col-md-6">
                       
                      
@@ -52,8 +52,15 @@
 
                   </div>
 
+                <div class="form-group row">
+                    <label for="coupon_terms" class="col-md-3 col-form-label required_star_red ">เงื่อนไขการได้รับคูปอง : </label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="text" value="{{ @$sRow->coupon_terms }}" id="coupon_terms" name="coupon_terms" required>
+                    </div>
+                </div>
+
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">วันเริ่ม - วันสิ้นสุด</label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">วันเริ่ม - วันสิ้นสุด</label>
                     <div class="col-md-6 d-flex  ">
                       <?php 
                          $sd = explode('-', @$sRow->pro_sdate);
@@ -100,10 +107,10 @@
                     <div class="col-md-3"></div>
                     
                     <div class="col-md-3">
-                    <label for="receipt" class="col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
+                    <label for="" class="col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
                     </div>
                     <div class="col-md-4 " style="" >
-                    <label for="receipt" class="col-form-label"><span class="dLexam" style="cursor: pointer;">[Download ตัวอย่างโครงสร้างไฟล์เพื่อใช้นำเข้า]</span></label>
+                    <label for="" class="col-form-label"><span class="dLexam" style="cursor: pointer;">[Download ตัวอย่างโครงสร้างไฟล์เพื่อใช้นำเข้า]</span></label>
                     </div>
                     
                   </div>
@@ -127,7 +134,7 @@
 
                   @if(Session::has('message'))
                   <div class="form-group row ">
-                    <label for="receipt" class="col-md-2 col-form-label"></label>
+                    <label for="" class="col-md-2 col-form-label"></label>
                     <div class="col-md-6 ">
                       <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
                     </div>
@@ -151,7 +158,7 @@
               <div class="panel-body">
      
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">จำนวนรหัสที่จะ gen :</label>
+                    <label for="" class="col-md-3 col-form-label">จำนวนรหัสที่จะ gen :</label>
                     <div class="col-md-3">
                       <input type="number" class="form-control" name="GenAmt" >
                     </div>
@@ -160,7 +167,7 @@
                   </div>
 
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">Random กี่หลัก :</label>
+                    <label for="" class="col-md-3 col-form-label">Random กี่หลัก :</label>
                     <div class="col-md-3">
                       <input type="number" class="form-control" name="amt_random" >
                     </div>
@@ -169,7 +176,7 @@
                   </div>
 
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">รหัส Prefix :</label>
+                    <label for="" class="col-md-3 col-form-label">รหัส Prefix :</label>
                     <div class="col-md-3" >
                       <input type="text" class="form-control" id="prefix_coupon"  name="prefix_coupon" >
                     </div>
@@ -178,7 +185,7 @@
                   </div>
 
                   <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label">รหัส Suffix :</label>
+                    <label for="" class="col-md-3 col-form-label">รหัส Suffix :</label>
                     <div class="col-md-3" >
                       <input type="text" class="form-control" id="suffix_coupon"  name="suffix_coupon" >
                     </div>
@@ -551,6 +558,12 @@ $(document).ready(function() {
             return false;
           }
 
+          var v = $("#coupon_terms").val();
+          if(v=='' || v==0){
+            $("#coupon_terms").focus();
+            return false;
+          }
+
           var v = $("input[name=pro_sdate]").val();
           if(v=='' || v==0){
             $("#startDate").focus();
@@ -585,19 +598,26 @@ $(document).ready(function() {
             return false;
           }
 
-          var v = $("input[name=pro_sdate]").val();
-          if(v=='' || v==0){
+
+          var coupon_terms = $("#coupon_terms").val();
+          if(coupon_terms==''){
+            $("#coupon_terms").focus();
+            return false;
+          }
+          
+          var pro_sdate = $("input[name=pro_sdate]").val();
+          if(pro_sdate==''){
             $("#startDate").focus();
             return false;
           }
-          var v = $("input[name=pro_edate]").val();
-          if(v=='' || v==0){
+          var pro_edate = $("input[name=pro_edate]").val();
+          if(pro_edate==''){
             $("#endDate").focus();
             return false;
           }          
 
-          var v = $("input[name=GenAmt]").val();
-          if(v=='' || v==0){
+          var GenAmt = $("input[name=GenAmt]").val();
+          if(GenAmt==''){
             $("input[name=GenAmt]").focus();
             return false;
           }
@@ -660,6 +680,12 @@ $(document).ready(function() {
             return false;
           }
 
+          var coupon_terms = $("#coupon_terms").val();
+          if(coupon_terms==''){
+            $("#coupon_terms").focus();
+            return false;
+          }
+
           var pro_sdate = $("input[name=pro_sdate]").val();
           // alert(pro_sdate);
           if(pro_sdate=='' || pro_sdate==0){
@@ -673,6 +699,10 @@ $(document).ready(function() {
             return false;
           }        
 
+          // console.log(coupon_terms);
+
+          // return false;
+
         $(".myloading").show();
 
         $.ajax({
@@ -681,11 +711,12 @@ $(document).ready(function() {
            data:{ _token: '{{csrf_token()}}',
            id:id,
            promotion_id_fk:promotion_id_fk,
+           coupon_terms:coupon_terms,
            pro_sdate:pro_sdate,
            pro_edate:pro_edate,
             },
             success:function(data){
-                 console.log(data); 
+                 // console.log(data); 
                  // return false;
 
                  $(".myloading").hide();

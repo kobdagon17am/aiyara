@@ -265,7 +265,7 @@
 
             <div class="myBorder" style="">
         
-              <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+              <form id="frm-main" action="{{ route('backend.po_receive.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="approved" type="hidden" value="1">
@@ -322,9 +322,14 @@
                   </div>
                   <div class="col-md-6 text-right">
 
+                    @IF(@$sRow->approve_status>0)
+                    @ELSE
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> อนุมัติ
                     </button>
+                    @ENDIF
+
+                    
 
                   </div>
                 </div>

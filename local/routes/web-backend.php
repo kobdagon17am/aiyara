@@ -287,6 +287,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('ajaxGetCustomerForFrontstore', 'AjaxController@ajaxGetCustomerForFrontstore');
     Route::post('ajaxGetCustomerForAicashSelect', 'AjaxController@ajaxGetCustomerForAicashSelect');
+    Route::post('ajaxGetCustomerAistockist', 'AjaxController@ajaxGetCustomerAistockist');
+    Route::post('ajaxGetCustomerAgency', 'AjaxController@ajaxGetCustomerAgency');
     
     Route::post('fnCheckStock', 'AjaxController@fnCheckStock');
     
@@ -390,6 +392,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     
     Route::post('ajaxSaveChangePurchaseType', 'AjaxController@ajaxSaveChangePurchaseType');
+    
+    Route::post('ajaxCheckDescGiftvoucher', 'AjaxController@ajaxCheckDescGiftvoucher');
 
 
     Route::resource('delivery', 'DeliveryController');
@@ -720,14 +724,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
 
-    Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+    // Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+    // Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
 
     Route::post('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
     Route::get('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
 
     Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
-    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
+    // Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
 
     Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
     Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
@@ -877,6 +881,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('ajaxDelUser', 'AjaxController@ajaxDelUser');
     Route::post('ajaxDelPromoProduct', 'AjaxController@ajaxDelPromoProduct');
+    
+    Route::post('ajaxDelPickpack', 'AjaxController@ajaxDelPickpack');
+    Route::post('ajaxDelDelivery', 'AjaxController@ajaxDelDelivery');
 
     Route::post('ajaxCourseCheckRegis', 'AjaxController@ajaxCourseCheckRegis');
     

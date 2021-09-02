@@ -215,13 +215,13 @@ class Po_approveController extends Controller
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
-                if ($row->purchase_type_id_fk == 7) {
+                if (@$row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
-                } else if ($row->purchase_type_id_fk == 5) {
+                } else if (@$row->purchase_type_id_fk == 5) {
                     $total_price = $row->total_price - $row->gift_voucher_price;
                     return number_format($total_price, 2);
                 } else {
-                    return number_format($row->sum_price + $row->shipping_price, 2);
+                    return number_format(@$row->sum_price + $row->shipping_price, 2);
                 }
 
             })
@@ -229,8 +229,10 @@ class Po_approveController extends Controller
             //     return date('d/m/Y H:i:s', strtotime($row->created_at));
             // })
              ->addColumn('customer_name', function($row) {
-                $Customer = DB::select(" select * from customers where id=".$row->customers_id_fk." ");
-                return $Customer[0]->user_name." : ".$Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name;
+                if(!empty($row->customers_id_fk)){
+                @$Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+                return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.$Customer[0]->first_name." ".@$Customer[0]->last_name;
+                    }
               })
 
              ->addColumn('note_fullpayonetime', function($row) {

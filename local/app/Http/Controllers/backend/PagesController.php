@@ -465,6 +465,7 @@ class PagesController extends Controller{
               }
 
               $sRow->promotion_id_fk = $request->promotion_id_fk;
+              $sRow->coupon_terms = $request->coupon_terms;
               $sRow->pro_sdate = $request->pro_sdate;
               $sRow->pro_edate = $request->pro_edate;
               // $sRow->pro_status = 4 ;

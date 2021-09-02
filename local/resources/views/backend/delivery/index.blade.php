@@ -56,7 +56,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> รายการรอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> รายการรอจัดส่ง  </h4>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -102,7 +102,7 @@
 
         <div class="myBorder">
 
-          <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
@@ -298,7 +298,7 @@
         </button>
       </div>
 
-      <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+      <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_select_addr" value="1" >
             {{ csrf_field() }}
 
@@ -328,7 +328,7 @@
         </button>
       </div>
 
-       	 <form id="frm-example" action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+       	 <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_select_addr_edit" value="1" >
             {{ csrf_field() }}
 
@@ -754,7 +754,11 @@ $(function() {
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
                                 // + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-    	                          + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+    	                          // + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+
     	                        ).addClass('input');
                     		  }
                         }
@@ -959,6 +963,54 @@ $(function() {
 
           });
     </script> 
+
+
+
+      <script>
+      $(document).ready(function() {
+
+
+          $(document).on('click', '.cCancel', function(event) {
+
+            var id = $(this).data('id');
+         
+              if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
+                  return false;
+              }else{
+              $.ajax({
+                  url: " {{ url('backend/ajaxDelDelivery') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", id:id,
+                  },
+                  success:function(data)
+                  { 
+                    // console.log(data);
+                    // return false;
+                        Swal.fire({
+                          type: 'success',
+                          title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+
+                        setTimeout(function () {
+                          // $('#data-table').DataTable().clear().draw();
+                          location.reload();
+                        }, 1500);
+                  }
+                });
+
+            }
+
+              
+            });
+                
+      });
+
+    </script>
+
+
 
     <script type="text/javascript">
 

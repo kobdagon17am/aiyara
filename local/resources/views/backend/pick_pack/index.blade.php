@@ -52,12 +52,12 @@
 @endsection
 
 @section('content')
-
+<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> Packing ใบเบิก  </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> Packing ใบเบิก  </h4>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -565,6 +565,8 @@ $(function() {
 
                           console.log(ids); 
 
+                          $(".myloading").hide();
+
                   }, 500);
 
 
@@ -573,6 +575,7 @@ $(function() {
   	            			var str = $('.select-info').text();
         							var str = str.split(" ");
         								$('.divBtnSave').show();
+                         $(".myloading").hide();
         				
   		            	}else{
   		            		$('.divBtnSave').hide();
@@ -677,11 +680,19 @@ $(function() {
                             $('td:last-child', nRow).html('-');
                         }else{ 
 
+                           console.log(aData['id']);
+
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
                                 // + '<a href="{{ route('backend.pick_pack.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
     	                          
-    	                          + '<a href="backend/pick_pack/" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+    	                          // + '<a href="backend/pick_pack/" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+
+
+                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+
     	                        ).addClass('input');
                     		}
 
@@ -891,6 +902,14 @@ $(function() {
                 //   event.preventDefault();
                 // });
 
+                     $(document).on('click', '.cDelete', function(event) {
+
+                            $(".myloading").show();
+                            setTimeout(function(){
+                              location.reload();
+                            }, 1500);
+                      });
+
 
 
 
@@ -960,6 +979,53 @@ $(function() {
          
 </script>
 
+
+
+
+
+      <script>
+      $(document).ready(function() {
+
+
+          $(document).on('click', '.cCancel', function(event) {
+
+            var id = $(this).data('id');
+         
+              if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
+                  return false;
+              }else{
+              $.ajax({
+                  url: " {{ url('backend/ajaxDelPickpack') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", id:id,
+                  },
+                  success:function(data)
+                  { 
+                    // console.log(data);
+                    // return false;
+                        Swal.fire({
+                          type: 'success',
+                          title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+
+                        setTimeout(function () {
+                          // $('#data-table').DataTable().clear().draw();
+                          location.reload();
+                        }, 1500);
+                  }
+                });
+
+            }
+
+              
+            });
+                
+      });
+
+    </script>
 
 
     <script>
