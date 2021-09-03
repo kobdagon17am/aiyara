@@ -39,12 +39,12 @@
                  <?php
                  $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->address_sent_id_fk);
 
-  //                dd($sent_to_customer_data);
-  //                +"prefix_name": "คุณ"
-  // +"first_name": "ชฎาพรww"
-  // +"last_name": "พิกุลe"
-  // +"business_name": "Orange Thailand"
-  // +"user_name": "A0000032"
+                // dd($sent_to_customer_data);
+                // +"prefix_name": "คุณ"
+                // +"first_name": "ชฎาพรww"
+                // +"last_name": "พิกุลe"
+                // +"business_name": "Orange Thailand"
+                // +"user_name": "A0000032"
                  ?>
                  <hr>
                  <p>
@@ -151,7 +151,10 @@
 
                                      @if($value->type_product == 'promotion')
 
-                                     <ul>
+                                     @if($value->promotion_code)
+                                     <span class="label label-warning" ><b style="color: #000"> {{ $value->promotion_code }} </b></span>
+                                     @endif
+                                     <ul class="mt-2">
                                          <?php
 $location_id = Auth::guard('c_user')->user()->business_location_id;
 $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk, $location_id);

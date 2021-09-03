@@ -246,19 +246,14 @@ class PvPayment extends Model
                 //check รายการสินค้าแถม
 
                 if ($type_id == 1) { //ทำคุณสมบติ
-                    $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('pv','line_type','upline_id','pv_mt','status_pv_mt','pv_mt_active','user_name')
-                        ->where('user_name', '=', $customer_update->user_name)
-                        ->first();
 
-                        // dd($data_user);
 
-                    $add_pv = $data_user->pv + $pv;;
+                    $add_pv = $customer_update->pv + $pv;;
 
-                    $order_update->pv_old = $data_user->pv;
+                    $order_update->pv_old = $customer_update->pv;
                     $order_update->pv_banlance = $add_pv;
                     $order_update->approve_date =  date('Y-m-d H:i:s');
-                    
+
                     // dd($customer_update->user_name);
                     // dd($pv);
 
@@ -269,23 +264,19 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
-                    $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('pv','line_type','upline_id','pv_mt','status_pv_mt','pv_mt_active')
-                        ->where('user_name', '=', $customer_update->user_name)
-                        ->first();
 
-                    $active_mt_old_date = $data_user->pv_mt_active;
-                    $status_pv_mt_old = $data_user->status_pv_mt;
+                    $active_mt_old_date = $customer_update->pv_mt_active;
+                    $status_pv_mt_old = $customer_update->status_pv_mt;
 
-                    $order_update->pv_mt_old = $data_user->pv_mt;
+                    $order_update->pv_mt_old = $customer_update->pv_mt;
                     $order_update->active_mt_old_date =  $active_mt_old_date;
                     $order_update->status_pv_mt_old =  $status_pv_mt_old;
                     $order_update->approve_date =  date('Y-m-d H:i:s');
 
-                    $strtime_user = strtotime($data_user->pv_mt_active);
+                    $strtime_user = strtotime($customer_update->pv_mt_active);
                     $strtime = strtotime(date("Y-m-d"));
 
-                    if ($data_user->status_pv_mt == 'first') {
+                    if ($customer_update->status_pv_mt == 'first') {
 
                         // if($strtime_user < $strtime){
                         //     //$contract_date = strtotime(date('Y-m',$strtime_user));
@@ -306,7 +297,7 @@ class PvPayment extends Model
                             ->first();
 
                         $pro_mt = $promotion_mt->pv;
-                        $pv_mt = $data_user->pv_mt;
+                        $pv_mt = $customer_update->pv_mt;
                         $pv_mt_all = $pv + $pv_mt;
 
                         if ($pv_mt_all >= $pro_mt) {
@@ -348,7 +339,7 @@ class PvPayment extends Model
                             ->first();
 
                         $pro_mt = $promotion_mt->pv;
-                        $pv_mt = $data_user->pv_mt;
+                        $pv_mt = $customer_update->pv_mt;
                         $pv_mt_all = $pv + $pv_mt;
 
                         if ($strtime_user > $strtime) {
@@ -387,7 +378,7 @@ class PvPayment extends Model
                             $customer_update->pv_mt = $pv_mt_all;
 
                             $order_update->pv_banlance = $pv_mt_all;
-                            $order_update->active_mt_date = $data_user->pv_mt_active;
+                            $order_update->active_mt_date = $customer_update->pv_mt_active;
 
                         }
 
@@ -397,14 +388,11 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
-                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                  ->select('pv','line_type','upline_id','pv_tv','pv_tv_active')
-                  ->where('user_name', '=', $customer_update->user_name)
-                  ->first();
 
-                    $active_tv_old_date = $data_user->pv_tv_active;
 
-                    $strtime_user = strtotime($data_user->pv_tv_active);
+                    $active_tv_old_date = $customer_update->pv_tv_active;
+
+                    $strtime_user = strtotime($customer_update->pv_tv_active);
                     $strtime = strtotime(date("Y-m-d"));
 
                     $promotion_tv = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
@@ -413,7 +401,7 @@ class PvPayment extends Model
                         ->first();
 
                     $pro_tv = $promotion_tv->pv;
-                    $pv_tv = $data_user->pv_tv;
+                    $pv_tv = $customer_update->pv_tv;
                     $pv_tv_all = $pv + $pv_tv;
 
                     if ($strtime_user > $strtime) {
@@ -438,7 +426,7 @@ class PvPayment extends Model
                         $customer_update->pv_tv = $pv_tv_total;
                         $customer_update->pv_tv_active = $tv_active;
 
-                        $order_update->pv_tv_old = $data_user->pv_tv;
+                        $order_update->pv_tv_old = $customer_update->pv_tv;
                         $order_update->pv_banlance = $pv_tv_total;
                         $order_update->active_tv_old_date = $active_tv_old_date;
                         $order_update->active_tv_date = $tv_active;
@@ -447,10 +435,10 @@ class PvPayment extends Model
                         //dd('อัพเดท');
                     $customer_update->pv_tv = $pv_tv_all;
 
-                    $order_update->pv_tv_old = $data_user->pv_tv;
+                    $order_update->pv_tv_old = $customer_update->pv_tv;
                     $order_update->pv_banlance =  $pv_tv_all;
                     $order_update->active_tv_old_date = $active_tv_old_date;
-                    $order_update->active_tv_date = $data_user->pv_tv_active;
+                    $order_update->active_tv_date = $customer_update->pv_tv_active;
 
                   }
 
@@ -458,13 +446,9 @@ class PvPayment extends Model
 
                 }elseif($type_id == 4) { //เติม Aipocket
 
-                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                  ->select('pv','line_type','upline_id','pv_aistockist')
-                  ->where('user_name', '=', $customer_update->user_name)
-                  ->first();
-                    //dd($data_user);
 
-                    $add_pv_aipocket = $data_user->pv_aistockist + $pv;
+
+                    $add_pv_aipocket = $customer_update->pv_aistockist + $pv;
                     $customer_update->pv_aistockist = $add_pv_aipocket;
 
                     $update_ai_stockist = DB::table('ai_stockist')
@@ -484,18 +468,15 @@ class PvPayment extends Model
                     //ไม่เข้าสถานะต้อง Approve
                 } elseif ($type_id == 6) { //couse อบรม
 
-                  $data_user = DB::table('customers') //อัพ Pv ของตัวเอง
-                  ->select('pv','line_type','upline_id')
-                  ->where('user_name', '=', $customer_update->user_name)
-                  ->first();
+
 
                         $update_couse = DB::table('course_event_regis')
                         ->where('order_id_fk', $order_id)
                         ->update(['status_register' => '2']);
 
-                    $add_pv = $data_user->pv + $pv;;
+                    $add_pv = $customer_update->pv + $pv;;
 
-                    $order_update->pv_old = $data_user->pv;
+                    $order_update->pv_old = $customer_update->pv;
                     $order_update->pv_banlance =$add_pv;
                     $order_update->action_date =date('Y-m-d H:i:s');
 

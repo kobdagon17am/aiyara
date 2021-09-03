@@ -139,7 +139,11 @@
              <td class="td-custom">
                  <b>{{ $value->product_name }}</b>
                  @if($value->type_product == 'promotion')
-                 <ul>
+
+                    @if($value->promotion_code)
+                      <br><b style="color: #000"> CODE : {{ $value->promotion_code }} </b>
+                    @endif
+                 <ul class="mt-2">
                      <?php
                     $location_id = Auth::guard('c_user')->user()->business_location_id;
                     $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk, $location_id);

@@ -78,9 +78,20 @@
                                         </td>
                                         <td>
                                             <h6> {{ $value['name'] }} </h6>
+                                            @if($value['attributes']['category_id'] == 9)
+
+                                            <span class="label label-warning" ><b style="color: #000"> {{ $value['attributes']['coupong'] }} </b></span>
+
+                                            @endif
+
+                                            @if($value['attributes']['category_id'] == 8)
+
+                                            <span class="label label-primary" ><b style="color: #000"> Promotion </b></span>
+
+                                            @endif
 
                                             @if($value['attributes']['promotion_detail'])
-                                            <ul>
+                                            <ul class="mt-2">
                                                 @foreach($value['attributes']['promotion_detail'] as $promotion_product)
                                                 <li style="font-size: 12px">
                                                     <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
@@ -252,13 +263,18 @@
         if(data['chek_course']['status'] == 'fail'){
             var eror_id = 'eror_'+data['action_id'];
             $('#'+eror_id).html(data['chek_course']['message']);
-            //document.getElementById("couse_submit").style.display = "non";
+            if(type == 6){
+              document.getElementById("couse_submit").style.display = "non";
+            }
+
 
 
         }else {
           var eror_id = 'eror_'+data['action_id'];
           $('#'+eror_id).html('');
-          //document.getElementById("couse_submit").style.display = "block";
+          if(type == 6){
+              document.getElementById("couse_submit").style.display = "block";
+            }
 
       }
 

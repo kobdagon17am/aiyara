@@ -656,7 +656,10 @@
 
                                                     @if ($value->type_product == 'promotion')
 
-                                                        <ul>
+                                                        @if($value->promotion_code)
+                                                        <span class="label label-warning" ><b style="color: #000"> {{ $value->promotion_code }} </b></span>
+                                                        @endif
+                                                        <ul class="mt-2">
                                                             <?php
                                                             $location_id = Auth::guard('c_user')->user()->business_location_id;
                                                             $get_promotion_detail = \App\Helpers\Frontend::get_promotion_detail($value->promotion_id_fk, $location_id);

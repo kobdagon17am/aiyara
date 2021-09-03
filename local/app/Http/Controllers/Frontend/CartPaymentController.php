@@ -344,7 +344,7 @@ class CartPaymentController extends Controller
                 DB::rollback();
                 return redirect('product-history')->withError($resule['message']);
             } else {
-                $add_product = PaymentAddProduct::payment_add_product($resule['id'], $customer_id, $rs->type, $business_location_id, $rs->pv_total,$code_order);
+                $add_product = PaymentAddProduct::payment_add_product($resule['id'], $customer_id, $rs->type, $business_location_id, $rs->pv_total,$code_order,Auth::guard('c_user')->user()->user_name);
                 if ($rs->type == 5) {
                     $update_giftvoucher = DB::table('log_gift_voucher') //log_gift_voucher order_id_fk
                         ->where('code_order', $code_order)

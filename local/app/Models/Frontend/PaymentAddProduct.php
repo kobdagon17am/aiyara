@@ -10,11 +10,10 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Models\DbOrderProductsList;
 use App\Models\DbGiveawayProducts;
 use App\Models\DbOrderProductsListGiveaway;
-
-
+//use App\Models\Backend\PromotionCus;
 class PaymentAddProduct extends Model
 {
-	public static function payment_add_product($order_id,$customer_id,$type,$business_location_id='',$pv_total='',$code_order){
+	public static function payment_add_product($order_id,$customer_id,$type,$business_location_id='',$pv_total='',$code_order,$customer_username){
 
     DB::BeginTransaction();
 		try {
@@ -49,7 +48,24 @@ class PaymentAddProduct extends Model
           $insert_db_products_list->promotion_code = '';//ยังทำไม่เสร็จ
           $insert_db_products_list->add_from = 2;
 
-				}else{
+        }elseif($value['attributes']['category_id'] == 9){//ซื้อด้วยคูปอง
+
+          $type_product = 'promotion';
+          $insert_db_products_list->promotion_id_fk = $value['attributes']['promotion_id'];
+          $insert_db_products_list->type_product = $type_product;
+          $insert_db_products_list->promotion_code = $value['attributes']['coupong'];
+          $insert_db_products_list->add_from = 2;
+
+          $id_add_ai_cash = DB::table('db_promotion_cus')
+          ->where('promotion_code', $value['attributes']['coupong'])
+          ->update(  [
+            'pro_status' =>2,//ถูกใช้งานเเล้ว
+            'used_user_name' =>$customer_username,
+            'used_date' => now(),
+        ]);
+
+
+        }else{
           $type_product = 'product';
           $insert_db_products_list->type_product = $type_product;
           $insert_db_products_list->product_id_fk = $value['id'];

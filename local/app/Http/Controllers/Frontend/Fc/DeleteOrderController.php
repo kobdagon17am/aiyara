@@ -32,24 +32,29 @@ class DeleteOrderController extends Controller
          }
 
           DB::table('log_gift_voucher')->where('order_id_fk', '=', $order_id)->delete();
-          DB::table('db_orders')->where('id', '=', $order_id)->delete();
-          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
-          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
-
-        }elseif($order_data->purchase_type_id_fk == 5){
-
-          DB::table('course_event_regis')->where('order_id_fk', '=', $order_id)->delete();
-          DB::table('db_orders')->where('id', '=', $order_id)->delete();
-          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
-          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
-
-        }else{
-
-          DB::table('db_orders')->where('id', '=', $order_id)->delete();
-          DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
-          DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
 
         }
+
+        if($order_data->purchase_type_id_fk == 6){
+          DB::table('course_event_regis')->where('order_id_fk', '=', $order_id)->delete();
+        }
+
+        DB::table('db_orders')->where('id', '=', $order_id)->delete();
+        DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $order_id)->delete();
+
+        $coupong = DB::table('db_order_products_list')
+        ->where('frontstore_id_fk','=',$order_id)
+        ->where('type_product','=','promotion')
+        ->where('promotion_code','!=','')
+        ->first();
+
+        if($coupong->promotion_code){
+          $coupong_update = DB::table('db_promotion_cus')
+          ->where('promotion_code',$coupong->promotion_code)
+          ->update(['pro_status' => 1,'used_user_name' => null,'used_date' => null]);
+        }
+
+        DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
 
         DB::commit();
         $resule = ['status' => 'success', 'message' => 'Delete Oder Success'];
