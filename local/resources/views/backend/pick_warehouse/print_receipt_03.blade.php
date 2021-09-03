@@ -235,6 +235,9 @@ tr.border_bottom td {
 
 require(app_path().'/Models/MyFunction.php');
 
+// echo $data[0];
+// exit;
+
 $delivery = DB::select(" 
 SELECT
 db_pick_pack_requisition_code.receipts,
@@ -242,7 +245,7 @@ db_pick_pack_requisition_code.pick_pack_packing_code
 FROM
 db_pick_pack_requisition_code
 Left Join db_pick_pack_packing_code ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing_code.id
-where db_pick_pack_requisition_code.pick_pack_packing_code = '".$data[0]."'
+where db_pick_pack_requisition_code.receipts = '".$data[0]."'
      ");
 // print_r($delivery);
 
@@ -258,14 +261,14 @@ $arr01 = implode(",",$arr01);
 // $arr01 = "'P1210600001','P1210600002'";
 
 $frontstore = DB::select(" 
-                   SELECT * FROM `db_orders`  WHERE invoice_code in ($arr01)
+                   SELECT * FROM `db_orders`  WHERE code_order in ($arr01)
 
      ");
 
 
 foreach($frontstore as $front_db){
 //   print_r($front_db->id);
-//   print_r($front_db->invoice_code);
+//   print_r($front_db->code_order);
 // }
 
 
@@ -335,10 +338,10 @@ $value = DB::select("
 
 <div class="NameAndAddress" >
 
-  <div style="border-radius: 5px; height: 33mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="width:30%;" > 
+        <td style="width:50%;" > 
 
          <?php
 
@@ -347,7 +350,7 @@ $value = DB::select("
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$front_db->id)->get();
 
                 echo "<b>ที่อยู่จัดส่ง</b>"."<br>";
-                echo "<b>".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."</b><br>";
+                echo "".@$value[0]->prefix_name.@$value[0]->first_name.' '.@$value[0]->last_name."<br>";
 
 
                       if(@$sRow->delivery_location==0){
@@ -517,11 +520,11 @@ $value = DB::select("
 
                      ?>
       </td>
-      <td style="width:10%;vertical-align: top;font-weight: bold;" > 
-        เลขที่ / No. <?=@$front_db->invoice_code?> <br>
+      <td style="width:20%;vertical-align: top;font-weight: bold;" > 
+        เลขที่ / No. <?=@$front_db->code_order?> <br>
         วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
       </td>
-      <td style="width:10%;vertical-align: top;" > 
+      <td style="width:5%;vertical-align: top;" > 
           <br>
       </td>
         

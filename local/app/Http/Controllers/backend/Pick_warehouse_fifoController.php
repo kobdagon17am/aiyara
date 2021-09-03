@@ -909,7 +909,7 @@ class Pick_warehouse_fifoController extends Controller
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
                      
                       <div class="divTableRow">
-                      <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+                      <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
                       <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวน</div>
                       </div>
@@ -1037,7 +1037,7 @@ class Pick_warehouse_fifoController extends Controller
 
                                 $pn .=     
                                 '<div class="divTableRow">
-                                <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
+                                <div class="divTableCell" style="width:220px;text-align:center;"> '.$sWarehouse.' </div>
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
                                 <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;color:blue;"> '.$amt_to_take.' </div>
                                 </div>
@@ -1336,13 +1336,11 @@ class Pick_warehouse_fifoController extends Controller
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
-                    <div class="divTableCell" style="width:450px;text-align:center;"> ';
+                    <div class="divTableCell" style="width:400px;text-align:center;"> ';
 
                       $pn .=     
-                            '<div class="divTableRow">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
-                            <div class="divTableCell" style="width:200px;text-align:center;">  </div>
-                            <div class="divTableCell" style="width:100px;text-align:center;">  </div>
+                            '<div class="divTableRow" style="text-align:center;">
+                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง</div>
                             </div>
                             ';
 
@@ -1458,7 +1456,7 @@ class Pick_warehouse_fifoController extends Controller
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
           '<div class="divTableRow">
-          <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+          <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
           <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
           <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวน</div>
           </div>
@@ -1730,7 +1728,7 @@ class Pick_warehouse_fifoController extends Controller
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
                      
                       <div class="divTableRow">
-                      <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+                      <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
                       <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
                       </div>
@@ -2395,7 +2393,7 @@ class Pick_warehouse_fifoController extends Controller
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
                      
                       <div class="divTableRow">
-                      <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+                      <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
                       <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
                       </div>

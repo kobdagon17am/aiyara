@@ -118,7 +118,9 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-             <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+             <h4 class="mb-0 font-size-18  "> จำหน่ายสินค้าหน้าร้าน > เปิดรายการขาย ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+
+             <!-- test_clear_data -->
 
                     <a class="btn btn-secondary btn-sm waves-effect btnBack " href="{{ url("backend/frontstore") }}">
                       <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
@@ -2224,9 +2226,11 @@
                       }
 
                       //  console.log(frontstore_id_fk);
-                      // / // console.log(aData['pay_type']);
+                      // console.log(aData['pay_type']);
+                      // console.log(aData['check_press_save']);
 
-                      if(aData['pay_type'] !== "" && aData['pay_type'] !== 0){
+                      // if(aData['pay_type'] !== "" && aData['pay_type'] !== 0){
+                      if(aData['check_press_save'] == "2" ){
 
                           $('td:last-child', nRow).html('-');
 
@@ -2250,8 +2254,6 @@
 
          $(document).ready(function() {
 
-
-          
 
             $(document).on('change', '#purchase_type_id_fk', function(event) {
                   $(".div_btnSaveChangePurchaseType").show();

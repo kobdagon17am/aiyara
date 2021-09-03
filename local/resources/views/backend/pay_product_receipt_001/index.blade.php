@@ -1347,7 +1347,13 @@ $(function() {
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
               
-              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+              
+                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
+                      return false;
+                  }else{
+                  
+                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+                  }
        
             });
                 

@@ -979,6 +979,10 @@ class FrontstorelistController extends Controller
           $pay_type = DB::select(" select pay_type_id_fk from db_orders WHERE id=".$row->frontstore_id_fk." ");
           return @$pay_type[0]->pay_type_id_fk;
       })
+      ->addColumn('check_press_save', function($row) {
+          $d = DB::select(" select check_press_save from db_orders WHERE id=".$row->frontstore_id_fk." ");
+          return @$d[0]->check_press_save;
+      })
       ->make(true);
     }
 
