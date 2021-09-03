@@ -72,14 +72,18 @@ class ProductController extends Controller
             foreach ($data['product'] as $value) {
 
                 $html .= ProductList::product_list_html($value->products_id, $type, $value->img_url, $value->product_img, $value->product_name, $value->title, $value->icon, $value->member_price, $value->pv, $c_id);
-
+                $data = ['html' => $html];
             }
 
         } else {
             $html = '';
+            $data = ['html' => $html];
         }
 
-        return $html;
+
+
+
+        return $data;
     }
 
     public function product_detail($type, $id, $category_id = '', $coupong = '')
@@ -114,7 +118,7 @@ class ProductController extends Controller
                 if ($category_id == 8 || $category_id == 9) { //โปรโมชั่น || cpupon
 
                     $product = DB::table('promotions')
-                        ->select('promotions.id as products_id', 'name_thai as product_name',
+                        ->select('promotions.id as products_id', 'name_thai as product_name','promotions.limited_amt_person',
                             'selling_price as member_price', 'promotions_cost.pv', 'detail_thai as descriptions'
                             , 'detail_thai as products_details')
                     // ->leftjoin('promotions_images','promotions_images.promotion_id_fk','=','promotions.id')
@@ -130,6 +134,8 @@ class ProductController extends Controller
                     // ->orderby('id','DESC')
                         ->where('promotions.id', '=', $id)
                         ->first();
+
+
 
                     if (empty($product)) {
                         return redirect('product-list/' . $type)->withError('No Product');
@@ -175,6 +181,8 @@ class ProductController extends Controller
                     $data = ['product_data' => $product, 'img' => $img, 'type' => $type, 'category_id' => $category_id];
                 }
 
+
+
                 return view('frontend/product/product-detail', compact('data'));
 
             }
@@ -183,31 +191,43 @@ class ProductController extends Controller
 
     public function add_cart(Request $request)
     {
+      $location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($location_id)) {
+          $location_id = 1;
+      }
+
+      $coupong = $request->coupong;
 
         if ($request->category_id == 8) { //promotion
             $id = 'P' . $request->id;
-            $location_id = Auth::guard('c_user')->user()->business_location_id;
-            $data = \App\Helpers\Frontend::get_promotion_detail($request->id, $location_id);
 
-        } else {
-            $id = $request->id;
-            $data = '';
-        }
-        $coupong = $request->coupong;
-        if ($coupong) {
-            $cartCollection = Cart::session($request->type)->getContent();
-            $data = $cartCollection->toArray();
+            $product_list = \App\Helpers\Frontend::get_promotion_detail($request->id, $location_id);
 
-            if ($data) {
-                foreach ($data as $value) {
+        }elseif($request->category_id == 9){//coupong
+            $id = $request->coupong;
+            $product_list = \App\Helpers\Frontend::get_promotion_detail($request->id, $location_id);
 
-                    if ($value['attributes']['coupong'] == $coupong) {
-                        $data = ['status' => 'fail', 'message' => 'Coupong Code สามารถใช้งานได้เพียง 1 ครั้ง ต่อ 1 Code เท่านั้น'];
-                        return $data;
+
+            if ($coupong) {
+                $cartCollection = Cart::session($request->type)->getContent();
+                $data = $cartCollection->toArray();
+
+                if ($data) {
+                    foreach ($data as $value) {
+
+                        if ($value['attributes']['coupong'] == $coupong) {
+                            $data = ['status' => 'fail', 'message' => 'Coupong Code สามารถใช้งานได้เพียง 1 ครั้ง ต่อ 1 Code เท่านั้น'];
+                            return $data;
+                        }
                     }
                 }
             }
+
+        }else{
+            $id = $request->id;
+            $product_list = '';
         }
+
 
         Cart::session($request->type)->add(array(
             'id' => $id, // inique row ID
@@ -221,7 +241,7 @@ class ProductController extends Controller
                 'product_unit_name' => $request->product_unit_name,
                 'coupong' => $coupong,
                 'promotion_id' => $request->id,
-                'promotion_detail' => $data,
+                'promotion_detail' => $product_list,
                 'category_id' => $request->category_id,
             ),
         ));

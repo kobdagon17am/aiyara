@@ -158,8 +158,9 @@
                                                          </button>
                                                      </span>
                                                      <?php
+
                                                      if(@$data['coupong'] != ''){
-                                                       $max = 1;
+                                                       $max = $data['product_data']->limited_amt_person;
                                                      }else {
                                                        $max = 50;
                                                      }

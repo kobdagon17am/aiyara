@@ -74,17 +74,17 @@
 
                                     <tr id="items">
                                         <td class="text-center">
-                                            <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}"><img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl"></a>
+                                             <img src="{{asset($value['attributes']['img'])}}" class="img-fluid zoom img-70" alt="tbl">
                                         </td>
                                         <td>
-                                            <h6> <a href="{{ route('product-detail',['type'=>$type,'id'=>$value['id']]) }}">{{ $value['name'] }}</a></h6>
+                                            <h6> {{ $value['name'] }} </h6>
 
                                             @if($value['attributes']['promotion_detail'])
                                             <ul>
                                                 @foreach($value['attributes']['promotion_detail'] as $promotion_product)
-                                                {{-- <li style="font-size: 12px">
-                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
-                                                </li> --}}
+                                                <li style="font-size: 12px">
+                                                    <i class="icofont icofont-double-right text-success"></i> {{ $promotion_product->product_name }} {{ $promotion_product->product_amt }} {{ $promotion_product->unit_name }}
+                                                </li>
 
                                                 @endforeach
                                             </ul>
@@ -96,8 +96,14 @@
                                             @endif
                                             @endif
                                         </td>
-                                        <td>
-                                            <input type="number" min="1" onchange="quantity_change('{{ $value['id'] }}')" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
+                                        <td class="text-center">
+                                          @if($value['attributes']['category_id'] == 9)
+                                          {{ $value['quantity'] }}
+
+                                          @else
+                                          <input type="number" min="1" onchange="quantity_change('{{ $value['id'] }}')" class="form-control" id="quantity_{{$value['id']}}" name="quantity" value="{{ $value['quantity'] }}">
+
+                                          @endif
                                         </td>
                                         <td><b>{{ number_format($value['price'],2) }}</b></td>
 
@@ -246,13 +252,13 @@
         if(data['chek_course']['status'] == 'fail'){
             var eror_id = 'eror_'+data['action_id'];
             $('#'+eror_id).html(data['chek_course']['message']);
-            document.getElementById("couse_submit").style.display = "non";
+            //document.getElementById("couse_submit").style.display = "non";
 
 
         }else {
           var eror_id = 'eror_'+data['action_id'];
           $('#'+eror_id).html('');
-          document.getElementById("couse_submit").style.display = "block";
+          //document.getElementById("couse_submit").style.display = "block";
 
       }
 

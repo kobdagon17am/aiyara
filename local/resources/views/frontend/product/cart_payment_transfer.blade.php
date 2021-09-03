@@ -1056,7 +1056,7 @@
             } else if (data == '3') {
 
 
-                var ai_cash = {{ Auth::guard('c_user')->user()->ai_cash }};
+                var ai_cash = '{{ Auth::guard('c_user')->user()->ai_cash }}';
                 var price_total = {{ $data->total_price }};
 
                 if (ai_cash < price_total) {

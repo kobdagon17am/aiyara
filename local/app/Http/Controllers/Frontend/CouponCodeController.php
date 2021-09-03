@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use App\Models\Frontend\Product;
+use Cart;
 class CouponCodeController extends Controller
 {
 
@@ -16,6 +17,20 @@ class CouponCodeController extends Controller
     }
 
    public static function coupon(Request $request){
+
+
+    $cartCollection = Cart::session($request->type)->getContent();
+    $data = $cartCollection->toArray();
+
+    if ($data) {
+        foreach ($data as $value) {
+
+            if ($value['attributes']['coupong']) {
+                $data = ['status' => 'fail', 'message' => 'Coupong Code สามารถใช้งานได้เพียง 1 ครั้ง ต่อ 1 บิลเท่านั้น'];
+                return $data;
+            }
+        }
+    }
 
 
        $coupon =  DB::table('db_promotion_cus')
@@ -36,26 +51,26 @@ class CouponCodeController extends Controller
 
        if($coupon){
           if($coupon->pro_status == 2){
-            $resule = ['status'=>'fail','massage'=>'Coupon Code นี้ถูกใช้งานเเล้ว'];
+            $resule = ['status'=>'fail','message'=>'Coupon Code นี้ถูกใช้งานเเล้ว'];
             //1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code
           }elseif($coupon->pro_status == 3 || $coupon->pro_status == 4 || $coupon->pro_status == 5){
-            $resule = ['status'=>'fail','massage'=>'Coupon Code นี้ยังไม่พร้อมใช้งาน'];
+            $resule = ['status'=>'fail','message'=>'Coupon Code นี้ยังไม่พร้อมใช้งาน'];
           }else{
             $pro_edate =$coupon->pro_edate;
             $now_date = date('Y-m-d');
             if(strtotime($pro_edate) <= strtotime($now_date)){
-              $resule = ['status'=>'fail','massage'=>'Promotions หมดอายุการใช้งานแล้ว'];
+              $resule = ['status'=>'fail','message'=>'Promotions หมดอายุการใช้งานแล้ว'];
             }else{
                $category_id = 9;//coupon type
                $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id,$request->coupon_code);
-               $resule = ['status'=>'success','massage'=>'success','html'=>$html,'coupon'=>$request->coupon_code];
+               $resule = ['status'=>'success','message'=>'success','html'=>$html,'coupon'=>$request->coupon_code];
                return $resule;
             }
 
           }
 
       }else{
-        $resule = ['status'=>'fail','massage'=>'ไม่พบ Coupon Code นี้ในระบบ'];
+        $resule = ['status'=>'fail','message'=>'ไม่พบ Coupon Code นี้ในระบบ'];
       }
 
        return $resule;

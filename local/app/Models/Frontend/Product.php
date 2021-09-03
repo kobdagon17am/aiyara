@@ -115,7 +115,7 @@ class Product extends Model
             ->orderby('id', 'DESC')
             ->get();
 
-        //dd($promotions);
+
 
         if (count($promotions) <= 0) {
             $resule = ['status' => 'fail', 'message' => 'ตอนนี้ไม่มี Promotions'];
@@ -215,6 +215,7 @@ class Product extends Model
                 }
 
             }
+
 
             $data = ['html' => $html, 'rs' => $resule];
             return $data;

@@ -360,7 +360,7 @@
       data: {'category_id':category,'type':'{{$type}}'},
     })
     .done(function(data){
-      $('#product_list').html(data);
+      $('#product_list').html(data['html']);
       $('#coupon_code').val('');
       // console.log("success");
     })
@@ -403,12 +403,12 @@
      .done(function(data){
 
       if(data['status'] == 'fail'){
+        console.log(data);
        Swal.fire({
         icon: 'error',
-        text: data['massage'],
-              // text: 'Something went wrong!',
+        text: data['message'],
               // footer: '<a href>Why do I have this issue?</a>'
-            })
+        })
 
      }else {
        $('#product_list').html(data['html']['html']);
