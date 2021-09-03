@@ -63,10 +63,13 @@ body{
                 // $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
                 if(!empty($value[0]->recipient_name)){
-                    echo @$value[0]->recipient_name."<br>";
-                    echo @$value[0]->address."<br>";
+                    echo "คุณ ".@$value[0]->recipient_name."<br>";
+                    echo "ที่อยู่ ".@$value[0]->address."<br>";
                     echo @$value[0]->postcode."<br>";
                     echo @$value[0]->mobile."<br>";
+                    echo "<br>";
+                    echo "<br>";
+                    echo "Tracking No. : ".@$value[0]->consignment_no;
                 //     $addr = $addr;
                 // }else{
                 //     $addr = "-ไม่พบข้อมูลที่อยู่-";

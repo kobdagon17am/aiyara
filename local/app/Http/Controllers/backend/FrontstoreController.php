@@ -1732,12 +1732,25 @@ class FrontstoreController extends Controller
           return $r[0]->status_delivery;
 
       })   
-      // ->addColumn('status_sent_money', function($row) {
-      //     $r = DB::select(" select status_sent_money FROM db_orders WHERE id = ".$row->id." ");
-      //     if($r)
-      //     return $r[0]->status_sent_money;
-
-      // })             
+      ->addColumn('status_sent_product', function($row) {
+        if(!empty($row->code_order)){
+          $r1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE receipts = '".$row->code_order."' ");
+          if(@$r1){
+             $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
+             return @$r2[0]->status_sent;
+          }
+        }
+      })  
+      ->addColumn('status_sent_desc', function($row) {
+        if(!empty($row->code_order)){
+          $r1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE receipts = '".$row->code_order."' ");
+          if(@$r1){
+            $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
+            $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
+            return @$r3->txt_desc;
+          }
+        }
+      })             
       ->make(true);
     }
 

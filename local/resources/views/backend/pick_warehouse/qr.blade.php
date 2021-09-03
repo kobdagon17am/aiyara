@@ -309,7 +309,7 @@
                             method: "POST",
                             data:{ _token: '{{csrf_token()}}',
                             id:id,
-                            picking_id:packing_id,
+                            picking_id:id,
                           },
                         },
                   columns: [
@@ -686,7 +686,7 @@
 
 
                $(".btnPackingFinished").click(function(event) {
-                  $(".myloading").show();
+                  // $(".myloading").show();
 
                   var id = "{{$id}}"; 
 
@@ -726,7 +726,7 @@
 
 
                $(".btnShippingFinished").click(function(event) {
-                  $(".myloading").show();
+                  // $(".myloading").show();
 
                   var id = "{{$id}}"; 
 

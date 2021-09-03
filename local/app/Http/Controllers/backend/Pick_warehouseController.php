@@ -609,20 +609,27 @@ where db_pay_requisition_001.id =$id ");
                 LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
                 LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
                 WHERE db_orders.id in  (".$row->orders_id_fk.")
+                AND db_order_products_list.product_id_fk<>''
                 GROUP BY db_order_products_list.product_id_fk
                 ORDER BY db_order_products_list.product_id_fk ");
 
               $sum_amt = 0 ;
+
+              if(@$Products){
+            
               foreach ($Products as $key => $value) {
 
                 $arr_inv = [];
                 $arr_inv2 = [];
+                if(@$row->orders_id_fk){
                 $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                WHERE frontstore_id_fk in (".$row->orders_id_fk.") AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
-                foreach ($r_invoice_code as $inv) {
-                    array_push($arr_inv,$inv->invoice_code);
-                    array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+                WHERE frontstore_id_fk in (".@$row->orders_id_fk.") AND db_order_products_list.product_id_fk in (".@$value->product_id_fk.") ");
+                if(@$r_invoice_code){
+                  foreach (@$r_invoice_code as $inv) {
+                      array_push($arr_inv,@$inv->invoice_code);
+                      array_push($arr_inv2,'"'.@$inv->invoice_code.'"');
+                  }
                 }
 
                 $invoice_code = implode(",",$arr_inv);
@@ -631,18 +638,18 @@ where db_pay_requisition_001.id =$id ");
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                '.$value->product_name.'</b><br>('.$invoice_code.')
+                '.@$value->product_name.'</b><br>('.@$invoice_code.')
                 </div>
-                <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
-                <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
+                <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+                <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                 <div class="divTableCell" style="text-align:left;"> ';
 
                 $item_id = 1;
-                $amt_scan = $value->amt;
+                $amt_scan = @$value->amt;
 
                 for ($i=0; $i < $amt_scan ; $i++) { 
 
-                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".$item_id."' and packing_code= ('".$row->packing_code."') AND product_id_fk='".$value->product_id_fk."' ");
+                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
                 
                             if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
 
@@ -656,13 +663,13 @@ where db_pay_requisition_001.id =$id ");
 
                                $pn .= 
                                '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-packing_code="'.$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-packing_code="'.$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i> 
+                                <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
                                ';
 
                             }
 
-                              $item_id++;
+                              @$item_id++;
                               
                           }  
 
@@ -670,11 +677,13 @@ where db_pay_requisition_001.id =$id ");
                 $pn .= '</div>';  
               
               }
+              }
+              }
 
               $pn .=     
               '<div class="divTableRow">
               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
+              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
               <div class="divTableCell" style="text-align:center;"> </div>
               <div class="divTableCell" style="text-align:center;"> </div>
               </div>

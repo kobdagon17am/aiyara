@@ -815,6 +815,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
                       // console.log('sD : '+sD);
                       // // console.log('can_cancel_bill : '+can_cancel_bill);
                       // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+                    
 
                     if(sU!='1'&&sD!='1'){
                         $('td:last-child', nRow).html('-');
@@ -859,6 +860,12 @@ Gift Voucher  <i class="fa fa-gift"></i>
 
                     }
 
+
+                    // console.log('status_sent_product : '+aData['status_sent_product']);
+                    if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
+                       $('td:last-child', nRow).html('-');
+                       $("td:eq(8)", nRow).html(aData['status_sent_desc']);
+                    }
 
                     // // console.log(aData['purchase_type_id_fk']);
                     if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
@@ -1659,6 +1666,8 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
       DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
 
+      DB::select("TRUNCATE `db_pay_product_receipt_list_cus`;");
+
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
       
@@ -1684,13 +1693,14 @@ $(document).ready(function() {
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
-      DB::select(" UPDATE db_stocks SET amt='100' ; ");
-
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       DB::select("TRUNCATE `db_orders`;");
       DB::select("TRUNCATE `db_orders_tmp`;");
       DB::select("TRUNCATE `db_order_products_list`;");
       DB::select("TRUNCATE `db_order_products_list_tmp`;");
+      
+      DB::select("TRUNCATE `db_order_products_list_giveaway`;");
       
       DB::select("TRUNCATE `db_delivery` ;");
       DB::select("TRUNCATE `db_delivery_packing` ;");
@@ -1702,6 +1712,57 @@ $(document).ready(function() {
 
       DB::select("TRUNCATE `db_add_ai_cash` ;");
       DB::select("TRUNCATE `payment_slip` ;");
+
+      // เพิ่มเติม
+DB::select(" TRUNCATE temp_cus_ai_cash ; ");
+DB::select(" TRUNCATE temp_db_pay_product_receipt_fifo ; ");
+DB::select(" TRUNCATE temp_db_stocks1 ; ");
+DB::select(" TRUNCATE temp_db_stocks2 ; ");
+DB::select(" TRUNCATE temp_db_stocks5 ; ");
+DB::select(" TRUNCATE temp_db_stocks_amt_template ; ");
+DB::select(" TRUNCATE temp_db_stocks_amt_template_02 ; ");
+DB::select(" TRUNCATE temp_db_stocks_check002_template ; ");
+DB::select(" TRUNCATE temp_db_stocks_check2 ; ");
+DB::select(" TRUNCATE temp_db_stocks_check5 ; ");
+DB::select(" TRUNCATE temp_db_stocks_check_template ; ");
+DB::select(" TRUNCATE temp_db_stocks_compare002_template ; ");
+DB::select(" TRUNCATE temp_db_stocks_compare2 ; ");
+DB::select(" TRUNCATE temp_db_stocks_compare5 ; ");
+DB::select(" TRUNCATE temp_db_stocks_compare_template ; ");
+DB::select(" TRUNCATE temp_db_stocks_from_return1 ; ");
+DB::select(" TRUNCATE temp_db_stocks_from_return5 ; ");
+DB::select(" TRUNCATE temp_ppp_0011 ; ");
+DB::select(" TRUNCATE temp_ppp_0021 ; ");
+DB::select(" TRUNCATE temp_ppp_00221 ; ");
+DB::select(" TRUNCATE temp_ppp_002_template ; ");
+DB::select(" TRUNCATE temp_ppp_0031 ; ");
+DB::select(" TRUNCATE temp_ppp_003_template ; ");
+DB::select(" TRUNCATE temp_ppp_0041 ; ");
+DB::select(" TRUNCATE temp_ppp_004_template ; ");
+DB::select(" TRUNCATE temp_ppp_006_template ; ");
+DB::select(" TRUNCATE temp_ppr_0011 ; ");
+DB::select(" TRUNCATE temp_ppr_0012 ; ");
+DB::select(" TRUNCATE temp_ppr_0015 ; ");
+DB::select(" TRUNCATE temp_ppr_0021 ; ");
+DB::select(" TRUNCATE temp_ppr_0022 ; ");
+DB::select(" TRUNCATE temp_ppr_0025 ; ");
+DB::select(" TRUNCATE temp_ppr_0031 ; ");
+DB::select(" TRUNCATE temp_ppr_0032 ; ");
+DB::select(" TRUNCATE temp_ppr_0035 ; ");
+DB::select(" TRUNCATE temp_ppr_003_template ; ");
+DB::select(" TRUNCATE temp_ppr_0041 ; ");
+DB::select(" TRUNCATE temp_ppr_0042 ; ");
+DB::select(" TRUNCATE temp_ppr_0045 ; ");
+DB::select(" TRUNCATE temp_ppr_004_template ; ");
+DB::select(" TRUNCATE temp_ppr_006_template ; ");
+
+DB::select(" TRUNCATE db_consignments ; ");
+DB::select(" TRUNCATE db_consignments_import ; ");
+
+// DB::select(" TRUNCATE db_promotion_code ; ");
+// DB::select(" TRUNCATE db_promotion_cus ; ");
+// DB::select(" TRUNCATE db_promotion_cus_products ; ");
+
       
       // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
 

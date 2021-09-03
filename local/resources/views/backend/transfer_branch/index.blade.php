@@ -1505,7 +1505,16 @@
 
 
      $(document).on('click', '.test_clear_data_transfer_branch', function(event) {
-        location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
+      
+
+          if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
+              return false;
+          }else{
+          
+                location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
+          }
+
+   
       });
 
 

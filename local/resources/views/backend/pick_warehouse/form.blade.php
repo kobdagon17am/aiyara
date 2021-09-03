@@ -214,7 +214,7 @@
                         </div>
 
           <table id="data-table-0000" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
-          <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+          <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
           <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;"> </table>
 
                        <div class=" div_datatables_003 " style="" >
@@ -852,8 +852,13 @@
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
               
-              location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
+                      return false;
+                  }else{
+                  
+                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+                  }
+   
             });
                 
       });

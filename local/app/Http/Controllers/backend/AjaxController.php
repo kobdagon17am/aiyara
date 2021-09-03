@@ -3518,7 +3518,7 @@ if($frontstore[0]->check_press_save==2){
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE date(updated_at)=CURDATE() AND status_sent_money=0  ");
 
-              }else{
+            }else{
 
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ('1',".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
