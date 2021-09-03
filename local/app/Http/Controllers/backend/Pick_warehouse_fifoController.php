@@ -51,6 +51,9 @@ class Pick_warehouse_fifoController extends Controller
       $picking = explode(",", $picking[0]);
 
       // return gettype($picking);
+      // if(gettype($picking)=="array"){
+      //   $picking = implode(",", $picking);
+      // }
       // return ($picking[0]);
       // return gettype($arr_picking_id);
       // return $picking;
@@ -64,7 +67,6 @@ class Pick_warehouse_fifoController extends Controller
       $arr_picking = array_unique($arr_picking);
       $pickings = implode(',', $arr_picking);
       // return $pickings;
-      // dd();
 
       $pick_pack_packing_code = implode(',', $arr_picking);
 
@@ -144,7 +146,6 @@ class Pick_warehouse_fifoController extends Controller
           $arr_product_id_fk = $arr_product_id_fk?$arr_product_id_fk:0;
 
           // return $arr_product_id_fk;
-          // dd();
 
           $business_location_id_fk = \Auth::user()->business_location_id_fk;
           $branch_id_fk = \Auth::user()->branch_id_fk;
@@ -214,6 +215,7 @@ class Pick_warehouse_fifoController extends Controller
     // return $r01;
     // return $r01[0]->invoice_code;
     // return $receipt;
+    // return $r_db_orders;
 // dd();
 
     if($r_db_orders){
@@ -793,6 +795,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
 // http://localhost/aiyara.host/backend/pay_product_receipt
+// http://localhost/aiyara/backend/pick_warehouse
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function Datatable0002FIFO(Request $request){
 
@@ -838,6 +841,8 @@ class Pick_warehouse_fifoController extends Controller
       }
 
       $receipt = implode(",",$arr_01);
+
+      // return $picking_id;
 
       $sTable = DB::select("
         SELECT * from $temp_ppp_0022 WHERE pick_pack_requisition_code_id_fk in($picking_id)  GROUP BY pick_pack_requisition_code_id_fk
@@ -966,7 +971,7 @@ class Pick_warehouse_fifoController extends Controller
                 }
 
 
-                $invoice_code = implode("<br>",$arr_inv);
+                $invoice_code = implode("<br>",array_unique($arr_inv));
 
                 if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
                 if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}

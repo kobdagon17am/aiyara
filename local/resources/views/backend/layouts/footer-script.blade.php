@@ -168,7 +168,7 @@
           <script>    
               $(document).ready(function(){
                 var fp = "{{@$page}}";
-                console.log(fp);
+                // console.log(fp);
                   if(!fp){
                     $('body').toggleClass('vertical-collpsed');
                     $(".btnHome").show();

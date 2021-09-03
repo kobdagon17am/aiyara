@@ -958,7 +958,7 @@ class FrontstoreController extends Controller
               $sRow->pay_with_other_bill = request('pay_with_other_bill');
               $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
 
-              $sRow->check_press_save = '2';
+              
 
               if(empty(request('shipping_price'))){
 
@@ -1276,7 +1276,6 @@ class FrontstoreController extends Controller
               }
 
               $sRow->save();
-
              
               // dd(RunNumberPayment::run_number_order(1));
 
@@ -1284,10 +1283,15 @@ class FrontstoreController extends Controller
 
               DB::select(" UPDATE `db_orders` SET date_setting_code='$date_setting_code' WHERE (`id`=".$sRow->id.") ");
 
+              if($sRow->check_press_save!=2){
+                  $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+              }else{
+                  $code_order = $sRow->code_order;
+              }
 
-              $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+              // $sRow->check_press_save = '2';
 
-              DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
+              DB::select(" UPDATE `db_orders` SET `code_order`='$code_order',check_press_save=2 WHERE (`id`=".$sRow->id.") ");
               DB::select(" UPDATE `db_orders` SET `invoice_code`='$code_order' WHERE `id`=".$sRow->id." and pay_type_id_fk not in(8,10,11) ");
 
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_01);");

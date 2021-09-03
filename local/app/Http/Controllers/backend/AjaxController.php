@@ -1216,11 +1216,15 @@ if($frontstore[0]->check_press_save==2){
             cash_price='0',
             cash_pay='0',
 
-            `approve_status`='0' ,
+            `approve_status`='0' 
+
+            WHERE id=$frontstore_id_fk ");
+
+            DB::select(" UPDATE db_orders SET
 
             `check_press_save`='0'
 
-            WHERE id=$frontstore_id_fk ");
+            WHERE id=$frontstore_id_fk AND check_press_save<>2 ");
 
           // UPDATE `db_orders` SET `check_press_save`='0' WHERE (`id`='5')
 
@@ -1973,6 +1977,12 @@ if($frontstore[0]->check_press_save==2){
             // $sRow->save();
             if($sRow->save()){
               DB::select(" UPDATE db_promotion_cus SET pro_status=1 WHERE promotion_code_id_fk=".$request->id." AND pro_status<>2 ; ");
+              DB::select(" UPDATE db_promotion_cus SET pro_status=1 WHERE promotion_code_id_fk=".$request->id." AND used_user_name is null ; ");
+              DB::select(" UPDATE db_promotion_cus SET pro_status=2 WHERE promotion_code_id_fk=".$request->id." AND used_user_name is not null ; ");
+              if($request->pro_edate<date("Y-m-d")){
+                 DB::select(" UPDATE db_promotion_cus SET pro_status=3 WHERE promotion_code_id_fk=".$request->id." AND used_user_name is null AND pro_status<>2 ; ");
+              }
+              
             }
 
 
@@ -2017,20 +2027,141 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxCheckCouponUsed(Request $request)
     {
-
         // return($request);
-        // dd();
         // return $request->txtSearchPro;
+        // $customers_id_fk = $request->customers_id_fk;
 
-        // check แค่ตารางเดียว ก็น่าจะจบนะ 
+        $p1 = DB::select("
+            select promotions.id from db_promotion_cus
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE 
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+             ;
+        ");
+
+  // `minimum_package_purchased` int(11) DEFAULT '0' COMMENT 'package ขั้นต่ำที่ซื้อได้',
+  // `reward_qualify_purchased` int(11) DEFAULT '0' COMMENT 'คุณวุฒิ reward ที่ซื้อได้',
+  // `keep_personal_quality` int(11) DEFAULT '0' COMMENT 'รักษาคุณสมบัติส่วนตัว',
+  // `maintain_travel_feature` int(11) DEFAULT '0' COMMENT 'รักษาคุณสมบัติท่องเที่ยว',
+  // `aistockist` int(11) DEFAULT '0' COMMENT 'aistockist',
+  // `agency` int(11) DEFAULT '0' COMMENT 'agency',
+
+        // promotion
+        $a1=array(0,0,0,0,0,0);
+        $sPromotions = \App\Models\Backend\Promotions::find($p1[0]->id);
+        // return $sPromotions->minimum_package_purchased; // Package  ขั้นต่ำที่ซื้อได้
+        if($sPromotions->minimum_package_purchased){
+            $a1[0] = $sPromotions->minimum_package_purchased; 
+        }
+        // return $sPromotions->reward_qualify_purchased; //คุณวุฒิ reward ที่ซื้อได้
+        if($sPromotions->reward_qualify_purchased){
+            $a1[1] = $sPromotions->reward_qualify_purchased; 
+        }
+        // return $sPromotions->keep_personal_quality; //รักษาคุณสมบัติส่วนตัว
+        if($sPromotions->keep_personal_quality){
+            $a1[2] = 1; 
+        }
+        // return $sPromotions->maintain_travel_feature; //รักษาคุณสมบัติท่องเที่ยว
+        if($sPromotions->maintain_travel_feature){
+            $a1[3] = 1; 
+        }
+        // return $sPromotions->aistockist; //aistockist
+        if($sPromotions->aistockist){
+            $a1[4] = 1; 
+        }
+        // return $sPromotions->agency; //agency
+        if($sPromotions->agency){
+            $a1[5] = 1; 
+        }
+
+        // return $a1;
+       
+        // customer
+        $a2=array(0,0,0,0,0,0);
+        $sCustomers = \App\Models\Backend\Customers::find($request->customers_id_fk);
+        // return $sCustomer;
+        // return $sCustomers->package_id; // Package  ขั้นต่ำที่ซื้อได้
+        if($sCustomers->package_id){
+            if($a1[0]){
+                if($sCustomers->package_id>=$a1[0]){
+                    $a1[0] = 1;
+                    $a2[0] = 1;
+                }else{
+                    $a1[0] = 1;
+                    $a2[0] = 0; 
+                }
+            }else{
+                $a1[0] = 0;
+                $a2[0] = 0 ;
+            }
+        }
+        // return $sCustomers->reward_qualify_purchased; //คุณวุฒิ reward ที่ซื้อได้
+        if($sCustomers->reward_qualify_purchased){
+            if($a1[1]){
+                $a2[1] = $sCustomers->reward_qualify_purchased; 
+            }else{
+                $a2[1] = 0 ;
+            }
+        }
+        // return $sCustomers->keep_personal_quality; //รักษาคุณสมบัติส่วนตัว
+        if($sCustomers->keep_personal_quality){
+            if($a1[2]){
+                $a2[2] = 1; 
+            }else{
+                $a2[2] = 0 ;
+            }
+        }
+        // return $sCustomers->maintain_travel_feature; //รักษาคุณสมบัติท่องเที่ยว
+        if($sCustomers->maintain_travel_feature){
+            if($a1[3]){
+                $a2[3] = 1; 
+            }else{
+                $a2[3] = 0 ;
+            }
+        }
+        // return $sCustomers->aistockist; //aistockist
+        if($sCustomers->aistockist){
+            if($a1[4]){
+                $a2[4] = 1; 
+            }else{
+                $a2[4] = 0 ;
+            }
+        }
+        // return $sCustomers->agency; //agency
+        if($sCustomers->agency){
+             if($a1[5]){
+                $a2[5] = 1; 
+            }else{
+                $a2[5] = 0 ;
+            }
+        }
+
+        // return $a1;
+        // return $a2;
+       
+        $arraysAreEqual = ($a1 === $a2);
+        $arraysAreEqual = $arraysAreEqual==true?1:0;
+        // return($arraysAreEqual);
+        // dd();
 
         $promotion_cus = DB::select("
 
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' AND promotions.status=1 AND promotions.promotion_coupon_status=1 AND db_promotion_cus.pro_status=1 
-            AND date(db_promotion_code.pro_edate) >= curdate() ;
+            WHERE 
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            AND promotions.status=1 
+            AND promotions.promotion_coupon_status=1 
+            AND db_promotion_cus.pro_status=1 
+            AND curdate() >= date(db_promotion_code.pro_sdate)
+            AND date(db_promotion_code.pro_edate) >= curdate()
+            AND curdate() >= date(promotions.show_startdate)
+            AND date(promotions.show_enddate) >= curdate()
+            AND ".$request->purchase_type_id_fk." in (promotions.orders_type_id)
+
+             ;
 
             ");
         // return $promotion_cus[0]->promotion_code_id_fk;
@@ -2039,9 +2170,8 @@ if($frontstore[0]->check_press_save==2){
         // return count($promotion_cus);
         // dd();
 
-        if( count($promotion_cus) == 0){
+        if( count($promotion_cus) == 0 || $arraysAreEqual == 0 ){
             return "InActive";
-            
         }else{
 
             // return @$promotion_cus[0]->promotion_code_id_fk;
