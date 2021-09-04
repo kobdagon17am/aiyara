@@ -15,10 +15,16 @@ class DeleteOrderController extends Controller
       try{
         $order_id  = $delete_order_id;
 
+
         $order_data = DB::table('db_orders')
         ->select('code_order','purchase_type_id_fk')
         ->where('id','=',$order_id)
         ->first();
+
+        if(empty($order_data)){
+          $resule = ['status' => 'fail', 'message' => 'Delete Oder Fail ( Oder is Null )'];
+          return $resule;
+        }
 
         if($order_data->purchase_type_id_fk == 5){
         $giv_log = DB::table('log_gift_voucher')
@@ -48,7 +54,7 @@ class DeleteOrderController extends Controller
         ->where('promotion_code','!=','')
         ->first();
 
-        if($coupong->promotion_code){
+        if(@$coupong->promotion_code){
           $coupong_update = DB::table('db_promotion_cus')
           ->where('promotion_code',$coupong->promotion_code)
           ->update(['pro_status' => 1,'used_user_name' => null,'used_date' => null]);
