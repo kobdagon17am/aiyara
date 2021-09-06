@@ -99,13 +99,13 @@ class RunPvController extends Controller
 
                     } else {
 
-                        // dd();
+
 
                         if ($last_upline_type == 'A') {
 
                             $add_pv = $data_user->pv_a + $pv;
                             $update_pv = DB::table('customers')
-                                ->where('id', $customer_id)
+                                ->where('user_name', $customer_id)
                                 ->update(['pv_a' => $add_pv]);
 
                             $customer_id = $upline_id;
@@ -115,7 +115,7 @@ class RunPvController extends Controller
                         } elseif ($last_upline_type == 'B') {
                             $add_pv = $data_user->pv_b + $pv;
                             $update_pv = DB::table('customers')
-                                ->where('id', $customer_id)
+                                ->where('user_name', $customer_id)
                                 ->update(['pv_b' => $add_pv]);
 
                             $customer_id = $upline_id;
@@ -264,7 +264,7 @@ class RunPvController extends Controller
 
                             $add_pv = $data_user->pv_a + $pv;
                             $update_pv = DB::table('customers')
-                                ->where('id', $customer_id)
+                                ->where('user_name', $customer_id)
                                 ->update(['pv_a' => $add_pv]);
 
                             $customer_id = $upline_id;
@@ -274,7 +274,7 @@ class RunPvController extends Controller
                         } elseif ($last_upline_type == 'B') {
                             $add_pv = $data_user->pv_b - $pv;
                             $update_pv = DB::table('customers')
-                                ->where('id', $customer_id)
+                                ->where('user_name', $customer_id)
                                 ->update(['pv_b' => $add_pv]);
 
                             $customer_id = $upline_id;

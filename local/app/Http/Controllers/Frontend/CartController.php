@@ -105,13 +105,18 @@ class CartController extends Controller
 
     }
 
-    public function payment_test_type_1()
+    public static function payment_test_type_1()
     {
 
-        $order_id = '88'; //order_id
-        $admin_id = '99'; //admin_id
-        $resule = PvPayment::PvPayment_type_confirme($order_id, $admin_id);
+        $order_id = '5'; //order_id
+        $admin_id = '4959'; //admin_id
+        $distribution_channel = '1';
+        $resule = PvPayment::PvPayment_type_confirme($order_id,'1','2','customer');
         dd($resule);
+        if ($resule['status'] == 'success') {
+        }
+
+
     }
 
     public function add_gif()
