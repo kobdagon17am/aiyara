@@ -855,6 +855,22 @@ class FrontstoreController extends Controller
 
              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
+             if ($request->hasFile('image01')) {
+                  @UNLINK(@$sRow->file_slip);
+                  $this->validate($request, [
+                    'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                  ]);
+                  $image = $request->file('image01');
+                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
+                   VALUES 
+                   ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
+                  $lastInsertId_01 = DB::getPdo()->lastInsertId();
+                }
+
              if ($request->hasFile('image02')) {
                   @UNLINK(@$sRow->file_slip_02);
                   $this->validate($request, [
@@ -887,19 +903,34 @@ class FrontstoreController extends Controller
                   $lastInsertId_03 = DB::getPdo()->lastInsertId();
                 }
 
+              $sRow->account_bank_id = request('account_bank_id');
+
+              $sRow->transfer_money_datetime = request('transfer_money_datetime')?request('transfer_money_datetime'):NULL;
               $sRow->transfer_money_datetime_02 = request('transfer_money_datetime_02')?request('transfer_money_datetime_02'):NULL;
               $sRow->transfer_money_datetime_03 = request('transfer_money_datetime_03')?request('transfer_money_datetime_03'):NULL;
+              $sRow->note_fullpayonetime = request('note_fullpayonetime');
               $sRow->note_fullpayonetime_02 = request('note_fullpayonetime_02');
               $sRow->note_fullpayonetime_03 = request('note_fullpayonetime_03');
+              $sRow->pay_with_other_bill = request('pay_with_other_bill');
+              $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
+              $sRow->approve_status = 1 ;
+              $sRow->check_press_save = 2 ;
 
+              $sRow->save();
 
-                $sRow->save();
+              $date_setting_code = date('ym');
+              DB::select(" UPDATE `db_orders` SET date_setting_code='$date_setting_code' WHERE (`id`=".$sRow->id.") ");
+              if($sRow->code_order==""){
+                  $code_order = RunNumberPayment::run_number_order($sRow->business_location_id_fk);
+                  DB::select(" UPDATE `db_orders` SET code_order='$code_order' WHERE (`id`=".$sRow->id.") ");
+              }
 
                 // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
   
 
          }else if(isset($request->receipt_save_list)){
+          
           // dd($request->all());
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
@@ -909,9 +940,6 @@ class FrontstoreController extends Controller
               // dd($branchs[0]->business_location_id_fk);
 
               $sRow->date_setting_code = date('ym');
-
-             
-
 
               if($sRow->invoice_code==""){
 
@@ -1416,8 +1444,16 @@ class FrontstoreController extends Controller
           $user_login_id = \Auth::user()->id;
           $sPermission = \Auth::user()->permission ;
           // dd($sPermission);
+          /*
+          1 Super Admin
+2 Director
+3 Manager
+4 Supervisor
+5 User
+
+*/
 // \Auth::user()->position_level==4 => Supervisor
-        if(\Auth::user()->position_level=='4'){
+        if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
             $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }else{
             $action_user_011 = " AND action_user = $user_login_id ";

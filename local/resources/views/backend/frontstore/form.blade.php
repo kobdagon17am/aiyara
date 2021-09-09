@@ -86,11 +86,17 @@
           font-weight: bold;
         }
 
+        .myloading {
+          left: 45% !important;
+        }
+
 </style>
 
 @endsection
 
 @section('content')
+
+<div class="myloading"></div>
 
 
 <div class="row">
@@ -112,8 +118,6 @@
         </div>
     </div>
 
-
-<div class="myloading"></div>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -1198,7 +1202,7 @@
                       <div class="divTableCell">
                               @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
-                                  <input {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
+                                  <input class="class_transfer_edit" {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
                             @endif
 
@@ -1214,7 +1218,7 @@
                       </div>
                       <div class="divTableCell">
                     
-                            <input {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
+                            <input class="class_transfer_edit" {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}> 
                             <label for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                             <br>
 
@@ -1243,7 +1247,7 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
 
@@ -1412,7 +1416,7 @@
                             @IF(@$sRow->pay_type_id_fk==8)
                             <input class="form-control input-airight f-ainumber-18-b input-aireadonly  class_transfer_edit " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill class_transfer_edit " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill class_transfer_edit NumberOnly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -3107,7 +3111,7 @@
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                         //  console.log(response);
+                          console.log(response);
                          //  console.log(frontstore_id_fk);
                          // return false;
 
@@ -3365,7 +3369,10 @@
 
     $(document).ready(function() {
         $(document).on('click', '.btnProductAll1,.btnAihealth2,.btnAilada3,.btnAibody4,.btnPromotion8', function(event) {
+
+
           event.preventDefault();
+
 
           $('#frmFrontstorelist').show();
           $('.div-data-table-list-pro').hide();
@@ -3376,7 +3383,7 @@
           var category_id = $(this).data('value');
           // alert(category_id);
 
-          $("#spinner_frame").show();
+          // $("#spinner_frame").show();
 
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var order_type = $("#purchase_type_id_fk").val();
@@ -3490,13 +3497,15 @@
 
     $(document).ready(function() {
         $(document).on('click', '.btnPromotion8', function(event) {
+
+          $(".myloading").show();
+
           event.preventDefault();
 
           $('#frmFrontstorelist').hide();
           $('.div-data-table-list-pro').show();
 
-          $("#spinner_frame").show();
-
+          // $("#spinner_frame").show();
             var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
             var order_type = $("#purchase_type_id_fk").val();
             // alert(order_type);
@@ -3545,7 +3554,7 @@
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+v[2]+'"  type="number" readonly >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -3557,24 +3566,24 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                          if (aData['frontstore_promotions_list'] > 0 ) {
+                          // if (aData['frontstore_promotions_list'] > 0 ) {
 
-                              $("td:eq(4)", nRow).html(
-                                '<input name="promotion_id_fk_pro[]" value="'+aData['frontstore_promotions_list']+'" type="hidden" ><div class="input-group inline-group"> '
-                                +' <div class="input-group-prepend"> '
-                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
-                                +'     <i class="fa fa-minus"></i> '
-                                +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
-                                +'   <div class="input-group-append"> '
-                                +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
-                                +'     <i class="fa fa-plus"></i> '
-                                +'    </button> '
-                                +'  </div> '
-                                +' </div> '
-                                );
+                          //     $("td:eq(4)", nRow).html(
+                          //       '<input name="promotion_id_fk_pro[]" value="'+aData['frontstore_promotions_list']+'" type="hidden" ><div class="input-group inline-group"> '
+                          //       +' <div class="input-group-prepend"> '
+                          //       +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
+                          //       +'     <i class="fa fa-minus"></i> '
+                          //       +'   </button>'
+                          //       +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
+                          //       +'   <div class="input-group-append"> '
+                          //       +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
+                          //       +'     <i class="fa fa-plus"></i> '
+                          //       +'    </button> '
+                          //       +'  </div> '
+                          //       +' </div> '
+                          //       );
 
-                          }
+                          // }
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
@@ -3595,6 +3604,8 @@
                                 +' </div> '
                                 );
                            }
+
+                           $(".myloading").hide();
 
                       }
 
@@ -3641,7 +3652,7 @@
                  customers_id_fk:customers_id_fk
                },
                 success:function(msg){
-                     // console.log(msg);
+                     console.log(msg);
                      // return false;
                      if(msg=="InActive"){
                         alert('! คูปอง รหัสนี้ ไม่อยู่ในสถานะที่ใช้งานได้ ');
@@ -5210,7 +5221,7 @@ $(document).ready(function() {
                    url: " {{ url('backend/ajaxCalPriceFrontstore02') }} ", 
                    data: $("#frm-main").serialize()+"&id="+id+"&pay_type_id_fk="+pay_type_id_fk,
                     success:function(data){
-                          // console.log(data); 
+                          console.log(data); 
                           // return false;
                             $.each(data,function(key,value){
                                   
@@ -5552,7 +5563,13 @@ $(document).ready(function() {
                                       $('.input_shipping_free').show();
                                       $('.input_shipping_nofree').hide();
                                   }else{
+
+                                    if(value.shipping_price){
                                       $('#shipping_price').val(formatNumber(parseFloat(value.shipping_price).toFixed(2)));
+                                    }else{
+                                      $('#shipping_price').val(formatNumber(parseFloat(0).toFixed(2)));
+                                    }
+                                      
                                       $('.input_shipping_free').hide();
                                       $('.input_shipping_nofree').show();
                                   }
@@ -6235,6 +6252,16 @@ $(document).ready(function() {
                 //    success:function(data){
                 //    },
                 // });
+          }
+
+          // ประเภทที่มีเงินโอนพ่วงด้วย
+          if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11)) {
+
+            $(".show_div_transfer_price").show();
+            $(".div_account_bank_id").show();
+            $(".div_pay_with_other_bill").show();
+            $(".show_div_cash_pay").show();
+
           }
 
 

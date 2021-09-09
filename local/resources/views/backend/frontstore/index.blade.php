@@ -759,7 +759,8 @@ Gift Voucher  <i class="fa fa-gift"></i>
                // return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
                //  + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                 return '<center>'
-                + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                // + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
      
             {data: 'id', title :'Tools', className: 'text-center w70'}, 
@@ -1823,6 +1824,49 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
     </script>
    
+
+      <script>
+      $(document).ready(function() {
+
+          $(document).on('click', '.print02', function(event) {
+
+              event.preventDefault();
+
+              $(".myloading").show();
+
+              var id = $(this).data('id');
+
+              console.log(id);
+
+              setTimeout(function(){
+                 // window.open("{{ url('backend/frontstore/test_print_receipt_02') }}"+"/"+id);
+                 window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
+                 $(".myloading").hide();
+              }, 500);
+
+         
+        
+              // $.ajax({
+              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
+              //     method: "post",
+              //     data: {
+              //       "_token": "{{ csrf_token() }}", id:id,
+              //     },
+              //     success:function(data)
+              //     { 
+              //       console.log(data);
+              //       return false;
+              //     }
+              //   });
+
+              
+            });
+                
+      });
+
+    </script>
+   
+
     <?php 
     if(isset($_REQUEST['test_clear_sent_money'])){
 
