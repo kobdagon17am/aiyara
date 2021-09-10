@@ -174,10 +174,11 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         <div class="row">
           <div class="col-md-4">
            <select class="form-control" id="status" >
-              <option value="">ทั้งหมด</option>
+
               <option value="1">ใช้งานได้</option>
               <option value="2">ถูกใช้แล้ว</option>
               <option value="expiry_date">หมดอายุ</option>
+              <option value="">ทั้งหมด</option>
             </select>
           </div>
 
@@ -189,11 +190,11 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
           <table id="dt_coupon_code" class="table table-striped table-bordered nowrap">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Start</th>
-                <th>Expiry</th>
+
+                <th>Valida From</th>
+                <th>Valida To</th>
                 <th>CODE</th>
-                <th>Detail</th>
+                <th>Description / Promotion</th>
                 <th>Status</th>
 
               </tr>
@@ -228,43 +229,38 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 
 <script type="text/javascript">
-  $(document).ready(function() {
-    fetch_data();
 
-  });
-
-  function fetch_data(status = '') {
-
-    $('#dt_coupon_code').DataTable({
-        // scrollX: true,
-        // scrollCollapsed: true,
+  var oTable;
+  $(function() {
+      oTable = $('#dt_coupon_code').DataTable({
         processing: true,
         serverSide: true,
         searching: true,
-        ajax: {
-          url: "{{ route('dt_coupon_code') }}",
-          dataType: "json",
-          type: "get",
-          data: {status:status}
-        },
+          ajax: {
+              url: '{{ route("dt_coupon_code") }}',
+              data: function(d) {
+                  d.status = $('#status').val();
 
-        columns:[
-        {"data": "id"},
-        {"data": "date"},
-        {"data": "expiry_date"},
-        {"data": "code"},
-        {"data": "detail"},
-        {"data": "status"},
+              },
+              method: 'get'
+          },
 
-        ],
-        //order: [[ "0", "desc" ]],
+          columns: [
+            {"data": "date"},
+            {"data": "expiry_date"},
+            {"data": "code"},
+            {"data": "detail"},
+            {"data": "status"},
+          ]
       });
-  }
+      $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+          oTable.draw();
+      });
 
-  $('#status').on('change',function(){
-    var status = $(this).val();
-    $('#dt_coupon_code').DataTable().destroy();
-    fetch_data(status);
+      $('#status').on('change', function(e) {
+          oTable.draw();
+          e.preventDefault();
+      });
   });
 
 

@@ -2,7 +2,7 @@
 
 use App\Helpers\Frontend;
 use App\Models\Frontend\MonthPv;
-$count_directsponsor = Frontend::check_customer_directsponsor($data->user_name);
+$count_directsponsor = Frontend::check_customer_directsponsor($data->team_active_a,$data->team_active_b,$data->team_active_c);
 
 ?>
 <div class="modal fade" id="modal_tree_show" tabindex="-1" role="dialog">

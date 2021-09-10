@@ -248,57 +248,32 @@ class Frontend{
 
 	}
 
-	public static function check_customer_directsponsor($user_name){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C
+	public static function check_customer_directsponsor($team_active_a ='',$team_active_b = '',$team_active_c = ''){//เช็ค ลูกทีมที่แนะนำตรง แยกสาย A B C
 
-		$a =  DB::table('customers')
-		->where('customers.introduce_id','=',$user_name)
-		->where('introduce_type','=','A')
-		->whereDate('pv_mt_active','>=',now())
-		->where('package_id','!=','')
-		->where('package_id','!=',null)
-		->count();
-
-
-		$b =  DB::table('customers')
-		->where('customers.introduce_id','=',$user_name)
-		->where('introduce_type','=','B')
-		->whereDate('pv_mt_active','>=',now())
-		->where('package_id','!=','')
-		->where('package_id','!=',null)
-		->count();
-
-		$c =  DB::table('customers')
-		->where('customers.introduce_id','=',$user_name)
-		->where('introduce_type','=','C')
-		->whereDate('pv_mt_active','>=',now())
-		->where('package_id','!=','')
-		->where('package_id','!=',null)
-		->count();
-
-		if($a>=5 and $b>=5 ){
+		if($team_active_a>=5 and $team_active_b>=5 ){
 			$reward_bonus =	'Five Star';
-		}elseif($a>=5 and $c>=5 ){
+		}elseif($team_active_a>=5 and $team_active_c>=5 ){
 			$reward_bonus =	'Five Star';
-		}elseif($b>=5 and $c>=5 ){
+		}elseif($team_active_b>=5 and $team_active_c>=5 ){
 			$reward_bonus =	'Five Star';
-		}elseif($a>=3 and $b>=3 ){
+		}elseif($team_active_a>=3 and $team_active_b>=3 ){
 			$reward_bonus =	'Triple Star';
-		}elseif($a>=3 and $c>=3 ){
+		}elseif($team_active_a>=3 and $team_active_c>=3 ){
 			$reward_bonus =	'Triple Star';
-		}elseif($b>=3 and $c>=3 ){
+		}elseif($team_active_b>=3 and $team_active_c>=3 ){
 			$reward_bonus =	'Triple Star';
-		}elseif($a>=1 and $b>=1 ){
+		}elseif($team_active_a>=1 and $team_active_b>=1 ){
 			$reward_bonus =	'Star';
-		}elseif($a>=1 and $c>=1 ){
+		}elseif($team_active_a>=1 and $team_active_c>=1 ){
 			$reward_bonus =	'Star';
-		}elseif($b>=1 and $c>=1 ){
+		}elseif($team_active_b>=1 and $team_active_c>=1 ){
 			$reward_bonus =	'Star';
 		}else{
 			$reward_bonus = ' - ';
 		}
 
 		//dd($c);
-		$data = ['A'=>$a,'B'=>$b,'C'=>$c,'reward_bonus'=>$reward_bonus];
+		$data = ['A'=>$team_active_a,'B'=>$team_active_b,'C'=>$team_active_c,'reward_bonus'=>$reward_bonus];
 
 
 		return $data;
