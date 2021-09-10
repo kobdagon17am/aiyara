@@ -83,9 +83,12 @@ public static function dt_coupon_code(Request $rs)
     {
       $date = date('Y-m-d');
         $sTable = DB::table('db_promotion_cus')
-       ->select('db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
+       ->select('db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code',
+       'promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia',
+       'db_promotion_cus.used_user_name','db_promotion_cus.pro_status','customers.user_name','customers.first_name','customers.last_name')
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
+       ->leftjoin('customers', 'customers.user_name', '=', 'db_promotion_cus.used_user_name')
        ->where('db_promotion_code.approve_status','=',1)
        ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
 
@@ -93,7 +96,7 @@ public static function dt_coupon_code(Request $rs)
        WHEN '{$rs->status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
        WHEN '{$rs->status}' = 2 THEN db_promotion_cus.pro_status = 2
        WHEN '{$rs->status}' = 'expiry_date' THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate < '{$date}'
-       END"))->get();
+       END"));
 
 
         $sQuery = DataTables::of($sTable);
@@ -128,7 +131,7 @@ public static function dt_coupon_code(Request $rs)
               if($row->pro_status == '1'){
 
                 if(strtotime($row->pro_edate) < strtotime(date('Y-m-d H:i:s'))){
-                  $status = '<span class="label label-danger">Expri</span>';
+                  $status = '<span class="label label-danger">Expried</span>';
                 }else{
                   $status = '<span class="label label-success">Usable</span>';
                  }
@@ -136,14 +139,23 @@ public static function dt_coupon_code(Request $rs)
               }elseif($row->pro_status == '2'){
                   $status = '<span class="label label-inverse">Used</span>';
               }else{
-                   $status = '<span class="label label-danger">Expri</span>';
+                   $status = '<span class="label label-danger">Expried</span>';
               }
 
                 return $status;
             })
 
+            ->addColumn('used', function ($row) {
+              if($row->used_user_name){
+                $used = '<b>('.@$row->user_name.') '.@$row->first_name.' '.@$row->last_name.'</b>';
+              }else{
+                $used = '';
+              }
 
-            ->rawColumns(['date','expiry_date','detail','status','code'])
+                 return $used;
+             })
+
+            ->rawColumns(['date','expiry_date','detail','status','code','used'])
             ->make(true);
     }
 

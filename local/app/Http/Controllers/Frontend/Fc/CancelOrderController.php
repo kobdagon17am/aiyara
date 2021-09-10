@@ -251,7 +251,7 @@ class CancelOrderController extends Controller
                     }
 
                 } else {
-                    $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
+                    $resule = ['status' => 'success', 'message' => 'pv ของบิลนี้มีค่าเป็น 0 ปรับสถานะบิลเป็น Cancel อย่างเดียว'];
                 }
             } else {
                 $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];

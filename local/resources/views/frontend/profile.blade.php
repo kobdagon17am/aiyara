@@ -178,7 +178,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               <option value="1">ใช้งานได้</option>
               <option value="2">ถูกใช้แล้ว</option>
               <option value="expiry_date">หมดอายุ</option>
-              <option value="">ทั้งหมด</option>
+              {{-- <option value="">ทั้งหมด</option> --}}
             </select>
           </div>
 
@@ -188,17 +188,13 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         <div class="table-responsive dt-responsive">
 
           <table id="dt_coupon_code" class="table table-striped table-bordered nowrap">
-            <thead>
+            {{-- <thead>
               <tr>
 
-                <th>Valida From</th>
-                <th>Valida To</th>
-                <th>CODE</th>
-                <th>Description / Promotion</th>
-                <th>Status</th>
+
 
               </tr>
-            </thead>
+            </thead> --}}
 
           </table>
         </div>
@@ -245,12 +241,41 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               method: 'get'
           },
 
+
           columns: [
-            {"data": "date"},
-            {"data": "expiry_date"},
-            {"data": "code"},
-            {"data": "detail"},
-            {"data": "status"},
+
+            {
+                        data: 'date',
+                        title: '<center>Valida From</center>',
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: 'expiry_date',
+                        title: '<center>Valida To</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'code',
+                        title: '<center>CODE</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'detail',
+                        title: '<center>Description / Promotion</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'used',
+                        title: '<center>ผู้ใช้งาน</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'status',
+                        title: '<center>Status</center>',
+                        className: 'text-center'
+                    },
+
           ]
       });
       $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
