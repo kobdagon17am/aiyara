@@ -29,65 +29,61 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-01.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/01.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-02.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/02.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-03.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/03.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-04.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/04.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-05.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/05.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-06.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/06.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
         </div>
 
-<div class="row justify-content-center mt-2">
-          <a href="#!" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aimmura/Sale_Page_Aimmura-CR-07.jpg') }}"
-                class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
-          </a>
-        </div>
+
         <div class="row justify-content-center mt-2">
-          <a href="{{ $url }}/aiyarashop/product-detail/2/18/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-07.jpg') }}"
+          {{-- <a href="{{ $url }}/aiyarashop/product-detail/2/18/{{ $rs['data']->user_name }}" target="_blank" >
+            <img src="{{ asset('frontend/salepage/Aimmura/07.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
-          </a>
+          </a> --}}
+          <img src="{{ asset('frontend/salepage/Aimmura/07.jpg') }}">
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/14/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-08.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/08.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/17/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-09.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/09.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
           </a>
         </div>
 
         <div class="row justify-content-center mt-2">
           <a href="{{ $url }}/aiyarashop/product-detail/2/19/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/Aimmura/ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Aimmura/10.jpg') }}"
                 class="img-fluid" alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
               </a>
         </div>
