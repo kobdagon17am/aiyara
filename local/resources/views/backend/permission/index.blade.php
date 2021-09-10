@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">Account (ผู้ดูแลระบบ)  </h4>
+            <h4 class="mb-0 font-size-18">Account (ผู้ดูแลระบบ) </h4>
         </div>
     </div>
 </div>
@@ -79,15 +79,16 @@ $(function() {
   var sPermission = '{{$sPermission}}' ;
   // alert(sPermission);
     oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+    // "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
         scroller: true,
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        paging: false,
+        // scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 100,
         ajax: {
           url: '{{ route('backend.admin.datatable') }}',
           data: function ( d ) {

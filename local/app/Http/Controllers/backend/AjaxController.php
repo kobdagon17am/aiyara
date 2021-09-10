@@ -1557,10 +1557,13 @@ if($frontstore[0]->check_press_save==2){
                     if(empty($request->transfer_price)){
                         exit;
                     }
+
                     $transfer_price = str_replace(',','',$request->transfer_price);
                     $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
                     $transfer_money_datetime = $request->transfer_money_datetime;
-                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,cash_price=(sum_price-$transfer_price),cash_pay=(sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
+
+                    DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
+
 
          }
 
@@ -2036,9 +2039,15 @@ if($frontstore[0]->check_press_save==2){
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
             WHERE 
-            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            db_promotion_cus.promotion_code='".$request->txtSearchPro."' 
              ;
         ");
+
+        if(empty($p1)){
+            return "InActive";
+        }
+
+        // return $p1;
 
   // `minimum_package_purchased` int(11) DEFAULT '0' COMMENT 'package ขั้นต่ำที่ซื้อได้',
   // `reward_qualify_purchased` int(11) DEFAULT '0' COMMENT 'คุณวุฒิ reward ที่ซื้อได้',
@@ -2159,13 +2168,13 @@ if($frontstore[0]->check_press_save==2){
             AND date(db_promotion_code.pro_edate) >= curdate()
             AND curdate() >= date(promotions.show_startdate)
             AND date(promotions.show_enddate) >= curdate()
-            AND ".$request->purchase_type_id_fk." in (promotions.orders_type_id)
+          
 
              ;
 
             ");
         // return $promotion_cus[0]->promotion_code_id_fk;
-
+//   AND ".$request->purchase_type_id_fk." in (promotions.orders_type_id)
         // // return $promotion_cus;
         // return count($promotion_cus);
         // dd();

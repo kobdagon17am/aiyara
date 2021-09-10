@@ -1076,12 +1076,11 @@ class FrontstorelistController extends Controller
           return @$Promotions_cost[0]->member_price;
       })
       ->addColumn('select_amt', function($row) {
-        // if(!empty($row->limited_amt_person)){
-        //   return $row->id.":".$row->limited_amt_person;
-        // }else{
-        //   return $row->id.":1";
-        // }
-        return $row->id.":".(@$row->limited_amt_person?$row->limited_amt_person:1);
+
+        $amt = DB::select(" SELECT amt from db_order_products_list WHERE promotion_id_fk in (".$row->id.") AND frontstore_id_fk in (".$row->frontstore_id_fk.") AND amt>0 limit 1 ");
+        $amt = @$amt[0]->amt > 0 ? $amt[0]->amt : 0 ;
+
+        return $row->id.":".(@$row->limited_amt_person>0?$row->limited_amt_person:10000000000).":".$amt;
       })
       ->addColumn('p_img', function($row) {
         if($row->p_img!=""){
