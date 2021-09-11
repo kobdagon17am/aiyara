@@ -120,6 +120,7 @@ foreach ($promotion_id_fk as $key => $value) {
 
 $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
+$arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
 $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
 // echo $cnt01[0]->cnt;
 // echo $cnt02[0]->cnt;
@@ -152,13 +153,37 @@ DB::select("
 $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
 $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
 $sFrontstoreData = DB::select(" select * from db_order_products_list ");
-$vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+
+
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
 $pv_total = @$sRow->pv_total?@$sRow->pv_total:0;
 
 $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-// return @$total_price[0]->total;
-$total_price = number_format(@$total_price[0]->total,2);
+// echo @$total_price[0]->total;
+
+$total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
+
+// ถ้าซื้อ ประเภทการซื้อ เป็น Gift Voucher => total_price ต้องลบออกจากราคาซื้อ
+// ถ้า gift_voucher_price > ราคาซื้อ ให้ สรุป total = 0
+$gift_voucher = DB::select(" SELECT gift_voucher_price FROM db_orders where id=$id and purchase_type_id_fk=5 AND gift_voucher_price>0 ");
+if(!empty($gift_voucher)){
+    if($gift_voucher[0]->gift_voucher_price > $total_price){
+
+          $total_price = 0 ;
+          $vat = 0 ;
+
+    }else{
+
+          $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
+          $vat = intval($total_price) - (intval($total_price)/1.07) ;
+    }
+
+
+}else{
+
+    $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+
+}
 
 
  $sTable = DB::select("
@@ -273,14 +298,17 @@ foreach ($sTable as $key => $row) {
            }
 
         }
-
-        
-
     
 }
 
-
-
+// ถ้าซื้อ ประเภทการซื้อ เป็น Gift Voucher ให้เพิ่มเข้าไปอีก 1 row
+$gift_voucher = DB::select(" SELECT gift_voucher_price FROM db_orders where id=$id and purchase_type_id_fk=5 AND gift_voucher_price>0 ");
+if(!empty($gift_voucher)){
+    $product_name = 'Gift Voucher '.(number_format(@$gift_voucher[0]->gift_voucher_price,0)).'';
+    $gift_voucher_price1 = (number_format(@$gift_voucher[0]->gift_voucher_price*(-1),0));
+    $gift_voucher_price2 = (number_format(@$gift_voucher[0]->gift_voucher_price*(-1),2));
+    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '$gift_voucher_price1' ,  '0pv',  1,  '$gift_voucher_price2'); ");
+}
 
 
 $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
@@ -334,7 +362,7 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
     $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
     $action_user_name = @$action_user[0]->name;
 
-
+     $tel = '';
      $cus = DB::select(" 
         SELECT
         customers.user_name,
@@ -411,7 +439,7 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
                               @$address .=  " ต.". @$addr[0]->tamname . "  ";
                               @$address .=  " อ.". @$addr[0]->ampname;
                               @$address .=  " จ.". @$addr[0]->provname;
-                              @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
+                              @$address .=  " ". @$addr[0]->card_zipcode ;
 
                               // echo @$address;
 
@@ -456,7 +484,7 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
                                   @$address .=  " ต.". @$addr[0]->tambon_name;
                                   @$address .=  " อ.". @$addr[0]->amp_name;
                                   @$address .=  " จ.". @$addr[0]->province_name;
-                                  @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode ;
+                                  @$address .=  " ". @$addr[0]->card_zipcode ;
 
                                   // echo @$address;
                               }else{
@@ -500,12 +528,14 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
-                                @$address .= " รหัส ปณ. ". @$addr[0]->zipcode;
+                                @$address .= " ". @$addr[0]->zipcode;
 
                                 // echo @$address;
 
                         }
 
+
+                       
 
                         if(@$sRow->delivery_location==3){
 
@@ -519,17 +549,22 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
                                 // print_r(@$addr);
                                 @$address = @$addr[0]->recipient_name;
                                 @$address .= ' '.@$addr[0]->addr_no;
-                                @$address .= " ต.". @$addr[0]->tamname. " ";
-                                @$address .= " อ.". @$addr[0]->ampname;
-                                @$address .= " จ.". @$addr[0]->provname;
-                                @$address .= " รหัส ปณ. ". @$addr[0]->zip_code. " ";
+                                @$address .= ",". @$addr[0]->tamname. " ";
+                                @$address .= ",". @$addr[0]->ampname;
+                                @$address .= ",". @$addr[0]->provname;
+                                @$address .= ",". @$addr[0]->zip_code;
+                                // @$address .= " ". @$addr[0]->tel ? '<br>Tel. '. @$addr[0]->tel:'' ;
+                                // @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;
 
                                 // echo @$address;
+                                if(!empty(@$addr[0]->tel)){
+                                     $tel = 'Tel. '. @$addr[0]->tel . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                }
 
                         }
 
                       }
-   $address = !empty($address) ? $address : NULL;
+   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
    $db_orders = DB::select("
@@ -548,6 +583,8 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
   
     $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
     $action_user_name = @$action_user[0]->name;
+
+    $aistockist = @$db_orders[0]->aistockist ? @$db_orders[0]->aistockist : '-';
 
     $pay_type = DB::select(" select dataset_pay_type.detail as pay_type from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id WHERE db_orders.id=".$id." ");
     $pay_type =   @$pay_type[0]->pay_type;
@@ -663,20 +700,20 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
 
         $m++;
 
-        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $branch_code ] SK : [ - ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $branch_code ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ 4/".number_format(@$shipping_price,0)." ]' WHERE id = (($n*$i)+17) ; ");
 
         if($amt_page==1){
 
           // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".$total_price."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(@$total_price,2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."' WHERE id = (($n*$i)+20) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
         }elseif($amt_page>1 && ($i+1)!=$amt_page){
@@ -686,13 +723,13 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
 
             // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".$total_price."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(@$total_price,2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."' WHERE id = (($n*$i)+20) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
 
             // หนเา
             DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
@@ -701,7 +738,8 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
 
     }
 
-       DB::select(" UPDATE $TABLE SET  a = 'ชื่อ-ที่อยู่ผู้รับ: $address ' WHERE id = (($amt_page*$n)-2) ; ");
+       DB::select(" UPDATE $TABLE SET  a = '$address ' WHERE id = (($amt_page*$n)-2) ; ");
+       DB::select(" UPDATE $TABLE SET  a = '$tel ' WHERE id = (($amt_page*$n)-1) ; ");
 
        // ยอดรวม
        DB::select(" UPDATE $TABLE_tmp SET  g = 0 WHERE g is null; ");
@@ -872,18 +910,20 @@ for ($j=0; $j < $amt_page ; $j++) {
       </td>
     </tr>
 
+
     <tr>
-        <td style="text-align: left;" colspan="4">
-          <span style="font-size: 14px !important;" >
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
-          <?php echo @$DB[0]->a ; ?>
-         </span>
+      <td colspan="3" style="font-size: 14px !important;margin-left: 5% !important;">
+        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
+        <?php echo @$DB[0]->a ; ?> &nbsp;
+      </td>
+      <td style="text-align: right;">
       </td>
     </tr>
+
   </table>
 </div>
 
- <div style="float:right;margin-top: 4%;font-size: 14px !important;">
+ <div style="float:right;font-size: 14px !important;">
   <!-- Page 1 -->
        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+22) ; "); ?>
        <?php echo @$DB[0]->g ; ?>

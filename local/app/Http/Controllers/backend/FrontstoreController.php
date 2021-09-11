@@ -14,6 +14,7 @@ use Auth;
 use App\Models\Frontend\RunNumberPayment;
 use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\CourseCheckRegis;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 
 
 class FrontstoreController extends Controller
@@ -342,6 +343,10 @@ class FrontstoreController extends Controller
     public function edit($id)
     {
       // dd($id);
+
+
+              // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
+              // dd($data);
 
       // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A56');
       // dd($Check);
@@ -1299,7 +1304,7 @@ class FrontstoreController extends Controller
                   $sRow->approve_status = 1  ;
                   $sRow->order_status_id_fk = 2  ;
               }else{
-                  $sRow->approve_status = 4 ;
+                  // $sRow->approve_status = 4 ;
                   $sRow->order_status_id_fk = 5  ;
               }
 
@@ -1320,26 +1325,21 @@ class FrontstoreController extends Controller
               // $sRow->check_press_save = '2';
 
               DB::select(" UPDATE `db_orders` SET `code_order`='$code_order',check_press_save=2 WHERE (`id`=".$sRow->id.") ");
-              DB::select(" UPDATE `db_orders` SET `invoice_code`='$code_order' WHERE `id`=".$sRow->id." and pay_type_id_fk not in(8,10,11) ");
+              // DB::select(" UPDATE `db_orders` SET `invoice_code`='$code_order' WHERE `id`=".$sRow->id." and pay_type_id_fk not in(8,10,11) ");
+
+              // if()
+                // str_replace(',','',request('gift_voucher_cost'));
 
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_01);");
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_02);");
               DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_03);");
 
-              // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+              $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               // dd($data);
               // return $data;
               // dd();
 
-              // cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
-
-              // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($sRow->id, \Auth::user()->id , 'customer', 'admin');
-              // dd($cancel);
-              // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
-              // dd($data);
-
               DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
-
 
 // TEST
              // return redirect()->to(url("backend/frontstore/".$sRow->id."/edit"));

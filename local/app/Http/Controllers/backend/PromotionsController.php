@@ -36,22 +36,22 @@ class PromotionsController extends Controller
           $sProduct_group = \App\Models\Backend\Product_group::get();
           $sLang = \App\Models\Backend\Language::get();
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
-      return View('backend.promotions.form')->with(
-        array(
-          'sAgency'=>$sAgency,
-          'sAistockist'=>$sAistockist,
-          'sTravel_feature'=>$sTravel_feature,
-          'sPersonal_quality'=>$sPersonal_quality,
-          'sQualification'=>$sQualification,
-          'sPackage'=>$sPackage,
-          'sLimited_amt_type'=>$sLimited_amt_type,
-          'sProduct_unit'=>$sProduct_unit,
-          'sBusiness_location'=>$sBusiness_location,
-          'sProduct_group'=>$sProduct_group,
-          'sLang'=>$sLang,
-          'dsOrders_type'=>$dsOrders_type,
-        ) 
-      );
+          return View('backend.promotions.form')->with(
+            array(
+              'sAgency'=>$sAgency,
+              'sAistockist'=>$sAistockist,
+              'sTravel_feature'=>$sTravel_feature,
+              'sPersonal_quality'=>$sPersonal_quality,
+              'sQualification'=>$sQualification,
+              'sPackage'=>$sPackage,
+              'sLimited_amt_type'=>$sLimited_amt_type,
+              'sProduct_unit'=>$sProduct_unit,
+              'sBusiness_location'=>$sBusiness_location,
+              'sProduct_group'=>$sProduct_group,
+              'sLang'=>$sLang,
+              'dsOrders_type'=>$dsOrders_type,
+            ) 
+          );
     }
 
     public function store(Request $request)
@@ -74,23 +74,23 @@ class PromotionsController extends Controller
           $sLang = \App\Models\Backend\Language::get();
           $sRow = \App\Models\Backend\Promotions::find($id);
           $dsOrders_type  = \App\Models\Backend\Orders_type::where('lang_id', 1)->get();
-       return View('backend.promotions.form')->with(
-        array(
-          'sAgency'=>$sAgency,
-          'sAistockist'=>$sAistockist,
-          'sQualification'=>$sQualification,
-          'sTravel_feature'=>$sTravel_feature,
-          'sPersonal_quality'=>$sPersonal_quality,
-          'sPackage'=>$sPackage,
-          'sLimited_amt_type'=>$sLimited_amt_type,
-          'sProduct_unit'=>$sProduct_unit,
-          'sBusiness_location'=>$sBusiness_location,
-          'sProduct_group'=>$sProduct_group,
-          'sRow'=>$sRow ,
-          'id'=>$id, 
-          'sLang'=>$sLang,
-          'dsOrders_type'=>$dsOrders_type,
-         )
+         return View('backend.promotions.form')->with(
+          array(
+            'sAgency'=>$sAgency,
+            'sAistockist'=>$sAistockist,
+            'sQualification'=>$sQualification,
+            'sTravel_feature'=>$sTravel_feature,
+            'sPersonal_quality'=>$sPersonal_quality,
+            'sPackage'=>$sPackage,
+            'sLimited_amt_type'=>$sLimited_amt_type,
+            'sProduct_unit'=>$sProduct_unit,
+            'sBusiness_location'=>$sBusiness_location,
+            'sProduct_group'=>$sProduct_group,
+            'sRow'=>$sRow ,
+            'id'=>$id, 
+            'sLang'=>$sLang,
+            'dsOrders_type'=>$dsOrders_type,
+           )
          );
     }
 
