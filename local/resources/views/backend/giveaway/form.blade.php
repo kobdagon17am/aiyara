@@ -37,7 +37,7 @@
 
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">สถานที่ตั้งธุรกิจ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">สถานที่ตั้งธุรกิจ : </label>
                     <div class="col-md-9">
                     <select name="business_location_id_fk" class="form-control select2-templating " required >
                       <option value="">-Business Location-</option>
@@ -52,7 +52,7 @@
 
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อการแถม : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อการแถม : </label>
                     <div class="col-md-9">
                         <input class="form-control" type="text" value="{{@$sRow->giveaway_name}}" name="giveaway_name" required>
                     </div>
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="start_date" class="col-md-3 col-form-label">วันเริ่มต้น : * </label>
+                    <label for="start_date" class="col-md-3 col-form-label required_star_red ">วันเริ่มต้น : </label>
                     <div class="col-md-3">
 
  					@if( empty($sRow) )
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="end_date" class="col-md-3 col-form-label">วันสิ้นสุด : * </label>
+                    <label for="end_date" class="col-md-3 col-form-label required_star_red ">วันสิ้นสุด : </label>
                     <div class="col-md-3">
 
  					@if( empty($sRow) )
@@ -130,7 +130,7 @@
                 </div>
 
    <!--                <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ประเภทการซื้อ : * </label>
+                    <label for="" class="col-md-3 col-form-label">ประเภทการซื้อ : </label>
                     <div class="col-md-9">
                       <select name="purchase_type_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
@@ -147,7 +147,7 @@
 
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">แถมสมาชิกแบบ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">แถมสมาชิกแบบ : </label>
                     <div class="col-md-9">
                       <select name="giveaway_member_type_id_fk" class="form-control select2-templating "  required >
                         <option value="">Select</option>
@@ -163,7 +163,7 @@
                   </div>
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">จำนวนการแถมในบิลนั้น : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">จำนวนการแถมในบิลนั้น : </label>
                     <div class="col-md-9">
                       <select name="giveaway_in_bill_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
@@ -179,14 +179,14 @@
                   </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">PV การซื้อขั้นต่ำ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">PV การซื้อขั้นต่ำ : </label>
                     <div class="col-md-3">
                         <input class="form-control " type="number" name="pv_minimum_purchase"  value="{{@$sRow->pv_minimum_purchase}}"  required  />
                     </div>
                 </div>
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ตัวเลือกการแถม : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ตัวเลือกการแถม : </label>
                     <div class="col-md-9">
                       <select name="giveaway_option_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
