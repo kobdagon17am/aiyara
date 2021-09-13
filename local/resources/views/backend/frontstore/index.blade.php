@@ -162,8 +162,8 @@
                      <select id="invoice_code" name="invoice_code" class="form-control select2-templating " >
                          <option value="">Select</option>
                           @foreach(@$r_invoice_code AS $r)
-                          <option value="{{$r->invoice_code}}" >
-                            {{$r->invoice_code}}
+                          <option value="{{$r->code_order}}" >
+                            {{$r->code_order}}
                           </option>
                           @endforeach
                      </select>
@@ -229,7 +229,7 @@
                 <label for="" >สถานะ : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
-                <select id="approve_status" class="form-control select2-templating "  >
+                <select id="approve_status" name="approve_status" class="form-control select2-templating "  >
                   <option value="">Select</option>
                   @if(@$sApproveStatus)
                     @foreach(@$sApproveStatus AS $r)
@@ -331,7 +331,7 @@
                     
                     <thead>
                       <tr style="background-color: #f2f2f2;text-align: right;">
-                        <th></th>
+                        <th><span style="color:red">*** ตารางนี้อยู่ระหว่างการปรับปรุง ***</span></th>
                         <th>รายการ</th>
                         <th>PV</th>
                         <th>จำนวนเงิน</th>
@@ -384,8 +384,6 @@
                   
                   <!-- display: none; -->
                   <div class="div_SumCostActionUser" style="" >
-                    
-                    
                   </div>
 
                 </div>
@@ -497,10 +495,19 @@ $(function() {
               }
             }},
             {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+            // {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+            {data: 'total_price',   title :'<center>รวม (บาท)  </center>', className: 'text-right ',render: function(d) {
+               if(d){
+                // return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
+               }else{
+                return '';
+               }
+            }},
             {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                // return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
                }else{
                 return '';
                }
@@ -519,7 +526,6 @@ $(function() {
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
                   return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
             }},
-            // {data: 'status', title :'<center>สถานะบิล</center>', className: 'text-center'},
             {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
               if(d==2){
                   return '<span style="color:green;">Success</span>';
@@ -543,8 +549,8 @@ $(function() {
           } ],
        rowCallback: function(nRow, aData, dataIndex){
 
-            if(aData['total_price']){
-              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+            if(aData['total_price']){ 
+              $("td:eq(4)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
 
            if(aData['type']!='0'){
@@ -758,7 +764,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // // console.log(data);
+                                  console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -925,7 +931,7 @@ $(document).ready(function() {
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
 
-                  // // console.log(status_sent_money);
+                  // console.log(invoice_code);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           					var oTable;
@@ -976,10 +982,19 @@ $(document).ready(function() {
           					              }
           					            }},
           					            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-          					            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
-          					            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+          					            // {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+                                  {data: 'total_price',   title :'<center>รวม (บาท)  </center>', className: 'text-right ',render: function(d) {
+                                     if(d){
+                                      // return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                      return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
+                                     }else{
+                                      return '';
+                                     }
+                                  }},
+          					            {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
           					               if(d){
           					                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                    // return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
           					               }else{
           					                return '';
           					               }
@@ -996,12 +1011,8 @@ $(document).ready(function() {
           					            }},
 
           					            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-          					              if(d=="รออนุมัติ"){
-          					                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-          					              }else{
-          					                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
-          					              }
-          					            }},
+                                      return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                }},
           					            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
           					              if(d==2){
           					                  return '<span style="color:green;">Success</span>';
@@ -1031,157 +1042,157 @@ $(document).ready(function() {
           					          } ],
           					         rowCallback: function(nRow, aData, dataIndex){
 
-            if(aData['total_price']){
-              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-            }
+                        if(aData['total_price']){ 
+                          $("td:eq(4)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+                        }
 
-           if(aData['type']!='0'){
-              $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
-              $("td:eq(5)", nRow).html('');
-              $("td:eq(7)", nRow).html('');
-            }
+                       if(aData['type']!='0'){
+                          $("td:eq(2)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
+                          $("td:eq(5)", nRow).html('');
+                          $("td:eq(7)", nRow).html('');
+                        }
 
-            if(aData['pay_type']=='ai_cash'){
-              $("td:eq(6)", nRow).html('เติม Ai-Cash');
-            }
+                        if(aData['pay_type']=='ai_cash'){
+                          $("td:eq(6)", nRow).html('เติม Ai-Cash');
+                        }
 
-            $("td:eq(3)", nRow).html(aData['customer_name']);
+                        $("td:eq(3)", nRow).html(aData['customer_name']);
 
-            var info = $(this).DataTable().page.info();
-            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                        var info = $(this).DataTable().page.info();
+                        $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-            if(aData['approve_status']==5){
+                        if(aData['approve_status']==5){
 
-              $('td:last-child', nRow).html('');
+                          $('td:last-child', nRow).html('');
 
-            }else{
+                        }else{
 
-                      var sPermission = "<?=\Auth::user()->permission?>";
-                      var sU = sessionStorage.getItem("sU");
-                      var sD = sessionStorage.getItem("sD");
-                      var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
-                      var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
+                                  var sPermission = "<?=\Auth::user()->permission?>";
+                                  var sU = sessionStorage.getItem("sU");
+                                  var sD = sessionStorage.getItem("sD");
+                                  var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                  var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-                      // console.log('sPermission : '+sPermission);
+                                  // console.log('sPermission : '+sPermission);
 
-                      if(sPermission==1){
-                        sU = 1;
-                        sD = 1;
-                        can_cancel_bill = 1;
-                        can_cancel_bill_across_day = 1;
-                      }
-                      // console.log('sU : '+sU);
-                      // console.log('sD : '+sD);
-                      // // console.log('can_cancel_bill : '+can_cancel_bill);
-                      // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
+                                  if(sPermission==1){
+                                    sU = 1;
+                                    sD = 1;
+                                    can_cancel_bill = 1;
+                                    can_cancel_bill_across_day = 1;
+                                  }
+                                  // console.log('sU : '+sU);
+                                  // console.log('sD : '+sD);
+                                  // // console.log('can_cancel_bill : '+can_cancel_bill);
+                                  // // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
 
-                    if(sU!='1'&&sD!='1'){
-                        $('td:last-child', nRow).html('-');
-                    }else{ 
+                                if(sU!='1'&&sD!='1'){
+                                    $('td:last-child', nRow).html('-');
+                                }else{ 
 
-                      if(aData['type']!='0'){ // เติม Ai-Cash
+                                  if(aData['type']!='0'){ // เติม Ai-Cash
 
-                      }else{
-              
-                          var str_V = '';
+                                  }else{
+                          
+                                      var str_V = '';
 
-                          str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
+                                      str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
 
-                          var str_U = '';
-                          if(sU=='1'){
-                            str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                          }
-                          var str_D = '';
-                          if(sD=='1'){
-                            str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                          }
-                          if(sU!='1' && sD!='1'){
-                             $('td:last-child', nRow).html('-');
-                          }else{
+                                      var str_U = '';
+                                      if(sU=='1'){
+                                        str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                      }
+                                      var str_D = '';
+                                      if(sD=='1'){
+                                        str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                      }
+                                      if(sU!='1' && sD!='1'){
+                                         $('td:last-child', nRow).html('-');
+                                      }else{
 
-                            // // console.log("invoice_code = "+aData['invoice_code']);
+                                        // // console.log("invoice_code = "+aData['invoice_code']);
 
-                                   // if(aData['invoice_code'] !== null){
-                                      
-                                   //    $('td:last-child', nRow).html(str_V + str_D).addClass('input');
+                                               // if(aData['invoice_code'] !== null){
+                                                  
+                                               //    $('td:last-child', nRow).html(str_V + str_D).addClass('input');
 
-                                   //  }else{
+                                               //  }else{
 
-                                   //     $('td:last-child', nRow).html(str_U + str_D).addClass('input');
+                                               //     $('td:last-child', nRow).html(str_U + str_D).addClass('input');
 
-                                   //  }
-                                      $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                          }
-// TEST
-                            // $('td:last-child', nRow).html(str_V + str_U + str_D).addClass('input');
-                            // $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                               //  }
+                                                  $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                      }
+            // TEST
+                                        // $('td:last-child', nRow).html(str_V + str_U + str_D).addClass('input');
+                                        // $('td:last-child', nRow).html( str_U + str_D).addClass('input');
 
-                    }
-
-
-                    // // console.log(aData['purchase_type_id_fk']);
-                    if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
-                       $("td:eq(8)", nRow).html('Success');
-                    }
-           
-               }
+                                }
 
 
-            }
+                                // // console.log(aData['purchase_type_id_fk']);
+                                if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                                   $("td:eq(8)", nRow).html('Success');
+                                }
+                       
+                           }
 
 
-            // // console.log(aData['invoice_code']);
-
-          
-    
-              // // console.log(aData['approve_status']);
-
-              if(aData['approve_status']==0){
-                $("td:eq(10)", nRow).html('');
-              }
-
-              if(aData['approve_status']==5){
-                $("td:eq(8)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
-                $("td:eq(9)", nRow).html('');
-              }
-              // // console.log(aData['type']);
-              // // console.log(aData['status_sent_money']);
-              if(aData['type']=="เติม Ai-Cash"){
-                // $("td:eq(9)", nRow).html('');
-                $("td:eq(10)", nRow).html('');
-              
-                $("td:eq(11)", nRow).html('');
-              }
+                        }
 
 
-        }
+                      // console.log(aData['invoice_code']);
+            
+                      // // console.log(aData['approve_status']);
+
+                                        if(aData['approve_status']==0){
+                                          $("td:eq(10)", nRow).html('');
+                                        }
+
+                                        if(aData['approve_status']==5){
+                                          $("td:eq(8)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                                          $("td:eq(9)", nRow).html('');
+                                        }
+                                        // // console.log(aData['type']);
+                                        // // console.log(aData['status_sent_money']);
+                                        if(aData['type']=="เติม Ai-Cash"){
+                                          // $("td:eq(9)", nRow).html('');
+                                          $("td:eq(10)", nRow).html('');
+                                        
+                                          $("td:eq(11)", nRow).html('');
+                                        }
+
+
+                                  }
 
                             });
                         });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                    // console.log(invoice_code);
               
-                $.ajax({
-                  url: " {{ url('backend/getSumCostActionUser') }} ", 
-                  method: "post",
-                  data: {
-                    "_token": "{{ csrf_token() }}", 
-                    startDate:startDate,
-                    endDate:endDate,
-                    purchase_type_id_fk:purchase_type_id_fk,
-                    customer_code:customer_code,
-                    customer_name:customer_name,
-                    invoice_code:invoice_code,
-                    action_user:action_user,
-                    status_sent_money:status_sent_money,
-                    approve_status:approve_status,
-                  },
-                  success:function(data)
-                  { 
-                    console.log(data);
-                    $(".div_SumCostActionUser").html(data);
-                    
-                  }
-                });
+                          $.ajax({
+                            url: " {{ url('backend/getSumCostActionUser') }} ", 
+                            method: "post",
+                            data: {
+                              "_token": "{{ csrf_token() }}", 
+                              startDate:startDate,
+                              endDate:endDate,
+                              purchase_type_id_fk:purchase_type_id_fk,
+                              customer_code:customer_code,
+                              customer_name:customer_name,
+                              invoice_code:invoice_code,
+                              action_user:action_user,
+                              status_sent_money:status_sent_money,
+                              approve_status:approve_status,
+                            },
+                            success:function(data)
+                            { 
+                              // console.log(data);
+                              $(".div_SumCostActionUser").html(data);
+                              
+                            }
+                          });
                  
 
                 setTimeout(function(){
@@ -1273,10 +1284,19 @@ $(document).ready(function() {
               					              }
               					            }},
               					            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-              					            {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+              					            // {data: 'total_price', title :'<center>รวม (บาท)  </center>', className: 'text-center'},
+                                      {data: 'total_price',   title :'<center>รวม (บาท)  </center>', className: 'text-right ',render: function(d) {
+                                         if(d){
+                                          // return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                          return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
+                                         }else{
+                                          return '';
+                                         }
+                                      }},
               					            {data: 'invoice_code',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
               					               if(d){
               					                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                        // return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
               					               }else{
               					                return '';
               					               }
@@ -1292,13 +1312,9 @@ $(document).ready(function() {
 
               					            }},
 
-              					            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              					              if(d=="รออนุมัติ"){
-              					                  return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-              					              }else{
-              					                  return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
-              					              }
-              					            }},
+                                    {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
+                                          return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                    }},
               					            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
               					              if(d==2){
               					                  return '<span style="color:green;">Success</span>';
@@ -1329,8 +1345,8 @@ $(document).ready(function() {
               					          } ],
               					        rowCallback: function(nRow, aData, dataIndex){
 
-            if(aData['total_price']){
-              $("td:eq(4)", nRow).html('<span class="tooltip_cost badge badge-pill badge-info font-size-14">'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+            if(aData['total_price']){ 
+              $("td:eq(4)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
 
            if(aData['type']!='0'){

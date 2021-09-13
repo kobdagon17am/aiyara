@@ -759,7 +759,7 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
+        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
 
         if($amt_page==1){
