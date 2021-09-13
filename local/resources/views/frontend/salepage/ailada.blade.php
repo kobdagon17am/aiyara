@@ -125,7 +125,7 @@
                         </p>
                         <h5> ราคา 1,500 บาท </h5>
                         <div class="text-center">
-                            <a href="{{ $url }}/aiyarashop/product-detail/3/24/{{ $rs['data']->user_name }}" target="_blank" >
+                            <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
                               <img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"> </a>
 
@@ -145,7 +145,7 @@
                         </p>
                         <h5> ราคา 1,100 บาท </h5>
                         <div class="text-center">
-                          <a href="{{ $url }}/aiyarashop/product-detail/3/29/{{ $rs['data']->user_name }}" target="_blank" >
+                          <a href="{{ $url }}/aiyarashop/product-detail/3/24/{{ $rs['data']->user_name }}" target="_blank" >
                             <img src="{{ asset('frontend/salepage/Alada/add_cart.png') }}" width="110"
                                     class="img-fluid" alt="Responsive image"></a>
 
