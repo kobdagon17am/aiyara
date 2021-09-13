@@ -156,6 +156,39 @@ $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
+
+
+
+$shipping = DB::select(" 
+    SELECT
+    db_orders.delivery_location,
+    db_orders.sentto_branch_id,
+    dataset_delivery_location.txt_desc,
+    db_orders.shipping_price,
+    branchs.b_name
+    FROM
+    db_orders
+    Left Join dataset_delivery_location ON db_orders.delivery_location = dataset_delivery_location.id
+    Left Join branchs ON db_orders.sentto_branch_id = branchs.id
+    WHERE
+    db_orders.id = '$id'
+ ");
+
+$shipping_desc = @$shipping[0]->shipping_price?@$shipping[0]->shipping_price:0;
+// $shipping_desc = $shipping_desc==0 ? '0':@$shipping[0]->txt_desc.'/ ค่าจัดส่ง '.(number_format(@$shipping_price,0));
+
+if(@$shipping[0]->delivery_location==4){
+    $shipping_desc = 'จัดส่งพร้อมบิลอื่น';
+}else if(@$shipping[0]->delivery_location==0){
+    $shipping_desc = 'รับสินค้าด้วยตัวเอง สาขา: '.@$shipping[0]->b_name;
+}else if(@$shipping[0]->delivery_location==2){
+    $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
+}else if(@$shipping[0]->delivery_location==3){
+    $shipping_desc = '0';
+}else{
+    $shipping_desc = '0';
+}
+
 $pv_total = @$sRow->pv_total?@$sRow->pv_total:0;
 
 $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
@@ -353,12 +386,15 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
             db_orders.id = '$id'
        ");
 
-    if(@$sRow->delivery_location!=0){ 
-       $branch_code = $db_orders[0]->branch_code;
-    }else{
-       $branch_code = '';
-    }
-  
+    // if(@$sRow->delivery_location!=0){ 
+    //    $branch_code = $db_orders[0]->branch_code;
+    // }else{
+    //    $branch_code = '';
+    // }
+  /*
+   `delivery_location` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ\r\n>1=ที่อยู่ตามบัตร ปชช.>customers_address_card,\r\n2=ที่อยู่ตามที่ลงทะเบียนในระบบ>customers_detail,\r\n3=ที่อยู่กำหนดเอง>customers_addr_frontstore,\r\n4=จัดส่งพร้อมบิลอื่น,\r\n5=ส่งแบบพิเศษ/พรีเมี่ยม',
+   */
+
     $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
     $action_user_name = @$action_user[0]->name;
 
@@ -380,7 +416,6 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
 
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
-                 $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
 
                  $cus = DB::select(" 
@@ -567,31 +602,52 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
    $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
-   $db_orders = DB::select("
-            SELECT db_orders.*,branchs.b_code as branch_code
-            FROM db_orders
-            LEFT Join branchs ON db_orders.branch_id_fk = branchs.id
+    $db_orders = DB::select("
+                SELECT db_orders.*,branchs.b_code as branch_code,customers.user_name
+                FROM
+                db_orders
+                Left Join branchs ON db_orders.branch_id_fk = branchs.id
+                Left Join customers ON db_orders.aistockist = customers.id
             WHERE
             db_orders.id = '$id'
        ");
 
-    if(@$sRow->delivery_location!=0){ 
-       $branch_code = $db_orders[0]->branch_code;
-    }else{
-       $branch_code = '';
-    }
+    // if(@$sRow->delivery_location!=0){ 
+    //    $branch_code = $db_orders[0]->branch_code;
+    // }else{
+    //    $branch_code = '';
+    // }
   
     $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
     $action_user_name = @$action_user[0]->name;
 
-    $aistockist = @$db_orders[0]->aistockist ? @$db_orders[0]->aistockist : '-';
+    $aistockist = @$db_orders[0]->user_name ? @$db_orders[0]->user_name : '-';
+
+    $agency = DB::select("
+                SELECT customers.user_name
+                FROM
+                db_orders
+                Left Join branchs ON db_orders.branch_id_fk = branchs.id
+                Left Join customers ON db_orders.agency = customers.id
+            WHERE
+            db_orders.id = '$id'
+       ");
+
+    $agency = @$agency[0]->user_name ? @$agency[0]->user_name : '-';
+
+    // if(@$sRow->delivery_location!=0){ 
+    //    $branch_code = $db_orders[0]->branch_code;
+    // }else{
+    //    $branch_code = '';
+    // }
 
     $pay_type = DB::select(" select dataset_pay_type.detail as pay_type from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id WHERE db_orders.id=".$id." ");
     $pay_type =   @$pay_type[0]->pay_type;
 
     $m = 1 ;
     for ($i=0; $i < $amt_page ; $i++) { 
-        DB::select(" UPDATE $TABLE SET a = '$branch_code' WHERE id = (($n*$i)+1) ; ");
+        // DB::select(" UPDATE $TABLE SET a = '$branch_code' WHERE id = (($n*$i)+1) ; ");
+        DB::select(" UPDATE $TABLE SET a = '&nbsp;' WHERE id = (($n*$i)+1) ; ");
         DB::select(" UPDATE $TABLE SET a = '$cus_user_name' WHERE id = (($n*$i)+2) ; ");
         DB::select(" UPDATE $TABLE SET a = '$cus_name' WHERE id = (($n*$i)+3) ; ");
         DB::select(" UPDATE $TABLE SET a = '$sRow->code_order' WHERE id = (($n*$i)+4) ; ");
@@ -700,8 +756,11 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
 
         $m++;
 
-        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $branch_code ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ 4/".number_format(@$shipping_price,0)." ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+
+        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
+
 
         if($amt_page==1){
 
@@ -879,7 +938,9 @@ for ($j=0; $j < $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td style="width:80%;font-size: 14px;">
+      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+18) ; "); ?>
+        <?php echo @$DB[0]->a ; ?>
       </td>
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>

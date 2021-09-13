@@ -103,7 +103,7 @@
                 <input id="startDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary btnSearchSub " data-attr="startDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub btnSearchDate" data-attr="startDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="endDate" >วันสร้างสิ้นสุด : </label>
@@ -112,7 +112,7 @@
                 <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary btnSearchSub " data-attr="endDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub btnSearchDate " data-attr="endDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >ประเภทการสั่งซื้อ : </label>
@@ -377,233 +377,21 @@
             </div>
           </div>
 
-
-          <div class="col-lg-7">
-            <div class="card">
-              <div class="card-body">
-                
-                <div class="table-responsive">
-                  <table class="table table-sm m-0">
-                    <thead>
-                      <tr style="background-color: #f2f2f2;"><th colspan="8">
-                      <?php 
-                         $sd = date('d/m/Y');
-                         // echo $sd;
-                      ?>
-                        รวมรายการชำระค่าสินค้า {{$sd}} - {{$sd}} 
-                      </th></tr>
-                      <tr>
-                        <th>พนักงานขาย</th>
-                        <th class="text-right">เงินสด</th>
-                        <th class="text-right">Ai-cash</th>
-                        <th class="text-right">เงินโอน</th>
-                        <th class="text-right">เครดิต</th>
-                        <th class="text-right">ค่าธรรมเนียม</th>
-                        <th class="text-right">ค่าขนส่ง</th>
-                        <th class="text-right">รวมทั้งสิ้น</th>
-                      </tr>
-                    </thead>
-
-                        <tbody>
-                          
-                          @IF(@$sDBFrontstoreSumCostActionUser)
-                              @foreach(@$sDBFrontstoreSumCostActionUser AS $r)
-                              @php
-                              @$cnt_row1 += 1;
-                              @$sum_cash_pay += $r->cash_pay;
-                              @$sum_aicash_price += $r->aicash_price;
-                              @$sum_transfer_price += $r->transfer_price;
-                              @$sum_credit_price += $r->credit_price;
-                              @$sum_shipping_price += $r->shipping_price;
-                              @$sum_fee_amt += $r->fee_amt;
-                              @$sum_total_price += $r->total_price;
-                              @endphp
-                              <tr>
-                                <td>{{$r->action_user_name}}</td>
-                                <td class="text-right"> {{number_format($r->cash_pay,2)}} </td>
-                                <td class="text-right"> {{number_format($r->aicash_price,2)}} </td>
-                                <td class="text-right"> {{number_format($r->transfer_price,2)}} </td>
-                                <td class="text-right"> {{number_format($r->credit_price,2)}} </td>
-                                <td class="text-right"> {{number_format($r->fee_amt,2)}} </td>
-                                <td class="text-right"> {{number_format($r->shipping_price,2)}} </td>
-                                <td class="text-right"> {{number_format($r->total_price,2)}} </td>
-                              </tr>
-                              @endforeach
-                          @ENDIF
-                          @IF(@$cnt_row1>1)
-                          <tr>
-                            <th>Total > </th>
-                            <th class="text-right"> {{number_format(@$sum_cash_pay,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_aicash_price,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_transfer_price,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_credit_price,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_shipping_price,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_fee_amt,2)}} </th>
-                            <th class="text-right"> {{number_format(@$sum_total_price,2)}} </th>
-                          </tr>
-                          @ENDIF
-                          
-                        </tbody>
-                  </table>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+            <div class="col-lg-7">
+              <div class="card">
+                <div class="card-body">
                   
+                  <!-- display: none; -->
+                  <div class="div_SumCostActionUser" style="" >
+                    
+                    
+                  </div>
+
                 </div>
-                <br>
-
-                 <div class="table-responsive">
-                  <table class="table table-sm m-0">
-                    <thead>
-                      <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        รายการ เติม Ai-Cash {{$sd}} - {{$sd}} 
-                      </th></tr>
-                      <tr>
-                        <th>พนักงานขาย</th>
-                        <th class="text-right">รายการ</th>
-                        <th class="text-right">รวมทั้งสิ้น</th>
-                      </tr>
-                    </thead>
-
-                        <tbody>
-                          
-                          @IF(@$sDBFrontstoreUserAddAiCash)
-                              @foreach(@$sDBFrontstoreUserAddAiCash AS $r)
-                              @php
-                                @$cnt_row2 += 1;
-                                @$cnt_aicash_amt += 1;
-                                @$sum_cnt += $r->cnt;
-                                @$sum_sum += $r->sum;
-                              @endphp
-                              <tr>
-                                <td>{{$r->name}}</td>
-                                <td class="text-right"> {{@$r->cnt}} </td>
-                                <td class="text-right"> {{number_format($r->sum,2)}} </td>
-                              </tr>
-                              @endforeach
-                          @ENDIF
-                          @IF(@$cnt_row2>1)
-                          <tr>
-                            <th>Total > </th>
-                            <th class="text-right"> {{@$sum_cnt}} </th>
-                            <th class="text-right"> {{number_format(@$sum_sum,2)}} </th>
-                          </tr>
-                          @ENDIF
-                          
-                        </tbody>
-                  </table>
-                  
-                </div>
-
-
-<br>
-
-                 <div id="tb_sent_money" class="table-responsive">
-                  <table class="table table-sm m-0">
-                    <thead>
-                      <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="test_clear_sent_money">รายการส่งเงินรายวัน
-                      </th></tr>
-                      <tr>
-                        <th class="text-center">ครั้งที่</th>
-                        <th class="text-center">รายการใบเสร็จที่ส่ง</th>
-                        <th class="text-center">ผู้ส่ง</th>
-                        <th class="text-center">วัน เวลา ที่ส่ง</th>
-                        <th class="text-center">Tool</th>
-                      </tr>
-                    </thead>
-					<tbody>
-
-						  @IF(@$sDBSentMoneyDaily)
-						  <?php $tt = 1; ?>
-              
-              @foreach(@$sDBSentMoneyDaily AS $r)
-
-               
-                <?php 
-
-                       $sOrders = DB::select("
-							              SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name
-							              FROM
-							              db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-							              where sent_money_daily_id_fk in (".$r->id.");
-							          ");
-
-                              ?>
-
-						<tr>
-							<td class="text-center">  {{$tt}} </td>
-							<?php if(@$r->status_cancel==0){ ?>
-								<td class="text-center">
-									<div class="invoice_code_list">
-											<?php 
-											$i = 1;
-											foreach ($sOrders as $key => $value) {
-									          echo $value->invoice_code."<br>";
-									          $i++;
-									          if($i==4){
-									           break;
-									          }
-									        }
-									        if($i>3) echo "...";
-
-											$arr = [];
-									        foreach ($sOrders as $key => $value) {
-											  array_push($arr,$value->invoice_code.' :'.(@$value->first_name.' '.@$value->last_name).'<br>');
-									          }
-									        $arr_inv = implode(",",$arr);
-
-											?>
-									</div>
-									<input type="hidden" class="arr_inv" value="<?=$arr_inv?>">
-							</td>
-								<?php }else{ ?>
-								<td class="text-left" style="color:red;">
-								 * รายการนี้ได้ทำการยกเลิกการส่งเงิน
-							   </td>
-								<?php } ?>
-
-							
-							<td class="text-center">{{@$r->sender}} </td>
-							<td class="text-center">{{@$r->updated_at}}</td>
-							<td class="text-center">
-								<!-- <a href="javascript: void(0);" class="btn btn-sm btn-primary" style="" ><i class="bx bx-edit font-size-16 align-middle"></i></a> -->
-								<?php if(@$r->status_approve==0){ ?>
-                <?php if(@$r->status_cancel==0){ ?>
-								<a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="{{@$r->id}} " > ยกเลิก </a>
-								<?php } ?>
-                <?php }else{echo"-";} ?>
-							</td>
-						</tr>
- 							<?php $tt++ ; ?>
- 							@endforeach
-             @ENDIF
-
-						<tr>
-							<td class="text-center">  </td>
-							<td class="text-left">  </td>
-							<td class="text-center">  </td>
-							<td class="text-center">  </td>
-							<td class="text-center">
-								<a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18 btnSentMoney " style="" > กดส่งเงิน </a>
-							</td>
-						</tr>
-
-					</tbody>
-                  </table>
-                  
-                </div>
-
-
               </div>
             </div>
-          </div>
-
- <?php 
-
-      for ($i=1;$i<=5;$i++){
-        $x = $i."test";
-        ?> <span @popper({{$x}})> I'm a Span </span> <br><?php
-      }
-
-   ?>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
         </div>
       </div>
@@ -691,14 +479,6 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
             {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
-/*
-ทำคุณสมบัติ  <i class="fa fa-shopping-basket"></i>
-รักษาคุณสมบัติรายเดือน  <i class="fa fa-calendar-check-o"></i>
-รักษาคุณสมบัติท่องเที่ยว <i class="fa fa-bus"></i>
-เติม Ai-Stockist <i class="ti-wallet "></i>
-Gift Voucher  <i class="fa fa-gift"></i>
-คอร์สอบรม <i class="mdi mdi-account-tie"></i>
-*/
             {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w100 ',render: function(d) {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
@@ -737,12 +517,7 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }},
 
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w100 ',render: function(d) {
-              // if(d=="รออนุมัติ"){
-              //     return '<span class=" badge badge-pill badge-soft-warning font-size-16" style="color:darkred">'+d+'</span>';
-              // }else{
-                  // return '<span class="badge badge-pill badge-soft-primary font-size-16" style="color:darkred">'+d+'</span>';
                   return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
-              // }
             }},
             // {data: 'status', title :'<center>สถานะบิล</center>', className: 'text-center'},
             {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w100 ',render: function(d) {
@@ -756,18 +531,13 @@ Gift Voucher  <i class="fa fa-gift"></i>
             }},
 
             {data: 'id',   title :'ใบเสร็จ', className: 'text-center w80 ',render: function(d) {
-               // return '<center> <a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
-               //  + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                 return '<center>'
-                // + ' <a href="{{ URL::to('backend/frontstore/print_receipt_02') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
      
-            {data: 'id', title :'Tools', className: 'text-center w70'}, 
+            {data: 'id', title :'Tools.', className: 'text-center w70'}, 
         ],
-           // "order": [ [ 1, 'desc' ] ],
            "columnDefs": [ {
-            // { targets: 'no-sort', orderable: false }
               "targets": [0,2,6,7,8,9] ,
               "orderable": false
           } ],
@@ -1112,13 +882,34 @@ $(document).ready(function() {
               // // console.log(d);
               // // console.log(v);
               
-              $("input").val('');
-              $("select").select2('destroy').val("").select2();
-              $("#"+d).val(v);
-              $("#"+d).trigger('change');
+              // $("input").val('');
+              // $("select").select2('destroy').val("").select2();
+              // $("#"+d).val(v);
+              // $("#"+d).trigger('change');
               $('.btnSearchTotal').trigger('click');
 
          });
+
+
+         // $(document).on('click', '.btnSearchDate', function(event) {
+         //      var d = $(this).data('attr');
+         //      var v = $("#"+d).val();
+         //      if(d=="startDate"){
+         //        $("#startDate").val(v);
+         //        if($("#endDate").val() < v){
+         //          $("#endDate").val(v);
+         //        }else{
+                  
+         //        }
+         //      }
+         //      if(d=="endDate"){
+         //        $("#endDate").val(v);
+         //        if($("#startDate").val()==""){
+         //          $("#startDate").val(v);
+         //        }
+         //      }
+         // });
+
 
             $(document).on('click', '.btnSearchTotal', function(event) {
                   event.preventDefault();
@@ -1368,7 +1159,29 @@ $(document).ready(function() {
                             });
                         });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                    	
+              
+                $.ajax({
+                  url: " {{ url('backend/getSumCostActionUser') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", 
+                    startDate:startDate,
+                    endDate:endDate,
+                    purchase_type_id_fk:purchase_type_id_fk,
+                    customer_code:customer_code,
+                    customer_name:customer_name,
+                    invoice_code:invoice_code,
+                    action_user:action_user,
+                    status_sent_money:status_sent_money,
+                    approve_status:approve_status,
+                  },
+                  success:function(data)
+                  { 
+                    console.log(data);
+                    $(".div_SumCostActionUser").html(data);
+                    
+                  }
+                });
                  
 
                 setTimeout(function(){
@@ -1383,7 +1196,30 @@ $(document).ready(function() {
 
 </script>
 
+      <script>
 
+      $(document).ready(function() {
+
+              $.ajax({
+                  url: " {{ url('backend/getSumCostActionUser') }} ", 
+                  method: "post",
+                  data: {
+                    "_token": "{{ csrf_token() }}", 
+
+                  },
+                  success:function(data)
+                  { 
+                    // console.log(data);
+                    $(".div_SumCostActionUser").html(data);
+                    
+                  }
+                });
+
+
+         });
+ 
+
+    </script>
 
  <script>
 
@@ -1632,6 +1468,7 @@ $(document).ready(function() {
 
 
 </script>
+
 
 
 

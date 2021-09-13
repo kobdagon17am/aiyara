@@ -765,6 +765,7 @@ if($frontstore[0]->check_press_save==2){
         }
 
 
+
         if(!empty($request->shipping_special)){
 
             // return $province_id;
@@ -776,12 +777,14 @@ if($frontstore[0]->check_press_save==2){
 
         }else{
 
+
             DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
 
             // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
+
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
             }else{
 
@@ -3882,13 +3885,16 @@ if($frontstore[0]->check_press_save==2){
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->where('aistockist_status', '1')
-                ->take(15)
-                ->get();
+                // $customers = DB::table('customers')
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                // ->where('aistockist_status', '1')
+                // ->take(15)
+                // ->get();
+
+                $customers = DB::select(" select id,user_name,first_name,last_name from customers where aistockist_status='1' and (user_name LIKE '%".$request->term."%' OR first_name LIKE '%".$request->term."%' OR last_name LIKE '%".$request->term."%'); ");
+
             }
             $json_result = [];
             foreach($customers as $k => $v){
@@ -3909,15 +3915,9 @@ if($frontstore[0]->check_press_save==2){
         if($request->ajax()){
             
             if(empty($request->term)){
-                $customers = DB::table('customers')->take(15)->get();
+                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->where('agency_status', '1')
-                ->take(15)
-                ->get();
+                 $customers = DB::select(" select id,user_name,first_name,last_name from customers where agency_status='1' and (user_name LIKE '%".$request->term."%' OR first_name LIKE '%".$request->term."%' OR last_name LIKE '%".$request->term."%'); ");
             }
             $json_result = [];
             foreach($customers as $k => $v){
