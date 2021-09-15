@@ -30,10 +30,10 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-01.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/01.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-02.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/02.jpg') }}" class="img-fluid" alt="">
             </div>
 
 
@@ -53,27 +53,27 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-04.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/04.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-05.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/05.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-06.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/06.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-07.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/07.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-08.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/08.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-09.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/09.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -92,19 +92,19 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-11.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/11.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-12.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/12.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-13.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/13.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-14.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/14.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -124,10 +124,10 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-16.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/16.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-17.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/17.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -147,11 +147,11 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-19.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/19.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-20.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/20.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -171,7 +171,7 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-22.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/22.jpg') }}" class="img-fluid" alt="">
             </div>
         </div>
 
@@ -191,13 +191,13 @@
 
             <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-24.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/24.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-25.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/25.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/ธุรกิจ-26.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/aiyara/26.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -217,33 +217,52 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="container bg_product">
-        {{-- <p class="float-right"><a href="#">Back to top</a></p>
-    <p>&copy; 2017-2020 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> --}}
-        <div class="row justify-content-center mt-2">
+    <footer class="d-flex flex-wrap align-items-center py-3 my-2 border-top" style="background-color: #28a745;">
+      <div class="container">
+          <div class="row justify-content-md-center">
 
-            @if ($rs['data']->url_fb)
-                <a href="{{ $rs['data']->url_fb }}"> <img src="{{ asset('frontend/salepage/img/FB.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
+              <div class="col-md-auto text-center">
+                @if ($rs['data']->profile_img)
+                <img src="{{ asset('local/public/profile_customer/' . $rs['data']->profile_img) }}" width="100"
+                    class="img-fluid" alt="Member" style="margin-top: 15px">
+            @else
+                <img src="{{ asset('local/public/images/ex.png') }}" class="img-fluid" width="100"
+                    alt="Member" style="margin-top: 15px">
             @endif
-            @if ($rs['data']->url_ig)
-                <a href="{{ $rs['data']->url_ig }}"> <img src="{{ asset('frontend/salepage/img/IG.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
-            @endif
-            @if ($rs['data']->url_line)
-                <a href="{{ $rs['data']->url_line }}"> <img src="{{ asset('frontend/salepage/img/line.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
-            @endif
+                <div class="justify-content-center" style="margin-top: 10px">
 
-        </div>
-        @if ($rs['data']->tel_number)
-            <div class="row justify-content-center" style="margin-top: 10px">
+                  <b style="color: #fff">สนใจสมัครสมาชิกติดต่อ</b>
+                  <p style="color: #fff">คุณ {{ $rs['data']->first_name }} {{ $rs['data']->last_name }} รหัส {{ $rs['data']->user_name }}
+                  @if ($rs['data']->email)
+                  <br><b>Email :</b> {{ $rs['data']->email }}
+                  @endif
+                  </p>
+                  @if ($rs['data']->url_fb)
+                  <a href="{{ $rs['data']->url_fb }}"> <img src="{{ asset('frontend/salepage/img/FB.png') }}"
+                          style="margin: 5px;" class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              @if ($rs['data']->url_ig)
+                  <a href="{{ $rs['data']->url_ig }}"> <img src="{{ asset('frontend/salepage/img/IG.png') }}"
+                          style="margin: 5px;" class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              @if ($rs['data']->url_line)
+                  <a href="{{ $rs['data']->url_line }}"> <img
+                          src="{{ asset('frontend/salepage/img/line.png') }}" style="margin: 5px;"
+                          class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              <br>
+
                 <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
                     <b>{{ $rs['data']->tel_number }}</b></a>
-            </div>
-        @endif
+                </div>
+              </div>
 
-    </footer>
+          </div>
+
+      </div>
+
+
+  </footer>
 
 
     <nav class="float-action-button">
