@@ -10,9 +10,9 @@ use App\Http\Controllers\Controller;
 class SalepageController extends Controller
 {
 	public function aimmura($user_name=''){
-
 			$data = DB::table('customers')
-			->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+      ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
 			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
 			->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
 			->where('customers.user_name','=',$user_name)
@@ -23,14 +23,14 @@ class SalepageController extends Controller
         return view('frontend/salepage/aimmura',compact('rs'));
       }else{
         return view('errors/404');
-
       }
 	}
 
   public function cashewy($user_name=''){
 
     $data = DB::table('customers')
-    ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+    ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+    'customers.last_name','customers.business_name','customers.profile_img','customers.email')
     ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
     ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
     ->where('customers.user_name','=',$user_name)
@@ -50,7 +50,8 @@ class SalepageController extends Controller
 public function aifacad($user_name=''){
 
     $data = DB::table('customers')
-    ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+    ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
     ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
     ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
     ->where('customers.user_name','=',$user_name)
@@ -72,7 +73,8 @@ public function aifacad($user_name=''){
 public function ailada($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
@@ -91,7 +93,8 @@ public function ailada($user_name=''){
 public function trimmax($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
@@ -110,7 +113,8 @@ public function trimmax($user_name=''){
 public function aiyara($user_name=''){
 
   $data = DB::table('customers')
-  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name','customers.last_name','customers.business_name')
+  ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
+  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
   ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
   ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
   ->where('customers.user_name','=',$user_name)
@@ -125,8 +129,6 @@ public function aiyara($user_name=''){
   }
 
 }
-
-
 
 	public static function setting(){
 

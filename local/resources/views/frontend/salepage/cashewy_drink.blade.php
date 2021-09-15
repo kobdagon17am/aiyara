@@ -27,61 +27,61 @@ Cashewy Drink
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-01.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/1.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-02.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/2.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-03.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/3.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-04.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/4.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-05.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/5.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-06.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/6.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-07.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/7.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-08.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/8.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-09.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/9.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy/10.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
         <div class="row justify-content-center mt-2">
-          <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-11.jpg') }}"
+          <img src="{{ asset('frontend/salepage/Cashewy/11.jpg') }}"
               class="img-fluid" alt="CashewyDrink">
       </div>
       <div class="row justify-content-center mt-2">
         <a href="{{ $url }}/aiyarashop/product-detail/2/10/{{ $rs['data']->user_name }}" target="_blank" >
-          <img src="{{ asset('frontend/salepage/Cashewy/CashewyDrink-12.jpg') }}"
+          <img src="{{ asset('frontend/salepage/Cashewy/12.jpg') }}"
             class="img-fluid" alt="CashewyDrink">
         </a>
 
@@ -91,33 +91,52 @@ Cashewy Drink
     </div>
 
     <!-- FOOTER -->
-    <footer class="container bg_product">
-        {{-- <p class="float-right"><a href="#">Back to top</a></p>
-    <p>&copy; 2017-2020 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> --}}
-        <div class="row justify-content-center mt-2">
+    <footer class="d-flex flex-wrap align-items-center py-3 my-2 border-top" style="background-color: #28a745;">
+      <div class="container">
+          <div class="row justify-content-md-center">
 
-            @if ($rs['data']->url_fb)
-                <a href="{{ $rs['data']->url_fb }}"> <img src="{{ asset('frontend/salepage/img/FB.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
+              <div class="col-md-auto text-center">
+                @if ($rs['data']->profile_img)
+                <img src="{{ asset('local/public/profile_customer/' . $rs['data']->profile_img) }}" width="100"
+                    class="img-fluid" alt="Member" style="margin-top: 15px">
+            @else
+                <img src="{{ asset('local/public/images/ex.png') }}" class="img-fluid" width="100"
+                    alt="Member" style="margin-top: 15px">
             @endif
-            @if ($rs['data']->url_ig)
-                <a href="{{ $rs['data']->url_ig }}"> <img src="{{ asset('frontend/salepage/img/IG.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
-            @endif
-            @if ($rs['data']->url_line)
-                <a href="{{ $rs['data']->url_line }}"> <img src="{{ asset('frontend/salepage/img/line.png') }}"
-                        style="margin: 5px;" class="img-fluid" width="50" alt="..."> </a>
-            @endif
+                <div class="justify-content-center" style="margin-top: 10px">
 
-        </div>
-        @if ($rs['data']->tel_number)
-            <div class="row justify-content-center" style="margin-top: 10px">
+                  <b style="color: #fff">สนใจสมัครสมาชิกติดต่อ</b>
+                  <p style="color: #fff">คุณ {{ $rs['data']->first_name }} {{ $rs['data']->last_name }} รหัส {{ $rs['data']->user_name }}
+                  @if ($rs['data']->email)
+                  <br><b>Email :</b> {{ $rs['data']->email }}
+                  @endif
+                  </p>
+                  @if ($rs['data']->url_fb)
+                  <a href="{{ $rs['data']->url_fb }}"> <img src="{{ asset('frontend/salepage/img/FB.png') }}"
+                          style="margin: 5px;" class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              @if ($rs['data']->url_ig)
+                  <a href="{{ $rs['data']->url_ig }}"> <img src="{{ asset('frontend/salepage/img/IG.png') }}"
+                          style="margin: 5px;" class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              @if ($rs['data']->url_line)
+                  <a href="{{ $rs['data']->url_line }}"> <img
+                          src="{{ asset('frontend/salepage/img/line.png') }}" style="margin: 5px;"
+                          class="img-fluid" width="30" alt="..."> </a>
+              @endif
+              <br>
+
                 <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
                     <b>{{ $rs['data']->tel_number }}</b></a>
-            </div>
-        @endif
+                </div>
+              </div>
 
-    </footer>
+          </div>
+
+      </div>
+
+
+  </footer>
 
 
     <nav class="float-action-button">
