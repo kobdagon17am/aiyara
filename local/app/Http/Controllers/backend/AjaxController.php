@@ -765,6 +765,7 @@ if($frontstore[0]->check_press_save==2){
         }
 
 
+
         if(!empty($request->shipping_special)){
 
             // return $province_id;
@@ -776,12 +777,14 @@ if($frontstore[0]->check_press_save==2){
 
         }else{
 
+
             DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
 
             // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
+
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
             }else{
 
@@ -3500,8 +3503,14 @@ if($frontstore[0]->check_press_save==2){
 // `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ',
 // แก้ใหม่
 // `approve_status` int(11) DEFAULT '0' COMMENT ' 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย',
+          $sPermission = \Auth::user()->permission ;
+          if($sPermission==1){
+              $wh = "";
+          }else{
+              $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." ";
+          }
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND approve_status=4 AND status_sent_money=0 
+          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() $wh AND approve_status in (2,4) AND status_sent_money <> 1
               AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
           // return $r0;
@@ -3882,13 +3891,16 @@ if($frontstore[0]->check_press_save==2){
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->where('aistockist_status', '1')
-                ->take(15)
-                ->get();
+                // $customers = DB::table('customers')
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                // ->where('aistockist_status', '1')
+                // ->take(15)
+                // ->get();
+
+                $customers = DB::select(" select id,user_name,first_name,last_name from customers where aistockist_status='1' and (user_name LIKE '%".$request->term."%' OR first_name LIKE '%".$request->term."%' OR last_name LIKE '%".$request->term."%'); ");
+
             }
             $json_result = [];
             foreach($customers as $k => $v){
@@ -3909,15 +3921,9 @@ if($frontstore[0]->check_press_save==2){
         if($request->ajax()){
             
             if(empty($request->term)){
-                $customers = DB::table('customers')->take(15)->get();
+                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->where('agency_status', '1')
-                ->take(15)
-                ->get();
+                 $customers = DB::select(" select id,user_name,first_name,last_name from customers where agency_status='1' and (user_name LIKE '%".$request->term."%' OR first_name LIKE '%".$request->term."%' OR last_name LIKE '%".$request->term."%'); ");
             }
             $json_result = [];
             foreach($customers as $k => $v){
@@ -4022,8 +4028,8 @@ if($frontstore[0]->check_press_save==2){
             }else{
                 $customers = DB::table('customers')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+               // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+              //  ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->take(15)
                 ->orderBy('user_name', 'asc')
                 ->get();
@@ -4049,11 +4055,11 @@ if($frontstore[0]->check_press_save==2){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->where('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->take(15)
-                ->orderBy('user_name', 'asc')
+                ->orderBy('first_name', 'asc')
                 ->get();
             }
             $json_result = [];

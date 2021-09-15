@@ -32,8 +32,7 @@ class FrontstoreController extends Controller
       $branch_id_fk = \Auth::user()->branch_id_fk;
       $user_login_id = \Auth::user()->id;
       $sUser = DB::select(" select * from ck_users_admin ");
-      // $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (1,2) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
-      $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (3) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
+      $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (1,2) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
 
       $sPermission = \Auth::user()->permission ;
       if($sPermission==1){
@@ -1553,12 +1552,6 @@ class FrontstoreController extends Controller
                 $startDate1 
                 $endDate1 
                 $invoice_code 
-                $purchase_type_id_fk
-                $customer_code
-                $customer_name
-                $action_user_02
-                $status_sent_money
-                $approve_status
 
                 GROUP BY action_user
         ");
@@ -1688,9 +1681,9 @@ class FrontstoreController extends Controller
 
                   $show .= '
                     <tr>
-                      <td>'.$r->name.'</td>
-                      <td class="text-right">'.@$r->cnt.'</td>
-                      <td class="text-right"> '.number_format($r->sum,2).' </td>
+                      <td>{{$r->name}}</td>
+                      <td class="text-right"> {{@$r->cnt}} </td>
+                      <td class="text-right"> {{number_format($r->sum,2)}} </td>
                     </tr>';
 
                   }
@@ -1711,136 +1704,6 @@ class FrontstoreController extends Controller
                    </table>
                  </div>
               <br>
-           ';
-
-          if($sPermission==1){
-              $action_user_0111 = "";
-          }else{
-
-              $action_user_0111 = " AND db_orders.action_user = $user_login_id ";
-          }
-
-            $ch_user = DB::select("
-                SELECT *
-                FROM
-                db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0 
-                $action_user_0111 
-
-        ");
-
-          if($sPermission==1 || count($ch_user)>0 ){
-               $show_tb_sent_money = "";
-          }else{
-               $show_tb_sent_money = "display:none;";
-          }
-
-           $show .= '    
-                <div id="tb_sent_money" class="table-responsive" style='.$show_tb_sent_money.'>
-                  <table class="table table-sm m-0">
-                    <thead>
-                      <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="test_clear_sent_money">รายการส่งเงินรายวัน
-                        </th></tr>
-                        <tr>
-                          <th class="text-center">ครั้งที่</th>
-                          <th class="text-center">รายการใบเสร็จที่ส่ง</th>
-                          <th class="text-center">ผู้ส่ง</th>
-                          <th class="text-center">วัน เวลา ที่ส่ง</th>
-                          <th class="text-center">Tool</th>
-                        </tr>
-                      </thead>
-                      <tbody>';
-
-                        if(@$sDBSentMoneyDaily){
-                         $tt = 1; 
-                        
-                        foreach(@$sDBSentMoneyDaily AS $r){
-                        
-                        $sOrders = DB::select("
-                                      SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name
-                                      FROM
-                                      db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where sent_money_daily_id_fk in (".$r->id.");
-                                      ");
-                    $show .= '  
-                        <tr>
-                          <td class="text-center">'.$tt.'</td>';
-
-                          if(@$r->status_cancel==0){ 
-
-                    $show .= '  
-                          <td class="text-center">
-                            <div class="invoice_code_list">';
-                            
-                              $i = 1;
-                              foreach ($sOrders as $key => $value) {
-                              echo $value->invoice_code."<br>";
-                              $i++;
-                              if($i==4){
-                              break;
-                              }
-                              }
-                              if($i>3) echo "...";
-                              $arr = [];
-                              foreach ($sOrders as $key => $value) {
-                              array_push($arr,$value->invoice_code.' :'.(@$value->first_name.' '.@$value->last_name).'<br>');
-                              }
-                              $arr_inv = implode(",",$arr);
-                              
-                   $show .= '  
-                            </div>
-                            <input type="hidden" class="arr_inv" value="'.$arr_inv.'">
-                          </td>';
-
-                           }else{ 
-              
-                   $show .= '  
-                          <td class="text-left" style="color:red;">
-                            * รายการนี้ได้ทำการยกเลิกการส่งเงิน
-                          </td>';
-
-                           } 
-
-                  $show .= '          
-                          <td class="text-center">'.@$r->sender.'</td>
-                          <td class="text-center">'.@$r->updated_at.'</td>
-                          <td class="text-center">';
-
-                             if(@$r->status_approve==0){ 
-                             if(@$r->status_cancel==0){ 
-                   $show .= '             
-                            <a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="'.@$r->id.'" > ยกเลิก </a>';
-                            } 
-
-                         }else{echo"-";} 
-
-                  $show .= '  
-                          </td>
-                        </tr>';
-
-                         $tt++ ; 
-
-                        }
-                      }
-
-                     $show .= '
-                        <tr>
-                          <td class="text-center">  </td>
-                          <td class="text-left">  </td>
-                          <td class="text-center">  </td>
-                          <td class="text-center">  </td>
-                          <td class="text-center">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18 btnSentMoney " style="" > กดส่งเงิน </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    
-                  </div>
-
            ';
 
          return $show;
@@ -2058,7 +1921,6 @@ class FrontstoreController extends Controller
                 $invoice_code
                 $action_user_02
                 $status_sent_money
-                $approve_status
 
                 UNION ALL 
 

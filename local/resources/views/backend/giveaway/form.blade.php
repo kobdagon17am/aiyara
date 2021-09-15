@@ -37,7 +37,7 @@
 
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">สถานที่ตั้งธุรกิจ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">สถานที่ตั้งธุรกิจ : </label>
                     <div class="col-md-9">
                     <select name="business_location_id_fk" class="form-control select2-templating " required >
                       <option value="">-Business Location-</option>
@@ -52,14 +52,39 @@
 
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ชื่อการแถม : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ชื่อการแถม : </label>
                     <div class="col-md-9">
                         <input class="form-control" type="text" value="{{@$sRow->giveaway_name}}" name="giveaway_name" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="start_date" class="col-md-3 col-form-label">วันเริ่มต้น : * </label>
+                  <label for="" class="col-md-3 col-form-label required_star_red ">ประเภทการซื้อ : </label>
+                  <div class="col-md-8">
+                  @php
+                        $v_orders_type_id = explode(",",@$sRow->orders_type_id);
+                        @endphp
+                        @foreach($dsOrders_type as $k => $r)
+                        @php
+                        $checked = '';
+                        foreach($v_orders_type_id as $v_orders_type){
+                        if($r->id==$v_orders_type) $checked = 'checked';
+                        }
+                        @endphp
+                        <div class="checkbox-color checkbox-primary">
+                            <input id="orders_type{{$r->id}}" name="orders_type[]"
+                            type="checkbox" {{$checked}}
+                            value="{{$r->id}}">
+                            <label for="orders_type{{$r->id}}">
+                                {{$r->orders_type}}
+                            </label>
+                        </div>
+                        @endforeach
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="start_date" class="col-md-3 col-form-label required_star_red ">วันเริ่มต้น : </label>
                     <div class="col-md-3">
 
  					@if( empty($sRow) )
@@ -82,7 +107,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="end_date" class="col-md-3 col-form-label">วันสิ้นสุด : * </label>
+                    <label for="end_date" class="col-md-3 col-form-label required_star_red ">วันสิ้นสุด : </label>
                     <div class="col-md-3">
 
  					@if( empty($sRow) )
@@ -104,8 +129,8 @@
                     </div>
                 </div>
 
-                  <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ประเภทการซื้อ : * </label>
+   <!--                <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label">ประเภทการซื้อ : </label>
                     <div class="col-md-9">
                       <select name="purchase_type_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
@@ -118,11 +143,11 @@
                             @endif                        
                       </select>
                     </div>
-                  </div>
+                  </div> -->
 
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">แถมสมาชิกแบบ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">แถมสมาชิกแบบ : </label>
                     <div class="col-md-9">
                       <select name="giveaway_member_type_id_fk" class="form-control select2-templating "  required >
                         <option value="">Select</option>
@@ -138,7 +163,7 @@
                   </div>
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">จำนวนการแถมในบิลนั้น : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">จำนวนการแถมในบิลนั้น : </label>
                     <div class="col-md-9">
                       <select name="giveaway_in_bill_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
@@ -154,14 +179,14 @@
                   </div>
 
                 <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">PV การซื้อขั้นต่ำ : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">PV การซื้อขั้นต่ำ : </label>
                     <div class="col-md-3">
                         <input class="form-control " type="number" name="pv_minimum_purchase"  value="{{@$sRow->pv_minimum_purchase}}"  required  />
                     </div>
                 </div>
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">ตัวเลือกการแถม : * </label>
+                    <label for="" class="col-md-3 col-form-label required_star_red ">ตัวเลือกการแถม : </label>
                     <div class="col-md-9">
                       <select name="giveaway_option_id_fk" class="form-control select2-templating " required >
                         <option value="">Select</option>
@@ -181,6 +206,93 @@
                     <div class="col-md-3">
                         <input class="form-control " type="number" name="giveaway_voucher"  value="{{@$sRow->giveaway_voucher}}" />
                     </div>
+                </div>
+
+
+              <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
+                  <div class="col-md-8">
+                    <select name="minimum_package_purchased" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sPackage)
+                          @foreach(@$sPackage AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->minimum_package_purchased)?'selected':'' }} >{{$r->dt_package}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
+                  <div class="col-md-8">
+                    <select name="reward_qualify_purchased" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sQualification)
+                          @foreach(@$sQualification AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->reward_qualify_purchased)?'selected':'' }} >{{$r->business_qualifications}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">รักษาคุณสมบัติส่วนตัว : </label>
+                  <div class="col-md-8">
+                    <select name="keep_personal_quality" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sPersonal_quality)
+                          @foreach(@$sPersonal_quality AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->keep_personal_quality)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
+                  <div class="col-md-8">
+                    <select name="maintain_travel_feature" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sTravel_feature)
+                          @foreach(@$sTravel_feature AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->maintain_travel_feature)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">aistockist : </label>
+                  <div class="col-md-8">
+                    <select name="aistockist" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sAistockist)
+                          @foreach(@$sAistockist AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->aistockist)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-3 col-form-label">agency : </label>
+                  <div class="col-md-8">
+                    <select name="agency" class="form-control select2-templating "  >
+                      <option value="">Select</option>
+                        @if(@$sAgency)
+                          @foreach(@$sAgency AS $r)
+                            <option value="{{$r->id}}" {{ (@$r->id==@$sRow->agency)?'selected':'' }} >{{$r->txt_desc}}</option>
+                          @endforeach
+                        @endif
+                    </select>
+                  </div>
                 </div>
 
 

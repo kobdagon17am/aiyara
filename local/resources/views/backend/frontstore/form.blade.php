@@ -322,7 +322,7 @@
 
  ?>
                                      
-                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  >
+                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  required >
                                           <option value="">Select</option>
                                           @if(@$sPurchase_type)
                                             @foreach(@$sPurchase_type AS $r)
@@ -389,50 +389,6 @@
                           <div class="row">
                               <div class="col-md-6">
                                 <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
-                                  <div class="col-md-6">
-
-                                    @if($ChangePurchaseType==1)
-                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
-                                       @IF(@$sRow->aistockist!=="")
-                                          <select id="aistockist" class="form-control select2-templating "  >
-                                                  <option  selected >
-                                                    {{@$CusAistockistName}}
-                                                  </option>
-                                          </select>
-                                        @ELSE
-                                         <select id="aistockist" class="form-control select2-templating "  >
-                                         </select> 
-                                        @ENDIF
-                                    @else
-                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
-                                         <select id="aistockist" class="form-control select2-templating " disabled >
-                                                  <option  selected >
-                                                    {{@$CusAistockistName}}
-                                                  </option>
-                                          </select>
-                                     @endif
-           
-
-                                  </div>
-                                </div>
-                              </div>
-
-                               <div class="col-md-6">
-                                <div class="col-md-12 form-group row" style="position: absolute;">
-                                   <label for="" class="col-form-label">หมายเหตุ :  </label>
-                                  <div class="col-md-10">
-                                       <textarea class="form-control" id="note" name="note" rows="5" >{{ @$sRow->note }}</textarea>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-
-
-                        <div class="row">
-                              <div class="col-md-6">
-                                <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label"> Agency : </label>
                                   <div class="col-md-6" >
 
@@ -459,6 +415,53 @@
 
 
                                   </div>
+                                </div>
+                              </div>
+
+                               <div class="col-md-6">
+                                <div class="col-md-12 form-group row" style="position: absolute;">
+                                   <label for="" class="col-form-label">หมายเหตุ :  </label>
+                                  <div class="col-md-10">
+                                       <textarea class="form-control" id="note" name="note" rows="5" >{{ @$sRow->note }}</textarea>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+                        <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group row">
+
+                                  <label for="" class="col-md-4 col-form-label">AiStockist :  </label>
+                                  <div class="col-md-6">
+
+                                    @if($ChangePurchaseType==1)
+                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
+                                       @IF(@$sRow->aistockist!=="")
+                                          <select id="aistockist" class="form-control select2-templating "  >
+                                                  <option  selected >
+                                                    {{@$CusAistockistName}}
+                                                  </option>
+                                          </select>
+                                        @ELSE
+                                         <select id="aistockist" class="form-control select2-templating "  >
+                                         </select> 
+                                        @ENDIF
+                                    @else
+                                         <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
+                                         <select id="aistockist" class="form-control select2-templating " disabled >
+                                                  <option  selected >
+                                                    {{@$CusAistockistName}}
+                                                  </option>
+                                          </select>
+                                     @endif
+           
+
+                                  </div>
+                                  
+                                  
                                 </div>
                               </div>
                               <div class="col-md-6">
@@ -691,11 +694,11 @@
                            <input {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$pay_type_transfer_aicash}} disabled id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$pay_type_transfer_aicash}} disabled id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                                  @if(@$r->id==@$sRow->branch_id_fk)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                  @if(@$sRow->sentto_branch_id>0))
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
                                   @elseif(@$r->id==$User_branch_id)
@@ -703,7 +706,7 @@
                                     {{$r->b_name}}
                                   </option>
                                   @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
                                   @endif
@@ -717,11 +720,11 @@
                            <input {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$pay_type_transfer_aicash}} id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
-                              @if(@$sBranchs)
+                             <select {{@$pay_type_transfer_aicash}} id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                                  @if(@$r->id==@$sRow->branch_id_fk)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                  @if(@$sRow->sentto_branch_id>0))
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
                                   @elseif(@$r->id==$User_branch_id)
@@ -729,7 +732,7 @@
                                     {{$r->b_name}}
                                   </option>
                                   @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
                                   @endif
@@ -866,7 +869,9 @@
                               @$address .= " ต. ". @$addr[0]->tamname;
                               @$address .= " อ. ". @$addr[0]->ampname;
                               @$address .= " จ. ". @$addr[0]->provname;
-                              @$address .= " รหัส ปณ. ". @$addr[0]->zip_code ;
+                              @$address .= " ". @$addr[0]->zip_code ;
+                              @$address .= " ". @$addr[0]->tel ? '<br>Tel. '. @$addr[0]->tel:'' ;
+                              @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;
 
                           }else{
                                 @$address = '-ไม่พบข้อมูล-';
@@ -877,7 +882,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>" class="ShippingCalculate03" name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>"  name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -1079,7 +1084,7 @@
 6 เงินสด + Ai-Cash
 9 เครดิต + Ai-Cash
 =================================== -->
-                        @if(@$sRow->check_press_save==2 && (@$sRow->purchase_type_id_fk==1 || @$sRow->purchase_type_id_fk==8 || @$sRow->purchase_type_id_fk==10 || @$sRow->purchase_type_id_fk==11 || @$sRow->purchase_type_id_fk==12))
+                        @if(@$sRow->check_press_save==2 && (@$sRow->purchase_type_id_fk==1 || @$sRow->purchase_type_id_fk==8 || @$sRow->purchase_type_id_fk==10 || @$sRow->purchase_type_id_fk==11 || @$sRow->purchase_type_id_fk==12) && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) )
 
                           @php
                           $disAfterSave = ' disabled '
@@ -1247,7 +1252,7 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{@$ds!='00/00/0000 00:00'?@$ds:null}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
                           </div>
 
@@ -2275,6 +2280,10 @@
                // console.log(purchase_type_id_fk);
                // console.log(aistockist);
                // console.log(agency);
+               if(purchase_type_id_fk==""){
+                  $("#purchase_type_id_fk").select2('open');
+                  return false;
+               }
 
                // return false;
 
@@ -2633,6 +2642,11 @@
                 },500);
                 
             });
+
+
+            // $('#modalDelivery').on('hidden.bs.modal', function () {
+            //     alert("xxxxxxxxxxxx");
+            // });
 
           $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
                 $("#spinner_frame").show();
@@ -4296,6 +4310,7 @@ $(document).ready(function() {
 
                      $('#pay_type_id_fk').val("").select2();
                      $('#pay_type_id_fk').val("").trigger("change");
+                     $('#pay_type_id_fk').prop('disabled',false);
 /*
 
 1 เงินโอน
@@ -4583,7 +4598,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxShippingCalculate') }} ",
                        data: $("#frm-main").serialize()+"&province_id="+$province_id+"&pay_type_id_fk="+pay_type_id_fk,
                         success:function(data){
-                            // console.log(data);
+                            console.log(data);
                             // return false;
 
                             $("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
@@ -6187,6 +6202,10 @@ $(document).ready(function() {
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var pay_type_id_fk = $("#pay_type_id_fk").val();
           // console.log(pay_type_id_fk);
+          if(pay_type_id_fk==""){
+             $("#pay_type_id_fk").select2('destroy').val("").select2();
+             $("#pay_type_id_fk").prop("disabled", false);
+          }
           var cash_pay = $("#cash_pay").val();
           // / // console.log(cash_pay);
 /*
@@ -6263,15 +6282,6 @@ $(document).ready(function() {
             $(".show_div_cash_pay").show();
 
           }
-
-
-          // ไปเช็คตารางสินค้าด้วย ถ้ายังไม่มีการเลือกสินค้า ยังไม่ต้องเช็คเงื่อนไขนี้ แต่ถ้ามีการเลือกสินค้าแล้ว ค่อยตรวจสอบอีกครั้ง
-          // check_press_save => 0=ยังไม่ได้เลือกสินค้า 1=มีการเลือกสินค้าแล้ว 2=มีการกดปุ่ม save แล้ว (เอาไว้เช็คกรณีซื้อที่หลังบ้าน เพื่อไม่ให้การคำนวณเงินผิดเพี้ยนไปจากเดิม)
-          // if(check_press_save=='1' && check_product_value>0 ){
-          if(check_press_save=='1'){
-
-
-           }
 
 
             if(pay_type_id_fk==5){

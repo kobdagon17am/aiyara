@@ -449,14 +449,65 @@ class FrontstorelistController extends Controller
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               $sRow->delivery_location    = '3';
-
+              $sRow->delivery_province_id    = $request->delivery_province;
               $sRow->action_date = date('Y-m-d H:i:s');
               $sRow->updated_at = date('Y-m-d H:i:s');
               $sRow->save();
 
+
+                        $branchs = DB::select("SELECT * FROM branchs WHERE id=".(@\Auth::user()->branch_id_fk)." ");
+
+                        if($request->delivery_province==$branchs[0]->province_id_fk){
+
+                            DB::select(" UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+
+                        }else{
+                             // ต่าง จ. กัน เช็คดูว่า อยู่ในเขตปริมณทฑลหรือไม่
+                            $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
+
+                            $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id =".$shipping_cost[0]->shipping_type_id." AND province_id_fk=".$request->delivery_province." ");
+
+                            if(count($shipping_vicinity)>0){
+
+                                DB::select(" UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+
+                            }else{
+
+                                $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=3 ");
+
+                                DB::select(" UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=".$request->frontstore_id." ");
+
+
+                            }
+
+                        }
+
+
         }
 
        if(isset($request->update_delivery_custom)){
+
+            DB::select(" UPDATE db_orders SET
+
+            pay_type_id_fk='0',
+
+            aicash_price='0',
+            member_id_aicash='0',
+            transfer_price='0',
+            credit_price='0',
+            shipping_price='0',
+
+            charger_type='0',
+            fee='0',
+            fee_amt='0',
+            sum_credit_price='0',
+
+            total_price='0',
+            cash_price='0',
+            cash_pay='0',
+            created_at=NOW()
+
+            WHERE id=".$request->frontstore_id." ");
 
         // dd($request->all());
 
@@ -527,9 +578,9 @@ class FrontstorelistController extends Controller
              // dd($frontstore[0]->branch_id_fk);
              // dd($branchs[0]->province_id_fk);
              // dd($request->delivery_province);
-                if($request->delivery_province==$branchs[0]->province_id_fk){
-                    DB::select("UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
-                }else{
+                // if($request->delivery_province==$branchs[0]->province_id_fk){
+                //     DB::select("UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+                // }else{
                      // ต่าง จ. กัน เช็คดูว่า อยู่ในเขรปริมณทฑลหรือไม่
                     $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
 
@@ -557,7 +608,7 @@ class FrontstorelistController extends Controller
 
                     }
 
-                }
+                // }
 
 // dd($request->all());
 
@@ -578,6 +629,34 @@ class FrontstorelistController extends Controller
                       where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
 
                 DB::select(" INSERT IGNORE INTO customers_addr_sent (customer_id, first_name, house_no, zipcode,amphures_id_fk, district_sub, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') ");
+
+
+                        $branchs = DB::select("SELECT * FROM branchs WHERE id=".(@\Auth::user()->branch_id_fk)." ");
+
+                        // if($request->delivery_province==$branchs[0]->province_id_fk){
+
+                        //     DB::select(" UPDATE db_orders SET shipping_price=0 WHERE id=".$request->frontstore_id." ");
+
+                        // }else{
+                             // ต่าง จ. กัน เช็คดูว่า อยู่ในเขตปริมณทฑลหรือไม่
+                            $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=2  ");
+
+                            $shipping_vicinity = DB::select("SELECT * FROM dataset_shipping_vicinity where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id =".$shipping_cost[0]->shipping_type_id." AND province_id_fk=".$request->delivery_province." ");
+
+                            if(count($shipping_vicinity)>0){
+
+                                DB::select(" UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost." WHERE id=".$request->frontstore_id." ");
+
+                            }else{
+
+                                $shipping_cost = DB::select("SELECT * FROM dataset_shipping_cost where business_location_id_fk =".$branchs[0]->business_location_id_fk." AND shipping_type_id=3 ");
+
+                                DB::select(" UPDATE db_orders SET shipping_price=".$shipping_cost[0]->shipping_cost."  WHERE id=".$request->frontstore_id." ");
+
+
+                            }
+
+                        // }
 
 
         }
