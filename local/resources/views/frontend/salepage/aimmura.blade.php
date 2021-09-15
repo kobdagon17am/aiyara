@@ -244,8 +244,11 @@
               @endif
               <br>
 
-                <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
-                    <b>{{ $rs['data']->tel_number }}</b></a>
+                  @if ($rs['data']->tel_number)
+                  <a href="tel:{{ $rs['data']->tel_number }}" class="btn btn-success"><i class="fa fa-phone-alt"></i>
+                      <b>{{ $rs['data']->tel_number }}</b></a>
+                  </div>
+                  @endif
                 </div>
               </div>
 
