@@ -111,7 +111,7 @@
                 <img src="{{ asset('frontend/salepage/Aimmura/aimmura.png') }}" class="img-fluid" alt="Responsive image">
                 <h2>1,550 บาท</h2>
 
-                <a class="btn btn-success btn-md" href="{{ $url }}/aiyarashop/product-detail/2/14/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a>
+                <a class="btn btn-success btn-md" href="{{ $url }}/aiyarashop/product-detail/2/1ค/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"> สั่งซื้อ </a>
             </div><!-- /.col-lg-4 -->
             <div class="col-6 col-sm-6 col-lg-3">
                 <img src="{{ asset('frontend/salepage/Aimmura/Aimmura X+Box.png') }}" class="img-fluid"
