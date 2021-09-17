@@ -347,6 +347,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxDelFileSlip', 'AjaxController@ajaxDelFileSlip');
     Route::post('ajaxDelFileSlip_02', 'AjaxController@ajaxDelFileSlip_02');
     Route::post('ajaxDelFileSlip_03', 'AjaxController@ajaxDelFileSlip_03');
+    Route::post('ajaxDelFileSlip_04', 'AjaxController@ajaxDelFileSlip_04');
     
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
     Route::post('ajaxClearCostFrontstore', 'AjaxController@ajaxClearCostFrontstore');
@@ -615,6 +616,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // ใบสั่งซื้อรออนุมัติ
     Route::resource('po_approve', 'Po_approveController');
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
+    Route::post('po_approve_edit/datatable', 'Po_approveController@DatatableEdit')->name('po_approve_edit.datatable');
     Route::post('po_approve_set/datatable', 'Po_approveController@DatatableSet')->name('po_approve_set.datatable');
 
     Route::get('po_approve/form_aicash/{id}', 'Add_ai_cashController@approve');

@@ -240,6 +240,7 @@ class FrontstoreController extends Controller
 
  public function create()
     {
+
       $sUser = \App\Models\Backend\Permission\Admin::get();
 
       $Products = DB::select("SELECT products.id as product_id,
@@ -919,6 +920,7 @@ class FrontstoreController extends Controller
                   DB::select(" UPDATE `db_orders` SET code_order='$code_order' WHERE (`id`=".$sRow->id.") ");
               }
 
+
                 // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
   
@@ -1319,6 +1321,8 @@ class FrontstoreController extends Controller
                    DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
               }
 // dd('1322');
+
+
      
              return redirect()->to(url("backend/frontstore"));
 
@@ -1386,20 +1390,21 @@ class FrontstoreController extends Controller
           $sRow->action_date = date('Y-m-d H:i:s');
           $sRow->created_at = date('Y-m-d H:i:s');
 
-              
-            // กรณีโอนชำระ
-              if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
-                   // $sRow->approve_status = 1 ;
-                   $sRow->order_status_id_fk = 2  ;
-              }else{
-                  $sRow->approve_status = 2 ;
-                  $sRow->order_status_id_fk = 5  ;
-              }
+            //   dd($sRow);
+            // // กรณีโอนชำระ
+            //   if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+            //        $sRow->approve_status = 1 ;
+            //        $sRow->order_status_id_fk = 2  ;
+            //   }else{
+            //       $sRow->approve_status = 2 ;
+            //       $sRow->order_status_id_fk = 5  ;
+            //   }
 
                   // $sRow->approve_status = 2 ;
 
           $sRow->save();
 
+          DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
           DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
 
 
@@ -1435,10 +1440,7 @@ class FrontstoreController extends Controller
     {
 
          // return $request;
-
           $user_login_id = \Auth::user()->id;
-          $sPermission = \Auth::user()->permission ;
-
           $sPermission = \Auth::user()->permission ;
           if($sPermission==1){
               $action_user_011 = "";
@@ -1742,7 +1744,7 @@ class FrontstoreController extends Controller
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="test_clear_sent_money">รายการส่งเงินรายวัน
+                        <span class="test_clear_sent_money">รายการส่งเงินรายวัน <span style="color:red">*** ตารางนี้อยู่ระหว่างการปรับปรุง ***</span>
                         </th></tr>
                         <tr>
                           <th class="text-center">ครั้งที่</th>
@@ -1833,7 +1835,7 @@ class FrontstoreController extends Controller
                           <td class="text-center">  </td>
                           <td class="text-center">  </td>
                           <td class="text-center">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18 btnSentMoney " style="" > กดส่งเงิน </a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18  btnSentMoney " style="" > กดส่งเงิน </a>
                           </td>
                         </tr>
                       </tbody>
@@ -1842,7 +1844,7 @@ class FrontstoreController extends Controller
                   </div>
 
            ';
-
+// btnSentMoney
          return $show;
     
 
@@ -1892,6 +1894,9 @@ class FrontstoreController extends Controller
            $endDate2 = "";
         }
 
+        // $startDate = "";
+        // $endDate = "";
+
         if(!empty($req->purchase_type_id_fk)){
            $purchase_type_id_fk = " AND db_orders.purchase_type_id_fk = '".$req->purchase_type_id_fk."' " ;
         }else{
@@ -1939,9 +1944,11 @@ class FrontstoreController extends Controller
 
           $sTable = DB::select("
 
-                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money
+                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,action_user
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                WHERE 1
+                $action_user_011
 
                 UNION ALL 
 
@@ -1953,13 +1960,17 @@ class FrontstoreController extends Controller
                 'เติม Ai-Cash' AS type,
                 db_add_ai_cash.customer_id_fk as c2,
                 db_add_ai_cash.aicash_amt,
-                db_add_ai_cash.id as inv_no,approve_status
+                db_add_ai_cash.id as inv_no,approve_status,action_user
                 ,'',
                 db_add_ai_cash.updated_at as ud2,
                 'ai_cash' as pay_type,cash_price,
                 credit_price,fee_amt,transfer_price,
                 0 as aicash_price,total_amt as total_price,'',status_sent_money
                 FROM db_add_ai_cash
+
+                WHERE 1 AND db_add_ai_cash.approve_status<>4
+                $action_user_01
+
                 ORDER BY created_at DESC
 
               ");
@@ -1976,10 +1987,11 @@ class FrontstoreController extends Controller
 */
               $sTable = DB::select("
 
-                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money
+                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,action_user
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE db_orders.purchase_type_id_fk in (1,2,3)
+                $action_user_011
 
                 UNION ALL 
 
@@ -1991,13 +2003,17 @@ class FrontstoreController extends Controller
                 'เติม Ai-Cash' AS type,
                 db_add_ai_cash.customer_id_fk as c2,
                 db_add_ai_cash.aicash_amt,
-                db_add_ai_cash.id as inv_no,approve_status
+                db_add_ai_cash.id as inv_no,approve_status,action_user
                 ,'',
                 db_add_ai_cash.updated_at as ud2,
                 'ai_cash' as pay_type,cash_price,
                 credit_price,fee_amt,transfer_price,
                 0 as aicash_price,total_amt as total_price,'' ,status_sent_money
                 FROM db_add_ai_cash
+
+                WHERE 1 AND db_add_ai_cash.approve_status<>4
+                $action_user_01
+
                 ORDER BY created_at DESC
 
               ");
@@ -2015,10 +2031,11 @@ class FrontstoreController extends Controller
 */
               $sTable = DB::select("
 
-                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money
+                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,action_user
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE db_orders.purchase_type_id_fk in (4,5)
+                $action_user_011
 
                 UNION ALL 
 
@@ -2030,13 +2047,17 @@ class FrontstoreController extends Controller
                 'เติม Ai-Cash' AS type,
                 db_add_ai_cash.customer_id_fk as c2,
                 db_add_ai_cash.aicash_amt,
-                db_add_ai_cash.id as inv_no,approve_status
+                db_add_ai_cash.id as inv_no,approve_status,action_user
                 ,'',
                 db_add_ai_cash.updated_at as ud2,
                 'ai_cash' as pay_type,cash_price,
                 credit_price,fee_amt,transfer_price,
                 0 as aicash_price,total_amt as total_price,'' ,status_sent_money
                 FROM db_add_ai_cash
+
+                WHERE 1 AND db_add_ai_cash.approve_status<>4
+                $action_user_01
+
                 ORDER BY created_at DESC
 
               ");
@@ -2045,10 +2066,10 @@ class FrontstoreController extends Controller
        
             $sTable = DB::select("
 
-                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay
+                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                WHERE 1
+                WHERE 1 
                 $action_user_011
                 $startDate
                 $endDate
@@ -2075,7 +2096,7 @@ class FrontstoreController extends Controller
                 db_add_ai_cash.updated_at as ud2,
                 'ai_cash' as pay_type,cash_price,
                 credit_price,fee_amt,transfer_price,
-                0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,''
+                0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user
                 FROM db_add_ai_cash
                 WHERE 1 AND db_add_ai_cash.approve_status<>4
                 $action_user_01
@@ -2087,6 +2108,8 @@ class FrontstoreController extends Controller
               ");
        
        }
+// OR (DATE(db_orders.updated_at) = CURDATE())
+      // dd($action_user_011);
 
       // $sTable = \App\Models\Backend\Frontstore::search();
       $sQuery = \DataTables::of($sTable);
@@ -2197,7 +2220,15 @@ class FrontstoreController extends Controller
             return @$r3->txt_desc;
           }
         }
-      })             
+      })      
+      ->addColumn('action_user', function($row) {
+        if(@$row->action_user!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
+           return @$sD[0]->name;
+        }else{
+          return '';
+        }
+      })      
       ->make(true);
     }
 

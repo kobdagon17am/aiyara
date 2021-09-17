@@ -2400,6 +2400,19 @@ if($frontstore[0]->check_press_save==2){
         }
     }
 
+  public function ajaxDelFileSlip_04(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id){
+              $r = DB::select(" SELECT url,file,order_id FROM `payment_slip` WHERE `id`=".$request->id." ");
+              DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".@$r[0]->order_id."  ");
+              @UNLINK(@$r[0]->url.@$r[0]->file);
+              DB::select(" DELETE FROM `payment_slip` WHERE `id`=".$request->id." ");
+            }
+        }
+    }
+
+
     public function ajaxDelFileSlip_02(Request $request)
     {
         // return $request;
@@ -3513,7 +3526,7 @@ if($frontstore[0]->check_press_save==2){
           $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() $wh AND approve_status in (2,4) AND status_sent_money <> 1
               AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
-          // return $r0;
+          return $r0;
 
           if($r0){
 

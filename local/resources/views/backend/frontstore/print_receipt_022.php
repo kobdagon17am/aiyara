@@ -184,7 +184,7 @@ if(@$shipping[0]->delivery_location==4){
 }else if(@$shipping[0]->delivery_location==2){
     $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
 }else if(@$shipping[0]->delivery_location==3){
-    $shipping_desc = '0';
+    $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
 }else{
     $shipping_desc = '0';
 }
@@ -394,9 +394,13 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
   /*
    `delivery_location` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ\r\n>1=ที่อยู่ตามบัตร ปชช.>customers_address_card,\r\n2=ที่อยู่ตามที่ลงทะเบียนในระบบ>customers_detail,\r\n3=ที่อยู่กำหนดเอง>customers_addr_frontstore,\r\n4=จัดส่งพร้อมบิลอื่น,\r\n5=ส่งแบบพิเศษ/พรีเมี่ยม',
    */
-
+if(!empty($db_orders[0]->action_user)){
     $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
     $action_user_name = @$action_user[0]->name;
+}else{
+    $action_user_name = "-";
+}
+
 
      $tel = '';
      $cus = DB::select(" 
@@ -618,8 +622,12 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
     //    $branch_code = '';
     // }
   
-    $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
-    $action_user_name = @$action_user[0]->name;
+    if(!empty($db_orders[0]->action_user)){
+        $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
+        $action_user_name = @$action_user[0]->name;
+    }else{
+        $action_user_name = "-";
+    }
 
     $aistockist = @$db_orders[0]->user_name ? @$db_orders[0]->user_name : '-';
 
@@ -641,9 +649,32 @@ for ($i=0; $i < ($amt_page*$n) ; $i++) {
     //    $branch_code = '';
     // }
 
-    $pay_type = DB::select(" select dataset_pay_type.detail as pay_type from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id WHERE db_orders.id=".$id." ");
-    $pay_type =   @$pay_type[0]->pay_type;
+    $pay_type = DB::select(" 
 
+        select 
+        db_orders.pay_type_id_fk,
+        db_orders.cash_pay,
+        db_orders.transfer_price,
+        dataset_pay_type.detail as pay_type
+        from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id 
+        WHERE db_orders.id=".$id." 
+
+        ");
+    // เงินโอน + เงินสด
+    if(@$pay_type[0]->pay_type_id_fk==10){
+        if(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->cash_pay==0){
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
+        }elseif(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }elseif(@$pay_type[0]->transfer_price==0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เงินสด: '.@$pay_type[0]->cash_pay;
+        }else{
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }
+    }else{
+        $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
+    }
+    
     $m = 1 ;
     for ($i=0; $i < $amt_page ; $i++) { 
         // DB::select(" UPDATE $TABLE SET a = '$branch_code' WHERE id = (($n*$i)+1) ; ");

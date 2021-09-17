@@ -5219,6 +5219,20 @@ $(document).ready(function() {
 
               var pay_type_id_fk = $("#pay_type_id_fk").val();
 
+              if(pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11){
+                console.log(pay_type_id_fk);
+                var transfer_price = $("#transfer_price").val();
+                if(transfer_price<=0){
+                  alert("! กรอกข้อมูลไม่ถูกต้อง เนื่องจากได้เลือกประเภทการชำระเงิน โอนชำระ ยอดโอนควรมากกว่าศูนย์");
+                  $("#cash_pay").val(0);
+                  $("#cash_price").val(0);
+                  $("#transfer_price").focus();
+                  $("#spinner_frame").hide();
+                  return false;
+                }
+
+              }
+
               if(pay_type_id_fk==''){
                 $("#cash_price").val('');
                 $("#cash_pay").val('');

@@ -129,13 +129,13 @@
               }
 
               
-              // console.log('menu_id : '+menu_id);
-              // console.log('sPermission : '+sPermission);
-              // console.log('can_approve : '+can_approve);
-              // console.log('sPermission : '+sPermission);
-              // console.log('sC : '+sC);
-              // console.log('sU : '+sU);
-              // console.log('sD : '+sD);
+              console.log('menu_id : '+menu_id);
+              console.log('sPermission : '+sPermission);
+              console.log('can_approve : '+can_approve);
+              console.log('sPermission : '+sPermission);
+              console.log('sC : '+sC);
+              console.log('sU : '+sU);
+              console.log('sD : '+sD);
               
               // console.log('can_cancel_bill : '+can_cancel_bill);
               // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
@@ -146,6 +146,7 @@
                 (sC==1)?($(".class_btn_add").show()):($(".class_btn_add").remove());
                 // เคสนี้ ต้องรับสินค้าครบทั้งหมดก่อนถึงจะมีสิทธิ์อนุมัติใบโอนได้ และค่อยดึงเข้าคลังต่อไปได้
                 (can_approve==1)?($(".div_approve_transfer_branch_get").show()):($(".div_approve_transfer_branch_get").remove());
+                (can_approve==1)?($(".div_confirm_transfer_slip").show()):($(".div_confirm_transfer_slip").remove());
 
               }
         

@@ -111,8 +111,8 @@
                     <div class="col-md-9">
                         <select id="bill_type" name="bill_type" class="form-control select2-templating " required >
                         <option value="">-Select-</option>
-                        <option value="1" >ขายสินค้า</option>
-                        <option value="2" >เติม Ai-cash </option>
+                        <option value="1" selected >ขายสินค้า</option>
+                        <!-- <option value="2" >เติม Ai-cash </option> -->
                       </select>
                     </div>
                   </div>
@@ -123,9 +123,9 @@
                     <div class="col-md-9">
                       <select id="doc_id" name="doc_id" class="form-control select2-templating " >
                         <option value="">-Select-</option>
-                         @if(@$sDoc_id)
-                          @foreach(@$sDoc_id AS $r)
-                            <option value="{{@$r->id}}" >{{$r->id}}</option>
+                         @if(@$code_order)
+                          @foreach(@$code_order AS $r)
+                            <option value="{{@$r->code_order}}" >{{$r->code_order}}</option>
                           @endforeach
                         @endif
                       </select>
@@ -140,7 +140,7 @@
                   <div class="form-group row">
                     <label for="customer_id_fk" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
                     <div class="col-md-9">
-                       <select id="approver" name="approver" class="form-control select2-templating " >
+                       <select id="transfer_amount_approver" name="transfer_amount_approver" class="form-control select2-templating " >
                         <option value="">-Select-</option>
                         @if(@$sApprover)
                         @foreach(@$sApprover AS $r)
@@ -153,16 +153,16 @@
                     </div>
                   </div>
                 </div>
-<!--  `approve_status` int(11) DEFAULT 0 COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id', -->
+
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="approve_status" class="col-md-3 col-form-label"> สถานะ :  </label>
+                    <label for="transfer_bill_status" class="col-md-3 col-form-label"> สถานะ :  </label>
                     <div class="col-md-9">
-                      <select id="approve_status" name="approve_status" class="form-control select2-templating " >
+                      <select id="transfer_bill_status" name="transfer_bill_status" class="form-control select2-templating " >
                         <option value="">-Status-</option>
                         <option value="1" > รออนุมัติ </option>
                         <option value="2" > อนุมัติ </option>
-                        <option value="6" > ไม่อนุมัติ </option>
+                        <option value="3" > ไม่อนุมัติ </option>
                       </select>
                     </div>
                   </div>
@@ -179,8 +179,9 @@
                           $first_day = date("Y-m-d",strtotime("-3 day"));
                           $last_day  = date('Y-m-d');
                          ?>
-                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="<?=$first_day?>" />
-                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="<?=$last_day?>" />
+                         <!-- <?=$first_day?><?=$last_day?> -->
+                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
+                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
                     </div>
                   </div>
                 </div>
@@ -188,8 +189,8 @@
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label"> วันที่อนุมัติ :  </label>
                     <div class="col-md-9 d-flex">
-                      <input id="approve_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
-                      <input id="approve_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
+                      <input id="transfer_bill_approve_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
+                      <input id="transfer_bill_approve_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
                     </div>
                   </div>
                 </div>
@@ -206,17 +207,12 @@
                      <div class="col-md-9" >
 
                       <!-- บิลขายสินค้า -->
-                      <a class="btn btn-primary btn-sm btnSearch01 " href="javascript: void(0);" style="font-size: 14px !important;margin-left: 0.8%;display: none;" >
+                      <a class="btn btn-primary btn-sm btnSearch01 " href="javascript: void(0);" style="font-size: 14px !important;margin-left: 0.8%;" >
                         <i class="bx bx-search align-middle "></i> SEARCH
                       </a>
 
                       <!-- บิลเติม Ai-cash -->
-                       <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                        <i class="bx bx-search align-middle "></i> SEARCH
-                      </a>
-
-                      <!-- ค้นรวม -->
-                 <!--      <a class="btn btn-success btn-sm btnSearch03 " href="javascript: void(0);" style="font-size: 14px !important;margin-left: 0.8%;" >
+                   <!--     <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
                         <i class="bx bx-search align-middle "></i> SEARCH
                       </a> -->
 
@@ -230,7 +226,7 @@
 
       </div> <!-- end row -->
 
-      <div class="row">
+      <div class="row div_datatable_01">
           <div class="col-12">
               <div class="card">
                   <div class="card-body">
@@ -248,7 +244,7 @@
       </div> <!-- end row -->
 
 
-      <div class="row">
+      <div class="row div_datatable_02">
           <div class="col-12">
               <div class="card">
                   <div class="card-body">
@@ -257,8 +253,7 @@
                         </div>
                       </div>
 
-                      <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
-                      </table>
+                      <!-- <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
 
                   </div>
               </div>
@@ -278,6 +273,7 @@ $(function() {
         serverSide: true,
         // scroller: true,
         // scrollCollapse: true,
+        "info":     false,
         scrollX: true,
         ordering: false,
         // scrollY: ''+($(window).height()-370)+'px',
@@ -308,54 +304,47 @@ $(function() {
           method: 'POST'
         },
             
-        columns: [
+   columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
             {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
             {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
             {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-            {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
-            // {data: 'transfer_money_datetime', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
-            {data: 'updated_at', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
-            {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
-            
-            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center w80',render: function(d) {
+              if(d){
+                  return d;
+              }else{
+                  return '-';
+              }
+            }}, 
+            {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
+              if(d){
+                  return d;
+              }else{
+                  return '-';
+              }
+            }}, 
+
+            {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
               if(d=='true'){
                   return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
               }else{
                   return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
               }
-            }},   
-            {data: 'approval_amount_transfer', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},         
-            {data: 'transfer_amount_approver', title :'<center>ยอด<br>อนุมัติ </center>', className: 'text-center'},         
-           
-            {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
-               return d!=1?d:'';
-            }},
+            }},    
+            {data: 'id', title :'Tool', className: 'text-center w100'},        
+      
         ],
    
          rowCallback: function ( nRow, aData, start, end, display ) {
-
 
              $('td:last-child', nRow).html(''
               + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               + ''
             ).addClass('input');
-
-             console.log(aData['sum_amount_transfer']);
-               if(aData['remark']==2){
-                    for (var i = 0; i < 9; i++) {
-                          $('td:eq( '+i+')', nRow).html("");
-                    }
-                    if(aData['sum_amount_transfer']){
-                      $('td:eq(9)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
-                      $('td:eq(10)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['sum_amount_transfer']+'</span>');
-                    }
-
-                    $('td:eq(11)', nRow).html("");
-                    $('td:eq(12)', nRow).html("");
-              }
 
 
         }
@@ -415,13 +404,13 @@ $(function() {
             {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          if(aData['approve_status']==5){
+          if(aData['transfer_bill_status']==5){
             for (var i = 0; i < 6; i++) {
               $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
             }
@@ -477,7 +466,7 @@ $(function() {
           uiLibrary: 'bootstrap4',
           iconsLibrary: 'fontawesome',
           minDate: function () {
-                return today;
+                // return today;
           }
       });
 
@@ -506,28 +495,28 @@ $(function() {
 
     <script>
 
-      $('#approve_sdate').datepicker({
+      $('#transfer_bill_approve_sdate').datepicker({
           // format: 'dd/mm/yyyy',
           format: 'yyyy-mm-dd',
           uiLibrary: 'bootstrap4',
           iconsLibrary: 'fontawesome',
       });
 
-      $('#approve_edate').datepicker({
+      $('#transfer_bill_approve_edate').datepicker({
           // format: 'dd/mm/yyyy',
           format: 'yyyy-mm-dd',
           uiLibrary: 'bootstrap4',
           iconsLibrary: 'fontawesome',
           minDate: function () {
-              return $('#approve_sdate').val();
+              return $('#transfer_bill_approve_sdate').val();
           }
       });
 
-      $('#approve_sdate').change(function(event) {
+      $('#transfer_bill_approve_sdate').change(function(event) {
 
-        if($('#approve_edate').val()>$(this).val()){
+        if($('#transfer_bill_approve_edate').val()>$(this).val()){
         }else{
-          $('#approve_edate').val($(this).val());
+          $('#transfer_bill_approve_edate').val($(this).val());
         }
 
       });        
@@ -546,16 +535,21 @@ $(function() {
                   $('#data-table').DataTable().clear();
 
                   $(".myloading").show();
+                  $(".div_datatable_01").show();
+                  $(".div_datatable_02").hide();
 
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var bill_type = $('#bill_type').val();
-                  // var doc_id = $('#doc_id').val();
+                  // alert(bill_type);
+                  var doc_id = $('#doc_id').val();
                   // var customer_id_fk = $('#customer_id_fk').val();
-                  // var bill_sdate = $('#bill_sdate').val();
-                  // var bill_edate = $('#bill_edate').val();
-                  // var approver = $('#approver').val();
-                  // var approve_status = $('#approve_status').val();
+                  var bill_sdate = $('#bill_sdate').val();
+                  var bill_edate = $('#bill_edate').val();
+                  var transfer_amount_approver = $('#transfer_amount_approver').val();
+                  var transfer_bill_status = $('#transfer_bill_status').val();
+                  var transfer_bill_approve_sdate = $('#transfer_bill_approve_sdate').val();
+                  var transfer_bill_approve_edate = $('#transfer_bill_approve_edate').val();
                   // var approve_sdate = $('#approve_sdate').val();
                   // var approve_edate = $('#approve_edate').val();
 
@@ -589,6 +583,7 @@ $(function() {
                                 scroller: true,
                                 destroy:true,
                                 ordering: false,
+                                "info":     false,
                                     
                                          ajax: {
                                           url: '{{ route('backend.po_approve.datatable') }}',
@@ -596,61 +591,66 @@ $(function() {
                                             _token: '{{csrf_token()}}',
                                                 business_location_id_fk:business_location_id_fk,
                                                 branch_id_fk:branch_id_fk,
-                                                // doc_id:doc_id,
-                                                // bill_sdate:bill_sdate,
-                                                // bill_edate:bill_edate,
-                                                // approver:approver,                                 
-                                                // approve_status:approve_status,                                 
+                                                doc_id:doc_id,
+                                                bill_sdate:bill_sdate,
+                                                bill_edate:bill_edate,
+                                                transfer_amount_approver:transfer_amount_approver,                                 
+                                                transfer_bill_status:transfer_bill_status,                                 
+                                                transfer_bill_approve_sdate:transfer_bill_approve_sdate,                                 
+                                                transfer_bill_approve_edate:transfer_bill_approve_edate,                                 
                                                 // approve_sdate:approve_sdate,
                                                 // approve_edate:approve_edate,                                
                                               },
                                             method: 'POST',
                                           }, 
-                                          columns: [
-                                              {data: 'id', title :'ID', className: 'text-center w50'},
-                                              {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-                                              {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
-                                              {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
-                                              {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-                                              {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
-                                              {data: 'transfer_money_datetime', title :'<center>วันเวลา<br>ที่โอน </center>', className: 'text-center'},
-                                              {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
                                               
-                                              {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                                              {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
-                                                if(d=='true'){
-                                                    return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
-                                                }else{
-                                                    return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
-                                                }
-                                              }},   
-                                              {data: 'approval_amount_transfer', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},         
-                                              {data: 'transfer_amount_approver', title :'<center>ยอด<br>อนุมัติ </center>', className: 'text-center'},         
-                                              {data: 'id',   title :'<center>ตรวจสอบ/อนุมัติ</center>', className: 'text-center',render: function(d) {
-                                                 return d!=1?d:'';
-                                              }},
-                                          ],
-                                      rowCallback: function(nRow, aData, dataIndex){
+                                         columns: [
+                                                  {data: 'id', title :'ID', className: 'text-center w50'},
+                                                  {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+                                                  {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+                                                  {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+                                                  {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+                                                  {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center w80',render: function(d) {
+                                                    if(d){
+                                                        return d;
+                                                    }else{
+                                                        return '-';
+                                                    }
+                                                  }}, 
+                                                  {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+                                                  {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
+                                                    if(d){
+                                                        return d;
+                                                    }else{
+                                                        return '-';
+                                                    }
+                                                  }}, 
 
-                                        if(sU!=''){
-                                            $('td:last-child', nRow).html('-');
-                                        }else{ 
+                                                  {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
+                                                  {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                                                  {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
+                                                    if(d=='true'){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
+                                                    }else{
+                                                        return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
+                                                    }
+                                                  }},    
+                                                  {data: 'id', title :'Tool', className: 'text-center w100'},        
+                                            
+                                              ],
+                                         
+                                               rowCallback: function ( nRow, aData, start, end, display ) {
 
-                                          if(aData['id']!=1){
-                                                $('td:last-child', nRow).html(''
-                                                + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                + ''
-                                              ).addClass('input');
-                                          }
+                                                   $('td:last-child', nRow).html(''
+                                                    + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                    + ''
+                                                  ).addClass('input');
 
-                                        }
-                                        
-                                      }
 
-                                  });
-                                 
-                              });
+                                              }
+                                    });
 
+                                });
 // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
               setTimeout(function(){
                    $(".myloading").hide();
@@ -672,6 +672,9 @@ $(function() {
 
                   $(".myloading").show();
 
+                  $(".div_datatable_02").show();
+                  $(".div_datatable_01").hide();
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var bill_type = $('#bill_type').val();
@@ -680,8 +683,8 @@ $(function() {
                   var bill_sdate = $('#bill_sdate').val();
                   var bill_edate = $('#bill_edate').val();
                   // var bill_status = $('#bill_status').val();
-                  var approver = $('#approver').val();
-                  var approve_status = $('#approve_status').val();
+                  var transfer_amount_approver = $('#transfer_amount_approver').val();
+                  var transfer_bill_status = $('#transfer_bill_status').val();
                   var approve_sdate = $('#approve_sdate').val();
                   var approve_edate = $('#approve_edate').val();
 
@@ -724,8 +727,8 @@ $(function() {
                                                 doc_id:doc_id,
                                                 bill_sdate:bill_sdate,
                                                 bill_edate:bill_edate,
-                                                approver:approver,                                 
-                                                approve_status:approve_status,                                 
+                                                transfer_amount_approver:transfer_amount_approver,                                 
+                                                transfer_bill_status:transfer_bill_status,                                 
                                                 approve_sdate:approve_sdate,
                                                 approve_edate:approve_edate,                                
                                               },
@@ -741,13 +744,13 @@ $(function() {
                                       {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
                                       {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
                                       {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                                      {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                                      {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
                                       {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
                                       {data: 'id', title :'Tools', className: 'text-center w60'}, 
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
 
-                                    if(aData['approve_status']==5){
+                                    if(aData['transfer_bill_status']==5){
                                       for (var i = 0; i < 6; i++) {
                                         $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
                                       }
@@ -852,7 +855,7 @@ $(function() {
             //      type:'POST',
             //      url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
             //       success:function(data){
-            //              console.log(data); 
+            //              // console.log(data); 
             //              if(data>0){
             //                 $('.toast').toast('show');
             //              }
@@ -869,7 +872,7 @@ $(function() {
                  type:'POST',
                  url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
                   success:function(data){
-                         console.log(data); 
+                         // console.log(data); 
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;
@@ -906,7 +909,7 @@ $(document).ready(function() {
                  type:'POST',
                  url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
                   success:function(data){
-                         console.log(data); 
+                         // console.log(data); 
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;

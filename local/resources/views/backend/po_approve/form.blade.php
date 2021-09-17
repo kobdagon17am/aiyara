@@ -46,18 +46,31 @@
 </div>
 
                     <div class="myBorder">
+
+                         <h5 class=" col-5 mb-0 "><i class="bx bx-play"></i> Slip File : </h5><br>
+
                         <div class="form-group row">
+                       
 
                             @if(@$slip)
                             @php 
                             @$i = 1
                             @endphp
                                 @foreach(@$slip AS $r)
+
+                     
+
+
                                     <label for="example-text-input" class="col-md-1 col-form-label">Slip {{@$i}} </label>
                                         <div class="col-md-3">
+                                            <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป </h5>
+                                             <input class="form-control  " type="text" value="{{@$r->transfer_bill_date?@$r->transfer_bill_date:NULL}}" readonly="" >
+                                             <br>
+
                                             @if (!empty(@$r->file))
                                                 <img id="imgAvatar_01" src="{{ $r->url }}/{{ @$r->file }}" width="200px"
                                                     class="grow">
+                                                    <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                             @ELSE
                                                 <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
@@ -69,8 +82,16 @@
                             @endphp
                                 @endforeach
                             @endif
+
+                         
+
                             
                         </div>
+
+                          @IF(count($slip)==0)
+                            <center><h5 class="" style="color:red;"> * ไม่พบไฟล์สลิป </h5></center>
+                           @ENDIF
+
                         <br>
                         <br>
                         <br>
@@ -90,14 +111,18 @@
                             &nbsp;
                             &nbsp; --}}
 
+                        @IF(@$sRow->transfer_bill_status==2)
+                        @ELSE
+                        <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"
                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
 
-                            <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
+                        <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
-                        </button>
-
+                        </button> 
+                    </div>
+                        @endif
 
                                 <form action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"
                                     enctype="multipart/form-data" autocomplete="off">
@@ -121,81 +146,103 @@
                                                 </div>
                                                 <div class="modal-body">
 
-                                                    <div class="col-md-12 mt-2 text-left">
-                                                        <h5 class="font-size-14">ธนาคารที่โอนชำระ <span
-                                                                class="text-danger">*</span></h5>
-                                                        <select class="form-control" name="bank_name" required>
-                                                            <option value="">Select</option>
-                                                            <option value="ธนาคารกรุงเทพ">ธนาคารกรุงเทพ</option>
-                                                            <option value="ธนาคารกรุงไทย">ธนาคารกรุงไทย</option>
-                                                            <option value="ธนาคารกรุงศรีอยุธยา">ธนาคารกรุงศรีอยุธยา</option>
-                                                            <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
-                                                            <option value="ธนาคารทหารไทยธนชาต">ธนาคารทหารไทยธนชาต</option>
-                                                            <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
-                                                        </select>
+                                                <div class="col-md-12 mt-2 mb-2 text-left">
+                                                    <div class="row form-group " >
+                                                        <div class="col-md-6 text-left">
+                                                            <h5 class="font-size-14">เลขที่ใบสั่งซื้อ </h5>
+                                                            <input class="form-control" type="text" value="{{@$sRow->code_order}}" readonly="">
+                                                        </div>
+                                                        <div class="col-md-6 text-left">
+                                                            <h5 class="font-size-14">วันที่สั่งซื้อในสลิป</h5>
+                                                            <input class="form-control" type="text" value="{{@$sRow->action_date}}" readonly="">
+                                                        </div>
                                                     </div>
+                                                </div>
 
-                                                    <div class="col-md-12 mt-2 mb-2 text-left">
-                                                        <h5 class="font-size-14">วันที่สั่งซื้อในสลิป <span
-                                                                class="text-danger">*</span></h5>
-                                                        <input class="form-control" type="datetime-local" 
-                                                            required>
-                                                    </div>
+
 
                                                 <div class="col-md-12 mt-2 mb-2 text-left">
                                                     <div class="row form-group " >
                                                         <div class="col-md-6 text-left">
-                                                            <h5 class="font-size-14">ยอดชำระ </h5>
-                                                            <input class="form-control" type="text" value="{{@$price}}" >
+                                                            <h5 class="font-size-14 ">ยอดชำระในใบสั่งซื้อ </h5>
+                                                            
                                                         </div>
                                                         <div class="col-md-6 text-left">
-                                                            <h5 class="font-size-14">ยอดโอน <span
-                                                                class="text-danger">*</span></h5>
-                                                            <input class="form-control" type="text" name="note_fullpayonetime" value="{{@$note_fullpayonetime}}" required="" > 
+                                                            <input class="form-control" type="text" value="{{@$price}}" readonly >
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                 <div class="col-md-12 mt-2 mb-2 text-left">
+
+                                                <div class="col-md-12 mt-2 mb-2 text-left">
                                                     <div class="row form-group " >
-                                                        <div class="col-md-7 text-left">
-                                                            <h5 class="font-size-14">ยอดอนุมัติ (กรอกยืนยันยอดอีกครั้ง) <span
-                                                                class="text-danger">*</span></h5>
-                                                            </div>
-                                                      <div class="col-md-5 text-left">
-                                                            <input class="form-control" type="text" name="approval_amount_transfer" value="{{@$approval_amount_transfer}}" required="" >
+                                                        <div class="col-md-6 text-left">
+                                                           <h5 class="font-size-14 required_star_red ">ธนาคารที่โอนชำระ </h5>
+                                                              <select id="account_bank" name="account_bank" class="form-control select2-templating "  required >
+                                                              <option value="">Select</option>
+                                                              @if(@$TransferBank)
+                                                                @foreach(@$TransferBank AS $r)
+                                                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->account_bank_name_customer)?'selected':'' }} >  {{$r->txt_bank_name}}
+                                                                  </option>
+                                                                @endforeach
+                                                              @endif
+                                                            </select>
                                                         </div>
-                                                       
+                                                        <div class="col-md-6 text-left">
+                                                            <h5 class="font-size-14 required_star_red">ยอดอนุมัติ (กรอกยืนยันอีกครั้ง)</h5>
+                                                               <input class="form-control NumberOnly " type="text" name="approval_amount_transfer" value="{{@$approval_amount_transfer}}" required="" >
+                                                        </div>
                                                     </div>
                                                 </div>
 
-
-
-                            <div class="col-md-12 mt-2 text-left">
 
                                   @IF(!empty(@$sRow->pay_with_other_bill))
 
-                                                <h5 class="font-size-14">ชำระพร้อมบิลอื่น </h5>
+
+                                  <div class="col-md-12 mt-2 mb-2 text-left">
+                                        <div class="row form-group " >
+                                            <div class="col-md-6 text-left">
+                                                <h5 class="font-size-14 ">ชำระพร้อมบิลอื่น </h5>
                                                 <input class="form-control" type="text" name=""
-                                                    id="" value="{{@$sRow->pay_with_other_bill_note}}" >
-                                                <br>
-                                                <h5 class="font-size-14">ชำระร่วม </h5>
-                                                <input class="form-control" type="text" name="" id="" value="{{@$sRow->pay_with_other_bill_note}}" >
-                                  @ENDIF                 
+                                        id="" value="{{@$sRow->pay_with_other_bill_note}}" readonly="" >
+                                            </div>
+                                            <div class="col-md-6 text-left">
+                                                <h5 class="font-size-14  ">ชำระร่วม </h5>
+                                                <input class="form-control" type="text" name="" id="" value="{{@$sRow->pay_with_other_bill_note}}" readonly="" >
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                  @ENDIF           
+
+                     <div class="col-md-12 mt-2 text-left">      
 
                             @if(@$slip)
                             @php 
                             @$i = 1
                             @endphp
                                 @foreach(@$slip AS $r)
-                                    <br><h5>Slip {{@$i}} </h5>
-                                            @if (!empty(@$r->file))
-                                                <img src="{{ $r->url }}/{{ @$r->file }}"
-                                                            class="img-fluid" alt="Responsive image">
-                                            @ELSE
-                                                <img src="{{ asset('local/public/images/example_img.png') }}"
-                                                            class="img-fluid" alt="Responsive image">
-                                            @ENDIF
+                                    <hr>
+                                       <div class="col-md-12 mt-2 mb-2 text-left ">
+                                                <div class="row form-group " >
+                                                    <div class="col-md-6 text-left">
+                                                      <h5 class="font-size-14 required_star_red ">Slip {{@$i}} : วันที่เวลาที่โอนในสลิป </h5>
+                                                    </div>
+                                                    <div class="col-md-6 text-left">
+                                                        <input type="hidden" name="id[]" value="{{@$r->id}}">
+                                                        <input class="form-control transfer_bill_date " name="transfer_bill_date[]" type="text" value="{{@$r->transfer_bill_date?@$r->transfer_bill_date:NULL}}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        @if (!empty(@$r->file))
+                                            <img src="{{ $r->url }}/{{ @$r->file }}"
+                                                        class="img-fluid" alt="Responsive image">
+                                        @ELSE
+                                            <img src="{{ asset('local/public/images/example_img.png') }}"
+                                                        class="img-fluid" alt="Responsive image">
+                                        @ENDIF
 
                                         @IF($i==2)
                                                 @IF(!empty(@$sRow->note_fullpayonetime_02))
@@ -215,11 +262,10 @@
                                 @endforeach
                             @endif
                                                        
-                                                </div>
+                                       </div>
 
-                                                </div>
+                                  </div>
 
-                                             
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -227,6 +273,8 @@
                                                     <button type="submit" type="submit" name="approved" value='approved'
                                                         class="btn btn-primary">อนุมัติ</button>
                                                 </div>
+                                        
+
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
@@ -262,19 +310,26 @@
                                                         </div>
                                                     </div>
 
+                                                    <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
+
                                                     @if (!empty(@$slip[0]->file))
-                                                        <img src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}"
+                                                        <center><img id="imgAvatar_01" src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}"
                                                             class="img-fluid" alt="Responsive image">
                                                     @ELSE
-                                                        <img src="{{ asset('local/public/images/example_img.png') }}"
-                                                            class="img-fluid" alt="Responsive image">
+                                                      <center><img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
                                                     @ENDIF
+
+                                                    <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" required="" >
+
+
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">Close</button>
-                                                    <button type="submit" type="submit" name="no_approved"
+                                                     
+                                                       <button type="submit" type="submit" name="no_approved"
                                                         value='no_approved' class="btn btn-primary">อัพโหลดสลิปใหม่</button>
+
+                                                        <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
                                                 </div>
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
@@ -307,7 +362,7 @@
     <script src="{{ URL::asset('backend/js/pages/lightbox.init.js') }}"></script>
 
 <script>
-var id = "{{@$sRow->id}}";
+var id = "{{@$sRow->id}}"; // alert(id);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -321,12 +376,12 @@ $(function() {
         // scrollY: ''+($(window).height()-370)+'px',
         // iDisplayLength: 25,
         ajax: {
-                        url: '{{ route('backend.po_approve.datatable') }}',
-                        data :{
-                              id:id,
-                            },
-                          method: 'POST',
-                        },
+            url: '{{ route('backend.po_approve_edit.datatable') }}',
+            data :{
+                  id:id,
+                },
+              method: 'POST',
+            },
             
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
@@ -334,11 +389,25 @@ $(function() {
             {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
             {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
             {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-            {data: 'note_fullpayonetime', title :'<center>ยอดโอน </center>', className: 'text-center'},
-            {data: 'transfer_money_datetime', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
-            {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
-            
-            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center',render: function(d) {
+              if(d){
+                  return d;
+              }else{
+                  return '-';
+              }
+            }}, 
+            // {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            // {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+            {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
+              if(d){
+                  return d;
+              }else{
+                  return '-';
+              }
+            }}, 
+
+            {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
               if(d=='true'){
                   return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
@@ -356,6 +425,96 @@ $(function() {
     });
 
 });
+</script>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" />
+
+ <script>
+      $('.transfer_bill_date').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'Y-m-d H:i',
+          formatTime: 'H:i',
+          formatDate: 'Y-m-d H:i',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          // minDate: 0,
+      });
+
+             function showPreview_01(ele)
+                    {
+                        $('#image01').attr('src', ele.value); // for IE
+                        if (ele.files && ele.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.span_file_slip').show();
+                                $('#imgAvatar_01').show();
+                                $('#imgAvatar_01').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(ele.files[0]);
+                    }
+                }
+
+                function showPreview_02(ele)
+                    {
+                        $('#image02').attr('src', ele.value); // for IE
+                        if (ele.files && ele.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.span_file_slip_02').show();
+                                $('#imgAvatar_02').show();
+                                $('#imgAvatar_02').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(ele.files[0]);
+                    }
+                }
+
+                function showPreview_03(ele)
+                    {
+                        $('#image03').attr('src', ele.value); // for IE
+                        if (ele.files && ele.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('.span_file_slip_03').show();
+                                $('#imgAvatar_03').show();
+                                $('#imgAvatar_03').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(ele.files[0]);
+                    }
+                }
+
+
+
+        $(document).on('click', '.btnDelSlip', function(event) {
+                  var id = $(this).data('id');
+                  if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
+                      return false;
+                  }else{
+
+                      $.ajax({
+                          type: "POST",
+                          url: " {{ url('backend/ajaxDelFileSlip_04') }} ",
+                           data:{ _token: '{{csrf_token()}}',id:id },
+                          success: function(data){
+                            console.log(data);
+                            location.reload();
+                          }
+                      });
+
+                  }
+
+        });
+
 </script>
 
 @endsection
