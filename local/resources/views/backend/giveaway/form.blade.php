@@ -295,20 +295,50 @@
                   </div>
                 </div>
 
+                <div class="form-group row">
+                  <label for="priority" class="col-md-3 col-form-label">Priority : </label>
+                  <div class="col-md-8">
+                    <select name="priority" class="form-control select2-templating "  >
+                            <option value="0" {{ (@$sRow->priority==0)?'selected':'' }} >0</option>
+                            <option value="1" {{ (@$sRow->priority==1)?'selected':'' }} >1</option>
+                            <option value="2" {{ (@$sRow->priority==2)?'selected':'' }} >2</option>
+                            <option value="3" {{ (@$sRow->priority==3)?'selected':'' }} >3</option>
+                            <option value="4" {{ (@$sRow->priority==4)?'selected':'' }} >4</option>
+                            <option value="5" {{ (@$sRow->priority==5)?'selected':'' }} >5</option>
+                            <option value="6" {{ (@$sRow->priority==6)?'selected':'' }} >6</option>
+                            <option value="7" {{ (@$sRow->priority==7)?'selected':'' }} >7</option>
+                            <option value="8" {{ (@$sRow->priority==8)?'selected':'' }} >8</option>
+                            <option value="9" {{ (@$sRow->priority==9)?'selected':'' }} >9</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                 <div class="form-group row">
+                    <label class="col-md-3 col-form-label">พิจารณาโปรอื่นหรือไม่</label>
+                    <div class="col-md-8 mt-2">
+                      <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="another_pro" name="another_pro" value="1" {{ ( @$sRow->another_pro=='1')?'checked':'' }}>
+                          <label class="custom-control-label" for="another_pro"> Y / N </label>
+                      </div>
+                    </div>
+                </div>
+
 
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label">สถานะ :</label>
                     <div class="col-md-9 mt-2">
                       <div class="custom-control custom-switch">
-                      	@if( empty($sRow) )
-                      		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
-                      	@else
-                      		<input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
-						@endif
+                        @if( empty($sRow) )
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" checked >
+                        @else
+                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
+                        @endif
                           <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
                       </div>
                     </div>
                 </div>
+
 
 
   

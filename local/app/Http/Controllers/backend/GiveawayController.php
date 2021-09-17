@@ -128,18 +128,18 @@ class GiveawayController extends Controller
           $sRow->giveaway_option_id_fk    = request('giveaway_option_id_fk');
           $sRow->giveaway_voucher    = request('giveaway_voucher');
           $sRow->action_user    = \Auth::user()->id ;
-
           $sRow->minimum_package_purchased    = request('minimum_package_purchased');
           $sRow->reward_qualify_purchased    = request('reward_qualify_purchased');
           $sRow->keep_personal_quality    = request('keep_personal_quality');
           $sRow->maintain_travel_feature    = request('maintain_travel_feature');
           $sRow->aistockist    = request('aistockist');
           $sRow->agency    = request('agency');
-
           $sRow->orders_type_id    = $Orders_type ;
 
+          $sRow->priority    = request('priority');
+          $sRow->another_pro    = request('another_pro')?request('another_pro'):0;
+
           $sRow->status    = request('status')?request('status'):0;
-                    
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
