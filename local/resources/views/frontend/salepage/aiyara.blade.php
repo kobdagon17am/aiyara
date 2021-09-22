@@ -30,10 +30,10 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center">
-                <img src="{{ asset('frontend/salepage/aiyara/01.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/01.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/02.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/02.jpg') }}" class="img-fluid" alt="">
             </div>
 
 
@@ -53,27 +53,27 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/04.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/04.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/05.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/05.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/06.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/06.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/07.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/07.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/08.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/08.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/09.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/09.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -92,19 +92,19 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/11.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/11.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/12.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/12.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/13.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/13.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/14.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/14.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -124,10 +124,10 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/16.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/16.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/17.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/17.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -147,11 +147,11 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/19.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/19.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/20.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/20.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -171,7 +171,7 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/22.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/22.jpg') }}" class="img-fluid" alt="">
             </div>
         </div>
 
@@ -191,13 +191,13 @@
 
             <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/24.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/24.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/25.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/25.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/aiyara/26.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara/26.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>

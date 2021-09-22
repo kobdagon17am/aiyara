@@ -568,21 +568,7 @@
 
                                  </div>
 
-                                 <div class="row m-t-5">
-                                     <div class="col-sm-12">
 
-                                         <a type="button" href="{{ route('product-list', ['type' => $bill['type']]) }}"
-                                             class="btn btn-warning waves-effect waves-light m-t-20"><i
-                                                 class="fa fa-shopping-cart"></i> เลือกสินค้าเพิ่มเติม</a>
-
-
-
-                                         {{-- <button type="button" onclick="submit_address()"
-                                             class="btn btn-primary waves-effect waves-light m-t-20 f-right"><i
-                                                 class="fa fa-credit-card-alt"></i> ชำระเงิน</button> --}}
-
-                                     </div>
-                                 </div>
                              </div>
                          </div>
 
@@ -625,9 +611,9 @@
                              </tr>
                              <tr>
                                  <td colspan="2">
-                                     <label class="label label-inverse-warning">
-                                         <font id="shipping_detail" style="color: #000"></font>
-                                     </label>
+
+                                         <div id="shipping_detail"></div>
+
 
                              </tr>
 
@@ -683,44 +669,42 @@
 
                      </table>
                      <hr m-t-2>
-                     @if ($check_giveaway['status'] == 'success' and $check_giveaway['s_data'])
+
+                     @if ($check_giveaway)
                          <h4 class="text-danger">Promotion Free </h4>
-
-
                          <table class="table table-responsive m-b-0">
-                             @foreach ($check_giveaway['s_data'] as $giveaway_value)
-                                 <?php
-                                 //dd($giveaway_value);
-                                 ?>
+
+                          @foreach ($check_giveaway as $check_giveaway_value)
+
                                  <tr class="table-danger">
-                                     <td><strong>{{ $giveaway_value['name'] }} x
-                                             [{{ $giveaway_value['count_free'] }}]</strong></td>
+                                     <td><strong>{{ $check_giveaway_value['rs']['name'] }} x
+                                             [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
                                      <td>รวม</td>
                                  </tr>
-                                 @if ($giveaway_value['type'] == 1)
+                                 @if ($check_giveaway_value['rs']['type'] == 1)
                                      {{-- Product --}}
-                                     @foreach ($giveaway_value['product'] as $product_value)
+                                     @foreach ($check_giveaway_value['rs']['product'] as $product_value)
                                          <tr>
                                              <td><strong style="font-size: 12px">{{ $product_value->product_name }}
                                                      [{{ $product_value->product_amt }}] x
-                                                     [{{ $giveaway_value['count_free'] }}]</strong></td>
+                                                     [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
                                              <td align="right"><strong>
-                                                     {{ $product_value->product_amt * $giveaway_value['count_free'] }}
+                                                     {{ $product_value->product_amt * $check_giveaway_value['rs']['count_free'] }}
                                                      {{ $product_value->product_unit }}</strong></td>
                                          </tr>
                                      @endforeach
                                  @else
                                      {{-- GiftVoucher --}}
                                      <tr>
-                                         <td><strong style="font-size: 12px">GiftVoucher {{ $giveaway_value['gv'] }} x
-                                                 [{{ $giveaway_value['count_free'] }}]</strong></td>
-                                         <?php $gv_total = $giveaway_value['gv'] *
-                                         $giveaway_value['count_free']; ?>
+                                         <td><strong style="font-size: 12px">GiftVoucher {{ $check_giveaway_value['rs']['gv'] }} x
+                                                 [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
+                                         <?php $gv_total = $check_giveaway_value['rs']['gv'] *
+                                         $check_giveaway_value['rs']['count_free']; ?>
                                          <td align="right"><strong> {{ number_format($gv_total) }} GV</strong></td>
                                      </tr>
                                  @endif
-                             @endforeach
 
+                            @endforeach
                          </table>
                      @endif
                      @if($bill['type'] != 6)
@@ -917,7 +901,7 @@
                  },
                  success: function(data) {
 
-                     document.getElementById('shipping_detail').textContent = data['data']['shipping_name'];
+                     document.getElementById('shipping_detail').innerHTML = '<label class="label label-inverse-warning">'+data['data']['shipping_name']+'</label>';
 
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
@@ -963,6 +947,7 @@
                  document.getElementById("sent_address_check").checked = true;
 
                  if(provinces_id == ''){
+                  document.getElementById('shipping_detail').innerHTML = '';
                    document.getElementById("btn_pay").style.display = 'none';
                   }else{
                     document.getElementById("btn_pay").style.display = 'block';
@@ -978,7 +963,7 @@
                  $('.sent_address_other').prop('required', false);
                  document.getElementById("html_shipping_premium").style.display = 'block';
                  if(provinces_id == ''){
-
+                  document.getElementById('shipping_detail').innerHTML = '';
                   document.getElementById("btn_pay").style.display = 'none';
                  }else{
                   document.getElementById("btn_pay").style.display = 'block';
@@ -998,6 +983,7 @@
                  document.getElementById("html_shipping_premium").style.display = 'none';
                  document.getElementById("checkbox13").checked = false;
                  document.getElementById("btn_pay").style.display = 'block';
+                 document.getElementById('shipping_detail').innerHTML = '<label class="label label-inverse-warning">รับที่สาขา</label>';
 
              } else if (type_sent == 'sent_other') {
                  document.getElementById("sent_address").style.display = 'none';
@@ -1011,6 +997,10 @@
                  document.getElementById("checkbox13").checked = false;
                  document.getElementById("sent_other").checked = true;
                  document.getElementById("btn_pay").style.display = 'block';
+                 document.getElementById('shipping_detail').innerHTML = '';
+                 var province = $('#province').val();
+                 check_shipping(province, type_sent);
+
 
              } else {
 

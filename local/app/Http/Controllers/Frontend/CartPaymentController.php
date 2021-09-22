@@ -110,8 +110,8 @@ class CartPaymentController extends Controller
             $price_total_type5 = null;
         }
 
-        $customer_pv = Auth::guard('c_user')->user()->pv;
-        $check_giveaway = GiveawayController::check_giveaway($business_location_id, $type, $customer_pv, $pv_total);
+        $customer_username = Auth::guard('c_user')->user()->user_name;
+        $check_giveaway = GiveawayController::check_giveaway($type,$customer_username, $pv_total);
 
         $bill = array(
             'vat' => $vat,

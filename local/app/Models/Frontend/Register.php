@@ -17,14 +17,16 @@ class Register extends Model
             $introduce_type = '';
         }
 
-        $id =DB::table('customers')
+        $customer_code_id =DB::table('customer_code')
         ->select('id')
         ->orderby('id','DESC')
-        ->limit('1')
-        ->get();
-        $new_id = $id[0]->id+1;
+        //->limit('1')
+        ->first();
 
-        $username ="A".$new_id;
+        $customer_code_id =  $customer_code_id->id+1;
+        $c_code = 'A'.$customer_code_id;
+
+        $username = $c_code;
 
         $alphabet = 'abcdefghjkmnopqrstuvwxyz23456789';
         $pass = array(); //remember to declare $pass as an array
@@ -200,14 +202,7 @@ class Register extends Model
                 'customer_id'=>$id];
                 DB::table('customers_address_card')->insert($customer_address_card);
 
-                $customer_code_id =DB::table('customer_code')
-                ->select('id')
-                ->orderby('id','DESC')
-						//->limit('1')
-                ->first();
 
-                $customer_code_id =  $customer_code_id->id+1;
-                $c_code = 'A'.$customer_code_id;
 
                 $customer_code = [
                    'customers_id_fk'=>$id,
