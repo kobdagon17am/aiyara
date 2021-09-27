@@ -647,6 +647,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+
                                         @foreach ($order_items as $index => $value)
 
 
@@ -677,6 +678,8 @@
                                                     @endif
 
                                                     @if ($value->type_product == 'giveaway')
+
+
                                                         <ul>
                                                             <?php
                                                             $location_id = Auth::guard('c_user')->user()->business_location_id;

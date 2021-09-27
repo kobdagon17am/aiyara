@@ -263,14 +263,11 @@
 							<li class="user-profile header-notification">
 								<a href="#!">
 									@if(Auth::guard('c_user')->user()->profile_img)
-
 									<img class="img-radius" width="100" src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" alt="User-Profile-Image">
 									@else
-
 									<img class="img-radius" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
 									@endif
-
-									<span>{{ Auth::guard('c_user')->user()->first_name }}</span>
+									<span>{{ Auth::guard('c_user')->user()->first_name }} ({{ Auth::guard('c_user')->user()->user_name }})</span>
 									<i class="ti-angle-down"></i>
 								</a>
 								<ul class="show-notification profile-notification">

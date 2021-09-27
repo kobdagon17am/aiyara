@@ -26,6 +26,8 @@ class PaymentAddProduct extends Model
                 $total_price = $value['price'] * $value['quantity'];
 
                 $insert_db_products_list->code_order = $code_order;
+
+
                 $insert_db_products_list->frontstore_id_fk = $order_id;
                 $insert_db_products_list->customers_id_fk = $customer_id;
                 $insert_db_products_list->distribution_channel_id_fk = 2;
@@ -113,6 +115,7 @@ class PaymentAddProduct extends Model
                                             'order_id_fk' => $order_id,
                                             'product_list_id_fk' => $insert_order_products_list_type_giveaway->id,
                                             'giveaway_id_fk' => $value['rs']['giveaway_id'],
+                                            'code_order' => $code_order,
                                             'product_id_fk' => $giveaway_product->product_id_fk,
                                             'product_name' => $giveaway_product->product_name,
                                             'product_unit_id_fk' => $giveaway_product->unit_id,
@@ -129,6 +132,7 @@ class PaymentAddProduct extends Model
                                         'order_id_fk' => $order_id,
                                         'product_list_id_fk' => $insert_order_products_list_type_giveaway->id,
                                         'product_name' => 'GiftVoucher',
+                                        'code_order' => $code_order,
                                         'giveaway_id_fk' => $value['rs']['giveaway_id'],
                                         'product_amt' => 1,
                                         'gv_free' => $value['rs']['gv'],

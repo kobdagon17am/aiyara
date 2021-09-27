@@ -108,35 +108,36 @@ class CartController extends Controller
     public static function payment_test_type_1()
     {
 
-        // $order_id = '5'; //order_id
-        // $admin_id = '4959'; //admin_id
-        // $distribution_channel = '1';
-        // $resule = PvPayment::PvPayment_type_confirme($order_id,'1','2','customer');
-        // dd($resule);
+        $order_id = '26'; //order_id
+        $admin_id = '4959'; //admin_id
+        $distribution_channel = '1';
+        $resule = PvPayment::PvPayment_type_confirme($order_id,'1','2','customer');
+        dd($resule);
         // if ($resule['status'] == 'success') {
         // }
 
-        $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
+        // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 
-        dd($data);
+        // dd($data);
 
     }
 
     public function add_gif()
     {
-        dd('fail');
-        $user_name = '0001';
-        $gv = '500';
-        $code = 'ABCD';
-        $admin_id = '99';
-        $expri_date = '2021-01-01 23:59:59';
-        $rs = GiftVoucher::add_gift($user_name, $gv, $code, $expri_date, $admin_id);
-        dd($rs);
+        // dd('fail');
+        // $user_name = '0001';
+        // $gv = '500';
+        // $code = 'ABCD';
+        // $admin_id = '99';
+        // $expri_date = '2021-01-01 23:59:59';
+        // $rs = GiftVoucher::add_gift($user_name, $gv, $code, $expri_date, $admin_id);
+        // dd($rs);
 
-        // $order_id = '57';//order_id
-        // $admin_id = '99';//admin_id
-        // $resule = PvPayment::PvPayment_type_confirme($order_id,$admin_id);
-        // dd($resule);
+        $order_id = '57';//order_id
+        $admin_id = '99';//admin_id
+
+        $resule = PvPayment::PvPayment_type_confirme($order_id,$admin_id,$distribution_channel,$action_type);
+        dd($resule);
     }
 
     public function course_register()

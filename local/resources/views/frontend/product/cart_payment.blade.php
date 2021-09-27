@@ -671,15 +671,18 @@
                      <hr m-t-2>
 
                      @if ($check_giveaway)
-                         <h4 class="text-danger">Promotion Free </h4>
-                         <table class="table table-responsive m-b-0">
-
+                     <?php $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
 
-                                 <tr class="table-danger">
+                          @if($check_giveaway_value['status'] == 'success')
+
+                          <h5 class="text-danger">Promotion Free {{ $i++ }}</h4>
+                            <div class="table-responsive p-3">
+                         <table class="table">
+                                 <tr class="table-success">
                                      <td><strong>{{ $check_giveaway_value['rs']['name'] }} x
                                              [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
-                                     <td>รวม</td>
+                                     <td class="text-right">รวม</td>
                                  </tr>
                                  @if ($check_giveaway_value['rs']['type'] == 1)
                                      {{-- Product --}}
@@ -703,9 +706,11 @@
                                          <td align="right"><strong> {{ number_format($gv_total) }} GV</strong></td>
                                      </tr>
                                  @endif
-
+                                </table>
+                            </div>
+                                 @endif
                             @endforeach
-                         </table>
+
                      @endif
                      @if($bill['type'] != 6)
 
@@ -835,9 +840,7 @@
                 document.getElementById('shipping_premium').value = false;
               }
 
-
-
-
+        sent_address('sent_address',address_provinces_id);
 
          //console.log(data_1);
          function check_premium() {
