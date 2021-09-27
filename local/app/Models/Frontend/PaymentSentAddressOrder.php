@@ -12,6 +12,8 @@ class PaymentSentAddressOrder extends Model
     public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv,$quantity)
     {
 
+
+
         try {
             DB::BeginTransaction();
             $insert_db_orders = new Db_Orders();
@@ -147,6 +149,8 @@ class PaymentSentAddressOrder extends Model
                 $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->other_province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
 
+
+
                 if ($data_shipping['data']->shipping_type_id == 1) {
                     $insert_db_orders->shipping_free = 1;
                 }
@@ -175,6 +179,8 @@ class PaymentSentAddressOrder extends Model
                 $insert_db_orders->email = $rs->office_email;
                 $insert_db_orders->branch_id_fk = $rs->receive_location;
                 $insert_db_orders->sentto_branch_id = $rs->receive_location;
+                $insert_db_orders->shipping_cost_detail = 'รับที่สาขา / branch';
+                $insert_db_orders->shipping_cost_id_fk = 5;
 
             } else {
                 $resule = ['status' => 'fail', 'message' => 'Orderstatus Not Type'];
