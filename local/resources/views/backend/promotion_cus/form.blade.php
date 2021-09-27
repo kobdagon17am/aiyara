@@ -107,7 +107,7 @@
                     <div class="col-md-3"></div>
                     
                     <div class="col-md-3">
-                    <label for="" class="col-form-label">นำเข้าไฟล์ Excel (.xlsx) :</label>
+                    <label for="" class="col-form-label">นำเข้าไฟล์ Excel (.xlsx , .csv) :</label>
                     </div>
                     <div class="col-md-4 " style="" >
                     <label for="" class="col-form-label"><span class="dLexam" style="cursor: pointer;">[Download ตัวอย่างโครงสร้างไฟล์เพื่อใช้นำเข้า]</span></label>
@@ -119,7 +119,7 @@
                     
                     <div class="col-md-3"></div>
                     <div class="col-md-3">
-                      <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
+                      <input type="file" accept=".xlsx,.csv" class="form-control" name="fileXLS" required>
                     </div>
                     <div class="col-md-4 " style="" >
                       <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='Import'>

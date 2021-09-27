@@ -57,7 +57,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> Packing ใบเบิก  </h4>
+            <h4 class="mb-0 font-size-18  "> Packing ใบเบิก  </h4>    
+            <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล + packing list) </span>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -108,7 +109,7 @@
 
             {{ csrf_field() }}
          
-                <div class="row">
+      <!--           <div class="row">
                   <div class="col-8">
 
                   	<div class="form-group row">
@@ -119,7 +120,7 @@
                   </div>
 
                 </div>
-
+ -->
 
                   <div class="row">
                     <div class="col-12 d-flex ">

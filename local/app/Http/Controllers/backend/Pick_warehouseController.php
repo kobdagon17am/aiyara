@@ -212,7 +212,7 @@ where db_pay_requisition_001.id =$id ");
 
       return View('backend.pick_warehouse.qr')->with(
         array(
-           'packing_id'=>$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
+           'packing_id'=>@$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
            'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
         ) );
       // return View('backend.pick_warehouse.qr');

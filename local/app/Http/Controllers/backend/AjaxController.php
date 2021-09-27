@@ -2027,7 +2027,7 @@ if($frontstore[0]->check_press_save==2){
             WHERE db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' AND promotions.status=1
             AND date(db_promotion_code.pro_edate) >= curdate() ;
           ");
-        return $rs[0]->promotion_id_fk;
+        return @$rs[0]->promotion_id_fk;
     }
 
 
@@ -2037,18 +2037,24 @@ if($frontstore[0]->check_press_save==2){
         // return $request->txtSearchPro;
         // $customers_id_fk = $request->customers_id_fk;
 
+        $msg = [];
+
         $p1 = DB::select("
             select promotions.id from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE 
-            db_promotion_cus.promotion_code='".$request->txtSearchPro."' 
+          WHERE 
+           db_promotion_cus.promotion_code='".$request->txtSearchPro."' 
              ;
         ");
 
         if(empty($p1)){
-            return "InActive";
+            $msg[] = "ไม่พบรหัสคูปองที่ค้นในฐานข้อมูล โปรดตรวจสอบอีกครั้ง";
+            // return "InActive";
+            return $msg;
         }
+
+        // return $msg;
 
         // return $p1;
 
@@ -2065,29 +2071,44 @@ if($frontstore[0]->check_press_save==2){
         // return $sPromotions->minimum_package_purchased; // Package  ขั้นต่ำที่ซื้อได้
         if($sPromotions->minimum_package_purchased){
             $a1[0] = $sPromotions->minimum_package_purchased; 
+            // $msg += ['cause' => "ไม่เข้าเงื่อนไข: Package  ขั้นต่ำที่ซื้อได้"];
+            $msg[] = "ไม่เข้าเงื่อนไข: Package  ขั้นต่ำที่ซื้อได้";
         }
+        
         // return $sPromotions->reward_qualify_purchased; //คุณวุฒิ reward ที่ซื้อได้
         if($sPromotions->reward_qualify_purchased){
             $a1[1] = $sPromotions->reward_qualify_purchased; 
+            $msg[] = "ไม่เข้าเงื่อนไข: คุณวุฒิ reward ที่ซื้อได้ ";
         }
+        
         // return $sPromotions->keep_personal_quality; //รักษาคุณสมบัติส่วนตัว
         if($sPromotions->keep_personal_quality){
             $a1[2] = 1; 
+            $msg[] = "ไม่เข้าเงื่อนไข: รักษาคุณสมบัติส่วนตัว ";
         }
+        
         // return $sPromotions->maintain_travel_feature; //รักษาคุณสมบัติท่องเที่ยว
         if($sPromotions->maintain_travel_feature){
             $a1[3] = 1; 
+            $msg[] = "ไม่เข้าเงื่อนไข: รักษาคุณสมบัติท่องเที่ยว ";
         }
+        
         // return $sPromotions->aistockist; //aistockist
         if($sPromotions->aistockist){
             $a1[4] = 1; 
+            $msg[] = "ไม่เข้าเงื่อนไข: aistockist ";
         }
+        
         // return $sPromotions->agency; //agency
         if($sPromotions->agency){
             $a1[5] = 1; 
+            $msg[] = "ไม่เข้าเงื่อนไข: agency ";
         }
 
         // return $a1;
+
+        // return $msg;
+
        
         // customer
         $a2=array(0,0,0,0,0,0);
@@ -2171,7 +2192,6 @@ if($frontstore[0]->check_press_save==2){
             AND date(db_promotion_code.pro_edate) >= curdate()
             AND curdate() >= date(promotions.show_startdate)
             AND date(promotions.show_enddate) >= curdate()
-          
 
              ;
 
@@ -2183,7 +2203,8 @@ if($frontstore[0]->check_press_save==2){
         // dd();
 
         if( count($promotion_cus) == 0 || $arraysAreEqual == 0 ){
-            return "InActive";
+            $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว หรือ ถูกใช้ไปแล้ว ';
+            return $msg;
         }else{
 
             // return @$promotion_cus[0]->promotion_code_id_fk;
@@ -3523,10 +3544,10 @@ if($frontstore[0]->check_press_save==2){
               $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." ";
           }
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() $wh AND approve_status in (2,4) AND status_sent_money <> 1
+          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() $wh AND approve_status in (2,4) AND status_sent_money <> 1 AND code_order <> ''
               AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
-          return $r0;
+          // return $r0;
 
           if($r0){
 
@@ -4070,9 +4091,10 @@ if($frontstore[0]->check_press_save==2){
                 $customers = DB::table('customers')
                 // ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->where('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->take(15)
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                ->take(1000)
                 ->orderBy('first_name', 'asc')
+                ->orderBy('last_name', 'asc')
                 ->get();
             }
             $json_result = [];

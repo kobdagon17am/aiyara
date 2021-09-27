@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -300,7 +300,7 @@
         <div class="divTable">
           <div class="divTableBody">
             <div class="divTableRow">
-
+<!-- btnViewCondition -->
               <div class="divTableCell" style="text-align: right;width: 40%;" >&nbsp; </div>
               <div class="divTableCell" style="text-align: right;" >
                 <button type="button" class="btn btn-success btnViewCondition " data-id="ViewAll" ><i class="bx bx-search font-size-18 align-middle"></i> ดูทั้งหมด</button>
@@ -326,53 +326,10 @@
             <div class="card">
               <div class="card-body">
                 
-                <div class="table-responsive">
-                  <table class="table table-striped mb-0">
-                    
-                    <thead>
-                      <tr style="background-color: #f2f2f2;text-align: right;">
-                        <th><span style="color:red">*** ตารางนี้อยู่ระหว่างการปรับปรุง ***</span></th>
-                        <th>รายการ</th>
-                        <th>PV</th>
-                        <th>จำนวนเงิน</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style="color: red" >
-                        <th scope="row">สถานะ > รอตรวจสอบ / รอชำระ /<br> รออนุมัติ</th>
-                        <td style="text-align: right;">{{@$approve_status_1}}</td>
-                        <td style="text-align: right;">{{@$pv_1}}</td>
-                        <td style="text-align: right;">{{@$sum_price_1}}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">สถานะ สำเร็จ</th>
-                        <td style="text-align: right;">{{@$approve_status_9}}</td>
-                        <td style="text-align: right;">{{@$pv_9}}</td>
-                        <td style="text-align: right;">{{@$sum_price_9}}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">สถานะ ยกเลิก</th>
-                        <td style="text-align: right;">{{@$approve_status_5}}</td>
-                        <td style="text-align: right;">{{@$pv_5}}</td>
-                        <td style="text-align: right;">{{@$sum_price_5}}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">สถานะ อื่นๆ <br>(ยกเว้น 3 สถานะข้างบน) </th>
-                        <td style="text-align: right;">{{@$approve_status_88}}</td>
-                        <td style="text-align: right;">{{@$pv_88}}</td>
-                        <td style="text-align: right;">{{@$sum_price_88}}</td>
-                      </tr>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+                <div class="div_PV_Amount"></div>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                      <tr>
-                        <th scope="row">รวมทั้งหมด</th>
-                        <td style="text-align: right;">{{@$approve_status_total}}</td>
-                        <td style="text-align: right;">{{@$pv_total}}</td>
-                        <td style="text-align: right;">{{@$sum_price_total}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                
               </div>
             </div>
           </div>
@@ -382,10 +339,8 @@
               <div class="card">
                 <div class="card-body">
                   
-                  <!-- display: none; -->
-                  <div class="div_SumCostActionUser" style="" >
-                  </div>
-
+                  <div class="div_SumCostActionUser"></div>
+                
                 </div>
               </div>
             </div>
@@ -512,15 +467,12 @@ $(function() {
             }},
             {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
             {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
-
               if(d>0){
                 return d;
               }else{
                 return '';
               }
-
             }},
-
             {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
                   return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
             }},
@@ -548,12 +500,15 @@ $(function() {
           } ],
        rowCallback: function(nRow, aData, dataIndex){
 
+           // var info = $(this).DataTable().page.info();
+           // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
             if(aData['total_price']){ 
               $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
 
            if(aData['type']!='0'){
-              $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
+              $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
               $("td:eq(6)", nRow).html('');
               $("td:eq(8)", nRow).html('');
             }
@@ -564,12 +519,11 @@ $(function() {
 
             $("td:eq(4)", nRow).html(aData['customer_name']);
 
-            var info = $(this).DataTable().page.info();
-            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+           
 
             if(aData['approve_status']==5){
 
-              $('td:last-child', nRow).html('');
+              $('td:last-child', nRow).html('-');
 
             }else{
 
@@ -627,16 +581,16 @@ $(function() {
             }
 
               if(aData['approve_status']==0){
-                $("td:eq(11)", nRow).html('');
+                $("td:eq(11)", nRow).html('-');
               }
 
               if(aData['approve_status']==5){
                 $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
-                $("td:eq(10)", nRow).html('');
+                $("td:eq(10)", nRow).html('-');
               }
               if(aData['type']=="เติม Ai-Cash"){
-                $("td:eq(11)", nRow).html('');
-                $("td:eq(12)", nRow).html('');
+                $("td:eq(11)", nRow).html('-');
+                $("td:eq(12)", nRow).html('-');
               }
 
         }
@@ -725,7 +679,7 @@ $(document).ready(function() {
                                 success:function(data)
                                 { 
                                   console.log(data);
-                                  return false;
+                                  // return false;
                                   
                                       Swal.fire({
                                         type: 'success',
@@ -735,8 +689,9 @@ $(document).ready(function() {
                                       });
 
                                       setTimeout(function () {
-                  											$("#tb_sent_money").load(location.href + " #tb_sent_money");
-                  											$('#data-table').DataTable().clear().draw();
+                  											// $("#tb_sent_money").load(location.href + " #tb_sent_money");
+                  											// $('#data-table').DataTable().clear().draw();
+                                        location.reload();
                                       }, 1000);
                                 }
                               })
@@ -788,8 +743,9 @@ $(document).ready(function() {
                                       });
 
                                       setTimeout(function () {
-											$("#tb_sent_money").load(location.href + " #tb_sent_money");
-											$('#data-table').DataTable().clear().draw();
+                    											// $("#tb_sent_money").load(location.href + " #tb_sent_money");
+                    											// $('#data-table').DataTable().clear().draw();
+                                          location.reload();
                                       }, 1000);
                                 }
                               })
@@ -824,6 +780,9 @@ $(document).ready(function() {
            $(document).on('click','.btnRefresh',function(event){
           		$("input").val('');
           		$("select").select2('destroy').val("").select2();
+              $("select").select2({             
+              placeholder: "Select"               
+              });
       				var today = new Date();
       				var dd = String(today.getDate()).padStart(2, '0');
       				var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -838,45 +797,321 @@ $(document).ready(function() {
     </script>
 
 
+ <script>
+
+   $(document).ready(function() {
+
+            $(document).on('click', '.btnViewCondition', function(event) {
+                  event.preventDefault();
+                  $('#data-table').DataTable().clear();
+                  $(".myloading").show();
+
+                  var startDate = $('#startDate').val();
+                  var endDate = $('#endDate').val();
+                  var purchase_type_id_fk = $('#purchase_type_id_fk').val();
+                  var customer_code = $('#customer_code').val();
+                  var customer_name = $('#customer_name').val();
+                  var invoice_code = $('#invoice_code').val();
+                  var action_user = $('#action_user').val();
+                  var status_sent_money = $('#status_sent_money').val();
+                  var approve_status = $('#approve_status').val();
+
+
+                  var viewcondition = $(this).data('id');
+                  console.log(viewcondition);
+
+                  if(viewcondition=="ViewAll"){
+
+                    $('.btnSearchTotal').trigger('click');
+            
+                  }else{
+              // ###################################
+
+              //viewcondition == ViewBuyNormal || ViewBuyVoucher
+
+                                $('#data-table').DataTable().clear();
+                                $(".myloading").show();
+      
+
+                                  // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                                          var oTable;
+                                          $(function() {
+                                              oTable = $('#data-table').DataTable({
+                                                  processing: true,
+                                                  serverSide: true,
+                                                  scroller: true,
+                                                  scrollCollapse: true,
+                                                  scrollX: true,
+                                                  ordering: true,
+                                                  paging:   true,
+                                                  searching: false,
+                                                  bLengthChange: false ,
+                                                  destroy: true,
+                                                   iDisplayLength: 25,
+                                                  ajax: {
+                                                      url: '{{ route('backend.frontstore.datatable') }}',
+                                                      data :{
+                                                            startDate:startDate,
+                                                            endDate:endDate,
+                                                            purchase_type_id_fk:purchase_type_id_fk,
+                                                            customer_code:customer_code,
+                                                            customer_name:customer_name,
+                                                            invoice_code:invoice_code,
+                                                            action_user:action_user,
+                                                            status_sent_money:status_sent_money,
+                                                            approve_status:approve_status,
+                                                            viewcondition:viewcondition,
+                                                          },
+                                                        method: 'POST',
+                                                      },
+                                                    columns: [
+                                                    {data: 'id', title :'ID', className: 'text-center w15'},
+                                                    {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
+                                                    {data: 'action_user', title :'<center>ผู้สร้าง </center>', className: 'text-center w80'},
+                                                    {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w80 ',render: function(d) {
+                                                      if(d==1){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
+                                                      }else if(d==2){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
+                                                      }else if(d==3){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
+                                                      }else if(d==4){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
+                                                      }else if(d==5){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
+                                                      }else if(d==6){
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
+                                                      }else{ 
+                                                        return '';
+                                                      }
+                                                    }},
+                                                    {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
+                                                    {data: 'total_price',   title :'รวม (บาท)', className: 'text-right ',render: function(d) {
+                                                       if(d){
+                                                        return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
+                                                       }else{
+                                                        return '';
+                                                       }
+                                                    }},
+                                                    {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                                       if(d){
+                                                        return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                                       }else{
+                                                        return '';
+                                                       }
+                                                    }},
+                                                    {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
+                                                    {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
+
+                                                      if(d>0){
+                                                        return d;
+                                                      }else{
+                                                        return '';
+                                                      }
+
+                                                    }},
+
+                                                    {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
+                                                          return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                                    }},
+                                                    {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
+                                                      if(d==2){
+                                                          return '<span style="color:green;">Success</span>';
+                                                      }else if(d==1){
+                                                          return '<span style="color:black;">In Process</span>';
+                                                      }else{
+                                                         return '-';
+                                                      }
+                                                    }},
+
+                                                    {data: 'id',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
+                                                        return '<center>'
+                                                        + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                                                    }},
+                                             
+                                                    {data: 'id', title :'Tools.', className: 'text-center w80'}, 
+                                                ],
+                                                   "columnDefs": [ {
+                                                      // "targets": [0,2,6,7,8,9] ,
+                                                      "targets": [0,11,12] ,
+                                                      "orderable": false
+                                                  } ],
+                                               rowCallback: function(nRow, aData, dataIndex){
+
+                                                   // var info = $(this).DataTable().page.info();
+                                                   // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                                    if(aData['total_price']){ 
+                                                      $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+                                                    }
+
+                                                   if(aData['type']!='0'){
+                                                      $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
+                                                      $("td:eq(6)", nRow).html('');
+                                                      $("td:eq(8)", nRow).html('');
+                                                    }
+
+                                                    if(aData['pay_type']=='ai_cash'){
+                                                      $("td:eq(7)", nRow).html('เติม Ai-Cash');
+                                                    }
+
+                                                    $("td:eq(4)", nRow).html(aData['customer_name']);
+
+                                                   
+
+                                                    if(aData['approve_status']==5){
+
+                                                      $('td:last-child', nRow).html('-');
+
+                                                    }else{
+
+                                                            var sPermission = "<?=\Auth::user()->permission?>";
+                                                            var sU = sessionStorage.getItem("sU");
+                                                            var sD = sessionStorage.getItem("sD");
+                                                            var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                                            var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
+
+                                                            if(sPermission==1){
+                                                              sU = 1;
+                                                              sD = 1;
+                                                              can_cancel_bill = 1;
+                                                              can_cancel_bill_across_day = 1;
+                                                            }
+
+                                                            if(sU!='1'&&sD!='1'){
+                                                                $('td:last-child', nRow).html('-');
+                                                            }else{ 
+
+                                                              if(aData['type']!='0'){ // เติม Ai-Cash
+                                                              }else{
+                                                      
+                                                                  var str_V = '';
+
+                                                                  str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
+
+                                                                  var str_U = '';
+                                                                  if(sU=='1'){
+                                                                    str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                                  }
+                                                                  var str_D = '';
+                                                                  if(sD=='1'){
+                                                                    str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                                  }
+                                                                  if(sU!='1' && sD!='1'){
+                                                                     $('td:last-child', nRow).html('-');
+                                                                  }else{
+
+                                                                       $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                                  }
+
+                                                            }
+
+                                                            if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
+                                                               $('td:last-child', nRow).html('-');
+                                                               $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                                            }
+
+                                                            if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                                                               $("td:eq(9)", nRow).html('Success');
+                                                            }
+                                                       }
+
+                                                    }
+
+                                                      if(aData['approve_status']==0){
+                                                        $("td:eq(11)", nRow).html('');
+                                                      }
+
+                                                      if(aData['approve_status']==5){
+                                                        $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                                                        $("td:eq(10)", nRow).html('');
+                                                      }
+                                                      if(aData['type']=="เติม Ai-Cash"){
+                                                        $("td:eq(11)", nRow).html('-');
+                                                        $("td:eq(12)", nRow).html('-');
+                                                      }
+
+                                                }
+                                            });
+                                            oTable.on( 'draw', function () {
+                                              $('[data-toggle="tooltip"]').tooltip();
+                                            });
+
+                                  // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                                        $.ajax({
+                                          url: " {{ url('backend/getSumCostActionUser') }} ", 
+                                          method: "post",
+                                          data: {
+                                            "_token": "{{ csrf_token() }}", 
+                                            startDate:startDate,
+                                            endDate:endDate,
+                                            purchase_type_id_fk:purchase_type_id_fk,
+                                            customer_code:customer_code,
+                                            customer_name:customer_name,
+                                            invoice_code:invoice_code,
+                                            action_user:action_user,
+                                            status_sent_money:status_sent_money,
+                                            approve_status:approve_status,
+                                            viewcondition:viewcondition,
+                                          },
+                                          success:function(data)
+                                          { 
+                                            // console.log(data);
+                                            $(".div_SumCostActionUser").html(data);
+                                            
+                                          }
+                                        });
+                               // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                        $.ajax({
+                                          url: " {{ url('backend/getPV_Amount') }} ", 
+                                          method: "post",
+                                          data: {
+                                            "_token": "{{ csrf_token() }}", 
+                                            startDate:startDate,
+                                            endDate:endDate,
+                                            purchase_type_id_fk:purchase_type_id_fk,
+                                            customer_code:customer_code,
+                                            customer_name:customer_name,
+                                            invoice_code:invoice_code,
+                                            action_user:action_user,
+                                            status_sent_money:status_sent_money,
+                                            approve_status:approve_status,
+                                            viewcondition:viewcondition,
+                                          },
+                                          success:function(data)
+                                          { 
+                                            console.log(data);
+                                            $(".div_PV_Amount").html(data);
+                                            
+                                          }
+                                        });
+                               // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                              setTimeout(function(){
+                                 $(".myloading").hide();
+                              }, 1500);
+                          });
+
+
+// ###################################
+                  }
+               
+        }); 
+    }); 
+
+
+</script>
  
  <script>
 
    $(document).ready(function() {
 
-         $(document).on('click', '.btnSearchSub', function(event) {
-              var d = $(this).data('attr');
-              var v = $("#"+d).val();
-              // // console.log(d);
-              // // console.log(v);
-              
-              // $("input").val('');
-              // $("select").select2('destroy').val("").select2();
-              // $("#"+d).val(v);
-              // $("#"+d).trigger('change');
-              $('.btnSearchTotal').trigger('click');
+           $(document).on('click', '.btnSearchSub', function(event) {
+                var d = $(this).data('attr');
+                var v = $("#"+d).val();
+                $('.btnSearchTotal').trigger('click');
 
-         });
-
-
-         // $(document).on('click', '.btnSearchDate', function(event) {
-         //      var d = $(this).data('attr');
-         //      var v = $("#"+d).val();
-         //      if(d=="startDate"){
-         //        $("#startDate").val(v);
-         //        if($("#endDate").val() < v){
-         //          $("#endDate").val(v);
-         //        }else{
-                  
-         //        }
-         //      }
-         //      if(d=="endDate"){
-         //        $("#endDate").val(v);
-         //        if($("#startDate").val()==""){
-         //          $("#startDate").val(v);
-         //        }
-         //      }
-         // });
-
+           });
 
             $(document).on('click', '.btnSearchTotal', function(event) {
                   event.preventDefault();
@@ -924,178 +1159,181 @@ $(document).ready(function() {
           		                            },
           		                          method: 'POST',
           		                        },
-          					        columns: [
-                                    {data: 'id', title :'ID', className: 'text-center w15'},
-                                    {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
-                                    {data: 'action_user', title :'<center>ผู้สร้าง </center>', className: 'text-center w80'},
-                                    {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w80 ',render: function(d) {
-                                      if(d==1){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
-                                      }else if(d==2){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
-                                      }else if(d==3){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
-                                      }else if(d==4){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
-                                      }else if(d==5){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
-                                      }else if(d==6){
-                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
-                                      }else{ 
-                                        return '';
+          					          columns: [
+                                      {data: 'id', title :'ID', className: 'text-center w15'},
+                                      {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
+                                      {data: 'action_user', title :'<center>ผู้สร้าง </center>', className: 'text-center w80'},
+                                      {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w80 ',render: function(d) {
+                                        if(d==1){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
+                                        }else if(d==2){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
+                                        }else if(d==3){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
+                                        }else if(d==4){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
+                                        }else if(d==5){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
+                                        }else if(d==6){
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
+                                        }else{ 
+                                          return '';
+                                        }
+                                      }},
+                                      {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
+                                      {data: 'total_price',   title :'รวม (บาท)', className: 'text-right ',render: function(d) {
+                                         if(d){
+                                          return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
+                                         }else{
+                                          return '';
+                                         }
+                                      }},
+                                      {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                         if(d){
+                                          return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                         }else{
+                                          return '';
+                                         }
+                                      }},
+                                      {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
+                                      {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
+
+                                        if(d>0){
+                                          return d;
+                                        }else{
+                                          return '';
+                                        }
+
+                                      }},
+
+                                      {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
+                                            return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                      }},
+                                      {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
+                                        if(d==2){
+                                            return '<span style="color:green;">Success</span>';
+                                        }else if(d==1){
+                                            return '<span style="color:black;">In Process</span>';
+                                        }else{
+                                           return '-';
+                                        }
+                                      }},
+
+                                      {data: 'id',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
+                                          return '<center>'
+                                          + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                                      }},
+                               
+                                      {data: 'id', title :'Tools.', className: 'text-center w80'}, 
+                                  ],
+                                     "columnDefs": [ {
+                                        // "targets": [0,2,6,7,8,9] ,
+                                        "targets": [0,11,12] ,
+                                        "orderable": false
+                                    } ],
+                                 rowCallback: function(nRow, aData, dataIndex){
+
+                                     // var info = $(this).DataTable().page.info();
+                                     // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                                      if(aData['total_price']){ 
+                                        $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
                                       }
-                                    }},
-                                    {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-                                    {data: 'total_price',   title :'รวม (บาท)', className: 'text-right ',render: function(d) {
-                                       if(d){
-                                        return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
-                                       }else{
-                                        return '';
-                                       }
-                                    }},
-                                    {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                                       if(d){
-                                        return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
-                                       }else{
-                                        return '';
-                                       }
-                                    }},
-                                    {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
-                                    {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
 
-                                      if(d>0){
-                                        return d;
-                                      }else{
-                                        return '';
+                                     if(aData['type']!='0'){
+                                        $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
+                                        $("td:eq(6)", nRow).html('');
+                                        $("td:eq(8)", nRow).html('');
                                       }
 
-                                    }},
-
-                                    {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
-                                          return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
-                                    }},
-                                    {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
-                                      if(d==2){
-                                          return '<span style="color:green;">Success</span>';
-                                      }else if(d==1){
-                                          return '<span style="color:black;">In Process</span>';
-                                      }else{
-                                         return '-';
+                                      if(aData['pay_type']=='ai_cash'){
+                                        $("td:eq(7)", nRow).html('เติม Ai-Cash');
                                       }
-                                    }},
 
-                                    {data: 'id',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
-                                        return '<center>'
-                                        + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
-                                    }},
-                             
-                                    {data: 'id', title :'Tools.', className: 'text-center w80'}, 
-                                ],
-                                   "columnDefs": [ {
-                                      // "targets": [0,2,6,7,8,9] ,
-                                      "targets": [0,11,12] ,
-                                      "orderable": false
-                                  } ],
-                               rowCallback: function(nRow, aData, dataIndex){
+                                      $("td:eq(4)", nRow).html(aData['customer_name']);
 
-                                    if(aData['total_price']){ 
-                                      $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-                                    }
-
-                                   if(aData['type']!='0'){
-                                      $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
-                                      $("td:eq(6)", nRow).html('');
-                                      $("td:eq(8)", nRow).html('');
-                                    }
-
-                                    if(aData['pay_type']=='ai_cash'){
-                                      $("td:eq(7)", nRow).html('เติม Ai-Cash');
-                                    }
-
-                                    $("td:eq(4)", nRow).html(aData['customer_name']);
-
-                                    var info = $(this).DataTable().page.info();
-                                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-
-                                    if(aData['approve_status']==5){
-
-                                      $('td:last-child', nRow).html('');
-
-                                    }else{
-
-                                            var sPermission = "<?=\Auth::user()->permission?>";
-                                            var sU = sessionStorage.getItem("sU");
-                                            var sD = sessionStorage.getItem("sD");
-                                            var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
-                                            var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
-
-                                            if(sPermission==1){
-                                              sU = 1;
-                                              sD = 1;
-                                              can_cancel_bill = 1;
-                                              can_cancel_bill_across_day = 1;
-                                            }
-
-                                            if(sU!='1'&&sD!='1'){
-                                                $('td:last-child', nRow).html('-');
-                                            }else{ 
-
-                                              if(aData['type']!='0'){ // เติม Ai-Cash
-                                              }else{
-                                      
-                                                  var str_V = '';
-
-                                                  str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
-
-                                                  var str_U = '';
-                                                  if(sU=='1'){
-                                                    str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                                  }
-                                                  var str_D = '';
-                                                  if(sD=='1'){
-                                                    str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                                                  }
-                                                  if(sU!='1' && sD!='1'){
-                                                     $('td:last-child', nRow).html('-');
-                                                  }else{
-
-                                                       $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                                  }
-
-                                            }
-
-                                            if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
-                                               $('td:last-child', nRow).html('-');
-                                               $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                                            }
-
-                                            if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
-                                               $("td:eq(9)", nRow).html('Success');
-                                            }
-                                       }
-
-                                    }
-
-                                      if(aData['approve_status']==0){
-                                        $("td:eq(11)", nRow).html('');
-                                      }
+                                     
 
                                       if(aData['approve_status']==5){
-                                        $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
-                                        $("td:eq(10)", nRow).html('');
-                                      }
-                                      if(aData['type']=="เติม Ai-Cash"){
-                                        $("td:eq(11)", nRow).html('');
-                                        $("td:eq(12)", nRow).html('');
+
+                                        $('td:last-child', nRow).html('-');
+
+                                      }else{
+
+                                              var sPermission = "<?=\Auth::user()->permission?>";
+                                              var sU = sessionStorage.getItem("sU");
+                                              var sD = sessionStorage.getItem("sD");
+                                              var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                              var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
+
+                                              if(sPermission==1){
+                                                sU = 1;
+                                                sD = 1;
+                                                can_cancel_bill = 1;
+                                                can_cancel_bill_across_day = 1;
+                                              }
+
+                                              if(sU!='1'&&sD!='1'){
+                                                  $('td:last-child', nRow).html('-');
+                                              }else{ 
+
+                                                if(aData['type']!='0'){ // เติม Ai-Cash
+                                                }else{
+                                        
+                                                    var str_V = '';
+
+                                                    str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
+
+                                                    var str_U = '';
+                                                    if(sU=='1'){
+                                                      str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                    }
+                                                    var str_D = '';
+                                                    if(sD=='1'){
+                                                      str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                    }
+                                                    if(sU!='1' && sD!='1'){
+                                                       $('td:last-child', nRow).html('-');
+                                                    }else{
+
+                                                         $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                    }
+
+                                              }
+
+                                              if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
+                                                 $('td:last-child', nRow).html('-');
+                                                 $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                              }
+
+                                              if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                                                 $("td:eq(9)", nRow).html('Success');
+                                              }
+                                         }
+
                                       }
 
-                                }
-                            });
-                    
+                                        if(aData['approve_status']==0){
+                                          $("td:eq(11)", nRow).html('');
+                                        }
+
+                                        if(aData['approve_status']==5){
+                                          $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                                          $("td:eq(10)", nRow).html('');
+                                        }
+                                        if(aData['type']=="เติม Ai-Cash"){
+                                          $("td:eq(11)", nRow).html('-');
+                                          $("td:eq(12)", nRow).html('-');
+                                        }
+
+                                  }
+                              });
+                              oTable.on( 'draw', function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                              });
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
-                    // console.log(invoice_code);
-              
                           $.ajax({
                             url: " {{ url('backend/getSumCostActionUser') }} ", 
                             method: "post",
@@ -1118,7 +1356,30 @@ $(document).ready(function() {
                               
                             }
                           });
-                 
+                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                          $.ajax({
+                            url: " {{ url('backend/getPV_Amount') }} ", 
+                            method: "post",
+                            data: {
+                              "_token": "{{ csrf_token() }}", 
+                              startDate:startDate,
+                              endDate:endDate,
+                              purchase_type_id_fk:purchase_type_id_fk,
+                              customer_code:customer_code,
+                              customer_name:customer_name,
+                              invoice_code:invoice_code,
+                              action_user:action_user,
+                              status_sent_money:status_sent_money,
+                              approve_status:approve_status,
+                            },
+                            success:function(data)
+                            { 
+                              console.log(data);
+                              $(".div_PV_Amount").html(data);
+                              
+                            }
+                          });
+                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){
                    $(".myloading").hide();
@@ -1153,226 +1414,28 @@ $(document).ready(function() {
                 });
 
 
+             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                  $.ajax({
+                    url: " {{ url('backend/getPV_Amount') }} ", 
+                    method: "post",
+                    data: {
+                      "_token": "{{ csrf_token() }}", 
+                    },
+                    success:function(data)
+                    { 
+                      // console.log(data);
+                      $(".div_PV_Amount").html(data);
+                    }
+                  });
+             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
          });
  
 
     </script>
 
- <script>
-
-   $(document).ready(function() {
-
-            $(document).on('click', '.btnViewCondition', function(event) {
-                  event.preventDefault();
-                  $('#data-table').DataTable().clear();
-                  $(".myloading").show();
-                  let ViewCondition = $(this).data('id');
-                  // // console.log(ViewCondition);
-
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-              					var oTable;
-              					$(function() {
-              					    oTable = $('#data-table').DataTable({
-              					        processing: true,
-              					        serverSide: true,
-              					        scroller: true,
-              					        scrollCollapse: true,
-              					        scrollX: true,
-              					        ordering: true,
-              					        paging:   true,
-              					        searching: false,
-              					        bLengthChange: false ,
-              					        destroy: true,
-                                iDisplayLength: 25,
-              					        ajax: {
-              		                        url: '{{ route('backend.frontstore.datatable') }}',
-              		                        data :{
-              		                              ViewCondition:ViewCondition,
-              		                            },
-              		                          method: 'POST',
-              		                        },
-              					         columns: [
-                                        {data: 'id', title :'ID', className: 'text-center w15'},
-                                        {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
-                                        {data: 'action_user', title :'<center>ผู้สร้าง </center>', className: 'text-center w80'},
-                                        {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w80 ',render: function(d) {
-                                          if(d==1){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
-                                          }else if(d==2){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
-                                          }else if(d==3){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
-                                          }else if(d==4){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
-                                          }else if(d==5){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
-                                          }else if(d==6){
-                                            return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
-                                          }else{ 
-                                            return '';
-                                          }
-                                        }},
-                                        {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-                                        {data: 'total_price',   title :'รวม (บาท)', className: 'text-right ',render: function(d) {
-                                           if(d){
-                                            return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
-                                           }else{
-                                            return '';
-                                           }
-                                        }},
-                                        {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                                           if(d){
-                                            return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
-                                           }else{
-                                            return '';
-                                           }
-                                        }},
-                                        {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
-                                        {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
-
-                                          if(d>0){
-                                            return d;
-                                          }else{
-                                            return '';
-                                          }
-
-                                        }},
-
-                                        {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
-                                              return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
-                                        }},
-                                        {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
-                                          if(d==2){
-                                              return '<span style="color:green;">Success</span>';
-                                          }else if(d==1){
-                                              return '<span style="color:black;">In Process</span>';
-                                          }else{
-                                             return '-';
-                                          }
-                                        }},
-
-                                        {data: 'id',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
-                                            return '<center>'
-                                            + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
-                                        }},
-                                 
-                                        {data: 'id', title :'Tools.', className: 'text-center w80'}, 
-                                    ],
-                                       "columnDefs": [ {
-                                          // "targets": [0,2,6,7,8,9] ,
-                                          "targets": [0,11,12] ,
-                                          "orderable": false
-                                      } ],
-                                   rowCallback: function(nRow, aData, dataIndex){
-
-                                        if(aData['total_price']){ 
-                                          $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-                                        }
-
-                                       if(aData['type']!='0'){
-                                          $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16"> <i class="fas fa-wallet"></i> </span>');
-                                          $("td:eq(6)", nRow).html('');
-                                          $("td:eq(8)", nRow).html('');
-                                        }
-
-                                        if(aData['pay_type']=='ai_cash'){
-                                          $("td:eq(7)", nRow).html('เติม Ai-Cash');
-                                        }
-
-                                        $("td:eq(4)", nRow).html(aData['customer_name']);
-
-                                        var info = $(this).DataTable().page.info();
-                                        $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-
-                                        if(aData['approve_status']==5){
-
-                                          $('td:last-child', nRow).html('');
-
-                                        }else{
-
-                                                var sPermission = "<?=\Auth::user()->permission?>";
-                                                var sU = sessionStorage.getItem("sU");
-                                                var sD = sessionStorage.getItem("sD");
-                                                var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
-                                                var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
-
-                                                if(sPermission==1){
-                                                  sU = 1;
-                                                  sD = 1;
-                                                  can_cancel_bill = 1;
-                                                  can_cancel_bill_across_day = 1;
-                                                }
-
-                                                if(sU!='1'&&sD!='1'){
-                                                    $('td:last-child', nRow).html('-');
-                                                }else{ 
-
-                                                  if(aData['type']!='0'){ // เติม Ai-Cash
-                                                  }else{
-                                          
-                                                      var str_V = '';
-
-                                                      str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
-
-                                                      var str_U = '';
-                                                      if(sU=='1'){
-                                                        str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                                      }
-                                                      var str_D = '';
-                                                      if(sD=='1'){
-                                                        str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                                                      }
-                                                      if(sU!='1' && sD!='1'){
-                                                         $('td:last-child', nRow).html('-');
-                                                      }else{
-
-                                                           $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                                      }
-
-                                                }
-
-                                                if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
-                                                   $('td:last-child', nRow).html('-');
-                                                   $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                                                }
-
-                                                if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
-                                                   $("td:eq(9)", nRow).html('Success');
-                                                }
-                                           }
-
-                                        }
-
-                                          if(aData['approve_status']==0){
-                                            $("td:eq(11)", nRow).html('');
-                                          }
-
-                                          if(aData['approve_status']==5){
-                                            $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
-                                            $("td:eq(10)", nRow).html('');
-                                          }
-                                          if(aData['type']=="เติม Ai-Cash"){
-                                            $("td:eq(11)", nRow).html('');
-                                            $("td:eq(12)", nRow).html('');
-                                          }
-
-                                    }
-                                });
-                                oTable.on( 'draw', function () {
-                                  $('[data-toggle="tooltip"]').tooltip();
-                                });
-
-                                 setTimeout(function(){
-                                    $(".myloading").hide();
-                                    // location.reload();
-                                  }, 3000);
-
-              }); 
-           }); 
-        }); 
-
-
-</script>
 
 
 

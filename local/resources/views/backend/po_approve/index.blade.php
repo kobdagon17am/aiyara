@@ -347,7 +347,11 @@ $(function() {
             ).addClass('input');
 
 
-        }
+            if(aData['price']<=0){ 
+                     $('td:last-child', nRow).html('-');
+                    }
+
+            }
 
     });
 

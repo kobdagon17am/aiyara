@@ -43,43 +43,45 @@ class Pick_warehouse_fifoController extends Controller
       // return "aaa";
       // dd();
       
-      $arr_picking_id = $request->picking_id;
-      $picking = explode(",", $request->picking_id);
+      // $arr_picking_id = $request->picking_id;
+      // $picking = explode(",", $request->picking_id);
 
       // return ($request->picking_id);
       // return ($picking[0]);
-      $picking = explode(",", $picking[0]);
+      // $picking = explode(",", $picking[0]);
 
       // return gettype($picking);
-      // if(gettype($picking)=="array"){
-      //   $picking = implode(",", $picking);
-      // }
+      if(gettype($request->picking_id)=="array"){
+        $picking = implode(",", $request->picking_id);
+      }else{
+        $picking = $request->picking_id;
+      }
       // return ($picking[0]);
       // return gettype($arr_picking_id);
       // return $picking;
       // return count($picking);
 
-      $arr_picking = [];
-      for ($i=0; $i < count($picking) ; $i++) { 
-        $a = "P2".sprintf("%05d",$picking[$i]);
-        array_push($arr_picking,$a);
-      }
-      $arr_picking = array_unique($arr_picking);
-      $pickings = implode(',', $arr_picking);
+      // $arr_picking = [];
+      // for ($i=0; $i < count($picking) ; $i++) { 
+      //   $a = "P2".sprintf("%05d",$picking[$i]);
+      //   array_push($arr_picking,$a);
+      // }
+      // $arr_picking = array_unique($arr_picking);
+      // $pickings = implode(',', $arr_picking);
       // return $pickings;
 
-      $pick_pack_packing_code = implode(',', $arr_picking);
+      // $pick_pack_packing_code = implode(',', $arr_picking);
 
       // return gettype($picking);
-      $picking = array_unique($picking);
-      $row_id = implode(',', $picking);
+      // $picking = array_unique($picking);
+      // $row_id = implode(',', $picking);
       
       // return gettype($row_id);
       // return $arr_picking_id;
       // dd();
       if(isset($request->picking_id)){
 
-          $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in ($arr_picking_id) ; ");
+          $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in ($picking) ; ");
 
           // return $r_db_pick_pack_packing_code;
           // dd();
@@ -233,7 +235,7 @@ class Pick_warehouse_fifoController extends Controller
         DB::select(" CREATE TABLE $temp_db_pick_pack_requisition_code LIKE db_pick_pack_requisition_code ");
         DB::select(" INSERT INTO $temp_db_pick_pack_requisition_code select * from db_pick_pack_requisition_code ");
 
-        DB::select(" INSERT IGNORE INTO $temp_db_pick_pack_requisition_code(pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts) VALUES ('$row_id','".$pickings."',".(\Auth::user()->id).",'".$receipts."') ");
+        DB::select(" INSERT IGNORE INTO $temp_db_pick_pack_requisition_code(pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts) VALUES ('$picking','$picking',".(\Auth::user()->id).",'".$receipts."') ");
         $lastInsertId01 = DB::getPdo()->lastInsertId();
 
         $requisition_code = "P3".sprintf("%05d",$lastInsertId01);
@@ -799,15 +801,18 @@ class Pick_warehouse_fifoController extends Controller
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function Datatable0002FIFO(Request $request){
 
+    // return $request->picking_id;
 
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
+      // $temp_ppp_0023 = "temp_ppp_0023".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
       $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+      $temp_db_pick_pack_packing_code = "db_pick_pack_packing_code".\Auth::user()->id; 
 
 
       $TABLES = DB::select(" SHOW TABLES ");
@@ -843,9 +848,9 @@ class Pick_warehouse_fifoController extends Controller
       $receipt = implode(",",$arr_01);
 
       // return $picking_id;
-
+//  SELECT * from $temp_ppp_0022 WHERE pick_pack_requisition_code_id_fk in($picking_id)  GROUP BY pick_pack_requisition_code_id_fk
       $sTable = DB::select("
-        SELECT * from $temp_ppp_0022 WHERE pick_pack_requisition_code_id_fk in($picking_id)  GROUP BY pick_pack_requisition_code_id_fk
+            SELECT * from $temp_ppp_0022 GROUP BY pick_pack_requisition_code_id_fk
         ");
 
       $sQuery = \DataTables::of($sTable);
@@ -884,8 +889,14 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
 
            $Products = DB::select("
-            SELECT * from $temp_ppp_0022
-            where $temp_ppp_0022.pick_pack_requisition_code_id_fk=".$row->pick_pack_requisition_code_id_fk."
+           SELECT
+id,
+pick_pack_requisition_code_id_fk,
+pick_pack_packing_code_id_fk,
+product_id_fk,
+product_name,
+sum(amt) as amt,
+product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
 
           ");
 
@@ -903,7 +914,6 @@ class Pick_warehouse_fifoController extends Controller
           $pn .=     
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
-          <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">รหัสใบเสร็จ</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
@@ -992,7 +1002,6 @@ class Pick_warehouse_fifoController extends Controller
                     $pn .=     
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="text-align:center;">'.$invoice_code.'</div> 
                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';

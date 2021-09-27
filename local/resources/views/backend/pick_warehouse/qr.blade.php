@@ -185,8 +185,8 @@
             <div class="form-group row  " >
               <div class="col-md-12 ">
               <!--   <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอเบิก </span> -->
-              <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-              <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
+              <!-- <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
+              <!-- <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' > -->
             </div>
           </div>
         </div>

@@ -41,21 +41,22 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-2 col-form-label">หน่วย : * </label>
+                  <label for="example-text-input" class="col-md-2 col-form-label required_star_red ">หน่วย :</label>
                   <div class="col-md-10">
-                    <select name="product_unit_id_fk" class="form-control select2-templating " required >
+                   <!--  <select name="product_unit_id_fk" class="form-control select2-templating " required >
                       <option value="">Select</option>
                         @if(@$sProduct_unit)
                           @foreach(@$sProduct_unit AS $r)
                             <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_unit_id_fk)?'selected':'' }} >{{$r->product_unit}}</option>
                           @endforeach
                         @endif
-                    </select>
+                    </select> -->
+                    <input class="form-control" type="text" value="{{ @$sRow->product_unit_txt }}" name="product_unit_txt" placeholder="กรอกชื่อหน่วยนับ" required>
                   </div>
                 </div>
 
                  <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">ค่าที่แปลง : * </label>
+                    <label for="example-text-input" class="col-md-2 col-form-label required_star_red ">ค่าที่แปลง : </label>
                     <div class="col-md-10">
                         <input class="form-control NumberOnly " type="text" value="{{ @$sRow->converted_value }}" name="converted_value" required>
                     </div>

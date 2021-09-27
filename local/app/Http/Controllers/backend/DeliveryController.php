@@ -20,12 +20,13 @@ class DeliveryController extends Controller
 
       // ขายหน้าร้าน (หลังบ้าน)
       // DB::select(" TRUNCATE `db_delivery` ; ");
+
       DB::select("
           INSERT IGNORE INTO db_delivery
-          ( orders_id_fk,receipt, customer_id, business_location_id , delivery_date, billing_employee, created_at,list_type,shipping_price)
-          SELECT id,invoice_code,customers_id_fk,business_location_id_fk,created_at,action_user,now(),2,shipping_price FROM db_orders where invoice_code<>'' AND delivery_location<>0  ; ");
-
-      // AND delivery_location<>0
+          ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price)
+          SELECT id,invoice_code,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price 
+          FROM db_orders where invoice_code<>'' AND delivery_location<>0  ; 
+        ");
 
       // นำเข้าที่อยู่ในการจัดส่ง
       // `addr_type` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ>0=รัยสินค้าที่สาขาด้วยตนเอง,
@@ -33,125 +34,123 @@ class DeliveryController extends Controller
       // 2=ที่อยู่ตามที่ลงทะเบียนในระบบ>customers_detail,
       // 3>ที่อยู่กำหนดเอง>customers_addr_frontstore',
 
-        // DB::select(" TRUNCATE customers_addr_sent; ");
-
         // 1=ที่อยู่ตามบัตร ปชช.>customers_address_card
-        $address_card = DB::select("
+        // $address_card = DB::select("
 
-                SELECT
-                customers_address_card.*,
-                dataset_provinces.name_th AS provname,
-                dataset_amphures.name_th AS ampname,
-                dataset_districts.name_th AS tamname,
-                customers.prefix_name,
-                customers.first_name,
-                customers.last_name
-                FROM
-                customers_address_card
-                Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
-                Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
-                Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
-                Left Join customers ON customers_address_card.customer_id = customers.id
+        //         SELECT
+        //         customers_address_card.*,
+        //         dataset_provinces.name_th AS provname,
+        //         dataset_amphures.name_th AS ampname,
+        //         dataset_districts.name_th AS tamname,
+        //         customers.prefix_name,
+        //         customers.first_name,
+        //         customers.last_name
+        //         FROM
+        //         customers_address_card
+        //         Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+        //         Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+        //         Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+        //         Left Join customers ON customers_address_card.customer_id = customers.id
 
-               ");
+        //        ");
 
-        foreach ($address_card as $key => $value) {
+        // foreach ($address_card as $key => $value) {
 
-              $d = array(
-                 "customer_id"=>@$value->customer_id,
-                 "recipient_name"=>@$value->prefix_name.@$value->first_name.' '.@$value->last_name,
-                 "house_no"=>@$value->card_house_no,
-                 "house_name"=>@$value->card_house_name,
-                 "moo"=>@$value->moo,
-                 "road"=>@$value->road,
-                 "soi"=>@$value->soi,
-                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
-                 "amphures"=>@$value->ampname,
-                 "district_id_fk"=>@$value->card_district_id_fk,
-                 "district"=>@$value->tamname,
-                 "province_id_fk"=>@$value->card_province_id_fk,
-                 "province"=>@$value->provname,
-                 "zipcode"=>@$value->card_zipcode,
-                 "from_table"=>'customers_address_card',
-                 "from_table_id"=>@$value->id,
-                 "addr_type"=>1,
-                 "created_at"=>now());
-               AddressSent::insertData($d);
+        //       $d = array(
+        //          "customer_id"=>@$value->customer_id,
+        //          "recipient_name"=>@$value->prefix_name.@$value->first_name.' '.@$value->last_name,
+        //          "house_no"=>@$value->card_house_no,
+        //          "house_name"=>@$value->card_house_name,
+        //          "moo"=>@$value->moo,
+        //          "road"=>@$value->road,
+        //          "soi"=>@$value->soi,
+        //          "amphures_id_fk"=>@$value->card_amphures_id_fk,
+        //          "amphures"=>@$value->ampname,
+        //          "district_id_fk"=>@$value->card_district_id_fk,
+        //          "district"=>@$value->tamname,
+        //          "province_id_fk"=>@$value->card_province_id_fk,
+        //          "province"=>@$value->provname,
+        //          "zipcode"=>@$value->card_zipcode,
+        //          "from_table"=>'customers_address_card',
+        //          "from_table_id"=>@$value->id,
+        //          "addr_type"=>1,
+        //          "created_at"=>now());
+        //        AddressSent::insertData($d);
 
-        }
+        // }
 
-        // 2=ที่อยู่ตามที่ลงทะเบียนในระบบ>customers_detail,
-        $customers_detail = DB::select("
-                SELECT
-                  customers_detail.*,
-                  dataset_provinces.name_th AS provname,
-                  dataset_amphures.name_th AS ampname,
-                  dataset_districts.name_th AS tamname,
-                  customers.prefix_name,
-                  customers.first_name,
-                  customers.last_name
-                  FROM
-                  customers_detail
-                  Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-                  Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-                  Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-                  Left Join customers ON customers_detail.customer_id = customers.id
-                   ");
+        // // 2=ที่อยู่ตามที่ลงทะเบียนในระบบ>customers_detail,
+        // $customers_detail = DB::select("
+        //         SELECT
+        //           customers_detail.*,
+        //           dataset_provinces.name_th AS provname,
+        //           dataset_amphures.name_th AS ampname,
+        //           dataset_districts.name_th AS tamname,
+        //           customers.prefix_name,
+        //           customers.first_name,
+        //           customers.last_name
+        //           FROM
+        //           customers_detail
+        //           Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+        //           Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+        //           Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+        //           Left Join customers ON customers_detail.customer_id = customers.id
+        //            ");
 
-        foreach ($customers_detail as $key => $value) {
+        // foreach ($customers_detail as $key => $value) {
 
-              $d = array(
-                 "customer_id"=>@$value->customer_id,
-                 "recipient_name"=>@$value->prefix_name.@$value->first_name.' '.@$value->last_name,
-                 "house_no"=>@$value->house_no,
-                 "house_name"=>@$value->house_name,
-                 "moo"=>@$value->moo,
-                 "road"=>@$value->road,
-                 "soi"=>@$value->soi,
-                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
-                 "amphures"=>@$value->ampname,
-                 "district_id_fk"=>@$value->card_district_id_fk,
-                 "district"=>@$value->tamname,
-                 "province_id_fk"=>@$value->card_province_id_fk,
-                 "province"=>@$value->provname,
-                 "zipcode"=>@$value->zipcode,
-                 "from_table"=>'customers_detail',
-                 "from_table_id"=>@$value->id,
-                 "addr_type"=>2,
-                 "created_at"=>now());
-               AddressSent::insertData($d);
+        //       $d = array(
+        //          "customer_id"=>@$value->customer_id,
+        //          "recipient_name"=>@$value->prefix_name.@$value->first_name.' '.@$value->last_name,
+        //          "house_no"=>@$value->house_no,
+        //          "house_name"=>@$value->house_name,
+        //          "moo"=>@$value->moo,
+        //          "road"=>@$value->road,
+        //          "soi"=>@$value->soi,
+        //          "amphures_id_fk"=>@$value->card_amphures_id_fk,
+        //          "amphures"=>@$value->ampname,
+        //          "district_id_fk"=>@$value->card_district_id_fk,
+        //          "district"=>@$value->tamname,
+        //          "province_id_fk"=>@$value->card_province_id_fk,
+        //          "province"=>@$value->provname,
+        //          "zipcode"=>@$value->zipcode,
+        //          "from_table"=>'customers_detail',
+        //          "from_table_id"=>@$value->id,
+        //          "addr_type"=>2,
+        //          "created_at"=>now());
+        //        AddressSent::insertData($d);
 
-        }
+        // }
 
 
-        // 3>ที่อยู่กำหนดเอง>customers_addr_frontstore',
-        $addr_frontstore = DB::select(" SELECT customers_addr_frontstore.*,db_orders.invoice_code from customers_addr_frontstore Left Join db_orders ON customers_addr_frontstore.frontstore_id_fk = db_orders.id ");
+        // // 3>ที่อยู่กำหนดเอง>customers_addr_frontstore',
+        // $addr_frontstore = DB::select(" SELECT customers_addr_frontstore.*,db_orders.invoice_code from customers_addr_frontstore Left Join db_orders ON customers_addr_frontstore.frontstore_id_fk = db_orders.id ");
 
-        foreach ($addr_frontstore as $key => $value) {
+        // foreach ($addr_frontstore as $key => $value) {
 
-              $district = DB::select(" SELECT * from dataset_amphures where id=".@$value->amphur_code." ");
-              $district_sub = DB::select(" SELECT * from dataset_districts where id=".@$value->tambon_code." ");
-              $province = DB::select(" SELECT * from dataset_provinces where id=".@$value->province_id_fk." ");
+        //       $district = DB::select(" SELECT * from dataset_amphures where id=".@$value->amphur_code." ");
+        //       $district_sub = DB::select(" SELECT * from dataset_districts where id=".@$value->tambon_code." ");
+        //       $province = DB::select(" SELECT * from dataset_provinces where id=".@$value->province_id_fk." ");
 
-              $d = array(
-                 "customer_id"=>@$value->customers_id_fk,
-                 "recipient_name"=>@$value->recipient_name,
-                 "house_no"=>@$value->addr_no,
-                 "amphures_id_fk"=>@$value->card_amphures_id_fk,
-                 "amphures"=>@$value->ampname,
-                 "district_id_fk"=>@$value->card_district_id_fk,
-                 "district"=>@$value->tamname,
-                 "province_id_fk"=>@$value->card_province_id_fk,
-                 "province"=>@$value->provname,
-                 "zipcode"=>@$value->zip_code,
-                 "tel"=>@$value->tel,
-                 "from_table"=>'customers_addr_frontstore',
-                 "from_table_id"=>@$value->id,
-                 "addr_type"=>3,
-                 "receipt_no"=>@$value->invoice_code,
-                 "created_at"=>now());
-               AddressSent::insertData($d);
-        }
+        //       $d = array(
+        //          "customer_id"=>@$value->customers_id_fk,
+        //          "recipient_name"=>@$value->recipient_name,
+        //          "house_no"=>@$value->addr_no,
+        //          "amphures_id_fk"=>@$value->card_amphures_id_fk,
+        //          "amphures"=>@$value->ampname,
+        //          "district_id_fk"=>@$value->card_district_id_fk,
+        //          "district"=>@$value->tamname,
+        //          "province_id_fk"=>@$value->card_province_id_fk,
+        //          "province"=>@$value->provname,
+        //          "zipcode"=>@$value->zip_code,
+        //          "tel"=>@$value->tel,
+        //          "from_table"=>'customers_addr_frontstore',
+        //          "from_table_id"=>@$value->id,
+        //          "addr_type"=>3,
+        //          "receipt_no"=>@$value->invoice_code,
+        //          "created_at"=>now());
+        //        AddressSent::insertData($d);
+        // }
 
      // DB::select(" UPDATE db_delivery SET billing_employee='1' WHERE  billing_employee is null ; ");
         $User_branch_id = \Auth::user()->branch_id_fk;
@@ -390,8 +389,35 @@ class DeliveryController extends Controller
       // return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
+    public function Datatable(Request $req)
+    {
+
+        if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
+            $business_location_id = " and db_delivery.business_location_id =  ".$req->business_location_id_fk ;
+        }else{
+            $business_location_id = "";
+        }
+
+        if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
+            $branch_id_fk = " and db_delivery.branch_id_fk =  ".$req->branch_id_fk ;
+        }else{
+            $branch_id_fk = "";
+        }
+
+
+      // $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
+      $sTable = DB::select(" 
+
+        SELECT * from db_delivery  
+        WHERE status_pack=0 AND approver=0 
+
+        $business_location_id
+        $branch_id_fk
+
+
+        ");
+
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('delivery_date', function($row) {

@@ -3,6 +3,20 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
+
+<style>
+    .select2-selection {height: 34px !important;margin-left: 3px;}
+    .border-left-0 {height: 67%;}
+
+    .form-group {
+        margin-bottom: 0rem  !important; 
+     }
+
+    .btn-outline-secondary {
+        margin-bottom: 36% !important;
+    }
+</style>
+
 <style type="text/css">
 	table.minimalistBlack {
 	  border: 2px solid #000000;
@@ -51,12 +65,14 @@
 @endsection
 
 @section('content')
+<div class="myloading"></div>
 
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18 test_clear_data "> รายการรอจัดส่ง  </h4>
+             <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -100,129 +116,155 @@
 
 
 
-        <div class="myBorder">
+        <div class="myBorder" >
+
+             <div class="row" >
+
+                 <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
+                        <div class="col-md-9">
+                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                              <option value="">-Business Location-</option>
+                              @if(@$sBusiness_location)
+                                @foreach(@$sBusiness_location AS $r)
+                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
+                                @endforeach
+                              @endif
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                            <div class="col-md-9">
+
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                                 @if(@$sBranchs)
+                                  @foreach(@$sBranchs AS $r)
+                                   @if($sPermission==1)
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @else 
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @endif
+                                  @endforeach
+                                @endif
+                              </select>
+
+                            </div>
+                          </div>
+                    </div>
+
+               </div>
+
+              <div class="row" >
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
+                    <div class="col-md-9">
+                        <select id="bill_type" name="bill_type" class="form-control select2-templating " required >
+                        <option value="">-Select-</option>
+                        <option value="1" selected >ขายสินค้า</option>
+                        <!-- <option value="2" >เติม Ai-cash </option> -->
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
+                    <div class="col-md-9">
+                      <select id="doc_id" name="doc_id" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                         @if(@$code_order)
+                          @foreach(@$code_order AS $r)
+                            <option value="{{@$r->code_order}}" >{{$r->code_order}}</option>
+                          @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            <div class="row" >
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
+                    <div class="col-md-9">
+                       <select id="transfer_amount_approver" name="transfer_amount_approver" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                        @if(@$sApprover)
+                        @foreach(@$sApprover AS $r)
+                        <option value="{{$r->id}}" >
+                           {{$r->name}}
+                        </option>
+                        @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="delivery_status" class="col-md-3 col-form-label"> สถานะ :  </label>
+                    <div class="col-md-9">
+                      <select id="delivery_status" name="delivery_status" class="form-control select2-templating " >
+                        <option value="">-Status-</option>
+                        <option value="1" > รอจัดส่ง </option>
+                        <option value="2" > จัดส่งแล้ว </option>
+                        <option value="3" > อยู่ระหว่างการจัดเบิก </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row" >
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label"> วันที่สั่งซื้อ : </label>
+                     <div class="col-md-9 d-flex">
+                       <?php
+                          $first_day = date("Y-m-d",strtotime("-3 day"));
+                          $last_day  = date('Y-m-d');
+                         ?>
+                         <!-- <?=$first_day?><?=$last_day?> -->
+                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
+                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label">  </label>
+                    <div class="col-md-9 d-flex">
+                      <a class="btn btn-primary btn-sm btnSearch01 " href="javascript: void(0);" style="font-size: 14px !important;margin-left: 0.8%;" >
+                        <i class="bx bx-search align-middle "></i> SEARCH
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
 
           <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
          
-                <div class="row">
-                  <div class="col-8">
-
-                  	<div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดส่ง (รายบิล) </span>
-                          </div>
-                        </div>
-                  </div>
-
-                </div>
-
-
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-     				           <div class="col-md-2">
-                          <div class="form-group row">
-                            <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
-                              <option value="">Business Location</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                <option value="{{$r->id}}" >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @endforeach
-                              @endif
-                            </select>
-                          </div>
-                        </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="receipt_no" name="receipt_no" class="form-control select2-templating " >
-                            <option value="">ใบเสร็จ</option>
-                            @if(@$sDelivery)
-                            @foreach(@$sDelivery AS $r)
-                            <option value="{{$r->id}}" >
-                              {{$r->receipt}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="packing_no" name="packing_no" class="form-control select2-templating " >
-                            <option value="">รหัสแพ็คกิ้ง</option>
-                            @if(@$sPacking)
-                              @foreach(@$sPacking AS $r)
-                              <option value="{{@$r->id}}" > {{"P".sprintf("%05d",@$r->id)}}
-                              </option>
-                              @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>   
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " >
-                            <option value="">รหัส:ชื่อลูกค้า</option>
-                            @if(@$Customer)
-                            @foreach(@$Customer AS $r)
-                            <option value="{{$r->id}}"  >
-                             	{{$r->user_name}} : {{$r->first_name}}{{$r->last_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-             
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="status_search" name="status_search" class="form-control select2-templating " >
-                            <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-
-              <?php if($can_packing_list=='1'){ ?>
-
-                    <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-
-              <?php }else{ ?>
-
-                    <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
-              
-              <?php }?>
+                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
 
                  <div class=" divBtnSave " style="display: none;">
                  	<center>
@@ -254,10 +296,6 @@
 
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-              <?php }else{ ?>
-
-                     <!-- <table id="data-table-no-payproduct" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
-              
               <?php }?>
 
 							<center>
@@ -412,7 +450,7 @@ $(function() {
                   {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                         return d>0?d:'';
                   }},
-                  {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
+                  {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
                   	if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
                   	}else{
@@ -516,87 +554,6 @@ $(function() {
           });
               oTable.on( 'draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
-              });
-          });
-
-
-var oTableNopacking;
-$(function() {
-  $.fn.dataTable.ext.errMode = 'throw';
-    oTableNopacking = $('#data-table-no-packing').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 10,
-        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
-        ajax: {
-          url: '{{ route('backend.delivery.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
-              columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'delivery_date', title :'<center>วันเวลา<br>ที่ออกบิล </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
-                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                  {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  // {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
-                  //     return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
-                  // }},
-                  {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'status_delivery',   title :'<center>สถานะการส่ง</center>', className: 'text-center ',render: function(d) {
-                    if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                    }else{
-                        return '-รอจัดส่ง-';
-                    }
-                  }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
-              ],
-              rowCallback: function(nRow, aData, dataIndex){
-                  $("td:eq(1)", nRow).hide();
-              }
-          });
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTableNopacking.draw();
               });
           });
 
@@ -712,7 +669,7 @@ $(function() {
                       {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                           return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะการส่ง </center>', className: 'text-center ',render: function(d) {
+                      {data: 'status_delivery',   title :'<center>สถานะ </center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
@@ -768,92 +725,8 @@ $(function() {
                   }
               });
 
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTable2.draw();
-              });
           });
 
-
-
-          var oTableNoPayproduct;
-          $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
-              oTableNoPayproduct = $('#data-table-no-payproduct').DataTable({
-              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                  processing: true,
-                  serverSide: true,
-                  scroller: true,
-                  scrollCollapse: true,
-                  scrollX: true,
-                  ordering: false,
-                  scrollY: ''+($(window).height()-370)+'px',
-                  iDisplayLength: 10,
-                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
-                  ajax: {
-                    url: '{{ route('backend.delivery_packing_code.datatable') }}',
-                    data: function ( d ) {
-                      d.Where={};
-                      $('.myWhere').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Where[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Like={};
-                      $('.myLike').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Like[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Custom={};
-                      $('.myCustom').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      oData = d;
-                    },
-                    method: 'POST'
-                  },
-                  columns: [
-                      // {data: 'id', title :'ID', className: 'text-center w50'},
-                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
-                      
-                      // {data: 'packing_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
-                      //     return ;
-                      // }},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
-                            if(d==''||d=='0'){
-                                return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-                            }else{
-                              return d ;
-                            }
-                      }},
-                    
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-
-                   
-                  }
-              });
-
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTableNoPayproduct.draw();
-              });
-          });
 
 </script>
 
@@ -995,7 +868,6 @@ $(function() {
                         });
 
                         setTimeout(function () {
-                          // $('#data-table').DataTable().clear().draw();
                           location.reload();
                         }, 1500);
                   }
@@ -1014,66 +886,256 @@ $(function() {
 
     <script type="text/javascript">
 
-    	/*
-    	var v = "<?=@$_REQUEST['select_addr']?>";
-    	if(v){
 
-		        $.ajax({
-	               type:'POST',
-	               url: " {{ url('backend/ajaxSelectAddr') }} ", 
-	               data:{ _token: '{{csrf_token()}}',v:v },
-	                success:function(data){
-	                     // console.log(data); 
-	                     // location.reload();
-	                     $('#select_addr_result').html(data);
-	                     setTimeout(function(){
-							$('#exampleModalCenter').modal('show');
-						 }, 1500);
-	                  },
-	                error: function(jqXHR, textStatus, errorThrown) { 
-	                    console.log(JSON.stringify(jqXHR));
-	                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-	                    $(".myloading").hide();
-	                }
-	            });
+    $(document).ready(function() {
 
-    	}
-      */
-    	
+        $(document).on('click', '.btnSearch01', function(event) {
+                  event.preventDefault();
+                  $('#data-table').DataTable().clear();
+
+                  $(".myloading").show();
+
+                  var business_location_id_fk = $('#business_location_id_fk').val();
+                  var branch_id_fk = $('#branch_id_fk').val();
+                  // var customer_id_fk = $('#customer_id_fk').val();
+                  // var startDate = $('#startDate').val();
+                  // var endDate = $('#endDate').val();
+                  // var status_sent = $('#status_sent').val();
+
+                  // var startPayDate = $('#startPayDate').val();
+                  // var endPayDate = $('#endPayDate').val();
+                  // var btnSearch03 = $('#btnSearch03').val();
+                  // var action_user = $('#action_user').val();
+
+                  // console.log(business_location_id_fk);
+                  // console.log(branch_id_fk);
+                  // console.log(customer_id_fk);
+                  // console.log(startDate);
+                  // console.log(endDate);
+                  // console.log(status_sent);
+
+                  // return false;
+
+                  if(business_location_id_fk==''){
+                    $('#business_location_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+                  // alert(branch_id_fk);
+                  if(branch_id_fk=='' || branch_id_fk === null ){
+                    $('#branch_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                  }
+
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                    var sU = "{{@$sU}}"; 
+                    var sD = "{{@$sD}}";
+                    var oTable_001;
+                    $(function() {
+                      $.fn.dataTable.ext.errMode = 'throw';
+                        oTable_001 = $('#data-table').DataTable({
+                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                            processing: true,
+                            serverSide: true,
+                            scroller: true,
+                            destroy: true,
+                            ordering: false,
+                            iDisplayLength: 50,
+                            ajax: {
+                                url: '{{ route('backend.delivery.datatable') }}',
+                                data :{
+                                    _token: '{{csrf_token()}}',
+                                      business_location_id_fk:business_location_id_fk,
+                                      branch_id_fk:branch_id_fk,
+                                      // customer_id_fk:customer_id_fk,
+                                      // startDate:startDate,
+                                      // startPayDate:startPayDate,
+                                      // endDate:endDate,
+                                      // endPayDate:endPayDate,
+                                      // status_sent:status_sent,                                 
+                                      // txtSearch_001:txtSearch_001,                                  
+                                      // btnSearch03:btnSearch03,                                  
+                                      // action_user:action_user,                                  
+                                    },
+                                  method: 'POST',
+                                },
+                            columns: [
+                                    {data: 'id', title :'ID', className: 'text-center'},
+                                    {data: 'id', title :'เลือก', className: 'text-center '},
+                                    {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
+                                    {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                                    {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                                    {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
+                                    {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                                    {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
+                                    {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
+                                    {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
+                                          return d>0?d:'';
+                                    }},
+                                    {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
+                                      if(d=='1'){
+                                          return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+                                      }else{
+                                          return '-รอจัดส่ง-';
+                                      }
+                                    }},
+                                    // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                ],
+                                'columnDefs': [
+                                 {
+                                    'targets': 0,
+                                    'checkboxes': {
+                                       'selectRow': true
+                                    }
+                                 }
+                                ],
+                                'select': {
+                                   'style': 'multi'
+                                },
+
+                                rowCallback: function(nRow, aData, dataIndex){
+
+                                    // $('td:last-child', nRow).html(''
+                                    //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                    //     ).addClass('input');
+
+                                  if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                                        $('td:eq(2)', nRow).html(
+                                          '<span class=" badge badge-info font-size-14" data-toggle="tooltip" data-placement="right" title="Shipping"  >S</span>');
+                                   }else{
+                                        $("td:eq(2)", nRow).html('');
+                                   }
+                                  
+
+                                   $("td:eq(1)", nRow).hide();
+                                   // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
+
+                                   if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                                        $('td:eq(8)', nRow).html(''
+                                          + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                                        ).addClass('input');
+                                   }
+                                   else{ //2=db_orders จากการขายหลังบ้าน
+                                        $('td:eq(8)', nRow).html(''
+                                          + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                                        ).addClass('input');
+                                   }
+
+                                   if (aData['status_delivery'] == "1") {
+                                          $('td', nRow).css('background-color', '#ffd9b3');
+                                          $("td:eq(0)", nRow).html('');
+                                          $("td:eq(7)", nRow).html('');
+                                          $("td:eq(6)", nRow).html('');
+                                          $("td:eq(10)", nRow).html('');
+                                          var i;
+                                          for (i = 0; i < 10 ; i++) {
+                                             $("td:eq("+i+")", nRow).prop('disabled',true); 
+                                          } 
+
+                                  }else{
+                                      $("td:eq(7)", nRow).prop('disabled',true); 
+                                      $("td:eq(8)", nRow).prop('disabled',true); 
+                                      $("td:eq(10)", nRow).prop('disabled',true); 
+                                  } 
+
+
+                                      if(aData['status_pick_pack']=='1'){
+                                          $('td', nRow).css('background-color', '#ffd9b3');
+                                          var i;
+                                          for (i = 0; i < 10 ; i++) {
+                                             $("td:eq("+i+")", nRow).prop('disabled',true); 
+                                          }
+                                          $('td:last-child', nRow).html('-');
+                                          $('td:eq(8)', nRow).html(''
+                                             + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                                           ).addClass('input');
+
+                                      }else{
+                                      
+                                            if(sU!=''&&sD!=''){
+                                                $('td:last-child', nRow).html('-');
+                                            }else{ 
+
+                                              if (aData['status_delivery'] != "1") {
+
+                                                  // $('td:last-child', nRow).html(''
+                                                  //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                    
+                                                  // ).addClass('input');
+                                                }
+
+                                                // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+                                            }
+
+                                      }
+
+
+
+                                }
+                            });
+                                oTable.on( 'draw', function () {
+                                  $('[data-toggle="tooltip"]').tooltip();
+                                });
+                            });
+                   
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+                                  
+                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+               
+
+                setTimeout(function(){
+                   $(".myloading").hide();
+                }, 1500);
+
+               
+            });
+
+        }); 
+
+
+</script>
         
 	</script>
 
 
-
-
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
-        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-        $('#startDate').datepicker({
-             format: 'dd/mm/yyyy',
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome',
-            // minDate: today,
-            // maxDate: function () {
-            //     return $('#endDate').val();
-            // }
-        });
-        $('#endDate').datepicker({
-            format: 'dd/mm/yyyy',
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome',
-            minDate: function () {
-                return $('#startDate').val();
-            }
-        });
 
-         $('#startDate').change(function(event) {
-           $('#endDate').val($(this).val());
-         });
-         
-</script>
+    <script>
+      var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+      $('#bill_sdate').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          minDate: function () {
+                // return today;
+          }
+      });
+
+      $('#bill_edate').datepicker({
+          // format: 'dd/mm/yyyy',
+          format: 'yyyy-mm-dd',
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          minDate: function () {
+              return $('#bill_sdate').val();
+          }
+      });
+
+      $('#bill_sdate').change(function(event) {
+
+        if($('#bill_edate').val()>$(this).val()){
+        }else{
+          $('#bill_edate').val($(this).val());
+        }
+
+      });        
+
+    </script>
 
 
         <script>
@@ -1102,6 +1164,10 @@ $(function() {
       DB::select("TRUNCATE `db_delivery_packing_code` ;");
       DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
       DB::select("TRUNCATE db_consignments;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+
       ?>
           <script>
           location.replace( "{{ url('backend/delivery') }}");

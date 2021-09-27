@@ -58,9 +58,6 @@
                             @endphp
                                 @foreach(@$slip AS $r)
 
-                     
-
-
                                     <label for="example-text-input" class="col-md-1 col-form-label">Slip {{@$i}} </label>
                                         <div class="col-md-3">
                                             <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป </h5>
@@ -68,11 +65,11 @@
                                              <br>
 
                                             @if (!empty(@$r->file))
-                                                <img id="imgAvatar_01" src="{{ $r->url }}/{{ @$r->file }}" width="200px"
+                                                <img src="{{ $r->url }}/{{ @$r->file }}" width="200px"
                                                     class="grow">
                                                     <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                             @ELSE
-                                                <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}"
+                                                <img src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
                                             @ENDIF
 
@@ -230,7 +227,7 @@
                                                       <h5 class="font-size-14 required_star_red ">Slip {{@$i}} : วันที่เวลาที่โอนในสลิป </h5>
                                                     </div>
                                                     <div class="col-md-6 text-left">
-                                                        <input type="hidden" name="id[]" value="{{@$r->id}}">
+                                                        <input type="hidden" name="slip_ids[]" value="{{@$r->id}}">
                                                         <input class="form-control transfer_bill_date " name="transfer_bill_date[]" type="text" value="{{@$r->transfer_bill_date?@$r->transfer_bill_date:NULL}}" required>
                                                     </div>
                                                 </div>
@@ -310,16 +307,32 @@
                                                         </div>
                                                     </div>
 
+                                                    <center>
+
+
+                                                    @if(@$slip)
+                                                     <?php $i = 1 ; ?>
+                                                        @foreach(@$slip AS $r)
+
+                                                        <input type="file" accept="image/*" id="image0{{$i}}" name="image0{{$i}}" class="form-control" OnChange="showPreview_0{{$i}}(this)" required="" >
+
+                                                            @if (!empty(@$r->file))
+                                                                <img id="imgAvatar_0{{$i}}" src="{{ @$r->url }}/{{ @$r->file }}"
+                                                                    class="img-fluid" alt="Responsive image">
+                                                            @ELSE
+                                                              <center><img id="imgAvatar_0{{$i}}" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
+                                                            @ENDIF
+
+                                                        <?php $i++ ; ?>
+
+                                                        @endforeach
+                                                    @endif
+                                                       
+
+                                                    @IF(count($slip)==0)
                                                     <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
-
-                                                    @if (!empty(@$slip[0]->file))
-                                                        <center><img id="imgAvatar_01" src="{{ $slip[0]->url }}/{{ @$slip[0]->file }}"
-                                                            class="img-fluid" alt="Responsive image">
-                                                    @ELSE
-                                                      <center><img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
-                                                    @ENDIF
-
-                                                    <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" required="" >
+                                                       <center><img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
+                                                    @endif
 
 
                                                 </div>
@@ -418,8 +431,7 @@ $(function() {
       
         ],
         rowCallback: function(nRow, aData, dataIndex){
-
-           
+  
         }
 
     });

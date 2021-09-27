@@ -22,7 +22,7 @@ class Transfer_corporate_membersController extends Controller
       $sRowGroup = \App\Models\Backend\Transfer_corporate_members::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\language::get();
+      $sLanguage = \App\Models\Backend\Language::get();
 
       $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -41,7 +41,7 @@ class Transfer_corporate_membersController extends Controller
        $sRowGroup = \App\Models\Backend\Transfer_corporate_members::find($id);
        $sRow = \App\Models\Backend\Transfer_corporate_members::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\language::get();
+       $sLanguage = \App\Models\Backend\Language::get();
        return View('backend.transfer_corporate_members.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

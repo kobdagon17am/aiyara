@@ -549,8 +549,9 @@
                              $.ajax({
                                    type:'POST',
                                    url: " {{ url('backend/calFifo') }} ", 
-                                   data: $("#frm-packing").serialize()+"&picking_id="+picking_id,
-                                    success: function(response){ // What to do if we succeed
+                                   // data: $("#frm-packing").serialize()+"&picking_id="+picking_id,
+                                   data:{picking_id:picking_id},
+                                    success: function(response){ 
                                       console.log(response);
                                       // return false;
 
@@ -697,7 +698,8 @@
                                                                             success:function(d2){
                                                                                  // console.log(d2);
                                                                                  // return false;
-                                                                                location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
+                                                                                // location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
+                                                                                location.replace('{{ url("backend/pay_requisition_001") }}');
    
                                                                                $(".myloading").hide();
                                                                             },
