@@ -3541,11 +3541,19 @@ if($frontstore[0]->check_press_save==2){
           if($sPermission==1){
               $wh = "";
           }else{
+              // $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." AND branch_id_fk=".@\Auth::user()->branch_id_fk." ";
               $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." ";
           }
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() $wh AND approve_status in (2,4) AND status_sent_money <> 1 AND code_order <> ''
-              AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
+          // return($wh);
+
+          $r0 = DB::select(" SELECT * FROM `db_orders`  
+            WHERE date(updated_at)=CURDATE() 
+            $wh 
+            AND approve_status in (2,4) 
+            AND status_sent_money <> 1 
+            AND code_order <> ''
+            AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
           // return $r0;
 
@@ -3888,6 +3896,78 @@ if($frontstore[0]->check_press_save==2){
     }    
 
 
+
+    public function ajaxGetCustomerDelivery(Request $request)
+    {
+        if($request->ajax()){
+            
+            // สำหรับกรณี Autocomplete
+            // $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
+            // ->orWhere('first_name','LIKE',"%$request->txt%")
+            // ->orWhere('last_name','LIKE',"%$request->txt%")
+            // ->take(15)->get();
+            // $response = array();
+            // foreach ($query as $key => $value) {
+            //     $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
+            // }
+            // return json_encode($response);
+
+            if(!empty($request->term)){
+
+                // $customers = DB::table('customers')
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                // ->take(15)
+                // ->orderBy('user_name', 'asc')
+                // ->get();
+
+                if(@\Auth::user()->permission==1){
+
+                    $customers = DB::select(" 
+
+                    select * from customers 
+                    where id in (select customer_id from db_delivery)
+                    and 
+                    (
+                    user_name like '%".$request->term."%' OR
+                    first_name like '%".$request->term."%' OR
+                    last_name like '%".$request->term."%' 
+                    )
+                    ; 
+                    ");
+
+                }else{
+
+                      $customers = DB::select(" 
+
+                    select * from customers 
+                    where id in (select customer_id from db_delivery where branch_id_fk=".@\Auth::user()->branch_id_fk.")
+                    and 
+                    (
+                    user_name like '%".$request->term."%' OR
+                    first_name like '%".$request->term."%' OR
+                    last_name like '%".$request->term."%' 
+                    )
+                    ; 
+                    ");
+
+                }
+
+                  
+
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }           
+            return json_encode($json_result);
+
+           }
+    }    
 
     public function ajaxGetCustomerForFrontstore(Request $request)
     {

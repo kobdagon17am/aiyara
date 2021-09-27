@@ -164,51 +164,54 @@
 
                </div>
 
-              <div class="row" >
+               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
+                    <label for="receipt" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
                     <div class="col-md-9">
-                        <select id="bill_type" name="bill_type" class="form-control select2-templating " required >
+                        <select id="receipt" name="receipt" class="form-control select2-templating " required >
                         <option value="">-Select-</option>
-                        <option value="1" selected >ขายสินค้า</option>
-                        <!-- <option value="2" >เติม Ai-cash </option> -->
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
-                    <div class="col-md-9">
-                      <select id="doc_id" name="doc_id" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                         @if(@$code_order)
-                          @foreach(@$code_order AS $r)
-                            <option value="{{@$r->code_order}}" >{{$r->code_order}}</option>
+
+                         @if(@$sDelivery)
+                          @foreach(@$sDelivery AS $r)
+                            <option value="{{$r->receipt}}" >
+                              {{$r->receipt}} 
+                            </option>
                           @endforeach
                         @endif
+
                       </select>
                     </div>
                   </div>
                 </div>
-              </div>
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                   <!--  <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
+                    <div class="col-md-9">
+                      <select id="" name="" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                      </select>
+                    </div> -->
+
+                        <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
+                    <div class="col-md-9">
+                       <select id="customer_id_fk" name="customer_id_fk" class="form-control select2-templating " >
+                        <option value="">-Select-</option>
+                      </select>
+                    </div>
+
+                  </div>
+                </div>
+              </div> 
 
 
-            <div class="row" >
+            <!--  <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
                     <div class="col-md-9">
                        <select id="transfer_amount_approver" name="transfer_amount_approver" class="form-control select2-templating " >
                         <option value="">-Select-</option>
-                        @if(@$sApprover)
-                        @foreach(@$sApprover AS $r)
-                        <option value="{{$r->id}}" >
-                           {{$r->name}}
-                        </option>
-                        @endforeach
-                        @endif
                       </select>
                     </div>
                   </div>
@@ -227,22 +230,17 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>  -->
 
 
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> วันที่สั่งซื้อ : </label>
+                    <label for="" class="col-md-3 col-form-label"> ช่วงวันที่ออกบิล : </label>
                      <div class="col-md-9 d-flex">
-                       <?php
-                          $first_day = date("Y-m-d",strtotime("-3 day"));
-                          $last_day  = date('Y-m-d');
-                         ?>
-                         <!-- <?=$first_day?><?=$last_day?> -->
                       <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
                       <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
-                    </div>
+                    </div> 
                   </div>
                 </div>
                 <div class="col-md-6 " >
@@ -256,7 +254,6 @@
                   </div>
                 </div>
               </div>
-
 
 
           <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -446,7 +443,10 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
+                  {data: 'orders_id_fk',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
+                      return '<center>'
+                      + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                  }},
                   {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                         return d>0?d:'';
                   }},
@@ -488,16 +488,16 @@ $(function() {
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
 
-                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                      $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                 }
-                 else{ //2=db_orders จากการขายหลังบ้าน
-                      $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                 }
+                 // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                 //      $('td:eq(8)', nRow).html(''
+                 //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                 //      ).addClass('input');
+                 // }
+                 // else{ //2=db_orders จากการขายหลังบ้าน
+                 //      $('td:eq(8)', nRow).html(''
+                 //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                 //      ).addClass('input');
+                 // }
 
               	 if (aData['status_delivery'] == "1") {
           			        $('td', nRow).css('background-color', '#ffd9b3');
@@ -582,6 +582,7 @@ $(function() {
                           var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
 
                           console.log(ids); 
+                          $(".myloading").hide();
 
                   }, 500);
 
@@ -598,6 +599,7 @@ $(function() {
   		            	}else{
   		            		$('.divBtnSave').hide();
   		            	}
+                    $(".myloading").hide();
   		            }, 500);
 
             } );
@@ -666,9 +668,9 @@ $(function() {
       	                  		return d ;
       	                  	}
 	                    }},
-                      {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
-                          return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      }},
+                      // {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
+                      //     return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+                      // }},
                       {data: 'status_delivery',   title :'<center>สถานะ </center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -897,9 +899,11 @@ $(function() {
 
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
-                  // var customer_id_fk = $('#customer_id_fk').val();
-                  // var startDate = $('#startDate').val();
-                  // var endDate = $('#endDate').val();
+                  var receipt = $('#receipt').val();
+                  // alert(receipt);
+                  var customer_id_fk = $('#customer_id_fk').val();
+                  var bill_sdate = $('#bill_sdate').val();
+                  var bill_edate = $('#bill_edate').val();
                   // var status_sent = $('#status_sent').val();
 
                   // var startPayDate = $('#startPayDate').val();
@@ -948,8 +952,10 @@ $(function() {
                                     _token: '{{csrf_token()}}',
                                       business_location_id_fk:business_location_id_fk,
                                       branch_id_fk:branch_id_fk,
-                                      // customer_id_fk:customer_id_fk,
-                                      // startDate:startDate,
+                                      receipt:receipt,
+                                      customer_id_fk:customer_id_fk,
+                                      bill_sdate:bill_sdate,
+                                      bill_edate:bill_edate,
                                       // startPayDate:startPayDate,
                                       // endDate:endDate,
                                       // endPayDate:endPayDate,
@@ -969,7 +975,10 @@ $(function() {
                                     {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                                     {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                                     {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                                    {data: 'id', title :'ใบเสร็จ', className: 'text-center '},
+                                    {data: 'orders_id_fk',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
+                                        return '<center>'
+                                        + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
+                                    }},
                                     {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                                           return d>0?d:'';
                                     }},
@@ -1011,16 +1020,16 @@ $(function() {
                                    $("td:eq(1)", nRow).hide();
                                    // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
 
-                                   if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                                        $('td:eq(8)', nRow).html(''
-                                          + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                                        ).addClass('input');
-                                   }
-                                   else{ //2=db_orders จากการขายหลังบ้าน
-                                        $('td:eq(8)', nRow).html(''
-                                          + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                                        ).addClass('input');
-                                   }
+                                   // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                                   //      $('td:eq(8)', nRow).html(''
+                                   //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                                   //      ).addClass('input');
+                                   // }
+                                   // else{ //2=db_orders จากการขายหลังบ้าน
+                                   //      $('td:eq(8)', nRow).html(''
+                                   //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                                   //      ).addClass('input');
+                                   // }
 
                                    if (aData['status_delivery'] == "1") {
                                           $('td', nRow).css('background-color', '#ffd9b3');
@@ -1095,8 +1104,117 @@ $(function() {
         }); 
 
 
+
+   $('#business_location_id_fk').change(function(){
+
+          var business_location_id_fk = this.value;
+          // alert(warehouse_id_fk);
+
+           if(business_location_id_fk != ''){
+             $.ajax({
+                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  method: "post",
+                  data: {
+                    business_location_id_fk:business_location_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                  success:function(data)
+                  { 
+                   if(data == ''){
+                       alert('ไม่พบข้อมูลสาขา !!.');
+                   }else{
+                       var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                       $.each(data,function(key,value){
+                        layout += '<option value='+value.id+'>'+value.b_name+'</option>';
+                       });
+                       $('#branch_id_fk').html(layout);
+                       $('#warehouse_id_fk').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
+                       $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                       $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                   }
+                  }
+                })
+           }
+ 
+      });
+
+
 </script>
+        <script type="text/javascript">
+  
+   $(document).ready(function(){   
+
+      $("#customer_id_fk").select2({
+          minimumInputLength: 2,
+          allowClear: true,
+          placeholder: '-Select-',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerDelivery') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+            console.log(params);
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+
+   });
+</script>
+
+
+      <script>
+      $(document).ready(function() {
+
+          $(document).on('click', '.print02', function(event) {
+
+              event.preventDefault();
+
+              $(".myloading").show();
+
+              var id = $(this).data('id');
+
+              // console.log(id);
+
+              setTimeout(function(){
+                 // window.open("{{ url('backend/frontstore/test_print_receipt_02') }}"+"/"+id);
+                 window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
+                 $(".myloading").hide();
+              }, 500);
+
+         
         
+              // $.ajax({
+              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
+              //     method: "post",
+              //     data: {
+              //       "_token": "{{ csrf_token() }}", id:id,
+              //     },
+              //     success:function(data)
+              //     { 
+              //       // console.log(data);
+              //       return false;
+              //     }
+              //   });
+
+              
+            });
+                
+      });
+
+    </script>
+   
+
 	</script>
 
 

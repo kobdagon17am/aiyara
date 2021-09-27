@@ -835,9 +835,15 @@ class FrontstoreController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
+      // dd($request->transfer_money_datetime." : AAAA");
+
+      // dd($request->all());
+
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
 
           // dd($request->all());
+
+           // dd($request->transfer_money_datetime." : CCCC ");
 
              $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
@@ -920,6 +926,7 @@ class FrontstoreController extends Controller
          }else if(isset($request->receipt_save_list)){
           
           // dd($request->all());
+          // dd($request->transfer_money_datetime." : BBBB");
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
               // dd($sRow);
@@ -1829,6 +1836,7 @@ class FrontstoreController extends Controller
 
           if($sPermission==1 || count($ch_user)>0 ){
                $show_tb_sent_money = "";
+               $user_login_id = \Auth::user()->id;
           }else{
                $show_tb_sent_money = "display:none;";
           }
@@ -1838,7 +1846,7 @@ class FrontstoreController extends Controller
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="" >รายการส่งเงินรายวัน</span>
+                        <span class="" >รายการส่งเงินรายวัน </span>
                         </th></tr>
                         <tr>
                           <th class="text-center">ครั้งที่</th>
@@ -1857,7 +1865,7 @@ class FrontstoreController extends Controller
               FROM
               db_sent_money_daily
               Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
-              WHERE date(db_sent_money_daily.updated_at)=CURDATE()
+              WHERE date(db_sent_money_daily.updated_at)=CURDATE() and sender_id=$user_login_id
               order by db_sent_money_daily.time_sent
         ");
 
@@ -1870,7 +1878,7 @@ class FrontstoreController extends Controller
                                       SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
                                       FROM
                                       db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where sent_money_daily_id_fk in (".$r->id.") AND code_order<>'' ;
+                                      where sent_money_daily_id_fk in (".$r->id.") AND code_order<>'' AND action_user=$user_login_id ;
                                       ");
                     $show .= '  
                         <tr>

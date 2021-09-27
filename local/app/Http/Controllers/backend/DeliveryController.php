@@ -14,19 +14,22 @@ class DeliveryController extends Controller
 
     public function index(Request $request)
     {
-      // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
-      $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
-      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
       // ขายหน้าร้าน (หลังบ้าน)
       // DB::select(" TRUNCATE `db_delivery` ; ");
-
+//   `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
       DB::select("
           INSERT IGNORE INTO db_delivery
           ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price)
-          SELECT id,invoice_code,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price 
-          FROM db_orders where invoice_code<>'' AND delivery_location<>0  ; 
+          SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price 
+          FROM db_orders where code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) ; 
         ");
+
+      // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
+      $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
+      // dd($sDelivery);
+      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
+
 
       // นำเข้าที่อยู่ในการจัดส่ง
       // `addr_type` int(1) DEFAULT '0' COMMENT 'ที่อยู่ผู้รับ>0=รัยสินค้าที่สาขาด้วยตนเอง,
@@ -404,6 +407,25 @@ class DeliveryController extends Controller
             $branch_id_fk = "";
         }
 
+        if(!empty($req->receipt)){
+            $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;
+        }else{
+            $receipt = "";
+        }
+
+        if(!empty($req->customer_id_fk)){
+            $customer_id_fk = " and db_delivery.customer_id =  '".$req->customer_id_fk."'" ;
+        }else{
+            $customer_id_fk = "";
+        }
+
+        if(!empty($req->bill_sdate) && !empty($req->bill_edate)){
+           $delivery_date = " and date(db_delivery.delivery_date) BETWEEN '".$req->bill_sdate."' AND '".$req->bill_edate."'  " ;
+        }else{
+           $delivery_date = "";
+        }
+
+        // return $receipt;
 
       // $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
       $sTable = DB::select(" 
@@ -413,6 +435,9 @@ class DeliveryController extends Controller
 
         $business_location_id
         $branch_id_fk
+        $receipt
+        $customer_id_fk
+        $delivery_date
 
 
         ");

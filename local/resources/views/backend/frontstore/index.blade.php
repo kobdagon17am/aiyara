@@ -98,7 +98,18 @@
               <div class="divTH">
                 <label for="startDate" >วันสร้างเริ่มต้น : </label>
               </div>
-              <?php $sd = date('Y-m-d'); ?>
+              <?php 
+
+                $sd = date('Y-m-d');
+
+                // $date=date_create("2021-09-27");
+                // date_sub($date,date_interval_create_from_date_string("3 days"));
+                // echo date_format($date,"Y-m-d");
+
+                // $sd = date_format($date,"Y-m-d");
+
+               ?>
+
               <div class="divTableCell">
                 <input id="startDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
               </div>
@@ -678,7 +689,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  console.log(data);
+                                  // console.log(data);
                                   // return false;
                                   
                                       Swal.fire({
@@ -733,7 +744,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // // console.log(data);
+                                  // // // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -818,7 +829,7 @@ $(document).ready(function() {
 
 
                   var viewcondition = $(this).data('id');
-                  console.log(viewcondition);
+                  // console.log(viewcondition);
 
                   if(viewcondition=="ViewAll"){
 
@@ -1057,7 +1068,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           { 
-                                            // console.log(data);
+                                            // // console.log(data);
                                             $(".div_SumCostActionUser").html(data);
                                             
                                           }
@@ -1081,7 +1092,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           { 
-                                            console.log(data);
+                                            // console.log(data);
                                             $(".div_PV_Amount").html(data);
                                             
                                           }
@@ -1127,7 +1138,7 @@ $(document).ready(function() {
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
 
-                  // console.log(invoice_code);
+                  // // console.log(invoice_code);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           					var oTable;
@@ -1351,7 +1362,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             { 
-                              // console.log(data);
+                              // // console.log(data);
                               $(".div_SumCostActionUser").html(data);
                               
                             }
@@ -1374,7 +1385,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             { 
-                              console.log(data);
+                              // console.log(data);
                               $(".div_PV_Amount").html(data);
                               
                             }
@@ -1407,7 +1418,7 @@ $(document).ready(function() {
                   },
                   success:function(data)
                   { 
-                    // console.log(data);
+                    // // console.log(data);
                     $(".div_SumCostActionUser").html(data);
                     
                   }
@@ -1423,7 +1434,7 @@ $(document).ready(function() {
                     },
                     success:function(data)
                     { 
-                      // console.log(data);
+                      // // console.log(data);
                       $(".div_PV_Amount").html(data);
                     }
                   });
@@ -1604,7 +1615,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
                   },
                   success:function(data)
                   { 
-                    // console.log(data);
+                    // // console.log(data);
                     // return false;
                         Swal.fire({
                           type: 'success',
@@ -1641,7 +1652,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
               var id = $(this).data('id');
 
-              console.log(id);
+              // console.log(id);
 
               setTimeout(function(){
                  // window.open("{{ url('backend/frontstore/test_print_receipt_02') }}"+"/"+id);
@@ -1659,7 +1670,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
               //     },
               //     success:function(data)
               //     { 
-              //       console.log(data);
+              //       // console.log(data);
               //       return false;
               //     }
               //   });

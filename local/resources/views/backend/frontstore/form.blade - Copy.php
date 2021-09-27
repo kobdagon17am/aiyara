@@ -1253,9 +1253,18 @@
                               $ds_m = $ds[1];
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{@$ds!='00/00/0000 00:00'?@$ds:null}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                            }else{
+
+                              $ds='';
+                           
+                            } ?>
+
+                           
+                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{@$sRow->transfer_money_datetime}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
+
+
+
                           </div>
 
                               <input {{@$disAfterSave}} type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
@@ -5604,7 +5613,6 @@ $(document).ready(function() {
                                   }else{
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
-
                                   if(value.transfer_money_datetime){
                                     $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   }
