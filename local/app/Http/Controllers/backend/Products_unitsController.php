@@ -57,7 +57,8 @@ class Products_unitsController extends Controller
 
        $sRowNew = \App\Models\Backend\Products::find($sRow->product_id_fk);
 
-       $sProduct_unit = \App\Models\Backend\Product_unit::get();
+       // $sProduct_unit = \App\Models\Backend\Product_unit::get();
+       $sProduct_unit = DB::select(" select * from `dataset_product_unit` where id in(2,6)");
 
        return View('backend.products_units.form')->with(array(
         'sRow'=>$sRow , 'id'=>$id,'sRowNew'=>$sRowNew,'sProductName'=>$sProductName,'sProduct_unit'=>$sProduct_unit
@@ -82,7 +83,8 @@ class Products_unitsController extends Controller
           }
 
           $sRow->product_id_fk    = request('product_id_fk');
-          $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+          // $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+          $sRow->product_unit_txt    = request('product_unit_txt');
           $sRow->converted_value    = request('converted_value');
 
           $sRow->status    = request('status')?request('status'):0;
@@ -116,11 +118,17 @@ class Products_unitsController extends Controller
       return $sQuery
       ->addColumn('product_unit_name', function($row) {
           $sP = \App\Models\Backend\Product_unit::where('id',$row->product_unit_id_fk)->where('lang_id',1)->get();
-          return $sP[0]->product_unit;
+          return @$sP[0]->product_unit.@$row->product_unit_txt;
+          // $p1 =  @$sP[0]->product_unit;
+          // if($p1==0){
+          //   return @$row->product_unit_txt;
+          // }else{
+          //   return $p1;
+          // }
       })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
-      })
+      // ->addColumn('updated_at', function($row) {
+      //   return is_null($row->updated_at) ? '-' : $row->updated_at;
+      // })
       ->make(true);
     }
 

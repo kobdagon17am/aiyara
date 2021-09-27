@@ -55,7 +55,7 @@ class Products_costController extends Controller
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sCountry = \App\Models\Backend\Country::get();
        $sCurrency = \App\Models\Backend\Currency::get();
-       $sLang = \App\Models\Backend\language::get();
+       $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Products_cost::find($id);
 
        $sProducts_details = \App\Models\Backend\Products_details::where('product_id_fk',$sRow->product_id_fk)->where('lang_id',1)->get();

@@ -103,14 +103,28 @@ class ProductsController extends Controller
           
           $sRow->save();
 
+           if( $id ){
+           }else{
+            $sProducts_units = new \App\Models\Backend\Products_units;
+            $sProducts_units->product_id_fk    = $sRow->id ;
+            $sProducts_units->product_unit_id_fk    = 4 ;
+            $sProducts_units->converted_value    = 1 ;
+            $sProducts_units->status    = 1 ;
+            $sProducts_units->first_unit    = 1 ;
+            $sProducts_units->created_at = date('Y-m-d H:i:s');
+            $sProducts_units->save();
+          }
+
+
           \DB::commit();
 
 
-          // if( $id ){
+          if( $sRow->status == 0 ){
           //   return redirect()->action('backend\ProductsController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
-          // }else{
+            return redirect()->to(url("backend/products"));
+          }else{
             return redirect()->to(url("backend/products/".$sRow->id."/edit"));
-          // }
+          }
           
 
       } catch (\Exception $e) {
@@ -122,20 +136,22 @@ class ProductsController extends Controller
 
     public function destroy($id)
     {
-      $sRow = \App\Models\Backend\Products::find($id);
-      $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
-      foreach ($sRowProducts_images as $key => $value) {
-      	  @UNLINK(@$value->img_url.@$value->product_img);
-      }
-      if( $sRowProducts_images ){
-        DB::delete(" DELETE FROM products_images WHERE (product_id_fk='$id') ");
-      }
-      if( $sRow ){
-      	DB::delete(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
-        DB::delete(" DELETE FROM products_cost WHERE (product_id_fk='$id') ");
-        $sRow->forceDelete();
-      }
-      return response()->json(\App\Models\Alert::Msg('success'));
+      // $sRow = \App\Models\Backend\Products::find($id);
+      // $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
+      // foreach ($sRowProducts_images as $key => $value) {
+      // 	  @UNLINK(@$value->img_url.@$value->product_img);
+      // }
+      // if( $sRowProducts_images ){
+      //   DB::select(" DELETE FROM products_images WHERE (product_id_fk='$id') ");
+      // }
+      // if( $sRow ){
+      	// DB::select(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
+        // DB::select(" DELETE FROM products_cost WHERE (product_id_fk='$id') ");
+        // $sRow->forceDelete();
+      // }
+      //  DB::select(" UPDATE products SET `status`='2', deleted_at=now() WHERE (id='$id') ");
+
+      // return response()->json(\App\Models\Alert::Msg('success'));
       // return redirect()->to(url("backend/products"));
     }
 

@@ -13,7 +13,7 @@ class Po_approveController extends Controller
     {
         $sBusiness_location = \App\Models\Backend\Business_location::get();
         $sBranchs = \App\Models\Backend\Branchs::get();
-        $code_order = DB::select(" select code_order from db_orders where LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
+        $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
 
         return View('backend.po_approve.index')->with(
@@ -87,8 +87,14 @@ class Po_approveController extends Controller
                 $sRow->approve_status  = 2;
                 $sRow->transfer_bill_status  = 2;
 
-                for ($i=0; $i < count($request->id) ; $i++) { 
-                    DB::select(" UPDATE `payment_slip` SET `code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->id[$i]."') ");
+                // return $request->slip_ids;
+
+                if(!empty($request->slip_ids)){
+
+                    for ($i=0; $i < count($request->slip_ids) ; $i++) { 
+                        DB::select(" UPDATE `payment_slip` SET `code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->slip_ids[$i]."') ");
+                    }
+                    
                 }
 
                 $sRow->approval_amount_transfer = $request->approval_amount_transfer;
@@ -106,29 +112,28 @@ class Po_approveController extends Controller
                 $sRow->status_slip = 'false';
                 $sRow->order_status_id_fk = '3';
                 $sRow->approve_status  = 1;
-                // $sRow->transfer_bill_status  = 3;
 
                  if ($request->hasFile('image01')) {
                       
 
-                      $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
-                      @UNLINK(@$r[0]->url.@$r[0]->file);
+                  $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
+                  @UNLINK(@$r[0]->url.@$r[0]->file);
 
-                      DB::select(" DELETE FROM `payment_slip` WHERE `code_order`='".$sRow->code_order."'; ");
+                  DB::select(" DELETE FROM `payment_slip` WHERE `code_order`='".$sRow->code_order."'; ");
 
-                      $this->validate($request, [
-                        'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                      ]);
-                      $image = $request->file('image01');
-                      $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                      $image_path = 'local/public/files_slip/'.date('Ym').'/';
-                      $image->move($image_path, $name);
-                      $sRow->file_slip = $image_path.$name;
-                      DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
-                       VALUES 
-                       ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
-                      $lastInsertId_01 = DB::getPdo()->lastInsertId();
-                    }
+                  $this->validate($request, [
+                    'image01' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+                  ]);
+                  $image = $request->file('image01');
+                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image->move($image_path, $name);
+                  $sRow->file_slip = $image_path.$name;
+                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
+                   VALUES 
+                   ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
+
+                }
 
 
                 $sRow->transfer_bill_status = 1;
@@ -139,6 +144,7 @@ class Po_approveController extends Controller
                 $sRow->transfer_amount_approver = 0;
                 $sRow->transfer_bill_date  = NULL;
                 $sRow->transfer_bill_approvedate = NULL;
+                $sRow->transfer_bill_note = @request('detail');
 
                 DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
 
@@ -256,6 +262,7 @@ class Po_approveController extends Controller
 select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk` 
 
 where 
+pay_type_id_fk in (1,8,10,11,12) and 
 `dataset_order_status`.`lang_id` = 1 and 
 `dataset_orders_type`.`lang_id` = 1 and 
 `db_orders`.`id` != 0

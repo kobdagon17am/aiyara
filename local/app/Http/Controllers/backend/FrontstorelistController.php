@@ -367,15 +367,7 @@ class FrontstorelistController extends Controller
         // dd($request->all());
         if(isset($request->add_course)){
 
-
             $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
-            if($sFrontstore->check_press_save!=2){
-                $business_location_id = \Auth::user()->business_location_id;
-                $code_order = RunNumberPayment::run_number_order($business_location_id);
-            }else{
-                $code_order = $sFrontstore->code_order;
-            }
-
             $id = request('id');
 
             for ($i=0; $i < count($id) ; $i++) { 
@@ -389,7 +381,7 @@ class FrontstorelistController extends Controller
                 $sRow->action_date = date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
                 $sRow->type_product = 'course' ;
-                $sRow->code_order = $code_order  ;
+                $sRow->check_press_save = '2';
 
                 if(!empty(request('amt_apply')[$i])){
                     $Course_event = \App\Models\Backend\Course_event::find($id[$i]);
@@ -419,10 +411,17 @@ class FrontstorelistController extends Controller
                     DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
                     DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
               }else{
-                DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+                    DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
               }
 
+              if($sFrontstore->check_press_save==2 && $sFrontstore->approve_status>0 && $sFrontstore->code_order!=""){
 
+                 DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sFrontstore->id.") ");
+                 $business_location_id = \Auth::user()->business_location_id;
+                 $code_order = RunNumberPayment::run_number_order($business_location_id);
+                 DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sFrontstore->id.") ");
+
+              }
 
             return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
 

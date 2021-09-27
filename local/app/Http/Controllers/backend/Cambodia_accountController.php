@@ -21,7 +21,7 @@ class Cambodia_accountController extends Controller
       $sRowGroup = \App\Models\Backend\Cambodia_account::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\language::get();
+      $sLanguage = \App\Models\Backend\Language::get();
 
       $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -40,7 +40,7 @@ class Cambodia_accountController extends Controller
        $sRowGroup = \App\Models\Backend\Cambodia_account::find($id);
        $sRow = \App\Models\Backend\Cambodia_account::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\language::get();
+       $sLanguage = \App\Models\Backend\Language::get();
        return View('backend.cambodia_account.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 

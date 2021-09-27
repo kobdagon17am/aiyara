@@ -280,6 +280,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetLotnumber2', 'AjaxController@ajaxGetLotnumber2');
     
     Route::post('ajaxGetCustomer', 'AjaxController@ajaxGetCustomer');
+    Route::post('ajaxGetCustomerDelivery', 'AjaxController@ajaxGetCustomerDelivery');
     Route::post('ajaxGetCustomerCode', 'AjaxController@ajaxGetCustomerCode');
 
     Route::post('ajaxGetCustomerCodeOnly', 'AjaxController@ajaxGetCustomerCodeOnly');
@@ -563,6 +564,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('frontstore/viewdata/{id}', 'FrontstoreController@viewdata');
 
     Route::post('getSumCostActionUser', 'FrontstoreController@getSumCostActionUser');
+    Route::post('getPV_Amount', 'FrontstoreController@getPV_Amount');
+
 
     Route::get('check_stock_account/print_receipt/{id}', 'AjaxController@createPDFStock_account');
 

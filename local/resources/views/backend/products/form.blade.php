@@ -480,13 +480,22 @@
                         {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                            return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w150'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
-                      $('td:last-child', nRow).html(''
-                        + '<a href="{{ route('backend.products_units.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_units.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                      ).addClass('input');
+
+                      if(aData['first_unit']!=1){
+
+                        $('td:last-child', nRow).html(''
+                          + '<a href="{{ route('backend.products_units.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                          + '<a href="javascript: void(0);" data-url="{{ route('backend.products_units.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        ).addClass('input');
+
+                      }else{
+                        $('td:last-child', nRow).html('Default value');
+                      }
+
+
                     }
                 });
                 $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

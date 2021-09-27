@@ -22,7 +22,7 @@ class Business_locationController extends Controller
     {
       $sCountry = \App\Models\Backend\Country::get();
       $sLocale  = \App\Models\Locale::all();
-      $sLang = \App\Models\Backend\language::get();
+      $sLang = \App\Models\Backend\Language::get();
       return View('backend.business_location.form')->with(array('sLang'=>$sLang, 'sCountry'=>$sCountry) );
     }
 
@@ -34,7 +34,7 @@ class Business_locationController extends Controller
     public function edit($id)
     {
        $sCountry = \App\Models\Backend\Country::get();
-       $sLang = \App\Models\Backend\language::get();
+       $sLang = \App\Models\Backend\Language::get();
        $sRow = \App\Models\Backend\Business_location::find($id);
        return View('backend.business_location.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang, 'sCountry'=>$sCountry) );
     }
@@ -94,7 +94,7 @@ class Business_locationController extends Controller
           return $C->txt_desc;
       })      
       // ->addColumn('lang', function($row) {
-      //     $sLang = \App\Models\Backend\language::find($row->lang_id);
+      //     $sLang = \App\Models\Backend\Language::find($row->lang_id);
       //     return $sLang->txt_desc;
       // })
       ->addColumn('updated_at', function($row) {

@@ -554,7 +554,7 @@
 
              @if(@$sRow->purchase_type_id_fk==6) รายการคอร์สอบรม @ELSE รายการสินค้า/บริการ @ENDIF
 
-             <?=@$sRow->invoice_code?'['.@$sRow->invoice_code.']':'';?> </h4>
+             <?=@$sRow->code_order?'['.@$sRow->code_order.']':'';?> </h4>
              <div style="text-align: right;">
 
 
@@ -1033,7 +1033,7 @@
           <div class="divTableCell" >
           </div>
           <div class="divTH">
-            <label for="" > ยอด Ai Voucherr ที่มี : </label>
+            <label for="" > ยอด Ai Voucher ที่มี : </label>
           </div>
           <div class="divTableCell">
             <input class="form-control f-ainumber-18 input-aireadonly" id="gift_voucher_cost" name="gift_voucher_cost" value="{{number_format(@$giftvoucher_this,2)}}" readonly="" >
@@ -1084,10 +1084,10 @@
 6 เงินสด + Ai-Cash
 9 เครดิต + Ai-Cash
 =================================== -->
-                        @if(@$sRow->check_press_save==2 && (@$sRow->purchase_type_id_fk==1 || @$sRow->purchase_type_id_fk==8 || @$sRow->purchase_type_id_fk==10 || @$sRow->purchase_type_id_fk==11 || @$sRow->purchase_type_id_fk==12) && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) )
+                        @if(@$sRow->check_press_save==2  && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) && ($sRow->pay_type_id_fk==1 || $sRow->pay_type_id_fk==8 || $sRow->pay_type_id_fk==10 || $sRow->pay_type_id_fk==11 || $sRow->pay_type_id_fk==12 || $sRow->pay_type_id_fk==3 || $sRow->pay_type_id_fk==6 || $sRow->pay_type_id_fk==9 ) )
 
                           @php
-                          $disAfterSave = ' disabled '
+                          $disAfterSave = 'disabled'
                           @endphp
 
                         @ELSE
@@ -1097,6 +1097,8 @@
                           @endphp
 
                         @ENDIF
+<?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk; ?>
+                        <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
 
                              <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
                               <option value="">Select</option>
@@ -1618,7 +1620,7 @@
                     if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
                     ?>
 
-                         <input type="hidden" name="pay_type_transfer_slip" value="1">
+                         <input type="hidden" id="pay_type_transfer_slip" name="pay_type_transfer_slip" value="1">
 
                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
@@ -1709,7 +1711,11 @@
                   <label for="" class="col-2" ><b>รหัสคูปอง : </b></label>
                   <input class="col-4 form-control " type="text" name="txtSearchPro" id="txtSearchPro" > &nbsp; &nbsp;
                   <button class="btn btn-success btnCheckProCode " >ตรวจสอบ</button>
+                  
                 </div>
+
+                 <div class=" note_coupon_inactive " style="color: red;font-size: 16px;margin-left: 5%;">
+                 </div>
 
                 <div class="modal-title">
                 <input id="pro_name" type="text" readonly="" style="border: 0px solid transparent;width: 100%;font-weight: bold;font-size: 18px;display: none;">
@@ -3640,6 +3646,11 @@
     $(document).ready(function() {
         $(document).on('click', '.btnCheckProCode', function(event) {
           event.preventDefault();
+            $(".myloading").show();
+
+            setTimeout(function(){
+               $(".myloading").hide();
+            }, 2000);  
 
           var frontstore_id_fk = $("#frontstore_id_fk").val(); //alert(frontstore_id_fk);
           var purchase_type_id_fk = $("#purchase_type_id_fk").val(); //alert(purchase_type_id_fk);
@@ -3652,6 +3663,7 @@
           // $("#spinner_frame").show();
           if(txtSearchPro==''){
             $("#txtSearchPro").focus();
+            $(".myloading").hide();
             return false;
           }
 
@@ -3666,20 +3678,27 @@
                  customers_id_fk:customers_id_fk
                },
                 success:function(msg){
-                     console.log(msg);
+                     // console.log(msg);
                      // return false;
-                     if(msg=="InActive"){
-                        alert('! คูปอง รหัสนี้ ไม่อยู่ในสถานะที่ใช้งานได้ ');
+
+                     if(msg!="1"){
+                        // alert('! คูปอง รหัสนี้ ไม่อยู่ในสถานะที่ใช้งานได้ ');
+                        $(".note_coupon_inactive").html("Note: * "+msg);
                         $("#pro_name").hide();
                         $('.btnSavePro').hide();
                         $('.show_add_coupon').hide();
                         $('#data-table-promotion').hide();
                         $('#divTablePromotionsCost').hide();
+                        $(".myloading").hide();
                         return false;
+                     }else{
+                        $(".myloading").hide();
+                        $(".note_coupon_inactive").html('');
                      }
 
                      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+                      $(".myloading").show();
 
                            $.ajax({
                              type:'POST',
@@ -3798,6 +3817,8 @@
                                       {data: 'product_unit', title :'<center>หน่วย</center>', className: 'text-center'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
+
+                                     $(".myloading").hide();
 
                                     }
 
@@ -4641,7 +4662,7 @@ $(document).ready(function() {
           timepicker: true,
           datepicker: true,
           weeks: false,
-          minDate: 0,
+          // minDate: 0,
       });
 
       $('.transfer_money_datetime').change(function(event) {
@@ -4672,7 +4693,7 @@ $(document).ready(function() {
           timepicker: true,
           datepicker: true,
           weeks: false,
-          minDate: 0,
+          // minDate: 0,
       });
 
       $('.transfer_money_datetime_02').change(function(event) {
@@ -4702,7 +4723,7 @@ $(document).ready(function() {
           timepicker: true,
           datepicker: true,
           weeks: false,
-          minDate: 0,
+          // minDate: 0,
       });
 
       $('.transfer_money_datetime_03').change(function(event) {
@@ -5584,9 +5605,15 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
-                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  if(value.transfer_money_datetime){
+                                    $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  }
+                                  if(value.transfer_money_datetime_02){
+                                    $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  }
+                                  if(value.transfer_money_datetime_03){
+                                    $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  }
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -5895,6 +5922,8 @@ $(document).ready(function() {
 
 
            $(document).on('click', '.btnSave', function(event) {
+
+            var pay_type_id_fk = $("#pay_type_id_fk").val();
             // alert("xx");
             event.preventDefault();
              $("#frm-main").valid();
@@ -5925,6 +5954,7 @@ $(document).ready(function() {
                                             return false;
                                           }else{
                                             $('.btnSave').removeAttr("type").attr("type", "submit");
+                                            // $('#pay_type_transfer_slip').val(0);
                                             $('#frm-main').submit();
 
                                           }
@@ -5932,6 +5962,7 @@ $(document).ready(function() {
                                         }else{
                                           // $('#member_id_aicash').attr('required', false);
                                           $('.btnSave').removeAttr("type").attr("type", "submit");
+                                           // $('#pay_type_transfer_slip').val(0);
                                            $('#frm-main').submit();
                                         }
 

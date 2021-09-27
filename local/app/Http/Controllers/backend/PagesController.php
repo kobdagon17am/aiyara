@@ -445,7 +445,7 @@ class PagesController extends Controller{
           $mimeType = $file->getMimeType();
 
           // Valid File Extensions
-          $valid_extension = array("xlsx");
+          $valid_extension = array("xlsx","csv");
 
           // 2MB in Bytes
           // $maxFileSize = 2097152; 
@@ -453,7 +453,8 @@ class PagesController extends Controller{
           $maxFileSize = 5242880; 
 
           // Check file extension
-          if(in_array(strtolower($extension),$valid_extension)){
+          // if(in_array(strtolower($extension),$valid_extension)){
+          if(in_array(strtolower($extension),['xlsx'])){
 
             // Check file size
             if($fileSize <= $maxFileSize){
@@ -508,14 +509,14 @@ class PagesController extends Controller{
                             continue; 
                          }
 
-                       $insertData = array(
-                         "promotion_code_id_fk"=>@$sRow->id,
-                         "promotion_code"=>@$request->prefix_coupon.@$promotion_code,
-                         // "customer_id_fk"=>@$customers_id_fk,
-                         "user_name"=>@$user_name,
-                         "pro_status"=> '4' ,
-                         "created_at"=>now());
-                       PromotionCode_add::insertData($insertData);
+                       // $insertData = array(
+                       //   "promotion_code_id_fk"=>@$sRow->id,
+                       //   "promotion_code"=>@$request->prefix_coupon.@$promotion_code,
+                       //   "user_name"=>@$user_name,
+                       //   "pro_status"=> '4' ,
+                       //   "created_at"=>now());
+                       // PromotionCode_add::insertData($insertData);
+                       DB::select(" INSERT IGNORE INTO db_promotion_cus(promotion_code_id_fk,promotion_code,user_name,pro_status,created_at) VALUES (".@$sRow->id.",'".@$request->prefix_coupon.@$promotion_code."','".@$user_name."','4',now()) ");
 
                        $i++;
 
@@ -539,6 +540,89 @@ class PagesController extends Controller{
             }else{
                Session::flash('message','Invalid File Extension.');
             }
+
+
+// CSV 
+
+              if(in_array(strtolower($extension),['csv'])){
+
+                    if( @$request->promotion_code_id_fk ){
+                      $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_code_id_fk );
+                    }else{
+                      $sRow = new \App\Models\Backend\PromotionCode;
+                    }
+
+                    $sRow->promotion_id_fk = $request->promotion_id_fk;
+                    $sRow->coupon_terms = $request->coupon_terms;
+                    $sRow->pro_sdate = $request->pro_sdate;
+                    $sRow->pro_edate = $request->pro_edate;
+                    // $sRow->pro_status = 4 ;
+                    $sRow->created_at = date('Y-m-d H:i:s');
+                    $sRow->save();
+
+                  // Check file size
+                  if($fileSize <= $maxFileSize){
+
+                    // File upload location
+                    $location = 'uploads/';
+                    $destinationPath = public_path($location);
+                    $file->move($destinationPath, $filename);
+
+                    $filepath = public_path("uploads/".$filename);
+
+                    // Reading file
+                    $file = fopen($filepath,"r");
+
+                    $importData_arr = array();
+                    $i = 0;
+
+                    while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                       $num = count($filedata );
+                       
+                       // Skip first row (Remove below comment if you want to skip the first row)
+                       if($i == 0){
+                          $i++;
+                          continue; 
+                       }
+                       
+                       for ($c=0; $c < $num; $c++) {
+                          $importData_arr[$i][] = $filedata [$c];
+                       }
+                       $i++;
+                    }
+                    fclose($file);
+
+                    // Insert to MySQL database
+                    foreach($importData_arr as $importData){
+
+                      // $insertData = array(
+                      //    "customers_id_fk"=>@$importData[0],
+                      //    "txt_msg"=>@$importData[1],
+                      //    "show_from"=>@$importData[2],
+                      //    "show_to"=>@$importData[3],
+                      //    "remark"=>@$importData[4],
+                      //    "created_at"=>now()
+                      //  );
+                      // Page::insertData($insertData);
+
+                         DB::select(" INSERT IGNORE INTO db_promotion_cus(promotion_code_id_fk,promotion_code,user_name,pro_status,created_at) VALUES (".@$sRow->id.",'".@$request->prefix_coupon.@$importData[0]."','".@$importData[1]."','4',now()) ");
+
+
+                    }
+
+                    Session::flash('message','Import Successful.');
+
+                    // dd(Session::get('message'));
+
+                  }else{
+                    Session::flash('message','File too large. File must be less than 5MB.');
+                  }
+
+                }else{
+                   Session::flash('message','Invalid File Extension.');
+                }
+
+
 
           }
 

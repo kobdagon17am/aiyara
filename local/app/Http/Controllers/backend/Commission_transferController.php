@@ -24,7 +24,7 @@ class Commission_transferController extends Controller
         $sRowGroup = \App\Models\Backend\Commission_transfer::orderBy('group_id', 'desc')->limit(1)->get();
         $groupMaxID = $sRowGroup[0]->group_id + 1;
         // dd($groupMaxID);
-        $sLanguage = \App\Models\Backend\language::get();
+        $sLanguage = \App\Models\Backend\Language::get();
 
         $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -43,7 +43,7 @@ class Commission_transferController extends Controller
         $sRowGroup = \App\Models\Backend\Commission_transfer::find($id);
         $sRow = \App\Models\Backend\Commission_transfer::where('group_id', $sRowGroup->group_id)->get();
         // dd($sRow[0]->status);
-        $sLanguage = \App\Models\Backend\language::get();
+        $sLanguage = \App\Models\Backend\Language::get();
         return View('backend.commission_transfer.form')->with(array('sRow' => $sRow, 'id' => $id, 'sLanguage' => $sLanguage));
     }
 

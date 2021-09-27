@@ -79,8 +79,8 @@ $(function() {
         scrollX: true,
         ordering: false,
         destroy: true,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
+        // scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 100,
         ajax: {
               url: '{{ route('backend.products.datatable') }}',
               data :{
@@ -108,10 +108,19 @@ $(function() {
 
           $('td:last-child', nRow).html(''
             + '<a href="{{ route('backend.products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-            + '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            // + '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           ).addClass('input');
 
           }
+
+
+          if(aData['status']==0){
+            for (var i = 1; i < 4; i++) {
+              $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#808080','text-decoration':'line-through','font-style':'italic'});
+            }
+          }
+
+
         }
     });
     // $('.myLike').on('change', function(e){
@@ -178,7 +187,7 @@ $(function() {
 
                               $('td:last-child', nRow).html(''
                                 + '<a href="{{ route('backend.products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                + '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                // + '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                               ).addClass('input');
 
                               }

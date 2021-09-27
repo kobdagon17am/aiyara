@@ -23,7 +23,7 @@ class Orders_typeController extends Controller
       $sRowGroup = \App\Models\Backend\Orders_type::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\language::get();
+      $sLanguage = \App\Models\Backend\Language::get();
       return View('backend.orders_type.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
@@ -37,7 +37,7 @@ class Orders_typeController extends Controller
        $sRowGroup = \App\Models\Backend\Orders_type::find($id);
        $sRow = \App\Models\Backend\Orders_type::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\language::get();
+       $sLanguage = \App\Models\Backend\Language::get();
        return View('backend.orders_type.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 
