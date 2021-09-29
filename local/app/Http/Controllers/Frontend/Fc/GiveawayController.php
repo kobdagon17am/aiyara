@@ -29,7 +29,7 @@ class GiveawayController extends Controller
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
         $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
 
-        $giveaway = Giveaway::where('business_location_id_fk', '=', $data_customer->business_location_id)
+        $giveaway = Giveaway::where('business_location_id_fk', '=', (@$data_customer->business_location_id?@$data_customer->business_location_id:1))
             ->where('status', '=', 1)
             ->wheredate('start_date', '<=', now())
             ->wheredate('end_date', '>=', now())
@@ -166,7 +166,7 @@ class GiveawayController extends Controller
 
     public static function check_giveaway_all($type, $customer_username, $pv_total)
     { //ประเภทการซื้อ ,customer_username,pv order
-
+        // dd($type);
         $data_customer = DB::table('customers')
             ->where('user_name', '=', $customer_username)
             ->first();
@@ -185,11 +185,15 @@ class GiveawayController extends Controller
         $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
         $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
 
-        $giveaway = Giveaway::where('business_location_id_fk', '=', $data_customer->business_location_id)
+        // dd($data_customer->business_location_id);
+
+        $giveaway = Giveaway::where('business_location_id_fk', '=', (@$data_customer->business_location_id?@$data_customer->business_location_id:1))
             ->where('status', '=', 1)
             ->wheredate('start_date', '<=', now())
             ->wheredate('end_date', '>=', now())
             ->get();
+
+      // dd($giveaway);
 
         if (count($giveaway) > 0) {
 
