@@ -52,7 +52,7 @@ class GiveawayController extends Controller
                 if ($set_another_pro == 0) {
                     $i++;
                     $arr_type =  array($value->orders_type_id);
-                    if (in_array($type,$arr_type)) {
+                    if (in_array($type,$arr_type) == FALSE) {
                         $arr[$i]['message'] = 'ประเภทการซื้อไม่ถูกต้อง';
 
                     } elseif ($value->giveaway_member_type_id_fk == 1 and $data_customer->pv > 0) {
@@ -211,7 +211,7 @@ class GiveawayController extends Controller
               if ($set_another_pro == 0) {
                     $i++;
 
-                    if (in_array($type,$arr_type)) {
+                    if (in_array($type,$arr_type) == FALSE) {
 
                         $arr[$i][] = 'ประเภทการซื้อไม่ถูกต้อง';
 

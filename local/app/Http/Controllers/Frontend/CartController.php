@@ -108,17 +108,17 @@ class CartController extends Controller
     public static function payment_test_type_1()
     {
 
-        $order_id = '26'; //order_id
-        $admin_id = '4959'; //admin_id
-        $distribution_channel = '1';
-        $resule = PvPayment::PvPayment_type_confirme($order_id,'1','2','customer');
-        dd($resule);
-        // if ($resule['status'] == 'success') {
-        // }
+        // $order_id = '26'; //order_id
+        // $admin_id = '4959'; //admin_id
+        // $distribution_channel = '1';
+        // $resule = PvPayment::PvPayment_type_confirme($order_id,'1','2','customer');
+        // dd($resule);
+        // // if ($resule['status'] == 'success') {
+        // // }
 
-        // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
+        $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway_all(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 
-        // dd($data);
+        dd($data);
 
     }
 
