@@ -166,6 +166,8 @@ class Pick_warehouse_fifoController extends Controller
           $TABLES = DB::select(" SHOW TABLES ");
           // return $TABLES;
           // dd();
+
+          // return $temp_db_stocks;
           
           $array_TABLES = [];
           foreach($TABLES as $t){
@@ -187,10 +189,16 @@ class Pick_warehouse_fifoController extends Controller
           // return $branch_id_fk;
           // return $temp_db_stocks;
           // dd();
+          if($branch_id_fk==1){ // รวม 6 = WAREHOUSE คลังสินค้า 
+            $wh_branch_id_fk = " AND db_stocks.branch_id_fk in (1,6) ";
+          }else{
+            $wh_branch_id_fk = " AND db_stocks.branch_id_fk='$branch_id_fk' ";
+          }
 
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
-          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
-
+          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' $wh_branch_id_fk AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+// return $business_location_id_fk;
+// return $branch_id_fk;
 // dd();
       // $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
@@ -242,11 +250,11 @@ class Pick_warehouse_fifoController extends Controller
         DB::select(" UPDATE $temp_db_pick_pack_requisition_code SET requisition_code='$requisition_code' WHERE id in ($lastInsertId01) ");
         DB::select(" UPDATE $temp_ppp_001 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
 
-        $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk FROM $temp_db_pick_pack_requisition_code WHERE requisition_code='".$requisition_code."'");
-        $r2 = explode(",",@$r1[0]->pick_pack_packing_code_id_fk);
-        foreach ($r2 as $key => $v) {
-           DB::select(" UPDATE db_consignments SET requisition_code='".@$requisition_code."' WHERE pick_pack_packing_code_id_fk in (".$v.") ");
-        }
+        // $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk FROM $temp_db_pick_pack_requisition_code WHERE requisition_code='".$requisition_code."'");
+        // $r2 = explode(",",@$r1[0]->pick_pack_packing_code_id_fk);
+        // foreach ($r2 as $key => $v) {
+        //    DB::select(" UPDATE db_consignments SET requisition_code='".@$requisition_code."' WHERE pick_pack_packing_code_id_fk in (".$v.") ");
+        // }
 
 
         // return "OK";
@@ -890,13 +898,13 @@ class Pick_warehouse_fifoController extends Controller
 
            $Products = DB::select("
            SELECT
-id,
-pick_pack_requisition_code_id_fk,
-pick_pack_packing_code_id_fk,
-product_id_fk,
-product_name,
-sum(amt) as amt,
-product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
+            id,
+            pick_pack_requisition_code_id_fk,
+            pick_pack_packing_code_id_fk,
+            product_id_fk,
+            product_name,
+            sum(amt) as amt,
+            product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
 
           ");
 
@@ -919,7 +927,7 @@ product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
                      
                       <div class="divTableRow">
-                      <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
+                      <div class="divTableCell" style="width:220px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง.</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
                       <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวน</div>
                       </div>
@@ -956,35 +964,61 @@ product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
           foreach ($Products as $key => $value) {
 
             // return $value->amt;
+               //  $arr_inv = [];
+               //  $arr_inv2 = [];
+               //  $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+               //  LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+               //  WHERE frontstore_id_fk in ($orders_id_fk) AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
+               //  foreach ($r_invoice_code as $inv) {
+               //      array_push($arr_inv,$inv->invoice_code);
+               //      array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+               //  }
+
+               // // รวม product promotion ด้วย (ถ้ามี)
+               //  $sPromotion = DB::select("
+               //    SELECT db_orders.code_order,promotions_products.product_id_fk FROM promotions_products 
+               //    LEFT JOIN promotions on promotions.id=promotions_products.promotion_id_fk
+               //    JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions.id
+               //    LEFT JOIN db_orders on db_orders.id=db_order_products_list.frontstore_id_fk
+               //    WHERE db_order_products_list.frontstore_id_fk in ($orders_id_fk) and promotions_products.product_id_fk=".$value->product_id_fk." ;
+               //  ");
+               //  if($sPromotion){
+               //          foreach ($sPromotion as $v) {
+               //              array_push($arr_inv,$v->code_order);
+               //          }
+               //  }
+
+
+               //  $invoice_code = implode(",",array_unique($arr_inv));
+
+                // if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
+                // if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}
+
+               // บิลปกติ
                 $arr_inv = [];
-                $arr_inv2 = [];
-                $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+                $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                WHERE frontstore_id_fk in ($orders_id_fk) AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
-                foreach ($r_invoice_code as $inv) {
-                    array_push($arr_inv,$inv->invoice_code);
-                    array_push($arr_inv2,'"'.$inv->invoice_code.'"');
+                WHERE db_orders.id in ($orders_id_fk) AND db_order_products_list.product_id_fk in ($value->product_id_fk)  AND type_product='product' ");
+                if(@$p1){
+                  foreach (@$p1 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
+                  }
                 }
 
-               // รวม product promotion ด้วย (ถ้ามี)
-                $sPromotion = DB::select("
-                  SELECT db_orders.code_order,promotions_products.product_id_fk FROM promotions_products 
-                  LEFT JOIN promotions on promotions.id=promotions_products.promotion_id_fk
-                  JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions.id
-                  LEFT JOIN db_orders on db_orders.id=db_order_products_list.frontstore_id_fk
-                  WHERE db_order_products_list.frontstore_id_fk in ($orders_id_fk) and promotions_products.product_id_fk=".$value->product_id_fk." ;
-                ");
-                if($sPromotion){
-                        foreach ($sPromotion as $v) {
-                            array_push($arr_inv,$v->code_order);
-                        }
+                // บิลโปร
+                $p2 = DB::select(" 
+                select db_orders.code_order 
+                FROM `promotions_products` 
+                LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
+                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                WHERE db_orders.id in  ($orders_id_fk) AND promotions_products.product_id_fk in ($value->product_id_fk) AND db_order_products_list.type_product='promotion' ");
+                if(@$p2){
+                  foreach (@$p2 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
+                  }
                 }
 
-
-                $invoice_code = implode("<br>",array_unique($arr_inv));
-
-                if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
-                if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}
+                $invoice_code = implode(",",$arr_inv);
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
                $amt_pay_this = $value->amt; 
@@ -1001,7 +1035,10 @@ product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
                   
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                    <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                        ('.@$invoice_code.')
+                    </div>
                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -1021,9 +1058,10 @@ product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
                           $amt_remain = @$rs_[0]->amt_remain?@$rs_[0]->amt_remain:0;
                           $pay_this = @$rs_[0]->amt_remain?@$rs_[0]->amt_remain:$value->amt ;
 
+                          $branch = DB::select(" select * from branchs where id=".$v_02->branch_id_fk." ");
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
-                          $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
+                          $sWarehouse = @$branch[0]->b_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
                           // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
@@ -1349,7 +1387,7 @@ product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
 
                       $pn .=     
                             '<div class="divTableRow" style="text-align:center;">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง</div>
+                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง. </div>
                             </div>
                             ';
 

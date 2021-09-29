@@ -23,6 +23,10 @@ class Consignments_import extends Model {
               'consignment_no' => $data['consignment_no'],
             	'customer_ref_no' => $data['customer_ref_no'],
             	'sender_code' => $data['sender_code'],
+               'postcode' => $data['postcode'],
+               'mobile' => $data['mobile'],
+               'pay_requisition_001_id_fk' => $data['pay_requisition_001_id_fk'],
+               'delivery_id_fk' => $data['delivery_id_fk'],
             ));
       }
 

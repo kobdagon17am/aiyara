@@ -59,7 +59,8 @@ class Pick_packPackingCodeController extends Controller
 
     public function packing_list(Request $request){     
 
-      $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND status<>1 ");
 
       $sQuery = \DataTables::of($sTable);
 

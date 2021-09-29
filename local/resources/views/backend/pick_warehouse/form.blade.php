@@ -899,7 +899,7 @@
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
-      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");

@@ -1164,10 +1164,10 @@
                     <div class="divTableRow show_div_credit " style="<?=$show_div_credit?>" >
                       <div class="divTableCell" > </div>
                       <div class="divTH">
-                          <label for="" class="" > บัตรเครดิต  :  </label>
+                          <label for="" class="" > ยอดชำระเงินด้วยบัตรเครดิต  :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
+                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" placeholder="" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
                       </div>
                     </div>
 
@@ -6425,7 +6425,7 @@ $(document).ready(function() {
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
-      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
 
       DB::select("TRUNCATE `db_orders`;");

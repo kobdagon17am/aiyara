@@ -860,6 +860,7 @@ class PagesController extends Controller{
                            "hrc"=>@$hrc,
                            "invr"=>@$invr,
                            "service_code"=>@$service_code,
+                           "pay_requisition_001_id_fk"=>@$request->id,
                            "created_at"=>now());
                          Consignments_import::insertData($insertData);
 

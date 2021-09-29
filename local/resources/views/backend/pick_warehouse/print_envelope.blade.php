@@ -64,9 +64,9 @@ body{
 
                 if(!empty($value[0]->recipient_name)){
                     echo "คุณ ".@$value[0]->recipient_name."<br>";
-                    echo "ที่อยู่ ".@$value[0]->address."<br>";
+                    echo "ที่อยู่ ".@$value[0]->address." ";
                     echo @$value[0]->postcode."<br>";
-                    echo @$value[0]->mobile."<br>";
+                    echo @$value[0]->mobile?" Tel.".@$value[0]->mobile:''."<br>";
                     echo "<br>";
                     echo "<br>";
                     echo "Tracking No. : ".@$value[0]->consignment_no;

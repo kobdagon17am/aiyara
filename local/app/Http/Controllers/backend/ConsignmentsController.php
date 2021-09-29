@@ -47,7 +47,7 @@ class ConsignmentsController extends Controller
 
     public function DatatableMap(Request $req){
       // $sTable = \App\Models\Backend\Consignments::get();
-      $sTable = DB::select(" select * from db_consignments WHERE requisition_code='".$req->requisition_code."' ");
+      $sTable = DB::select(" SELECT * FROM `db_consignments` where pay_requisition_001_id_fk='$req->id' ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->make(true);

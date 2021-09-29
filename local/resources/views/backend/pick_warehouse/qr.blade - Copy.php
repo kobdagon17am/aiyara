@@ -185,10 +185,9 @@
             <div class="form-group row  " >
               <div class="col-md-12 ">
                 <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอเบิก </span>
-
-                 <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
-
-                <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                <span style="font-weight: bold;color: red;">
+                 *** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>
+                <!-- <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
                 <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
             </div>
           </div>
@@ -206,7 +205,6 @@
                   <div class="form-group row">
 
                     <input type="hidden" name="requisition_code" value="{{@$requisition_code}}">
-                    <input type="hidden" name="id" value="{{@$id}}">
                     
                     <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) จาก KERRY :</label>
                     <div class="col-md-3">
@@ -217,7 +215,7 @@
                       &nbsp;
                       &nbsp;
                       &nbsp;
-                      <input type='button' data-id="{{@$id}}" class="btn btn-danger btnClearImport " value='Clear data Import' >
+                      <input type='button' class="btn btn-danger btnClearImport " value='Clear data Import' >
                     </div>
                     
                   </div>
@@ -317,8 +315,8 @@
                           },
                         },
                   columns: [
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก </span> ', className: 'text-center w100'},
-                      {data: 'column_002', title :'<span style="vertical-align: middle;"> รหัส Packing List ในใบเบิก</span> ', className: 'text-center w150'},
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิกรวม </span> ', className: 'text-center w150'},
+                      {data: 'column_002', title :'<span style="vertical-align: middle;"> รหัส Packing List ในใบเบิก</span> ', className: 'text-center w200'},
                       {data: 'column_003', title :'<span style="vertical-align: middle;"> รหัสใบเสร็จในใบเบิก</span> ', className: 'text-center w350'},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
@@ -336,8 +334,8 @@
 
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-          var id = "{{$id}}";  //alert(id);
-          var packing_id = "{{$packing_id}}"; //alert(packing_id);
+          var id = "{{$id}}";
+          var packing_id = "{{$packing_id}}";// alert(packing_id);
           var oTable0002;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -359,7 +357,7 @@
                             data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
                         },
                   columns: [
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก  </span> ', className: 'text-center w100'},
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิกย่อย  </span> ', className: 'text-center w150'},
                       {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการสินค้า </span> ', className: 'text-left',render: function(d) {
                         return d;
                       }},
@@ -375,10 +373,11 @@
 
   <script type="text/javascript">
        var oTableMap;
-         var id = "{{$id}}";
+         var requisition_code = "{{$requisition_code}}"; 
 
-         if(id){
+         if(requisition_code){
 
+            // console.log(requisition_code);
             $(function() {
               $.fn.dataTable.ext.errMode = 'throw';
                 oTableMap = $('#data-table-map-consignments').DataTable({
@@ -398,7 +397,7 @@
                           url: '{{ route('backend.consignments_map.datatable') }}',
                           method: "POST",
                           data:{ _token: '{{csrf_token()}}',
-                          id:id,
+                          requisition_code:requisition_code,
                         },
                       },
                     columns: [
@@ -423,7 +422,7 @@
  // ส่ง ajax ไป insert data to db_consignments
 
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-          var id = "{{$id}}"; //alert(id);
+          var id = "{{$id}}";
           var packing_id = "{{$packing_id}}"; //alert(packing_id);
           var requisition_code = "{{$requisition_code}}"; //alert(requisition_code);
           var oTable0005;
@@ -453,11 +452,7 @@
                       }},
                       {data: 'recipient_code',   title :'<span style="vertical-align: top;"><center>ใบปะหน้ากล่อง & ใบเสร็จ ', className: 'text-left',render: function(d) {
                         return '<center> <a href="{{ URL::to('backend/pick_warehouse/print_envelope') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
-                          // + ' <a href="{{ URL::to('backend/pick_warehouse/print_receipt_03') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>'
-
-                          + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>'
-
-                          ;
+                          + ' <a href="{{ URL::to('backend/pick_warehouse/print_receipt_03') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                       }},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
@@ -467,28 +462,6 @@
          
          });
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-    </script>
-
-
-      <script>
-      $(document).ready(function() {
-
-          $(document).on('click', '.print02', function(event) {
-
-              event.preventDefault();
-              $(".myloading").show();
-
-              var id = $(this).data('id');
-              // console.log(id);
-              setTimeout(function(){
-                 window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id);
-                 $(".myloading").hide();
-              }, 500);
-              
-            });
-                
-      });
-
     </script>
 
   <script type="text/javascript">
@@ -630,13 +603,12 @@
               $(".btnClearImport").click(function(event) {
                   /* Act on the event */
                   $(".myloading").show();
-                 var id =  $(this).data('id');
 
                   $.ajax({
 
                          type:'POST',
                          url: " {{ url('backend/ajaxClearConsignment') }} ", 
-                         data:{ _token: '{{csrf_token()}}',id:id },
+                         data:{ _token: '{{csrf_token()}}' },
                           success:function(data){
                                console.log(data); 
                                location.reload();
@@ -668,7 +640,7 @@
                               // setTimeout(function(){
 
                                     var oTableMap;
-                                    var id = "{{$id}}"; 
+                                    var requisition_code = "{{$requisition_code}}"; 
                                     // console.log(requisition_code);
                                     $(function() {
                                       $.fn.dataTable.ext.errMode = 'throw';
@@ -689,7 +661,7 @@
                                                   url: '{{ route('backend.consignments_map.datatable') }}',
                                                   method: "POST",
                                                   data:{ _token: '{{csrf_token()}}',
-                                                  id:id,
+                                                  requisition_code:requisition_code,
                                                 },
                                               },
                                             columns: [
@@ -804,7 +776,6 @@
 
       var sU = "{{@$sU}}"; //alert(sU);
       var sD = "{{@$sD}}"; //alert(sD);
-      var id = "{{$id}}"; //alert(id);
       var oTableIm;
       $(function() {
         $.fn.dataTable.ext.errMode = 'throw';
@@ -821,40 +792,31 @@
               iDisplayLength: 10,
               stateSave: true,
               destroy:true,
-              // ajax: {
-              //   url: '{{ route('backend.consignments_import.datatable') }}',
-              //   data: function ( d ) {
-              //     d.Where={};
-              //     $('.myWhere').each(function() {
-              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              //         d.Where[$(this).attr('name')] = $.trim($(this).val());
-              //       }
-              //     });
-              //     d.Like={};
-              //     $('.myLike').each(function() {
-              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              //         d.Like[$(this).attr('name')] = $.trim($(this).val());
-              //       }
-              //     });
-              //     d.Custom={};
-              //     $('.myCustom').each(function() {
-              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              //         d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              //       }
-              //     });
-              //     oData = d;
-              //   },
-              //   method: 'POST'
-              // },
-
-               ajax: {
-                            url: '{{ route('backend.consignments_import.datatable') }}',
-                            method: "POST",
-                            data:{ _token: '{{csrf_token()}}',
-                            id:id,
-                          },
-                        },
-
+              ajax: {
+                url: '{{ route('backend.consignments_import.datatable') }}',
+                data: function ( d ) {
+                  d.Where={};
+                  $('.myWhere').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Where[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Like={};
+                  $('.myLike').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Like[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  d.Custom={};
+                  $('.myCustom').each(function() {
+                    if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                      d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                    }
+                  });
+                  oData = d;
+                },
+                method: 'POST'
+              },
               columns: [
                   {data: 'consignment_no', title :'<center>Consignment No. <br> (หมายเลขพัสดุ) </center>', className: 'text-center'},
                   {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},

@@ -71,8 +71,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> รายการรอจัดส่ง  </h4>
-             <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span>
+            <h4 class="mb-0 font-size-18 test_clear_data "> สินค้ารอจัดส่ง  </h4>
+             <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span> -->
             <!-- test_clear_data -->
         </div>
     </div>
@@ -223,7 +223,7 @@
                     <div class="col-md-9">
                       <select id="delivery_status" name="delivery_status" class="form-control select2-templating " >
                         <option value="">-Status-</option>
-                        <option value="1" > รอจัดส่ง </option>
+                        <option value="1" > รอเบิกสินค้าจากคลัง </option>
                         <option value="2" > จัดส่งแล้ว </option>
                         <option value="3" > อยู่ระหว่างการจัดเบิก </option>
                       </select>
@@ -266,7 +266,7 @@
                  <div class=" divBtnSave " style="display: none;">
                  	<center>
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-18  ">
-                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> บันทึกรวมบิล Packing List
+                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> สร้าง Packing List
                     </button>
                		</center>
                   </div>
@@ -282,7 +282,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดส่ง (Packing List) </span>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ Packing List </span>
                           </div>
                         </div>
                         <div class="form-group row">
@@ -296,9 +296,7 @@
               <?php }?>
 
 							<center>
-							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">
-								Packing ใบเบิก >
-							</a>
+							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">ไปหน้า สร้างใบเบิก ></a>
 							</center>
 
                           </div>
@@ -317,70 +315,6 @@
 
 
 
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>ที่อยู่ในการจัดส่ง</b></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-       	 <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="save_select_addr_edit" value="1" >
-            {{ csrf_field() }}
-
-	      <div class="modal-body">
-				<div id="select_addr_result_edit"></div>
-	      </div>
-
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Save</button>
-	      </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
 
 @endsection
 
@@ -454,7 +388,7 @@ $(function() {
                   	if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
                   	}else{
-                  		  return '-รอจัดส่ง-';
+                  		  return '-รอเบิกสินค้า-';
                   	}
                   }},
                   // {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -661,13 +595,14 @@ $(function() {
                             return '-';
                           }
                       }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
-      	                  	if(d==''||d=='0'){
-      	                        return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-      	                  	}else{
-      	                  		return d ;
-      	                  	}
-	                    }},
+                   //   {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
+      	                  	// if(d==''||d=='0'){
+      	                   //      return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
+      	                  	// }else{
+      	                  	// 	return d ;
+      	                  	// }
+                            // return '' ;
+	                 //   }},
                       // {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
                       //     return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                       // }},
@@ -675,7 +610,7 @@ $(function() {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
-	                  		return '-รอจัดส่ง-';
+	                  		return '-รอเบิกสินค้าจากคลัง-';
 	                  	}
 	                  }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -700,9 +635,9 @@ $(function() {
                            $("td:eq("+i+")", nRow).prop('disabled',true); 
                         }
                         $('td:last-child', nRow).html('-');
-                        $('td:eq(4)', nRow).html(''
-                           + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                         ).addClass('input');
+                        // $('td:eq(4)', nRow).html(''
+                        //    + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                        //  ).addClass('input');
 
                     }else{
 
@@ -788,7 +723,6 @@ $(function() {
 		                     console.log(data); 
 		                     // location.reload();
 		                     $('#select_addr_result_edit').html(data);
-		                     $('#exampleModalCenterEdit').modal('show');
 
 		                  },
 		                error: function(jqXHR, textStatus, errorThrown) { 
@@ -943,9 +877,12 @@ $(function() {
                             processing: true,
                             serverSide: true,
                             scroller: true,
-                            destroy: true,
+                            scrollCollapse: true,
+                            scrollX: true,
                             ordering: false,
-                            iDisplayLength: 50,
+                            scrollY: ''+($(window).height()-370)+'px',
+                            iDisplayLength: 10,
+                            destroy:true,
                             ajax: {
                                 url: '{{ route('backend.delivery.datatable') }}',
                                 data :{
@@ -986,7 +923,7 @@ $(function() {
                                       if(d=='1'){
                                           return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
                                       }else{
-                                          return '-รอจัดส่ง-';
+                                          return '-รอเบิกสินค้า-';
                                       }
                                     }},
                                     // {data: 'id', title :'Tools', className: 'text-center w80'}, 
@@ -1285,6 +1222,42 @@ $(function() {
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      DB::select("TRUNCATE `db_consignments`;");
+      DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
 
       ?>
           <script>

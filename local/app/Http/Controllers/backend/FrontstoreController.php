@@ -1846,7 +1846,7 @@ class FrontstoreController extends Controller
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="" >รายการส่งเงินรายวัน </span>
+                        <span class="" >รายการส่งเงินรายวัน (วันปัจจุบัน : '.date("d-m-Y").$user_login_id.') </span>
                         </th></tr>
                         <tr>
                           <th class="text-center">ครั้งที่</th>
@@ -1875,11 +1875,14 @@ class FrontstoreController extends Controller
                         foreach(@$sDBSentMoneyDaily AS $r){
                         
                         $sOrders = DB::select("
-                                      SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+
+                          SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
                                       FROM
                                       db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where sent_money_daily_id_fk in (".$r->id.") AND code_order<>'' AND action_user=$user_login_id ;
+                                      where db_orders.id in (".$sDBSentMoneyDaily[0]->orders_ids.") AND code_order<>'' AND action_user='$user_login_id' ;
+
                                       ");
+                        // AND code_order<>'' AND action_user='$user_login_id'
                     $show .= '  
                         <tr>
                           <td class="text-center">'.$tt.'</td>';

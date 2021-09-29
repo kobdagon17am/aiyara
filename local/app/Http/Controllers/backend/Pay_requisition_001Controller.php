@@ -313,9 +313,7 @@ class Pay_requisition_001Controller extends Controller
  
     public function Datatable001(Request $req){
 
-       $w01 = "";
-       $w02 = "";
-       $w03 = "";
+
        $w04 = "";
        $w05 = "";
        $w06 = "";
@@ -359,14 +357,14 @@ class Pay_requisition_001Controller extends Controller
         }
 
         if(!empty($req->startDate) && !empty($req->endDate)){
-           $w04 = " and date(db_pay_requisition_001.bill_date) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+           $w04 = " and date(db_pay_requisition_001.pay_date) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
            $w05 = "";
         }else{
            $w04 = "";
         }
 
         if(!empty($req->btnSearch03) && $req->btnSearch03==1 ){
-           $w04 = " and date(db_pay_requisition_001.bill_date) BETWEEN '".$req->startDate."' AND '".$req->endDate."' AND db_pay_requisition_001.status_sent!=3 " ;
+           $w04 = " and date(db_pay_requisition_001.pay_date) BETWEEN '".$req->startDate."' AND '".$req->endDate."' AND db_pay_requisition_001.status_sent!=3 " ;
            $w05 = "";
         }
 
@@ -515,12 +513,12 @@ class Pay_requisition_001Controller extends Controller
             }
       })      
       ->addColumn('action_user', function($row) {
-        if(@$row->action_user){
-          $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
-            return @$P[0]->name." <br> ".@$row->action_date;
-        }else{
+        // if(@$row->action_user){
+        //   $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
+        //     return @$P[0]->name." <br> ".@$row->action_date;
+        // }else{
           return '-';
-        }        
+        // }        
       }) 
       ->escapeColumns('action_user') 
       ->addColumn('pay_user', function($row) {
@@ -1366,10 +1364,12 @@ class Pay_requisition_001Controller extends Controller
           }
           // $db_pick_pack_packing_code_id = $request->picking_id;
 
-          $r_db_pick_pack_packing = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in($db_pick_pack_packing_code_id) ");
+          $r_db_pick_pack_packing = DB::select(" SELECT * FROM $temp_db_pick_pack_requisition_code WHERE id in($db_pick_pack_packing_code_id) ");
           // return $r_db_pick_pack_packing;
           DB::select(" UPDATE db_pick_pack_packing_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
-          // dd();
+          DB::select(" UPDATE db_pick_pack_requisition_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
+          DB::select(" UPDATE $temp_db_pick_pack_requisition_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
+          // return ($db_pick_pack_packing_code_id);
           // if(gettype($request->picking_id)=='array'){
           //     $picking_id = implode(',',$request->picking_id);
           // }else{

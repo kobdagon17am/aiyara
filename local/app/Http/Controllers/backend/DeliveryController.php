@@ -230,7 +230,7 @@ class DeliveryController extends Controller
 
   	      $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
   	      if( $DeliveryPackingCode ){
-  	      	$DeliveryPackingCode->address_sent_id_fk = $rsDeliveryAddr[0]->addr;
+  	      	$DeliveryPackingCode->address_sent_id_fk = @$rsDeliveryAddr[0]->addr;
   	      	$DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
   	        $DeliveryPackingCode->save();
   	      }
@@ -257,7 +257,8 @@ class DeliveryController extends Controller
 
 
 
-        return redirect()->to(url("backend/delivery?select_addr=".$DeliveryPackingCode->id."&"));
+      //  return redirect()->to(url("backend/delivery?select_addr=".$DeliveryPackingCode->id."&"));
+        return redirect()->to(url("backend/delivery"));
 
         // return redirect()->to(url("backend/delivery/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
 
@@ -431,7 +432,7 @@ class DeliveryController extends Controller
       $sTable = DB::select(" 
 
         SELECT * from db_delivery  
-        WHERE status_pack=0 AND approver=0 
+        WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
 
         $business_location_id
         $branch_id_fk
@@ -439,16 +440,18 @@ class DeliveryController extends Controller
         $customer_id_fk
         $delivery_date
 
+        order by updated_at desc
+
 
         ");
 
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('delivery_date', function($row) {
-          $d = strtotime($row->delivery_date);
-          return date("d/m/", $d).(date("Y", $d)+543);
-      })
+      // ->addColumn('delivery_date', function($row) {
+      //     $d = strtotime($row->delivery_date);
+      //     return date("d/m/", $d).(date("Y", $d)+543);
+      // })
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id!=''){
          	$Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");

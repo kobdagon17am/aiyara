@@ -37,7 +37,7 @@ class AdminController extends Controller
       $sRow = \App\Models\Backend\Permission\Admin::find($id);
       // dd($sRow);
       $sRole_group = \App\Models\Backend\Role::get();
-      $sBranchs = \App\Models\Backend\Branchs::get();
+      $sBranchs = \App\Models\Backend\Branchs::orderBy('b_name', 'asc')->get();
       $position_level = DB::select("select * from dataset_position_level");
       return View('backend.permission.form')->with(array('sRow'=>$sRow, 'sLocale'=>$sLocale,'sRole_group'=>$sRole_group,'sBranchs'=>$sBranchs,'position_level'=>$position_level));
     } catch (\Exception $e) {

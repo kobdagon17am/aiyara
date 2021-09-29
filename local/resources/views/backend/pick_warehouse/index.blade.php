@@ -171,7 +171,7 @@
 
                 </div>
 
-
+<!-- 
                   <div class="row">
                     <div class="col-12 d-flex ">
 
@@ -264,7 +264,7 @@
                       </div>
                     </div>
                   </div>
-
+ -->
 
 
               <?php if($can_packing_list=='1'){ ?>
@@ -280,7 +280,7 @@
                 <div class=" divCreatePackBill " style="display: none;">
                   <center>
                     <button type="button" class="btn btn-primary btn-sm waves-effect font-size-18 btnCreatePackBill ">
-                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> สร้างใบเบิก หรือ รวม Packing ใบเบิก
+                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> เบิกสินค้าจากคลัง
                     </button>
                   </center>
                   </div>
@@ -398,9 +398,9 @@
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'id', title :'ID', className: 'text-center'},
+                      // {data: 'id', title :'ID', className: 'text-center'},
                       {data: 'id', title :'เลือก', className: 'text-center '},
-                      {data: 'packing_code_02', title :'<center>รหัส Packing List </center>', className: 'text-center'},
+                      {data: 'packing_code_02', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -408,13 +408,13 @@
                             return '-';
                           }
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
+                      // {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                      //     if(d){
+                      //       return d.replace(/ *, */g, '<br>');
+                      //     }else{
+                      //       return '-';
+                      //     }
+                      // }},
                       {data: 'action_user_name', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
                       {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
                       if(d=='1'){
@@ -424,21 +424,21 @@
                       }
                     }},
                   ],
-                                'columnDefs': [
-               {
-                  'targets': 0,
-                  'checkboxes': {
-                     'selectRow': true
-                  }
-               }
-              ],
-              'select': {
-                 'style': 'multi'
-              },
+              //                   'columnDefs': [
+              //  {
+              //     'targets': 0,
+              //     'checkboxes': {
+              //        'selectRow': true
+              //     }
+              //  }
+              // ],
+              // 'select': {
+              //    'style': 'multi'
+              // },
 
                   rowCallback: function(nRow, aData, dataIndex){
 
-                    $("td:eq(1)", nRow).hide();
+                    // $("td:eq(1)", nRow).hide();
 
                     if (aData['status_delivery'] == "1") {
 
@@ -472,54 +472,90 @@
 
 
         $(document).ready(function() {
-          
-          
-                  $('#data-table-packing').on( 'click', 'tr', function () {
+                    
+                    
+          var table = $('#data-table-packing').DataTable();
+           
+           $('#data-table-packing').on( 'click', 'tr', function () {
+              console.log( table.row( this ).data().id );
 
-                       $(".myloading").show();
+                 $("input[name^=row_id]").remove();
+                 $('#data-table-0002').hide();
+                 $(".div_btn_save").hide();
 
-                        $("input[name^=row_id]").remove();
-                        $("#pick_pack_requisition_code_id_fk").val('');
-
-                        setTimeout(function(){
-
-                                var rows_selected = $('#data-table-packing').DataTable().column(0).checkboxes.selected();
-                                $.each(rows_selected, function(index, rowId){
-
-                                  $('#last_form').after(
-                                       $('<input>')
-                                          .attr('type', 'hidden')
-                                          .attr('name', 'row_id[]')
-                                          .attr('id', 'row_id'+rowId)
-                                          .val(rowId)
-                                   );
-
-                                });
-
-                                var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
-
-                                // console.log(ids); 
-
-                        }, 500);
-
-                       setTimeout(function(){
-                          if($('.select-info').text()!=''){
-                            var str = $('.select-info').text();
-                            var str = str.split(" ");
-                              $('.divCreatePackBill').show();
+               if ( $(this).hasClass('selected') ) {
+                      $(this).removeClass('selected');
+                      $('.divCreatePackBill').hide();
                       
-                          }else{
-                            $('.divCreatePackBill').hide();
-                             $('input[name*=row_id').remove();
-                          }
+                  }
+                  else {
+                    // $('#data-table-0002').show();
+                      table.$('tr.selected').removeClass('selected');
+                      $(this).addClass('selected');
 
-                           $(".myloading").hide();
+                         $('#last_form').after(
+                             $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'row_id[]')
+                                .attr('id', 'row_id'+table.row( this ).data().id)
+                                .val(table.row( this ).data().id)
+                         );
 
-                        }, 500);
+                        $('.divCreatePackBill').show();
+
+                  }
+
+                  
+
+          } );
+
+// return false;
+                  // $('#data-table-packing').on( 'click', 'tr', function () {
+
+                  //      $(".myloading").show();
+
+                  //       $("input[name^=row_id]").remove();
+                  //       $("#pick_pack_requisition_code_id_fk").val('');
+
+                  //       setTimeout(function(){
+
+                  //               var rows_selected = $('#data-table-packing').DataTable().column(0).checkboxes.selected();
+                  //               $.each(rows_selected, function(index, rowId){
+
+                  //                 $('#last_form').after(
+                  //                      $('<input>')
+                  //                         .attr('type', 'text')
+                  //                         .attr('name', 'row_id[]')
+                  //                         .attr('id', 'row_id'+rowId)
+                  //                         .val(rowId)
+                  //                  );
+
+                  //               });
+
+                  //               var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+
+                  //               // // console.log(ids); 
+
+                  //       }, 500);
+
+                  //      setTimeout(function(){
+                  //         if($('.select-info').text()!=''){
+                  //           var str = $('.select-info').text();
+                  //           var str = str.split(" ");
+                  //             $('.divCreatePackBill').show();
+                      
+                  //         }else{
+                  //           $('.divCreatePackBill').hide();
+                  //            $('input[name*=row_id').remove();
+                  //         }
+
+                  //          $(".myloading").hide();
+
+                  //       }, 500);
 
 
 
-                  } );
+                  // } );
 
         });
  
@@ -536,11 +572,11 @@
                      picking_id.push($(this).val());
                   });
 
-                  // console.log(picking_id);
+                  // // console.log(picking_id);
                   // return false;
 
                  // $('#data-table-0001').show();
-                 $('#data-table-0002').show();
+                 // $('#data-table-0002').show();
 
                  setTimeout(function(){
   
@@ -552,7 +588,7 @@
                                    // data: $("#frm-packing").serialize()+"&picking_id="+picking_id,
                                    data:{picking_id:picking_id},
                                     success: function(response){ 
-                                      console.log(response);
+                                      // console.log(response);
                                       // return false;
 
                                       $("#pick_pack_requisition_code_id_fk").val(response);
@@ -561,7 +597,7 @@
                                    
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
-                                  // console.log(picking_id);
+                                  // // console.log(picking_id);
                     
                                         $.fn.dataTable.ext.errMode = 'throw';
                                         var oTable0002;
@@ -591,8 +627,8 @@
                                                 rowCallback: function(nRow, aData, dataIndex){
 
                                                       $(".myloading").hide();
-                                                      // console.log("xxxxxxx");
-                                                      // console.log(aData['ch_amt_lot_wh']);
+                                                      // // console.log("xxxxxxx");
+                                                      // // console.log(aData['ch_amt_lot_wh']);
                                                       setTimeout(function(){
                                                           if(aData['ch_amt_lot_wh']==0){
                                                             $(".div_btn_save").hide();
@@ -607,15 +643,23 @@
                                         });
                                         // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
+                                       
+
                                         $(".myloading").hide();
 
                                     },
                                     error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
                                        $(".myloading").hide();
-                                        console.log(JSON.stringify(jqXHR));
-                                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                        // console.log(JSON.stringify(jqXHR));
+                                        // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                     }
                                 });
+
+setTimeout(function(){
+                                                      
+                                                              $('#data-table-0002').show();
+                                                      }, 1500);
+
                         }else{
                            $(".myloading").hide();
                            // $('#data-table-0001').hide();
@@ -627,7 +671,7 @@
                      }, 1500);
 
 
-         }); // ปิด $(document).on('click', '.btnSave'
+         });
 
     </script>
    
@@ -659,7 +703,7 @@
                                     success: function(response){ // What to do if we succeed
                                       // console.log(response);
                                        // return false;
-                                      // console.log(ids[0]);
+                                      // // console.log(ids[0]);
 
                                       $("#pick_pack_requisition_code_id_fk").val(response);
                                       var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
@@ -675,8 +719,8 @@
                                              data:{ _token: '{{csrf_token()}}' },
                                               success:function(data){
                                                    // console.log(data);
-
                                                    // return false;
+
                                                    // $(".myloading").hide();
                                                    if(data=="No_changed"){
                                                         $(".myloading").hide();
@@ -691,10 +735,13 @@
                                                                         
                                                                       $(".myloading").show();
 
+                                                                      // console.log(picking_id);
+                                                                      // return false;
+
                                                                         $.ajax({
                                                                            type:'POST',
                                                                            url: " {{ url('backend/ajaxSavePay_requisition') }} ",
-                                                                           data:{ _token: '{{csrf_token()}}',picking_id:response,db_pick_pack_packing_code_id:db_pick_pack_packing_code_id },
+                                                                           data:{ _token: '{{csrf_token()}}',picking_id:picking_id,db_pick_pack_packing_code_id:db_pick_pack_packing_code_id },
                                                                             success:function(d2){
                                                                                  // console.log(d2);
                                                                                  // return false;
@@ -733,8 +780,8 @@
 
                                     },
                                     error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                                        console.log(JSON.stringify(jqXHR));
-                                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                                        // console.log(JSON.stringify(jqXHR));
+                                        // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                     }
                                 });
                         }else{
@@ -842,7 +889,7 @@
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
-      DB::select(" UPDATE db_stocks SET amt='100' ; ");
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       ?>
           <script>

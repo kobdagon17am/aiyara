@@ -2054,6 +2054,47 @@ if($frontstore[0]->check_press_save==2){
             return $msg;
         }
 
+       $p2 = DB::select("
+
+            select * from db_promotion_cus
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE 
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            AND ( date(db_promotion_code.pro_edate) < curdate() OR date(promotions.show_enddate) < curdate() )
+
+             ;
+
+            ");
+        
+        if(!empty($p2)){
+            $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว ';
+            // return "InActive";
+            return $msg;
+        }
+
+       $p3 = DB::select("
+
+            select * from db_promotion_cus
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE 
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            AND curdate() >= date(db_promotion_code.pro_sdate)
+            AND date(db_promotion_code.pro_edate) >= curdate()
+            AND curdate() >= date(promotions.show_startdate)
+            AND date(promotions.show_enddate) >= curdate()
+
+             ;
+
+            ");
+        
+        if(empty($p3)){
+            $msg[] = 'รหัสคูปองนี้ ไม่อยู่ในช่วงวันของโปรโมชั่น ';
+            // return "InActive";
+            return $msg;
+        }
+
         // return $msg;
 
         // return $p1;
@@ -2203,7 +2244,21 @@ if($frontstore[0]->check_press_save==2){
         // dd();
 
         if( count($promotion_cus) == 0 || $arraysAreEqual == 0 ){
-            $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว หรือ ถูกใช้ไปแล้ว ';
+            // $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว หรือ ถูกใช้ไปแล้ว หรือ ยังไม่อยู่ในช่วงวันของโปรโมชั่น ';
+            $p4 = DB::select("
+
+            select * from db_promotion_cus
+            Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+            Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+            WHERE 
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+             ;
+
+            ");
+        // retur
+            $p4_use1 = @$p4[0]->used_user_name?' ด้วยรหัส '.$p4[0]->used_user_name:'';
+            $p4_use2 = @$p4[0]->used_date?' เมื่อ '.$p4[0]->used_date:'';
+            $msg[] = 'รหัสคูปองนี้ ถูกใช้ไปแล้ว '.$p4_use1.$p4_use2;
             return $msg;
         }else{
 
@@ -2306,9 +2361,9 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxClearConsignment(Request $request)
     {
-        DB::delete(" DELETE FROM db_consignments_import ");
+        DB::delete(" DELETE FROM db_consignments_import where pay_requisition_001_id_fk=$request->id ");
         DB::select(" ALTER table db_consignments_import AUTO_INCREMENT=1; ");
-        DB::select(" UPDATE db_consignments set consignment_no='' ; ");
+        DB::select(" UPDATE db_consignments set consignment_no='' where pay_requisition_001_id_fk=$request->id  ; ");
     }
 
 
@@ -2995,7 +3050,7 @@ if($frontstore[0]->check_press_save==2){
                  $addr .= $v->tel." ";
                  $addr .= $v->tel_home." ";
 
-                 DB::select(" UPDATE db_consignments set recipient_name='".@$v->recipient_name."',address='".$addr."' WHERE recipient_code='".@$v->invoice_code."'  ");
+                 // DB::select(" UPDATE db_consignments set recipient_name='".@$v->recipient_name."',address='".$addr."' WHERE recipient_code='".@$v->invoice_code."'  ");
 
                // }
              
@@ -3026,8 +3081,10 @@ if($frontstore[0]->check_press_save==2){
               db_consignments
               Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
               SET
-              db_consignments.consignment_no=
-              db_consignments_import.consignment_no ");
+              db_consignments.consignment_no=db_consignments_import.consignment_no ,
+              db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk 
+
+              ");
         }
     }
 
@@ -3542,7 +3599,7 @@ if($frontstore[0]->check_press_save==2){
               $wh = "";
           }else{
               // $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." AND branch_id_fk=".@\Auth::user()->branch_id_fk." ";
-              $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." ";
+              $wh = " AND db_orders.action_user = '".(\Auth::user()->id)."' ";
           }
 
           // return($wh);
@@ -4347,10 +4404,13 @@ if($frontstore[0]->check_press_save==2){
           DB::update(" UPDATE db_delivery SET status_pick_pack='0' WHERE id in (".$arr_delivery_id_fk.")");
 
           DB::update(" DELETE FROM db_pick_pack_packing WHERE packing_code = $id  ");
+          DB::update(" ALTER TABLE db_pick_pack_packing AUTO_INCREMENT=1; ");
 
           $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
           if( $sRow ){
             $sRow->forceDelete();
+            DB::update(" ALTER TABLE db_pick_pack_packing_code AUTO_INCREMENT=1; ");
+
           }
 
 
@@ -4372,10 +4432,12 @@ if($frontstore[0]->check_press_save==2){
           }
 
           DB::update(" DELETE FROM db_delivery_packing WHERE packing_code_id_fk = $id  ");
+          DB::select(" ALTER TABLE db_delivery_packing AUTO_INCREMENT=1; ");
 
           $sRow = \App\Models\Backend\DeliveryPackingCode::find($id);
           if( $sRow ){
             $sRow->forceDelete();
+            DB::select(" ALTER TABLE db_delivery_packing_code AUTO_INCREMENT=1; ");
           }
 
 

@@ -57,8 +57,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> Packing ใบเบิก  </h4>    
-            <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล + packing list) </span>
+            <h4 class="mb-0 font-size-18  "> รายการสร้างใบเบิก  </h4>    
+            <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล + packing list) </span> -->
             <!-- test_clear_data -->
         </div>
     </div>
@@ -122,7 +122,7 @@
                 </div>
  -->
 
-                  <div class="row">
+               <!--    <div class="row">
                     <div class="col-12 d-flex ">
 
      				           <div class="col-md-2">
@@ -213,7 +213,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
 
 
               <?php if($can_packing_list=='1'){ ?>
@@ -229,7 +229,7 @@
                  <div class=" divBtnSave " style="display: none;">
                   <center>
                     <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-18 ">
-                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> บันทึกรวมบิล/ใบสั่งซื้อ
+                    <i class="bx bx-save font-size-18 align-middle mr-1"></i> สร้างใบเบิก
                     </button>
                   </center>
                   </div>
@@ -244,7 +244,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ใบเสร็จรอจัดเบิกจากคลัง </span>
+                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการใบเบิก </span>
                           </div>
                         </div>
                         <div class="form-group row">
@@ -264,7 +264,7 @@
 
                     <center>
                         <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}">
-                          เบิกสินค้าจากคลัง >
+                          ไปหน้า เบิกสินค้าจากคลัง >
                         </a>
                     </center>
 
@@ -339,7 +339,7 @@ $(function() {
                   {data: 'id', title :'ID', className: 'text-center'},
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
-                  {data: 'delivery_date', title :'<center>วันที่ออกบิล </center>', className: 'text-center w100 '},
+                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
                   {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
@@ -350,7 +350,7 @@ $(function() {
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  {data: 'id', title :'พิมพ์', className: 'text-center '},
+                  // {data: 'id', title :'พิมพ์', className: 'text-center '},
                   {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
                     if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -394,24 +394,24 @@ $(function() {
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
 
-                 if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                      $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                 }
-                 else{ //2=db_orders จากการขายหลังบ้าน
+                 // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                 //      $('td:eq(8)', nRow).html(''
+                 //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                 //      ).addClass('input');
+                 // }
+                 // else{ //2=db_orders จากการขายหลังบ้าน
 
-                      if(aData['status_pack']==1){
-                          $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                      }else{
-                          $('td:eq(8)', nRow).html(''
-                        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                      ).addClass('input');
-                      }
+                 //      if(aData['status_pack']==1){
+                 //          $('td:eq(8)', nRow).html(''
+                 //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                 //      ).addClass('input');
+                 //      }else{
+                 //          $('td:eq(8)', nRow).html(''
+                 //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+                 //      ).addClass('input');
+                 //      }
                       
-                 }
+                 // }
 
                  if (aData['status_delivery'] == "1") {
                         $('td', nRow).css('background-color', '#ffd9b3');
@@ -454,91 +454,6 @@ $(function() {
            
           });
 
-var oTableNopacking;
-$(function() {
-  $.fn.dataTable.ext.errMode = 'throw';
-    oTableNopacking = $('#data-table-no-packing').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 10,
-        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
-        ajax: {
-          url: '{{ route('backend.pick_pack.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
-              columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'id', title :'ID', className: 'text-center w50 '},
-                  {data: 'delivery_date', title :'<center>วันเวลา<br>ที่ออกบิล </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
-                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                  {data: 'province_name', title :'<center>สาขา </center>', className: 'text-center'},
-                  // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
-                  //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
-                  // }},
-                  // {data: 'cover_sheet',   title :'<center>พิมพ์</center>', className: 'text-center ',render: function(d) {
-                  //     return '<a href="backend/delivery?'+d+'">ใบประหน้า</a>';
-                  // }},
-                  {data: 'id',   title :'ใบจ่าหน้า<br>กล่องส่ง', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/pdf01') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'id',   title :'พิมพ์<br>ใบเสร็จ', className: 'text-center ',render: function(d) {
-                      return '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                  }},
-                  {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
-                    if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                    }else{
-                        return '-รอจัดเบิก-';
-                    }
-                  }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
-              ],
-              rowCallback: function(nRow, aData, dataIndex){
-                  $("td:eq(1)", nRow).hide();
-              }
-          });
-              $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-                oTableNopacking.draw();
-              });
-          });
 
 
             $('#data-table').on( 'click', 'tr', function () {
@@ -564,7 +479,7 @@ $(function() {
 
                           var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
 
-                          console.log(ids); 
+                          // console.log(ids); 
 
                           $(".myloading").hide();
 
@@ -627,21 +542,21 @@ $(function() {
                     method: 'POST'
                   },
                   columns: [
-                      {data: 'packing_code_02', title :'<center>รหัส Packing List </center>', className: 'text-center'},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                      {data: 'packing_code_02', title :'<center>รหัสใบเบิก</center>', className: 'text-center'},
+                      {data: 'receipt',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '';
                           }
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
+                      // {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                      //     if(d){
+                      //       return d.replace(/ *, */g, '<br>');
+                      //     }else{
+                      //       return '-';
+                      //     }
+                      // }},
                       {data: 'action_user_name', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
                       {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
@@ -654,6 +569,8 @@ $(function() {
                       // {data: 'packing_code_01', title :'test', className: 'text-center '}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
+
+                    console.log(aData['status_delivery']);
 
                   	if (aData['status_delivery'] == "1") {
 
@@ -681,7 +598,7 @@ $(function() {
                             $('td:last-child', nRow).html('-');
                         }else{ 
 
-                           console.log(aData['id']);
+                           // console.log(aData['id']);
 
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
@@ -843,21 +760,21 @@ $(function() {
                 	event.preventDefault();
                 	var id = $(this).data('id');
                   var receipt_no = $(this).data('receipt_no');
-                  console.log(id+":"+receipt_no); 
+                  // console.log(id+":"+receipt_no); 
                 	$.ajax({
 		               type:'POST',
 		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
 		               data:{ _token: '{{csrf_token()}}',id:id,receipt_no:receipt_no },
 		                success:function(data){
-		                     console.log(data); 
+		                     // console.log(data); 
 		                     // location.reload();
 		                     $('#select_addr_result_edit').html(data);
 		                     $('#exampleModalCenterEdit').modal('show');
 
 		                  },
 		                error: function(jqXHR, textStatus, errorThrown) { 
-		                    console.log(JSON.stringify(jqXHR));
-		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+		                    // console.log(JSON.stringify(jqXHR));
+		                    // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
 		                    $(".myloading").hide();
 		                }
 		            });
@@ -928,7 +845,7 @@ $(function() {
 	               url: " {{ url('backend/ajaxSelectAddr') }} ", 
 	               data:{ _token: '{{csrf_token()}}',v:v },
 	                success:function(data){
-	                     // console.log(data); 
+	                     // // console.log(data); 
 	                     // location.reload();
 	                     $('#select_addr_result').html(data);
 	                     setTimeout(function(){
@@ -936,8 +853,8 @@ $(function() {
 						 }, 1500);
 	                  },
 	                error: function(jqXHR, textStatus, errorThrown) { 
-	                    console.log(JSON.stringify(jqXHR));
-	                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+	                    // console.log(JSON.stringify(jqXHR));
+	                    // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
 	                    $(".myloading").hide();
 	                }
 	            });
@@ -1003,7 +920,7 @@ $(function() {
                   },
                   success:function(data)
                   { 
-                    // console.log(data);
+                    // // console.log(data);
                     // return false;
                         Swal.fire({
                           type: 'success',

@@ -55,7 +55,19 @@ class DeliveryPackingCodeController extends Controller
     }
 
     public function Datatable(){      
-      $sTable = \App\Models\Backend\DeliveryPackingCode::search()->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\DeliveryPackingCode::search()->orderBy('id', 'asc');
+
+       $sTable = DB::select(" 
+
+SELECT db_delivery_packing_code.* from db_delivery_packing_code  
+LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
+LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
+WHERE db_delivery.status_pick_pack<>1
+group by db_delivery_packing_code.id
+order by db_delivery_packing_code.updated_at desc
+
+        ");
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('status_pick_pack', function($row) {
@@ -99,7 +111,7 @@ class DeliveryPackingCodeController extends Controller
           }
       })
       ->addColumn('addr_to_send', function($row) { 
-
+        if($row->address_sent_id_fk){
           $rs = DB::select(" SELECT
                 customers_addr_sent.recipient_name,
                 customers_addr_sent.house_no,
@@ -131,6 +143,7 @@ class DeliveryPackingCodeController extends Controller
                 $addr .= @$rs[0]->province?" จ.".@$rs[0]->province.", ":'';
                 $addr .= @$rs[0]->zipcode?" ".@$rs[0]->zipcode:'';
                 return $addr;
+        }
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

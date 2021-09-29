@@ -100,7 +100,38 @@
 <?php
     require(app_path().'/Models/MyFunction.php');
 
-$id = $data[0];
+
+if(substr($data[0],0,1)=="O"){
+    $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' "); 
+    $arr_orders_id = [];
+    foreach ($d1 as $key => $v) {
+        array_push($arr_orders_id,$v->id);
+    }
+}else{
+
+        $id = intval(substr($data[0],2));
+
+        $d1 = DB::select(" SELECT orders_id_fk FROM `db_delivery` WHERE `packing_code`='".$id."' "); 
+
+        if($d1){
+
+           $arr_orders_id = [];
+            foreach ($d1 as $key => $v) {
+                array_push($arr_orders_id,$v->orders_id_fk);
+            }
+          
+        }
+
+}
+
+
+
+// echo count($arr3);
+for ($z=0; $z < count($arr_orders_id) ; $z++) { 
+    // code...
+
+$id = @$arr_orders_id[$z];
+
 $n = 22;
 $limit = 10;
 
@@ -1038,4 +1069,5 @@ for ($j=0; $j < $amt_page ; $j++) {
        <?php echo @$DB[0]->g ; ?>
  </div>
 
+<?php } ?>
 <?php } ?>

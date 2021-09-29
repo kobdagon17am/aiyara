@@ -141,8 +141,8 @@ class Pick_packController extends Controller
                 }
 
 
-              $recipient_code = "P2".sprintf("%05d",$r1[0]->id);
-              DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('$recipient_code',".$r1[0]->id.",'".@$recipient_name."','".@$address."'); ");
+              // $recipient_code = "P2".sprintf("%05d",$r1[0]->id);
+              // DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('$recipient_code',".$r1[0]->id.",'".@$recipient_name."','".@$address."'); ");
 
 
           }
@@ -186,7 +186,7 @@ class Pick_packController extends Controller
                   @$recipient_name = '';
                 }
 
-             DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('".$r2[0]->receipt."',".$r2[0]->id.",'".@$recipient_name."','".@$address."'); ");
+             // DB::select(" INSERT IGNORE INTO `db_consignments` (`recipient_code`,pick_pack_packing_code_id_fk,recipient_name,address) VALUES ('".$r2[0]->receipt."',".$r2[0]->id.",'".@$recipient_name."','".@$address."'); ");
 
           }
 
@@ -252,7 +252,7 @@ class Pick_packController extends Controller
         select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 
         UNION
         select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 GROUP BY packing_code
-        ORDER BY delivery_date DESC
+        ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -289,7 +289,7 @@ class Pick_packController extends Controller
         $array = '';
 
         if(@$row->packing_code!=''){
-             $array = "P".sprintf("%05d",@$row->packing_code);
+             $array = "P1".sprintf("%05d",@$row->packing_code);
         }
 
         $array1 = array();

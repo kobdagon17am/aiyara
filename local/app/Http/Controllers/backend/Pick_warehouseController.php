@@ -555,17 +555,26 @@ where db_pay_requisition_001.id =$id ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
-          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->requisition_code."</b>";
+        //  $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
+        //  return "<b>".$d[0]->requisition_code."</b>";
+        if(@$row->pick_pack_requisition_code_id_fk){
+          return "P3".sprintf("%05d",@$row->pick_pack_requisition_code_id_fk) ;
+        }else{
+          return "-";
+        }
       })
       ->addColumn('column_002', function($row) {
-          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->pick_pack_packing_code."</b>";
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk`=".@$row->pick_pack_requisition_code_id_fk." GROUP BY requisition_code ");
+          return "P1".sprintf("%05d",@$d[0]->pick_pack_packing_code);
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
-          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->receipts."</b>";      })
+
+          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk`=".@$row->pick_pack_requisition_code_id_fk." ");
+          return str_replace(',', ' , ', @$d[0]->receipts);      
+          // return @$d[0]->receipts;      
+
+        })
       ->escapeColumns('column_003')        
       ->make(true);
     }
@@ -573,9 +582,9 @@ where db_pay_requisition_001.id =$id ");
 
   public function warehouse_qr_0002(Request $reg){
 
-      $sTable1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$reg->id." ");
+      $sTable1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk`='".$reg->picking_id."' GROUP BY requisition_code ");
       $sTable = DB::select(" 
-        SELECT db_pick_pack_packing_code.*,db_pick_pack_packing.packing_code FROM db_pick_pack_packing_code 
+        SELECT '".@$sTable1[0]->requisition_code."' as requisition_code ,db_pick_pack_packing_code.*,db_pick_pack_packing.packing_code FROM db_pick_pack_packing_code 
         JOIN db_pick_pack_packing  on db_pick_pack_packing.packing_code_id_fk=db_pick_pack_packing_code.id
         WHERE db_pick_pack_packing_code.id in (".$sTable1[0]->pick_pack_packing_code_id_fk.")
         GROUP BY db_pick_pack_packing_code.id 
@@ -583,7 +592,7 @@ where db_pay_requisition_001.id =$id ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
-         return '<b>'.$row->packing_code.'</b>';
+         return '<b>'.$row->requisition_code.'</b>';
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
@@ -598,20 +607,58 @@ where db_pay_requisition_001.id =$id ");
             </div>
             ';
 
-                $Products = DB::select("
-                SELECT 
-                db_order_products_list.product_id_fk,
-                db_order_products_list.product_name,
-                db_order_products_list.product_unit_id_fk,
-                SUM(db_order_products_list.amt) AS amt ,
-                dataset_product_unit.product_unit
-                from db_order_products_list
-                LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-                WHERE db_orders.id in  (".$row->orders_id_fk.")
-                AND db_order_products_list.product_id_fk<>''
-                GROUP BY db_order_products_list.product_id_fk
-                ORDER BY db_order_products_list.product_id_fk ");
+                // $Products = DB::select("
+                // SELECT 
+                // db_order_products_list.product_id_fk,
+                // db_order_products_list.product_name,
+                // db_order_products_list.product_unit_id_fk,
+                // SUM(db_order_products_list.amt) AS amt ,
+                // dataset_product_unit.product_unit
+                // from db_order_products_list
+                // LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+                // LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                // WHERE db_orders.id in  (".$row->orders_id_fk.")
+                // AND db_order_products_list.product_id_fk<>''
+                // GROUP BY db_order_products_list.product_id_fk
+                // ORDER BY db_order_products_list.product_id_fk ");
+
+              // ต้องรวมสินค้า โปรโมชั่น ด้วย 
+
+          $Products = DB::select("
+
+(SELECT 
+db_order_products_list.product_id_fk,
+db_order_products_list.product_name,
+db_order_products_list.product_unit_id_fk,
+SUM(db_order_products_list.amt) AS amt ,
+dataset_product_unit.product_unit
+from db_order_products_list
+LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+WHERE db_orders.id in  ($row->orders_id_fk) AND type_product='product'
+GROUP BY db_order_products_list.product_id_fk
+ORDER BY db_order_products_list.product_id_fk
+)
+UNION 
+(
+SELECT 
+promotions_products.product_id_fk,
+(SELECT concat( products.product_code,' : '  ,
+products_details.product_name) FROM products_details LEFT JOIN products on products.id=products_details.product_id_fk
+WHERE product_id_fk=promotions_products.product_id_fk and products_details.lang_id=1 limit 1) as product_name,
+promotions_products.product_unit as product_unit_id_fk,
+SUM(promotions_products.product_amt) AS amt,
+dataset_product_unit.product_unit
+FROM `promotions_products` 
+LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
+LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id 
+WHERE db_orders.id in  ($row->orders_id_fk) AND db_order_products_list.type_product='promotion'
+GROUP BY promotions_products.product_id_fk
+)
+
+
+                 ");
 
               $sum_amt = 0 ;
 
@@ -619,26 +666,39 @@ where db_pay_requisition_001.id =$id ");
             
               foreach ($Products as $key => $value) {
 
-                $arr_inv = [];
-                $arr_inv2 = [];
+                
                 if(@$row->orders_id_fk){
-                $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
+                  // บิลปกติ
+                $arr_inv = [];
+                $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                WHERE frontstore_id_fk in (".@$row->orders_id_fk.") AND db_order_products_list.product_id_fk in (".@$value->product_id_fk.") ");
-                if(@$r_invoice_code){
-                  foreach (@$r_invoice_code as $inv) {
-                      array_push($arr_inv,@$inv->invoice_code);
-                      array_push($arr_inv2,'"'.@$inv->invoice_code.'"');
+                WHERE db_orders.id in ($row->orders_id_fk) AND db_order_products_list.product_id_fk in ($value->product_id_fk)  AND type_product='product' ");
+                if(@$p1){
+                  foreach (@$p1 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
+                  }
+                }
+
+                // บิลโปร
+                $p2 = DB::select(" 
+                select db_orders.code_order 
+                FROM `promotions_products` 
+                LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
+                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                WHERE db_orders.id in  ($row->orders_id_fk) AND promotions_products.product_id_fk in ($value->product_id_fk) AND db_order_products_list.type_product='promotion' ");
+                if(@$p2){
+                  foreach (@$p2 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
                   }
                 }
 
                 $invoice_code = implode(",",$arr_inv);
-                $invoice_code2 = implode(",",$arr_inv2);
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                '.@$value->product_name.'</b><br>('.@$invoice_code.')
+                '.@$value->product_name.'</b><br>
+                    ('.@$invoice_code.')
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
@@ -826,66 +886,120 @@ where db_pay_requisition_001.id =$id ");
 
   public function warehouse_address_sent(Request $reg){
 
-    //  $sTable = DB::select(" SELECT * FROM `db_consignments` WHERE `packing_code`=".$reg->packing_id." ");
-      $sTable = DB::select(" SELECT * FROM `db_consignments`  ");
+    // return $reg->id;
+
+    // DB::select(" TRUNCATE`db_consignments`  ");
+
+    if(!empty($reg->id)){
+        $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `id`=".$reg->id." "); 
+         // return $d1;
+        if($d1){
+            $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
+            // return $d2[0]->receipts;
+            $arr1 = []; 
+            if($d2){
+              foreach ($d2 as $key => $v) {
+                 $str = explode(',',$v->receipts);
+                 foreach ($str as $key => $v2) {
+                   array_push($arr1,"'".$v2."'");
+                 }
+              }
+              $arr2 = implode(',', $arr1);
+              // return $arr2;
+              // กำหนดที่อยู่
+              if($arr2){
+
+                  $addr_01 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) ;");
+                  if(@$addr_01){
+                      $addr_02 = DB::select("SELECT orders_id_fk FROM `db_delivery` WHERE receipt in ($arr2) ;");
+                      // return @$addr_02;
+
+                      if(@$addr_02){
+
+                      // $arr3 = [];
+                      foreach ($addr_02 as $key => $v1) {
+
+                        $addr_03 = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                        dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
+                        from customers_addr_frontstore
+                        Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                        Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                        Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                        WHERE
+                        frontstore_id_fk in (".@$v1->orders_id_fk.") ;");
+
+
+                               if(@$addr_03){
+                                foreach ($addr_03 as $key => $v2) {
+                                    DB::select(" UPDATE db_delivery  
+                                    SET 
+                                    recipient_name = '".@$v2->recipient_name."',
+                                    addr_send = '".@$v2->addr_no."',
+                                    postcode = '".@$v2->zip_code."',
+                                    mobile = '".@$v2->tel.' '.@$v2->tel_home."'
+
+                                    where orders_id_fk = '".@$v2->frontstore_id_fk."'
+
+                                   ");
+                                }
+                                
+                              }
+
+                              DB::select("UPDATE db_delivery set set_addr_send_this=1 WHERE shipping_price>0 AND orders_id_fk in (".@$v1->orders_id_fk.") ;");
+
+                        }
+
+
+
+                        
+                      }
+                      
+                  }
+                  
+
+              }
+
+              // return $addr_03;
+
+
+
+              $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
+              // return $d3[0]->addr_send;
+              foreach ($d3 as $key => $v3) {
+                 // echo $v3->addr_send;
+                 $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
+                 DB::select(" INSERT IGNORE INTO `db_consignments` 
+                  SET 
+                  `pay_requisition_001_id_fk`='$reg->id' ,
+                  `recipient_code`='$recipient_code' ,
+                  `recipient_name`='$v3->recipient_name' ,
+                  `address`='$v3->addr_send' ,
+                  `postcode`='$v3->postcode' ,
+                  `mobile`='$v3->mobile' ,
+                  `delivery_id_fk`='$v3->id' ,
+                  `created_at`=now() 
+
+                  ");
+              }
+
+            }
+            
+        }
+  
+      }
+
+      $sTable = DB::select(" SELECT * FROM `db_consignments` where pay_requisition_001_id_fk='$reg->id' ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('column_001', function($row) {
-
-      //   return "P2".sprintf("%05d",$row->packing_code);
-      // })
       ->addColumn('column_002', function($row) {
-        
-          return $row->recipient_name." > ".$row->address;
-
-        // return "ชื่อและที่อยู่ลูกค้า";
-           // @$addr = DB::select(" SELECT
-           //                            customers_detail.customer_id,
-           //                            customers_detail.house_no,
-           //                            customers_detail.house_name,
-           //                            customers_detail.moo,
-           //                            customers_detail.zipcode,
-           //                            customers_detail.soi,
-           //                            customers_detail.amphures_id_fk,
-           //                            customers_detail.district_id_fk,
-           //                            customers_detail.road,
-           //                            customers_detail.province_id_fk,
-           //                            customers.prefix_name,
-           //                            customers.first_name,
-           //                            customers.last_name,
-           //                            dataset_provinces.name_th AS provname,
-           //                            dataset_amphures.name_th AS ampname,
-           //                            dataset_districts.name_th AS tamname
-           //                            FROM
-           //                            customers_detail
-           //                            Left Join customers ON customers_detail.customer_id = customers.id
-           //                            Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-           //                            Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-           //                            Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-           //                            WHERE customers_detail.customer_id =8");
-
-           //      if(sizeof(@$addr)>0){
-
-           //                      @$address = "";
-           //                      @$address .= "ชื่อผู้รับ : ". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
-           //                      @$address .= "<br>ที่อยู่ : ". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
-           //                      @$address .= " ต. ". @$addr[0]->tamname;
-           //                      @$address .= " อ. ". @$addr[0]->ampname;
-           //                      @$address .= " จ. ". @$addr[0]->provname;
-           //                      @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
-
-           //                    }else{
-           //                      @$address = '-ไม่พบข้อมูล-';
-           //                    }
-           //  return @$address; 
-
+          return @$row->recipient_name." > ".@$row->address ." ".@$row->postcode.(@$row->mobile?" Tel.".@$row->mobile:"");
       })
       ->escapeColumns('column_002')  
-      ->addColumn('column_003', function($row) {
+      // ->addColumn('column_003', function($row) {
           // $d = DB::select(" SELECT * FROM `db_orders` WHERE `invoice_code`='".$row->recipient_code."' ");
           // return $d[0]->id?$d[0]->id:1;      
-        })
-      ->escapeColumns('column_003')        
+        // })
+      // ->escapeColumns('column_003')        
       ->make(true);
     }
 
