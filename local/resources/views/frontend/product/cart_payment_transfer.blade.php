@@ -878,7 +878,7 @@
                                         <label class="label label-inverse-warning">
                                             <font id="shipping_detail" style="color: #000">
                                                 {{ $data->shipping_cost_detail }} </font>
-                                                <?php dd($data); ?>
+
                                         </label>
 
                                 </tr>

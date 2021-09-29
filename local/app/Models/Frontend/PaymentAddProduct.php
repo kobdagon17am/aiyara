@@ -20,14 +20,15 @@ class PaymentAddProduct extends Model
             $cartCollection = Cart::session($type)->getContent();
             $data = $cartCollection->toArray();
 
+
+
             foreach ($data as $value) {
+
                 $insert_db_products_list = new DbOrderProductsList();
                 $total_pv = $value['attributes']['pv'] * $value['quantity'];
                 $total_price = $value['price'] * $value['quantity'];
 
                 $insert_db_products_list->code_order = $code_order;
-
-
                 $insert_db_products_list->frontstore_id_fk = $order_id;
                 $insert_db_products_list->customers_id_fk = $customer_id;
                 $insert_db_products_list->distribution_channel_id_fk = 2;
@@ -88,6 +89,7 @@ class PaymentAddProduct extends Model
 
                                 $insert_order_products_list_type_giveaway = new DbOrderProductsList();
                                 $insert_order_products_list_type_giveaway->frontstore_id_fk = $order_id;
+                                $insert_order_products_list_type_giveaway->code_order = $code_order;
                                 $insert_order_products_list_type_giveaway->customers_id_fk = $customer_id;
                                 $insert_order_products_list_type_giveaway->distribution_channel_id_fk = 2;
                                 $insert_order_products_list_type_giveaway->giveaway_id_fk = $value['rs']['giveaway_id'];

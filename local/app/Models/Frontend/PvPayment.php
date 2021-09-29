@@ -20,6 +20,7 @@ class PvPayment extends Model
             ->where('id', '=', $order_id)
             ->first();
 
+
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
 
@@ -27,6 +28,11 @@ class PvPayment extends Model
 
         if (empty($order_data)) {
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
+            return $resule;
+        }
+
+        if ($order_data->order_status_id_fk == 4 || $order_data->order_status_id_fk == 5 ||$order_data->order_status_id_fk == 6 || $order_data->order_status_id_fk == 7) {
+            $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
             return $resule;
         }
 
@@ -388,8 +394,6 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
-
-
                     $active_tv_old_date = $customer_update->pv_tv_active;
 
                     $strtime_user = strtotime($customer_update->pv_tv_active);
@@ -466,6 +470,7 @@ class PvPayment extends Model
 
                     $order_update->pv_banlance =$pv_banlance->pv;
                     //ไม่เข้าสถานะต้อง Approve
+                    $resule = RunPvController::Runpv($customer_update->user_name,$pv,$type_id);
                 } elseif ($type_id == 6) { //couse อบรม
 
 
@@ -493,6 +498,8 @@ class PvPayment extends Model
                   $customer_update->aistockist_status = 1;
                   $customer_update->aistockist_date =  date('Y-m-d h:i:s');
                 }
+
+
 
                 if ($resule['status'] == 'success') {
                   $movement_ai_cash->save();

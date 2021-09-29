@@ -1,10 +1,12 @@
 @extends('frontend.layouts.customer.customer_app')
+@section('css')
 <style>
   code {
     color: #009688 !important;
 }
-
 </style>
+@endsection
+
 @section('conten')
 
     <div class="row">
@@ -87,7 +89,7 @@
                           }
 
                           ?>
-                            <label>Example Url :</label> <code>{{ route('aiyara', $url_s1) }}</code>
+                            <label>Example Url :</label> <code>{{ url($url_s1.'/1') }}</code>
                             <div class="input-group input-group-button mb-0">
 
                                 <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Edit Name Url"
@@ -141,29 +143,24 @@
                           <div class="row">
                             <div class="col-md-6">
 
-
-
                               <p> <label>1. Aiyara</label>
-
-
                               {{-- <button type="button" class="btn btn-default waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="tooltip on top">Top
                               </button> --}}
-
                                 {{-- <code>{{ route('aiyara', $url_s1) }}</code> --}}
                                 <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aiyara', $url_s1) }}"  href="#!" data-url="{{ route('aiyara', $url_s1) }}"><b stye="color:#000">Copy Url</b></a>
+                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s1.'/1') }}"  href="#!" data-url="{{ url($url_s1.'/1') }}"><b stye="color:#000">Copy Url</b></a>
                                 <br>
                                 <label>2. Aimmura</label>
                                 {{-- <code>{{ route('aimmura', $url_s2) }}</code> --}}
                                 <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aimmura', $url_s2) }}" href="#!" data-url="{{ route('aimmura', $url_s2) }}"><b stye="color:#000">Copy Url</b></a>
+                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s2.'/2') }}" href="#!" data-url="{{ url($url_s2.'/2') }}"><b stye="color:#000">Copy Url</b></a>
                                 <br>
 
                                 <label>3. Cashewy Drink</label>
                                 {{-- <code>{{ route('cashewy', $url_s3) }}</code> --}}
                                  <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
 
-                                 data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('cashewy', $url_s3) }}" href="#!" data-url="{{ route('cashewy', $url_s3) }}"><b stye="color:#000">Copy Url</b></a><br>
+                                 data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s3.'/3') }}" href="#!" data-url="{{ url($url_s3.'/3') }}"><b stye="color:#000">Copy Url</b></a><br>
 
 
                             </div>
@@ -173,19 +170,18 @@
                               <label>4. Aifacad</label>
                               {{-- <code>{{ route('aifacad', $url_s4) }}</code> --}}
                               <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('aifacad', $url_s4) }}" href="#!" data-url="{{ route('aifacad', $url_s4) }}" href="#!" data-url="{{ route('aifacad', $url_s4) }}"><b stye="color:#000">Copy Url</b></a>
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s4.'/4') }}" href="#!" data-url="{{ url($url_s4.'/4') }}"  ><b stye="color:#000">Copy Url</b></a>
                               <br>
 
                               <label>5. Alada</label>
-                              {{-- <code>{{ route('ailada', $url_s5) }}</code>  --}}
+                              {{-- <code>{{ url('ailada.'/,' $url_s5) }}</code>  --}}
                               <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('ailada', $url_s5) }}" href="#!" data-url="{{ route('ailada', $url_s5) }}"><b stye="color:#000">Copy Url</b></a>
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s5.'/5') }}" href="#!" data-url="{{ url($url_s5.'/5') }}"><b stye="color:#000">Copy Url</b></a>
                               <br>
                               <label>6. TrimMax</label>
-                              {{-- <code>{{ route('trimmax', $url_s6) }}</code>  --}}
+                              {{-- <code>{{ url('trimma.'/'', $url_s6) }}</code>  --}}
                               <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ route('trimmax', $url_s6) }}" href="#!" data-url="{{ route('trimmax', $url_s6) }}"><b stye="color:#000">Copy Url</b></a>
+                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s6.'/6') }}" href="#!" data-url="{{ url($url_s6.'/6') }}"><b stye="color:#000">Copy Url</b></a>
                               <br>
                               </p>
 

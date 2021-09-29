@@ -595,40 +595,40 @@
 			<ul class="pcoded-submenu">
 				<?php $user_name= Auth::guard('c_user')->user()->user_name; ?>
 
-        <li class="{{ (request()->is('aiyara*') ) ? 'active' : '' }}">
-					<a href="{{route('aiyara',['user_name'=>$user_name])}}" target="_blank">
+        <li class="">
+					<a href="{{url($user_name.'/1')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aiyara</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('aimmura*') ) ? 'active' : '' }}">
-					<a href="{{route('aimmura',['user_name'=>$user_name])}}" target="_blank">
+				<li class="">
+					<a href="{{url($user_name.'/2')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aimmura</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('cashewy*') ) ? 'active' : '' }}">
-					<a href="{{route('cashewy',['user_name'=>$user_name])}}" target="_blank">
+				<li class="">
+					<a href="{{url($user_name.'/3')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Cashewy Drink</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-        <li class="{{ (request()->is('aifacad*') ) ? 'active' : '' }}">
-					<a href="{{route('aifacad',['user_name'=>$user_name])}}" target="_blank">
+        <li class="">
+					<a href="{{url($user_name.'/4')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Aifacad</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('ailada*') ) ? 'active' : '' }}">
-					<a href="{{route('ailada',['user_name'=>$user_name])}}" target="_blank">
+				<li class="">
+					<a href="{{url($user_name.'/5')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">Ailada</span>
 						<span class="pcoded-mcaret"></span>
@@ -636,14 +636,13 @@
 				</li>
 
 
-				<li class="{{ (request()->is('trimmax*') ) ? 'active' : '' }}">
-					<a href="{{route('trimmax',['user_name'=>$user_name])}}" target="_blank">
+				<li class="">
+					<a href="{{url($user_name.'/6')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext">TrimMax</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
-
 
 
 				<li class="{{ (request()->is('salepage/setting')) ? 'active' : '' }}">

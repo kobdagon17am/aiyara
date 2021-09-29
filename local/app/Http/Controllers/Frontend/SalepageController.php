@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class SalepageController extends Controller
 {
-	public function aimmura($user_name=''){
+	public function aimmura($user_name='',$type=''){
 			$data = DB::table('customers')
       ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
   'customers.last_name','customers.business_name','customers.profile_img','customers.email')
