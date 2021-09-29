@@ -395,7 +395,6 @@ class PvPayment extends Model
                 } elseif ($type_id == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
                     $active_tv_old_date = $customer_update->pv_tv_active;
-
                     $strtime_user = strtotime($customer_update->pv_tv_active);
                     $strtime = strtotime(date("Y-m-d"));
 
