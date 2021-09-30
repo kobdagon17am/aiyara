@@ -469,7 +469,7 @@
                           if(aData['status_sent_2']==3 || aData['status_sent_2']==4 || aData['status_sent_2']==5 || aData['status_cancel_some']==1 ){ 
 
                               $('td:last-child', nRow).html(''
-                                // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
                                 
                               ).addClass('input');

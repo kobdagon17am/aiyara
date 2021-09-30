@@ -669,10 +669,13 @@
 
 // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 
-//         // dd($data);
+//// dd($data);
 // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway_all(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 
-//         dd($data);
+// dd($data);
+
+// $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
+// dd($data);
 
                     ?>
 
