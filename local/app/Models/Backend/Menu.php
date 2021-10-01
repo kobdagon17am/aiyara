@@ -32,9 +32,9 @@ class Menu extends Model
           }else{
             $active = substr_count($path, (empty($r->url)?'1':$r->url)) > 0?'Y':'N';
           }
-          $setMenu[$r->ref][] = (object) 
+          $setMenu[$r->ref][] = (object)
           ['id'=>$r->id,'name'=>$r->name,'link'=>$r->url,'icon'=>$r->icon,'active'=>$active,'ref2'=>$r->ref2,'menu_level'=>$r->menu_level];
-          
+
         }
       }
     }
@@ -81,7 +81,7 @@ foreach ($MenuPermission as $key => $value) {
 
         if( empty($setMenu[$mMenu->id]) ){
 
-            
+
             if(\Auth::user()->permission==1){
                  $txtMenu .= '
                       <li>
@@ -104,10 +104,10 @@ foreach ($MenuPermission as $key => $value) {
 
             }
 
-           
+
 
         }else{
-    
+
 
           foreach( $setMenu[$mMenu->id] AS $sMenu ){
 
@@ -118,8 +118,8 @@ foreach ($MenuPermission as $key => $value) {
               if(\Auth::user()->permission==1 ){
 
                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
-	              		
-	                    	$subMenu .= '       
+
+	                    	$subMenu .= '
 		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
@@ -132,7 +132,7 @@ foreach ($MenuPermission as $key => $value) {
 								        }
 
 								   }
-								
+
 
 		                $subMenu .= '</li>';
 
@@ -146,15 +146,15 @@ foreach ($MenuPermission as $key => $value) {
 		              	}
 
 	            	}
-                    
+
 
               }else{
 
 	                  if(in_array($sMenu->id, $arr_menu_id)){
 
 	                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
-	              		
-	                    	$subMenu .= '       
+
+	                    	$subMenu .= '
 		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
@@ -167,7 +167,7 @@ foreach ($MenuPermission as $key => $value) {
 								        }
 
 								   }
-								
+
 				                $subMenu .= '</li>';
 
 			            	}else{
@@ -201,7 +201,7 @@ foreach ($MenuPermission as $key => $value) {
                         <span>'.$mMenu->name.' </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
-                        '.$subMenu.' 
+                        '.$subMenu.'
                     </ul>
                   </li>
                   ';
@@ -218,7 +218,7 @@ foreach ($MenuPermission as $key => $value) {
 	                        <span>'.$mMenu->name.'  </span>
 	                    </a>
 	                    <ul class="sub-menu" aria-expanded="true">
-	                        '.$subMenu.' 
+	                        '.$subMenu.'
 	                    </ul>
 	                  </li>
 	                  ';

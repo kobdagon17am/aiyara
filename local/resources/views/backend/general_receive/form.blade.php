@@ -9,7 +9,7 @@
   }
   input[type=number] {
     font-weight: bold;
-  }  
+  }
 
 </style>
 @endsection
@@ -26,7 +26,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -38,7 +38,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -46,7 +46,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 
 <div class="row">
@@ -59,15 +59,14 @@
               <form action="{{ route('backend.general_receive.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
               @endif
-                {{ csrf_field() }}
-
 
                       <div class="myBorder">
 
                       	<div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                             <div class="col-md-8">
-                               <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                               <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required=""
+                               @if(@$sRow->business_location_id_fk) disabled @endif>
                               <option value="">-Business Location-</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
@@ -79,6 +78,45 @@
                             </select>
                             </div>
                           </div>
+
+                          <div class="form-group row">
+                            <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
+                            <div class="col-md-8">
+
+
+                            @if($sPermission==1 && !isset($sRow))
+
+                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating" required >
+                                     <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
+                                  </select>
+
+                             @else
+
+                                       @if( empty(@$sRow) )
+                                         <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
+                                       @else
+                                        <input type="hidden" name="branch_id_fk" value="{{@$sRow->branch_id_fk}}">
+                                       @endif
+
+                                      <select  class="form-control select2-templating" disabled="" >
+                                         @if(@$sBranchs)
+                                            @foreach(@$sBranchs AS $r)
+                                            <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
+                                            <option value="{{$r->id}}" {{ ( @$r->id==$branch_id_fk) ? 'selected': ''  }} >
+                                                {{$r->b_name}}
+                                              </option>
+                                            @endforeach
+                                          @endif
+                                      </select>
+
+                             @endif
+
+
+
+
+                            </div>
+                          </div>
+
 
 
                           <div class="form-group row">
@@ -187,10 +225,10 @@
                             <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * </label>
                             <div class="col-md-3">
                                @IF(!empty(@$sRow->lot_expired_date))
-                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly > 
-                               @ELSE 
-                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required > 
-                               @ENDIF 
+                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly >
+                               @ELSE
+                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required >
+                               @ENDIF
                             </div>
                           </div>
 
@@ -220,24 +258,6 @@
 
                     @if( empty(@$sRow) )
 
-                          <div class="form-group row">
-                            <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
-                            <div class="col-md-8">
-                    
-                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " >
-                                     <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
-                                     @if(@$sBranchs)
-                                        @foreach(@$sBranchs AS $r)
-                                          <option value="{{$r->id}}" >
-                                            {{$r->b_name}}
-                                          </option>
-                                        @endforeach
-                                      @endif
-                                  </select>
-
-                            </div>
-                          </div>
-
                         <div class="form-group row">
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
                             <div class="col-md-8">
@@ -246,7 +266,7 @@
                               </select>
                             </div>
                           </div>
-                          
+
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Zone : * </label>
                             <div class="col-md-8">
@@ -278,24 +298,6 @@
                     @else
 
 
-
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขา : </label>
-                            <div class="col-md-8">
-                                <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
-                                 <option value="">Select</option>
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @endforeach
-                                  @endif
-                              </select>
-                            </div>
-                          </div>
-
-
                         <div class="form-group row">
                             <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
                             <div class="col-md-8">
@@ -307,7 +309,7 @@
                                         <option value="{{$r->id}}" selected >
                                           {{$r->w_name}}
                                         </option>
-                                     <?php } ?>                                      
+                                     <?php } ?>
                                       @endforeach
                                     @endif
                               </select>
@@ -344,7 +346,7 @@
                                       </option>
                                       <?php } ?>
                                     @endforeach
-                                  @endif                                 
+                                  @endif
                               </select>
                             </div>
                           </div>
@@ -374,7 +376,7 @@
                                         <input class="form-control" type="text" value="{{@$Recipient[0]->name}}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ @$sRow->recipient }}" name="recipient" >
                                    @endif
-                                    
+
                                 </div>
                             </div>
 
@@ -388,7 +390,7 @@
                                         <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                                    @endif
-                                    
+
                                 </div>
                             </div>
 
@@ -415,7 +417,7 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
-                      
+
                       <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
                       <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
 
@@ -493,14 +495,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                        $(".myloading").hide();
@@ -524,10 +526,10 @@
                $('#shelf_floor').val(1);
                $(".myloading").hide();
            }
- 
+
       });
 
-       
+
        $('#warehouse_id_fk').change(function(){
 
           $(".myloading").show();
@@ -536,14 +538,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                        $(".myloading").hide();
@@ -561,11 +563,11 @@
            }else{
             $(".myloading").hide();
            }
- 
+
       });
 
 
-     
+
        $('#zone_id_fk').change(function(){
           $(".myloading").show();
           var zone_id_fk = this.value;
@@ -573,14 +575,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                        $(".myloading").hide();
@@ -597,7 +599,7 @@
            }else{
             $(".myloading").hide();
            }
- 
+
       });
 
 
@@ -648,7 +650,7 @@
           },1000);
 
       });
-       
+
 </script>
 
 <script type="text/javascript">
@@ -694,7 +696,7 @@ $( function() {
         },
         // select: function (event, ui) {
         //    console.log(ui.item);
-        //    $('#lot_number_auto').val(ui.item.value); 
+        //    $('#lot_number_auto').val(ui.item.value);
         //    return false;
         // },
         // focus: function(event, ui){
@@ -734,7 +736,7 @@ $( function() {
              });
         });
 
-   
+
 
 
  });

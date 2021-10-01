@@ -31,13 +31,15 @@ class General_receiveController extends Controller
       $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
       $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
 
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->business_location_id_fk);
+      })->get();
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
 
@@ -51,7 +53,7 @@ class General_receiveController extends Controller
       $sSupplier = \App\Models\Backend\Supplier::get();
       $Check_stock = \App\Models\Backend\Check_stock::get();
       $Product_status = \App\Models\Backend\Product_status::get();
-      
+
       return View('backend.general_receive.form')->with(
         array(
            'Product_in_cause'=>$Product_in_cause,
@@ -79,7 +81,7 @@ class General_receiveController extends Controller
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -87,16 +89,16 @@ class General_receiveController extends Controller
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
 
-      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();       
+      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
-      $Shelf = \App\Models\Backend\Shelf::get();      
+      $Shelf = \App\Models\Backend\Shelf::get();
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
       $sSupplier = \App\Models\Backend\Supplier::get();
       $Check_stock = \App\Models\Backend\Check_stock::get();
       $Product_status = \App\Models\Backend\Product_status::get();
-      
+
       // dd($Check_stock);
 
       return View('backend.general_receive.form')->with(
@@ -149,12 +151,12 @@ class General_receiveController extends Controller
           $sRow->shelf_id_fk    = request('shelf_id_fk');
           $sRow->shelf_floor    = request('shelf_floor');
           $sRow->delivery_person    = request('delivery_person');
-          
+
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');
           $sRow->recipient    = request('recipient');
           $sRow->approver    = request('approver');
           $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -174,7 +176,7 @@ class General_receiveController extends Controller
                 ->get();
 
                 if($value->count() == 0){
-           
+
                       DB::table('db_stocks')->insert(array(
                         'business_location_id_fk' => request('business_location_id_fk'),
                         'branch_id_fk' => request('branch_id_fk'),
@@ -213,7 +215,7 @@ class General_receiveController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/general_receive/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -236,10 +238,10 @@ class General_receiveController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -259,14 +261,14 @@ class General_receiveController extends Controller
         }else{
           return '';
         }
-        
+
       })
       ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
+        $d = strtotime($row->lot_expired_date);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('pickup_date', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
+        $d = strtotime($row->pickup_firstdate);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('updated_at', function($row) {

@@ -18,7 +18,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
     $menu_id = @$_REQUEST['menu_id'];
     $role_group_id = @$_REQUEST['role_group_id'];
@@ -35,7 +35,7 @@
 
       //   echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;  
+      // echo $menu_id;
 
    ?>
 <div class="row">
@@ -58,7 +58,7 @@
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                             <div class="col-md-8">
-                             
+
                             @if($sPermission==1)
 
                                      <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
@@ -74,7 +74,7 @@
 
                                      </select>
 
-                             @else 
+                             @else
 
                                        @if( empty(@$sRow) )
                                          <input type="hidden" name="business_location_id_fk" value="{{@\Auth::user()->business_location_id_fk}}">
@@ -92,13 +92,13 @@
                                             @endforeach
                                           @endif
                                       </select>
-  
+
                              @endif
-                           
+
                             </div>
                           </div>
 
-                          
+
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                             <div class="col-md-8">
@@ -106,11 +106,11 @@
 
                             @if($sPermission==1)
 
-                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " required >
+                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating" required >
                                      <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
                                   </select>
 
-                             @else 
+                             @else
 
                                        @if( empty(@$sRow) )
                                          <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
@@ -118,7 +118,7 @@
                                         <input type="hidden" name="branch_id_fk" value="{{@$sRow-branch_id_fk}}">
                                        @endif
 
-                                      <select  class="form-control select2-templating " disabled="" >
+                                      <select  class="form-control select2-templating" disabled="" >
                                          @if(@$sBranchs)
                                             @foreach(@$sBranchs AS $r)
                                             <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
@@ -128,11 +128,11 @@
                                             @endforeach
                                           @endif
                                       </select>
-  
+
                              @endif
 
 
-                                  
+
 
                             </div>
                           </div>
@@ -186,7 +186,7 @@
                           <div class="form-group row">
                             <label for="lot_number" class="col-md-3 col-form-label">Lot Number : * </label>
                             <div class="col-md-8">
-                              
+
                                 @if( empty(@$sRow) )
                                    <select id="lot_number" class="form-control select2-templating " >
                                      <option disabled selected>กรุณาเลือกสินค้าก่อน</option>
@@ -243,7 +243,7 @@
                                         <input class="form-control" type="text" value="{{@$Recipient[0]->name}}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ @$sRow->recipient }}" name="recipient" >
                                    @endif
-                                    
+
                                 </div>
                             </div>
 
@@ -257,7 +257,7 @@
                                         <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                       <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                                    @endif
-                                    
+
                                 </div>
                             </div>
 
@@ -284,10 +284,10 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
-                      
+
                       <input type="hidden" name="role_group_id" value="{{@$_REQUEST['role_group_id']}}" >
                       <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
- 
+
                 @if( @$sRow->approve_status!='1' )
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
@@ -312,7 +312,7 @@
 
 <script type="text/javascript">
 
-   
+
 
        $('#business_location_id_fk').change(function(){
 
@@ -356,14 +356,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -384,10 +384,10 @@
                $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
                $('#shelf_floor').val(1);
            }
- 
+
       });
 
-       
+
        $('#warehouse_id_fk').change(function(){
 
           var warehouse_id_fk = this.value;
@@ -395,14 +395,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -416,11 +416,11 @@
                   }
                 })
            }
- 
+
       });
 
 
-     
+
        $('#zone_id_fk').change(function(){
 
           var zone_id_fk = this.value;
@@ -428,14 +428,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -448,7 +448,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -488,7 +488,7 @@
                        $.each(data,function(key,value){
                         layout += '<option value='+value.id+'>'+value.lot_number+' [Expired:'+value.lot_expired_date+']</option>';
                         $('#lot_number_txt').val(value.lot_number);
-                        
+
                        });
                        $('#lot_number').html(layout);
                    }
@@ -562,7 +562,7 @@
                             );
 
                            $('#lot_expired_date').val(value.lot_expired_date);
-                           
+
                          });
 
                          $(".myloading").hide();
@@ -597,7 +597,7 @@
             });
 
 
-</script> 
+</script>
 
 <script>
   $(document).ready(function() {
@@ -636,7 +636,7 @@
               })
        }
   });
-   
+
 </script>
 
 
