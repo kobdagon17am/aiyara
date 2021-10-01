@@ -263,8 +263,9 @@
                           <?php } ?>
 
                     <center>
-                        <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}">
-                          ไปหน้า เบิกสินค้าจากคลัง >
+                        <!-- <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}"> -->
+                        <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pay_requisition_001") }}">
+                          ไปหน้า จ่ายสินค้าตามใบเบิก >
                         </a>
                     </center>
 

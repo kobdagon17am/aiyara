@@ -21,13 +21,23 @@ class General_takeoutController extends Controller
  public function create()
     {
       $Product_out_cause = \App\Models\Backend\Product_out_cause::get();
-      $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+
+      $Products = DB::select("
+
+        SELECT products.id as product_id,
+        products.product_code,
+        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+        FROM
+        products_details
+        Left Join products ON products_details.product_id_fk = products.id
+        WHERE 
+        products.id in (SELECT product_id_fk FROM db_stocks WHERE business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk.")
+        AND
+        lang_id=1
+
+            ");
+
+      // dd($Products);
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
 
@@ -53,6 +63,7 @@ class General_takeoutController extends Controller
     }
     public function store(Request $request)
     {
+      dd($request->all());
       return $this->form();
     }
 

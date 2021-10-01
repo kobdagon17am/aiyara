@@ -863,7 +863,7 @@
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
-                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
+                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -961,6 +961,7 @@
                       <div class="divTableCell" >&nbsp; </div>
                       <div class="divTH">
                         <label for="" >รวม PV : </label>
+                        <!-- <input type="button" class="btnClickRefresh" value="R"> -->
                       </div>
                       <div class="divTableCell">
 
@@ -1850,14 +1851,14 @@
 
 
 
-<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
+<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
-       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> -->
+        </button>
       </div>
 
       <div class="modal-body">
@@ -2353,7 +2354,6 @@
               if (!confirm("ยืนยัน ? เพื่อลบรายการ ")){
                   return false;
               }else{
-                $(".myloading").show();
               $.ajax({
                   url: " {{ url('backend/ajaxDeLProductOrderBackend') }} ", 
                   method: "post",
@@ -2366,19 +2366,46 @@
                   { 
                     // console.log(data);
                     // return false;
+
                         var frontstore_id_fk = $("#frontstore_id_fk").val();
                         $.ajax({
                              type:'POST',
                              url: " {{ url('backend/ajaxForCheck_press_save') }} ", 
                              data:{ _token: '{{csrf_token()}}',frontstore_id_fk:frontstore_id_fk},
                               success:function(data){
-                              },
+                                   // / console.log(data); 
+                                },
                               error: function(jqXHR, textStatus, errorThrown) { 
+                                  // / console.log(JSON.stringify(jqXHR));
                               }
                           });
 
-                        location.reload();
+
+                        // Swal.fire({
+                        //   type: 'success',
+                        //   title: 'ทำการลบรายการสินค้าที่ระบุเรียบร้อยแล้ว',
+                        //   showConfirmButton: false,
+                        //   timer: 2000
+                        // });
+
+                        // setTimeout(function () {
+                          // $('#data-table-list').DataTable().clear().draw();
+                          //fnGetDBfrontstore();
+
+                              // $.ajax({
+                              //    type:'POST',
+                              //    dataType:'JSON',
+                              //    url: " {{ url('backend/ajaxClearCostFrontstore') }} ",
+                              //    data: { _token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk },
+                              //    success:function(data){
+
+                                  location.reload();
+
+                              //    },
+                              // });
+
                           
+                        // }, 1500);
                   }
                 });
 
@@ -2628,27 +2655,19 @@
             });
 
 
-      
-
             $('#modalAddFromProductsList,#modalAddList').on('hidden.bs.modal', function () {
-                // $("#spinner_frame").show();
-                    setTimeout(function(){
-                      window.location.reload(true);
-                    },500);
-
-                   if (jQuery(".myloading").is(':visible')) {
-                    $(".myloading").hide();
-                    localStorage.setItem("myloading", 'false');
-                   }
-                   else
-                   {
-                    jQuery(".myloading").show();
-                    $(".myloading").show();
-                     localStorage.setItem("myloading", 'true');
-                   }
-
+                $("#spinner_frame").show();
+                // $(".myloading").show();
+                setTimeout(function(){
+                  window.location.reload(true);
+                },500);
                 
             });
+
+
+            // $('#modalDelivery').on('hidden.bs.modal', function () {
+            //     alert("xxxxxxxxxxxx");
+            // });
 
           $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
                 $("#spinner_frame").show();
@@ -2659,20 +2678,20 @@
             });
 
 
+
+             $(document).on('click', '.btnClickRefresh', function () {
+                  $(".myloading").show();
+                  location.reload();
+              });
+
+
+
+
+
       });
 
 
     $(document).ready(function() {
-
-           jQuery(window).on('load',function(){
-                if (localStorage.getItem("myloading") == 'true') {
-                    $(".myloading").show();
-                }
-
-                if (localStorage.getItem("myloading") == 'false') {
-                    $(".myloading").hide();
-                }
-             });
 
 
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
@@ -3852,8 +3871,10 @@ $(document).ready(function() {
                        data:{ _token: '{{csrf_token()}}',product_id_fk:product_id_fk,frontstore_id:frontstore_id },
                         success:function(data){
                              //  console.log(data);
+                             // location.reload();
                              $('#show_product').html(data);
                              // $('#modalAddList').modal('show');
+
                               $('#amt').val($('#p_amt').val());
                               $('#amt').focus().select();
 
@@ -4299,10 +4320,12 @@ $(document).ready(function() {
                           },
                             success:function(data){
                                 // / console.log(data);
+                                // location.reload();
                             }
                         });
 
                         setTimeout(function(){
+                          // $('#frm-main').attr('action', "{{ url('backend/test1') }}").submit();
                           location.replace("{{url('backend/frontstore')}}");
                         },2000);
 
@@ -4320,6 +4343,7 @@ $(document).ready(function() {
                     var pay_type_id_fk =  $('#pay_type_id_fk').val()?$('#pay_type_id_fk').val():0;
 
                     // / console.log(pay_type_id_fk);
+
                      $('#pay_type_id_fk').val("").select2();
                      $('#pay_type_id_fk').val("").trigger("change");
                      $('#pay_type_id_fk').prop('disabled',false);
@@ -4349,19 +4373,83 @@ $(document).ready(function() {
 กรณีเงินโอน ได้แก่ 1,8,10,11,12
 
 */
-          
+                    // return false;
+                    // $(".show_div_credit").hide();
+                    // $(".div_fee").hide();
+                    // $(".show_div_transfer_price").hide();
+                    // $(".div_account_bank_id").hide();
+                    // $(".show_div_aicash_price").hide();
+                    // $(".show_div_cash_pay").hide();
+                    // $(".div_pay_with_other_bill").hide();
+                    
+                    // $('.class_btnSave').addClass(' btnSave ');
+                    // $('.class_btnSave').removeAttr( "disabled" );
                     $('.class_btnSave').hide();
+
+                    // var pay_type_id_fk =  $('#pay_type_id_fk').val();
+                    // $('#pay_type_id_fk').val(pay_type_id_fk).trigger("change");
 
                     // กรณีเงินโอน ไปอีกช่องทางนึง
                     if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
-                      
-                         location.reload();
 
-                    }else if(pay_type_id_fk==5){
+                      // คำนวณ บวกเงินค่าขนส่ง ใส่เข้าไปในยอด โอน หรือ เงินสด บิลเดิมนี้ด้วย 
+
+                      // $('#pay_type_id_fk').prop('disabled',true);
+
+                      // $('.class_btnSaveTransferType').removeAttr( "disabled" );
+                      // $('.class_btnSaveTransferType').show();
+
+                      // $("#cash_pay").load(location.href + " #cash_pay");
+                      
+                      location.reload();
+                      
+
+
+                      // let shipping_price =  parseFloat($('#shipping_price').val().replace(",", ""));
+                      // let transfer_price =  parseFloat($('#transfer_price').val().replace(",", ""));
+                      // let cash_pay =  parseFloat($('#cash_pay').val().replace(",", ""));
+
+                      // / // console.log("shipping_price : "+shipping_price);
+                      // / // console.log("transfer_price : "+transfer_price);
+                      // / // console.log("cash_pay : "+cash_pay);
+
+                      // 1 เงินโอน
+                      // 8 เครดิต + เงินโอน
+                      // 9 เครดิต + Ai-Cash
+                      // 10  เงินโอน + เงินสด
+                      // 11  เงินโอน + Ai-Cash
+                      // 12  Gift Voucher + เงินโอน
+
+                      // 10  เงินโอน + เงินสด
+                      // if(pay_type_id_fk==10){
+                      //     let res =  (+cash_pay+shipping_price);
+                      //     $('#cash_pay').val(res.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                      // }
+
+                      // $('#transfer_price').removeAttr( "disabled" );
+                      // $('#transfer_price').val("");
+                      // $('#cash_pay').val("");
+
+                      // $('.class_btnSave').addClass(' btnSave ');
+                    // $('.class_btnSave').removeAttr( "disabled" );
+
+                        //  $.ajax({
+                        //     url: "{{ url('backend/ajaxClearPayTypeFrontstore') }}",
+                        //     type: "POST",
+                        //     data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
+                        //     success: function () {
+                        //       // $('#pay_type_id_fk').val("").select2();
+                        //       // $('#pay_type_id_fk').val("").trigger("change");
+                        //       location.reload(true);
+                        //     }
+                        // });
+
+                      }else if(pay_type_id_fk==5){
 
                         $('#pay_type_id_fk').attr("disabled", false);
                         $('#pay_type_id_fk').val("").select2();
                         $('#pay_type_id_fk').val("").trigger("change");
+
 
                     }else{
 
@@ -4370,7 +4458,10 @@ $(document).ready(function() {
                               type: "POST",
                               data: {_token: '{{csrf_token()}}', frontstore_id_fk:frontstore_id_fk},
                               success: function (data) {
-                              
+                                // / console.log(data);
+                                // $('#pay_type_id_fk').val("").select2();
+                                // $('#pay_type_id_fk').val("").trigger("change");
+                                // location.reload(true);
                               }
                           });
 
@@ -4426,12 +4517,16 @@ $(document).ready(function() {
 
 
                  $('#modalAddFromProductsList').on('hidden.bs.modal', function () {
-                    // $("#spinner_frame").show();
+                    $("#spinner_frame").show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
                       $(".ShippingCalculate02").trigger('click');
                     }, 1000);
-            
+
+                    // setTimeout(function(){
+                    //   location.reload();
+                    // }, 2000);
+
                 });
 
           });
@@ -4720,6 +4815,7 @@ $(document).ready(function() {
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     // / // console.log(data);
+                                    // location.reload();
                                     $(".span_file_slip").hide();
                                     $(".transfer_money_datetime").val('');
                                     $("#note_fullpayonetime").val('');
@@ -4743,6 +4839,7 @@ $(document).ready(function() {
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     // / // console.log(data);
+                                    // location.reload();
                                     $(".span_file_slip_02").hide();
                                     $(".transfer_money_datetime_02").val('');
                                     $("#note_fullpayonetime_02").val('');
@@ -4766,6 +4863,7 @@ $(document).ready(function() {
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     // / // console.log(data);
+                                    // location.reload();
                                     $(".span_file_slip_03").hide();
                                     $(".transfer_money_datetime_03").val('');
                                     $("#note_fullpayonetime_03").val('');
@@ -5856,6 +5954,7 @@ $(document).ready(function() {
                                     if (result.value) {
                                      // $("form").submit();
                                      // $("#spinner_frame").show();
+                                     // location.reload();
 
                                      // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
                                        $("#frm-main").valid();
@@ -6283,18 +6382,10 @@ $(document).ready(function() {
 </script>
 
 
+
       <script>
 // Clear data in View page  
       $(document).ready(function() {
-
-        $('.myloading').show();
-
-                setTimeout(function(){
-                  $('.myloading').hide();
-                },1500);
-
-
-
             $(".test_clear_data").on('click',function(){
 
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){

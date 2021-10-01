@@ -906,17 +906,17 @@ GROUP BY promotions_products.product_id_fk
               }
               $arr2 = implode(',', $arr1);
               // return $arr2;
+              // กรณีที่อยู่ไม่ได้ทำตรงนี้แล้ว ไปทำที่ D:\wamp64\www\aiyara\local\app\Http\Controllers\backend\FrontstoreController.php
               // กำหนดที่อยู่
+          /*
               if($arr2){
 
                   $addr_01 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) ;");
                   if(@$addr_01){
                       $addr_02 = DB::select("SELECT orders_id_fk FROM `db_delivery` WHERE receipt in ($arr2) ;");
-                      // return @$addr_02;
 
                       if(@$addr_02){
 
-                      // $arr3 = [];
                       foreach ($addr_02 as $key => $v1) {
 
                         $addr_03 = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
@@ -959,8 +959,7 @@ GROUP BY promotions_products.product_id_fk
 
               }
 
-              // return $addr_03;
-
+            */
 
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");

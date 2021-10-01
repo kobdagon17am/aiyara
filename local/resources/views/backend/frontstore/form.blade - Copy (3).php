@@ -863,7 +863,7 @@
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
-                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
+                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์ </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -1850,14 +1850,14 @@
 
 
 
-<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
+<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
-       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> -->
+        </button>
       </div>
 
       <div class="modal-body">
@@ -2353,7 +2353,6 @@
               if (!confirm("ยืนยัน ? เพื่อลบรายการ ")){
                   return false;
               }else{
-                $(".myloading").show();
               $.ajax({
                   url: " {{ url('backend/ajaxDeLProductOrderBackend') }} ", 
                   method: "post",
@@ -6283,18 +6282,10 @@ $(document).ready(function() {
 </script>
 
 
+
       <script>
 // Clear data in View page  
       $(document).ready(function() {
-
-        $('.myloading').show();
-
-                setTimeout(function(){
-                  $('.myloading').hide();
-                },1500);
-
-
-
             $(".test_clear_data").on('click',function(){
 
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){

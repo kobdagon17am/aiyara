@@ -472,6 +472,31 @@
 
 
         $(document).ready(function() {
+
+          $('#data-table-packing').on( 'draw.dt', function () {
+          var table = $('#data-table-packing').DataTable();
+
+                table.row(':eq(0)', { page: 'current' }).select();
+
+
+                         $('#last_form').after(
+                             $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'row_id[]')
+                                .attr('id', 'row_id'+1)
+                                .val(1)
+                         );
+
+
+                  // $('.divCreatePackBill').show();
+
+                  $('.btnCreatePackBill ').trigger('click');
+
+        });
+
+
+
+          // $('.btnCreatePackBill ').trigger('click');
                     
                     
           var table = $('#data-table-packing').DataTable();

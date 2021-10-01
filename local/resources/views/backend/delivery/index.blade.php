@@ -172,8 +172,8 @@
                         <select id="receipt" name="receipt" class="form-control select2-templating " required >
                         <option value="">-Select-</option>
 
-                         @if(@$sDelivery)
-                          @foreach(@$sDelivery AS $r)
+                         @if(@$receipt)
+                          @foreach(@$receipt AS $r)
                             <option value="{{$r->receipt}}" >
                               {{$r->receipt}} 
                             </option>
@@ -193,7 +193,7 @@
                       </select>
                     </div> -->
 
-                        <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
+                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อลูกค้า : </label>
                     <div class="col-md-9">
                        <select id="customer_id_fk" name="customer_id_fk" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -374,13 +374,14 @@ $(function() {
                   {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
-                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
+                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-left'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
                   {data: 'orders_id_fk',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
                       return '<center>'
                       + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                   }},
+                  {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
                   {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                         return d>0?d:'';
                   }},
@@ -514,27 +515,50 @@ $(function() {
                           });
 
                           var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+                          var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
+                          var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
 
-                          console.log(ids); 
+                          // console.log(ids); 
+                          // console.log(shipping_price); 
+                          // console.log(total_price); 
                           $(".myloading").hide();
 
+            					     setTimeout(function(){
+            	            		if($('.select-info').text()!=''){
+            	            			var str = $('.select-info').text();
+                  							var str = str.split(" ");
+                  							if(parseInt(str[0])>1){
+                                    sum_shipping_price = 0;
+                                    $.each(shipping_price,function(){sum_shipping_price+=parseFloat(this) || 0;});
+                                    console.log(sum_shipping_price); 
+                                  if(sum_shipping_price>0){
+                                     $('.divBtnSave').show();
+                                  }else{
+                                    $('.divBtnSave').hide();
+                                    sum = 0;
+                                    $.each(total_price,function(){sum+=parseFloat(this) || 0;});
+                                    console.log(sum); 
+                                    var shipping_cost = "{{@$shipping_cost}}";
+                                    // console.log(shipping_cost); 
+                                    if(sum>=shipping_cost){
+                                      $('.divBtnSave').show();
+                                    }else{
+                                      $('.divBtnSave').hide();
+                                    }
+                                  }
+                  								
+                  							}else{
+                  								$('.divBtnSave').hide();
+                  							}
+            		            	}else{
+            		            		$('.divBtnSave').hide();
+            		            	}
+                              $(".myloading").hide();
+            		            }, 500);
+
+
+
                   }, 500);
-
-
-  					     setTimeout(function(){
-  	            		if($('.select-info').text()!=''){
-  	            			var str = $('.select-info').text();
-        							var str = str.split(" ");
-        							if(parseInt(str[0])>1){
-        								$('.divBtnSave').show();
-        							}else{
-        								$('.divBtnSave').hide();
-        							}
-  		            	}else{
-  		            		$('.divBtnSave').hide();
-  		            	}
-                    $(".myloading").hide();
-  		            }, 500);
 
             } );
 
@@ -588,31 +612,23 @@ $(function() {
                             return '-';
                           }
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '-';
                           }
                       }},
-                   //   {data: 'addr_to_send',   title :'<center>ที่อยู่ในการจัดส่ง</center>', className: 'text-center w250 ',render: function(d) {
-      	                  	// if(d==''||d=='0'){
-      	                   //      return '<span style="color:red;font-size:16px;">-ไม่ระบุ กรุณาตรวจสอบ-</span>';
-      	                  	// }else{
-      	                  	// 	return d ;
-      	                  	// }
-                            // return '' ;
-	                 //   }},
-                      // {data: 'id',   title :'ใบเสร็จ', className: 'text-center ',render: function(d) {
-                      //     return '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-                      // }},
-                      {data: 'status_delivery',   title :'<center>สถานะ </center>', className: 'text-center ',render: function(d) {
-	                  	if(d=='1'){
-	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-	                  	}else{
-	                  		return '-รอเบิกสินค้าจากคลัง-';
-	                  	}
-	                  }},
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+                      {data: 'status_delivery',   title :'<center>สถานะ. </center>', className: 'text-center ',render: function(d) {
+  	                  	if(d=='1'){
+  	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+  	                  	}else{
+  	                  		return '-รอเบิกสินค้าจากคลัง-';
+  	                  	}
+	                    }},
                       {data: 'id', title :'Tools', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
@@ -916,6 +932,7 @@ $(function() {
                                         return '<center>'
                                         + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                                     }},
+                                    {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
                                     {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                                           return d>0?d:'';
                                     }},

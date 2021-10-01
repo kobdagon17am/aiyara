@@ -50,22 +50,51 @@
               @endif
                 {{ csrf_field() }}
 
+<?php //echo \Auth::user()->business_location_id_fk ; ?>
+<?php //dd(@$sBusiness_location); ?>
 
                       <div class="myBorder">
 
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                             <div class="col-md-8">
-                               <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
-                              <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @endforeach
-                              @endif
-                            </select>
+                             
+                            @if($sPermission==1)
+
+                                     <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+
+                                        <option value="">-Business Location-</option>
+                                        @if(@$sBusiness_location)
+                                          @foreach(@$sBusiness_location AS $r)
+                                          <option value="{{$r->id}}" {{ (@$r->id==@$sRow->business_location_id_fk)?'selected':'' }} >
+                                            {{$r->txt_desc}}
+                                          </option>
+                                          @endforeach
+                                        @endif
+
+                                     </select>
+
+                             @else 
+
+                                       @if( empty(@$sRow) )
+                                         <input type="hidden" name="business_location_id_fk" value="{{@\Auth::user()->business_location_id_fk}}">
+                                       @else
+                                        <input type="hidden" name="business_location_id_fk" value="{{@$sRow-business_location_id_fk}}">
+                                       @endif
+
+                                      <select  class="form-control select2-templating " disabled="" >
+                                         @if(@$sBusiness_location)
+                                            @foreach(@$sBusiness_location AS $r)
+                                            <?=$business_location=(@$sRow->business_location_id_fk?@$sRow->business_location_id_fk : @\Auth::user()->business_location_id_fk)?>
+                                            <option value="{{$r->id}}" {{ ( @$r->id==$business_location) ? 'selected': ''  }} >
+                                                {{$r->txt_desc}}
+                                              </option>
+                                            @endforeach
+                                          @endif
+                                      </select>
+  
+                             @endif
+                           
                             </div>
                           </div>
 
@@ -74,19 +103,35 @@
                             <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                             <div class="col-md-8">
 
-                                @if( empty(@$sRow) )
+
+                            @if($sPermission==1)
+
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " required >
                                      <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
                                   </select>
-                                @else
 
-                                    <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
-                                      <option value="{{@$sBranchs[0]->id}}" {{ (@$sBranchs[0]->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                        {{@$sBranchs[0]->b_name}}
-                                      </option>
-                                  </select>
+                             @else 
 
-                                @endif
+                                       @if( empty(@$sRow) )
+                                         <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
+                                       @else
+                                        <input type="hidden" name="branch_id_fk" value="{{@$sRow-branch_id_fk}}">
+                                       @endif
+
+                                      <select  class="form-control select2-templating " disabled="" >
+                                         @if(@$sBranchs)
+                                            @foreach(@$sBranchs AS $r)
+                                            <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
+                                            <option value="{{$r->id}}" {{ ( @$r->id==$branch_id_fk) ? 'selected': ''  }} >
+                                                {{$r->b_name}}
+                                              </option>
+                                            @endforeach
+                                          @endif
+                                      </select>
+  
+                             @endif
+
+
                                   
 
                             </div>
@@ -412,7 +457,10 @@
           $(".myloading").show();
 
           var product_id_fk = this.value;
-          // alert(zone_id_fk);
+          var business_location_id_fk = $("#business_location_id_fk").val();
+          var branch_id_fk = $("#branch_id_fk").val();
+          // alert(business_location_id_fk);
+          // alert(branch_id_fk);
           $('#amt').val('');
           $('#amt_in_stock').val('');
           $('#lot_number_txt').val('');
@@ -424,6 +472,8 @@
                    url: " {{ url('backend/ajaxGetLotnumber') }} ",
                   method: "post",
                   data: {
+                    business_location_id_fk:business_location_id_fk,
+                    branch_id_fk:branch_id_fk,
                     product_id_fk:product_id_fk,
                     "_token": "{{ csrf_token() }}",
                   },

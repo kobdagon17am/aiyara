@@ -489,7 +489,16 @@ class AjaxController extends Controller
     public function ajaxGetLotnumber(Request $request)
     {
         if($request->ajax()){
-          $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
+          // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
+          if(@\Auth::user()->permission==1){
+
+            $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".$request->business_location_id_fk." AND branch_id_fk=".$request->branch_id_fk." ");
+
+          }else{
+            
+             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
+          }
+
           return response()->json($query);      
         }
     }    
@@ -3958,67 +3967,43 @@ if($frontstore[0]->check_press_save==2){
     {
         if($request->ajax()){
             
-            // สำหรับกรณี Autocomplete
-            // $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
-            // ->orWhere('first_name','LIKE',"%$request->txt%")
-            // ->orWhere('last_name','LIKE',"%$request->txt%")
-            // ->take(15)->get();
-            // $response = array();
-            // foreach ($query as $key => $value) {
-            //     $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
-            // }
-            // return json_encode($response);
-
             if(!empty($request->term)){
-
-                // $customers = DB::table('customers')
-                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                // ->take(15)
-                // ->orderBy('user_name', 'asc')
-                // ->get();
 
                 if(@\Auth::user()->permission==1){
 
                     $customers = DB::select(" 
 
-                    select * from customers 
-                    where id in (select customer_id from db_delivery)
-                    and 
-                    (
-                    user_name like '%".$request->term."%' OR
-                    first_name like '%".$request->term."%' OR
-                    last_name like '%".$request->term."%' 
-                    )
-                    ; 
+                        select customers.id,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name from db_delivery
+                        left join customers on customers.id=db_delivery.customer_id
+                        where
+                        customers.user_name like '%".$request->term."%' or
+                        customers.first_name like '%".$request->term."%' or
+                        customers.last_name like '%".$request->term."%'
+
                     ");
 
                 }else{
 
                       $customers = DB::select(" 
 
-                    select * from customers 
-                    where id in (select customer_id from db_delivery where branch_id_fk=".@\Auth::user()->branch_id_fk.")
-                    and 
-                    (
-                    user_name like '%".$request->term."%' OR
-                    first_name like '%".$request->term."%' OR
-                    last_name like '%".$request->term."%' 
-                    )
-                    ; 
+                        select customers.id,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name from db_delivery
+                        left join customers on customers.id=db_delivery.customer_id
+                        where
+                        db_delivery.branch_id_fk=".@\Auth::user()->branch_id_fk." AND 
+                        (customers.user_name like '%".$request->term."%' or
+                        customers.first_name like '%".$request->term."%' or
+                        customers.last_name like '%".$request->term."%')
+
                     ");
 
                 }
-
-                  
 
             }
             $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
                     'id'    => $v->id,
-                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                    'text'  => $v->user_name.' : '.$v->prefix_name.$v->first_name.' '.$v->last_name,
                 ];
             }           
             return json_encode($json_result);
@@ -4371,8 +4356,11 @@ if($frontstore[0]->check_press_save==2){
 
            // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($r[0]->id, \Auth::user()->id , 'admin', 'admin');
            // dd($cancel);
+  // `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
+  // `order_status_id_fk` int(11) DEFAULT NULL COMMENT '(ยึดตาม* dataset_order_status )',
 
-           DB::select(" UPDATE db_orders SET approve_status=5 where id=$request->id ");
+           DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
+           DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
       // return response()->json(\App\Models\Alert::Msg('success'));
        // return redirect()->to(url("backend/frontstore"));
        }
@@ -4469,7 +4457,6 @@ if($frontstore[0]->check_press_save==2){
 
 
           DB::select(" DELETE FROM `db_order_products_list` where id=$request->id ");
-
           // $sumprice = DB::select(" SELECT sum(total_price) as sumprice FROM `db_order_products_list` where frontstore_id_fk=$request->id ");
 
           // $sumprice = $sumprice[0]->sumprice>0?$sumprice[0]->sumprice:0;
