@@ -126,8 +126,8 @@
 
 
     <div class="myBorder">
-              <div class="row" >
-                <div class="col-md-6 " >
+              <div class="row">
+                <div class="col-md-6" >
                   <div class="form-group row">
                     <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location</label>
                     <div class="col-md-9">
@@ -142,24 +142,9 @@
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                        <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                        <div class="col-md-9">
-
-                          <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " @if($sPermission !== 1) disabled @endif >
-                             <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
-                             @if(@$sBranchs)
-                              @foreach(@$sBranchs AS $r)
-                                <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk) && $sPermission !== 1)?'selected':'' }} >{{$r->b_name}}</option>
-                              @endforeach
-                            @endif
-                          </select>
-
-                        </div>
-                      </div>
-                </div>
+              <div class="row" >
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
