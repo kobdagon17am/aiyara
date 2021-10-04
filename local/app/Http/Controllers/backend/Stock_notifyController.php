@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class Stock_notifyController extends Controller
 {
-
     public function index(Request $request)
     {
-
       // $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('id', 'asc');
       // dd($sTable);
-        $sBusiness_location = \App\Models\Backend\Business_location::get();
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
 
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -28,7 +29,9 @@ class Stock_notifyController extends Controller
          $product_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
          // dd($product_name);
-         $sBranchs = \App\Models\Backend\Branchs::get();
+         $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+           return $query->where('id', auth()->user()->branch_id_fk);
+         })->get();
          $Warehouse = \App\Models\Backend\Warehouse::get();
 
         return View('backend.stock_notify.index')->with(array(
@@ -58,7 +61,7 @@ class Stock_notifyController extends Controller
 
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -122,10 +125,10 @@ class Stock_notifyController extends Controller
     public function Datatable(Request $req){
       if(!empty($req->product_name) ){
         // $sTable = \App\Models\Backend\Stock_notify::where('product_id_fk', 'like', '%' . $req->product_name . '%')->get();
-        $sTable = DB::select(" 
-          select db_stocks_notify.*,products_details.product_name from db_stocks_notify 
+        $sTable = DB::select("
+          select db_stocks_notify.*,products_details.product_name from db_stocks_notify
           Left Join products_details ON products_details.product_id_fk = db_stocks_notify.product_id_fk
-          WHERE 
+          WHERE
           products_details.product_name LIKE '%".$req->product_name."%' OR
           db_stocks_notify.product_id_fk LIKE '%".ltrim($req->product_name, '0')."%'
           AND products_details.lang_id=1
@@ -134,13 +137,13 @@ class Stock_notifyController extends Controller
       }else{
         $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('updated_at', 'desc');
       }
-      
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -154,7 +157,7 @@ class Stock_notifyController extends Controller
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
         return @$BL[0]->txt_desc.'/'.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name;
-      }) 
+      })
       ->make(true);
     }
 
@@ -164,19 +167,19 @@ class Stock_notifyController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('diff_d', function($row) {
-          $D = DB::select("SELECT timestampdiff(DAY,now(),lot_expired_date) as Day  FROM db_stocks_notify 
+          $D = DB::select("SELECT timestampdiff(DAY,now(),lot_expired_date) as Day  FROM db_stocks_notify
             WHERE id=".@$row->id." ");
          return @$D[0]->Day;
       })
       ->addColumn('diff_d02', function($row) {
-          $D = DB::select("SELECT timestampdiff(DAY,now(),lot_expired_date) - amt_day_before_expired as Day  FROM db_stocks_notify 
+          $D = DB::select("SELECT timestampdiff(DAY,now(),lot_expired_date) - amt_day_before_expired as Day  FROM db_stocks_notify
             WHERE id=".@$row->id." ");
          return @$D[0]->Day;
-      })               
+      })
       ->addColumn('product_name', function($row) {
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -190,7 +193,7 @@ class Stock_notifyController extends Controller
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
         return @$BL[0]->txt_desc.'/'.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name;
-      }) 
+      })
       ->make(true);
     }
 

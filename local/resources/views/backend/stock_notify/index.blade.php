@@ -182,7 +182,7 @@
                   <div class="row" >
                     <div class="col-md-12" >
                        <div class="form-group row">
-                        
+
                         </div>
                     </div>
                   </div>
@@ -271,7 +271,7 @@ $(function() {
               }else{
                 return d;
               }
-            }},            
+            }},
             {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
             {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
@@ -288,7 +288,7 @@ $(function() {
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
           $('td:last-child', nRow).html(''
             + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -344,7 +344,7 @@ $(function() {
 			              }else{
 			                return d;
 			              }
-			            }},            
+			            }},
 			            {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
 			            {data: 'id', title :'Tools', className: 'text-center w80'},
 			        ],
@@ -361,7 +361,7 @@ $(function() {
 
 			          if(sU!=''&&sD!=''){
 			              $('td:last-child', nRow).html('-');
-			          }else{ 
+			          }else{
 
 			          $('td:last-child', nRow).html(''
 			            + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -452,7 +452,7 @@ $(function() {
                                       }else{
                                         return d;
                                       }
-                                    }},            
+                                    }},
                                     {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
                                     {data: 'id', title :'Tools', className: 'text-center w80'},
                                 ],
@@ -469,7 +469,7 @@ $(function() {
 
                                   if(sU!=''&&sD!=''){
                                       $('td:last-child', nRow).html('-');
-                                  }else{ 
+                                  }else{
 
                                   $('td:last-child', nRow).html(''
                                     + '<a href="{{ route('backend.stock_notify.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -483,7 +483,7 @@ $(function() {
 
                         });
                   // datatables
-                       
+
 
                   setTimeout(function(){
                     $("#spinner_frame").hide();
@@ -650,5 +650,5 @@ $(function() {
            $('#end_date').val($(this).val());
          });
 
-  </script>   
+  </script>
 @endsection

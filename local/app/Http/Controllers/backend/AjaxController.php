@@ -35,7 +35,7 @@ class AjaxController extends Controller
         $sD = 1;
         $can_cancel_bill = 0;
         $can_cancel_bill_across_day = 0;
-        
+
         $sPermission = \Auth::user()->permission ;
         $menu_id = $request->menu_id;
 
@@ -49,9 +49,9 @@ class AjaxController extends Controller
             $sU = @$menu_permit->u;
             $sD = @$menu_permit->d;
 
-            $can_cancel_bill = @$menu_permit->can_cancel_bill; 
-            $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
-            $can_approve = @$menu_permit->can_approve; 
+            $can_cancel_bill = @$menu_permit->can_cancel_bill;
+            $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+            $can_approve = @$menu_permit->can_approve;
 
         }
 
@@ -457,7 +457,12 @@ class AjaxController extends Controller
     public function ajaxGetBranch(Request $request)
     {
         if($request->ajax()){
-          $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)->get()->toArray();
+          $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)
+            ->when(auth()->user()->permission !== 1, function ($query) {
+              return $query->where('id', auth()->user()->business_location_id_fk);
+            })
+            ->get()
+            ->toArray();
           return response()->json($query);
         }
     }
@@ -482,9 +487,9 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
           $query = \App\Models\Backend\Shelf::where('zone_id_fk',$request->zone_id_fk)->get()->toArray();
-          return response()->json($query);      
+          return response()->json($query);
         }
-    }    
+    }
 
     public function ajaxGetLotnumber(Request $request)
     {
@@ -495,24 +500,24 @@ class AjaxController extends Controller
             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".$request->business_location_id_fk." AND branch_id_fk=".$request->branch_id_fk." ");
 
           }else{
-            
+
              $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
           }
 
-          return response()->json($query);      
+          return response()->json($query);
         }
-    }    
+    }
 
 
     public function ajaxGetLotnumber2(Request $request)
     {
         if($request->ajax()){
-       
+
            $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get();
-          // return response()->json($query);      
+          // return response()->json($query);
 
             $response = array();
-            
+
             foreach ($query as $key => $value) {
              $response[] = array("value"=>$value->lot_number,"lot_expired_date"=>$value->lot_expired_date);
             }
@@ -520,7 +525,7 @@ class AjaxController extends Controller
             return json_encode($response);
 
            }
-    }    
+    }
 
 
     public function ajaxGetAmphur(Request $request)
@@ -730,7 +735,7 @@ class AjaxController extends Controller
               $rs = DB::select(" SELECT * FROM db_orders WHERE id=$id ");
               return response()->json($rs);
             }
-      
+
     }
 
 
@@ -800,7 +805,7 @@ if($frontstore[0]->check_press_save==2){
                 DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
 
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
-                 
+
                 }else{
 
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
@@ -889,7 +894,7 @@ if($frontstore[0]->check_press_save==2){
                 }else{
                     return 0;
                 }
-               
+
                 // dd();
             }else{
                 return 0;
@@ -1228,7 +1233,7 @@ if($frontstore[0]->check_press_save==2){
             cash_price='0',
             cash_pay='0',
 
-            `approve_status`='0' 
+            `approve_status`='0'
 
             WHERE id=$frontstore_id_fk ");
 
@@ -1248,7 +1253,7 @@ if($frontstore[0]->check_press_save==2){
           if(!empty($request->pay_type_id_fk)){
 
                   if(@$request->pay_type_id_fk==6 || @$request->pay_type_id_fk==9 || @$request->pay_type_id_fk==11 ){
-                   
+
                     // DB::select("  TRUNCATE temp_cus_ai_cash ; ");
                     DB::select("  DELETE FROM temp_cus_ai_cash where admin_id_login ='".\Auth::user()->id."'; ");
                     DB::select("  ALTER TABLE temp_cus_ai_cash  AUTO_INCREMENT=1; ");
@@ -1256,7 +1261,7 @@ if($frontstore[0]->check_press_save==2){
                     if(@$request->user_name){
                         $this->fnSearchIntroduceId($request->user_name);
                     }
-                    
+
                   }
           }
 
@@ -1272,7 +1277,7 @@ if($frontstore[0]->check_press_save==2){
             DB::select(" UPDATE db_orders set check_press_save='1' where product_value>0 and check_press_save<>'2' and id=".$request->frontstore_id_fk."
              ");
         }
-          
+
           // return response()->json($rs);
     }
 
@@ -1496,15 +1501,15 @@ if($frontstore[0]->check_press_save==2){
                         if($credit_price<$sum_price){
 
                                    // ถ้ายอดเครดิต ลบ ราคาสินค้ารวม แล้ว มากกว่า ยอด ai-cash ที่มี ให้ ยอด ai-cash = ยอด ai-cash ที่มี แล้ว ส่วนเอาที่เหลือ เอาไปรวมกับยอด เครดิต อีกรอบ
-                            
-                            // ยังไม่ได้เลือก icash เลย โฟกัสที่ เครดิต ก่อน 
+
+                            // ยังไม่ได้เลือก icash เลย โฟกัสที่ เครดิต ก่อน
                             // return response()->json('to this');
 
                                     DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0 WHERE id=$frontstore_id ");
 
                         }else{
 
-                            // จะไม่เข้าเคสนี้ 
+                            // จะไม่เข้าเคสนี้
 
                                    // ถ้ายอดเครดิต ลบ ราคาสินค้ารวม แล้ว มากกว่า ยอด ai-cash ที่มี ให้ ยอด ai-cash = ยอด ai-cash ที่มี แล้ว ส่วนเอาที่เหลือ เอาไปรวมกับยอด เครดิต อีกรอบ
                                     // $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
@@ -1525,12 +1530,12 @@ if($frontstore[0]->check_press_save==2){
 
                         }
 
-                 
+
                     }
 
                 }else{
 
-                    // ยังไม่ได้เลือก ไอแคช เลย 
+                    // ยังไม่ได้เลือก ไอแคช เลย
 
                         $sCustomer = DB::select(" select * from customers where id=".$request->customers_id_fk." ");
                         $Cus_Aicash = $sCustomer[0]->ai_cash;
@@ -1651,7 +1656,7 @@ if($frontstore[0]->check_press_save==2){
        // return response()->json($pay_type_id_fk);
 
 
-        
+
         if($pay_type_id_fk==6){
 
             $aicash_price = str_replace(',','',@$request->aicash_price);
@@ -1862,7 +1867,7 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGenPromotionCode(Request $request)
     {
 
-         
+
             // if($request->promotion_id_fk){
             // $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_id_fk);
             // }else{
@@ -1978,7 +1983,7 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxGenPromotionSaveDate(Request $request)
     {
-// 
+//
         // return $request;
         // dd();
          if($request->id){
@@ -1997,7 +2002,7 @@ if($frontstore[0]->check_press_save==2){
               if($request->pro_edate<date("Y-m-d")){
                  DB::select(" UPDATE db_promotion_cus SET pro_status=3 WHERE promotion_code_id_fk=".$request->id." AND used_user_name is null AND pro_status<>2 ; ");
               }
-              
+
             }
 
 
@@ -2020,7 +2025,7 @@ if($frontstore[0]->check_press_save==2){
             $sRow2->pro_sdate = $request->pro_sdate;
             $sRow2->pro_edate = $request->pro_edate;
             $sRow2->save();
-             
+
           }
 
     }
@@ -2052,8 +2057,8 @@ if($frontstore[0]->check_press_save==2){
             select promotions.id from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-          WHERE 
-           db_promotion_cus.promotion_code='".$request->txtSearchPro."' 
+          WHERE
+           db_promotion_cus.promotion_code='".$request->txtSearchPro."'
              ;
         ");
 
@@ -2068,14 +2073,14 @@ if($frontstore[0]->check_press_save==2){
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE 
-            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            WHERE
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
             AND ( date(db_promotion_code.pro_edate) < curdate() OR date(promotions.show_enddate) < curdate() )
 
              ;
 
             ");
-        
+
         if(!empty($p2)){
             $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว ';
             // return "InActive";
@@ -2087,8 +2092,8 @@ if($frontstore[0]->check_press_save==2){
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE 
-            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            WHERE
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
             AND curdate() >= date(db_promotion_code.pro_sdate)
             AND date(db_promotion_code.pro_edate) >= curdate()
             AND curdate() >= date(promotions.show_startdate)
@@ -2097,7 +2102,7 @@ if($frontstore[0]->check_press_save==2){
              ;
 
             ");
-        
+
         if(empty($p3)){
             $msg[] = 'รหัสคูปองนี้ ไม่อยู่ในช่วงวันของโปรโมชั่น ';
             // return "InActive";
@@ -2120,38 +2125,38 @@ if($frontstore[0]->check_press_save==2){
         $sPromotions = \App\Models\Backend\Promotions::find($p1[0]->id);
         // return $sPromotions->minimum_package_purchased; // Package  ขั้นต่ำที่ซื้อได้
         if($sPromotions->minimum_package_purchased){
-            $a1[0] = $sPromotions->minimum_package_purchased; 
+            $a1[0] = $sPromotions->minimum_package_purchased;
             // $msg += ['cause' => "ไม่เข้าเงื่อนไข: Package  ขั้นต่ำที่ซื้อได้"];
             $msg[] = "ไม่เข้าเงื่อนไข: Package  ขั้นต่ำที่ซื้อได้";
         }
-        
+
         // return $sPromotions->reward_qualify_purchased; //คุณวุฒิ reward ที่ซื้อได้
         if($sPromotions->reward_qualify_purchased){
-            $a1[1] = $sPromotions->reward_qualify_purchased; 
+            $a1[1] = $sPromotions->reward_qualify_purchased;
             $msg[] = "ไม่เข้าเงื่อนไข: คุณวุฒิ reward ที่ซื้อได้ ";
         }
-        
+
         // return $sPromotions->keep_personal_quality; //รักษาคุณสมบัติส่วนตัว
         if($sPromotions->keep_personal_quality){
-            $a1[2] = 1; 
+            $a1[2] = 1;
             $msg[] = "ไม่เข้าเงื่อนไข: รักษาคุณสมบัติส่วนตัว ";
         }
-        
+
         // return $sPromotions->maintain_travel_feature; //รักษาคุณสมบัติท่องเที่ยว
         if($sPromotions->maintain_travel_feature){
-            $a1[3] = 1; 
+            $a1[3] = 1;
             $msg[] = "ไม่เข้าเงื่อนไข: รักษาคุณสมบัติท่องเที่ยว ";
         }
-        
+
         // return $sPromotions->aistockist; //aistockist
         if($sPromotions->aistockist){
-            $a1[4] = 1; 
+            $a1[4] = 1;
             $msg[] = "ไม่เข้าเงื่อนไข: aistockist ";
         }
-        
+
         // return $sPromotions->agency; //agency
         if($sPromotions->agency){
-            $a1[5] = 1; 
+            $a1[5] = 1;
             $msg[] = "ไม่เข้าเงื่อนไข: agency ";
         }
 
@@ -2159,7 +2164,7 @@ if($frontstore[0]->check_press_save==2){
 
         // return $msg;
 
-       
+
         // customer
         $a2=array(0,0,0,0,0,0);
         $sCustomers = \App\Models\Backend\Customers::find($request->customers_id_fk);
@@ -2172,7 +2177,7 @@ if($frontstore[0]->check_press_save==2){
                     $a2[0] = 1;
                 }else{
                     $a1[0] = 1;
-                    $a2[0] = 0; 
+                    $a2[0] = 0;
                 }
             }else{
                 $a1[0] = 0;
@@ -2182,7 +2187,7 @@ if($frontstore[0]->check_press_save==2){
         // return $sCustomers->reward_qualify_purchased; //คุณวุฒิ reward ที่ซื้อได้
         if($sCustomers->reward_qualify_purchased){
             if($a1[1]){
-                $a2[1] = $sCustomers->reward_qualify_purchased; 
+                $a2[1] = $sCustomers->reward_qualify_purchased;
             }else{
                 $a2[1] = 0 ;
             }
@@ -2190,7 +2195,7 @@ if($frontstore[0]->check_press_save==2){
         // return $sCustomers->keep_personal_quality; //รักษาคุณสมบัติส่วนตัว
         if($sCustomers->keep_personal_quality){
             if($a1[2]){
-                $a2[2] = 1; 
+                $a2[2] = 1;
             }else{
                 $a2[2] = 0 ;
             }
@@ -2198,7 +2203,7 @@ if($frontstore[0]->check_press_save==2){
         // return $sCustomers->maintain_travel_feature; //รักษาคุณสมบัติท่องเที่ยว
         if($sCustomers->maintain_travel_feature){
             if($a1[3]){
-                $a2[3] = 1; 
+                $a2[3] = 1;
             }else{
                 $a2[3] = 0 ;
             }
@@ -2206,7 +2211,7 @@ if($frontstore[0]->check_press_save==2){
         // return $sCustomers->aistockist; //aistockist
         if($sCustomers->aistockist){
             if($a1[4]){
-                $a2[4] = 1; 
+                $a2[4] = 1;
             }else{
                 $a2[4] = 0 ;
             }
@@ -2214,7 +2219,7 @@ if($frontstore[0]->check_press_save==2){
         // return $sCustomers->agency; //agency
         if($sCustomers->agency){
              if($a1[5]){
-                $a2[5] = 1; 
+                $a2[5] = 1;
             }else{
                 $a2[5] = 0 ;
             }
@@ -2222,7 +2227,7 @@ if($frontstore[0]->check_press_save==2){
 
         // return $a1;
         // return $a2;
-       
+
         $arraysAreEqual = ($a1 === $a2);
         $arraysAreEqual = $arraysAreEqual==true?1:0;
         // return($arraysAreEqual);
@@ -2233,11 +2238,11 @@ if($frontstore[0]->check_press_save==2){
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE 
-            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
-            AND promotions.status=1 
-            AND promotions.promotion_coupon_status=1 
-            AND db_promotion_cus.pro_status=1 
+            WHERE
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
+            AND promotions.status=1
+            AND promotions.promotion_coupon_status=1
+            AND db_promotion_cus.pro_status=1
             AND curdate() >= date(db_promotion_code.pro_sdate)
             AND date(db_promotion_code.pro_edate) >= curdate()
             AND curdate() >= date(promotions.show_startdate)
@@ -2259,8 +2264,8 @@ if($frontstore[0]->check_press_save==2){
             select * from db_promotion_cus
             Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
             Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
-            WHERE 
-            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."' 
+            WHERE
+            db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
              ;
 
             ");
@@ -2936,7 +2941,7 @@ if($frontstore[0]->check_press_save==2){
 
   public function ajaxCalSaveTransferType(Request $request)
     {
-        
+
         // return $request;
          $transfer_price = str_replace(',', '', $request->transfer_price);
          $cash_pay = str_replace(',', '', $request->cash_pay);
@@ -2966,9 +2971,9 @@ if($frontstore[0]->check_press_save==2){
           // $sTable = DB::select(" SELECT * from db_products_fifo_bill where recipient_code in ($c) ");
 
         DB::select(" TRUNCATE TABLE db_pick_warehouse_tmp; ");
-          DB::select(" 
+          DB::select("
 
-          INSERT INTO db_pick_warehouse_tmp (invoice_code, product_code, product_name, amt, product_unit, amt_get, status, status_scan_qrcode, product_id_fk, created_at, updated_at) 
+          INSERT INTO db_pick_warehouse_tmp (invoice_code, product_code, product_name, amt, product_unit, amt_get, status, status_scan_qrcode, product_id_fk, created_at, updated_at)
           SELECT
           db_orders.invoice_code,
           (SELECT product_code FROM products WHERE id=db_order_products_list.product_id_fk limit 1) as product_code,
@@ -2983,7 +2988,7 @@ if($frontstore[0]->check_press_save==2){
           db_order_products_list
           Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
           Left Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id
-          WHERE db_order_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked) 
+          WHERE db_order_products_list.product_id_fk in(SELECT product_id_fk FROM db_pick_warehouse_fifo_topicked)
           AND db_orders.invoice_code<>'' ");
 
 
@@ -3046,7 +3051,7 @@ if($frontstore[0]->check_press_save==2){
             foreach ($data_addr as $key => $v) {
 
               // if($v->recipient_name!='' && $v->invoice_code!=''){
-                
+
                  $addr = $v->house_no." ";
                  $addr .= $v->house_name." ";
                  $addr .= $v->moo." ";
@@ -3062,7 +3067,7 @@ if($frontstore[0]->check_press_save==2){
                  // DB::select(" UPDATE db_consignments set recipient_name='".@$v->recipient_name."',address='".$addr."' WHERE recipient_code='".@$v->invoice_code."'  ");
 
                // }
-             
+
             }
 
           //  DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
@@ -3091,7 +3096,7 @@ if($frontstore[0]->check_press_save==2){
               Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
               SET
               db_consignments.consignment_no=db_consignments_import.consignment_no ,
-              db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk 
+              db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk
 
               ");
         }
@@ -3119,12 +3124,12 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxOfferToApprove(Request $request)
     {
         // return  $request->product_id_fk ;
-        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj" 
+        // product_id_fk: "2", start_date: "2021-04-02", end_date: "2021-04-02", _token: "zNKz86gXYZxaj7qtsvaDUvs0WR12I5aBW2LhGtYj"
         // dd();
         if($request->ajax()){
 
 
-    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส
           $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
           if($REF_CODE){
               $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
@@ -3154,7 +3159,7 @@ if($frontstore[0]->check_press_save==2){
           $i=1;
           foreach ($db_stocks_account as $key => $value) {
 
-             $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+             $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i));
 
              DB::select(" UPDATE db_stocks_account SET run_code = '$run_code' where stocks_account_code_id_fk =".$request->id." AND id=".$value->id." AND (run_code='' or run_code is null) ");
 
@@ -3276,22 +3281,22 @@ if($frontstore[0]->check_press_save==2){
       if($request->ajax()){
          // $r= DB::select(" SELECT amt FROM db_stocks where product_id_fk = $request->product_id_fk AND id = $request->id ");
          // return @$r[0]->amt;
-          $rs = DB::select(" 
+          $rs = DB::select("
             SELECT db_stocks.*,dataset_product_unit.product_unit,
             dataset_business_location.txt_desc AS business_location,
             branchs.b_name AS branch,
             warehouse.w_name,
             zone.z_name,
             shelf.s_name
-             FROM db_stocks 
-            Left Join dataset_product_unit ON db_stocks.product_unit_id_fk = dataset_product_unit.id 
+             FROM db_stocks
+            Left Join dataset_product_unit ON db_stocks.product_unit_id_fk = dataset_product_unit.id
             Left Join dataset_business_location ON db_stocks.business_location_id_fk = dataset_business_location.id
             Left Join branchs ON db_stocks.branch_id_fk = branchs.id
             Left Join warehouse ON db_stocks.warehouse_id_fk = warehouse.id
             Left Join zone ON db_stocks.zone_id_fk = zone.id
             Left Join shelf ON db_stocks.shelf_id_fk = shelf.id
             WHERE db_stocks.id=$request->id ");
-          return response()->json($rs);  
+          return response()->json($rs);
 
       }
 
@@ -3302,7 +3307,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-         
+
             DB::select(" TRUNCATE db_consignments; ");
 
             $data = DB::select(" SELECT invoice_code from db_pick_warehouse_tmp GROUP BY invoice_code ");
@@ -3361,7 +3366,7 @@ if($frontstore[0]->check_press_save==2){
                  $addr .= $v->tel_home." ";
                  DB::select(" UPDATE db_consignments set recipient_name='".$v->recipient_name."',address='$addr' WHERE recipient_code='".$v->invoice_code."'  ");
                }
-             
+
             }
 
           //  DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
@@ -3378,8 +3383,8 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          DB::select(" INSERT IGNORE INTO `db_stocks_notify` 
-          (`business_location_id_fk`, `branch_id_fk`, `warehouse_id_fk`, `product_id_fk`, `lot_number`, `lot_expired_date`, `amt`, `product_unit_id_fk`, `created_at`, `updated_at`) 
+          DB::select(" INSERT IGNORE INTO `db_stocks_notify`
+          (`business_location_id_fk`, `branch_id_fk`, `warehouse_id_fk`, `product_id_fk`, `lot_number`, `lot_expired_date`, `amt`, `product_unit_id_fk`, `created_at`, `updated_at`)
 
           SELECT
           `business_location_id_fk`, `branch_id_fk`, `warehouse_id_fk`, `product_id_fk`, `lot_number`, `lot_expired_date`, `amt`, `product_unit_id_fk`, `created_at`, `updated_at`
@@ -3397,10 +3402,10 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
              SELECT
              $temp_ppr_003.id,
              $temp_ppr_003.business_location_id_fk,
@@ -3417,7 +3422,7 @@ if($frontstore[0]->check_press_save==2){
              customers.user_name AS user_code,
              CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
              dataset_pay_product_status.txt_desc as bill_status,
-             (SELECT sum(amt_lot) FROM $temp_ppr_004 WHERE invoice_code=$temp_ppr_003.invoice_code GROUP BY invoice_code) as sum_amt_lot 
+             (SELECT sum(amt_lot) FROM $temp_ppr_004 WHERE invoice_code=$temp_ppr_003.invoice_code GROUP BY invoice_code) as sum_amt_lot
              FROM
              $temp_ppr_003
              Left Join customers ON $temp_ppr_003.customer_id_fk = customers.id
@@ -3425,7 +3430,7 @@ if($frontstore[0]->check_press_save==2){
             where $temp_ppr_003.invoice_code = '".$request->txtSearch."'
              ");
 
-          return response()->json($rs); 
+          return response()->json($rs);
 
       }
 
@@ -3437,9 +3442,9 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
              SELECT
              $temp_ppr_003.id,
              $temp_ppr_003.business_location_id_fk,
@@ -3463,7 +3468,7 @@ if($frontstore[0]->check_press_save==2){
             where $temp_ppr_003.invoice_code = '".$request->txtSearch."'
              ");
 
-          return response()->json($rs); 
+          return response()->json($rs);
 
       }
 
@@ -3476,7 +3481,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
                 SELECT
                 course_event_regis.id,
                 course_event_regis.customers_id_fk,
@@ -3497,7 +3502,7 @@ if($frontstore[0]->check_press_save==2){
                 Left  Join course_event ON course_event_regis.ce_id_fk = course_event.id
                 where course_event_regis.id = '".$request->id."'
              ");
-          return response()->json($rs); 
+          return response()->json($rs);
 
       }
 
@@ -3511,14 +3516,14 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
             SELECT
             course_event_regis.id
             FROM
             course_event_regis
             where course_event_regis.qr_code = '".$request->txtSearch."'
              ");
-          return @$rs[0]->id; 
+          return @$rs[0]->id;
 
       }
 
@@ -3545,7 +3550,7 @@ if($frontstore[0]->check_press_save==2){
             <label for='regis_gift".$value->id."'>".$value->txt_desc."</label>
             </div>";
           }
-          return $response; 
+          return $response;
 
       }
 
@@ -3557,9 +3562,9 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
           $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$request->txtSearch."' AND status in (2) ");
-          return count($rs_pay_history); 
+          return count($rs_pay_history);
 
       }
 
@@ -3569,7 +3574,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE id='".$request->id."' ");
 
       }
@@ -3583,7 +3588,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=5 WHERE id='".$request->id."' ");
 
       }
@@ -3596,7 +3601,7 @@ if($frontstore[0]->check_press_save==2){
       // return($request);
 
       if($request->ajax()){
-        
+
         //  $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND status_sent_money=0  ");
         // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
 // ของเดิม
@@ -3613,11 +3618,11 @@ if($frontstore[0]->check_press_save==2){
 
           // return($wh);
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`  
-            WHERE date(updated_at)=CURDATE() 
-            $wh 
-            AND approve_status in (2,4) 
-            AND status_sent_money <> 1 
+          $r0 = DB::select(" SELECT * FROM `db_orders`
+            WHERE date(updated_at)=CURDATE()
+            $wh
+            AND approve_status in (2,4)
+            AND status_sent_money <> 1
             AND code_order <> ''
             AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
@@ -3632,7 +3637,7 @@ if($frontstore[0]->check_press_save==2){
             $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
             // return $arr_orders_id_fk;
 
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." 
+            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)."
              ");
 
             if($r1){
@@ -3664,7 +3669,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
           $r1= DB::select(" SELECT * FROM `db_sent_money_daily`  WHERE id=".$request->id."  ");
           if($r1){
             DB::select(" UPDATE `db_orders` SET status_sent_money=0,sent_money_daily_id_fk=0 WHERE sent_money_daily_id_fk=".$request->id." ");
@@ -3682,7 +3687,7 @@ if($frontstore[0]->check_press_save==2){
       // return($request);
 
       if($request->ajax()){
-        
+
           DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
           // $r1= DB::select(" SELECT * FROM `db_sent_money_daily`  WHERE id=".$request->id."  ");
           // if($r1){
@@ -3709,7 +3714,7 @@ if($frontstore[0]->check_press_save==2){
       */
 
       if($request->ajax()){
-        
+
            $r1 =  DB::select(" SELECT * FROM `db_orders` WHERE id=".$request->orders_id_fk." AND purchase_type_id_fk=".$request->purchase_type_id_fk." ");
            if($r1){
 
@@ -3718,8 +3723,8 @@ if($frontstore[0]->check_press_save==2){
 
                   // agency = '".($request->agency?$request->agency:0)."'
                     if(!empty($request->aistockist)){
-                          DB::select(" UPDATE `db_orders` 
-                          SET 
+                          DB::select(" UPDATE `db_orders`
+                          SET
                           aistockist = '".$request->aistockist."',
                           agency = '".$request->agency."'
                           WHERE id=".$request->orders_id_fk." ");
@@ -3729,7 +3734,7 @@ if($frontstore[0]->check_press_save==2){
 
            }else{
 
-                DB::select(" UPDATE `db_orders` 
+                DB::select(" UPDATE `db_orders`
                   SET purchase_type_id_fk=".$request->purchase_type_id_fk." ,
                      aistockist = '".$request->aistockist."',
                       agency = '".$request->agency."'
@@ -3737,7 +3742,7 @@ if($frontstore[0]->check_press_save==2){
 
                 return "มีการเปลี่ยนแปลง ประเภทการซื้อ";
            }
-       
+
 
       }
 
@@ -3750,7 +3755,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
            $r1 = DB::select("  SELECT db_po_supplier_products.*,product_amt-product_amt_receive as remain FROM `db_po_supplier_products`  WHERE po_supplier_id_fk='".$request->po_supplier_products_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
            // return $request->product_id_fk;
            if($r1){
@@ -3766,7 +3771,7 @@ if($frontstore[0]->check_press_save==2){
            }else{
             return 0;
            }
- 
+
 
       }
 
@@ -3777,7 +3782,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-        
+
            $r1 = DB::select("  SELECT db_transfer_branch_get_products.*,product_amt-product_amt_receive as remain FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk='".$request->transfer_branch_get_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
            // return $request->product_id_fk;
            if($r1){
@@ -3793,7 +3798,7 @@ if($frontstore[0]->check_press_save==2){
            }else{
             return 0;
            }
- 
+
 
       }
 
@@ -3805,7 +3810,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
                 SELECT
                 register_files.id,
                 register_files.business_location_id_fk,
@@ -3839,8 +3844,8 @@ if($frontstore[0]->check_press_save==2){
                 where register_files.id= '".$request->id."'
              ");
 
-            return response()->json($rs); 
-     
+            return response()->json($rs);
+
       }
 
     }
@@ -3852,7 +3857,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-         $rs1 =  DB::select(" 
+         $rs1 =  DB::select("
                 SELECT
                 *
                 FROM
@@ -3864,7 +3869,7 @@ if($frontstore[0]->check_press_save==2){
          // return $rs1[0]->customer_id;
 
 
-          $rs =  DB::select(" 
+          $rs =  DB::select("
                 SELECT
                 register_files.id,
                 register_files.business_location_id_fk,
@@ -3898,8 +3903,8 @@ if($frontstore[0]->check_press_save==2){
                 where register_files.customer_id =(".$rs1[0]->customer_id.") AND register_files.regis_doc_status='1' AND register_files.id<>".$request->id." AND register_files.item_checked=1
              ");
 
-            return response()->json($rs); 
-     
+            return response()->json($rs);
+
       }
 
     }
@@ -3912,12 +3917,12 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-            $rs =  DB::select(" 
+            $rs =  DB::select("
                 SELECT regis_date_doc from customers where id=".$request->customer_id."
              ");
-            
-            return response()->json($rs); 
-     
+
+            return response()->json($rs);
+
       }
 
     }
@@ -3926,7 +3931,7 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGetCustomer(Request $request)
     {
         if($request->ajax()){
-            
+
             // สำหรับกรณี Autocomplete
             // $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
             // ->orWhere('first_name','LIKE',"%$request->txt%")
@@ -3955,23 +3960,23 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
 
 
     public function ajaxGetCustomerDelivery(Request $request)
     {
         if($request->ajax()){
-            
+
             if(!empty($request->term)){
 
                 if(@\Auth::user()->permission==1){
 
-                    $customers = DB::select(" 
+                    $customers = DB::select("
 
                         select customers.id,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name from db_delivery
                         left join customers on customers.id=db_delivery.customer_id
@@ -3984,12 +3989,12 @@ if($frontstore[0]->check_press_save==2){
 
                 }else{
 
-                      $customers = DB::select(" 
+                      $customers = DB::select("
 
                         select customers.id,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name from db_delivery
                         left join customers on customers.id=db_delivery.customer_id
                         where
-                        db_delivery.branch_id_fk=".@\Auth::user()->branch_id_fk." AND 
+                        db_delivery.branch_id_fk=".@\Auth::user()->branch_id_fk." AND
                         (customers.user_name like '%".$request->term."%' or
                         customers.first_name like '%".$request->term."%' or
                         customers.last_name like '%".$request->term."%')
@@ -4005,16 +4010,16 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name.' : '.$v->prefix_name.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
     public function ajaxGetCustomerForFrontstore(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4033,17 +4038,17 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
 
     public function ajaxGetCustomerAistockist(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4064,18 +4069,18 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }   
+    }
 
 
 
     public function ajaxGetCustomerAgency(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                  $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4087,11 +4092,11 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }   
+    }
 
 
 
@@ -4101,19 +4106,19 @@ if($frontstore[0]->check_press_save==2){
             $arr = [];
             foreach ($sql as $key => $row) {
                 if ($row->line_type=="AA" || !$row) break;
-                 DB::select("  INSERT IGNORE INTO `temp_cus_ai_cash` 
-                    (`admin_id_login`, `user_name`, `introduce_id`, `line_type`, `ai_cash`, `cus_id_fk`, `prefix_name`, `first_name`, `last_name`) VALUES 
+                 DB::select("  INSERT IGNORE INTO `temp_cus_ai_cash`
+                    (`admin_id_login`, `user_name`, `introduce_id`, `line_type`, `ai_cash`, `cus_id_fk`, `prefix_name`, `first_name`, `last_name`) VALUES
                     ('".\Auth::user()->id."', '".$row->user_name."', '".$row->introduce_id."', '".$row->line_type."', '".$row->ai_cash."', '".$row->id."', '".$row->prefix_name."', '".$row->first_name."', '".$row->last_name."') ");
                  $this->fnSearchIntroduceId($row->introduce_id);
             }
 
     }
-    
+
 
     public function ajaxGetCustomerForAicashSelect(Request $request)
     {
         if($request->ajax()){
-      
+
             $customers = DB::table('temp_cus_ai_cash')
             ->where('user_name', 'LIKE', '%'.$request->term.'%')
             ->orWhere('first_name','LIKE', '%'.$request->term.'%')
@@ -4127,11 +4132,11 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->cus_id_fk,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name.' ('.$v->ai_cash.')',
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
 
 
@@ -4148,7 +4153,7 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGetCustomerCode(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4166,11 +4171,11 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->user_name,
                     'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
 
 
@@ -4178,7 +4183,7 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGetCustomerCodeOnly(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4196,17 +4201,17 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->user_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
 
     public function ajaxGetCustomerNameOnly(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4225,16 +4230,16 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->id,
                     'text'  => $v->first_name.' '.$v->last_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }    
+    }
 
     public function ajaxGetBusinessName(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
@@ -4251,21 +4256,21 @@ if($frontstore[0]->check_press_save==2){
                     'id'    => $v->business_name,
                     'text'  => $v->business_name,
                 ];
-            }           
+            }
             return json_encode($json_result);
 
            }
-    }  
+    }
 
 
     public function ajaxGetIntroduce_id(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
+                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่
                 $customers = DB::table('customers')
                 ->where('introduce_id', 'LIKE', '%'.$request->term.'%')
                 ->take(15)
@@ -4280,14 +4285,14 @@ if($frontstore[0]->check_press_save==2){
                         // ->groupBy('introduce_id')
                         // ->orderBy('introduce_id', 'asc')
                         // ->get();
-                       
+
                                 foreach($customers as $k => $v){
                                     $json_result[] = [
                                         'id'    => @$v->introduce_id,
                                         'text'  => @$v->introduce_id,
                                     ];
-                                } 
-                           
+                                }
+
 
                         }
                          return json_encode($json_result);
@@ -4295,7 +4300,7 @@ if($frontstore[0]->check_press_save==2){
 
 
            }
-    }  
+    }
 
 
 
@@ -4303,11 +4308,11 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxGetUpline_id(Request $request)
     {
         if($request->ajax()){
-            
+
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
-                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่ 
+                // เอารหัสที่ filter มาหาใน customers ว่ามี user_name นั้นๆ หรือไม่
                 $customers = DB::table('customers')
                 ->where('upline_id', 'LIKE', '%'.$request->term.'%')
                 ->take(15)
@@ -4322,14 +4327,14 @@ if($frontstore[0]->check_press_save==2){
                         // ->groupBy('introduce_id')
                         // ->orderBy('introduce_id', 'asc')
                         // ->get();
-                       
+
                                 foreach($customers as $k => $v){
                                     $json_result[] = [
                                         'id'    => @$v->upline_id,
                                         'text'  => @$v->upline_id,
                                     ];
-                                } 
-                           
+                                }
+
 
                         }
                          return json_encode($json_result);
@@ -4337,14 +4342,14 @@ if($frontstore[0]->check_press_save==2){
 
 
            }
-    }  
+    }
 
     public function ajaxCancelOrderBackend(Request $request)
     {
       // return ($request);
       if($request->ajax()){
 
-          // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1 
+          // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1
             $Frontstorelist = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',$request->id)->get();
             foreach ($Frontstorelist as $key => $v) {
 
@@ -4449,7 +4454,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-            // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1 
+            // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1
             $Frontstorelist = \App\Models\Backend\Frontstorelist::find($request->id);
             if($Frontstorelist->promotion_code){
                 DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$Frontstorelist->promotion_code."') ");
@@ -4462,7 +4467,7 @@ if($frontstore[0]->check_press_save==2){
           // $sumprice = $sumprice[0]->sumprice>0?$sumprice[0]->sumprice:0;
 
           // DB::select(" UPDATE `db_orders` SET `cash_price`='$sumprice' WHERE (`id`=$request->frontstore_id_fk) ");
-          // clear เลย ให้ใส่ใหม่ 
+          // clear เลย ให้ใส่ใหม่
            $id=   @$request->frontstore_id_fk;
 
            $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
@@ -4480,7 +4485,7 @@ if($frontstore[0]->check_press_save==2){
             }
 
 
-           
+
 /*
 1 เงินโอน
 2 บัตรเครดิต
@@ -4546,7 +4551,7 @@ if($frontstore[0]->check_press_save==2){
 
     public function fnCheckStock($branch_id_fk,$product_id_fk,$amt,$lot_number,$lot_expired_date,$warehouse_id_fk,$zone_id_fk,$shelf_id_fk,$shelf_floor)
     {
-      
+
        // return $branch_id_fk.":".$product_id_fk.":".$amt.":".$lot_number.":".$lot_expired_date.":".$warehouse_id_fk.":".$zone_id_fk.":".$shelf_id_fk.":".$shelf_floor;
 
                   $_check=DB::table('db_stocks')
@@ -4651,7 +4656,7 @@ start_date: "2021-08-01"
         DB::select(" TRUNCATE db_stock_card; ");
 
         if($request->ajax()){
-          
+
           DB::select(" INSERT INTO db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
 
         // return "to here" ;
@@ -4692,7 +4697,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockCard($insertData);
-        
+
             }
 
             return "db_stock_card => success";
@@ -4724,7 +4729,7 @@ start_date: "2021-08-01"
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
                 concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd
                 FROM
-                db_general_receive 
+                db_general_receive
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
           ");
 
@@ -4750,7 +4755,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
             return "(1) รับเข้า : db_general_receive => success";
@@ -4773,7 +4778,7 @@ start_date: "2021-08-01"
                 db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
                 concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd
                 FROM
-                db_general_takeout 
+                db_general_takeout
                 left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
           ");
 
@@ -4799,7 +4804,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
              return "(2) นำสินค้าออกทั่วไป : db_general_takeout => success";
@@ -4826,7 +4831,7 @@ start_date: "2021-08-01"
                 (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END) as amt,
                 2 as 'in_out',product_unit_id_fk,
                 warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
-                'ปรับปรุงยอด (ลด)' as note, 
+                'ปรับปรุงยอด (ลด)' as note,
                  db_stocks_account_code.updated_at as dd
                 FROM
                 db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
@@ -4856,7 +4861,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
             // ปรับปรุงยอด (เพิ่ม)
@@ -4867,7 +4872,7 @@ start_date: "2021-08-01"
                         db_stocks_account.amt_diff as amt,
                         1 as 'in_out',product_unit_id_fk,
                         warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
-                        'ปรับปรุงยอด (เพิ่ม)' as note, 
+                        'ปรับปรุงยอด (เพิ่ม)' as note,
                          db_stocks_account_code.updated_at as dd
                         FROM
                         db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
@@ -4897,7 +4902,7 @@ start_date: "2021-08-01"
                       );
 
                         AjaxController::insertStockMovement($insertData);
-                
+
                     }
 
              return "(3) ปรับปรุงยอด (ลด) / ปรับปรุงยอด (เพิ่ม) : db_stocks_account => success";
@@ -4918,7 +4923,7 @@ start_date: "2021-08-01"
 
         // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
         $Data = DB::select("
-                 SELECT 
+                 SELECT
                 borrow_number as doc_no,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
 
                 db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
@@ -4951,7 +4956,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
              return "(4) การเบิก/ยืม : db_products_borrow_code => success";
@@ -5014,7 +5019,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
              return "(5) โอนภายในสาขา : db_transfer_warehouses_code => success";
@@ -5032,7 +5037,7 @@ start_date: "2021-08-01"
       if($request->ajax()){
 
         // ดึงจาก การโอนระหว่างสาขา > db_transfer_branch_code > db_transfer_branch_details
-        // โอนออก 
+        // โอนออก
         $Data = DB::select("
 
                 SELECT
@@ -5076,11 +5081,11 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
 
-     // รับเข้าจากการโอน 
+     // รับเข้าจากการโอน
         $Data = DB::select("
                 SELECT
                 db_transfer_branch_get.tr_number as doc_no,
@@ -5122,7 +5127,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
              return "(6) โอนระหว่างสาขา (จ่ายออกจากการโอน) / (รับเข้าจากการโอน) : db_transfer_branch_code => success";
@@ -5141,10 +5146,10 @@ start_date: "2021-08-01"
 
       if($request->ajax()){
 
-        // ดึงจาก จ่ายสินค้าตามใบเสร็จ db_pay_product_receipt_001 
+        // ดึงจาก จ่ายสินค้าตามใบเสร็จ db_pay_product_receipt_001
         $Data = DB::select("
 
-            SELECT 
+            SELECT
             invoice_code  as doc_no,
             (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
                 db_pay_product_receipt_002.branch_id_fk,
@@ -5163,7 +5168,7 @@ start_date: "2021-08-01"
 
                     $Data1 = DB::select("
 
-                    SELECT 
+                    SELECT
                     invoice_code  as doc_no,
                     (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
                         db_pay_product_receipt_002.branch_id_fk,
@@ -5211,7 +5216,7 @@ start_date: "2021-08-01"
 
                     $Data1 = DB::select("
 
-                    SELECT 
+                    SELECT
                     invoice_code  as doc_no,
                     (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
                         db_pay_product_receipt_002.branch_id_fk,
@@ -5249,8 +5254,8 @@ start_date: "2021-08-01"
                       );
 
                         AjaxController::insertStockMovement($insertData);
-                }          
-             }          
+                }
+             }
 
       }
 
@@ -5270,7 +5275,7 @@ start_date: "2021-08-01"
 
         // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
         $Data = DB::select("
-                SELECT 
+                SELECT
                 db_stocks_return.invoice_code as doc_no,
                 db_stocks_return.updated_at as doc_date,
                 db_stocks_return.branch_id_fk,
@@ -5311,7 +5316,7 @@ start_date: "2021-08-01"
               );
 
                 AjaxController::insertStockMovement($insertData);
-        
+
             }
 
              return "(8) รับคืนจากการยกเลิกใบสั่งซื้อ : db_stocks_return => success";
@@ -5329,10 +5334,10 @@ start_date: "2021-08-01"
 
       if($request->ajax()){
 
-        // ดึงจาก จ่ายสินค้าตามใบเบิก db_pay_requisition_001 
+        // ดึงจาก จ่ายสินค้าตามใบเบิก db_pay_requisition_001
         $Data = DB::select("
 
-            SELECT 
+            SELECT
             id as doc_no,
             updated_at as doc_date,
             db_pay_requisition_002.branch_id_fk,
@@ -5354,7 +5359,7 @@ start_date: "2021-08-01"
 
                     $Data1 = DB::select("
 
-                        SELECT 
+                        SELECT
                         id as doc_no,
                         updated_at as doc_date,
                         db_pay_requisition_002.branch_id_fk,
@@ -5406,7 +5411,7 @@ start_date: "2021-08-01"
                     $Data1 = DB::select("
 
 
-                        SELECT 
+                        SELECT
                         id as doc_no,
                         updated_at as doc_date,
                         db_pay_requisition_002.branch_id_fk,
@@ -5447,8 +5452,8 @@ start_date: "2021-08-01"
                       );
 
                         AjaxController::insertStockMovement($insertData);
-                }          
-             }          
+                }
+             }
 
       }
 

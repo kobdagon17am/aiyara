@@ -10,7 +10,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -29,7 +29,7 @@
         .toast-color {
             color: white;
             background-color: #33b5e5;
-            border-radius: 5px; 
+            border-radius: 5px;
         }
         h1 {
             color:green;
@@ -49,7 +49,7 @@
 
               <!--     <div class="col-4 text-right" >
                     <a class="btn btn-info btn-sm mt-1  font-size-16 " href="{{ route('backend.transfer_branch_get.create') }}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i> สร้างใบรับสินค้าจากการโอน 
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i> สร้างใบรับสินค้าจากการโอน
                     </a>
                   </div> -->
 
@@ -97,11 +97,11 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -125,7 +125,7 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->b_name}} 
+                                      {{$r->b_name}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -143,7 +143,7 @@
                                  @if(@$Transfer_branch_status)
                                   @foreach(@$Transfer_branch_status AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->txt_to}} 
+                                      {{$r->txt_to}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -181,7 +181,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
@@ -202,7 +202,7 @@
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -231,7 +231,7 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-          
+
 
             </div>
         </div>
@@ -290,13 +290,13 @@ $(function() {
             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
             {data: 'tr_status_get', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
           // console.log(aData['tr_status_get']);
           // console.log(aData['tr_status_code']);
-    
+
               var sPermission = "<?=\Auth::user()->permission?>";
               var sU = sessionStorage.getItem("sU");
               if(sPermission==1){
@@ -304,16 +304,16 @@ $(function() {
               }
               var str_U = '';
               if(sU=='1'){
-                
+
                 // กรณีปฏิเสธการรับจากฝั่งรับ
                 if(aData['tr_status_code']=='5'){
                   str_U = '<a href="{{ URL('backend/transfer_branch_get/noget') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                 }else{
                   str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                 }
-                
+
               }
-    
+
               if(sU!='1'){
                  $('td:last-child', nRow).html('-');
               }else{
@@ -323,7 +323,7 @@ $(function() {
 
         }
     });
-    
+
 });
 </script>
 
@@ -379,8 +379,8 @@ $(function() {
                                                 tr_number:tr_number,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                action_user:action_user,                                 
-                                                tr_status_get:tr_status_get,                                 
+                                                action_user:action_user,
+                                                tr_status_get:tr_status_get,
                                               },
                                             method: 'POST',
                                           },
@@ -393,13 +393,13 @@ $(function() {
                                           {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
                                           {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
                                           {data: 'tr_status_get', title :'<center>สถานะใบโอน </center>', className: 'text-center'},
-                                          {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                          {data: 'id', title :'Tools', className: 'text-center w80'},
                                       ],
                                       rowCallback: function(nRow, aData, dataIndex){
 
                                         console.log(aData['tr_status_get']);
                                         console.log(aData['tr_status_code']);
-                                  
+
                                             var sPermission = "<?=\Auth::user()->permission?>";
                                             var sU = sessionStorage.getItem("sU");
                                             if(sPermission==1){
@@ -414,9 +414,9 @@ $(function() {
                                               }else{
                                                 str_U = '<a href="{{ route('backend.transfer_branch_get.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                                               }
-                                              
+
                                             }
-                                  
+
                                             if(sU!='1'){
                                                $('td:last-child', nRow).html('-');
                                             }else{
@@ -434,7 +434,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -473,10 +473,10 @@ $(function() {
         $('#startPayDate').val('');
         $('#endPayDate').val('');
 
-      });        
+      });
 
 
- 
+
     </script>
     <script>
 
@@ -502,7 +502,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -545,6 +545,6 @@ $(function() {
 
 
 
-</script> 
+</script>
 @endsection
 

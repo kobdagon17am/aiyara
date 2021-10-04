@@ -41,7 +41,7 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Check Stock </h4>
-            <h4 class="mb-0 font-size-18">  
+            <h4 class="mb-0 font-size-18">
 
              <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;display: none;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
@@ -87,7 +87,7 @@
 
 
                               <?php if(@\Auth::user()->permission==1){ ?>
-                                     
+
                                       <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
                                        <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" <?=$dis01?> >
                                             <option value="">-Business Location-</option>
@@ -97,11 +97,11 @@
                                               <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
                                                 {{$r->txt_desc}}
                                               </option>
-                                              @ELSE 
+                                              @ELSE
                                               <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
                                                 {{$r->txt_desc}}
                                               </option>
-                                              @ENDIF 
+                                              @ENDIF
                                               @endforeach
                                             @endif
                                           </select>
@@ -116,11 +116,11 @@
                                           <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
                                             {{$r->txt_desc}}
                                           </option>
-                                          @ELSE 
+                                          @ELSE
                                           <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
                                             {{$r->txt_desc}}
                                           </option>
-                                          @ENDIF 
+                                          @ENDIF
                                           @endforeach
                                         @endif
                                       </select>
@@ -354,7 +354,7 @@
                   <div class="row" >
                     <div class="col-md-12" >
                        <div class="form-group row">
-                        
+
                         </div>
                     </div>
                   </div>
@@ -372,7 +372,7 @@
 
 
               <div class="myBorder" style="margin-top: 2%;">
-                
+
                 <div style="">
                   <div class="form-group row">
                     <div class="col-md-12">
@@ -488,7 +488,7 @@
                                                 extend: 'excelHtml5',
                                                 title: 'CHECK STOCK'
                                             },
-                                       
+
                                         ],
                                        columns: [
                                               {data: 'id', title :'ID', className: 'text-center w50'},
@@ -523,26 +523,26 @@
                                               var lot_number = rows.data().pluck('lot_number').toArray();
                                               var lot_number = lot_number[0];
 
-                                              if ( group==lot_number ) {  
+                                              if ( group==lot_number ) {
 
                                                   return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
                                                   .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
                                                   .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'/'+sTotal.trim()+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a> </td>' );
 
-                                                  
+
                                               }else{
                                                    return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
                                               }
-                                                  
-                                              
+
+
                                           },
                                           dataSrc: [  "product_name", "lot_number" ]
                                       },
-                                 
+
                                          rowCallback: function(nRow, aData, dataIndex){
 
                                            $('td:last-child', nRow).html(''
@@ -608,7 +608,7 @@
                     oTable02.on( 'draw', function () {
                     $('[data-toggle="tooltip"]').tooltip();
                     });
-         
+
             });
 
  </script>
@@ -828,13 +828,13 @@
            $('#end_date').val($(this).val());
          });
 
-  </script>   
+  </script>
 
 
 <script>
   /** It is done after the page load is complete . **/
   $(document).ready(function(){
-    
+
     setTimeout(function(){
        $('.btnStockMovement').trigger('click');
     },1500);
@@ -879,7 +879,7 @@
 
                                       console.log(data);
                                       $("#spinner_frame").hide();
-                                
+
                                     }
                                   });
 
@@ -899,7 +899,7 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
@@ -920,13 +920,13 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
 
                           },1000);
- 
+
                            setTimeout(function(){
 
                                $.ajax({
@@ -940,7 +940,7 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
@@ -960,7 +960,7 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
@@ -980,14 +980,14 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
 
                           },1000);
 
-                                                                                                       
+
                           setTimeout(function(){
 
                                $.ajax({
@@ -1001,7 +1001,7 @@
 
                                     console.log(data);
                                     $("#spinner_frame").hide();
-                              
+
                                   }
                                 });
 
@@ -1021,7 +1021,7 @@
 
                                 console.log(data);
                                 $("#spinner_frame").hide();
-                          
+
                               }
                             });
 
@@ -1041,7 +1041,7 @@
 
                                 console.log(data);
                                 $("#spinner_frame").hide();
-                          
+
                               }
                             });
 
@@ -1060,7 +1060,7 @@
 
                                 console.log(data);
                                 $("#spinner_frame").hide();
-                          
+
                               }
                             });
 
@@ -1070,7 +1070,7 @@
                       }
                     });
 
-          
+
 
 
 
