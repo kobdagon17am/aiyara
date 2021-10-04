@@ -160,7 +160,7 @@
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Location : </label>
                         <div class="col-md-9">
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
                               <option value="">-Business Location-</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
@@ -176,7 +176,7 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  @if($sPermission !== 1) disabled @endif>
                                  <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
