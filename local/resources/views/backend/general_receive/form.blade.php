@@ -72,7 +72,7 @@
                     <option value="">-Business Location-</option>
                     @if(@$sBusiness_location)
                       @foreach(@$sBusiness_location AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id == @$sRow->business_location_id_fk || $r->id == auth()->user()->business_location_id_fk)?'selected':'' }}>
+                          <option value="{{$r->id}}" {{ (@$r->id == @$sRow->business_location_id_fk || $r->id == auth()->user()->business_location_id_fk && auth()->user()->permission !== 1)?'selected':'' }}>
                             {{$r->txt_desc}}
                           </option>
                       @endforeach

@@ -52,7 +52,7 @@
                     <!-- <input type="text" class="form-control float-left text-center w125 myLike" placeholder="ชื่อ Supplier" name="supplier_name" style="margin-left: 1%;"> -->
                   </div>
 
-                  <div class="col-4 text-right">
+                  <div class="col-4 text-right" style="{{ @$sC }}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
