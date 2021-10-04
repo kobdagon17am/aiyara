@@ -14,8 +14,12 @@ class Member_regisController extends Controller
     {
 
        $sApprover = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
-       $sBusiness_location = \App\Models\Backend\Business_location::get();
-       $sBranchs = \App\Models\Backend\Branchs::get();
+       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+         return $query->where('id', auth()->user()->business_location_id_fk);
+       })->get();
+       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+         return $query->where('id', auth()->user()->branch_id_fk);
+       })->get();
        $Supplier = DB::select(" select * from dataset_supplier ");
        $po_number = DB::select(" SELECT po_number FROM `db_po_supplier` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
        $filetype = DB::select(" SELECT * FROM `dataset_regis_filetype` ");
@@ -55,7 +59,7 @@ class Member_regisController extends Controller
 
         ) );
       // return view('backend.member_regis.index');
-      
+
     }
 
  public function create()
@@ -83,7 +87,7 @@ class Member_regisController extends Controller
       // }else{
         return $this->form();
       // }
-      
+
     }
 
     public function edit($id)
@@ -164,13 +168,13 @@ class Member_regisController extends Controller
               }
 
               $Customers->save();
-       
+
          }
 
            \DB::commit();
 
            return redirect()->to(url("backend/member_regis"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -238,8 +242,8 @@ class Member_regisController extends Controller
       // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');
       $sTable = DB::select("
 
-        SELECT * FROM `register_files` 
-        where 1 
+        SELECT * FROM `register_files`
+        where 1
                 ".$w01."
                 ".$w02."
                 ".$w03."
@@ -251,7 +255,7 @@ class Member_regisController extends Controller
        GROUP BY customer_id
        ORDER BY updated_at DESC
 
-       
+
          ");
 
       $sQuery = \DataTables::of($sTable);
@@ -276,7 +280,7 @@ class Member_regisController extends Controller
         }
         $f = implode('<br>',$f);
         return $f;
-        
+
       })
       ->escapeColumns('filetype')
 
@@ -354,7 +358,7 @@ class Member_regisController extends Controller
 
         $f = implode('<br>',$f);
         return $f;
-        
+
       })
       ->escapeColumns('filetype')
 
@@ -370,7 +374,7 @@ class Member_regisController extends Controller
 
         $f = implode('<br>',$f);
         return $f;
-        
+
       })
       ->escapeColumns('approver')
 
@@ -385,12 +389,12 @@ class Member_regisController extends Controller
 
         $f = implode('<br>',$f);
         return $f;
-        
+
       })
       ->escapeColumns('approve_date')
 // เอาไว้ไปเช็คในตาราง Datatable สมาชิกลงทะเบียน ตรวจเอกสาร
       // ->addColumn('regis_status_02', function($row) {
-      //   // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
+      //   // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers
       //   //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
       //   //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
       //   //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
@@ -457,7 +461,7 @@ class Member_regisController extends Controller
         }
         $f = implode('<br>',$f);
         return $f;
-        
+
       })
       ->escapeColumns('icon')
 
@@ -492,9 +496,9 @@ class Member_regisController extends Controller
         // dataset_regis_doc_status
         // 1=ยืนยันตัวตนแล้ว,2=ยังไม่ยืนยันตัวตน,3=ผ่านแล้วบางรายการ,4=เอกสารไม่ผ่าน
 
-        // กรณี 1=ยืนยันตัวตนแล้ว ผ่าน 3 รายการแรก หลัก ก็ถือว่าผ่าน  
+        // กรณี 1=ยืนยันตัวตนแล้ว ผ่าน 3 รายการแรก หลัก ก็ถือว่าผ่าน
         $case_ok = DB::select("
-        SELECT customer_id FROM `register_files` where customer_id in 
+        SELECT customer_id FROM `register_files` where customer_id in
         (
         SELECT
         customers.id
@@ -514,7 +518,7 @@ class Member_regisController extends Controller
 
         // กรณี 2=ยังไม่ยืนยันตัวตน
         $case_nosend = DB::select("
-        SELECT customer_id FROM `register_files` where customer_id in 
+        SELECT customer_id FROM `register_files` where customer_id in
         (
         SELECT
         customers.id
@@ -535,7 +539,7 @@ class Member_regisController extends Controller
 
         // กรณี 3=ผ่านแล้วบางรายการ
         $case_somepass = DB::select("
-        SELECT customer_id FROM `register_files` where customer_id in 
+        SELECT customer_id FROM `register_files` where customer_id in
         (
         SELECT
         customers.id
@@ -554,14 +558,14 @@ class Member_regisController extends Controller
          $arr_case_somepass  = implode(",", $arr_case_somepass );
 
 
-        // กรณี 4=เอกสารไม่ผ่าน 
+        // กรณี 4=เอกสารไม่ผ่าน
         $case_nopass = DB::select("
-        SELECT customer_id FROM `register_files` where customer_id in 
+        SELECT customer_id FROM `register_files` where customer_id in
         (
         SELECT
         customers.id
         FROM
-        customers WHERE regis_doc1_status=2 AND regis_doc2_status=2 AND regis_doc3_status=2 
+        customers WHERE regis_doc1_status=2 AND regis_doc2_status=2 AND regis_doc3_status=2
         )
         group by customer_id
         ");
@@ -583,7 +587,7 @@ class Member_regisController extends Controller
             }elseif($req->regis_doc_status==3){
                $w02 = " AND customer_id in ($arr_case_somepass) " ;
             }elseif($req->regis_doc_status==4){
-               $w02 = " AND customer_id in ($arr_case_nopass) " ;           
+               $w02 = " AND customer_id in ($arr_case_nopass) " ;
             }else{
                $w02 = "";
             }
@@ -601,13 +605,13 @@ class Member_regisController extends Controller
 
         $sTable = DB::select("
 
-              SELECT id,created_at,customer_id,type,regis_doc_status,updated_at FROM `register_files` 
+              SELECT id,created_at,customer_id,type,regis_doc_status,updated_at FROM `register_files`
               where 1
                       ".$w01."
                       ".$w02."
               group by customer_id
               ORDER BY updated_at DESC
-         
+
            ");
 
         $sQuery = \DataTables::of($sTable);
@@ -704,7 +708,7 @@ class Member_regisController extends Controller
              }
 
             return $icon;
-         
+
         })
         ->escapeColumns('icon')
         ->addColumn('created_at', function($row) {
@@ -718,10 +722,10 @@ class Member_regisController extends Controller
             }else{
               return '';
             }
-            
+
         })
         ->make(true);
       }
 
-  
+
 }
