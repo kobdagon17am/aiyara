@@ -39,9 +39,11 @@ class General_receiveController extends Controller
 
       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
           return $query->where('id', auth()->user()->business_location_id_fk);
-      })->get();
+        })
+        ->get();
+
       $User_branch_id = \Auth::user()->branch_id_fk;
-      $sBranchs = \App\Models\Backend\Branchs::get();
+      $sBranchs = \App\Models\Backend\Branchs::whereIn('business_location_id_fk', $sBusiness_location->pluck('id'))->get();
 
       // dd($sBranchs);
 
@@ -234,7 +236,12 @@ class General_receiveController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\General_receive::search()->orderBy('updated_at', 'desc');
+      $sTable = \App\Models\Backend\General_receive::search()
+        ->when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('recipient', auth()->id());
+        })
+        ->orderBy('updated_at', 'desc');
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
