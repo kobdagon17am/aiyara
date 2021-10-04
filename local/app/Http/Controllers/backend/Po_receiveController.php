@@ -14,8 +14,12 @@ class Po_receiveController extends Controller
     {
 
        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
-       $sBusiness_location = \App\Models\Backend\Business_location::get();
-       $sBranchs = \App\Models\Backend\Branchs::get();
+       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
+       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->branch_id_fk);
+        })->get();
        $Supplier = DB::select(" select * from dataset_supplier ");
        $po_number = DB::select(" SELECT po_number FROM `db_po_supplier` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
       return View('backend.po_receive.index')->with(
@@ -25,7 +29,7 @@ class Po_receiveController extends Controller
            'po_number'=>$po_number,
         ) );
       // return view('backend.po_receive.index');
-      
+
     }
 
  public function create()
@@ -129,7 +133,7 @@ class Po_receiveController extends Controller
 
                     ");
 
-// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add 
+// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
 
                  foreach ($products as $key => $p) {
 
@@ -182,8 +186,8 @@ class Po_receiveController extends Controller
 
                           }
                     }
-                          
-                      
+
+
 
                  }
 
@@ -193,7 +197,7 @@ class Po_receiveController extends Controller
       }else{
             return $this->form($id);
       }
-      
+
     }
 
    public function form($id=NULL)
@@ -220,7 +224,7 @@ class Po_receiveController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/po_receive/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();

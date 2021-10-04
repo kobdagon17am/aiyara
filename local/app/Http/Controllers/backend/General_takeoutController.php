@@ -15,7 +15,7 @@ class General_takeoutController extends Controller
     {
 
       return view('backend.general_takeout.index');
-      
+
     }
 
  public function create()
@@ -26,11 +26,11 @@ class General_takeoutController extends Controller
 
         SELECT products.id as product_id,
         products.product_code,
-        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
         FROM
         products_details
         Left Join products ON products_details.product_id_fk = products.id
-        WHERE 
+        WHERE
         products.id in (SELECT product_id_fk FROM db_stocks WHERE business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk.")
         AND
         lang_id=1
@@ -39,8 +39,9 @@ class General_takeoutController extends Controller
 
       // dd($Products);
 
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
-
+      $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+        return $query->where('id', auth()->user()->business_location_id_fk);
+      })->get();
 
       // dd($Products);
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -74,7 +75,7 @@ class General_takeoutController extends Controller
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -82,7 +83,7 @@ class General_takeoutController extends Controller
       $sBusiness_location = \App\Models\Backend\Business_location::get();
 
 
-      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();       
+      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
@@ -131,14 +132,14 @@ class General_takeoutController extends Controller
           $sRow->zone_id_fk    = request('zone_id_fk');
           $sRow->shelf_id_fk    = request('shelf_id_fk');
           $sRow->shelf_floor    = request('shelf_floor');
-          
+
           $sRow->receive_person    = request('receive_person');
-          
+
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');
           $sRow->recipient    = request('recipient');
           $sRow->approver    = request('approver');
           $sRow->approve_status    = request('approve_status');
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
 
           // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
@@ -163,7 +164,7 @@ class General_takeoutController extends Controller
 
           if(request('approve_status')=='1'){
               DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE product_id_fk = ".request('product_id_fk')." AND lot_number='".request('lot_number')."' AND lot_expired_date='".request('lot_expired_date')."' ");
-              
+
               return redirect()->to(url("backend/general_takeout"));
 
           }
@@ -172,7 +173,7 @@ class General_takeoutController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/general_takeout/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -195,10 +196,10 @@ class General_takeoutController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -216,11 +217,11 @@ class General_takeoutController extends Controller
         return $d->txt_desc;
       })
       ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
+        $d = strtotime($row->lot_expired_date);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('pickup_date', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
+        $d = strtotime($row->pickup_firstdate);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('updated_at', function($row) {
