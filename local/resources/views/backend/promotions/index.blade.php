@@ -8,7 +8,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -44,7 +44,7 @@
         <div class="card">
             <div class="card-body">
 
-                
+
 
             <div class="row " >
                 <div class="col-md-6 " >
@@ -89,7 +89,7 @@
                   </div>
                 </div>
 
-          
+
                 <div class="col-md-6 " >
                  <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="col-md-6 " >
                     <div class="form-group row">
-                   
+
                   </div>
                 </div>
               </div>
@@ -168,7 +168,7 @@ $(function() {
           },
           method: 'POST'
         },
-     
+
         columns: [
             {data: 'id', title :'*', className: 'text-center w50'},
             {data: 'pcode', title :'<center>Promotion Code </center>', className: 'text-center'},
@@ -178,7 +178,7 @@ $(function() {
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">แสดงใช้งาน</span>':'<span style="color:red">ปิด/ไม่แสดง</span>';
             }},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -206,7 +206,7 @@ $(function() {
 
         }
     });
-  
+
 });
 </script>
 
@@ -218,16 +218,16 @@ $(function() {
             $(document).on('click', '.btnSearch01', function(event) {
                    $(".myloading").show();
                   event.preventDefault();
-                 
+
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var pcode = $('#pcode').val();
                   var pstatus = $('#pstatus').val();
                   // console.log(tr_status);
                   // alert(pstatus);
-               
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                                         
+
                       var oTable;
                       $(function() {
                           oTable = $('#data-table').DataTable({
@@ -263,7 +263,7 @@ $(function() {
                                   {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                                      return d==1?'<span style="color:blue">Active</span>':'<span style="color:red">In-Active</span>';
                                   }},
-                                  {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                  {data: 'id', title :'Tools', className: 'text-center w60'},
                               ],
                               rowCallback: function(nRow, aData, dataIndex){
 
@@ -291,7 +291,7 @@ $(function() {
 
                               }
                           });
-                        
+
                       });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -299,12 +299,12 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
     </script>
-    
+
 
 
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -336,7 +336,7 @@ $(function() {
           $('#endDate').val($(this).val());
         }
 
-      });   
+      });
 
 
 

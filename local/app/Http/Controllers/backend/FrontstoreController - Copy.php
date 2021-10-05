@@ -1318,19 +1318,10 @@ class FrontstoreController extends Controller
                
                        DB::select("
                         INSERT IGNORE INTO db_delivery
-                        ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
-                        SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
-                        (SUM(
-                        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
-                        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                        (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-                        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-                        (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
-                        ))
+                        ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price)
+                        SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price 
                         FROM db_orders WHERE (`id`=".$sRow->id.") ; 
                       ");
-
 
 // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง 
                       DB::select(" UPDATE db_delivery  

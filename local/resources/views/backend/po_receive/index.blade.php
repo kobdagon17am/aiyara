@@ -10,7 +10,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -29,7 +29,7 @@
         .toast-color {
             color: white;
             background-color: #33b5e5;
-            border-radius: 5px; 
+            border-radius: 5px;
         }
         h1 {
             color:green;
@@ -49,7 +49,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -61,7 +61,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -69,7 +69,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 <div class="row">
     <div class="col-12">
@@ -88,11 +88,11 @@
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location</label>
                         <div class="col-md-9">
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
-                              <option value="">-Business Location-</option>
+                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
+                              <option disabled selected value="">-Business Location-</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
+                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk) && $sPermission !== 1)?'selected':'' }} >{{$r->txt_desc}}</option>
                                 @endforeach
                               @endif
                             </select>
@@ -105,19 +105,11 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " @if($sPermission !== 1) disabled @endif >
                                  <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
-                                   @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @endif
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk) && $sPermission !== 1)?'selected':'' }} >{{$r->b_name}}</option>
                                   @endforeach
                                 @endif
                               </select>
@@ -138,7 +130,7 @@
                                 @if(@$Supplier)
                                   @foreach(@$Supplier AS $r)
                                     <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
-                                      {{$r->txt_desc}} 
+                                      {{$r->txt_desc}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -191,7 +183,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
@@ -212,7 +204,7 @@
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -241,7 +233,7 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-          
+
 
             </div>
         </div>
@@ -303,16 +295,16 @@ $(function() {
             {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
             {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
             {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-              
+
               ).addClass('input');
 
           }
@@ -360,12 +352,12 @@ $(function() {
         $('#endPayDate').val('');
         $('#btnSearch03').val('0');
 
-      });        
+      });
 
 
       $('#endDate').change(function(event) {
         $('#btnSearch03').val('0');
-      });  
+      });
 
 
     </script>
@@ -393,7 +385,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -427,8 +419,8 @@ $(function() {
                     return false;
                   }
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
+                        var sU = "{{@$sU}}";
+                        var sD = "{{@$sD}}";
                         var oTable;
                         $(function() {
                           $.fn.dataTable.ext.errMode = 'throw';
@@ -448,9 +440,9 @@ $(function() {
                                                 po_number:po_number,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                action_user:action_user,                                 
-                                                po_status:po_status,                                 
-                                                supplier_id_fk:supplier_id_fk,                                 
+                                                action_user:action_user,
+                                                po_status:po_status,
+                                                supplier_id_fk:supplier_id_fk,
                                               },
                                             method: 'POST',
                                           },
@@ -462,12 +454,12 @@ $(function() {
                                       {data: 'action_user', title :'<center>ผู้สร้างใบ PO </center>', className: 'text-center'},
                                       {data: 'created_at', title :'<center>วันที่สร้างใบ PO </center>', className: 'text-center'},
                                       {data: 'po_status', title :'<center>สถานะใบ PO </center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                      {data: 'id', title :'Tools', className: 'text-center w80'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
                                     if(sU!=''&&sD!=''){
                                         $('td:last-child', nRow).html('-');
-                                    }else{ 
+                                    }else{
 
                                         $('td:last-child', nRow).html(''
                                           + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -484,7 +476,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -527,6 +519,6 @@ $(function() {
 
 
 
-</script> 
+</script>
 @endsection
 

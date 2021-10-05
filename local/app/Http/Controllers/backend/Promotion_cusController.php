@@ -25,7 +25,7 @@ class Promotion_cusController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -41,23 +41,23 @@ class Promotion_cusController extends Controller
            'Products'=>$Products,
            'sProductUnit'=>$sProductUnit,
            'sPromotions'=>$sPromotions,
-        ) ); 
-      
+        ) );
+
     }
     public function store(Request $request)
     {
       // dd($request->all());
       // return(count($request->promotion_code));
-        for ($i=0; $i < count($request->promotion_code) ; $i++) { 
+        for ($i=0; $i < count($request->promotion_code) ; $i++) {
             if(@$request->customer_id[$i]!=""){
               \App\Models\Backend\PromotionCus::where('promotion_code', @$request->promotion_code[$i])->update(
                     [
                       'customer_id_fk' => @$request->customer_id[$i] ,
                       'pro_status' => 1  ,
                     ]
-                ); 
+                );
             }
-   
+
           }
 
           return redirect()->to(url("backend/promotion_cus"));
@@ -69,10 +69,10 @@ class Promotion_cusController extends Controller
       $sRow = \App\Models\Backend\PromotionCode::find($id);
       $sPromotions = \App\Models\Backend\Promotions::get();
       // dd($sPromotions);
-      
+
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -95,7 +95,7 @@ class Promotion_cusController extends Controller
            'sRowProCus'=>$sRowProCus,
            'sRowProduct'=>$sRowProduct,
            'sPromotions'=>$sPromotions,
-        ) );       
+        ) );
     }
 
     public function update(Request $request, $id)
@@ -115,7 +115,7 @@ class Promotion_cusController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
-            for ($i=0; $i < count($request->product_id_fk) ; $i++) { 
+            for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
                 // echo $Check_stock->product_id_fk;
                   $sProducts = DB::select("
@@ -126,7 +126,7 @@ class Promotion_cusController extends Controller
                       FROM
                       dataset_product_unit
                       WHERE id = products.id AND lang_id=1 LIMIT 1
-                    ) as product_unit,                
+                    ) as product_unit,
                     products.category_id ,categories.category_name,
                     (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
                     (
@@ -142,10 +142,10 @@ class Promotion_cusController extends Controller
                     products
                     LEFT JOIN categories on products.category_id=categories.id
                     LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1 
+                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
                 ");
                   // echo ($sProducts[0]->product_unit);
-               
+
                $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
                $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -166,7 +166,7 @@ class Promotion_cusController extends Controller
                               // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                               'product_unit_id_fk' => @$sProducts[0]->product_unit,
                             ]
-                        ); 
+                        );
 
                   }
 
@@ -191,7 +191,7 @@ class Promotion_cusController extends Controller
 
               }
 
-       
+
               }
 
 
@@ -205,13 +205,12 @@ class Promotion_cusController extends Controller
           }
 
         }
-        
+
     public function destroy($id)
     {
     }
 
     public function Datatable(Request $req){
-
       $sTable = \App\Models\Backend\PromotionCus::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery

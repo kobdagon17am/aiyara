@@ -15,18 +15,22 @@ class Check_stockController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
       WHERE lang_id=1");
 
       $Check_stock = \App\Models\Backend\Check_stock::get();
-   
+
 
       $User_branch_id = \Auth::user()->branch_id_fk;
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
-      $sBranchs = \App\Models\Backend\Branchs::get();
+      $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+        return $query->where('id', auth()->user()->business_location_id_fk);
+      })->get();
+      $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+        return $query->where('id', auth()->user()->branch_id_fk);
+      })->get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
       // dd($Warehouse);
       // dd(\Auth::user()->branch_id_fk);
@@ -35,7 +39,7 @@ class Check_stockController extends Controller
       }else{
         $Warehouse = \App\Models\Backend\Warehouse::where('branch_id_fk',\Auth::user()->branch_id_fk)->get();
       }
-      
+
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
 
@@ -56,7 +60,7 @@ class Check_stockController extends Controller
         // dd($request);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -101,7 +105,7 @@ class Check_stockController extends Controller
         // dd($request);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -147,14 +151,14 @@ class Check_stockController extends Controller
       }
 // TEST
       $sTable = \App\Models\Backend\Check_stock::search()->orderBy('updated_at', 'desc');
-      
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -164,11 +168,11 @@ class Check_stockController extends Controller
 
       })
       ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
+        $d = strtotime($row->lot_expired_date);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('date_in_stock', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
+        $d = strtotime($row->pickup_firstdate);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('warehouses', function($row) {
@@ -177,7 +181,7 @@ class Check_stockController extends Controller
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-      })      
+      })
       ->addColumn('stock_card', function($row) {
         // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
       })

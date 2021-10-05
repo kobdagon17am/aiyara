@@ -17,8 +17,8 @@
     </div>
 </div>
 <!-- end page title -->
-    <?php 
-    
+    <?php
+
     // echo Session::get('session_menu_id');
 
       $sPermission = \Auth::user()->permission ;
@@ -32,7 +32,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -40,7 +40,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 <div class="row">
     <div class="col-12">
@@ -52,9 +52,9 @@
                     <!-- <input type="text" class="form-control float-left text-center w125 myLike" placeholder="ชื่อ Supplier" name="supplier_name" style="margin-left: 1%;"> -->
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}">
+                  <div class="col-4 text-right" style="{{ @$sC }}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
 
@@ -124,7 +124,7 @@ $(function() {
             {data: 'amt', title :'<center>จำนวน </center>', className: 'text-center'},
             {data: 'recipient_name', title :'<center>พนักงานที่รับ </center>', className: 'text-center'},
             {data: 'pickup_date', title :'<center>วันที่รับเข้า </center>', className: 'text-center'},
-            
+
             {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
@@ -132,12 +132,12 @@ $(function() {
                   return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:darkgreen">รออนุมัติ</span>';
               }
             }},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '

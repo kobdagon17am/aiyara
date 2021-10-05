@@ -58,6 +58,39 @@ class Pick_warehouseController extends Controller
         ) );
     }
 
+    public function show(Request $request)
+    {
+ 
+      $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
+     // dd($Pick_warehouse_fifo_topicked);
+      $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
+      // dd($Pick_warehouse_fifo);
+
+      $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
+      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      $Customer = DB::select(" SELECT
+          db_delivery.customer_id as id,
+          customers.prefix_name,
+          customers.first_name,
+          customers.last_name,
+          customers.user_name
+          FROM
+          db_delivery
+          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
+           ");
+
+      return View('backend.pick_warehouse.index')->with(
+        array(
+           'sDelivery'=>$sDelivery,
+           'Customer'=>$Customer,
+           'sBusiness_location'=>$sBusiness_location,
+           'sPacking'=>$sPacking,
+           'Pick_warehouse_fifo_topicked'=>$Pick_warehouse_fifo_topicked,
+        ) );
+
+      
+    }
 
     public function store(Request $request)
     {
@@ -906,17 +939,17 @@ GROUP BY promotions_products.product_id_fk
               }
               $arr2 = implode(',', $arr1);
               // return $arr2;
+              // กรณีที่อยู่ไม่ได้ทำตรงนี้แล้ว ไปทำที่ D:\wamp64\www\aiyara\local\app\Http\Controllers\backend\FrontstoreController.php
               // กำหนดที่อยู่
+          /*
               if($arr2){
 
                   $addr_01 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) ;");
                   if(@$addr_01){
                       $addr_02 = DB::select("SELECT orders_id_fk FROM `db_delivery` WHERE receipt in ($arr2) ;");
-                      // return @$addr_02;
 
                       if(@$addr_02){
 
-                      // $arr3 = [];
                       foreach ($addr_02 as $key => $v1) {
 
                         $addr_03 = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
@@ -959,8 +992,7 @@ GROUP BY promotions_products.product_id_fk
 
               }
 
-              // return $addr_03;
-
+            */
 
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
@@ -1002,6 +1034,7 @@ GROUP BY promotions_products.product_id_fk
       // ->escapeColumns('column_003')        
       ->make(true);
     }
+
 
 
 

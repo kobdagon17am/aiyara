@@ -46,7 +46,34 @@ class PromotionCodeController extends Controller
     }
 
     public function Datatable(Request $req){
-      $sTable = \App\Models\Backend\PromotionCode::search()->orderBy('id', 'asc');
+
+      $coupon_name = $req->couponName;
+
+      $startDate = $req->startDate;
+      $endDate = $req->endDate;
+      $status = $req->pstatus;
+
+      $sTable = \App\Models\Backend\PromotionCode::search()
+        ->leftJoin('promotions', 'promotions.id', 'db_promotion_code.promotion_id_fk')
+        ->when($coupon_name, function ($query, $coupon_name) {
+          return $query->where('promotions.name_thai', 'LIKE', "%{$coupon_name}%");
+        })
+        ->when($startDate, function ($query, $startDate) {
+          return $query->where('db_promotion_code.pro_sdate', '>=', $startDate);
+        })
+        ->when($endDate, function ($query, $endDate) {
+          return $query->where('db_promotion_code.pro_edate', '<=', $endDate);
+        })
+        ->when($status, function ($query, $status) {
+            if ($status == -1) {
+              return $query->where('db_promotion_code.pro_edate', '<', date('Y-m-d'));
+            } else if ($status == 2) {
+              return $query->where('db_promotion_code.pro_edate', '>', date('Y-m-d'))
+                ->where('db_promotion_code.status', 0);
+            } else {
+              return $query->where('db_promotion_code.status', $status);
+            }
+        });
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('promotion_name', function($row) {
@@ -61,7 +88,7 @@ class PromotionCodeController extends Controller
       })
       ->addColumn('pro_edate', function($row) {
         $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
-      })     
+      })
       ->addColumn('status', function($row) {
           //  `pro_status` int(1) DEFAULT '1' COMMENT '1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code',
             // $sRowProCus = \App\Models\Backend\PromotionCus::where('promotion_code_id_fk', $row->id)->get();
@@ -78,7 +105,7 @@ class PromotionCodeController extends Controller
                }
             // }
             // return $row->status;
-      })  
+      })
       ->escapeColumns('status')
       ->make(true);
     }

@@ -10,7 +10,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -29,7 +29,7 @@
         .toast-color {
             color: white;
             background-color: #33b5e5;
-            border-radius: 5px; 
+            border-radius: 5px;
         }
         h1 {
             color:green;
@@ -100,7 +100,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -112,7 +112,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -120,7 +120,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 
 <div class="row" >
@@ -145,7 +145,7 @@
                   <span class="d-none d-sm-block">สรุปรายการตรวจเอกสาร</span>
                 </a>
               </li>
-      
+
             </ul>
 
             <!-- Tab panes -->
@@ -160,7 +160,7 @@
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Location : </label>
                         <div class="col-md-9">
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
                               <option value="">-Business Location-</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
@@ -176,16 +176,16 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  @if($sPermission !== 1) disabled @endif>
                                  <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -226,7 +226,7 @@
                         @if(@$filetype)
                         @foreach(@$filetype AS $r)
                         <option value="{{$r->id}}" >
-                          {{$r->txt_desc}} 
+                          {{$r->txt_desc}}
                         </option>
                         @endforeach
                         @endif
@@ -264,18 +264,18 @@
                   </div>
                 </div>
               </div>
-              
+
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
                     <div class="col-md-9">
-                     
+
                     </div>
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
@@ -291,12 +291,12 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-       
+
 </div>
-         
+
                   <div style="text-align: center;">
                   <b>หมายเหตุ</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <?php 
+                    <?php
                     foreach ($filetype as $key => $value) {
                          echo $value->icon;
                          echo " : ";
@@ -307,12 +307,12 @@
                   </div>
                 </p>
               </div>
-   
+
 
           <!--Tab panes -->
           <div class="tab-pane  " id="second_tab" role="tabpanel">
             <p class="mb-0">
-           
+
 
            <div class="myBorder">
 
@@ -344,18 +344,18 @@
                   </div>
                 </div>
               </div>
-              
+
             <div class="row" style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
                     <div class="col-md-9">
-                     
+
                     </div>
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-5 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
@@ -377,7 +377,7 @@
             </p>
 
 
-                <b style="font-size: 14px;">หมายเหตุ</b> 
+                <b style="font-size: 14px;">หมายเหตุ</b>
                 <div class="divTable">
                   <div class="divTableBody">
                     <div class="divTableRow">
@@ -396,7 +396,7 @@
                   ">
                   (<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง | สีเทา = รอตรวจสอบ)
                 </div>
-                            
+
             </div>
 
           </div>
@@ -437,7 +437,7 @@
 
                 <h2 id="cus_name"></h2>
 
-              <div class="row"> 
+              <div class="row">
                 <div class="column column_1 " style="background-color:#aaa;">
                   <h4 class="p_desc_1">(1) ภาพถ่ายบัตรประชาชน</h4>
                   <p> <img id="file_path1" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
@@ -506,7 +506,7 @@
         </div>
 
       </div>
- 
+
       </form>
 
     </div>
@@ -567,13 +567,13 @@ $(function() {
             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
             {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
-            {data: 'tools', title :'Tools', className: 'text-center w80'}, 
+            {data: 'tools', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
-         
+
             //  if(sU!=''&&sD!=''){
             //     $('td:last-child', nRow).html('-');
-            //  }else{ 
+            //  }else{
             //   // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
             //   if(aData['regis_status_02']=='S' && aData['item_checked']==0){
             //       $('td:last-child', nRow).html('-');
@@ -641,7 +641,7 @@ $(function() {
                 extend: 'excelHtml5',
                 title: 'รายการตรวจเอกสาร'
             },
-       
+
         ],
         columns: [
             {data: 'id', title :'No.', className: 'text-center w50'},
@@ -656,7 +656,7 @@ $(function() {
           var info = $(this).DataTable().page.info();
           $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-    
+
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -699,7 +699,7 @@ $(function() {
         $('#startPayDate').val('');
         $('#endPayDate').val('');
 
-      });        
+      });
 
     </script>
 
@@ -731,7 +731,7 @@ $(function() {
         $('#startPayDate02').val('');
         $('#endPayDate02').val('');
 
-      });        
+      });
 
 
     </script>
@@ -760,7 +760,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -794,8 +794,8 @@ $(function() {
                     return false;
                   }
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
+                        var sU = "{{@$sU}}";
+                        var sD = "{{@$sD}}";
                         var oTable;
                         $(function() {
                           $.fn.dataTable.ext.errMode = 'throw';
@@ -814,10 +814,10 @@ $(function() {
                                                 branch_id_fk:branch_id_fk,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                approver:approver,                                 
-                                                regis_status:regis_status,                                 
-                                                filetype:filetype,                                 
-                                                customer_id:customer_id,                                 
+                                                approver:approver,
+                                                regis_status:regis_status,
+                                                filetype:filetype,
+                                                customer_id:customer_id,
                                               },
                                             method: 'POST',
                                           },
@@ -828,14 +828,14 @@ $(function() {
                                             {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
                                             {data: 'regis_status', title :'<center>สถานะการอนุมัติ </center>', className: 'text-center'},
                                             {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-                                            {data: 'approve_date', title :'<center>วันที่นุมัติ </center>', className: 'text-center'},
+                                            {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
                                             {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
-                                            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                            {data: 'id', title :'Tools', className: 'text-center w80'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
                                     if(sU!=''&&sD!=''){
                                         $('td:last-child', nRow).html('-');
-                                    }else{ 
+                                    }else{
 
                                         $('td:last-child', nRow).html(''
                                           + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -852,7 +852,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -878,10 +878,10 @@ $(function() {
                     $("#startDate02").select('open');
                     return false;
                   }
-                
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var sU = "{{@$sU}}"; 
-                        var sD = "{{@$sD}}";  
+                        var sU = "{{@$sU}}";
+                        var sD = "{{@$sD}}";
                         var oTable;
                         $(function() {
                           $.fn.dataTable.ext.errMode = 'throw';
@@ -898,7 +898,7 @@ $(function() {
                                             _token: '{{csrf_token()}}',
                                                 startDate:startDate02,
                                                 endDate:endDate02,
-                                                regis_doc_status:regis_doc_status,                                 
+                                                regis_doc_status:regis_doc_status,
                                               },
                                             method: 'POST',
                                           },
@@ -912,7 +912,7 @@ $(function() {
                                   rowCallback: function(nRow, aData, dataIndex){
                                     var info = $(this).DataTable().page.info();
                                     $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-                                 
+
                                   }
                               });
                         });
@@ -923,7 +923,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -1049,7 +1049,7 @@ $(function() {
                                     $('.p_desc_2').css({"background-color": "bisque", "color": "blue" });
                                     $('.column_2').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral","background-color": "bisque" });
                                   }
-                                  
+
                                   if(value.type=="3"){
                                     $('#file_path3').attr("src", value.file_path);
                                     $('#file_path3').show();
@@ -1057,7 +1057,7 @@ $(function() {
                                     // $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
                                     $('.column_3').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral","background-color": "bisque" });
                                   }
-                                  
+
                                   if(value.type=="4"){
                                     $('#file_path4').attr("src", value.file_path);
                                     $('#file_path4').show();
@@ -1065,13 +1065,13 @@ $(function() {
                                     $('.p_desc_44').html("บัญชีธนาคาร : "+value.bank_no+" "+value.bank_name);
                                     $('.column_4').css({"border-style": "dotted", "border-width": "7px", "border-color": "coral","background-color": "bisque" });
                                   }
-                                  
+
                                   // $('.file_path_desc').hide();
                                    // var id = $(this).data('id');
                                   // $('#id').val(id);
 
                                     // กรณี type อื่นๆ ที่ผ่านก็แสดงเช่นเดียวกัน แต่ไม่มีกรอบ
-                                    // ต้องส่ง ajax ไปดึงมาแสดงต่างหาก เว้น type อันที่ระบุ 
+                                    // ต้องส่ง ajax ไปดึงมาแสดงต่างหาก เว้น type อันที่ระบุ
                                    $.ajax({
                                         url: " {{ url('backend/ajaxGetFilepath02') }} ",
                                         method: "post",
@@ -1096,7 +1096,7 @@ $(function() {
                                                     if(ch==true && value.status=="1"){
 
                                                       console.log(value.type);
-                                                
+
                                                       if(value.type=="1" ){
                                                         $('#file_path1').attr("src", value.file_path);
                                                         $('#file_path1').show();
@@ -1107,13 +1107,13 @@ $(function() {
                                                         $('#file_path2').attr("src", value.file_path);
                                                         $('#file_path2').show();
                                                       }
-                                                      
+
                                                       if(value.type=="3"){
                                                         $('#file_path3').attr("src", value.file_path);
                                                         $('#file_path3').show();
                                                         // $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
                                                       }
-                                                      
+
                                                       if(value.type=="4"){
                                                         $('#file_path4').attr("src", value.file_path);
                                                         $('#file_path4').show();
@@ -1141,7 +1141,7 @@ $(function() {
                                 }
 
                                  $('#type').val(value.type);
-                            
+
                            });
 
                             // console.log(v);
@@ -1165,6 +1165,6 @@ $(function() {
      //    location.reload();
      // });
 
-</script> 
+</script>
 @endsection
 

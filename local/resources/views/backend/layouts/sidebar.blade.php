@@ -8,7 +8,7 @@ background: linear-gradient(90deg, rgba(0,11,0,1) 90%, rgba(160,244,202,0.997712
         <!--- Sidemenu -->
         <div id="sidebar-menu"  >
             <!-- Left Menu Start  style="background-color: #003300;" -->
-            <ul class="metismenu list-unstyled" id="side-menu" > 
+            <ul class="metismenu list-unstyled" id="side-menu" >
                 <!-- <li class="menu-title">Menu</li> -->
       <!--            <li>
                     <a href="backend" class=" waves-effect">

@@ -13,12 +13,13 @@ class Transfer_branchController extends Controller
 
     public function index(Request $request)
     {
-// dd();
-        $sBusiness_location = \App\Models\Backend\Business_location::get();
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
 
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -26,7 +27,9 @@ class Transfer_branchController extends Controller
 
         $sPermission  = \Auth::user()->permission ;
         $User_branch_id = \Auth::user()->branch_id_fk;
-        $sBranchs = \App\Models\Backend\Branchs::get();
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->branch_id_fk);
+        })->get();
         $Warehouse = \App\Models\Backend\Warehouse::get();
         $Zone = \App\Models\Backend\Zone::get();
         $Shelf = \App\Models\Backend\Shelf::get();
@@ -61,7 +64,7 @@ class Transfer_branchController extends Controller
            'sPermission'=>$sPermission,
 
         ) );
-      
+
     }
 
  public function create()
@@ -86,7 +89,7 @@ class Transfer_branchController extends Controller
       if(isset($request->save_select_to_transfer)){
         // dd($request->all());
 
-        for ($i=0; $i < count($request->id) ; $i++) { 
+        for ($i=0; $i < count($request->id) ; $i++) {
             $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
             $sRow = new \App\Models\Backend\Transfer_choose_branch;
@@ -119,19 +122,19 @@ class Transfer_branchController extends Controller
 
         // dd($request->all());
               if($request->save_set_to_warehouse==1){
-                // DB::update(" 
-                //     UPDATE db_transfer_choose_branch 
+                // DB::update("
+                //     UPDATE db_transfer_choose_branch
                 //     SET branch_id_fk = ".$request->branch_id_set_to_warehouse.",
                 //      warehouse_id_fk = ".$request->warehouse_id_fk_c."  ,
                 //      zone_id_fk = ".$request->zone_id_fk_c."  ,
-                //      shelf_id_fk = ".$request->shelf_id_fk_c."  
-                //     where id=".$request->id_set_to_warehouse." 
+                //      shelf_id_fk = ".$request->shelf_id_fk_c."
+                //     where id=".$request->id_set_to_warehouse."
                 // ");
-                DB::update(" 
-                    UPDATE db_transfer_choose_branch 
+                DB::update("
+                    UPDATE db_transfer_choose_branch
                     SET branch_id_fk_to = ".$request->branch_id_fk_c_to."
-                    where action_user=".(\Auth::user()->id)." 
-                ");                
+                    where action_user=".(\Auth::user()->id)."
+                ");
               }
 
               return redirect()->to(url("backend/transfer_branch"));
@@ -140,37 +143,37 @@ class Transfer_branchController extends Controller
 
         // dd($request->all());
               if($request->save_set_to_warehouse_e==1){
-                // DB::update(" 
-                //     UPDATE db_transfer_choose_branch 
+                // DB::update("
+                //     UPDATE db_transfer_choose_branch
                 //     SET branch_id_fk = ".$request->branch_id_set_to_warehouse_e.",
                 //      warehouse_id_fk = ".$request->warehouse_id_fk_c_e."  ,
                 //      zone_id_fk = ".$request->zone_id_fk_c_e."  ,
-                //      shelf_id_fk = ".$request->shelf_id_fk_c_e."  
-                //     where id=".$request->id_set_to_warehouse_e." 
+                //      shelf_id_fk = ".$request->shelf_id_fk_c_e."
+                //     where id=".$request->id_set_to_warehouse_e."
                 // ");
-                 DB::update(" 
-                    UPDATE db_transfer_choose_branch 
+                 DB::update("
+                    UPDATE db_transfer_choose_branch
                     SET branch_id_fk_to = ".$request->branch_id_fk_c_e_to."
-                    where action_user=".(\Auth::user()->id)." 
+                    where action_user=".(\Auth::user()->id)."
                 ");
               }
 
               return redirect()->to(url("backend/transfer_branch"));
-      
-      }else if(isset($request->save_select_to_cancel)){     
 
-          DB::update(" UPDATE db_transfer_branch_code 
-            SET 
+      }else if(isset($request->save_select_to_cancel)){
+
+          DB::update(" UPDATE db_transfer_branch_code
+            SET
             approve_status=2 , note = '".$request->note_to_cancel."'
             WHERE id=".$request->id_to_cancel." ; ");
-          
+
           return redirect()->to(url("backend/transfer_branch"));
 
       }else{
          // dd($request->all());
         return $this->form();
       }
-      
+
     }
 
     public function edit($id)
@@ -199,7 +202,7 @@ class Transfer_branchController extends Controller
       if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
           // dd($request->approve_status);
 
-        $rsBranch_details = DB::select("  
+        $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
         $arr1 = [];
         foreach ($rsBranch_details as $key => $value) {
@@ -214,7 +217,7 @@ class Transfer_branchController extends Controller
             DB::update(" UPDATE db_transfer_branch_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_branch_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
         }
 
-         $rsBranch_details = DB::select("  
+         $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
          foreach ($rsBranch_details as $key => $value) {
               DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
@@ -249,7 +252,7 @@ class Transfer_branchController extends Controller
 
 
 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-          $db_select = DB::select(" 
+          $db_select = DB::select("
             SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$id."
              ");
           foreach ($db_select as $key => $v) {
@@ -318,14 +321,14 @@ CREATE TABLE `db_transfer_branch_get` (
 // อนุมัติ เท่านั้น
           if($sRow->approve_status==1){
 
-    // สาขาปลายทางที่รับ 
-              
+    // สาขาปลายทางที่รับ
+
               $Transfer_branch_get->save();
 
 
               DB::select("  UPDATE `db_transfer_branch_details_log` SET remark=1 WHERE transfer_branch_code_id=".$sRow->id."  ");
 
-              // เมื่อมีการรับเข้าแล้ว นำเข้า Stock ด้วย 
+              // เมื่อมีการรับเข้าแล้ว นำเข้า Stock ด้วย
 
 
             /*
@@ -387,17 +390,17 @@ CREATE TABLE `db_transfer_branch_get` (
               }
 
 
-          // เมื่อมีการอนุมัติแล้ว ต้องตัดออกจาก Stock 
+          // เมื่อมีการอนุมัติแล้ว ต้องตัดออกจาก Stock
 
            if($sRow->approve_status==1){
 
-               // ตัด Stock 
-              $db_select = DB::select(" 
+               // ตัด Stock
+              $db_select = DB::select("
                 SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$sRow->id."
                  ");
 
               foreach ($db_select as $key => $v) {
-              
+
                        $_choose=DB::table('db_stocks')
                       ->where('branch_id_fk', $sRow->branch_id_fk)
                       ->where('product_id_fk', $v->product_id_fk)
@@ -426,24 +429,24 @@ CREATE TABLE `db_transfer_branch_get` (
                                 ));
 
 
-                       
+
                       }
-       
+
               }
 
-              
+
            }
 
 
 
-            
+
           }
 
           \DB::commit();
 
            // return redirect()->to(url("backend/transfer_branch/".$id."/edit?list_id=".$id.""));
            return redirect()->to(url("backend/transfer_branch"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -468,15 +471,15 @@ CREATE TABLE `db_transfer_branch_get` (
       }else{
            $sTable = \App\Models\Backend\Transfer_branch::search()->orderBy('id', 'asc');
       }
-    
+
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -486,11 +489,11 @@ CREATE TABLE `db_transfer_branch_get` (
 
       })
       // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date); 
+      //   $d = strtotime($row->lot_expired_date);
       //   return date("d/m/", $d).(date("Y", $d)+543);
       // })
       // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date); 
+      //   $d = strtotime($row->action_date);
       //   return date("d/m/", $d).(date("Y", $d)+543);
       // })
        ->escapeColumns('product_name')
@@ -502,18 +505,18 @@ CREATE TABLE `db_transfer_branch_get` (
         $zone = DB::select(" select * from zone where id=".$Check_stock->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$Check_stock->shelf_id_fk." ");
         return str_replace(">","/",@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น '.@$Check_stock->shelf_floor);
-      })  
+      })
       ->escapeColumns('warehouses')
       ->addColumn('amt_in_warehouse', function($row) {
         if($row->stocks_id_fk!=''){
           $Check_stock = DB::select(" select * from db_stocks where id=".$row->stocks_id_fk." ");
           return @$Check_stock[0]->amt;
         }
-      }) 
+      })
       ->addColumn('to_branch', function($row) {
           $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
           return @$sBranchs[0]->b_name;
-      })      
+      })
       // ->addColumn('updated_at', function($row) {
       //   return is_null($row->updated_at) ? '-' : $row->updated_at;
       // })
@@ -529,10 +532,10 @@ CREATE TABLE `db_transfer_branch_get` (
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -542,11 +545,11 @@ CREATE TABLE `db_transfer_branch_get` (
 
       })
       // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date); 
+      //   $d = strtotime($row->lot_expired_date);
       //   return date("d/m/", $d).(date("Y", $d)+543);
       // })
       // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date); 
+      //   $d = strtotime($row->action_date);
       //   return date("d/m/", $d).(date("Y", $d)+543);
       // })
        ->escapeColumns('product_name')
@@ -558,18 +561,18 @@ CREATE TABLE `db_transfer_branch_get` (
         $zone = DB::select(" select * from zone where id=".$Check_stock->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$Check_stock->shelf_id_fk." ");
         return str_replace(">","/",@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น '.@$Check_stock->shelf_floor);
-      })  
+      })
       ->escapeColumns('warehouses')
       ->addColumn('amt_in_warehouse', function($row) {
         if($row->stocks_id_fk!=''){
           $Check_stock = DB::select(" select * from db_stocks where id=".$row->stocks_id_fk." ");
           return @$Check_stock[0]->amt;
         }
-      }) 
+      })
       ->addColumn('to_branch', function($row) {
           $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
           return @$sBranchs[0]->b_name;
-      })      
+      })
       // ->addColumn('updated_at', function($row) {
       //   return is_null($row->updated_at) ? '-' : $row->updated_at;
       // })

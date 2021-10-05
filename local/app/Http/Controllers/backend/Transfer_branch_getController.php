@@ -14,8 +14,12 @@ class Transfer_branch_getController extends Controller
     {
 
        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
-       $sBusiness_location = \App\Models\Backend\Business_location::get();
-       $sBranchs = \App\Models\Backend\Branchs::get();
+       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+         return $query->where('id', auth()->user()->business_location_id_fk);
+       })->get();
+       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+         return $query->where('id', auth()->user()->branch_id_fk);
+       })->get();
        $Supplier = DB::select(" select * from dataset_supplier ");
        $tr_number = DB::select(" SELECT tr_number FROM `db_transfer_branch_get` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
 
@@ -30,7 +34,7 @@ class Transfer_branch_getController extends Controller
            'sPermission'=>\Auth::user()->permission,
         ) );
       // return view('backend.transfer_branch_get.index');
-      
+
     }
 
  public function create()
@@ -262,7 +266,7 @@ CREATE TABLE `db_stocks` (
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='ข้อมูล Stocks'
 */
 
-// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add 
+// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
 
                  foreach ($products as $key => $p) {
 
@@ -314,13 +318,13 @@ CREATE TABLE `db_stocks` (
 
 
                           }
-                          
-                      
+
+
 
                  }
 
-         
-               
+
+
             }
 
             return redirect()->to(url("backend/transfer_branch_get/noget/".$request->id));
@@ -328,7 +332,7 @@ CREATE TABLE `db_stocks` (
       }else{
         return $this->form($id);
       }
-      
+
     }
 
    public function form($id=NULL)
@@ -339,7 +343,7 @@ CREATE TABLE `db_stocks` (
             $sRow = \App\Models\Backend\Transfer_branch_get::find($id);
           }else{
             $sRow = new \App\Models\Backend\Transfer_branch_get;
-            // รหัสหลักๆ จะถูกสร้างตั้งแต่เลือกรหัสใบโอนมาจากสาขาที่ส่งสินค้ามาให้แล้ว  หลังการอนุมัติเสร็จ 
+            // รหัสหลักๆ จะถูกสร้างตั้งแต่เลือกรหัสใบโอนมาจากสาขาที่ส่งสินค้ามาให้แล้ว  หลังการอนุมัติเสร็จ
             // $sRow->business_location_id_fk    = request('business_location_id_fk');
             // $sRow->branch_id_fk    =  \Auth::user()->branch_id_fk;
             // $sRow->tr_number    = request('tr_number');
@@ -373,7 +377,7 @@ CREATE TABLE `db_transfer_branch_get` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   */
 
-  
+
             if(request('approve_status')==5){
                 $sRow->tr_status_get    = 5 ; // ปฏิเสธการรับ
             }
@@ -431,7 +435,7 @@ CREATE TABLE `db_transfer_branch_get` (
 
                     ");
 
-          // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add 
+          // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
                  foreach ($products as $key => $p) {
 
                           $_check=DB::table('db_stocks')
@@ -480,20 +484,20 @@ CREATE TABLE `db_transfer_branch_get` (
                                 ));
 
                           }
-                          
-                      
+
+
 
                  }
 
-         
-               
+
+
             }
 
 
           \DB::commit();
 
            return redirect()->to(url("backend/transfer_branch_get/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -506,7 +510,7 @@ CREATE TABLE `db_transfer_branch_get` (
     {
 
        if($id){
-        
+
         DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt_receive`='0' WHERE `product_amt_receive` is null ; ");
 
         $r = DB::select("SELECT *  FROM `db_transfer_branch_get_products_receive` WHERE (`id`='$id')");
@@ -555,14 +559,14 @@ CREATE TABLE `db_transfer_branch_get` (
 
 
               if($ch1[0]->r == $ch2[0]->r){
-              
+
                 $r2 =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$r[0]->transfer_branch_get_id_fk." ");
                 DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='6' where tr_number='".$r2[0]->tr_number."' ");
 
                 DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' WHERE transfer_branch_get_id_fk=".$r[0]->transfer_branch_get_id_fk." ");
-              
+
               }else{
-                
+
                 $r2 =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$r[0]->transfer_branch_get_id_fk." ");
                 DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='5' where tr_number='".$r2[0]->tr_number."' ");
 
@@ -638,7 +642,7 @@ CREATE TABLE `db_transfer_branch_get` (
             SELECT db_transfer_branch_get.*
             FROM
             db_transfer_branch_get
-            WHERE 1 
+            WHERE 1
             ".$w01."
             ".$w02."
             ".$w022."
@@ -646,7 +650,7 @@ CREATE TABLE `db_transfer_branch_get` (
             ".$w04."
             ".$w05."
             ".$w06."
-            ORDER BY updated_at DESC 
+            ORDER BY updated_at DESC
          ");
 
       $sQuery = \DataTables::of($sTable);
@@ -681,7 +685,7 @@ CREATE TABLE `db_transfer_branch_get` (
           }
        })
       ->escapeColumns('tr_status_code')
-      
+
      ->addColumn('approve_date', function($row) {
         if($row->approve_date){
         return date("Y-m-d",strtotime($row->approve_date));

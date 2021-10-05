@@ -189,14 +189,14 @@ class Pick_warehouse_fifoController extends Controller
           // return $branch_id_fk;
           // return $temp_db_stocks;
           // dd();
-          if($branch_id_fk==1){ // รวม 6 = WAREHOUSE คลังสินค้า 
-            $wh_branch_id_fk = " AND db_stocks.branch_id_fk in (1,6) ";
-          }else{
-            $wh_branch_id_fk = " AND db_stocks.branch_id_fk='$branch_id_fk' ";
-          }
+          // if($branch_id_fk==1){ // รวม 6 = WAREHOUSE คลังสินค้า 
+          //   $wh_branch_id_fk = " AND db_stocks.branch_id_fk in (1,6) ";
+          // }else{
+          //   $wh_branch_id_fk = " AND db_stocks.branch_id_fk='$branch_id_fk' ";
+          // }
 
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
-          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' $wh_branch_id_fk AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 // return $business_location_id_fk;
 // return $branch_id_fk;
 // dd();

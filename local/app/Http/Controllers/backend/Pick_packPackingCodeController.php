@@ -60,7 +60,7 @@ class Pick_packPackingCodeController extends Controller
     public function packing_list(Request $request){     
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND status<>1 ");
+      $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1  ");
 
       $sQuery = \DataTables::of($sTable);
 
@@ -100,11 +100,108 @@ class Pick_packPackingCodeController extends Controller
 
  public function packing_list_for_fifo(Request $request){     
 
-      if(!empty($request->packing_id)){
-          $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
-      }else{
-          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status','0')->where('status_picked','1')->search()->orderBy('id', 'asc');
-      }
+      // if(!empty($request->packing_id)){
+      //     $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
+      // }else{
+          // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status','0')->where('status_picked','1')->search()->orderBy('id', 'asc');
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      // }
+// 
+      $sQuery = \DataTables::of($sTable);
+
+      return $sQuery
+      ->addColumn('packing_code_02', function($row) {
+        // return "P2".sprintf("%05d",$row->id);
+           $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+           return $DP->packing_code;
+      })      
+      ->addColumn('customer_name', function($row) {
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          $array = array();
+          if(@$DP){
+            foreach ($DP as $key => $value) {
+              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+              array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+            }
+            $arr = implode(',', $array);
+            return $arr;
+          }
+      })
+
+      ->addColumn('approver', function($row) {
+        $d1 = '';
+        if(@$row->approver!=''){
+           $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
+            $d1 = @$sD[0]->name;
+            $d = date("Y-m-d",strtotime($row->updated_at))." : ".date("h:i:s",strtotime($row->updated_at));
+            return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".$d1."</span>";
+        }else{
+            return "-";
+        }
+
+      })
+      ->escapeColumns('approver')
+
+      ->addColumn('amt_receipt', function($row) {
+          $amt = explode(',', $row->orders_id_fk);
+          return sizeof($amt);
+      })
+
+      ->addColumn('action_user', function($row) {
+        $d1 = '';
+        if(@$row->action_user!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
+           $d1 = @$sD[0]->name;
+            $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+           return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".$d1."</span>";
+        }else{
+          return "-";
+        }
+      })
+      ->escapeColumns('action_user')
+
+
+      ->addColumn('sender', function($row) {
+        $d1 = '';
+        if(@$row->sender!=''){
+          $sD = DB::select(" select * from ck_users_admin where id=".$row->sender." ");
+           $d1 = @$sD[0]->name;
+            $d = date("Y-m-d",strtotime($row->sent_date))." : ".date("h:i:s",strtotime($row->sent_date));
+           return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".$d1."</span>";
+        }else{
+          return "-";
+        }
+      })
+      ->escapeColumns('action_user')
+
+
+      ->addColumn('action_date', function($row) {
+        // return is_null($row->updated_at) ? '-' : $row->updated_at;
+        $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+        return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".date("Y-m-d",strtotime($row->created_at))."</span>";
+      })
+      ->escapeColumns('updated_at')
+
+      ->addColumn('status', function($row) {
+          return "";
+      })
+      ->escapeColumns('status')
+
+
+      ->make(true);
+    }
+
+
+
+
+ public function packing_list_for_fifo_02(Request $request){     
+
+      // if(!empty($request->packing_id)){
+          $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->id)->search();
+      // }else{
+      //     $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      // }
 
       $sQuery = \DataTables::of($sTable);
 
@@ -140,6 +237,7 @@ class Pick_packPackingCodeController extends Controller
       })
       ->make(true);
     }
+
 
 
 }

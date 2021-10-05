@@ -39,7 +39,7 @@
     </div>
 
 
-    
+
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
@@ -47,7 +47,7 @@
 
           <?php if(!empty(@$sProducts_borrow_chooseAll) && count($sProducts_borrow_chooseAll)==0){ ?>
           <!--     <button type="button" class="btn btn-primary btn-sm btnAddproducts_borrowItem " style="font-size: 14px !important;" >
-               + เพิ่มรายการยืมสินค้า 
+               + เพิ่มรายการยืมสินค้า
               </button> -->
           <?php } ?>
 
@@ -58,8 +58,8 @@
 
 
 <!-- end page title -->
-  <?php 
-    
+  <?php
+
     // echo Session::get('session_menu_id');
 
       $sPermission = \Auth::user()->permission ;
@@ -73,7 +73,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -81,7 +81,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 <div class="row">
     <div class="col-12">
@@ -107,9 +107,18 @@
                           <label for="branch_id_fk" class="col-md-3 col-form-label"><i class="bx bx-play"></i>สาขา :</label>
                           <div class="col-md-9">
 
-                            <?php //echo $User_branch_id; ?>
-                           
-                            @if(@$User_branch_id==0)
+                            <?php //echo $sRow; ?>
+
+                            <select name="branch_id_fk" id="branch_id_fk" class="form-control select2-templating">
+                              <option value="">Select</option>
+                              @if ($sBranchs)
+                                  @foreach ($sBranchs as $sBranch)
+                                      <option value="{{ $sBranch->id }}" {{ ($sBranch->id == auth()->user()->branch_id_fk && auth()->user()->permission !== 1) ? 'selected' : '' }} >{{ $sBranch->b_name }}</option>
+                                  @endforeach
+                              @endif
+                            </select>
+
+                            {{-- @if(@$User_branch_id==0)
                              <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
                               <option value="">Select</option>}
                              @if(@$sBranchs)
@@ -135,7 +144,7 @@
                                 @endforeach
                               @endif
                              </select>
-                             @endif
+                             @endif --}}
 
                           </div>
                         </div>
@@ -354,7 +363,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
                 <div class="row" >
                     <div class="col-md-6 " >
                       <div class="form-group row">
@@ -463,7 +472,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
                 <div class="row" >
                     <div class="col-md-6 " >
                       <div class="form-group row">
@@ -623,14 +632,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -645,7 +654,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -656,14 +665,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -677,7 +686,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -688,14 +697,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -708,7 +717,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -720,14 +729,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -742,7 +751,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -753,14 +762,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -774,7 +783,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -785,14 +794,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -805,12 +814,12 @@
                   }
                 })
            }
- 
+
       });
 
 
 $(document).ready(function() {
-  
+
       var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
       var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
       var sU = "{{@$sU}}"; //alert(sU);
@@ -870,13 +879,13 @@ $(document).ready(function() {
                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                       return d ;
                   }},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w80'},
               ],
               rowCallback: function(nRow, aData, dataIndex){
 
                 // if(sU!=''&&sD!=''){
                 //     $('td:last-child', nRow).html('-');
-                // }else{ 
+                // }else{
 
                   if(aData['approve_status']!=0){
 
@@ -903,7 +912,7 @@ $(document).ready(function() {
           });
       });
     });
-  	
+
 
     $(document).ready(function() {
         $(document).on('click', '.btnSearch', function(event) {
@@ -913,12 +922,12 @@ $(document).ready(function() {
           var product_id = $("#product").val();
           var product_id = product_id?product_id:0;
           var borrow_cause_id_fk = $("#borrow_cause_id_fk").val();
-          
+
           var return_datetime = $("#return_datetime").val();
           // alert(return_datetime);
 
           $("#branch_id_select_to_products_borrow").val(branch_id_fk);
-          
+
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
             return false;
@@ -974,12 +983,12 @@ $(document).ready(function() {
   					        ],
 
   					    });
-  					  
+
   					});
 
             			$('#exampleModalCenter').modal('show');
           }
-          
+
         });
     });
 
@@ -988,7 +997,7 @@ $(document).ready(function() {
         $("#spinner_frame").hide();
     });
 
-   
+
     var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
     var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
     var sU = "{{@$sU}}"; //alert(sU);
@@ -1037,7 +1046,7 @@ $(document).ready(function() {
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                   {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
                   {data: 'amt', title :'<center>จำนวนที่ต้องการยืม </center>', className: 'text-center'},
-                  {data: 'id', title :'Tools', className: 'text-center w150'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w150'},
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -1050,7 +1059,7 @@ $(document).ready(function() {
 
                   }
           });
-        
+
       });
 
 
@@ -1077,7 +1086,7 @@ $(document).ready(function() {
     $(document).ready(function() {
 
       // $("#exampleModalCenter").modal({ show : true });
-      
+
 
        $(window).keydown(function(event){
           if(event.keyCode == 13) {
@@ -1131,14 +1140,14 @@ $(document).ready(function() {
 
              if(branch_id_fk != ''){
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouse') }} ",
                     method: "post",
                     data: {
                       branch_id_fk:branch_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                      if(data == ''){
                          alert('ไม่พบข้อมูลคลัง !!.');
                      }else{
@@ -1157,7 +1166,7 @@ $(document).ready(function() {
                 $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                 $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
              }
-  
+
              $("#id_set_to_warehouse").val(id);
              $('#branch_id_fk_c').attr("disabled", true);
              $('#setToWarehouseModal').modal('show');
@@ -1244,11 +1253,11 @@ $(document).ready(function() {
                  $.ajax({
 
                        type:'POST',
-                       url: " {{ url('backend/ajaxGetSetToWarehouse') }} ", 
+                       url: " {{ url('backend/ajaxGetSetToWarehouse') }} ",
                        data:{ _token: '{{csrf_token()}}',id:id },
                         success:function(data){
-                             
-                             // console.log(data); 
+
+                             // console.log(data);
 
                                 var obj = JSON.parse(data);
                                 $.each(obj, function( index, value ) {
@@ -1281,7 +1290,7 @@ $(document).ready(function() {
                                 $('#warehouse_id_fk_c_e').val(warehouse_id_fk).select2();
                                 $('#zone_id_fk_c_e').val(zone_id_fk).select2();
                                 $('#shelf_id_fk_c_e').val(shelf_id_fk).select2();
-                               
+
 
                              });
 
@@ -1290,13 +1299,13 @@ $(document).ready(function() {
                                 $('#setToWarehouseModalEdit').modal('show');
 
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log(JSON.stringify(jqXHR));
                             console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         }
                   });
 
-       
+
            }
 
 
@@ -1307,7 +1316,7 @@ $(document).ready(function() {
         $(document).on('click', '.cDelete', function(event) {
               setTimeout(function(){
                 location.reload();
-              }, 3000);  
+              }, 3000);
         });
 
         $(document).on('click', '.cCancel', function(event) {
@@ -1315,7 +1324,7 @@ $(document).ready(function() {
               var id = $(this).data('id');
               $('#id_to_cancel').val(id);
               $('#modalNote').modal('show');
-           
+
         });
 
 
@@ -1328,17 +1337,17 @@ $(document).ready(function() {
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
-                       alert('ไม่พบข้อมูลคลัง !!.'); 
-                       $("#warehouse_id_search").val('').trigger('change'); 
+                       alert('ไม่พบข้อมูลคลัง !!.');
+                       $("#warehouse_id_search").val('').trigger('change');
                        $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
@@ -1350,7 +1359,7 @@ $(document).ready(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -1386,9 +1395,9 @@ $(document).ready(function() {
          $('#startDate').change(function(event) {
            $('#endDate').val($(this).val());
          });
-         
+
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnSearchInList', function(event) {
                   // event.preventDefault();
 
@@ -1404,7 +1413,7 @@ $(document).ready(function() {
                   var startDated = s_date.split("/").reverse().join("-");
                   var e_date = $('#endDate').val();
                   var endDate = e_date.split("/").reverse().join("-");
-                  
+
                   console.log(branch_id_search);
                   console.log(warehouse_id_search);
                   console.log(status_search);
@@ -1476,13 +1485,13 @@ $(document).ready(function() {
                                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                                       return d ;
                                   }},
-                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                  {data: 'id', title :'Tools', className: 'text-center w80'},
                               ],
                               rowCallback: function(nRow, aData, dataIndex){
 
                                 // if(sU!=''&&sD!=''){
                                 //     $('td:last-child', nRow).html('-');
-                                // }else{ 
+                                // }else{
 
                                   if(aData['approve_status']==2){
 
@@ -1510,15 +1519,15 @@ $(document).ready(function() {
                                    $("#spinner_frame").hide();
                               }
                           });
-              
+
                       });
 
 
-               
-               
+
+
             });
 
-        }); 
+        });
 
 
 

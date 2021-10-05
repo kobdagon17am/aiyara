@@ -59,12 +59,12 @@ class DeliveryPackingCodeController extends Controller
 
        $sTable = DB::select(" 
 
-SELECT db_delivery_packing_code.* from db_delivery_packing_code  
-LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
-LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
-WHERE db_delivery.status_pick_pack<>1
-group by db_delivery_packing_code.id
-order by db_delivery_packing_code.updated_at desc
+          SELECT db_delivery_packing_code.*,db_delivery.id as db_delivery_id from db_delivery_packing_code  
+          LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
+          LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
+          WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
+          group by db_delivery_packing_code.id
+          order by db_delivery_packing_code.updated_at desc
 
         ");
 
@@ -111,40 +111,42 @@ order by db_delivery_packing_code.updated_at desc
           }
       })
       ->addColumn('addr_to_send', function($row) { 
-        if($row->address_sent_id_fk){
-          $rs = DB::select(" SELECT
-                customers_addr_sent.recipient_name,
-                customers_addr_sent.house_no,
-                customers_addr_sent.house_name,
-                customers_addr_sent.moo,
-                customers_addr_sent.road,
-                customers_addr_sent.soi,
-                dataset_districts.name_th as tambon,
-                dataset_amphures.name_th as amphur,
-                dataset_provinces.name_th as province,
-                customers_addr_sent.zipcode,
-                customers_addr_sent.tel,
-                customers_addr_sent.tel_home
-                FROM
-                customers_addr_sent
-                Left Join dataset_provinces ON customers_addr_sent.province_id_fk = dataset_provinces.id
-                Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
-                Left Join dataset_districts ON customers_addr_sent.district_id_fk = dataset_districts.id
-                WHERE customers_addr_sent.id=".$row->address_sent_id_fk."
-            ");
-                $addr = @$rs[0]->recipient_name?"ชื่อผู้รับ : ". @$rs[0]->recipient_name.", ":'';
-                $addr .= @$rs[0]->house_no?@$rs[0]->house_no.", ":'';
-                $addr .= @$rs[0]->house_name?@$rs[0]->house_name.", ":'';
-                $addr .= @$rs[0]->moo?" หมู่ ".@$rs[0]->moo.", ":'';
-                $addr .= @$rs[0]->soi?" ซอย".@$rs[0]->soi.", ":'';
-                $addr .= @$rs[0]->road?" ถนน".@$rs[0]->road.", ":'';
-                $addr .= @$rs[0]->tambon?" ต.".@$rs[0]->tambon.", ":'';
-                $addr .= @$rs[0]->amphur?" อ.".@$rs[0]->amphur.", ":'';
-                $addr .= @$rs[0]->province?" จ.".@$rs[0]->province.", ":'';
-                $addr .= @$rs[0]->zipcode?" ".@$rs[0]->zipcode:'';
-                return $addr;
-        }
+
+           if($row->id!==""){
+              $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+              $array = array();
+              if(@$DP){
+                foreach ($DP as $key => $value) {
+                  $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+                  array_push($array, "'".@$rs[0]->receipt."'");
+                }
+                $arr = implode(',', $array);
+              }
+            }
+
+            $addr = DB::select(" SELECT
+                  db_delivery.set_addr_send_this,
+                  db_delivery.recipient_name,
+                  db_delivery.addr_send,
+                  db_delivery.postcode,
+                  db_delivery.mobile,
+                  db_delivery.total_price,
+                  db_delivery_packing_code.id AS db_delivery_packing_code_id,
+                  db_delivery.receipt
+                  FROM
+                  db_delivery_packing_code
+                  Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
+                  Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+                  WHERE 
+                  db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+            if($addr){
+              return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+            }else{
+              return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
+            }
+
       })
+      ->escapeColumns('addr_to_send')
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

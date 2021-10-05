@@ -112,6 +112,14 @@
             <h4 class="mb-0 font-size-18  "> เบิกจ่ายสินค้าจากคลัง </h4>
             <!-- test_clear_data -->
         </div>
+
+
+           <div  style="float: right;">
+            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/pay_requisition_001") }}">
+              <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+            </a>
+          </div>
+
     </div>
 </div>
 <!-- end page title -->
@@ -171,111 +179,7 @@
 
                 </div>
 
-<!-- 
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-                       <div class="col-md-2">
-                          <div class="form-group row">
-                            <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
-                              <option value="">Business Location</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                <option value="{{$r->id}}" >
-                                  {{$r->txt_desc}}
-                                </option>
-                                @endforeach
-                              @endif
-                            </select>
-                          </div>
-                        </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="receipt_no" name="receipt_no" class="form-control select2-templating " >
-                            <option value="">ใบเสร็จ</option>
-                            @if(@$sDelivery)
-                            @foreach(@$sDelivery AS $r)
-                            <option value="{{$r->id}}" >
-                              {{$r->receipt}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="packing_no" name="packing_no" class="form-control select2-templating " >
-                            <option value="">รหัสแพ็คกิ้ง</option>
-                            @if(@$sPacking)
-                              @foreach(@$sPacking AS $r)
-                              <option value="{{@$r->id}}" > {{"P".sprintf("%05d",@$r->id)}}
-                              </option>
-                              @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>   
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="customers_id_fk" name="customers_id_fk" class="form-control select2-templating " >
-                            <option value="">รหัส:ชื่อลูกค้า</option>
-                            @if(@$Customer)
-                            @foreach(@$Customer AS $r)
-                            <option value="{{$r->id}}"  >
-                              {{$r->user_name}} : {{$r->first_name}}{{$r->last_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                          </select>
-                        </div>
-                      </div>
-             
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-12 d-flex ">
-
-                      <div class="col-md-2">
-                        <div class="form-group row">
-                          <select id="status_search" name="status_search" class="form-control select2-templating " >
-                            <option value="" >สถานะ</option>
-                            <option value="0" >รออนุมัติ</option>
-                            <option value="1" >อนุมัติ</option>
-                            <option value="3" >ไม่อนุมัติ</option>
-                            <option value="2" >ยกเลิก</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3 d-flex  ">
-                         <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม"  />
-                         <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด"  />
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group row"> &nbsp; &nbsp;
-                          <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                          <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
- -->
-
-
-              <?php if($can_packing_list=='1'){ ?>
-
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-
-              <?php }else{ ?>
-
-              
-              <?php }?>
-
       
                 <div class=" divCreatePackBill " style="display: none;">
                   <center>
@@ -287,11 +191,9 @@
 
                 <div id="last_form"></div>
 
-
               </form>
 
  </div>
-
 
 
 <div class="myBorder" style="" >
@@ -326,15 +228,12 @@
             </div>
           </div>
 
-
         </div>
 
       </div>
     </div>
   </div>
   </div> <!-- end col -->
-
-
 
 
 
@@ -357,6 +256,8 @@
           var sU = "{{@$sU}}"; //alert(sU);
           var sD = "{{@$sD}}"; //alert(sD);
 
+          var id = "{{@$_REQUEST[id]}}"; //alert(id);
+
 
           var oTable2;
           $(function() {
@@ -373,30 +274,10 @@
                   iDisplayLength: 10,
                   // stateSave: true,
                   ajax: {
-                    url: '{{ route('backend.packing_list_for_fifo.datatable') }}',
-                    data: function ( d ) {
-                      d.Where={};
-                      $('.myWhere').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Where[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Like={};
-                      $('.myLike').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Like[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Custom={};
-                      $('.myCustom').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      oData = d;
+                        url: '{{ route('backend.packing_list_for_fifo_02.datatable') }}',
+                        type: "POST",
+                        data: { _token : "{{ csrf_token() }}", id:id },
                     },
-                    method: 'POST'
-                  },
                   columns: [
                       // {data: 'id', title :'ID', className: 'text-center'},
                       {data: 'id', title :'เลือก', className: 'text-center '},
@@ -472,6 +353,31 @@
 
 
         $(document).ready(function() {
+
+          $('#data-table-packing').on( 'draw.dt', function () {
+          var table = $('#data-table-packing').DataTable();
+
+                table.row(':eq(0)', { page: 'current' }).select();
+
+
+                         $('#last_form').after(
+                             $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'row_id[]')
+                                .attr('id', 'row_id'+1)
+                                .val(1)
+                         );
+
+
+                  // $('.divCreatePackBill').show();
+
+                  $('.btnCreatePackBill ').trigger('click');
+
+        });
+
+
+
+          // $('.btnCreatePackBill ').trigger('click');
                     
                     
           var table = $('#data-table-packing').DataTable();

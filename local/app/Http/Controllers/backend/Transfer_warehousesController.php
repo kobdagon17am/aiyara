@@ -17,7 +17,7 @@ class Transfer_warehousesController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -25,7 +25,9 @@ class Transfer_warehousesController extends Controller
 
       $User_branch_id = \Auth::user()->branch_id_fk;
       // dd($User_branch_id);
-      $sBranchs = \App\Models\Backend\Branchs::get();
+      $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+        return $query->where('id', auth()->user()->branch_id_fk);
+      })->get();
 
       // $Warehouse = \App\Models\Backend\Warehouse::where('id','1')->get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
@@ -39,8 +41,8 @@ class Transfer_warehousesController extends Controller
         $b_l = \App\Models\Backend\Branchs::where('id',$User_branch_id)->get();
 
         $business_location_id_fk = $b_l[0]->business_location_id_fk;
-      
-     
+
+
       // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
       // dd($sTransfer_choose);
@@ -50,7 +52,7 @@ class Transfer_warehousesController extends Controller
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
            'business_location_id_fk'=>$business_location_id_fk
         ) );
-      
+
     }
 
  public function create()
@@ -74,7 +76,7 @@ class Transfer_warehousesController extends Controller
       if(isset($request->save_select_to_transfer)){
         // dd($request->all());
 
-        for ($i=0; $i < count($request->id) ; $i++) { 
+        for ($i=0; $i < count($request->id) ; $i++) {
             $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
             $sRow = new \App\Models\Backend\Transfer_choose;
@@ -100,14 +102,14 @@ class Transfer_warehousesController extends Controller
 
         // dd($request->all());
               if($request->save_set_to_warehouse==1){
-                DB::update(" 
-                    UPDATE db_transfer_choose 
+                DB::update("
+                    UPDATE db_transfer_choose
                     SET branch_id_fk = ".$request->branch_id_set_to_warehouse.",
                      warehouse_id_fk = ".$request->warehouse_id_fk_c."  ,
                      zone_id_fk = ".$request->zone_id_fk_c."  ,
                      shelf_id_fk = ".$request->shelf_id_fk_c."  ,
-                     shelf_floor = ".$request->shelf_floor_c."  
-                    where id=".$request->id_set_to_warehouse." 
+                     shelf_floor = ".$request->shelf_floor_c."
+                    where id=".$request->id_set_to_warehouse."
                 ");
               }
 
@@ -117,33 +119,33 @@ class Transfer_warehousesController extends Controller
 
         // dd($request->all());
               if($request->save_set_to_warehouse_e==1){
-                DB::update(" 
-                    UPDATE db_transfer_choose 
+                DB::update("
+                    UPDATE db_transfer_choose
                     SET branch_id_fk = ".$request->branch_id_set_to_warehouse_e.",
                      warehouse_id_fk = ".$request->warehouse_id_fk_c_e."  ,
                      zone_id_fk = ".$request->zone_id_fk_c_e."  ,
-                     shelf_id_fk = ".$request->shelf_id_fk_c_e.",  
-                     shelf_floor = ".$request->shelf_floor_c_e."  
-                    where id=".$request->id_set_to_warehouse_e." 
+                     shelf_id_fk = ".$request->shelf_id_fk_c_e.",
+                     shelf_floor = ".$request->shelf_floor_c_e."
+                    where id=".$request->id_set_to_warehouse_e."
                 ");
               }
 
               return redirect()->to(url("backend/transfer_warehouses"));
-      
-      }else if(isset($request->save_select_to_cancel)){     
 
-          DB::update(" UPDATE db_transfer_warehouses_code 
-            SET 
+      }else if(isset($request->save_select_to_cancel)){
+
+          DB::update(" UPDATE db_transfer_warehouses_code
+            SET
             approve_status=2 , note = '".$request->note_to_cancel."'
             WHERE id=".$request->id_to_cancel." ; ");
-          
+
           return redirect()->to(url("backend/transfer_warehouses"));
 
       }else{
          // dd($request->all());
         return $this->form();
       }
-      
+
     }
 
     public function edit($id)
@@ -164,7 +166,7 @@ class Transfer_warehousesController extends Controller
       if(!empty($request->approve_status) && $request->approve_status==1){
           // dd($request->approve_status);
 
-        $rsWarehouses_details = DB::select("  
+        $rsWarehouses_details = DB::select("
            select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
         $arr1 = [];
         foreach ($rsWarehouses_details as $key => $value) {
@@ -179,7 +181,7 @@ class Transfer_warehousesController extends Controller
             DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
         }
 
-         $rsWarehouses_details = DB::select("  
+         $rsWarehouses_details = DB::select("
            select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
          foreach ($rsWarehouses_details as $key => $value) {
               DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
@@ -220,7 +222,7 @@ class Transfer_warehousesController extends Controller
 
            // return redirect()->to(url("backend/transfer_warehouses/".$id."/edit?list_id=".$id.""));
            return redirect()->to(url("backend/transfer_warehouses"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -243,10 +245,10 @@ class Transfer_warehousesController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -256,11 +258,11 @@ class Transfer_warehousesController extends Controller
 
       })
       ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
+        $d = strtotime($row->lot_expired_date);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('action_date', function($row) {
-        $d = strtotime($row->action_date); 
+        $d = strtotime($row->action_date);
         return date("d/m/", $d).(date("Y", $d)+543);
       })
       ->addColumn('warehouses', function($row) {
@@ -269,15 +271,15 @@ class Transfer_warehousesController extends Controller
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$row->shelf_floor;
-      })  
+      })
       ->addColumn('amt_in_warehouse', function($row) {
         // $Check_stock = \App\Models\Backend\Check_stock::where('id',$row->stock_id_fk);
         if($row->stocks_id_fk!=''){
           $Check_stock = DB::select(" select * from db_stocks where id=".$row->stocks_id_fk." ");
           return @$Check_stock[0]->amt;
         }
-        
-      })     
+
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
