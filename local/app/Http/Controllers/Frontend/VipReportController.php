@@ -10,6 +10,10 @@ use Carbon\Carbon;
 
 class VipReportController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('customer');
+  }
     public function index()
     {
         return view('frontend.salepage.vip-report');
@@ -44,7 +48,7 @@ class VipReportController extends Controller
             ->where('users.user_recommend', auth('c_user')->user()->user_name)
             ->orderBy('db_orders.created_at', 'desc')
             ->get();
-        
+
         return Datatables::of($orders)
             ->editColumn('created_at', function ($order) {
                 return date('d/m/Y H:i:s', strtotime($order->created_at));
