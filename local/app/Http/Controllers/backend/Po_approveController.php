@@ -11,8 +11,12 @@ class Po_approveController extends Controller
 
     public function index(Request $request)
     {
-        $sBusiness_location = \App\Models\Backend\Business_location::get();
-        $sBranchs = \App\Models\Backend\Branchs::get();
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+             return $query->where('id', auth()->user()->branch_id);
+         })->get();
         $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
 

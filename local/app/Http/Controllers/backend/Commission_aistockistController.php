@@ -13,6 +13,9 @@ class Commission_aistockistController extends Controller
     {
         //$sBranchs = \App\Models\Backend\Branchs::get();
         $data = DB::table('dataset_business_location')
+            ->when(auth()->user()->permission !== 1, function ($query) {
+                return $query->where('id', auth()->user()->business_location_id_fk);
+            })
             ->get();
         return view('backend.commission_aistockist.index')->with(array('business_location' => $data));
     }
@@ -128,7 +131,7 @@ class Commission_aistockistController extends Controller
 
         $sTable = DB::table('db_report_bonus_transfer_aistockist')
             ->select('db_report_bonus_transfer_aistockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
-            ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_id_fk', '=', 'customers.id')
+            ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_username', '=', 'customers.user_name')
             ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer_aistockist.business_location_id_fk')
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_aistockist.business_location_id_fk = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
