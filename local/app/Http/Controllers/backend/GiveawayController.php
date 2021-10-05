@@ -13,7 +13,11 @@ class GiveawayController extends Controller
     public function index(Request $request)
     {
 
-      return view('backend.giveaway.index');
+      $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+        return $query->where('id', auth()->user()->business_location_id_fk);
+      })
+      ->get();
+      return view('backend.giveaway.index', compact('sBusiness_location'));
 
     }
 
@@ -58,7 +62,7 @@ class GiveawayController extends Controller
 
     public function edit($id)
     {
-      
+
       $sRow = \App\Models\Backend\Giveaway::find($id);
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       $sGiveaway_type = DB::select(" select * from dataset_giveaway_type where status=1 ");
@@ -82,7 +86,7 @@ class GiveawayController extends Controller
         'sGiveaway_type'=>$sGiveaway_type,
         'sGiveaway_time'=>$sGiveaway_time,
         'sGiveaway_obtion'=>$sGiveaway_obtion,
-        'sBusiness_location'=>$sBusiness_location, 
+        'sBusiness_location'=>$sBusiness_location,
 
         'sPackage'=>$sPackage,
         'sQualification'=>$sQualification,
@@ -165,8 +169,30 @@ class GiveawayController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
-      $sTable = \App\Models\Backend\Giveaway::search()->orderBy('id', 'asc');
+    public function Datatable(Request $request){
+
+      $business_location_id_fk = $request->business_location_id_fk;
+      $giveaway_name = $request->giveaway_name;
+      $startDate = $request->startDate;
+      $endDate = $request->endDate;
+
+      $sTable = \App\Models\Backend\Giveaway::search()
+        ->when(auth()->user()->permission !== 1, function ($query) {
+          $query->where('business_location_id_fk', auth()->user()->business_location_id_fk);
+        })
+        ->when($business_location_id_fk, function ($query, $business_location_id_fk) {
+          return $query->where('business_location_id_fk', $business_location_id_fk);
+        })
+        ->when($giveaway_name, function ($query, $giveaway_name) {
+          return $query->where('giveaway_name', 'LIKE', "%{$giveaway_name}%");
+        })
+        ->when($startDate, function ($query, $startDate) {
+          return $query->where('start_date', '>=', $startDate);
+        })
+        ->when($endDate, function ($query, $endDate) {
+          return $query->where('end_date', '<=', $endDate);
+        });
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('business_location', function($row) {

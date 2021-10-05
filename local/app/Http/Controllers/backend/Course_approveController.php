@@ -114,6 +114,10 @@ public function Datatable(Request $request){
  ->where('dataset_orders_type.lang_id','=','1')
 //  ->where('db_orders.purchase_type_id_fk','=','6')
  ->where('db_orders.order_status_id_fk','=','2')
+ ->when(auth()->user()->permission !== 1, function ($query) {
+   return $query->where('db_orders.business_location_id_fk', auth()->user()->business_location_id_fk)
+      ->where('db_orders.branch_id_fk', auth()->user()->branch_id_fk);
+ })
  ->when($business_location_id_fk, function ($query, $business_location_id_fk) {
    return $query->where('db_orders.business_location_id_fk', $business_location_id_fk);
  })

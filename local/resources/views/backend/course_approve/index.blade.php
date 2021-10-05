@@ -3,7 +3,9 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<style>
+  .select2-selection {height: 34px !important;margin-left: 3px;}
+</style>
 @endsection
 
 @section('content')
@@ -164,13 +166,13 @@ $(function() {
           url: '{{ route('backend.course_approve.datatable') }}',
           data: function ( d ) {
             d.business_location_id_fk = $('#business_location_id_fk').val()
-            d.branch_id_fk = $('#branch_id_fk').val().trim()
+            d.branch_id_fk = $('#branch_id_fk').val()
             d.orderStatus = $('#orderStatus').val()
             d.type = $('#type').val()
             d.date = {}
             d.date['start'] = $('#startDate').val()
             d.date['end'] = $('#endDate').val()
-            d.codeOrder = $('#codeOrder').val()
+            d.codeOrder = $('#codeOrder').val().trim()
           },
           method: 'POST'
         },
