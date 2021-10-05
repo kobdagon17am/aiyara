@@ -58,7 +58,7 @@
                       <i class="bx bx-search align-middle "></i> SEARCH
                     </button>
                     <button class="btn btn-dark btn-sm" style="font-size: 14px !important;margin-left: 0.8%;" id="clearFilter">
-                      CLEAR
+                      <i class="bx bx-revision"></i> CLEAR
                     </button>
                   </div>
                 </div>
