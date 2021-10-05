@@ -5347,7 +5347,7 @@ start_date: "2021-08-01"
             amt_get as amt,
             2 as 'in_out',
             db_pay_requisition_002.product_unit_id_fk,
-            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,7
             (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
             concat('จ่ายสินค้าตามใบเบิก') as note,
             (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
@@ -5477,6 +5477,26 @@ start_date: "2021-08-01"
     }
 
 
+  public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)
+    {
+
+      if($request->ajax()){
+
+        // return $request->id;
+
+        $d1 =  DB::select(" SELECT * FROM `db_delivery_packing` where packing_code_id_fk in ($request->id) LIMIT 1 ");
+        $d2 =  DB::select(" SELECT * FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
+        $d3 = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$d2[0]->orders_id_fk." ");
+        if($d3){
+            return response()->json($d3);
+        }else{
+            $d2 =  DB::select(" SELECT orders_id_fk as frontstore_id_fk,customer_id FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
+            return response()->json($d2);
+        }
+        
+
+      }
+    }
 
 
 

@@ -54,7 +54,7 @@
 <style>
     @media screen and (min-width: 676px) {
         .modal-dialog {
-          max-width: 1200px !important; /* New width for default modal */
+          max-width: 600px !important; /* New width for default modal */
         }
     }
 
@@ -62,6 +62,8 @@
     .border-left-0 {height: 67%;}
 
 </style>
+
+
 @endsection
 
 @section('content')
@@ -316,6 +318,147 @@
 
 
 
+<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> 
+      </div>
+
+      <div class="modal-body">
+
+
+        <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <input name="update_delivery_custom" type="hidden" value="1">
+          <input id="customers_addr_frontstore_id" name="customers_addr_frontstore_id"  type="hidden" value="">
+          <input id="customer_id" name="customer_id"  type="hidden" value="">
+
+          {{ csrf_field() }}
+
+          <div class="col-12">
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล (ผู้รับ) : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_cusname" name="delivery_cusname" class="form-control" value="" required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
+                  <div class="col-md-7">
+                    <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3"  required ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " >
+                       <option value="">Select</option>
+                       @if(@$sProvince)
+                        @foreach(@$sProvince AS $r)
+                        <option value="{{$r->id}}" >
+                          {{$r->province_name}}
+                        </option>
+                        @endforeach
+                        @endif
+                    </select>
+
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->amphur_code)
+                           <option value="">Select</option>
+                           @if(@$sAmphures)
+                            @foreach(@$sAmphures AS $r)
+                            <option value="{{$r->id}}" >
+                              {{$r->amphur_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกจังหวัดก่อน</option>
+                      @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->tambon_code)
+                           <option value="">Select</option>
+                           @if(@$sTambons)
+                            @foreach(@$sTambons AS $r)
+                            <option value="{{$r->id}}" >
+                              {{$r->tambon_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกอำเภอก่อน</option>
+                      @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_zipcode" name="delivery_zipcode" class="form-control" value="" required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_tel" name="delivery_tel" class="form-control" value=""  required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> เบอร์บ้าน : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_tel_home" name="delivery_tel_home" class="form-control" value=""  >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> </label>
+                  <div class="col-md-7">
+                    <button type="submit" class="btn btn-primary float-right "><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
+                    <!-- <button type="button" class="btn btn-secondary float-right " data-dismiss="modal">Close</button> -->
+                  </div>
+                </div>
+
+          </div>
+
+
+        </form>
+
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
 @endsection
 
 @section('script')
@@ -434,36 +577,36 @@ $(function() {
                  //      ).addClass('input');
                  // }
 
-              	 if (aData['status_delivery'] == "1") {
-          			        $('td', nRow).css('background-color', '#ffd9b3');
-          			        $("td:eq(0)", nRow).html('');
-          			        $("td:eq(7)", nRow).html('');
-          			        $("td:eq(6)", nRow).html('');
-          			        $("td:eq(10)", nRow).html('');
-          			        var i;
-              					for (i = 0; i < 10 ; i++) {
-              					   $("td:eq("+i+")", nRow).prop('disabled',true); 
-              					} 
+             //  	 if (aData['status_delivery'] == "1") {
+          			//         $('td', nRow).css('background-color', '#ffd9b3');
+          			//         $("td:eq(0)", nRow).html('');
+          			//         $("td:eq(7)", nRow).html('');
+          			//         $("td:eq(6)", nRow).html('');
+          			//         $("td:eq(10)", nRow).html('');
+          			//         var i;
+             //  					for (i = 0; i < 10 ; i++) {
+             //  					   $("td:eq("+i+")", nRow).prop('disabled',true); 
+             //  					} 
 
-    			      }else{
-      			      	$("td:eq(7)", nRow).prop('disabled',true); 
-      			      	$("td:eq(8)", nRow).prop('disabled',true); 
-      			      	$("td:eq(10)", nRow).prop('disabled',true); 
-    			      } 
+    			      // }else{
+      			    //   	$("td:eq(7)", nRow).prop('disabled',true); 
+      			    //   	$("td:eq(8)", nRow).prop('disabled',true); 
+      			    //   	$("td:eq(10)", nRow).prop('disabled',true); 
+    			      // } 
 
 
-                    if(aData['status_pick_pack']=='1'){
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        }
-                        $('td:last-child', nRow).html('-');
-                        $('td:eq(8)', nRow).html(''
-                           + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                         ).addClass('input');
+                    // if(aData['status_pick_pack']=='1'){
+                    //     $('td', nRow).css('background-color', '#ffd9b3');
+                    //     var i;
+                    //     for (i = 0; i < 10 ; i++) {
+                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
+                    //     }
+                    //     $('td:last-child', nRow).html('-');
+                    //     $('td:eq(8)', nRow).html(''
+                    //        + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                    //      ).addClass('input');
 
-                    }else{
+                    // }else{
                     
                           if(sU!=''&&sD!=''){
                               $('td:last-child', nRow).html('-');
@@ -481,7 +624,7 @@ $(function() {
 
                           }
 
-                    }
+                    // }
 
 
 
@@ -633,29 +776,29 @@ $(function() {
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                  	if (aData['status_delivery'] == "1") {
+                //   	if (aData['status_delivery'] == "1") {
 
-        				        $('td', nRow).css('background-color', '#ffd9b3');
-        				        $("td:eq(4)", nRow).html('');
-        				        $("td:eq(6)", nRow).html('');
-        				        var i;
-            						for (i = 0; i < 10 ; i++) {
-            						   $("td:eq("+i+")", nRow).prop('disabled',true); 
-            						} 
-			      	      }
+        				    //     $('td', nRow).css('background-color', '#ffd9b3');
+        				    //     $("td:eq(4)", nRow).html('');
+        				    //     $("td:eq(6)", nRow).html('');
+        				    //     var i;
+            				// 		for (i = 0; i < 10 ; i++) {
+            				// 		   $("td:eq("+i+")", nRow).prop('disabled',true); 
+            				// 		} 
+			      	      // }
 
-                    if(aData['status_pick_pack']=='1'){
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        }
-                        $('td:last-child', nRow).html('-');
+                    // if(aData['status_pick_pack']=='1'){
+                    //     $('td', nRow).css('background-color', '#ffd9b3');
+                    //     var i;
+                    //     for (i = 0; i < 10 ; i++) {
+                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
+                    //     }
+                    //     $('td:last-child', nRow).html('-');
                         // $('td:eq(4)', nRow).html(''
                         //    + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
                         //  ).addClass('input');
 
-                    }else{
+                    // }else{
 
                         if(sU!=''&&sD!=''){
                             $('td:last-child', nRow).html('-');
@@ -672,7 +815,7 @@ $(function() {
     	                        ).addClass('input');
                     		  }
                         }
-                    }
+                    // }
 
 
                   }
@@ -985,36 +1128,36 @@ $(function() {
                                    //      ).addClass('input');
                                    // }
 
-                                   if (aData['status_delivery'] == "1") {
-                                          $('td', nRow).css('background-color', '#ffd9b3');
-                                          $("td:eq(0)", nRow).html('');
-                                          $("td:eq(7)", nRow).html('');
-                                          $("td:eq(6)", nRow).html('');
-                                          $("td:eq(10)", nRow).html('');
-                                          var i;
-                                          for (i = 0; i < 10 ; i++) {
-                                             $("td:eq("+i+")", nRow).prop('disabled',true); 
-                                          } 
+                                  //  if (aData['status_delivery'] == "1") {
+                                  //         $('td', nRow).css('background-color', '#ffd9b3');
+                                  //         $("td:eq(0)", nRow).html('');
+                                  //         $("td:eq(7)", nRow).html('');
+                                  //         $("td:eq(6)", nRow).html('');
+                                  //         $("td:eq(10)", nRow).html('');
+                                  //         var i;
+                                  //         for (i = 0; i < 10 ; i++) {
+                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                                  //         } 
 
-                                  }else{
-                                      $("td:eq(7)", nRow).prop('disabled',true); 
-                                      $("td:eq(8)", nRow).prop('disabled',true); 
-                                      $("td:eq(10)", nRow).prop('disabled',true); 
-                                  } 
+                                  // }else{
+                                  //     $("td:eq(7)", nRow).prop('disabled',true); 
+                                  //     $("td:eq(8)", nRow).prop('disabled',true); 
+                                  //     $("td:eq(10)", nRow).prop('disabled',true); 
+                                  // } 
 
 
-                                      if(aData['status_pick_pack']=='1'){
-                                          $('td', nRow).css('background-color', '#ffd9b3');
-                                          var i;
-                                          for (i = 0; i < 10 ; i++) {
-                                             $("td:eq("+i+")", nRow).prop('disabled',true); 
-                                          }
-                                          $('td:last-child', nRow).html('-');
-                                          $('td:eq(8)', nRow).html(''
-                                             + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                                           ).addClass('input');
+                                  //     if(aData['status_pick_pack']=='1'){
+                                  //         $('td', nRow).css('background-color', '#ffd9b3');
+                                  //         var i;
+                                  //         for (i = 0; i < 10 ; i++) {
+                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                                  //         }
+                                  //         $('td:last-child', nRow).html('-');
+                                  //         $('td:eq(8)', nRow).html(''
+                                  //            + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
+                                  //          ).addClass('input');
 
-                                      }else{
+                                  //     }else{
                                       
                                             if(sU!=''&&sD!=''){
                                                 $('td:last-child', nRow).html('-');
@@ -1032,7 +1175,7 @@ $(function() {
 
                                             }
 
-                                      }
+                                      // }
 
 
 
@@ -1165,6 +1308,203 @@ $(function() {
             });
                 
       });
+
+
+      // ที่อยู่การจัดส่ง (กำหนดเอง)
+       $(document).on('click', '.class_add_address', function(event) {
+              var id = $(this).data('id');
+              // console.log(id);
+              if(id){
+                // ส่ง ajax ไปเอา orders_id_fk
+                $.ajax({
+                        url: " {{ url('backend/ajaxGetOrdersIDtoDeliveryAddr') }} ",
+                        method: "post",
+                        dataType: "json", 
+                        data: {
+                          id:id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                            console.log(data);
+                            if(data=='0'){
+                              alert("Invalid ! รายการข้อมูลไม่ถูกต้อง กรุณาติดต่อ Admin");
+                              return false;
+                            }
+                            $.each(data, function( index, value ) {
+                                  $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
+                                  $('#customer_id').val(value.customer_id);
+
+                                  $('#delivery_cusname').val(value.recipient_name);
+                                  $('#delivery_addr').val(value.addr_no);
+                                  $('#delivery_province').val(value.province_id_fk).select2();
+                                  // $('#delivery_amphur').val(value.amphur_code).select2();
+                                  // $('#delivery_tambon').val(value.tambon_code).select2();
+                                  $('#delivery_zipcode').val(value.zip_code);
+                                  $('#delivery_tel').val(value.tel);
+                                  $('#delivery_tel_home').val(value.tel_home);
+
+                                   if(value.province_id_fk != '' && typeof value.province_id_fk !== "undefined" ){
+                                         $.ajax({
+                                               url: " {{ url('backend/ajaxGetAmphur') }} ",
+                                              method: "post",
+                                              data: {
+                                                province_id:value.province_id_fk,
+                                                "_token": "{{ csrf_token() }}",
+                                              },
+                                              success:function(data2)
+                                              {
+                                                // console.log(value.amphur_code);
+                                                // console.log(data2);
+                                                $.each(data2, function( index2, value2 ) {
+                                                  if(value2.id==value.amphur_code){
+                                                       $('#delivery_amphur').html('<option value='+value.id+' selected >'+value2.amphur_name+'</option>');
+                                                  }
+                                                  
+                                                });
+                                              }
+                                            })
+                                       }
+
+                                      // alert(value.amphur_code);
+
+                                     if(value.amphur_code != '' &&  typeof value.amphur_code !== "undefined" ){
+                                           $.ajax({
+                                                 url: " {{ url('backend/ajaxGetTambon') }} ",
+                                                method: "post",
+                                                data: {
+                                                  amphur_id:value.amphur_code,
+                                                  "_token": "{{ csrf_token() }}",
+                                                },
+                                                success:function(data2)
+                                                {
+
+                                                 // console.log(value.tambon_code);
+                                                 // console.log(data2);
+
+                                                 $.each(data2, function( index2, value2 ) {
+                                                  if(value2.id==value.tambon_code){
+                                                       $('#delivery_tambon').html('<option value='+value.id+' selected >'+value2.tambon_name+'</option>');
+                                                  }
+                                                  
+                                                });
+
+                                                }
+                                              })
+                                         }
+
+                                 
+                            });
+
+                             $('#modalDelivery').modal('show');
+
+
+                        }
+                      })
+
+                   
+              }
+        });
+
+
+
+
+             $('#delivery_province').change(function(){
+
+                var province_id = this.value;
+                // alert(province_id);
+
+                 if(province_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetAmphur') }} ",
+                        method: "post",
+                        data: {
+                          province_id:province_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลอำเภอ !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกอำเภอ -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.amphur_name+'</option>';
+                             });
+                             $('#delivery_amphur').html(layout);
+                             $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
+                         }
+                        }
+                      })
+                 }
+
+            });
+
+
+             $('#delivery_amphur').change(function(){
+
+                var amphur_id = this.value;
+                // alert(amphur_id);
+
+                 if(amphur_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetTambon') }} ",
+                        method: "post",
+                        data: {
+                          amphur_id:amphur_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+
+                         $('#delivery_zipcode').val('');
+
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลตำบล !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกตำบล -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.tambon_name+'</option>';
+                             });
+                             $('#delivery_tambon').html(layout);
+                         }
+                        }
+                      })
+                 }
+
+            });
+
+
+             $('#delivery_tambon').change(function(){
+
+                var tambon_id = this.value;
+                // alert(tambon_id);
+
+                 if(tambon_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetZipcode') }} ",
+                        method: "post",
+                        data: {
+                          tambon_id:tambon_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                          //  console.log(data);
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลรหัส ปณ. !!.');
+                         }else{
+                             $.each(data,function(key,value){
+                                $('#delivery_zipcode').val(value.zip_code);
+                             });
+
+                         }
+                        }
+                      })
+                 }
+
+            });
+
 
     </script>
    

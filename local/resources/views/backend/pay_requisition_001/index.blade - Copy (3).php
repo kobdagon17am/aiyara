@@ -505,23 +505,21 @@
                         } 
                     }
 
-                        // if(sU!=''&&sD!=''){
-                        //     $('td:last-child', nRow).html('-');
-                        // }else{ 
+                        if(sU!=''&&sD!=''){
+                            $('td:last-child', nRow).html('-');
+                        }else{ 
 
                           if (aData['status_delivery'] != "1") {
                             $('td:last-child', nRow).html(''
-                                // + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="bottom" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
-                                 + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-
-                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
 
                             
                               ).addClass('input');
                         }
 
-                    // }
+                    }
 
                   }
               });
@@ -713,7 +711,7 @@
                     return false;
                   }
 
-          // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+        // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
       
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 

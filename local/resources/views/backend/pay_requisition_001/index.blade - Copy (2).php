@@ -355,11 +355,20 @@
                   <div class="row">
                   <div class="col-8">
                   </div>
+<!-- 
+                  <div class="col-4 text-right" style="{{@$sC}}" >
+                    <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pick_warehouse') }}">
+                      <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการเบิกจ่ายสินค้า
+                    </a>
+                  </div> -->
 
                 </div>
 
                  <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                 <br>
 
+                <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
+                </table>
                 </p>
               </div>
               <div class="tab-pane  " id="profile" role="tabpanel">
@@ -505,23 +514,21 @@
                         } 
                     }
 
-                        // if(sU!=''&&sD!=''){
-                        //     $('td:last-child', nRow).html('-');
-                        // }else{ 
+                        if(sU!=''&&sD!=''){
+                            $('td:last-child', nRow).html('-');
+                        }else{ 
 
                           if (aData['status_delivery'] != "1") {
                             $('td:last-child', nRow).html(''
-                                // + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="bottom" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
-                                 + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-
-                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
 
                             
                               ).addClass('input');
                         }
 
-                    // }
+                    }
 
                   }
               });
@@ -532,6 +539,79 @@
 
           });
 
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+          var sU = "{{@$sU}}"; 
+          var sD = "{{@$sD}}";
+          var oTable_001;
+          $(function() {
+          	$.fn.dataTable.ext.errMode = 'throw';
+              oTable_001 = $('#data-table-001').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  destroy: true,
+                  ordering: false,
+                  iDisplayLength: 50,
+                  ajax: {
+                            url: '{{ route('backend.pay_requisition_tb1.datatable') }}',
+                              method: 'POST',
+                            },
+                  columns: [
+                      // {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'pick_pack_requisition_code_id_fk', title :'<center>รหัสใบเบิก</center>', className: 'text-center'},
+                      {data: 'packing_date', title :'<center>วันที่ออกใบเบิก</center>', className: 'text-center'},
+                      // {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
+                      {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
+                      // {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
+                      // {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
+                      {data: 'pay_user', title :'<center>ผู้จัดส่ง</center>', className: 'text-center'},
+                      {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย</center>', className: 'text-center'},
+                      {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
+                      {data: 'id', title :'Tools', className: 'text-center w150'}, 
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+
+                    var info = $(this).DataTable().page.info();
+                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    if(sU!=''&&sD!=''){
+                        $('td:last-child', nRow).html('-');
+                    }else{ 
+
+                          // console.log(aData['status_cancel_some']);
+                          // console.log(aData['status_sent_2']);
+                          // && aData['status_sent_2']!=3 
+                          if(aData['status_sent_2']==3 || aData['status_sent_2']==4 || aData['status_sent_2']==5 || aData['status_cancel_some']==1 ){ 
+
+                              $('td:last-child', nRow).html('อยู่ระหว่างการปรับปรุง'
+                                 //  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
+                                
+                              ).addClass('input');
+
+                          }else{
+
+                             $('td:last-child', nRow).html('อยู่ระหว่างการปรับปรุง'
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
+                                 // + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-pick_pack_requisition_code_id_fk="'+aData['pick_pack_requisition_code_id_fk_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+                              
+                          }
+
+                   }
+                   
+                  }
+              });
+
+              oTable_001.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+              });
+            
+          });
+          // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 </script>
 
 
@@ -713,8 +793,89 @@
                     return false;
                   }
 
-          // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-      
+        // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+          var sU = "{{@$sU}}"; 
+          var sD = "{{@$sD}}";
+          var oTable_001;
+          $(function() {
+            $.fn.dataTable.ext.errMode = 'throw';
+              oTable_001 = $('#data-table-001').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  destroy: true,
+                  ordering: false,
+                  iDisplayLength: 50,
+                  ajax: {
+                            url: '{{ route('backend.pay_requisition_tb1.datatable') }}',
+                             data :{
+                                    _token: '{{csrf_token()}}',
+                                      business_location_id_fk:business_location_id_fk,
+                                      branch_id_fk:branch_id_fk,
+                                      // customer_id_fk:customer_id_fk,
+                                      startDate:startDate,
+                                      startPayDate:startPayDate,
+                                      endDate:endDate,
+                                      endPayDate:endPayDate,
+                                      status_sent:status_sent,                                 
+                                      action_user:action_user,                                  
+                                    },
+                              method: 'POST',
+                            },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'pick_pack_requisition_code_id_fk', title :'<center>ใบเบิก</center>', className: 'text-center'},
+                      {data: 'packing_date', title :'<center>วันที่ออกใบเบิก</center>', className: 'text-center'},
+                      // {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
+                      {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
+                      // {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
+                      // {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
+                      {data: 'pay_user', title :'<center>ผู้จัดส่ง</center>', className: 'text-center'},
+                      {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย</center>', className: 'text-center'},
+                      {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
+                      {data: 'id', title :'Tools..', className: 'text-center w150'}, 
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+
+                    var info = $(this).DataTable().page.info();
+                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    if(sU!=''&&sD!=''){
+                        $('td:last-child', nRow).html('-');
+                    }else{ 
+
+                          // console.log(aData['status_cancel_some']);
+                          // console.log(aData['status_sent_2']);
+                          // && aData['status_sent_2']!=3 
+                          if(aData['status_sent_2']==3 || aData['status_sent_2']==4 || aData['status_sent_2']==5 || aData['status_cancel_some']==1 ){ 
+
+                              $('td:last-child', nRow).html('อยู่ระหว่างการปรับปรุง'
+                                // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
+                                
+                              ).addClass('input');
+
+                          }else{
+
+                             $('td:last-child', nRow).html('อยู่ระหว่างการปรับปรุง'
+                                // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" style="'+sU+'" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Scan QR-Code" ><i class="mdi mdi-qrcode  align-middle"></i>QR</a> '
+                                // + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_warehouse.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-pick_pack_requisition_code_id_fk="'+aData['pick_pack_requisition_code_id_fk_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                              ).addClass('input');
+                              
+                          }
+
+                   }
+                   
+                  }
+              });
+
+              oTable_001.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+              });
+            
+          });
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){

@@ -305,6 +305,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetLabelPayType', 'AjaxController@ajaxGetLabelPayType');
     Route::post('ajaxGetLabelOthersPrice', 'AjaxController@ajaxGetLabelOthersPrice');
     Route::post('ajaxGetVoucher', 'AjaxController@ajaxGetVoucher');
+    
+    Route::post('ajaxGetOrdersIDtoDeliveryAddr', 'AjaxController@ajaxGetOrdersIDtoDeliveryAddr');
 
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');
@@ -417,6 +419,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('packing_list/datatable', 'Pick_packPackingCodeController@packing_list')->name('packing_list.datatable');
     Route::post('packing_list_for_fifo/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo')->name('packing_list_for_fifo.datatable');
+    Route::post('packing_list_for_fifo_02/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo_02')->name('packing_list_for_fifo_02.datatable');
 
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');

@@ -25,6 +25,115 @@ class DeliveryController extends Controller
         ");
         */
 
+
+  // DB::select("
+  //         INSERT IGNORE INTO db_delivery
+  //         ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+  //         SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+  //           (SUM(
+  //             (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+  //             (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+  //             (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+  //             (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+  //             (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
+  //             (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
+  //             ))
+  //         FROM db_orders 
+  //         WHERE code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2
+
+  //         GROUP BY db_orders.code_order
+
+  //       ");
+
+        //  DB::select("
+        //       UPDATE
+        //       db_delivery
+        //       SET
+        //       db_delivery.total_price=
+        //       (
+        //       SELECT
+        //       (SUM(
+        //       (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+        //       (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        //       (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+        //       (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        //       (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
+        //       (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
+        //       ))
+
+        //       from db_orders  WHERE db_orders.code_order=db_delivery.receipt
+        //       GROUP BY db_delivery.receipt
+        //       ) 
+
+        // ");
+
+
+
+
+         // $sDelivery = DB::select("
+         //            SELECT id,delivery_location
+         //            FROM db_orders 
+         //            WHERE code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2
+         //            GROUP BY db_orders.code_order
+         //          ");
+
+
+         // foreach ($sDelivery as $key => $vd) {
+          
+         //     if(@$request->delivery_location==3){
+
+         //                  $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+         //                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
+         //                    from customers_addr_frontstore
+         //                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+         //                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+         //                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+         //                    WHERE
+         //                    frontstore_id_fk in (".@$sRow->id.") ;");
+
+         //                   if(@$addr){
+         //                      foreach ($addr as $key => $v) {
+
+         //                          @$address = @$v->addr_no;
+         //                          @$address .= ", ต.". @$v->tamname. " ";
+         //                          @$address .= ", อ.". @$v->ampname;
+         //                          @$address .= ", จ.". @$v->provname;
+
+         //                          if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+         //                          }else{
+         //                              @$address = null;
+         //                          }
+
+         //                          if(!empty(@$v->tel)){
+         //                              $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
+         //                          }else{
+         //                              $tel = '';
+         //                          }
+
+         //                          DB::select(" UPDATE db_delivery  
+         //                          SET 
+         //                          recipient_name = '".@$v->recipient_name."',
+         //                          addr_send = '".@$address."',
+         //                          postcode = '".@$v->zip_code."',
+         //                          mobile = '".@$tel."',
+         //                          province_id_fk = '".@$v->province_id_fk."',
+         //                          province_name = '".@$v->provname."',
+         //                          set_addr_send_this = '1'
+         //                          where orders_id_fk = '".$sRow->id."'
+
+         //                         ");
+         //                      }
+
+         //                    }
+         //              }
+
+ 
+         // }
+
+     
+
+
+
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       // $receipt = \App\Models\Backend\Delivery::where('approver','NULL')->get();
         $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
@@ -43,6 +152,11 @@ class DeliveryController extends Controller
         $shipping_cost= $shipping_cost[0]->purchase_amt;
         // dd($shipping_cost);
 
+      $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
+      $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
+      $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
+      
+
         return View('backend.delivery.index')->with(
           array(
              'receipt'=>$receipt,
@@ -52,6 +166,9 @@ class DeliveryController extends Controller
              'sBusiness_location'=>$sBusiness_location,
              'sPacking'=>$sPacking,
              'shipping_cost'=>$shipping_cost,
+             'sProvince'=>$sProvince,
+             'sAmphures'=>$sAmphures,
+             'sTambons'=>$sTambons,
           ) );
 
 
@@ -73,9 +190,95 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-      // dd($request->all());
 
-      if(isset($request->save_to_packing)){
+        // dd($request->all());
+
+        if(isset($request->update_delivery_custom)){
+
+            $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$request->customers_addr_frontstore_id." ");
+            // dd(count($ch));
+            if(count($ch)==0){
+
+              DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id,customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+                  VALUES
+                  ('".$request->customers_addr_frontstore_id."',
+                   '".$request->customer_id."',
+                   '".$request->customer_id."',
+                   '".$request->delivery_cusname."',
+                    '".$request->delivery_addr."',
+                     '".$request->delivery_province."',
+                     '".$request->delivery_amphur."',
+                     '".$request->delivery_tambon."',
+                     '".$request->delivery_zipcode."',
+                     '".$request->delivery_tel."',
+                     '".$request->delivery_tel_home."',
+                     now()
+                  )
+                ");
+
+            }else{
+
+               // dd($request->all());
+
+               DB::select(" UPDATE customers_addr_frontstore
+                SET recipient_name = '".$request->delivery_cusname."',
+                addr_no = '".$request->delivery_addr."',
+                province_id_fk  = '".$request->delivery_province."',
+                amphur_code = '".$request->delivery_amphur."',
+                tambon_code = '".$request->delivery_tambon."',
+                zip_code = '".$request->delivery_zipcode."',
+                tel = '".$request->delivery_tel."',
+                tel_home = '".$request->delivery_tel_home."',
+                updated_at = now() where frontstore_id_fk=".$request->customers_addr_frontstore_id."
+              ");
+
+            }
+
+
+               $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                            dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
+                            from customers_addr_frontstore
+                            Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                            Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                            Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                            WHERE
+                            frontstore_id_fk in (".@$request->customers_addr_frontstore_id.") ;");
+
+                           if(@$addr){
+                              foreach ($addr as $key => $v) {
+
+                                  @$address = @$v->addr_no;
+                                  @$address .= ", ต.". @$v->tamname. " ";
+                                  @$address .= ", อ.". @$v->ampname;
+                                  @$address .= ", จ.". @$v->provname;
+
+                                  if(!empty(@$v->tel)){
+                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                  }else{
+                                      $tel = '';
+                                  }
+
+                                  DB::select(" UPDATE db_delivery  
+                                  SET 
+                                  recipient_name = '".@$v->recipient_name."',
+                                  addr_send = '".@$address."',
+                                  postcode = '".@$v->zip_code."',
+                                  mobile = '".@$tel."',
+                                  province_id_fk = '".@$v->province_id_fk."',
+                                  province_name = '".@$v->provname."',
+                                  set_addr_send_this = '1'
+                                  where orders_id_fk = '".$request->customers_addr_frontstore_id."'
+
+                                 ");
+                              }
+
+                            }
+
+
+            return redirect()->to(url("backend/delivery"));
+
+
+       }else if(isset($request->save_to_packing)){
 
       	if(empty($request->row_id)){
       		return redirect()->to(url("backend/delivery"));

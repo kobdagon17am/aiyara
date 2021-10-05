@@ -59,12 +59,12 @@ class DeliveryPackingCodeController extends Controller
 
        $sTable = DB::select(" 
 
-SELECT db_delivery_packing_code.*,db_delivery.id as db_delivery_id from db_delivery_packing_code  
-LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
-LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
-WHERE db_delivery.status_pick_pack<>1
-group by db_delivery_packing_code.id
-order by db_delivery_packing_code.updated_at desc
+          SELECT db_delivery_packing_code.*,db_delivery.id as db_delivery_id from db_delivery_packing_code  
+          LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
+          LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
+          WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
+          group by db_delivery_packing_code.id
+          order by db_delivery_packing_code.updated_at desc
 
         ");
 
@@ -140,7 +140,7 @@ order by db_delivery_packing_code.updated_at desc
                   WHERE 
                   db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
             if($addr){
-              return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile;
+              return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
             }else{
               return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
             }
