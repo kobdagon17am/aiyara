@@ -31,7 +31,8 @@ class Pay_requisition_001Controller extends Controller
               left Join customers ON db_pay_product_receipt_001.customer_id_fk = customers.id
               GROUP BY db_pay_product_receipt_001.customer_id_fk
               ");
-      $sPay_requisition_status = \App\Models\Backend\Pay_requisition_status::get();
+      // $sPay_requisition_status = \App\Models\Backend\Pay_requisition_status::get();
+      $sPay_requisition_status = DB::select(" select * from dataset_pay_requisition_status_02 ");
 
       $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
 

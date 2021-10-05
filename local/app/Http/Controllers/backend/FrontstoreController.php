@@ -1331,25 +1331,6 @@ class FrontstoreController extends Controller
                         FROM db_orders WHERE (`id`=".$sRow->id.") ; 
                       ");
 
-                    //  $total_price = DB::select("
-                    //     SELECT
-                    //     SUM(
-                    //     (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
-                    //     (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                    //     (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-                    //     (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                    //     (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-                    //     (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
-                    //     ) as total_price
-                    //     FROM
-                    //     db_orders
-                    //     WHERE (`id`=".$sRow->id.") ; 
-                    // ");
-
-                    //  DB::select("
-                    //     UPDATE db_orders SET total_price=".$total_price[0]->total_price." WHERE (`id`=".$sRow->id.") ; 
-                    //   ");
-
 
 // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง 
                       DB::select(" UPDATE db_delivery  

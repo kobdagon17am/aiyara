@@ -573,27 +573,27 @@ $(function() {
 
                     console.log(aData['status_delivery']);
 
-                  	if (aData['status_delivery'] == "1") {
+                //   	if (aData['status_delivery'] == "1") {
 
-        				        $('td', nRow).css('background-color', '#ffd9b3');
-        				        $("td:eq(4)", nRow).html('');
-        				        $("td:eq(6)", nRow).html('');
-        				        var i;
-            						for (i = 0; i < 10 ; i++) {
-            						   $("td:eq("+i+")", nRow).prop('disabled',true); 
-            						} 
-			      	      }
+        				    //     $('td', nRow).css('background-color', '#ffd9b3');
+        				    //     $("td:eq(4)", nRow).html('');
+        				    //     $("td:eq(6)", nRow).html('');
+        				    //     var i;
+            				// 		for (i = 0; i < 10 ; i++) {
+            				// 		   $("td:eq("+i+")", nRow).prop('disabled',true); 
+            				// 		} 
+			      	      // }
 
 
-                    if (aData['status'] == "1") {
+                //     if (aData['status'] == "1") {
 
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        } 
-                        $('td:last-child', nRow).html('-');
-                    }else{
+                //         $('td', nRow).css('background-color', '#ffd9b3');
+                //         var i;
+                //         for (i = 0; i < 10 ; i++) {
+                //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                //         } 
+                //         $('td:last-child', nRow).html('-');
+                //     }else{
 
                         if(sU!=''&&sD!=''){
                             $('td:last-child', nRow).html('-');
@@ -620,7 +620,7 @@ $(function() {
 
 
 
-                  }
+                  // }
               });
 
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
