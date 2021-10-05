@@ -5,11 +5,13 @@
 @section('css')
 <style>
   .select2-selection {height: 34px !important;margin-left: 3px;}
+  .dataTables_processing {
+    width: 0 !important;
+  }
 </style>
 @endsection
 
 @section('content')
-
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -113,6 +115,7 @@ var sU = "{{@$sU}}";
 var sD = "{{@$sD}}";
 var oTable;
 $(function() {
+
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
@@ -148,6 +151,10 @@ $(function() {
         order: [
           [ 0, 'asc' ]
         ],
+        language: {
+            loadingRecords: '&nbsp;',
+            processing: '<div class="myloading d-block"></div>'
+        } ,
         rowCallback: function(nRow, aData, dataIndex){
 
           if(sU!=''&&sD!=''){
@@ -170,6 +177,7 @@ $(function() {
     $('#searchFilter').on('click', function () {
       oTable.draw();
     })
+
 
     $('#clearFilter').on('click', function () {
       $('#business_location_id_fk').val('').trigger('change')
