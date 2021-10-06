@@ -211,7 +211,7 @@ class Promotion_cusController extends Controller
     }
 
     public function Datatable(Request $req){
-      $sTable = \App\Models\Backend\PromotionCus::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\PromotionCus::search();
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->make(true);
