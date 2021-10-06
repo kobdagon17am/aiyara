@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Course / Event </h4>
+            <h4 class="mb-0 font-size-18">{{ __('message.course_event_header') }}</h4>
         </div>
     </div>
 </div>
@@ -104,11 +104,11 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'ce_name', title :'<center>ชื่อกิจกรรม</center>', className: 'text-left'},
-            {data: 'ce_type_desc', title :'<center>ประเภท cource/event</center>', className: 'text-center'},
-            {data: 'ce_place', title :'<center>สถานที่จัดงาน</center>', className: 'text-left'},
-            {data: 'ce_max_ticket', title :'<center>จำนวนบัตรสูงสุด</center>', className: 'text-center'},
-            {data: 'ce_ticket_price', title :'<center>ราคาบัตร (หน่วย: บาทไทย)</center>', className: 'text-center'},
+            {data: 'ce_name', title :'<center>{{ __("message.activities_name") }}</center>', className: 'text-left'},
+            {data: 'ce_type_desc', title :'<center>{{ __("message.course_event_type") }}</center>', className: 'text-center'},
+            {data: 'ce_place', title :'<center>{{ __("message.place") }}</center>', className: 'text-left'},
+            {data: 'ce_max_ticket', title :'<center>{{ __("message.total_maximam_card") }}</center>', className: 'text-center'},
+            {data: 'ce_ticket_price', title :'<center>{{ __("message.card_price") }}</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w60'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){

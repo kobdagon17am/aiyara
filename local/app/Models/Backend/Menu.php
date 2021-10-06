@@ -2,7 +2,6 @@
 
 namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Model;
-
 class Menu extends Model
 {
   protected $table = 'ck_backend_menu';
@@ -19,6 +18,7 @@ class Menu extends Model
       $Menu = Menu::where('isActive', '<>', 'N')->orderBy('sort', 'asc')->orderBy('id', 'asc');
       return $Menu->get();
     });
+
     if( $row ){
       foreach( $row AS $r ){
 
@@ -33,7 +33,7 @@ class Menu extends Model
             $active = substr_count($path, (empty($r->url)?'1':$r->url)) > 0?'Y':'N';
           }
           $setMenu[$r->ref][] = (object)
-          ['id'=>$r->id,'name'=>$r->name,'link'=>$r->url,'icon'=>$r->icon,'active'=>$active,'ref2'=>$r->ref2,'menu_level'=>$r->menu_level];
+          ['id'=>$r->id,'name'=>$r->name,'link'=>$r->url,'icon'=>$r->icon,'active'=>$active,'ref2'=>$r->ref2,'menu_level'=>$r->menu_level, 'localizeName' => strpos($r->url, '/') !== false ? explode('/', $r->url)[1] : $r->url];
 
         }
       }
@@ -41,7 +41,7 @@ class Menu extends Model
 
     // echo "<pre>";
 
-  // print_r($setMenu);
+    // dump($setMenu);
     // print_r(\Auth::user()->role_group_id_fk);
 
  // $MenuPermission = \App\Models\MenuPermissionModel::where('admin_id',\Auth::user()->id)->get();
@@ -69,7 +69,7 @@ foreach ($MenuPermission as $key => $value) {
 //   echo "EEEEEEEEEEEE";
 // }
 
-
+    
     if( $setMenu[0] ){
       /**
        *---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ foreach ($MenuPermission as $key => $value) {
                       <li>
                           <a data-id="'.$sMenu->id.'" href="'.asset($mMenu->link).'" class=" waves-effect click_link ">
                               <i class="'.$mMenu->icon.'"></i>
-                              <span>'.$mMenu->name.'  </span>
+                              <span>'.trans('message.menus.'.$mMenu->localizeName).'</span>
                           </a>
                       </li>';
             }else{
@@ -97,7 +97,7 @@ foreach ($MenuPermission as $key => $value) {
                       <li>
                           <a data-id="'.$sMenu->id.'" href="'.asset($mMenu->link).'" class=" waves-effect click_link ">
                               <i class="'.$mMenu->icon.'"></i>
-                              <span>'.$mMenu->name.'  </span>
+                              <span>'.trans('message.menus.'.$mMenu->localizeName).'</span>
                           </a>
                       </li>';
               }
@@ -120,14 +120,14 @@ foreach ($MenuPermission as $key => $value) {
                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
 
 	                    	$subMenu .= '
-		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
+		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.trans('message.menus.'.$sMenu->localizeName).'</a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
 
 		                           		if($sMenu->id==$sMenu2->ref2){
 									  		$subMenu .= '
 									            <ul class="sub-menu" aria-expanded="true">
-								                    <li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
+								                    <li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu2->link).'">'.trans('message.menus.'.$sMenu2->localizeName).'</a></li>
 								                </ul>';
 								        }
 
@@ -139,9 +139,9 @@ foreach ($MenuPermission as $key => $value) {
 	            	}else{
 
 	            		if($sMenu->menu_level==1){
-		            		$subMenu .= '<li><a href="'.asset($sMenu->link).'" data-id="'.$sMenu->id.'" class="click_link" >'.$sMenu->name.' </a></li>';
+		            		$subMenu .= '<li><a href="'.asset($sMenu->link).'" data-id="'.$sMenu->id.'" class="click_link" >'.trans('message.menus.'.$sMenu->localizeName).'</a></li>';
 			                  if(in_array($sMenu->id, $arr_menu_id)){
-			                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu->link).'">'.$sMenu->name.'  </a></li>';
+			                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link"  href="'.asset($sMenu->link).'">'.trans('message.menus.'.$sMenu->localizeName).' </a></li>';
 			                  }
 		              	}
 
@@ -155,14 +155,14 @@ foreach ($MenuPermission as $key => $value) {
 	                      if($sMenu->ref2==0 && $sMenu->menu_level==2){
 
 	                    	$subMenu .= '
-		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.$sMenu->name.' </a>';
+		                           <li><a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow click_link ">'.trans('message.menus.'.$sMenu->localizeName).'</a>';
 
 		                           foreach( $setMenu[$mMenu->id] AS $sMenu2 ){
 
 		                           		if($sMenu->id==$sMenu2->ref2){
 									  		$subMenu .= '
 									            <ul class="sub-menu" aria-expanded="true">
-								                    <li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu2->link).'">'.$sMenu2->name.'</a></li>
+								                    <li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu2->link).'">'.trans('message.menus.'.$sMenu2->localizeName).'</a></li>
 								                </ul>';
 								        }
 
@@ -174,7 +174,7 @@ foreach ($MenuPermission as $key => $value) {
 
 			            		if($sMenu->menu_level==1){
 					                  if(in_array($sMenu->id, $arr_menu_id)){
-					                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu->link).'">'.$sMenu->name.'</a></li>';
+					                    $subMenu .= '<li><a data-id="'.$sMenu->id.'" class="click_link" href="'.asset($sMenu->link).'">'.trans('message.menus.'.$sMenu->localizeName).'</a></li>';
 					                  }
 				              	}
 
@@ -193,12 +193,12 @@ foreach ($MenuPermission as $key => $value) {
           if(\Auth::user()->permission==1){
 
                 // $click_link = $sMenu->ref==0?'click_link':'';
-
+                
                 $txtMenu .= '
                 <li>
                     <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect  ">
                         <i class="'.$mMenu->icon.'"></i>
-                        <span>'.$mMenu->name.' </span>
+                        <span>'.trans('message.menus.'.$mMenu->localizeName).'</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
                         '.$subMenu.'
@@ -215,7 +215,7 @@ foreach ($MenuPermission as $key => $value) {
 	                <li>
 	                    <a data-id="'.$sMenu->id.'" href="javascript: void(0);" class="has-arrow waves-effect  ">
 	                        <i class="'.$mMenu->icon.'"></i>
-	                        <span>'.$mMenu->name.'  </span>
+	                        <span>'.trans('message.menus.'.$mMenu->localizeName).'</span>
 	                    </a>
 	                    <ul class="sub-menu" aria-expanded="true">
 	                        '.$subMenu.'
@@ -230,7 +230,6 @@ foreach ($MenuPermission as $key => $value) {
         }
       }
     }
-
     return $txtMenu;
   }
 }

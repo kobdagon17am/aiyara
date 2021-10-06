@@ -796,7 +796,7 @@ class FrontstoreController extends Controller
         }
 
       }
-
+     
       return View('backend.frontstore.viewdata')->with(
         array(
            'sRow'=>$sRow,
@@ -1815,17 +1815,17 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  รวมรายการชำระค่าสินค้า ('.$sD3.')  
+                  '.trans('message.all_payment_list').' ('.$sD3.')  
                 </th></tr>
                 <tr>
-                  <th width="10%">พนักงานขาย</th>
-                  <th width="5%" class="text-right">เงินสด</th>
-                  <th width="5%" class="text-right">Ai-cash</th>
-                  <th width="5%" class="text-right">เงินโอน</th>
-                  <th width="5%" class="text-right">เครดิต</th>
-                  <th width="5%" class="text-right">ค่าธรรมเนียม</th>
-                  <th width="10%" class="text-right">รวมทั้งสิ้น</th>
-                  <th width="5%" class="text-right">(ค่าขนส่ง)</th>
+                  <th width="10%">'.trans('message.seller').'</th>
+                  <th width="5%" class="text-right">'.trans('message.cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.ai_cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.transfer_cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.credit_card').'</th>
+                  <th width="5%" class="text-right">'.trans('message.fee').'</th>
+                  <th width="10%" class="text-right">'.trans('message.total').'</th>
+                  <th width="5%" class="text-right">('.trans('message.transportor_fee').')</th>
                 </tr>
               </thead>
               <tbody>';
@@ -1924,16 +1924,16 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  รายการเติม Ai-Stockist ('.$sD3.')  
+                '.trans('message.payment_ai_cash_list').' ('.$sD3.')  
                 </th></tr>
                 <tr>
-                  <th width="10%">พนักงานขาย</th>
+                  <th width="10%">'.trans('message.seller').'</th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
-                  <th width="5%" class="text-right">รายการ</th>
-                  <th width="10%" class="text-right">รวมทั้งสิ้น</th>
+                  <th width="5%" class="text-right">'.trans('message.list').'</th>
+                  <th width="10%" class="text-right">'.trans('message.total').'</th>
                   <th width="5%" class="text-right"> </th>
                 </tr>
               </thead>
@@ -2043,13 +2043,13 @@ class FrontstoreController extends Controller
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="" >รายการส่งเงินรายวัน (วันปัจจุบัน : '.date("d-m-Y").$user_login_id.') </span>
+                        <span class="" >'.trans('message.daily_cash_list').' ('.trans('message.current_day').' : '.date("d-m-Y").$user_login_id.') </span>
                         </th></tr>
                         <tr>
-                          <th class="text-center">ครั้งที่</th>
-                          <th class="text-center">รายการใบเสร็จที่ส่ง</th>
-                          <th class="text-center">ผู้ส่ง</th>
-                          <th class="text-center">วัน เวลา ที่ส่ง</th>
+                          <th class="text-center">'.trans('message.times').'</th>
+                          <th class="text-center">'.trans('message.send_reciept_list').'</th>
+                          <th class="text-center">'.trans('message.sender').'</th>
+                          <th class="text-center">'.trans('message.send_time').'</th>
                           <th class="text-center">Tool</th>
                         </tr>
                       </thead>
@@ -2148,7 +2148,7 @@ class FrontstoreController extends Controller
                           <td class="text-center">  </td>
                           <td class="text-center">  </td>
                           <td class="text-center">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18  btnSentMoney " style="" > กดส่งเงิน </a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18  btnSentMoney " style="" > '.trans('message.btn_send_money').' </a>
                           </td>
                         </tr>
                       </tbody>
@@ -2599,39 +2599,39 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                     <thead>
                       <tr style="background-color: #f2f2f2;text-align: right;">
                         <th style="text-align: left !important;" > ('.$sD3.') </th>
-                        <th>รายการ</th>
+                        <th>'.trans('message.list').'</th>
                         <th>PV</th>
-                        <th>จำนวนเงิน</th>
+                        <th>'.trans('message.amount').'</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr style="color: red" >
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> รอตรวจสอบ,รอชำระ,รออนุมัติ</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_1').'</th>
                         <td style="text-align: right;">'.@$cnt_01.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_01,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_01,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> อนุมัติ</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_2').'</th>
                         <td style="text-align: right;">'.@$cnt_02.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_02,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_02,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> ยกเลิก</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_3').'</th>
                         <td style="text-align: right;">'.@$cnt_03.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_03,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_03,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> อื่นๆ <br>(ยกเว้น 3 สถานะข้างบน) </th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_4').'</th>
                         <td style="text-align: right;">'.@$cnt_04.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_04,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_04,2).' </td>
                       </tr>
 
                       <tr>
-                        <th scope="row">รวมทั้งหมด</th>
+                        <th scope="row">'.trans('message.total').'</th>
                         <td style="text-align: right;font-weight:bold;">'.@$cnt_05.' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$pv_total_05,0).' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$sum_price_05,2).' </td>

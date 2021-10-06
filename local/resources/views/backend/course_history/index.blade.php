@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ประวัติการลงทะเบียน Course / Event </h4>
+            <h4 class="mb-0 font-size-18"> {{ __('message.course_event_history_header') }} </h4>
         </div>
     </div>
 </div>
@@ -81,10 +81,10 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'course_event_desc', title :'<center>ชื่อกิจกรรม</center>', className: 'text-left'},
-            {data: 'regis_date', title :'<center>วันที่ลงทะเบียน</center>', className: 'text-center'},
-            {data: 'amt_registered', title :'<center>จำนวนผู้ลงทะเบียน</center>', className: 'text-center'},
-            {data: 'id',   title :'<center>ดูรายชื่อ</center>', className: 'text-center',render: function(d) {
+            {data: 'course_event_desc', title :'<center>{{ __("message.activities_name") }}</center>', className: 'text-left'},
+            {data: 'regis_date', title :'<center>{{ __("message.register_date") }}</center>', className: 'text-center'},
+            {data: 'amt_registered', title :'<center>{{ __("message.register_total") }}</center>', className: 'text-center'},
+            {data: 'id',   title :'<center>{{ __("message.list_member") }}</center>', className: 'text-center',render: function(d) {
                return '<a class="btn btn-info btn-sm mt-1" href="backend/course_history_list/'+d+'" >ตรวจสอบ</a>';
             }},
             {data: 'file_download',   title :'<center>Download</center>', className: 'text-center',render: function(d) {

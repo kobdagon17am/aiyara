@@ -82,12 +82,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> จำหน่ายสินค้าหน้าร้าน  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
 </div>
 <!-- end page title -->
+
 <div class="row">
   <div class="col-12">
     <div class="card">
@@ -96,7 +97,7 @@
           <div class="divTableBody">
             <div class="divTableRow">
               <div class="divTH">
-                <label for="startDate" >วันสร้างเริ่มต้น : </label>
+                <label for="startDate" >{{ __('message.create_date') }} : </label>
               </div>
               <?php 
 
@@ -117,7 +118,7 @@
                 <button type="button" class="btn btn-primary btnSearchSub btnSearchDate" data-attr="startDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="endDate" >วันสร้างสิ้นสุด : </label>
+                <label for="endDate" >{{ __('message.end_date') }} : </label>
               </div>
               <div class="divTableCell">
                 <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
@@ -126,7 +127,7 @@
                 <button type="button" class="btn btn-primary btnSearchSub btnSearchDate " data-attr="endDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="" >ประเภทการสั่งซื้อ : </label>
+                <label for="" >{{ __('message.order_type') }} : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
                 <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " required  >
@@ -146,7 +147,7 @@
             </div>
             <div class="divTableRow">
               <div class="divTH">
-                <label for="" >รหัสลูกค้า : </label>
+                <label for="" >{{ __('message.customer_id') }} : </label>
               </div>
               <div class="divTableCell">
 
@@ -157,7 +158,7 @@
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_code" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="" >ชื่อลูกค้า : </label>
+                <label for="" >{{ __('message.customer_name') }} : </label>
               </div>
               <div class="divTableCell">
                 <select id="customer_name" name="customer_name" class="form-control" ></select> 
@@ -166,7 +167,7 @@
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_name" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
-                <label for="" >เลขที่ใบเสร็จ : </label>
+                <label for="" >{{ __('message.receipt_no') }} : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
                      @if(@$r_invoice_code)
@@ -203,7 +204,7 @@
               </div> -->
 
               <div class="divTH">
-                <label for="" >ผู้สร้าง : </label>
+                <label for="" >{{ __('message.creator') }} : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
                 <select id="action_user" name="action_user" class="form-control select2-templating "  >
@@ -222,7 +223,7 @@
               </div>
 
               <div class="divTH">
-                <label for="" >การส่งเงิน : </label>
+                <label for="" >{{ __('message.money_send') }} : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
               <select id="status_sent_money" class="form-control select2-templating "  >
@@ -237,7 +238,7 @@
               </div>
 
               <div class="divTH">
-                <label for="" >สถานะ : </label>
+                <label for="" >{{ __('message.status') }} : </label>
               </div>
               <div class="divTableCell" style="width: 15%">
                 <select id="approve_status" name="approve_status" class="form-control select2-templating "  >
@@ -287,7 +288,7 @@
                 <label for="" >  </label>
               </div>
               <div class="divTableCell" style="width: 15%;text-align:right;">
-                  <button type="button" class="btn btn-warning btnSearchTotal " style="color:black;"><i class="bx bx-search font-size-18 align-middle "></i> ค้นหา</button>
+                  <button type="button" class="btn btn-warning btnSearchTotal " style="color:black;"><i class="bx bx-search font-size-18 align-middle "></i> {{ __('message.search') }}</button>
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-info btnRefresh " style="padding: 9%;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
@@ -314,17 +315,17 @@
 <!-- btnViewCondition -->
               <div class="divTableCell" style="text-align: right;width: 40%;" >&nbsp; </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewAll" ><i class="bx bx-search font-size-18 align-middle"></i> ดูทั้งหมด</button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewAll" ><i class="bx bx-search font-size-18 align-middle"></i> {{ __('message.see_all') }}</button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyNormal" ><i class="bx bx-search font-size-18 align-middle"></i> เฉพาะซื้อแบบปกติ</button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyNormal" ><i class="bx bx-search font-size-18 align-middle"></i> {{ __('message.general_buy') }}</button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
-                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyVoucher" ><i class="bx bx-search font-size-18 align-middle"></i> เฉพาะซื้อแบบ เติม Ai-Stockist / Gift Voucher </button>
+                <button type="button" class="btn btn-success btnViewCondition " data-id="ViewBuyVoucher" ><i class="bx bx-search font-size-18 align-middle"></i> {{ __('message.only_buy_ai_gift') }} </button>
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
-                <button type="button" class="btn btn-success btnAdd class_btn_add " ><i class="fa fa-plus font-size-18 align-middle "></i> เพิ่ม</button>
+                <button type="button" class="btn btn-success btnAdd class_btn_add " ><i class="fa fa-plus font-size-18 align-middle "></i> {{ __('message.add') }}</button>
                  </a>
               </div>
             </div>
@@ -442,9 +443,9 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
-            {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
-            {data: 'action_user', title :'<center>ผู้สร้าง </center>', className: 'text-center w80'},
-            {data: 'purchase_type_id_fk',   title :'<center>ประเภท <br> การสั่งซื้อ</center>', className: 'text-center w80 ',render: function(d) {
+            {data: 'created_at', title :'<center>{{ __("message.create_date") }}</center>', className: 'text-center w60'},
+            {data: 'action_user', title :'<center>{{ __("message.creator") }} </center>', className: 'text-center w80'},
+            {data: 'purchase_type_id_fk',   title :'<center>{{ __("message.order_type") }}</center>', className: 'text-center w80 ',render: function(d) {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="ทำคุณสมบัติ"> <i class="fa fa-shopping-basket"></i> </span>';
               }else if(d==2){
@@ -461,33 +462,33 @@ $(function() {
                 return '';
               }
             }},
-            {data: 'customer_name', title :'<center>ลูกค้า</center>', className: 'text-center'},
-            {data: 'total_price',   title :'รวม (บาท)', className: 'text-right ',render: function(d) {
+            {data: 'customer_name', title :'<center>{{ __("message.customer") }}</center>', className: 'text-center'},
+            {data: 'total_price',   title :'{{ __("message.total_baht") }}', className: 'text-right ',render: function(d) {
                if(d){
                 return '<span style="font-size:16px;font-weight:bold;">'+d+'</span>';
                }else{
                 return '';
                }
             }},
-            {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+            {data: 'code_order',   title :'<center>{{ __("message.receipt_code_no") }}</center>', className: 'text-center ',render: function(d) {
                if(d){
                 return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
                }else{
                 return '';
                }
             }},
-            {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
-            {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
+            {data: 'pay_type', title :'<center>{{ __("message.payment_type") }} </center>', className: 'text-center'},
+            {data: 'shipping_price',   title :'<center>{{ __("message.transportor_fee") }}</center>', className: 'text-center',render: function(d) {
               if(d>0){
                 return d;
               }else{
                 return '';
               }
             }},
-            {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
+            {data: 'status',   title :'<center>{{ __("message.status") }}</center>', className: 'text-center w80 ',render: function(d) {
                   return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
             }},
-            {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
+            {data: 'status_sent_money',   title :'<center>{{ __("message.money_send_status") }}</center>', className: 'text-center w80 ',render: function(d) {
               if(d==2){
                   return '<span style="color:green;">Success</span>';
               }else if(d==1){
@@ -497,7 +498,7 @@ $(function() {
               }
             }},
 
-            {data: 'id',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
+            {data: 'id',   title :'{{ __("message.receipt") }}', className: 'text-center w50 ',render: function(d) {
                 return '<center>'
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
@@ -1385,7 +1386,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             { 
-                              // console.log(data);
+                            //   console.log(data);
                               $(".div_PV_Amount").html(data);
                               
                             }
@@ -1434,7 +1435,7 @@ $(document).ready(function() {
                     },
                     success:function(data)
                     { 
-                      // // console.log(data);
+                      console.log(data);
                       $(".div_PV_Amount").html(data);
                     }
                   });
