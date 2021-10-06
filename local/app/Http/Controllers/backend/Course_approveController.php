@@ -12,7 +12,15 @@ class Course_approveController extends Controller
 
   public function index(Request $request)
   {
-    return view('backend.course_approve.index');
+    $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+      return $query->where('id', auth()->user()->business_location_id_fk);
+    })
+    ->get();
+    $sBranchs = \App\Models\Backend\Branchs::whereIn('business_location_id_fk', $sBusiness_location->pluck('id'))->get();
+    $types = DB::table('dataset_orders_type')->where('lang_id', 1)->get();
+    $statuses = DB::table('dataset_order_status')->get();
+
+    return view('backend.course_approve.index', compact('sBusiness_location', 'sBranchs', 'types', 'statuses'));
   }
 
   public function create()
@@ -87,7 +95,15 @@ public function destroy($id)
 
 }
 
-public function Datatable(){
+public function Datatable(Request $request){
+
+  $business_location_id_fk = $request->business_location_id_fk;
+  $branch_id_fk = $request->branch_id_fk;
+  $orderStatus = $request->orderStatus;
+  $codeOrder = $request->codeOrder;
+  $type = $request->type;
+  $startDate = $request->date['start'];
+  $endDate = $request->date['end'];
 
  $sTable =  DB::table('db_orders')
  ->select('db_orders.*','db_orders.id as orders_id','dataset_order_status.detail','dataset_order_status.css_class','dataset_orders_type.orders_type as type','dataset_pay_type.detail as pay_type_name')
@@ -98,6 +114,31 @@ public function Datatable(){
  ->where('dataset_orders_type.lang_id','=','1')
 //  ->where('db_orders.purchase_type_id_fk','=','6')
  ->where('db_orders.order_status_id_fk','=','2')
+ ->when(auth()->user()->permission !== 1, function ($query) {
+   return $query->where('db_orders.business_location_id_fk', auth()->user()->business_location_id_fk)
+      ->where('db_orders.branch_id_fk', auth()->user()->branch_id_fk);
+ })
+ ->when($business_location_id_fk, function ($query, $business_location_id_fk) {
+   return $query->where('db_orders.business_location_id_fk', $business_location_id_fk);
+ })
+ ->when($branch_id_fk, function ($query, $branch_id_fk) {
+   return $query->where('db_orders.branch_id_fk', $branch_id_fk);
+ })
+ ->when($orderStatus, function ($query, $orderStatus) {
+   return $query->where('dataset_order_status.id', $orderStatus);
+ })
+ ->when($codeOrder, function ($query, $codeOrder) {
+   return $query->where('db_orders.code_order', 'LIKE', "%{$codeOrder}%");
+ })
+ ->when($type, function ($query, $type) {
+  return $query->where('dataset_orders_type.id', $type);
+})
+->when($startDate, function ($query, $startDate) {
+  return $query->where('db_orders.created_at', '>=', $startDate.' 00:00:00');
+})
+->when($endDate, function ($query, $endDate) {
+  return $query->where('db_orders.created_at', '<=', $endDate.' 23:59:59');
+})
  ->orderby('id','DESC')
  ->get();
 

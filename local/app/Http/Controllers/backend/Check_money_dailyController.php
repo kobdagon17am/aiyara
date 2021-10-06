@@ -12,8 +12,12 @@ class Check_money_dailyController extends Controller
 
     public function index(Request $request)
     {
-       $sBusiness_location = \App\Models\Backend\Business_location::get();
-       $sBranchs = \App\Models\Backend\Branchs::get();
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->branch_id);
+        })->get();
         $sSeller = DB::select(" select id,name as seller_name from  ck_users_admin ");
        return View('backend.check_money_daily.index')->with(array(
         'sBusiness_location'=>$sBusiness_location,

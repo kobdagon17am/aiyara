@@ -4,6 +4,9 @@
 
 @section('css')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<style>
+  .select2-selection {height: 34px !important;margin-left: 3px;}
+</style>
 @endsection
 
 @section('content')
@@ -57,8 +60,8 @@
                     <button class="btn btn-info btn-sm btnSearch01" style="font-size: 14px !important;margin-left: 0.8%;" >
                       <i class="bx bx-search align-middle "></i> SEARCH
                     </button>
-                    <button class="btn btn-dark btn-sm" style="font-size: 14px !important;margin-left: 0.8%;" onclick="location.reload()">
-                      CLEAR
+                    <button class="btn btn-dark btn-sm" style="font-size: 14px !important;margin-left: 0.8%;" id="clearFilter">
+                      <i class="bx bx-revision"></i> CLEAR
                     </button>
                   </div>
                 </div>
@@ -176,6 +179,14 @@ $(function() {
     });
 
     $('.btnSearch01').on('click', function () {
+      oTable.draw();
+    })
+
+    $('#clearFilter').on('click', function () {
+      $('#coupon_name').val('');
+      $('#startDate').val('');
+      $('#endDate').val('');
+      $("#pstatus").val('').trigger('change')
       oTable.draw();
     })
 });

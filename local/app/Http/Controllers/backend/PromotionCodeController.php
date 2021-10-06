@@ -49,12 +49,8 @@ class PromotionCodeController extends Controller
 
       $coupon_name = $req->couponName;
 
-      if (isset($req->startDate) || isset($req->endDate)) {
-        $pro_date = [$req->startDate, $req->endDate];
-      } else {
-        $pro_date = '';
-      }
-
+      $startDate = $req->startDate;
+      $endDate = $req->endDate;
       $status = $req->pstatus;
 
       $sTable = \App\Models\Backend\PromotionCode::search()
@@ -62,9 +58,11 @@ class PromotionCodeController extends Controller
         ->when($coupon_name, function ($query, $coupon_name) {
           return $query->where('promotions.name_thai', 'LIKE', "%{$coupon_name}%");
         })
-        ->when($pro_date, function($query, $pro_date) {
-          return $query->where('db_promotion_code.pro_sdate', '>=', $pro_date[0])
-            ->where('db_promotion_code.pro_edate', '<=', $pro_date[1]);
+        ->when($startDate, function ($query, $startDate) {
+          return $query->where('db_promotion_code.pro_sdate', '>=', $startDate);
+        })
+        ->when($endDate, function ($query, $endDate) {
+          return $query->where('db_promotion_code.pro_edate', '<=', $endDate);
         })
         ->when($status, function ($query, $status) {
             if ($status == -1) {
