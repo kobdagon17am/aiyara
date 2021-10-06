@@ -649,8 +649,8 @@ setTimeout(function(){
                                                                            url: " {{ url('backend/ajaxSavePay_requisition') }} ",
                                                                            data:{ _token: '{{csrf_token()}}',picking_id:picking_id,db_pick_pack_packing_code_id:db_pick_pack_packing_code_id },
                                                                             success:function(d2){
-                                                                                 // console.log(d2);
-                                                                                 // return false;
+                                                                                 console.log(d2);
+                                                                                 return false;
                                                                                 // location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
                                                                                 location.replace('{{ url("backend/pay_requisition_001") }}');
    

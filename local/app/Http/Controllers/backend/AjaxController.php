@@ -453,6 +453,34 @@ class AjaxController extends Controller
 
     }
 
+    public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)
+    {
+        // return $request;
+        if($request->ajax()){
+          // $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)->get()->toArray();
+          // return response()->json($query);
+            $d1 = DB::select("
+                    SELECT orders_id_fk
+                    FROM
+                    db_delivery_packing
+                    LEFT Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+                    WHERE packing_code_id_fk in (".$request->id.") LIMIT 1");
+            if($d1){
+               $query = DB::select("
+                    SELECT * FROM customers_addr_frontstore WHERE frontstore_id_fk=999999
+                    "); 
+
+                return response()->json($query);
+            }else{
+                return response()->json(0);
+            }
+            
+
+            // return @$query[0]->orders_id_fk;
+            
+
+        }
+    }
 
     public function ajaxGetBranch(Request $request)
     {

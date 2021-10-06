@@ -14,7 +14,7 @@ class DeliveryPackingCodeController extends Controller
     {
 
       // return view('backend.delivery_packing.index');
-      
+
     }
 
  public function create()

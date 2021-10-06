@@ -494,22 +494,22 @@
 
                     // $("td:eq(1)", nRow).hide();
 
-                    if (aData['status_delivery'] == "1") {
+                    // if (aData['status_delivery'] == "1") {
 
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        $("td:eq(4)", nRow).html('');
-                        $("td:eq(6)", nRow).html('');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        } 
-                    }
+                    //     $('td', nRow).css('background-color', '#ffd9b3');
+                    //     $("td:eq(4)", nRow).html('');
+                    //     $("td:eq(6)", nRow).html('');
+                    //     var i;
+                    //     for (i = 0; i < 10 ; i++) {
+                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
+                    //     } 
+                    // }
 
                         // if(sU!=''&&sD!=''){
                         //     $('td:last-child', nRow).html('-');
                         // }else{ 
 
-                          if (aData['status_delivery'] != "1") {
+                          // if (aData['status_delivery'] != "1") {
                             $('td:last-child', nRow).html(''
                                 // + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
@@ -517,9 +517,12 @@
 
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
 
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
                             
                               ).addClass('input');
-                        }
+                        // }
 
                     // }
 

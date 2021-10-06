@@ -105,11 +105,13 @@ class Pick_warehouseController extends Controller
       // dd($id);
 
       $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
-      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
       // dd($sRow);
-
+//   SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
         $addr_sent =  DB::select(" 
-            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+        
+            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$id."
         ");
 
         if($addr_sent){
@@ -162,7 +164,8 @@ class Pick_warehouseController extends Controller
         ");
       return View('backend.pick_warehouse.form')->with(
         array(
-           'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
         ) );
     }
 

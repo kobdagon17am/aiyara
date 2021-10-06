@@ -1362,6 +1362,7 @@ class FrontstoreController extends Controller
                                       customers_address_card.card_soi,
                                       customers_address_card.created_at,
                                       customers_address_card.updated_at,
+                                      customers_address_card.card_province_id_fk,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,
                                       dataset_districts.name_th AS tamname,
@@ -1378,81 +1379,107 @@ class FrontstoreController extends Controller
 
                             ");
 
-                           if(@$addr){
-
-                                      if(@$addr[0]->provname!=''){
-
-                                        @$address = "";
-                                        @$address .=  @$addr[0]->card_house_no ;
-                                        @$address .=  " ต.". @$addr[0]->tamname . "  ";
-                                        @$address .=  " อ.". @$addr[0]->ampname;
-                                        @$address .=  " จ.". @$addr[0]->provname;
-                                        @$address .=  " ". @$addr[0]->card_zipcode ;
-
-
-                                     }else{
-
-                                          $addr = DB::select(" SELECT
-                                              customers_address_card.id,
-                                              customers_address_card.customer_id,
-                                              customers_address_card.card_house_no,
-                                              customers_address_card.card_house_name,
-                                              customers_address_card.card_moo,
-                                              customers_address_card.card_zipcode,
-                                              customers_address_card.card_soi,
-                                              customers_address_card.created_at,
-                                              customers_address_card.updated_at,
-                                              customers.prefix_name,
-                                              customers.first_name,
-                                              customers.last_name,
-                                               dataset_amphures.name_th AS amp_name,
-                                               dataset_districts.name_th AS tambon_name,
-                                               dataset_provinces.name_th AS province_name
-                                              FROM
-                                              customers_address_card
-                                              Left Join customers ON customers_address_card.customer_id = customers.id
-                                              Left Join customers_detail ON customers.id = customers_detail.customer_id
-                                              Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-                                                       Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-                                                       Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-                                              Where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
-
-                                               ");
-
-                                         if($addr){
-
-
-                                            @$address =  @$addr[0]->card_house_no." ". @$addr[0]->card_house_name."";
-                                            @$address .=  " หมู่ ". @$addr[0]->card_moo;
-                                            @$address .=  " ซอย ". @$addr[0]->card_soi;
-                                            @$address .=  " ถนน ". @$addr[0]->card_road;
-                                            @$address .=  " ต.". @$addr[0]->tambon_name;
-                                            @$address .=  " อ.". @$addr[0]->amp_name;
-                                            @$address .=  " จ.". @$addr[0]->province_name;
-                                            @$address .=  " ". @$addr[0]->card_zipcode ;
-
-
-                                        }
-
-                                  }
+                            if(@$addr){
 
 
                                         foreach ($addr as $key => $v) {
 
+                                          @$address = @$v->card_house_no." ". @$v->card_house_name." ". @$v->card_moo."";
+                                          @$address .= @$v->card_soi." ". @$v->card_road;
+                                          @$address .= ", ต.". @$v->tamname. " ";
+                                          @$address .= ", อ.". @$v->ampname;
+                                          @$address .= ", จ.". @$v->provname;
+
+                                          @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                          if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                          }else{
+                                              @$address = null;
+                                          }
+
                                             DB::select(" UPDATE db_delivery  
                                             SET 
-                                            recipient_name = '".@$v->recipient_name."',
+                                            recipient_name = '".@$recipient_name."',
                                             addr_send = '".@$address."',
-                                            postcode = '".@$v->zip_code."',
-                                            province_id_fk = '".@$v->province_id_fk."',
-                                            province_name = '".@$v->provname."',
+                                            postcode = '".@$v->card_zipcode."',
+                                            province_id_fk = '".@$v->card_province_id_fk."',
+                                            province_name = '".@$v->province_name."',
                                             set_addr_send_this = '1'
                                             where orders_id_fk = '".$sRow->id."'
 
                                            ");
                                         }
 
-                              
+                            }
+
+                      }
+
+
+
+                      if(@$request->delivery_location==2){
+
+                          $addr = DB::select("
+                            SELECT
+                                      customers_detail.customer_id,
+                                      customers_detail.house_no,
+                                      customers_detail.house_name,
+                                      customers_detail.moo,
+                                      customers_detail.zipcode,
+                                      customers_detail.soi,
+                                      customers_detail.road,
+                                      customers_detail.province_id_fk,
+                                      customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname
+                                      FROM
+                                      customers_detail
+                                      Left Join customers ON customers_detail.customer_id = customers.id
+                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                      WHERE customers_detail.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                               ");
+
+                           if(@$addr){
+                              foreach ($addr as $key => $v) {
+
+                                  @$address = @$v->house_no." ". @$v->house_name." ". @$v->moo." ". @$v->soi." ". @$v->road." ";
+                                  @$address .= ", ต.". @$v->tamname. " ";
+                                  @$address .= ", อ.". @$v->ampname;
+                                  @$address .= ", จ.". @$v->provname;
+
+                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                  }else{
+                                      @$address = null;
+                                  }
+
+                                  if(!empty(@$v->tel_mobile)){
+                                      $tel = 'Tel. '. @$v->tel_mobile . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                  }else{
+                                      $tel = '';
+                                  }
+
+                                  @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                  DB::select(" UPDATE db_delivery  
+                                  SET 
+                                  recipient_name = '".@$recipient_name."',
+                                  addr_send = '".@$address."',
+                                  postcode = '".@$v->zipcode."',
+                                  mobile = '".@$tel."',
+                                  province_id_fk = '".@$v->province_id_fk."',
+                                  province_name = '".@$v->provname."',
+                                  set_addr_send_this = '1'
+                                  where orders_id_fk = '".$sRow->id."'
+
+                                 ");
+                              }
 
                             }
                       }
@@ -1505,7 +1532,6 @@ class FrontstoreController extends Controller
 
                             }
                       }
-
 
 
               }
@@ -2770,6 +2796,8 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
           $viewcondition_02 = '';
         }
 
+   // dd($action_user_011);
+   
     $sTable = DB::select("
 
                 SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user
@@ -2820,8 +2848,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 ORDER BY created_at DESC
 
               ");
-    
-
+ 
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

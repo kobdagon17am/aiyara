@@ -453,7 +453,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxSavePay_product_receipt', 'Pay_product_receipt_001Controller@ajaxSavePay_product_receipt');
     
     Route::post('ajaxSavePay_requisition', 'Pay_requisition_001Controller@ajaxSavePay_requisition');
+    Route::get('ajaxSavePay_requisition', 'Pay_requisition_001Controller@ajaxSavePay_requisition');
     Route::post('ajaxSavePay_requisition_edit', 'Pay_requisition_001Controller@ajaxSavePay_requisition_edit');
+    Route::get('ajaxSavePay_requisition_edit', 'Pay_requisition_001Controller@ajaxSavePay_requisition_edit');
 
     Route::post('ajaxCHECKPay_product_receipt', 'Pay_product_receipt_001Controller@ajaxCHECKPay_product_receipt');
 
