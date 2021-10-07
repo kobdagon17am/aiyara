@@ -258,7 +258,7 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> วันที่ออกใบเบิก : </label>
+                    <label for="" class="col-md-3 col-form-label"> วันที่ทำการเบิก : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -418,10 +418,10 @@
 <script>
     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
-        var oTable2;
+        var oTable;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
-              oTable2 = $('#data-table-packing').DataTable({
+              oTable = $('#data-table-packing').DataTable({
               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                   processing: true,
                   serverSide: true,
@@ -466,70 +466,77 @@
                       {data: 'action_user', title :'<center>ผู้เบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
-                      {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                    //   {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
-                    //   if(d=='1'){
-                    //       return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                    //   }else{
-                    //     return '-รอจัดเบิก-';
-                    //   }
-                    // }},
-
+                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
                     {data: 'id', title :'Tools', className: 'text-center w150'}, 
 
                   ],
-              //                   'columnDefs': [
-              //  {
-              //     'targets': 0,
-              //     'checkboxes': {
-              //        'selectRow': true
-              //     }
-              //  }
-              // ],
-              // 'select': {
-              //    'style': 'multi'
-              // },
-
                   rowCallback: function(nRow, aData, dataIndex){
 
-                    // $("td:eq(1)", nRow).hide();
+                          // console.log(aData['status']);
 
-                    // if (aData['status_delivery'] == "1") {
+                          if(aData['status']==1){
 
-                    //     $('td', nRow).css('background-color', '#ffd9b3');
-                    //     $("td:eq(4)", nRow).html('');
-                    //     $("td:eq(6)", nRow).html('');
-                    //     var i;
-                    //     for (i = 0; i < 10 ; i++) {
-                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
-                    //     } 
-                    // }
+                              $('td:last-child', nRow).html(''
+                             
+                                 + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="อนุมัติเบิกจากคลัง" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
-                        // if(sU!=''&&sD!=''){
-                        //     $('td:last-child', nRow).html('-');
-                        // }else{ 
+                                + '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="ต้องอนุมัติก่อน" disabled style="background-color:grey;color:white;" >จัดส่ง</a> '
 
-                          // if (aData['status_delivery'] != "1") {
-                            $('td:last-child', nRow).html(''
-                                // + '<a href="{{ route('backend.pick_warehouse.index') }}" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-
-                                 + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-
-                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="จัดส่ง / Scan QR-Code" >จัดส่ง</a> '
-
-
-                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                             
                               ).addClass('input');
-                        // }
 
-                    // }
+                          }else if(aData['status']==2){
+
+                              $('td:last-child', nRow).html(''
+                             
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+                            
+                              ).addClass('input');
+
+                          }else if(aData['status']==4){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+
+                              ).addClass('input');
+
+                          }else if(aData['status']==5){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+
+                              ).addClass('input');
+
+
+                          }else if(aData['status']==6){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ดูข้อมูล" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+
+                              ).addClass('input');
+
+                          }else{
+
+                            $('td:last-child', nRow).html('-');
+                          }
 
                   }
               });
 
-            oTable2.on( 'draw', function () {
+               oTable.on( 'draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 });
 
@@ -645,8 +652,12 @@
                   // var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
                   const today = new Date().toISOString().slice(0, 10);
                   // console.log(today);
-                  var startPayDate = $('#startPayDate').val(today);
-                  var endPayDate = $('#endPayDate').val(today);
+                  $('#startPayDate').val(today);
+                  $('#endPayDate').val(today);
+
+                  var startPayDate = $('#startPayDate').val();
+                  var endPayDate = $('#endPayDate').val();
+
                   $('#startDate').val('');
                   $('#endDate').val('');
                   $('#btnSearch03').val('0');
@@ -665,8 +676,12 @@
                   const today = new Date().toISOString().slice(0, 10);
                   const start_day = new Date(myPastDate).toISOString().slice(0, 10);
                   // console.log(today);
-                  var startDate = $('#startDate').val(start_day);
-                  var endDate = $('#endDate').val(today);
+                  $('#startDate').val(start_day);
+                  $('#endDate').val(today);
+
+                  var startDate = $('#startDate').val();
+                  var endDate = $('#endDate').val();
+
                    $('#startPayDate').val('');
                    $('#endPayDate').val('');
                    $('#btnSearch03').val('1');
@@ -695,13 +710,6 @@
                   var btnSearch03 = $('#btnSearch03').val();
                   var action_user = $('#action_user').val();
 
-                  console.log(business_location_id_fk);
-                  console.log(branch_id_fk);
-                  // console.log(customer_id_fk);
-                  // console.log(startDate);
-                  // console.log(endDate);
-                  // console.log(status_sent);
-
                   // return false;
 
                   if(business_location_id_fk==''){
@@ -718,6 +726,123 @@
 
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
       
+        var oTable;
+          $(function() {
+            $.fn.dataTable.ext.errMode = 'throw';
+              oTable = $('#data-table-packing').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  ordering: false,
+                  scrollY: ''+($(window).height()-370)+'px',
+                  iDisplayLength: 10,
+                  // stateSave: true,
+                  destroy:true,
+
+                  ajax: {
+                        url: '{{ route('backend.packing_list_for_fifo.datatable') }}',
+                        data :{
+                            _token: '{{csrf_token()}}',
+                              business_location_id_fk:business_location_id_fk,
+                              branch_id_fk:branch_id_fk,
+                              startDate:startDate,
+                              startPayDate:startPayDate,
+                              endDate:endDate,
+                              endPayDate:endPayDate,
+                              status_sent:status_sent,                                 
+                              btnSearch03:btnSearch03,                                  
+                              action_user:action_user,                                  
+                            },
+                          method: 'POST',
+                        },
+
+                  columns: [
+                      {data: 'packing_code_02', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
+                      {data: 'action_date', title :'<center>วันที่ทำการเบิก </center>', className: 'text-center'},
+                      {data: 'amt_receipt',   title :'<center>จำนวนใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          return d;
+                      }},
+                      {data: 'action_user', title :'<center>ผู้เบิก </center>', className: 'text-center'},
+                      {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
+                      {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
+                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
+                    {data: 'id', title :'Tools', className: 'text-center w150'}, 
+
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+
+                          // console.log(aData['status']);
+
+                          if(aData['status']==1){
+
+                              $('td:last-child', nRow).html(''
+                             
+                                 + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="อนุมัติเบิกจากคลัง" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
+                                + '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="ต้องอนุมัติก่อน" disabled style="background-color:grey;color:white;" >จัดส่ง</a> '
+
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                            
+                              ).addClass('input');
+
+                          }else if(aData['status']==2){
+
+                              $('td:last-child', nRow).html(''
+                             
+                                 // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+                            
+                              ).addClass('input');
+
+                          }else if(aData['status']==4){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+
+                              ).addClass('input');
+
+                          }else if(aData['status']==5){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+                                + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
+
+                              ).addClass('input');
+
+
+                          }else if(aData['status']==6){
+
+                              $('td:last-child', nRow).html(''
+
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ดูข้อมูล" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                             
+
+                              ).addClass('input');
+
+                          }else{
+
+                            $('td:last-child', nRow).html('-');
+                          }
+
+                  }
+              });
+
+               oTable.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+                });
+
+          });
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                 setTimeout(function(){

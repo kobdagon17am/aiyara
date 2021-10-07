@@ -189,7 +189,7 @@
                  <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
 
                 <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
+                <center><input type='button' class="btn btn-primary btnExportElsx " data-id="{{$id}}" value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
             </div>
           </div>
         </div>
@@ -248,18 +248,21 @@
        <div class="form-group row">
               <div class="col-md-12">
                   <center>
-                
-                            @IF($can_cancel_packing_sent==1 || $sPermission==1 )
+                @IF(@$sUser[0]->status_sent==5)
+                <span style="color:red;font-size:16px;">*** บ.ขนส่งเข้ามารับสินค้าแล้ว *** </span>
+                @ELSE
+                @IF($can_cancel_packing_sent==1 || $sPermission==1 )
 
                 <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะ การ Packing / จัดส่ง " >
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                  @ENDIF
+                 @ENDIF
 
-                @IF($sUser[0]->status_sent==5)
+                @IF(@$sUser[0]->status_sent==5)
                 @ELSE
                     
-                    @IF($sUser[0]->status_sent==4)
+                    @IF(@$sUser[0]->status_sent==4)
                     <input type='button' class="btn btn-primary btnShippingFinished font-size-16 " value="บริษัทขนส่งเข้ารับสินค้าแล้ว" >
                     @ELSE
                     <input type='button' class="btn btn-primary btnPackingFinished font-size-16 " value="Packing เรียบร้อยแล้ว" >
@@ -591,11 +594,12 @@
                 $(".btnExportElsx").click(function(event) {
                     /* Act on the event */
                     $(".myloading").show();
+                    var id = $(this).data('id');
                     $.ajax({
 
                            type:'POST',
                            url: " {{ url('backend/excelExportConsignment') }} ", 
-                           data:{ _token: '{{csrf_token()}}' },
+                           data:{ _token: '{{csrf_token()}}',id:id },
                             success:function(data){
                                  console.log(data); 
                                  // location.reload();
@@ -630,7 +634,7 @@
               $(".btnClearImport").click(function(event) {
                   /* Act on the event */
                   $(".myloading").show();
-                 var id =  $(this).data('id');
+                  var id =  $(this).data('id');
 
                   $.ajax({
 
@@ -934,7 +938,7 @@
 
            $(document).on('click', '.btnCancelStatusPacking', function(){
 
-            $(".myloading").show();
+            // $(".myloading").show();
 
             var id = "{{$id}}"; 
             // alert(id);
@@ -970,7 +974,7 @@
 
                                       setTimeout(function () {
                                           // $('#data-table-0002').DataTable().clear().draw();
-                                          location.reload();
+                                          location.replace("{{ url('backend/pay_requisition_001') }}");
                                       }, 1000);
                                 }
                               })

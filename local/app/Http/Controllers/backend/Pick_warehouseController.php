@@ -173,29 +173,80 @@ class Pick_warehouseController extends Controller
     public function qr($id)
     {
           // return $id;
-
       $r = DB::select("SELECT db_pay_requisition_001.*,db_pick_pack_requisition_code.requisition_code FROM db_pay_requisition_001 LEFT Join db_pick_pack_requisition_code ON db_pay_requisition_001.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
-where db_pay_requisition_001.id =$id ");
+      where db_pay_requisition_001.pick_pack_requisition_code_id_fk =$id ");
       $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
       // dd($sRow);
       $requisition_code = $r[0]->requisition_code;
-      // dd($requisition_code);
-
-        $addr_sent =  DB::select(" 
-            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+      
+        $sUser =  DB::select(" 
+            SELECT
+            db_pay_requisition_001.id,
+            db_pay_requisition_001.business_location_id_fk,
+            db_pay_requisition_001.branch_id_fk,
+            db_pay_requisition_001.pick_pack_requisition_code_id_fk,
+            (select name from ck_users_admin where id=db_pay_requisition_001.action_user)  AS user_action,
+            db_pay_requisition_001.action_date,
+            (select name from ck_users_admin where id=db_pay_requisition_001.pay_user)  AS pay_user,
+            db_pay_requisition_001.pay_date,
+            db_pay_requisition_001.status_sent,
+            db_pay_requisition_001.customer_id_fk,
+            db_pay_requisition_001.address_send AS user_address,
+            db_pay_requisition_001.address_send_type,
+            -- customers.user_name AS user_code,
+            -- CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_requisition_001
+            Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
+            where db_pay_requisition_001.pick_pack_requisition_code_id_fk = '$id'
         ");
-        if($addr_sent){
-            $customer_id = $addr_sent[0]->customer_id;
-            $from_table = $addr_sent[0]->from_table;
+        // dd($sUser);
 
+      $user_amdin = DB::select(" select * from ck_users_admin where id=".(\Auth::user()->id)."");
+      $role_group = DB::select(" SELECT can_cancel_packing_sent FROM `role_permit` where can_cancel_packing_sent=1 and role_group_id_fk=".$user_amdin[0]->role_group_id_fk."");
+      // dd($user_amdin[0]->role_group_id_fk);
+      // dd($role_group[0]->can_cancel_packing_sent);
+      if(@$role_group[0]->can_cancel_packing_sent==1){
+          $can_cancel_packing_sent = 1;
+      }else{
+          $can_cancel_packing_sent = 0;
+      }
+
+      return View('backend.pick_warehouse.qr')->with(
+        array(
+           'packing_id'=>@$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
+           'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
+        ) );
+      // return View('backend.pick_warehouse.qr');
+
+    }
+
+
+
+    public function cancel($id)
+    {
+          // return $id;
+      $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
+      // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
+      // dd($sRow);
+//   SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+        $addr_sent =  DB::select(" 
+        
+            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$id."
+        ");
+
+        if($addr_sent){
+            $customer_id = @$addr_sent[0]->customer_id?@$addr_sent[0]->customer_id:0;
+            $from_table = @$addr_sent[0]->from_table;
             $addr =  DB::select(" 
                 SELECT * FROM $from_table WHERE customer_id=$customer_id
             ");
         }else{
-          $customer_id = 0 ;
-          $addr =  [0];
+          $customer_id = 0;
+          @$addr = [0];
         }
-
 
       if(sizeof(@$addr)>0){
 
@@ -232,26 +283,13 @@ where db_pay_requisition_001.id =$id ");
             db_pay_requisition_001
             Left Join customers ON $customer_id = customers.id
             Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
-            where db_pay_requisition_001.id = '$id'
+            where db_pay_requisition_001.id in ($id)
         ");
-        // dd($sUser);
-
-      $user_amdin = DB::select(" select * from ck_users_admin where id=".(\Auth::user()->id)."");
-      $role_group = DB::select(" SELECT can_cancel_packing_sent FROM `role_permit` where can_cancel_packing_sent=1 and role_group_id_fk=".$user_amdin[0]->role_group_id_fk."");
-      // dd($user_amdin[0]->role_group_id_fk);
-      // dd($role_group[0]->can_cancel_packing_sent);
-      if(@$role_group[0]->can_cancel_packing_sent==1){
-          $can_cancel_packing_sent = 1;
-      }else{
-          $can_cancel_packing_sent = 0;
-      }
-
-      return View('backend.pick_warehouse.qr')->with(
+      return View('backend.pick_warehouse.cancel')->with(
         array(
-           'packing_id'=>@$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
-           'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
+           // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
         ) );
-      // return View('backend.pick_warehouse.qr');
 
     }
 
@@ -594,14 +632,14 @@ where db_pay_requisition_001.id =$id ");
         //  $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
         //  return "<b>".$d[0]->requisition_code."</b>";
         if(@$row->pick_pack_requisition_code_id_fk){
-          return "P3".sprintf("%05d",@$row->pick_pack_requisition_code_id_fk) ;
+          return "P2".sprintf("%05d",@$row->pick_pack_requisition_code_id_fk) ;
         }else{
           return "-";
         }
       })
       ->addColumn('column_002', function($row) {
-          $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk`=".@$row->pick_pack_requisition_code_id_fk." GROUP BY requisition_code ");
-          return "P1".sprintf("%05d",@$d[0]->pick_pack_packing_code);
+          $d = DB::select(" SELECT * FROM `db_delivery_packing` WHERE `packing_code_id_fk`=".@$row->pick_pack_requisition_code_id_fk." GROUP BY packing_code_id_fk ");
+          return @$d[0]->packing_code;
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
@@ -628,7 +666,12 @@ where db_pay_requisition_001.id =$id ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
-         return '<b>'.$row->requisition_code.'</b>';
+         // return '<b>'.$row->requisition_code.'</b>';
+          if(@$row->id){
+          return "P2".sprintf("%05d",@$row->id) ;
+        }else{
+          return "-";
+        }
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
@@ -795,21 +838,21 @@ GROUP BY promotions_products.product_id_fk
 
   public function warehouse_tb_000(Request $reg){
 
-      $sTable = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `id`=".$reg->id." ");
-      $sQuery = \DataTables::of($sTable);
+      $sTable = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk` in (".$reg->id.") group by pick_pack_requisition_code_id_fk ");
+       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
           $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->requisition_code."</b>";
+          return "<b>".@$d[0]->requisition_code."</b>";
       })
       ->addColumn('column_002', function($row) {
           $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->pick_pack_packing_code."</b>";
+          return "<b>".@$d[0]->pick_pack_packing_code."</b>";
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
           $d = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$row->pick_pack_requisition_code_id_fk." ");
-          return "<b>".$d[0]->receipts."</b>";      })
+          return "<b>".@$d[0]->receipts."</b>";      })
       ->escapeColumns('column_003')        
       ->make(true);
     }
@@ -923,11 +966,8 @@ GROUP BY promotions_products.product_id_fk
   public function warehouse_address_sent(Request $reg){
 
     // return $reg->id;
-
-    // DB::select(" TRUNCATE`db_consignments`  ");
-
-    if(!empty($reg->id)){
-        $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `id`=".$reg->id." "); 
+    if(!empty($reg->packing_id)){
+        $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk`=".$reg->packing_id." "); 
          // return $d1;
         if($d1){
             $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
@@ -1005,7 +1045,7 @@ GROUP BY promotions_products.product_id_fk
                  $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
                  DB::select(" INSERT IGNORE INTO `db_consignments` 
                   SET 
-                  `pay_requisition_001_id_fk`='$reg->id' ,
+                  `pick_pack_requisition_code_id_fk`='$reg->packing_id' ,
                   `recipient_code`='$recipient_code' ,
                   `recipient_name`='$v3->recipient_name' ,
                   `address`='$v3->addr_send' ,
@@ -1023,18 +1063,13 @@ GROUP BY promotions_products.product_id_fk
   
       }
 
-      $sTable = DB::select(" SELECT * FROM `db_consignments` where pay_requisition_001_id_fk='$reg->id' ");
+      $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_002', function($row) {
           return @$row->recipient_name." > ".@$row->address ." ".@$row->postcode.(@$row->mobile?" Tel.".@$row->mobile:"");
       })
       ->escapeColumns('column_002')  
-      // ->addColumn('column_003', function($row) {
-          // $d = DB::select(" SELECT * FROM `db_orders` WHERE `invoice_code`='".$row->recipient_code."' ");
-          // return $d[0]->id?$d[0]->id:1;      
-        // })
-      // ->escapeColumns('column_003')        
       ->make(true);
     }
 

@@ -60,8 +60,13 @@ class Pick_packPackingCodeController extends Controller
     public function packing_list(Request $request){     
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1  ");
+      if(!empty($request->id)){
+        $sTable = DB::select(" select * from db_pick_pack_packing_code where id=$request->id ");
 
+      }else{
+        $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND `status`=1 ");
+      }
+      
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
@@ -98,15 +103,68 @@ class Pick_packPackingCodeController extends Controller
     }
 
 
- public function packing_list_for_fifo(Request $request){     
+ public function packing_list_for_fifo(Request $req){     
 
-      // if(!empty($request->packing_id)){
-      //     $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->packing_id)->search()->orderBy('id', 'asc');
-      // }else{
-          // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status','0')->where('status_picked','1')->search()->orderBy('id', 'asc');
-          $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      // }
-// 
+        if(!empty($req->business_location_id_fk) && !empty($req->branch_id_fk)){
+           // $w01 = " AND db_pay_product_receipt_001.business_location_id_fk=".$req->business_location_id_fk ;
+          $r_db_pick_pack_packing_code = DB::select(" SELECT action_user FROM db_pick_pack_packing_code where status_picked=1 ");
+          if(@$r_db_pick_pack_packing_code){
+             $r_user = DB::select(" SELECT id FROM ck_users_admin WHERE id in (".$r_db_pick_pack_packing_code[0]->action_user.") AND business_location_id_fk=".$req->business_location_id_fk." AND branch_id_fk=".$req->branch_id_fk." ");
+             $arr = [];
+             if($r_user){
+                   foreach ($r_user as $key => $value) {
+                      array_push($arr,$value->id);
+                   }
+                   $user_id = implode(",",$arr);
+                   $w01 = " AND action_user in (".$user_id.") ";
+             }else{
+              $w01 = " AND action_user in (0) ";
+            }
+          }else{
+            $w01 = "";
+          }
+        }else{
+           $w01 = "";
+        }
+
+   
+        if(!empty($req->action_user)){
+           $w02 = " and action_user = '".$req->action_user."' " ;
+        }else{
+           $w02 = "";
+        }
+
+
+        if(isset($req->status_sent) && $req->status_sent!=0 ){
+           $w03 = " and status ='".$req->status_sent."' " ;
+        }else{
+           $w03 = "";
+        }
+
+        if(!empty($req->startDate) && !empty($req->endDate)){
+           $w04 = " and date(created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+        }else{
+           $w04 = "";
+        }
+
+        if(!empty($req->startPayDate) && !empty($req->endPayDate)){
+           $w05 = " and date(sent_date) BETWEEN '".$req->startPayDate."' AND '".$req->endPayDate."'  " ;
+        }else{
+           $w05 = "";
+        }
+
+      // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
+      $sTable = DB::select(" SELECT * FROM db_pick_pack_packing_code 
+        where status_picked=1 
+
+        $w01
+        $w02
+        $w03
+        $w04
+        $w05
+
+        ");
+
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
@@ -134,7 +192,7 @@ class Pick_packPackingCodeController extends Controller
         if(@$row->approver!=''){
            $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
             $d1 = @$sD[0]->name;
-            $d = date("Y-m-d",strtotime($row->updated_at))." : ".date("h:i:s",strtotime($row->updated_at));
+            $d = date("Y-m-d",strtotime($row->created_at))." : ".date("h:i:s",strtotime($row->created_at));
             return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".$d1."</span>";
         }else{
             return "-";
@@ -153,7 +211,8 @@ class Pick_packPackingCodeController extends Controller
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
            $d1 = @$sD[0]->name;
-            $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+            // $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+            $d = date("Y-m-d",strtotime($row->created_at))." : ".date("h:i:s",strtotime($row->created_at));
            return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".$d1."</span>";
         }else{
           return "-";
@@ -178,15 +237,29 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('action_date', function($row) {
         // return is_null($row->updated_at) ? '-' : $row->updated_at;
-        $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+        // $d = date("Y-m-d",strtotime($row->action_date))." : ".date("h:i:s",strtotime($row->action_date));
+        $d = date("Y-m-d",strtotime($row->created_at))." : ".date("h:i:s",strtotime($row->created_at));
         return "<span data-toggle='tooltip' data-placement='right' title='".$d."' >".date("Y-m-d",strtotime($row->created_at))."</span>";
       })
-      ->escapeColumns('updated_at')
+      ->escapeColumns('action_date')
 
-      ->addColumn('status', function($row) {
-          return "";
+      ->addColumn('status_desc', function($row) {
+          $sD = DB::select(" select * from dataset_pay_requisition_status_02 where id=".$row->status." ");
+          // return @$sD[0]->txt_desc;
+          $t = '';
+          if($row->status==6){
+            if(@$row->who_cancel){
+              $w = DB::select(" select * from ck_users_admin where id=".$row->who_cancel." ");
+              $t = "ผู้ทำการยกเลิก ".$w[0]->name." : ".@$row->cancel_date;
+
+              return "<span data-toggle='tooltip' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
+
+            }
+          }else{
+            return @$sD[0]->txt_desc;
+          }
       })
-      ->escapeColumns('status')
+      ->escapeColumns('status_desc')
 
 
       ->make(true);

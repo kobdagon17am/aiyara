@@ -25,8 +25,9 @@ class Consignments_import extends Model {
             	'sender_code' => $data['sender_code'],
                'postcode' => $data['postcode'],
                'mobile' => $data['mobile'],
-               'pay_requisition_001_id_fk' => $data['pay_requisition_001_id_fk'],
-               'delivery_id_fk' => $data['delivery_id_fk'],
+               // 'pay_requisition_001_id_fk' => $data['pay_requisition_001_id_fk'],
+               'pick_pack_requisition_code_id_fk' => $data['service_code'],
+               // 'delivery_id_fk' => $data['delivery_id_fk'],
             ));
       }
 

@@ -453,34 +453,7 @@ class AjaxController extends Controller
 
     }
 
-    public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)
-    {
-        // return $request;
-        if($request->ajax()){
-          // $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)->get()->toArray();
-          // return response()->json($query);
-            $d1 = DB::select("
-                    SELECT orders_id_fk
-                    FROM
-                    db_delivery_packing
-                    LEFT Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                    WHERE packing_code_id_fk in (".$request->id.") LIMIT 1");
-            if($d1){
-               $query = DB::select("
-                    SELECT * FROM customers_addr_frontstore WHERE frontstore_id_fk=999999
-                    "); 
-
-                return response()->json($query);
-            }else{
-                return response()->json(0);
-            }
-            
-
-            // return @$query[0]->orders_id_fk;
-            
-
-        }
-    }
+ 
 
     public function ajaxGetBranch(Request $request)
     {
@@ -2403,9 +2376,9 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxClearConsignment(Request $request)
     {
-        DB::delete(" DELETE FROM db_consignments_import where pay_requisition_001_id_fk=$request->id ");
+        DB::delete(" DELETE FROM db_consignments_import where pick_pack_requisition_code_id_fk=$request->id ");
         DB::select(" ALTER table db_consignments_import AUTO_INCREMENT=1; ");
-        DB::select(" UPDATE db_consignments set consignment_no='' where pay_requisition_001_id_fk=$request->id  ; ");
+        DB::select(" UPDATE db_consignments set consignment_no='' where pick_pack_requisition_code_id_fk=$request->id  ; ");
     }
 
 
@@ -3092,14 +3065,9 @@ if($frontstore[0]->check_press_save==2){
                  $addr .= $v->tel." ";
                  $addr .= $v->tel_home." ";
 
-                 // DB::select(" UPDATE db_consignments set recipient_name='".@$v->recipient_name."',address='".$addr."' WHERE recipient_code='".@$v->invoice_code."'  ");
-
-               // }
+        
 
             }
-
-          //  DB::select(" UPDATE db_consignments set address='ไม่ได้ระบุที่อยู่ กรุณาตรวจสอบ' WHERE  address is null  ");
-          //  DB::select(" UPDATE db_consignments set address='' WHERE  address is null  ");
 
         }
     }
@@ -3110,14 +3078,6 @@ if($frontstore[0]->check_press_save==2){
     {
         if($request->ajax()){
 
-            // DB::select(" TRUNCATE db_pick_warehouse_consignments ; ");
-            // DB::select(" INSERT IGNORE INTO db_pick_warehouse_consignments(invoice_code) SELECT invoice_code FROM db_pick_warehouse_tmp ; ");
-            // DB::select(" UPDATE
-            //   db_pick_warehouse_consignments
-            //   Inner Join db_consignments_import ON db_pick_warehouse_consignments.invoice_code = db_consignments_import.recipient_code
-            //   SET
-            //   db_pick_warehouse_consignments.consignments=
-            //   db_consignments_import.consignment_no ");
 
             DB::select(" UPDATE
               db_consignments
@@ -3603,7 +3563,8 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE id='".$request->id."' ");
+          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+          DB::select(" UPDATE `db_pick_pack_packing_code` SET status=4 WHERE id='".$request->id."' ");
 
       }
 
@@ -3617,7 +3578,8 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=5 WHERE id='".$request->id."' ");
+          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=5 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+          DB::select(" UPDATE `db_pick_pack_packing_code` SET sender=".(\Auth::user()->id).",sent_date=now(),status=5 WHERE id='".$request->id."' ");
 
       }
 
@@ -3716,12 +3678,132 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-          DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
-          // $r1= DB::select(" SELECT * FROM `db_sent_money_daily`  WHERE id=".$request->id."  ");
-          // if($r1){
-          //   DB::select(" UPDATE `db_orders` SET status_sent_money=0,sent_money_daily_id_fk=0 WHERE sent_money_daily_id_fk=".$request->id." ");
-          //   DB::select(" UPDATE `db_sent_money_daily` SET `status_cancel`='1' WHERE (`id`='".$request->id."') ");
-          // }
+      //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
+
+          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+          DB::select(" UPDATE `db_pick_pack_packing_code` SET status=2 WHERE id='".$request->id."' ");
+
+      
+
+      }
+
+    }
+
+
+  public function cancelBill(Request $request)
+    {
+
+      // return($request);
+
+      if($request->ajax()){
+
+      //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
+
+          DB::select(" UPDATE `db_pay_requisition_001` SET action_user=".(\Auth::user()->id).",action_date=now(),status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+          DB::select(" UPDATE `db_pick_pack_packing_code` SET who_cancel=".(\Auth::user()->id).",cancel_date=now(),status=6 WHERE id='".$request->id."' ");
+          DB::select(" UPDATE 
+            db_pay_requisition_002
+            SET
+            status_cancel=1
+            WHERE pick_pack_requisition_code_id_fk='".$request->id."'
+            ORDER BY time_pay DESC LIMIT 1 ");
+
+          // เอาสินค้าคืนคลัง
+          $r = DB::select(" 
+
+            SELECT 
+            time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
+            FROM db_pay_requisition_002
+            WHERE pick_pack_requisition_code_id_fk='".$request->id."' 
+            ORDER BY time_pay DESC LIMIT 1 ; ");
+
+          if($r){
+
+            foreach ($r as $key => $v) {
+                   $_choose=DB::table("db_stocks_return")
+                      ->where('time_pay', $v->time_pay)
+                      ->where('business_location_id_fk', $v->business_location_id_fk)
+                      ->where('branch_id_fk', $v->branch_id_fk)
+                      ->where('product_id_fk', $v->product_id_fk)
+                      ->where('lot_number', $v->lot_number)
+                      ->where('lot_expired_date', $v->lot_expired_date)
+                      ->where('amt', $v->amt_get)
+                      ->where('product_unit_id_fk', $v->product_unit_id_fk)
+                      ->where('warehouse_id_fk', $v->warehouse_id_fk)
+                      ->where('zone_id_fk', $v->zone_id_fk)
+                      ->where('shelf_id_fk', $v->shelf_id_fk)
+                      ->where('shelf_floor', $v->shelf_floor)
+                      ->where('pick_pack_requisition_code_id_fk', $request->id)
+                      ->get();
+                      if($_choose->count() == 0){
+
+                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel) 
+                            SELECT 
+                            time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now(),1
+                             FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND time_pay='".$v->time_pay."' ; ");
+
+                       }
+
+
+                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")  
+                                  WHERE 
+                                  business_location_id_fk= ".$v->business_location_id_fk." AND 
+                                  branch_id_fk= ".$v->branch_id_fk." AND
+                                  product_id_fk= ".$v->product_id_fk." AND
+                                  lot_number= '".$v->lot_number."' AND
+                                  lot_expired_date= '".$v->lot_expired_date."' AND
+                                  warehouse_id_fk= ".$v->warehouse_id_fk." AND
+                                  zone_id_fk= ".$v->zone_id_fk." AND
+                                  shelf_id_fk= ".$v->shelf_id_fk." AND
+                                  shelf_floor= ".$v->shelf_floor." 
+                              ");
+       
+
+               }
+          }
+
+          $r2 = DB::select(" 
+            SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel=1 ORDER BY time_pay DESC LIMIT 1 ; ");
+
+             foreach ($r2 as $key => $v) {
+                   $_choose=DB::table("db_pay_requisition_002_cancel_log")
+                      ->where('time_pay', $v->time_pay)
+                      ->where('business_location_id_fk', $v->business_location_id_fk)
+                      ->where('branch_id_fk', $v->branch_id_fk)
+                      ->where('customers_id_fk', $v->customers_id_fk)
+                      ->where('pick_pack_requisition_code_id_fk', $v->pick_pack_requisition_code_id_fk)
+                      ->where('product_id_fk', $v->product_id_fk)
+                      ->where('amt_need', $v->amt_need)
+                      ->where('amt_get', $v->amt_get)
+                      ->where('amt_lot', $v->amt_lot)
+                      ->where('amt_remain', $v->amt_remain)
+                      ->where('lot_number', $v->lot_number)
+                      ->where('lot_expired_date', $v->lot_expired_date)
+                      ->where('product_unit_id_fk', $v->product_unit_id_fk)
+                      ->where('warehouse_id_fk', $v->warehouse_id_fk)
+                      ->where('zone_id_fk', $v->zone_id_fk)
+                      ->where('shelf_id_fk', $v->shelf_id_fk)
+                      ->where('shelf_floor', $v->shelf_floor)
+                      ->get();
+                      if($_choose->count() == 0){
+
+                              DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)  
+                                VALUES
+                               (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->customers_id_fk.", '".$v->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
+
+                       }
+
+
+               }
+
+
+                 // $ch_status_cancel = DB::select(" SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel in (0) ");
+                 // if(count(@$ch_status_cancel)==0 || empty(@$ch_status_cancel)){
+                 //    DB::select(" UPDATE db_pay_requisition_001 SET status_sent=1 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+                 // }
+
+
+      
 
       }
 
@@ -4583,15 +4665,15 @@ if($frontstore[0]->check_press_save==2){
        // return $branch_id_fk.":".$product_id_fk.":".$amt.":".$lot_number.":".$lot_expired_date.":".$warehouse_id_fk.":".$zone_id_fk.":".$shelf_id_fk.":".$shelf_floor;
 
                   $_check=DB::table('db_stocks')
-                      ->where('branch_id_fk', $branch_id_fk)
-                      ->where('product_id_fk', $product_id_fk)
-                      ->where('amt','>=', $amt)
-                      ->where('lot_number', $lot_number)
-                      ->where('lot_expired_date', $lot_expired_date)
-                      ->where('warehouse_id_fk', $warehouse_id_fk)
-                      ->where('zone_id_fk', $zone_id_fk)
-                      ->where('shelf_id_fk', $shelf_id_fk)
-                      ->where('shelf_floor', $shelf_floor)
+                      ->where('branch_id_fk', @$branch_id_fk?@$branch_id_fk:0)
+                      ->where('product_id_fk', @$product_id_fk?@$product_id_fk:0)
+                      ->where('amt','>=', @$amt?@$amt:9999999999999)
+                      ->where('lot_number', @$lot_number?@$lot_number:NULL)
+                      ->where('lot_expired_date', @$lot_expired_date?@$lot_expired_date:NULL)
+                      ->where('warehouse_id_fk', @$warehouse_id_fk?@$warehouse_id_fk:0)
+                      ->where('zone_id_fk', @$zone_id_fk?@$zone_id_fk:0)
+                      ->where('shelf_id_fk', @$shelf_id_fk?@$shelf_id_fk:0)
+                      ->where('shelf_floor', @$shelf_floor?@$shelf_floor:0)
                       ->get();
                       if($_check->count() > 0){
                         return 1;
@@ -5504,6 +5586,34 @@ start_date: "2021-08-01"
       }
     }
 
+   // public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)
+   //  {
+   //      // return $request;
+   //      if($request->ajax()){
+   //        // $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)->get()->toArray();
+   //        // return response()->json($query);
+   //          $d1 = DB::select("
+   //                  SELECT orders_id_fk
+   //                  FROM
+   //                  db_delivery_packing
+   //                  LEFT Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+   //                  WHERE packing_code_id_fk in (".$request->id.") LIMIT 1");
+   //          if($d1){
+   //             $query = DB::select("
+   //                  SELECT * FROM customers_addr_frontstore WHERE frontstore_id_fk=999999
+   //                  "); 
+
+   //              return response()->json($query);
+   //          }else{
+   //              return response()->json(0);
+   //          }
+            
+
+   //          // return @$query[0]->orders_id_fk;
+            
+
+   //      }
+   //  }
 
   public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)
     {

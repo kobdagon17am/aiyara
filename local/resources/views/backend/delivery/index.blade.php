@@ -334,10 +334,7 @@
         <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
           <input name="update_delivery_custom" type="hidden" value="1">
           <input id="customers_addr_frontstore_id" name="customers_addr_frontstore_id"  type="hidden" value="">
-<<<<<<< Updated upstream
           <input id="customer_id" name="customer_id"  type="hidden" value="">
-=======
->>>>>>> Stashed changes
 
           {{ csrf_field() }}
 
@@ -1336,10 +1333,7 @@ $(function() {
                             }
                             $.each(data, function( index, value ) {
                                   $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
-<<<<<<< Updated upstream
                                   $('#customer_id').val(value.customer_id);
-=======
->>>>>>> Stashed changes
 
                                   $('#delivery_cusname').val(value.recipient_name);
                                   $('#delivery_addr').val(value.addr_no);
@@ -1350,11 +1344,7 @@ $(function() {
                                   $('#delivery_tel').val(value.tel);
                                   $('#delivery_tel_home').val(value.tel_home);
 
-<<<<<<< Updated upstream
                                    if(value.province_id_fk != '' && typeof value.province_id_fk !== "undefined" ){
-=======
-                                   if(value.province_id_fk != ''){
->>>>>>> Stashed changes
                                          $.ajax({
                                                url: " {{ url('backend/ajaxGetAmphur') }} ",
                                               method: "post",
@@ -1376,14 +1366,9 @@ $(function() {
                                             })
                                        }
 
-<<<<<<< Updated upstream
                                       // alert(value.amphur_code);
 
                                      if(value.amphur_code != '' &&  typeof value.amphur_code !== "undefined" ){
-=======
-
-                                     if(value.amphur_code != ''){
->>>>>>> Stashed changes
                                            $.ajax({
                                                  url: " {{ url('backend/ajaxGetTambon') }} ",
                                                 method: "post",
@@ -1407,10 +1392,7 @@ $(function() {
                                                 }
                                               })
                                          }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
                                  
                             });
 
