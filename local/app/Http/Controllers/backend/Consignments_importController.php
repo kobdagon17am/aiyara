@@ -77,7 +77,7 @@ class Consignments_importController extends Controller
     public function Datatable(Request $reg){
 
       // $sTable = \App\Models\Backend\Consignments_import_tb::where('pay_requisition_001_id_fk',$reg->id)->get();
-      $sTable = DB::select(" SELECT * FROM `db_consignments_import` where pay_requisition_001_id_fk='$reg->id' ");
+      $sTable = DB::select(" SELECT * FROM `db_consignments_import` where pick_pack_requisition_code_id_fk='$reg->id' ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->make(true);

@@ -1370,7 +1370,7 @@ class Pay_requisition_001Controller extends Controller
 
           $r_db_pick_pack_packing = DB::select(" SELECT * FROM $temp_db_pick_pack_requisition_code WHERE id in($db_pick_pack_packing_code_id) ");
           // return $r_db_pick_pack_packing;
-          DB::select(" UPDATE db_pick_pack_packing_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
+          DB::select(" UPDATE db_pick_pack_packing_code SET approver=".(\Auth::user()->id).",aprove_date=now(),status=2 WHERE id in($db_pick_pack_packing_code_id) ");
           DB::select(" UPDATE db_pick_pack_requisition_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
           DB::select(" UPDATE $temp_db_pick_pack_requisition_code SET status=1 WHERE id in($db_pick_pack_packing_code_id) ");
           // return ($db_pick_pack_packing_code_id);
@@ -1522,28 +1522,28 @@ class Pay_requisition_001Controller extends Controller
                 SELECT * FROM  db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk AND time_pay=$time_pay
                  ");
 
-              return $db_select;
+              // return $db_select;
 
               foreach ($db_select as $key => $v) {
 
                      // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-                      // $fnCheckStock = new  AjaxController();
-                      //  $r_check_stcok = $fnCheckStock->fnCheckStock(
-                      //   $v->branch_id_fk,
-                      //   $v->product_id_fk,
-                      //   $v->amt_get,
-                      //   $v->lot_number,
-                      //   $v->lot_expired_date,
-                      //   $v->warehouse_id_fk,
-                      //   $v->zone_id_fk,
-                      //   $v->shelf_id_fk,
-                      //   $v->shelf_floor);
+                      $fnCheckStock = new  AjaxController();
+                       $r_check_stcok = $fnCheckStock->fnCheckStock(
+                        $v->branch_id_fk,
+                        $v->product_id_fk,
+                        $v->amt_get,
+                        $v->lot_number,
+                        $v->lot_expired_date,
+                        $v->warehouse_id_fk,
+                        $v->zone_id_fk,
+                        $v->shelf_id_fk,
+                        $v->shelf_floor);
                        
                       // return $r_check_stcok;
 
-                      // if($r_check_stcok==0){
-                      //   return redirect()->to(url("backend/pay_product_receipt_001"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-                      // }
+                      if($r_check_stcok==0){
+                        return redirect()->to(url("backend/pay_product_receipt_001"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+                      }
 
               
                        $_choose=DB::table('db_stocks')
@@ -1562,7 +1562,7 @@ class Pay_requisition_001Controller extends Controller
               }
         
              // อัพเดต สถานะ ด้วย ว่าจ่ายครบแล้ว หรือ ยังค้างอยู่  db_pay_requisition_001
-return "1563";
+// return "1563";
 
              $ch_status_cancel = DB::select(" SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk AND status_cancel in (0) ");
 // return "OK0";

@@ -127,7 +127,8 @@
   <?php 
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
+      // $menu_id = Session::get('session_menu_id');
+      $menu_id = '26';
       if($sPermission==1){
         $sC = '';
         $sU = '';
@@ -135,6 +136,7 @@
         $role_group_id = '%';
         $can_packing_list = '1';
         $can_payproduct = '1';
+        $can_approve = '1';
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
@@ -145,13 +147,17 @@
         $sD = @$menu_permit->d==1?'':'display:none;';
         $can_packing_list = @$menu_permit->can_packing_list==1?'1':'0';
         $can_payproduct = @$menu_permit->can_payproduct==1?'1':'0';
+        $can_approve = @$menu_permit->can_approve==1?'1':'0';
+
       }
       // echo $sPermission;
       // echo $role_group_id;
       // echo $menu_id;     
       // echo  @$menu_permit->can_packing_list;     
       // echo  @$menu_permit->can_payproduct;     
+      // echo  @$can_approve."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
       // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+
    ?>
 
 <div class="row">
@@ -214,7 +220,7 @@
               </table>
 
 
-                      <div class="form-group row div_btn_save " style="display: none;" >
+                    <!--   <div class="form-group row div_btn_save " style="display: none;" >
                         <div class="col-md-12 text-center ">
                           <br>
                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
@@ -223,10 +229,39 @@
 
                         </div>
                       </div>
+ -->
+ <?php if(@$can_approve==1){ ?>
+                       <div class="form-group row div_btn_save_02  "  >
+                        <div class="col-md-12 text-center ">
+                          <br>
+                          <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการเบิกสินค้า
+                          </button>
+
+                        </div>
+                      </div>
+ <?php } ?>
+
 
 
             </div>
           </div>
+
+ <?php if(@$can_approve!=1){ ?>
+     <div class="form-group row">
+            <div class="col-md-12">หมายเหตุ
+              <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> การอนุมัติ เบิกสินค้าจากคลัง พนักงานที่จะทำการเบิกได้ หรือ แสดงปุ่ม บันทึกการเบิกสินค้า ก็ต่อเมื่อได้รับกำหนดสิทธิ์จาก Admin ก่อน </span>
+            </div>
+          </div>
+ <?php } ?>
+
+
+         <div class="form-group row div_btn_save_02_desc " style="display:none;">
+            <div class="col-md-12">หมายเหตุ
+              <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> เนื่องจาก สินค้าบางรายการไม่มีในคลัง ระบบจะไม่ให้ บันทึกใบเบิกได้ กรุณาดำเนินการ นำสินค้าเข้าคลังให้ครบก่อน หรือไม่ ก็ทำการ ยกเลิกใบเบิกใบนี้แล้วทำใบเบิกใหม่ที่มีสินค้าในคลังครบถ้วนอีกครั้ง  </span>
+            </div>
+          </div>
+
 
         </div>
 
@@ -473,16 +508,17 @@
 
                 $(".myloading").show();
 
-                  var picking_id = new Array();
-                  $("input[name*=row_id]").each(function() {
-                     picking_id.push($(this).val());
-                  });
+                  // var picking_id = new Array();
+                  // $("input[name*=row_id]").each(function() {
+                  //    picking_id.push($(this).val());
+                  // });
 
                   // // console.log(picking_id);
                   // return false;
 
                  // $('#data-table-0001').show();
                  // $('#data-table-0002').show();
+                 var picking_id = "<?=$_REQUEST['id']?>"; //alert(picking_id);
 
                  setTimeout(function(){
   
@@ -497,8 +533,8 @@
                                       // console.log(response);
                                       // return false;
 
-                                      $("#pick_pack_requisition_code_id_fk").val(response);
-                                      var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
+                                      // $("#pick_pack_requisition_code_id_fk").val(response);
+                                      // var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
                                       // return false;
                                    
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
@@ -532,9 +568,11 @@
                                                 ],
                                                 rowCallback: function(nRow, aData, dataIndex){
 
+                                                  console.log(aData['check_product_instock']);
+
                                                       $(".myloading").hide();
-                                                      // // console.log("xxxxxxx");
-                                                      // // console.log(aData['ch_amt_lot_wh']);
+                                                      // console.log("xxxxxxx");
+                                                      // console.log(aData['ch_amt_lot_wh']);
                                                       setTimeout(function(){
                                                           if(aData['ch_amt_lot_wh']==0){
                                                             $(".div_btn_save").hide();
@@ -542,6 +580,15 @@
                                                               $(".div_btn_save").show();
                                                           }
                                                       }, 500);
+
+                                                      if(aData['check_product_instock']=="N"){
+                                                        $(".div_btn_save_02").hide();
+                                                        $(".div_btn_save_02_desc").show();
+                                                      }else{
+                                                        $(".div_btn_save_02").show();
+                                                        $(".div_btn_save_02_desc").hide();
+
+                                                      }
 
                                                 }
                                             });
@@ -561,10 +608,10 @@
                                     }
                                 });
 
-setTimeout(function(){
+                                setTimeout(function(){
                                                       
-                                                              $('#data-table-0002').show();
-                                                      }, 1500);
+                                        $('#data-table-0002').show();
+                                }, 1500);
 
                         }else{
                            $(".myloading").hide();
@@ -590,12 +637,14 @@ setTimeout(function(){
                 $(".myloading").show();
 
 
-                  var picking_id = new Array();
-                  var db_pick_pack_packing_code_id = new Array();
-                  $("input[name*=row_id]").each(function() {
-                     picking_id.push($(this).val());
-                     db_pick_pack_packing_code_id.push($(this).val());
-                  });
+                  // var picking_id = new Array();
+                  // var db_pick_pack_packing_code_id = new Array();
+                  // $("input[name*=row_id]").each(function() {
+                  //    picking_id.push($(this).val());
+                  //    db_pick_pack_packing_code_id.push($(this).val());
+                  // });
+
+                  var picking_id = "<?=$_REQUEST['id']?>";
       
                 // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
                   setTimeout(function(){
@@ -611,8 +660,8 @@ setTimeout(function(){
                                        // return false;
                                       // // console.log(ids[0]);
 
-                                      $("#pick_pack_requisition_code_id_fk").val(response);
-                                      var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
+                                      // $("#pick_pack_requisition_code_id_fk").val(response);
+                                      // var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
                                       // return false;
 
                                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
@@ -647,10 +696,14 @@ setTimeout(function(){
                                                                         $.ajax({
                                                                            type:'POST',
                                                                            url: " {{ url('backend/ajaxSavePay_requisition') }} ",
-                                                                           data:{ _token: '{{csrf_token()}}',picking_id:picking_id,db_pick_pack_packing_code_id:db_pick_pack_packing_code_id },
+                                                                           data:{ _token:
+                                                                            '{{csrf_token()}}',
+                                                                            picking_id:picking_id,
+                                                                            // db_pick_pack_packing_code_id:db_pick_pack_packing_code_id 
+                                                                          },
                                                                             success:function(d2){
-                                                                                 console.log(d2);
-                                                                                 return false;
+                                                                                 // console.log(d2);
+                                                                                 // return false;
                                                                                 // location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
                                                                                 location.replace('{{ url("backend/pay_requisition_001") }}');
    

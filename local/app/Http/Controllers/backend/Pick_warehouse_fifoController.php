@@ -51,11 +51,11 @@ class Pick_warehouse_fifoController extends Controller
       // $picking = explode(",", $picking[0]);
 
       // return gettype($picking);
-      if(gettype($request->picking_id)=="array"){
-        $picking = implode(",", $request->picking_id);
-      }else{
+      // if(gettype($request->picking_id)=="array"){
+      //   $picking = implode(",", $request->picking_id);
+      // }else{
         $picking = $request->picking_id;
-      }
+      // }
       // return ($picking[0]);
       // return gettype($arr_picking_id);
       // return $picking;
@@ -248,33 +248,8 @@ class Pick_warehouse_fifoController extends Controller
 
         $requisition_code = "P3".sprintf("%05d",$lastInsertId01);
         DB::select(" UPDATE $temp_db_pick_pack_requisition_code SET requisition_code='$requisition_code' WHERE id in ($lastInsertId01) ");
-        DB::select(" UPDATE $temp_ppp_001 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
-
-        // $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk FROM $temp_db_pick_pack_requisition_code WHERE requisition_code='".$requisition_code."'");
-        // $r2 = explode(",",@$r1[0]->pick_pack_packing_code_id_fk);
-        // foreach ($r2 as $key => $v) {
-        //    DB::select(" UPDATE db_consignments SET requisition_code='".@$requisition_code."' WHERE pick_pack_packing_code_id_fk in (".$v.") ");
-        // }
-
-
-        // return "OK";
-        // return $temp_ppp_002;
-        // dd();
-
-
-   // Qry > product_id_fk from $temp_ppp_002
-        // $product = DB::select(" select product_id_fk from $temp_ppp_002 ");
-        // return $product;
-
-        // $product_id_fk = [];
-        // foreach ($product as $key => $value) {
-        //    array_push($product_id_fk,$value->product_id_fk);
-        // }
-        // // return $product_id_fk;
-        // $arr_product_id_fk = array_filter($product_id_fk);
-        // $arr_product_id_fk = implode(',',$arr_product_id_fk);
-        // return $arr_product_id_fk;
-        // dd();
+   //     DB::select(" UPDATE $temp_ppp_001 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
+        DB::select(" UPDATE $temp_ppp_001 SET pick_pack_requisition_code_id_fk=$picking  ");
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
         DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
@@ -290,9 +265,6 @@ class Pick_warehouse_fifoController extends Controller
         ADD COLUMN pick_pack_requisition_code_id_fk  int NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_requisition_code>id' AFTER id ");
         DB::select(" UPDATE $temp_ppp_002 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
 
-          // return $arr_product_id_fk;
-          // return $lastInsertId01;
-          // return $temp_ppp_002;
 
         $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_0022; ");
@@ -436,32 +408,6 @@ class Pick_warehouse_fifoController extends Controller
 
 
      if($r_db_pay_requisition_002){
-
-        // DB::select(" DROP TABLE IF EXISTS $temp_ppp_001; ");
-        // DB::select(" CREATE TABLE $temp_ppp_001 LIKE db_orders ");
-        // DB::select(" INSERT $temp_ppp_001 SELECT * FROM db_orders WHERE id in ($id) ");
-        // DB::select(" ALTER TABLE $temp_ppp_001
-        // ADD COLUMN pick_pack_packing_code_id_fk  int NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_packing_code>id' AFTER id ");
-
-        // DB::select(" ALTER TABLE $temp_ppp_001
-        // ADD COLUMN pick_pack_requisition_code_id_fk  int NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_requisition_code>id' AFTER id ");
-
-        // DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
-        // DB::select(" CREATE TABLE $temp_db_pick_pack_requisition_code LIKE db_pick_pack_requisition_code ");
-        // DB::select(" INSERT INTO $temp_db_pick_pack_requisition_code select * from db_pick_pack_requisition_code ");
-
-        // DB::select(" INSERT IGNORE INTO $temp_db_pick_pack_requisition_code(pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts) VALUES ('$row_id','".$pickings."',".(\Auth::user()->id).",'".$receipts."') ");
-        // $lastInsertId01 = DB::getPdo()->lastInsertId();
-
-        // $requisition_code = "P3".sprintf("%05d",$lastInsertId01);
-        // DB::select(" UPDATE $temp_db_pick_pack_requisition_code SET requisition_code='$requisition_code' WHERE id in ($lastInsertId01) ");
-        // DB::select(" UPDATE $temp_ppp_001 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
-
-        // $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk FROM $temp_db_pick_pack_requisition_code WHERE requisition_code='".$requisition_code."'");
-        // $r2 = explode(",",@$r1[0]->pick_pack_packing_code_id_fk);
-        // foreach ($r2 as $key => $v) {
-        //    DB::select(" UPDATE db_consignments SET requisition_code='".@$requisition_code."' WHERE pick_pack_packing_code_id_fk in (".$v.") ");
-        // }
 
 
         // return "OK";
@@ -811,6 +757,7 @@ class Pick_warehouse_fifoController extends Controller
 
     // return $request->picking_id;
 
+
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -840,7 +787,8 @@ class Pick_warehouse_fifoController extends Controller
         DB::select(" CREATE TABLE $temp_ppp_004 LIKE temp_ppp_004_template ");
       }
 
-      $picking_id = implode(",",$request->picking_id);
+      // $picking_id = implode(",",$request->picking_id);
+      $picking_id = $request->picking_id;
 
       $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in($picking_id) ");
       // return $r_db_pick_pack_packing_code[0]->receipt ;
@@ -860,6 +808,8 @@ class Pick_warehouse_fifoController extends Controller
       $sTable = DB::select("
             SELECT * from $temp_ppp_0022 GROUP BY pick_pack_requisition_code_id_fk
         ");
+
+      
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -895,6 +845,8 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+
+
 
            $Products = DB::select("
            SELECT
@@ -1385,11 +1337,15 @@ class Pick_warehouse_fifoController extends Controller
                     <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                     <div class="divTableCell" style="width:400px;text-align:center;"> ';
 
+
                       $pn .=     
                             '<div class="divTableRow" style="text-align:center;">
                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง. </div>
                             </div>
                             ';
+
+
+                            @$_SESSION['check_product_instock'] = 0;
 
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                     
@@ -1535,7 +1491,17 @@ class Pick_warehouse_fifoController extends Controller
               return 0;
           }
 
-       })       
+       })    
+
+      ->addColumn('check_product_instock', function($row) { 
+      // ดูว่าไม่มีสินค้าในคลังบางรายการ
+          if(@$_SESSION['check_product_instock']=="0"){
+            return "N"; 
+          }else{
+            return "Y"; 
+          }
+
+       })    
       ->make(true);
     }
 
@@ -1572,7 +1538,10 @@ class Pick_warehouse_fifoController extends Controller
     // หาในตาราง db_orders ว่ามีมั๊ย
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
-    $packing_id = $request->packing_id;
+    $tb0 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk` in(".$request->packing_id.") ");
+
+    $packing_id = $tb0[0]->id;
+
     $tb1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id` in(".$packing_id.") ");
     // return $tb1;
     // dd();

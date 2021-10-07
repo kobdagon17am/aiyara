@@ -56,7 +56,7 @@
 		}
 
 
-		public function excelExportConsignment()
+		public function excelExportConsignment(Request $request)
 		{
 
 			$spreadsheet = new Spreadsheet();
@@ -82,7 +82,7 @@
 				$sheet = $spreadsheet->getActiveSheet();
 				$sheet->setTitle("Sheet".($j+1));
 
-				$sRow = \App\Models\Backend\Consignments::get();
+				$sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->get();
 
 				$sheet->setCellValue('A1', 'Consignment No. (หมายเลขพัสดุ)');
 				$sheet->setCellValue('B1', 'Customer Ref No. (เลขอ้างอิง)');
@@ -125,7 +125,8 @@
 					$sheet->setCellValue('P'.($i+2), $sRow[$i]->sat_del);
 					$sheet->setCellValue('Q'.($i+2), $sRow[$i]->hrc);
 					$sheet->setCellValue('R'.($i+2), $sRow[$i]->invr);
-					$sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+					// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+					$sheet->setCellValue('S'.($i+2), $request->id);
 				}
 
 			}

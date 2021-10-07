@@ -14,13 +14,11 @@ class Member_pvController extends Controller
     public function index(Request $request)
     {
 
-       ini_set('max_execution_time', '0');
-       ini_set('memory_limit', '-1');
+       ini_set('max_execution_time', '0'); 
+       ini_set('memory_limit', '-1'); 
 
        $sApprover = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
-       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
-         return $query->where('id', auth()->user()->business_location_id_fk);
-       })->get();
+       $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sBranchs = \App\Models\Backend\Branchs::get();
        $Supplier = DB::select(" select * from dataset_supplier ");
        $po_number = DB::select(" SELECT po_number FROM `db_po_supplier` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
@@ -48,7 +46,7 @@ class Member_pvController extends Controller
 
         ) );
       // return view('backend.member_pv.index');
-
+      
     }
 
     public function create()
@@ -119,21 +117,12 @@ class Member_pvController extends Controller
         $Operator04 = "!=";
       }
 
-      if(!empty($req->business_location_id_fk)){
-        $w05 = $req->business_location_id_fk;
-        $Operator05 = "=";
-      }else{
-        $w05 = "0" ;
-        $Operator05 = "!=";
-      }
-
 
       $sTable = \App\Models\Backend\Customers::where('id','!=',0)
       ->where('customers.id',$Operator01,$w01)
       ->where('customers.business_name',$Operator02,trim($w02))
       ->where('customers.introduce_id',$Operator03,$w03)
       ->where('customers.upline_id',$Operator04,$w04)
-      ->where('customers.business_location_id',$Operator05,$w05)
       ;
 
       $sQuery = \DataTables::of($sTable);
@@ -162,7 +151,7 @@ class Member_pvController extends Controller
         }
       })
       ->addColumn('regis_status', function($row) {
-        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers
+        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
         //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',

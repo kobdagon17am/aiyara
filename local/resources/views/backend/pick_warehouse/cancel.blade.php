@@ -218,22 +218,24 @@
           <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
           <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;"> </table>
 
-                       <div class=" div_datatables_003 " style="" >
-                           <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                        </div>     
 
-                        <div class=" div_datatables_004 " style="" >
-                           <table id="data-table-0004" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                        </div>  
+           <?php //echo $sUser[0]->status_sent ?>        
+           <?php if($sUser[0]->status_sent<6){ ?>        
                 
-                
-                        <div class="col-md-12 text-center div_btn_save_004 " style="display: none;" >
+                        <div class="col-md-12 text-center  "  >
                           <br>
-                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave004 " >
-                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
+                          <button type="submit" class="btn btn-danger btn-sm waves-effect font-size-16 btnCancelBill " >
+                          x ยกเลิกใบเสร็จใบนี้
                           </button>
                         </div>
-                        
+           <?php }else{ ?>     
+
+                <div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >
+                          <br>
+                      * หมายเหตุ  บิลนี้ มีสถานะ ยกเลิก *
+                        </div>
+
+           <?php } ?>     
 
 
           </div>
@@ -438,7 +440,7 @@
 
                         {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center '},
                         {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
-                        {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
+                        // {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
                                              
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
@@ -553,7 +555,6 @@
 
     <script>
           
-          $(".myloading").show();
 
                 var packing_id = "{{$pick_pack_requisition_code_id_fk}}"; //alert(packing_id);
                 // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
@@ -916,6 +917,63 @@
     });
    </script>
 
+
+   <script type="text/javascript">
+     
+    $(document).ready(function() {
+
+           $(document).on('click', '.btnCancelBill', function(){
+
+            // $(".myloading").show();
+
+            var id = "{{$id}}"; 
+            // alert(id);
+            // return false;
+
+                    Swal.fire({
+                      title: 'ยืนยัน ! ยกเลิก ใบเสร็จใบนี้ ',
+                      // text: 'You clicked the button!',
+                      type: 'question',
+                      showCancelButton: true,
+                      confirmButtonColor: '#556ee6',
+                      cancelButtonColor: "#f46a6a"
+                      }).then(function (result) {
+                          if (result.value) {
+
+                             $.ajax({
+                                url: " {{ url('backend/cancelBill') }} ", 
+                                method: "post",
+                                data: {
+                                  id:id,
+                                  "_token": "{{ csrf_token() }}", 
+                                },
+                                success:function(data)
+                                { 
+                                  // console.log(data);
+                                  // return false;
+                                      // Swal.fire({
+                                      //   type: 'success',
+                                      //   title: 'ทำการยกเลิกการจ่ายครั้งนี้เรียบร้อยแล้ว',
+                                      //   showConfirmButton: false,
+                                      //   timer: 2000
+                                      // });
+
+                                      setTimeout(function () {
+                                          // $('#data-table-0002').DataTable().clear().draw();
+                                          location.replace("{{ url('backend/pay_requisition_001') }}");
+                                      }, 1000);
+                                }
+                              })
+                            
+                          }else{
+                            $(".myloading").hide();
+                          }
+                    });
+
+             });   
+
+    });
+   </script>
 
         <script>
 

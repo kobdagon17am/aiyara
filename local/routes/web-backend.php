@@ -510,6 +510,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxPackingFinished', 'AjaxController@ajaxPackingFinished');
     Route::post('ajaxShippingFinished', 'AjaxController@ajaxShippingFinished');
     Route::post('cancel-status-packing-sent', 'AjaxController@ajaxCacelStatusPackingSent');
+    
+    Route::post('cancelBill', 'AjaxController@cancelBill');
 
 // 
 
@@ -778,6 +780,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
     Route::get('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
+
+    Route::post('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
+    Route::get('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
+
 
     Route::resource('supplier', 'SupplierController');
     Route::post('supplier/datatable', 'SupplierController@Datatable')->name('supplier.datatable');
