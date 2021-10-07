@@ -26,6 +26,7 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->code_order = $code_order;
             $insert_db_orders->distribution_channel_id_fk = 2;
             $insert_db_orders->purchase_type_id_fk = $rs->type;
+            $insert_db_orders->branch_id_fk = 12;
 
             if ($rs->type == '5') { //โอนชำระแบบกิฟวอยเชอ
               $insert_db_orders->gift_voucher_cost = $gv;

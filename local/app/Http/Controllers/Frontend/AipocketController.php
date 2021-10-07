@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Frontend\LineModel;
 use App\Models\Frontend\Runpv_AiStockis;
 use Auth;
+use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,168 +33,117 @@ class AipocketController extends Controller
 
     public function dt_aipocket(Request $request)
     {
+        //$date = date('Y-m-d');
 
-        $columns = array(
-            0 => 'order',
-            1 => 'order_code',
-            2 => 'created_at',
-            3 => 'customer_id',
-            4 => 'to_customer_id',
-            5 => 'type',
-            6 => 'pv',
-            7 => 'banlance',
-            8 => 'detail',
-            //status
-        );
+        $sTable = DB::table('ai_stockist')
+            ->select('ai_stockist.*', 'c_use.business_name as business_name_use', 'c_to.business_name as business_name_to',
+             'c_use.user_name as c_use', 'c_to.user_name as c_to', 'dataset_orders_type.orders_type',
+             'users.name as vip_name','users.last_name as vip_last_name')
+            ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
+            ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
+            ->leftjoin('users', 'users.id', '=', 'ai_stockist.user_id_fk')
+            ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
+            ->where('dataset_orders_type.lang_id', '=', '1')
+            ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')->get();
 
-        //1 รอส่งเอกสารการชำระเงิน warning
-        //2 ตรวจสอบการชำระเงิน warning
-        //3 เอกสารการชำระเงินไม่ผ่าน danger
-        //4 จัดเตรียมสินค้า primary
-        //5 จัดส่งสินค้า primary
-        //6 ได้รับสินค้าแล้ว Success
+        $sQuery = DataTables::of($sTable);
 
-        if (empty($request->input('search.value'))) {
+        return $sQuery
 
-            $totalData = DB::table('ai_stockist')
-                ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
-                ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
-                ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
-                ->where('dataset_orders_type.lang_id', '=', '1')
+            ->addColumn('created_at', function ($row) {
+                $data = '<label class="label label-inverse-info-border"><b>' . date('Y/m/d H:i:s', strtotime($row->created_at)) . '</b></label>';
 
-                ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
-                ->count();
+                return $data;
 
-            $totalFiltered = $totalData;
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            //$order = $columns[$request->input('order.0.column')];
-            ////$dir = $request->input('order.0.dir');
+            })
 
-            $ai_stockist = DB::table('ai_stockist')
-                ->select('ai_stockist.*', 'c_use.business_name as business_name_use', 'c_to.business_name as business_name_to', 'c_use.user_name as c_use', 'c_to.user_name as c_to', 'dataset_orders_type.orders_type')
-                ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
-                ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
-                ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
-                ->where('dataset_orders_type.lang_id', '=', '1')
-                ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
-                ->offset($start)
-                ->limit($limit)
-                ->orderby('ai_stockist.updated_at', 'DESC')
-                ->get();
+            ->addColumn('order_code', function ($row) {
+                return $row->transection_code;
+            })
 
-        } else {
+            ->addColumn('customer_id', function ($row) {
 
-            $search = trim($request->input('search.value'));
-
-            $totalData = DB::table('ai_stockist')
-                ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
-                ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
-                ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
-                ->where('dataset_orders_type.lang_id', '=', '1')
-                ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
-                ->whereRaw('(c_use.user_name LIKE "%' . $search . '%" or c_to.user_name LIKE "%' . $search . '%")')
-                ->count();
-
-            $totalFiltered = $totalData;
-
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            //$order = $columns[$request->input('order.0.column')];
-            //$dir = $request->input('order.0.dir');
-
-            $ai_stockist = DB::table('ai_stockist')
-                ->select('ai_stockist.*', 'c_use.business_name as business_name_use', 'c_to.business_name as business_name_to', 'c_use.user_name as c_use', 'c_to.user_name as c_to', 'dataset_orders_type.orders_type')
-                ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
-                ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
-                ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
-                ->where('dataset_orders_type.lang_id', '=', '1')
-                ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
-                ->whereRaw('(c_use.user_name LIKE "%' . $search . '%" or c_to.user_name LIKE "%' . $search . '%" or c_use.business_name LIKE "%' . $search . '%" or c_to.business_name LIKE "%' . $search . '%")')
-                ->offset($start)
-                ->limit($limit)
-                ->orderby('ai_stockist.updated_at', 'DESC')
-                ->get();
-
-            //dd($ai_stockist);
-
-        }
-
-        $i = $start;
-        $data = array();
-
-        foreach ($ai_stockist as $value) {
-            $i++;
-
-            $nestedData['order'] = $i;
-            if (Auth::guard('c_user')->user()->id == $value->customer_id) {
-                $nestedData['customer_id'] = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';
-
-            } else {
-                $nestedData['customer_id'] = $value->business_name_use . ' <b>( ' . $value->c_use . ' )</b>';
-
-            }
-
-            if (Auth::guard('c_user')->user()->id == $value->to_customer_id) {
-                $nestedData['to_customer_id'] = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';
-
-            } else {
-                $nestedData['to_customer_id'] = $value->business_name_to . ' <b>( ' . $value->c_to . ' )</b>';
-
-            }
-
-            $nestedData['created_at'] = date('d/m/Y H:i:s', strtotime($value->created_at));
-            $nestedData['type'] = $value->orders_type;
-            $nestedData['order_code'] = $value->transection_code;
-
-            if ($value->type_id == 4) {
-                $pv = '<b class="text-success">' . $value->pv . '</b>';
-            } else {
-                $pv = '<b class="text-danger"> -' . $value->pv . '</b>';
-
-            }
-
-            $nestedData['pv'] = $pv;
-
-            if ($value->status == 'success') {
-                if (empty($value->banlance)) {
-                    $banlance = '';
+              if($row->order_channel != 'VIP'){
+                if (Auth::guard('c_user')->user()->id == $row->customer_id) {
+                  $data = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';
                 } else {
-                    $banlance = number_format($value->banlance);
+                  $data = $row->business_name_use . ' <b>( ' . $row->c_use . ' )</b>';
+                }
+              }else{
+
+                $data = $row->vip_name.' '.$row->vip_last_name. ' <b>(VIP Shop)</b>';
+
+              }
+
+                return $data;
+            })
+
+            ->addColumn('to_customer_id', function ($row) {
+
+                if (Auth::guard('c_user')->user()->id == $row->to_customer_id) {
+                    $data = '<span class="label label-success"><b style="color: #000"><i class="fa fa-user"></i> You </b></span>';
+
+                } else {
+                    $data = $row->business_name_to . ' <b>( ' . $row->c_to . ' )</b>';
+
                 }
 
-            } elseif ($value->status == 'panding') {
-                $class_css = 'warning';
-                $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $value->status . '</b></span>';
-            } else {
-                $class_css = 'danger';
-            }
+                return $data;
+            })
 
-            // $nestedData['status'] =  '<span class="label label-'.$class_css.'"><b style="color: #000">'.$value->status.'</b></span>';
+            ->addColumn('type', function ($row) {
+                return $row->orders_type;
+            })
 
-            $nestedData['banlance'] = $banlance;
 
-            if ($value->detail == 'Sent Ai-Stockist') {
-                $detail = '';
-            } else {
-                $detail = $value->detail;
 
-            }
+            ->addColumn('pv', function ($row) {
 
-            $nestedData['detail'] = $detail;
+                if ($row->type_id == 4 || $row->type_id == 8) {
+                    $pv = '<b class="text-success">' . $row->pv . '</b>';
+                } else {
+                    $pv = '<b class="text-danger"> -' . $row->pv . '</b>';
 
-            $data[] = $nestedData;
-        }
+                }
 
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
+                return $pv;
+            })
 
-        return json_encode($json_data);
+            ->addColumn('banlance', function ($row) {
+
+                if ($row->status == 'success') {
+                    if (empty($row->banlance)) {
+                        $banlance = '';
+                    } else {
+                        $banlance = number_format($row->banlance);
+                    }
+
+                } elseif ($row->status == 'panding') {
+                    $class_css = 'warning';
+                    $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
+                } else {
+                    $class_css = 'danger';
+                }
+
+                return $banlance;
+            })
+
+            ->addColumn('detail', function ($row) {
+
+                if ($row->detail == 'Sent Ai-Stockist') {
+                    $detail = '';
+                } else {
+                    $detail = $row->detail;
+
+                }
+
+                return $detail;
+            })
+
+            ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail'])
+            ->make(true);
     }
+
 
     public function check_customer_id(Request $request)
     {
@@ -236,8 +186,7 @@ class AipocketController extends Controller
 
         } else {
             if ($type == 1) {
-                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
-
+                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
 
                 //dd($resule);
                 if ($resule['status'] == 'success') {
@@ -247,7 +196,7 @@ class AipocketController extends Controller
                 }
 
             } elseif ($type == 2) {
-                $resule =  Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
+                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
                 //dd($resule);
                 if ($resule['status'] == 'success') {
                     return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
@@ -256,7 +205,7 @@ class AipocketController extends Controller
                 }
 
             } elseif ($type == 3) {
-                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user,Auth::guard('c_user')->user()->user_name);
+                $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
                 //dd($resule);
                 if ($resule['status'] == 'success') {
                     return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');

@@ -549,7 +549,10 @@ class PvPayment extends Model
 
             $customer_update = Customer::find($order_data->customers_id_fk);
             $add_pv_aipocket = $customer_update->pv_aistockist + $order_data->pv_total;
+            $drop_ship_bonus = $customer_update->drop_ship_bonus + $order_data->drop_ship_bonus;
+
             $customer_update->pv_aistockist = $add_pv_aipocket;
+            $customer_update->drop_ship_bonus = $drop_ship_bonus;
 
             $ai_stockist = DB::table('ai_stockist')->insert(
                 [
@@ -561,7 +564,7 @@ class PvPayment extends Model
                     'set_transection_code' => date('ym'),
                     'code_order' => $order_data->code_order,
                     'pv' => $order_data->pv_total,
-                    'type_id' => '3',
+                    'type_id' => '8',
                     'status' => 'success',
                     'pv_aistockist' => $add_pv_aipocket,
                     'banlance' => $add_pv_aipocket,
@@ -588,6 +591,9 @@ class PvPayment extends Model
             $customer_update->save();
             $order_update->save();
             DB::commit();
+
+            $resule = ['status' => 'success', 'message' => 'Success'];
+            return $resule;
 
         } catch (Exception $e) {
             DB::rollback();

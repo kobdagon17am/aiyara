@@ -24,7 +24,7 @@
 
     <div class="col-md-12">
         <div class="card card-body">
-            <h4 class="mb-4">Orders</h4>
+            <h4 class="mb-4">Orders VIP Shop [ Drop Ship bonus : <span class="text-primary">{{ number_format(Auth::guard('c_user')->user()->drop_ship_bonus) }} </span> ]</h4>
 
             <div class="dt-responsive table-responsive">
                 <table id="orders-datatable" class="table table-striped table-bordered w-100">
@@ -35,8 +35,9 @@
                             <th>เลขใบสั่งซื้อ</th>
                             <th>Tracking</th>
                             <th>ยอดชำระ</th>
+                            <th>Drop Ship</th>
                             <th>ชำระโดย</th>
-                            <th>สถานะ</th>
+                            <th>สถานะสินค้า</th>
                             <th>#</th>
                         </tr>
                     </thead>
@@ -121,6 +122,9 @@
                 },
                 {
                     data: 'total_price'
+                },
+                {
+                    data: 'drop_ship_bonus'
                 },
                 {
                     data: 'pay_type'

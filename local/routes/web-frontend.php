@@ -186,7 +186,7 @@ Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')
 Route::get('ai-stockist','Frontend\AipocketController@index')->name('ai-stockist');
 Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
-Route::post('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
+Route::get('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
 
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');

@@ -63,6 +63,23 @@ class VipReportController extends Controller
                 $route = route('cart-payment-history', $order->code_order);
                 return "<a href='{$route}' class='btn btn-sm btn-success'><i class='fa fa-search'></i></a>";
             })
+
+            ->addColumn('total_price', function ($row) {
+              if ($row->drop_ship_bonus) {
+                  return number_format($row->total_price, 2);
+              } else {
+                  return '-';
+              }
+          })
+
+            ->addColumn('drop_ship_bonus', function ($row) {
+              if ($row->drop_ship_bonus) {
+                  return number_format($row->drop_ship_bonus, 2);
+              } else {
+                  return '-';
+              }
+          })
+
             ->rawColumns(['pay_type', 'pay_status', 'action'])
             ->make(true);
     }

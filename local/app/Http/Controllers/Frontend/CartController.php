@@ -108,8 +108,8 @@ class CartController extends Controller
     public static function payment_test_type_1()
     {
 
-        $order_id = '684'; //order_id
-        $admin_id = '4959'; //admin_id
+        $order_id = '689'; //order_id
+        $admin_id = '1'; //admin_id
         $distribution_channel = '1';
         $resule = PvPayment::PvPayment_type_confirme_vip($order_id,'1','2','customer');
         dd($resule);

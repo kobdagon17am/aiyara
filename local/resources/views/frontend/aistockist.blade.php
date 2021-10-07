@@ -69,30 +69,19 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-
                     <h5>ประวัติการสั่งซื้อ</h5>
                     {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
                 </div>
-
                 <div class="card-block">
-                    <div class="table-responsive dt-responsive">
-                        <table id="history" class="table table-striped table-bordered nowrap">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>OrderCode</th>
-                                    <th>Send</th>
-                                    <th>Receive(UserName)</th>
-                                    <th>Type</th>
-                                    <th>PV</th>
-                                    <th>Banlance</th>
-                                    <th>Detail</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
+                  <div class="dt-responsive table-responsive">
+                      <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
+
+                      </table>
+                  </div>
+
+              </div>
+
+
             </div>
         </div>
     </div>
@@ -107,7 +96,6 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     </div>
 
                     <div class="modal-body">
-
                         <div class="col-md-12 col-xl-12">
                             <div class="card bg-c-yellow order-card m-b-0">
                                 <div class="card-block">
@@ -123,9 +111,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                         <div class="col-md-12">
                                             <h6 class="m-b-0" style="color: #000"><i class="fa fa-star p-2 m-b-0"></i>
                                                 <b id="qualification_name"></b></h6>
-
                                         </div>
-
                                     </div>
                                     <hr class="m-b-5 m-t-5">
                                     <div class="row">
@@ -219,7 +205,92 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
     <script src="{{ asset('frontend/assets/pages/form-masking/jquery.inputmask.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/form-masking/autoNumeric.js') }}"></script>
     <script src="{{ asset('frontend/assets/pages/form-masking/form-mask.js') }}"></script>
-    <script type="text/javascript">
+
+    <script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/data-table/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
+    </script>
+    <script src="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
+    </script>
+
+  <script type="text/javascript">
+    var oTable;
+    $(function() {
+        oTable = $('#multi-colum-dt').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+            ajax: {
+              url: "{{ route('dt_aipocket') }}",
+                    dataType: "json",
+                    type: "GET",
+                    // data: function(d) {
+                    //   // d.startDate = $('#startDate').val();
+                    //   // d.endDate = $('#endDate').val();
+                    // },
+            },
+
+            columns: [
+
+                        {
+                            "data": "created_at",
+                            "name": "created_at",
+                            "title": '<center>Date</center>',
+                        },
+                        {"data": "order_code",
+                        "name": "order_code",
+                        "title": '<center>OrderCode</center>',
+                        },
+                        {
+                            "data": "customer_id",
+                            "name": "customer_id",
+                            "title": '<center>Send</center>',
+                        },
+                        {
+                            "data": "to_customer_id",
+                            "name": "to_customer_id",
+                            "title": '<center>Receive(UserName)</center>',
+                        },
+                        {
+                            "data": "type",
+                            "name": "type",
+                            "title": '<center>Type</center>',
+                        },
+                        {
+                            "data": "pv",
+                            "name": "pv",
+                            "title": '<center>PV</center>',
+                        },
+                        {
+                            "data": "banlance",
+                            "name": "banlance",
+                            "title": '<center>Banlance</center>',
+                        },
+                        {
+                            "data": "detail",
+                            "name": "detail",
+                            "title": '<center>Detail</center>',
+                        },
+                  ],order:[[0,'DESC']],
+        });
+        $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+            oTable.draw();
+        });
+
+        $('#search-form').on('click', function(e) {
+            oTable.draw();
+            e.preventDefault();
+        });
+    });
+</script>
+
+<script type="text/javascript">
         function check() {
             //var url = '{{ route('cart_delete') }}';
             var username = $('#username').val();
@@ -283,83 +354,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                 .fail(function() {
                     console.log("error");
                 })
-
-
         }
-
-
-
     </script>
-    <script src="{{ asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/pages/data-table/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/pages/data-table/js/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/pages/data-table/js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
-    </script>
-    <script src="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
-    </script>
-    <!-- Custom js -->
-    <script src="{{ asset('frontend/assets/pages/data-table/js/data-table-custom.js') }}"></script>
 
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            fetch_data();
-
-            function fetch_data() {
-                $('#history').DataTable({
-                    scrollX: true,
-                    scrollCollapsed: true,
-                    processing: true,
-                    serverSide: true,
-                    searching: true,
-                    ajax: {
-                        url: "{{ route('dt_aipocket') }}",
-                        dataType: "json",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        }
-                    },
-
-                    columns: [{
-                            "data": "order"
-                        },
-                        {
-                            "data": "created_at"
-                        },
-                        {"data": "order_code"
-                        },
-                        {
-                            "data": "customer_id"
-                        },
-                        {
-                            "data": "to_customer_id"
-                        },
-                        {
-                            "data": "type"
-                        },
-                        {
-                            "data": "pv"
-                        },
-                        {
-                            "data": "banlance"
-                        },
-                        {
-                            "data": "detail"
-                        },
-                        // {"data": "status"},
-
-                    ],
-                    //order: [[ "0", "desc" ]],
-                });
-            }
-        });
-
-    </script>
 
 @endsection

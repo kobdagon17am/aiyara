@@ -38,8 +38,8 @@ class DirectSponsorController extends Controller
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.introduce_id', '=', $user_name)
             ->orwhere('customers.user_name', '=', $user_name)
-            ->orderbyraw('(customers.id = ' . $id . ') DESC')
-            ->get();
+            ->orderbyraw('(customers.id = ' . $id . ') DESC');
+            // ->get();
 
         $sQuery = DataTables::of($sTable);
         return $sQuery
