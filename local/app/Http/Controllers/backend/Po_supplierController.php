@@ -14,8 +14,12 @@ class Po_supplierController extends Controller
     {
 
        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
-       $sBusiness_location = \App\Models\Backend\Business_location::get();
-       $sBranchs = \App\Models\Backend\Branchs::get();
+       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+           return $query->where('id', auth()->user()->business_location_id_fk);
+       })->get();
+       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->branch_id);
+        })->get();
        $Supplier = DB::select(" select * from dataset_supplier ");
        $po_number = DB::select(" SELECT po_number FROM `db_po_supplier` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
       return View('backend.po_supplier.index')->with(

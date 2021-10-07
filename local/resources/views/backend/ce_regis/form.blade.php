@@ -19,9 +19,9 @@
 <div class="row">
   <div class="col-12">
     <div class="page-title-box d-flex align-items-center justify-content-between">
-      <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม COURSE/EVENT </h4>
+      <h4 class="mb-0 font-size-18"> {{ __('message.course_event_save_header') }} </h4>
       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/ce_regis") }}">
-        <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+        <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> {{ __('message.back') }}
       </a>
       
     </div>
@@ -77,7 +77,7 @@
 
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label"> ชื่อลูกค้า : * </label>
+                            <label for="example-text-input" class="col-md-3 col-form-label"> {{ __('message.customer_name') }} : * </label>
                             <div class="col-md-8">
                               <select name="customers_id_fk" class="form-control select2-templating " required >
                                 <option value="">Select</option>
@@ -94,14 +94,14 @@
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label">วันที่ลงทะเบียน : * </label>
+                            <label for="example-text-input" class="col-md-3 col-form-label">{{ __('message.register_date') }} : * </label>
                             <div class="col-md-3">
                               <input class="form-control" type="date" value="{{ @$sRow->regis_date }}" name="regis_date" required >
                             </div>
                           </div>
 
                           <div class="form-group row">
-                            <label for="example-text-input" class="col-md-3 col-form-label">หมายเหตุ :</label>
+                            <label for="example-text-input" class="col-md-3 col-form-label">{{ __('message.remark') }} :</label>
                             <div class="col-md-8">
                               <input class="form-control" type="text" value="{{ @$sRow->ticket_number }}" id='autocomplete' name="ticket_number" >
                             </div>
@@ -109,7 +109,7 @@
 
 
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-md-3 col-form-label">ผู้รับเรื่อง (User Login) :</label>
+                                <label for="example-text-input" class="col-md-3 col-form-label">{{ __('message.reciever') }} (User Login) :</label>
                                 <div class="col-md-8">
 
                                 	@if( empty(@$sRow) )
@@ -134,7 +134,7 @@
                       <input type="hidden" name="menu_id" value="{{@$_REQUEST['menu_id']}}" >
 
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> {{ __('message.save') }}
                     </button>
                   </div>
                 </div>
@@ -232,7 +232,7 @@
                 <div class="form-group mb-0 row">
                   <div class="col-md-6">
                     <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/ce_regis") }}">
-                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                      <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> {{ __('message.back') }}
                     </a>
                   </div>
                 </div>
@@ -291,7 +291,7 @@
   <div class="modal-dialog modal-dialog-centered  " role="document" style="max-width: 650px !important;" >
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalNoteTitle"><b><i class="bx bx-play"></i>บันทึกการเข้าร่วมกินกรรม</b></h5>
+        <h5 class="modal-title" id="modalNoteTitle"><b><i class="bx bx-play"></i>บันทึกการเข้าร่วมกิจกรรม</b></h5>
       </div>
       <form action="{{ route('backend.ce_regis.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" name="save_ce_regis" value="1" >
@@ -429,16 +429,16 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'ce_name', title :'<center>ชื่อ Course/Event </center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รายชื่อลูกค้า </center>', className: 'text-left'},
+            {data: 'ce_name', title :'<center>{{ __("message.course_event_name") }}</center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>{{ __("message.customer_name") }}</center>', className: 'text-left'},
             // {data: 'ticket_number', title :'<center>หมายเลขบัตร </center>', className: 'text-center'},
             {data: 'cus_package', title :'<center>Package </center>', className: 'text-left'},
-            {data: 'ce_regis_gift', title :'<center>รับของ </center>', className: 'text-left'},
+            {data: 'ce_regis_gift', title :'<center>{{ __("message.pick_up") }}</center>', className: 'text-left'},
             // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
             //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             // }},
-            {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
-            {data: 'note', title :'<center>หมายเหตุ </center>', className: 'text-left'},
+            {data: 'regis_date', title :'<center>{{ __("message.register_date") }}</center>', className: 'text-center'},
+            {data: 'note', title :'<center>{{ __("message.remark") }}</center>', className: 'text-left'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){

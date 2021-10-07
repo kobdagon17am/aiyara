@@ -25,6 +25,7 @@ class DeliveryController extends Controller
         ");
         */
 
+<<<<<<< Updated upstream
 
   // DB::select("
   //         INSERT IGNORE INTO db_delivery
@@ -64,10 +65,29 @@ class DeliveryController extends Controller
         //       from db_orders  WHERE db_orders.code_order=db_delivery.receipt
         //       GROUP BY db_delivery.receipt
         //       ) 
+=======
+        // DB::select("
+        //   INSERT IGNORE INTO db_delivery
+        //   ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+        //   SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+        //   (SUM(
+        //   (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+        //   (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        //   (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+        //   (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        //   (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
+        //   (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
+        //   ))
+        //   FROM db_orders 
+        //   WHERE code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2
+
+        //   GROUP BY db_orders.code_order
+>>>>>>> Stashed changes
 
         // ");
 
 
+<<<<<<< Updated upstream
 
 
          // $sDelivery = DB::select("
@@ -134,6 +154,8 @@ class DeliveryController extends Controller
 
 
 
+=======
+>>>>>>> Stashed changes
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       // $receipt = \App\Models\Backend\Delivery::where('approver','NULL')->get();
         $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
@@ -199,11 +221,18 @@ class DeliveryController extends Controller
             // dd(count($ch));
             if(count($ch)==0){
 
+<<<<<<< Updated upstream
               DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id,customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
                   VALUES
                   ('".$request->customers_addr_frontstore_id."',
                    '".$request->customer_id."',
                    '".$request->customer_id."',
+=======
+              DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+                  VALUES
+                  ('".$request->customers_addr_frontstore_id."',
+                   '".$request->customers_id_fk."',
+>>>>>>> Stashed changes
                    '".$request->delivery_cusname."',
                     '".$request->delivery_addr."',
                      '".$request->delivery_province."',
@@ -234,6 +263,7 @@ class DeliveryController extends Controller
 
             }
 
+<<<<<<< Updated upstream
 
                $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                             dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
@@ -275,6 +305,8 @@ class DeliveryController extends Controller
                             }
 
 
+=======
+>>>>>>> Stashed changes
             return redirect()->to(url("backend/delivery"));
 
 

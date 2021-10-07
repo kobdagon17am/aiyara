@@ -4,6 +4,9 @@
 
 @section('css')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<style>
+  .select2-selection {height: 34px !important;margin-left: 3px;}
+</style>
 @endsection
 
 @section('content')
@@ -58,7 +61,7 @@
                       <i class="bx bx-search align-middle "></i> SEARCH
                     </button>
                     <button class="btn btn-dark btn-sm" style="font-size: 14px !important;margin-left: 0.8%;" id="clearFilter">
-                      CLEAR
+                      <i class="bx bx-revision"></i> CLEAR
                     </button>
                   </div>
                 </div>
@@ -141,7 +144,7 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center ', orderable: false},
         ],
         order: [
-          [ 0, 'asc']
+          [ 3, 'desc']
         ],
         rowCallback: function(nRow, aData, dataIndex){
 

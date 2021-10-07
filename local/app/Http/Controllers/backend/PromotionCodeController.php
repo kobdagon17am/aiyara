@@ -83,12 +83,12 @@ class PromotionCodeController extends Controller
           return @$d[0]->name_thai;
         }
       })
-      ->addColumn('pro_sdate', function($row) {
-        $d = strtotime($row->pro_sdate); return date("d/m/", $d).(date("Y", $d)+543);
-      })
-      ->addColumn('pro_edate', function($row) {
-        $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
-      })
+      // ->addColumn('pro_sdate', function($row) {
+      //   $d = strtotime($row->pro_sdate); return date("d/m/", $d).(date("Y", $d)+543);
+      // })
+      // ->addColumn('pro_edate', function($row) {
+      //   $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
+      // })
       ->addColumn('status', function($row) {
           //  `pro_status` int(1) DEFAULT '1' COMMENT '1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว,4=import excel,5=Gen code',
             // $sRowProCus = \App\Models\Backend\PromotionCus::where('promotion_code_id_fk', $row->id)->get();

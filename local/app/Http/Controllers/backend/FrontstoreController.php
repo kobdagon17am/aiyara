@@ -796,7 +796,7 @@ class FrontstoreController extends Controller
         }
 
       }
-
+     
       return View('backend.frontstore.viewdata')->with(
         array(
            'sRow'=>$sRow,
@@ -1362,6 +1362,7 @@ class FrontstoreController extends Controller
                                       customers_address_card.card_soi,
                                       customers_address_card.created_at,
                                       customers_address_card.updated_at,
+                                      customers_address_card.card_province_id_fk,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,
                                       dataset_districts.name_th AS tamname,
@@ -1378,81 +1379,107 @@ class FrontstoreController extends Controller
 
                             ");
 
-                           if(@$addr){
-
-                                      if(@$addr[0]->provname!=''){
-
-                                        @$address = "";
-                                        @$address .=  @$addr[0]->card_house_no ;
-                                        @$address .=  " ต.". @$addr[0]->tamname . "  ";
-                                        @$address .=  " อ.". @$addr[0]->ampname;
-                                        @$address .=  " จ.". @$addr[0]->provname;
-                                        @$address .=  " ". @$addr[0]->card_zipcode ;
-
-
-                                     }else{
-
-                                          $addr = DB::select(" SELECT
-                                              customers_address_card.id,
-                                              customers_address_card.customer_id,
-                                              customers_address_card.card_house_no,
-                                              customers_address_card.card_house_name,
-                                              customers_address_card.card_moo,
-                                              customers_address_card.card_zipcode,
-                                              customers_address_card.card_soi,
-                                              customers_address_card.created_at,
-                                              customers_address_card.updated_at,
-                                              customers.prefix_name,
-                                              customers.first_name,
-                                              customers.last_name,
-                                               dataset_amphures.name_th AS amp_name,
-                                               dataset_districts.name_th AS tambon_name,
-                                               dataset_provinces.name_th AS province_name
-                                              FROM
-                                              customers_address_card
-                                              Left Join customers ON customers_address_card.customer_id = customers.id
-                                              Left Join customers_detail ON customers.id = customers_detail.customer_id
-                                              Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-                                                       Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-                                                       Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-                                              Where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
-
-                                               ");
-
-                                         if($addr){
-
-
-                                            @$address =  @$addr[0]->card_house_no." ". @$addr[0]->card_house_name."";
-                                            @$address .=  " หมู่ ". @$addr[0]->card_moo;
-                                            @$address .=  " ซอย ". @$addr[0]->card_soi;
-                                            @$address .=  " ถนน ". @$addr[0]->card_road;
-                                            @$address .=  " ต.". @$addr[0]->tambon_name;
-                                            @$address .=  " อ.". @$addr[0]->amp_name;
-                                            @$address .=  " จ.". @$addr[0]->province_name;
-                                            @$address .=  " ". @$addr[0]->card_zipcode ;
-
-
-                                        }
-
-                                  }
+                            if(@$addr){
 
 
                                         foreach ($addr as $key => $v) {
 
+                                          @$address = @$v->card_house_no." ". @$v->card_house_name." ". @$v->card_moo."";
+                                          @$address .= @$v->card_soi." ". @$v->card_road;
+                                          @$address .= ", ต.". @$v->tamname. " ";
+                                          @$address .= ", อ.". @$v->ampname;
+                                          @$address .= ", จ.". @$v->provname;
+
+                                          @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                          if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                          }else{
+                                              @$address = null;
+                                          }
+
                                             DB::select(" UPDATE db_delivery  
                                             SET 
-                                            recipient_name = '".@$v->recipient_name."',
+                                            recipient_name = '".@$recipient_name."',
                                             addr_send = '".@$address."',
-                                            postcode = '".@$v->zip_code."',
-                                            province_id_fk = '".@$v->province_id_fk."',
-                                            province_name = '".@$v->provname."',
+                                            postcode = '".@$v->card_zipcode."',
+                                            province_id_fk = '".@$v->card_province_id_fk."',
+                                            province_name = '".@$v->province_name."',
                                             set_addr_send_this = '1'
                                             where orders_id_fk = '".$sRow->id."'
 
                                            ");
                                         }
 
-                              
+                            }
+
+                      }
+
+
+
+                      if(@$request->delivery_location==2){
+
+                          $addr = DB::select("
+                            SELECT
+                                      customers_detail.customer_id,
+                                      customers_detail.house_no,
+                                      customers_detail.house_name,
+                                      customers_detail.moo,
+                                      customers_detail.zipcode,
+                                      customers_detail.soi,
+                                      customers_detail.road,
+                                      customers_detail.province_id_fk,
+                                      customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname
+                                      FROM
+                                      customers_detail
+                                      Left Join customers ON customers_detail.customer_id = customers.id
+                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                      WHERE customers_detail.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                               ");
+
+                           if(@$addr){
+                              foreach ($addr as $key => $v) {
+
+                                  @$address = @$v->house_no." ". @$v->house_name." ". @$v->moo." ". @$v->soi." ". @$v->road." ";
+                                  @$address .= ", ต.". @$v->tamname. " ";
+                                  @$address .= ", อ.". @$v->ampname;
+                                  @$address .= ", จ.". @$v->provname;
+
+                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                  }else{
+                                      @$address = null;
+                                  }
+
+                                  if(!empty(@$v->tel_mobile)){
+                                      $tel = 'Tel. '. @$v->tel_mobile . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                  }else{
+                                      $tel = '';
+                                  }
+
+                                  @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                  DB::select(" UPDATE db_delivery  
+                                  SET 
+                                  recipient_name = '".@$recipient_name."',
+                                  addr_send = '".@$address."',
+                                  postcode = '".@$v->zipcode."',
+                                  mobile = '".@$tel."',
+                                  province_id_fk = '".@$v->province_id_fk."',
+                                  province_name = '".@$v->provname."',
+                                  set_addr_send_this = '1'
+                                  where orders_id_fk = '".$sRow->id."'
+
+                                 ");
+                              }
 
                             }
                       }
@@ -1505,7 +1532,6 @@ class FrontstoreController extends Controller
 
                             }
                       }
-
 
 
               }
@@ -1815,17 +1841,17 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  รวมรายการชำระค่าสินค้า ('.$sD3.')  
+                  '.trans('message.all_payment_list').' ('.$sD3.')  
                 </th></tr>
                 <tr>
-                  <th width="10%">พนักงานขาย</th>
-                  <th width="5%" class="text-right">เงินสด</th>
-                  <th width="5%" class="text-right">Ai-cash</th>
-                  <th width="5%" class="text-right">เงินโอน</th>
-                  <th width="5%" class="text-right">เครดิต</th>
-                  <th width="5%" class="text-right">ค่าธรรมเนียม</th>
-                  <th width="10%" class="text-right">รวมทั้งสิ้น</th>
-                  <th width="5%" class="text-right">(ค่าขนส่ง)</th>
+                  <th width="10%">'.trans('message.seller').'</th>
+                  <th width="5%" class="text-right">'.trans('message.cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.ai_cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.transfer_cash').'</th>
+                  <th width="5%" class="text-right">'.trans('message.credit_card').'</th>
+                  <th width="5%" class="text-right">'.trans('message.fee').'</th>
+                  <th width="10%" class="text-right">'.trans('message.total').'</th>
+                  <th width="5%" class="text-right">('.trans('message.transportor_fee').')</th>
                 </tr>
               </thead>
               <tbody>';
@@ -1924,16 +1950,16 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  รายการเติม Ai-Stockist ('.$sD3.')  
+                '.trans('message.payment_ai_cash_list').' ('.$sD3.')  
                 </th></tr>
                 <tr>
-                  <th width="10%">พนักงานขาย</th>
+                  <th width="10%">'.trans('message.seller').'</th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
                   <th width="5%" class="text-right"> </th>
-                  <th width="5%" class="text-right">รายการ</th>
-                  <th width="10%" class="text-right">รวมทั้งสิ้น</th>
+                  <th width="5%" class="text-right">'.trans('message.list').'</th>
+                  <th width="10%" class="text-right">'.trans('message.total').'</th>
                   <th width="5%" class="text-right"> </th>
                 </tr>
               </thead>
@@ -2043,13 +2069,13 @@ class FrontstoreController extends Controller
                   <table class="table table-sm m-0">
                     <thead>
                       <tr style="background-color: #f2f2f2;"><th colspan="8">
-                        <span class="" >รายการส่งเงินรายวัน (วันปัจจุบัน : '.date("d-m-Y").$user_login_id.') </span>
+                        <span class="" >'.trans('message.daily_cash_list').' ('.trans('message.current_day').' : '.date("d-m-Y").$user_login_id.') </span>
                         </th></tr>
                         <tr>
-                          <th class="text-center">ครั้งที่</th>
-                          <th class="text-center">รายการใบเสร็จที่ส่ง</th>
-                          <th class="text-center">ผู้ส่ง</th>
-                          <th class="text-center">วัน เวลา ที่ส่ง</th>
+                          <th class="text-center">'.trans('message.times').'</th>
+                          <th class="text-center">'.trans('message.send_reciept_list').'</th>
+                          <th class="text-center">'.trans('message.sender').'</th>
+                          <th class="text-center">'.trans('message.send_time').'</th>
                           <th class="text-center">Tool</th>
                         </tr>
                       </thead>
@@ -2148,7 +2174,7 @@ class FrontstoreController extends Controller
                           <td class="text-center">  </td>
                           <td class="text-center">  </td>
                           <td class="text-center">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18  btnSentMoney " style="" > กดส่งเงิน </a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary font-size-18  btnSentMoney " style="" > '.trans('message.btn_send_money').' </a>
                           </td>
                         </tr>
                       </tbody>
@@ -2599,39 +2625,39 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                     <thead>
                       <tr style="background-color: #f2f2f2;text-align: right;">
                         <th style="text-align: left !important;" > ('.$sD3.') </th>
-                        <th>รายการ</th>
+                        <th>'.trans('message.list').'</th>
                         <th>PV</th>
-                        <th>จำนวนเงิน</th>
+                        <th>'.trans('message.amount').'</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr style="color: red" >
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> รอตรวจสอบ,รอชำระ,รออนุมัติ</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_1').'</th>
                         <td style="text-align: right;">'.@$cnt_01.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_01,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_01,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> อนุมัติ</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_2').'</th>
                         <td style="text-align: right;">'.@$cnt_02.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_02,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_02,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> ยกเลิก</th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_3').'</th>
                         <td style="text-align: right;">'.@$cnt_03.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_03,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_03,2).' </td>
                       </tr>
                       <tr>
-                        <th scope="row"><span style="color:black !important;">สถานะ:</span> อื่นๆ <br>(ยกเว้น 3 สถานะข้างบน) </th>
+                        <th scope="row"><span style="color:black !important;">'.trans('message.status').':</span> '.trans('message.status_pv_4').'</th>
                         <td style="text-align: right;">'.@$cnt_04.' </td>
                         <td style="text-align: right;">'.number_format(@$pv_total_04,0).' </td>
                         <td style="text-align: right;">'.number_format(@$sum_price_04,2).' </td>
                       </tr>
 
                       <tr>
-                        <th scope="row">รวมทั้งหมด</th>
+                        <th scope="row">'.trans('message.total').'</th>
                         <td style="text-align: right;font-weight:bold;">'.@$cnt_05.' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$pv_total_05,0).' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$sum_price_05,2).' </td>
@@ -2770,6 +2796,8 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
           $viewcondition_02 = '';
         }
 
+   // dd($action_user_011);
+   
     $sTable = DB::select("
 
                 SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user
@@ -2820,8 +2848,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 ORDER BY created_at DESC
 
               ");
-    
-
+ 
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

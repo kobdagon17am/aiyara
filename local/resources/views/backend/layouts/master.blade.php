@@ -11,6 +11,13 @@
         <link rel="shortcut icon" href="{{ URL::asset('backend/images/favicon.ico')}}">
         <base href="{{ asset('') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        @if (session('locale') == 'en')
+            <style>
+                .metismenu li a {
+                    font-size: 15px !important;
+                }
+            </style>
+        @endif
         @include('backend.layouts.head')
     </head>
 

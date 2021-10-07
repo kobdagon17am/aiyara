@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> รายชื่อลงทะเบียน Course / Event </h4>
+            <h4 class="mb-0 font-size-18">{{ __('message.course_event_register_list_header') }}</h4>
         </div>
     </div>
 </div>
@@ -95,10 +95,10 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'details', title :'<center>รายละเอียด</center>', className: 'text-center'},
-            {data: 'regis_date', title :'<center>วันที่เข้าร่วมกิจกรรม</center>', className: 'text-center'},
-            {data: 'amt_registered', title :'<center>คะแนน</center>', className: 'text-center'},
-            {data: 'features', title :'<center>คุณวุฒิ</center>', className: 'text-center'},
+            {data: 'details', title :'<center>{{ __("message.details") }}</center>', className: 'text-center'},
+            {data: 'regis_date', title :'<center>{{ __("message.date_activities") }}</center>', className: 'text-center'},
+            {data: 'amt_registered', title :'<center>{{ __("message.score") }}</center>', className: 'text-center'},
+            {data: 'features', title :'<center>{{ __("message.qualification") }}</center>', className: 'text-center'},
         ],
 
     });

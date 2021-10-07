@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18">Course / Event</h4>
+            <h4 class="mb-0 font-size-18">{{ __('message.course_event_header') }}</h4>
         </div>
     </div>
 </div>
@@ -36,7 +36,7 @@
                 {{ csrf_field() }}
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">เลือกประเภท :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.select_type') }} :</label>
                     <div class="col-md-8">
                          <select name="ce_type" class="form-control select2-templating " >
                          <option value="">Select</option>
@@ -51,7 +51,7 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">ชื่อกิจกรรม :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.activities_name') }} :</label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->ce_name }}" name="ce_name" required>
                     </div>
@@ -59,21 +59,21 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">สถานที่จัดงาน :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.place') }} :</label>
                     <div class="col-md-8">
                         <input class="form-control" type="text" value="{{ @$sRow->ce_place }}" name="ce_place" required>
                     </div>
                 </div>           
 
                 <div class="form-group row">
-                  <label for="title" class="col-md-4 col-form-label">Title :</label>
+                  <label for="title" class="col-md-4 col-form-label">{{ __('message.title') }} :</label>
                   <div class="col-md-8">
                     <textarea name="title" class="form-control title  "  >{{@$sRow->title}}</textarea>
                   </div>
                 </div>
 
                 <div class="form-group row">
-                  <label for="detail" class="col-md-4 col-form-label">Details :</label>
+                  <label for="detail" class="col-md-4 col-form-label">{{ __('message.details') }} :</label>
                   <div class="col-md-8">
                     <textarea name="detail" class="form-control detail "  >{{@$sRow->detail}}</textarea>
                   </div>
@@ -81,14 +81,14 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">จำนวนบัตรสูงสุด :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.total_maximam_card') }} :</label>
                     <div class="col-md-8">
                         <input class="form-control" type="number" value="{{ @$sRow->ce_max_ticket }}" name="ce_max_ticket" required>
                     </div>
                 </div>   
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">ราคาบัตร (หน่วย: บาทไทย) :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.card_price') }} :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="number" value="{{ @$sRow->ce_ticket_price }}" name="ce_ticket_price" required>
                     </div>
@@ -96,21 +96,21 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">วันเริ่มจำหน่าย (mm/dd/yyyy) :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.sell_date') }} :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->ce_sdate }}" name="ce_sdate" required >
                     </div>
                 </div> 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">วันสิ้นสุดการจำหน่าย (mm/dd/yyyy) :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.expire_date') }} :</label>
                     <div class="col-md-3">
                         <input class="form-control" type="date" value="{{ @$sRow->ce_edate }}" name="ce_edate" required >
                     </div>
                 </div> 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">สมาชิก 1 คน  สามารถจองได้ (จำนวนบัตร) :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.reserve_card') }} :</label>
                     <div class="col-md-8">
                          <select name="ce_can_reserve" class="form-control select2-templating " >
                          <option value="">Select</option>
@@ -123,7 +123,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-4 col-form-label">การจำกัดจำนวน :</label>
+                    <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.card_limited') }} :</label>
                     <div class="col-md-8">
                          <select name="ce_limit" class="form-control select2-templating " >
                          <option value="">Select</option>
@@ -139,7 +139,7 @@
 
 
               <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">Package ขั้นต่ำที่ซื้อได้ : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.least_package') }} : </label>
                   <div class="col-md-8">
                     <select name="minimum_package_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -153,7 +153,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">คุณวุฒิ reward ที่ซื้อได้ : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.reward_qualification') }} : </label>
                   <div class="col-md-8">
                     <select name="reward_qualify_purchased" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติรายเดือน : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.personal_qualification_care') }} : </label>
                   <div class="col-md-8">
                     <select name="keep_personal_quality" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -182,7 +182,7 @@
 
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.travel_qualification_care') }} : </label>
                   <div class="col-md-8">
                     <select name="maintain_travel_feature" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -196,7 +196,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">aistockist : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.aistockist') }} : </label>
                   <div class="col-md-8">
                     <select name="aistockist" class="form-control select2-templating "  >
                       <option value="">Select</option>
@@ -210,7 +210,7 @@
                 </div>
 
                 <div class="form-group row">
-                  <label for="example-text-input" class="col-md-4 col-form-label">agency : </label>
+                  <label for="example-text-input" class="col-md-4 col-form-label">{{ __('message.agency') }} : </label>
                   <div class="col-md-8">
                     <select name="agency" class="form-control select2-templating "  >
                       <option value="">Select</option>

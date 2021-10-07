@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม Course/Event  </h4>
+            <h4 class="mb-0 font-size-18"> {{ __('message.course_event_save_header') }}  </h4>
         </div>
     </div>
 </div>
@@ -39,7 +39,7 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                     <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม Course/Event (รายกลุ่ม) </h4>
+                     <h4 class="mb-0 font-size-18"> {{ __('message.course_event_save_header') }} ({{ __('message.group_list') }}) </h4>
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
@@ -66,7 +66,7 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-8">
-                     <h4 class="mb-0 font-size-18"> บันทึกกิจกรรม Course/Event (รายบุคคล) </h4>
+                     <h4 class="mb-0 font-size-18"> {{ __('message.course_event_save_header') }} ({{ __('message.personal_list') }}) </h4>
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
@@ -136,13 +136,13 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'ce_name', title :'<center>ชื่อ Course/Event </center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รายชื่อลูกค้า </center>', className: 'text-center'},
-            {data: 'ticket_number', title :'<center>หมายเลขบัตร </center>', className: 'text-center'},
+            {data: 'ce_name', title :'<center>{{ __("message.course_event_name") }}</center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>{{ __("message.customer_name") }}</center>', className: 'text-center'},
+            {data: 'ticket_number', title :'<center>{{ __("message.card_number") }}</center>', className: 'text-center'},
             // {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
             //     return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             // }},
-            {data: 'regis_date', title :'<center>วันที่ลงทะเบียน </center>', className: 'text-center'},
+            {data: 'regis_date', title :'<center>{{ __("message.register_date") }}</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){

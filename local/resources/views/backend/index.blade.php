@@ -213,13 +213,13 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-4"> @lang('message.CHECKNOTIFY') </h4>
+                            <h4 class="card-title mb-4"> @lang('message.inventory_notify') </h4>
                             <div class="table-responsive">
                                 <table class="table table-centered table-nowrap">
                                     <thead class="thead-light">
                                         <div class="col-12 text-right" >
                                             <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.stock_notify.index') }}">
-                                              View Details
+                                                @lang('message.view_details')
                                             </a>
                                           </div>
                                     </thead>
@@ -245,13 +245,13 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-4">CRM Transaction</h4>
+                            <h4 class="card-title mb-4">@lang('message.crm_transaction')</h4>
                             <div class="table-responsive">
                                 <table class="table table-centered table-nowrap">
                                     <thead class="thead-light">
                                         <div class="col-12 text-right" >
                                             <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.crm.index') }}">
-                                              View Details
+                                                @lang('message.view_details')
                                             </a>
                                           </div>
                                     </thead>
@@ -276,13 +276,13 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-4">PM Transaction</h4>
+                            <h4 class="card-title mb-4">@lang('message.pm_transaction')</h4>
                             <div class="table-responsive">
                                 <table class="table table-centered table-nowrap">
                                     <thead class="thead-light">
                                          <div class="col-12 text-right" >
                                             <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" href="{{ route('backend.pm.index') }}">
-                                              View Details
+                                                @lang('message.view_details')
                                             </a>
                                           </div>
                                     </thead>
@@ -330,10 +330,10 @@
 
                 columns: [
                     {data: 'id', title :'ID', className: 'text-center w50'},
-                    {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w240 '},
-                    {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-center'},
-                    {data: 'amt', title :'<center>จำนวนคงคลังล่าสุด</center>', className: 'text-center w100 '},
-                    {data: 'amt_less', title :'<center>จำนวนไม่ต่ำกว่า (ชิ้น)</center>', className: 'text-center w100 ',render: function(d) {
+                    {data: 'product_name', title :'<center>{{ __("message.product_code_name") }}</center>', className: 'text-left w240 '},
+                    {data: 'warehouses', title :'<center>{{ __("message.inventory") }}</center>', className: 'text-center'},
+                    {data: 'amt', title :'<center>{{ __("message.inventory_latest_list") }}</center>', className: 'text-center w100 '},
+                    {data: 'amt_less', title :'<center>{{ __("message.least_piece") }}</center>', className: 'text-center w100 ',render: function(d) {
                       // if(d==0){
                       //   return '* ยังไม่ได้กำหนด';
                       // }else{
@@ -347,8 +347,8 @@
                         return '';
                       // }
                     }},
-                    {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                    {data: 'amt_day_before_expired', title :'<center>แจ้งเตือนก่อนวันหมดอายุ (วัน)</center>', className: 'text-center w100 ',render: function(d) {
+                    {data: 'lot_expired_date', title :'<center>{{ __("message.expiration_date") }}</center>', className: 'text-center'},
+                    {data: 'amt_day_before_expired', title :'<center>{{ __("message.warning_before_expiration_date") }}</center>', className: 'text-center w100 ',render: function(d) {
                       // if(d==0){
                       //   return '* ยังไม่ได้กำหนด';
                       // }else{
@@ -453,13 +453,13 @@ $(function() {
         },
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'role_name', title :'<center>แผนก </center>', className: 'text-center'},
+            {data: 'role_name', title :'<center>{{ __("message.department") }}</center>', className: 'text-center'},
             // {data: 'subject_receipt_number', title :'<center>เลขใบรับเรื่อง </center>', className: 'text-left'},
-            {data: 'receipt_date', title :'<center>วันที่-เวลา รับเรื่อง </center>', className: 'text-center'},
-            {data: 'topics_reported', title :'<center>หัวข้อที่ลูกค้าแจ้ง </center>', className: 'text-center'},
-            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-center'},
-            {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-center'},
-            {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-center'},
+            {data: 'receipt_date', title :'<center>{{ __("message.complaint_time_date") }}</center>', className: 'text-center'},
+            {data: 'topics_reported', title :'<center>{{ __("message.customer_topic") }}</center>', className: 'text-center'},
+            {data: 'recipient_name', title :'<center>{{ __("message.reciever") }}</center>', className: 'text-center'},
+            {data: 'operator_name', title :'<center>{{ __("message.operator") }}</center>', className: 'text-center'},
+            {data: 'last_update', title :'<center>{{ __("message.update_list") }}</center>', className: 'text-center'},
             {data: 'status_close_job',   title :'<center>Status</center>', className: 'text-center w150 ',render: function(d) {
                return d==1?'<span class="badge badge-pill badge-soft-success font-size-16">ปิดจ๊อบ</span>':'<span class="badge badge-pill badge-soft-danger font-size-16">Pending</span>';
             }},
@@ -521,20 +521,20 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'role_name', title :'<center>แผนก </center>', className: 'text-left'},
-            {data: 'receipt_date', title :'<center>วันที่รับเรื่อง </center>', className: 'text-left'},
-            {data: 'topics_question', title :'<center>หัวข้อที่ลูกค้าสอบถามเข้ามา </center>', className: 'text-left'},
+            {data: 'role_name', title :'<center>{{ __("message.department") }}</center>', className: 'text-left'},
+            {data: 'receipt_date', title :'<center>{{ __("message.complaint_date") }}</center>', className: 'text-left'},
+            {data: 'topics_question', title :'<center>{{ __("message.customer_topic2") }}</center>', className: 'text-left'},
             // {data: 'details_question', title :'<center>รายละเอียดคำถาม </center>', className: 'text-left'},
-            {data: 'txt_answers',   title :'<center>คำตอบ</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
+            {data: 'txt_answers',   title :'<center>{{ __("message.feedback") }}</center>', className: 'text-center font-size-16 th_ ',render: function(d) {
                            return '<span class="badge badge-pill badge-primary font-size-14">'+d+'</span>';
                         }},
             {data: 'level_class',   title :'<center>Class</center>', className: 'text-center ',render: function(d) {
                            return '<span class="badge badge-pill badge-soft-success font-size-16">'+d+'</span>';
             }},
 
-            {data: 'recipient_name', title :'<center>ผู้รับเรื่อง </center>', className: 'text-left'},
-            {data: 'operator_name', title :'<center>ผู้ดำเนินการ </center>', className: 'text-left'},
-            {data: 'last_update', title :'<center>วันที่-เวลา อัพเดตล่าสุด </center>', className: 'text-left'},
+            {data: 'recipient_name', title :'<center>{{ __("message.reciever") }}</center>', className: 'text-left'},
+            {data: 'operator_name', title :'<center>{{ __("message.operator") }}</center>', className: 'text-left'},
+            {data: 'last_update', title :'<center>{{ __("message.update_list") }}</center>', className: 'text-left'},
             {data: 'status_close_job',   title :'<center>Status</center>', className: 'text-center w150 ',render: function(d) {
                return d==1?'<span class="badge badge-pill badge-soft-success font-size-16">ปิดจ๊อบ</span>':'<span class="badge badge-pill badge-soft-danger font-size-16">Pending</span>';
             }},

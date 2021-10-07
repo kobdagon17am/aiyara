@@ -12,7 +12,7 @@ class Course_history_listController extends Controller
 
     public function index(Request $request)
     {
-
+        
       // $dsCourse_history_list  = \App\Models\Backend\Course_history_list::get();
       // $dsCourse_event = \App\Models\Backend\Course_event::find($dsCourse_history_list->course_event_id_fk);
       // return view('backend.course_history_list.index')->with(['dsCourse_history_list'=>$dsCourse_history_list,'dsCourse_event'=>$dsCourse_event]);

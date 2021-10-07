@@ -533,24 +533,6 @@ class FrontstorelistController extends Controller
 
        	    }else{
 
-
-// array:14 [▼
-//   "update_delivery_custom" => "1"
-//   "customers_addr_frontstore_id" => "34"
-//   "invoice_code" => null
-//   "frontstore_id" => "34"
-//   "customers_id_fk" => "150736"
-//   "_token" => "aVOig3fJv8OOmrcwqXpqbTEEcNne4ikLDwZWhkE6"
-//   "delivery_cusname" => "ศิริศักดิ์ ประพฤติ"
-//   "delivery_addr" => "206 ม.5 ซ.ประมง 7"
-//   "delivery_province" => "31"
-//   "delivery_amphur" => "460"
-//   "delivery_tambon" => "430116"
-//   "delivery_zipcode" => "43000"
-//   "delivery_tel" => "0864594116"
-//   "delivery_tel_home" => "-"
-
-
               // dd($request->all());
 
        	    	 DB::select(" UPDATE customers_addr_frontstore
