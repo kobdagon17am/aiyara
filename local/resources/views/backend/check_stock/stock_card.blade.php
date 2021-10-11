@@ -24,8 +24,8 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
               
-          <!--     &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-               <i class="bx bx-play"></i> {{@$wh}}  -->
+               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+               <i class="bx bx-play"></i> {{@$wh}} 
 
              </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
@@ -125,7 +125,9 @@ $(document).ready(function() {
 
       $(document).on('click', '.btnProcess', function(event) {
            
-              var product_id_fk =  "{{@$Products[0]->product_id}}";
+              var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              var product_id_fk =  "{{@$Products[0]->product_id}}"; //
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
 
               var start_date =  $('#start_date').val();
@@ -140,7 +142,12 @@ $(document).ready(function() {
                 return false;
               }     
 
-              // alert(start_date);   
+              console.log(business_location_id_fk);   
+              console.log(branch_id_fk);   
+              console.log(product_id_fk);   
+              console.log(lot_number);   
+              console.log(start_date);   
+              console.log(end_date);   
 
               $(".myloading").show();
 
@@ -150,6 +157,8 @@ $(document).ready(function() {
                           url: " {{ url('backend/ajaxProcessStockcard') }} ", 
                           method: "post",
                           data: {
+                            business_location_id_fk:business_location_id_fk,
+                            branch_id_fk:branch_id_fk,
                             product_id_fk:product_id_fk,
                             lot_number:lot_number,
                             start_date:start_date,
@@ -245,7 +254,7 @@ $(document).ready(function() {
                                             {
                                                $(".btnPrint").hide();
                                             }else{
-                                                $(".btnPrint").show();
+                                                // $(".btnPrint").show();
                                             }
 
                                             // $(".amt_remain").load(location.href + " .amt_remain");
@@ -308,15 +317,15 @@ $(document).ready(function() {
          // });
 
 
-      $(document).ready(function() {
-          var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
-          var res = date_s_e.split(":");
-          var start_date = res[0]; //alert(start_date);
-          var end_date = res[1]; //alert(end_date);
-          $('#start_date').val(start_date);
-          $('#end_date').val(end_date);
+      // $(document).ready(function() {
+      //     var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
+      //     var res = date_s_e.split(":");
+      //     var start_date = res[0]; //alert(start_date);
+      //     var end_date = res[1]; //alert(end_date);
+      //     $('#start_date').val(start_date);
+      //     $('#end_date').val(end_date);
 
-      });
+      // });
 
 
   </script>   

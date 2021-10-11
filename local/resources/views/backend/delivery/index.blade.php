@@ -1284,7 +1284,6 @@ $(function() {
               // console.log(id);
 
               setTimeout(function(){
-                 // window.open("{{ url('backend/frontstore/test_print_receipt_02') }}"+"/"+id);
                  window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
                  $(".myloading").hide();
               }, 500);

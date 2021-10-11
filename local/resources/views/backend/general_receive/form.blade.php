@@ -399,7 +399,7 @@
                     style="background-color: #f2f2f2;">
                   <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver">
                   @else
-                  <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly
+                  <input class="form-control" type="text" value="{{ @$Approver[0]->name }}" readonly
                     style="background-color: #f2f2f2;">
                   <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver">
                   @endif

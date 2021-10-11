@@ -4699,82 +4699,113 @@ if($frontstore[0]->check_press_save==2){
 
     }
 
-   public function insertStockCard($data){
-        DB::table('db_stock_card')->insert($data);
-   }
 
 
     public function ajaxProcessStockcard(Request $request)
     {
         // return  $request ;
-        // dd();
 
-/*
-{product_id_fk: "1", lot_number: "lot1111", start_date: "2021-08-01", end_date: "2021-08-31", _token: "ARAtoYAya4uQooep7bnTwH8uJMAsqhdYAQVYVRlO"}
-end_date: "2021-08-31"
-lot_number: "lot1111"
-product_id_fk: "1"
-start_date: "2021-08-01"
 
-*/
-
-        if(isset($request->product_id_fk)){
-            $w01 = " AND  product_id_fk =".$request->product_id_fk."  " ;
+        if(isset($request->business_location_id_fk)){
+            $w01 = " AND  business_location_id_fk =".$request->business_location_id_fk."  " ;
         }else{
             $w01 = '';
         }
 
-
-        if(isset($request->product_id_fk)){
-            $w02 = " AND  lot_number ='".$request->lot_number."'  " ;
+        if(isset($request->branch_id_fk)){
+            $w02 = " AND  branch_id_fk ='".$request->branch_id_fk."'  " ;
         }else{
             $w02 = '';
         }
 
-        $d2 = 0;
-        if(isset($request->start_date) && isset($request->end_date)){
-           $w03 = " and date(db_stock_movement.doc_date) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  " ;
-
-           $d1 =  DB::select(" SELECT date(doc_date) as doc_date  FROM `db_stock_movement` WHERE product_id_fk=".$request->product_id_fk." and lot_number='".$request->lot_number."' and date(doc_date)<='".$request->start_date."' ORDER BY doc_date DESC limit 1 ;");
-           if($d1){
-            $d2 =  DB::select(" SELECT sum(CASE WHEN in_out=1 THEN amt ELSE amt*(-1) END) as s FROM `db_stock_movement` WHERE product_id_fk=".$request->product_id_fk." and lot_number='".$request->lot_number."' and date(doc_date)='".$d1[0]->doc_date."' GROUP BY product_id_fk,lot_number ;");
-            $d2 = @$d2[0]->s;
-           }
-
+        if(isset($request->product_id_fk)){
+            $w03 = " AND  product_id_fk ='".$request->product_id_fk."'  " ;
         }else{
-           $w03 = "";
-           $d2 = 0;
+            $w03 = '';
         }
 
-
-// branch_id_fk:branch_id_fk,
-// warehouse_id_fk:warehouse_id_fk,
-// zone_id_fk:zone_id_fk,
-// shelf_id_fk:shelf_id_fk,
-// shelf_floor:shelf_floor,
-
-        if(isset($request->branch_id_fk)){
-          //  $w04 = " AND  branch_id_fk ='".$request->branch_id_fk."' AND  warehouse_id_fk ='".$request->warehouse_id_fk."' AND  zone_id_fk ='".$request->zone_id_fk."' AND  shelf_id_fk ='".$request->shelf_id_fk."' AND  shelf_floor ='".$request->shelf_floor."' " ;
-            $w04 = " AND  branch_id_fk ='".$request->branch_id_fk."' AND  warehouse_id_fk ='".$request->warehouse_id_fk."' AND  zone_id_fk ='".$request->zone_id_fk."' " ;
+        if(isset($request->lot_number)){
+            $w04 = " AND  lot_number ='".$request->lot_number."'  " ;
         }else{
             $w04 = '';
         }
 
-        // return "to here" ;
-        // dd();
+        if(isset($request->start_date) && isset($request->end_date)){
+            $w05 = " and date(db_stock_movement.doc_date) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  " ;
+        }else{
+            $w05 = '';
+        }
 
-        DB::select(" TRUNCATE db_stock_card; ");
+
+        $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;
+        DB::select(" DROP TABLE IF EXISTS $temp_db_stock_card ; ");
+        DB::select(" CREATE TABLE $temp_db_stock_card LIKE db_stock_card ");
+
 
         if($request->ajax()){
 
-          DB::select(" INSERT INTO db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
+       //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
+        $amt_balance_stock =  DB::select(" SELECT amt FROM db_stocks 
+            WHERE 1 
+            $w01 
+            $w02
+            $w03 
+            $w04
+
+             ") ;
+        $amt_balance_stock = @$amt_balance_stock[0]->amt ? $amt_balance_stock[0]->amt : 0 ;
+
+        $amt_in_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+            WHERE 1
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
+            AND in_out=1;
+
+            ") ;
+
+        $amt_in_stock = @$amt_in_stock[0]->amt ? $amt_in_stock[0]->amt : 0 ;
+
+        $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+
+            WHERE 1
+                 $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05  
+            AND in_out=2; 
+            ") ;
+
+        $amt_out_stock = @$amt_out_stock[0]->amt ? $amt_out_stock[0]->amt : 0 ;
+
+
+        $amt_balance_stock = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
+        $amt_balance_stock_02 = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
+
+        if($amt_balance_stock < 0 ) {
+            // $amt_balance_stock = 0 ;
+            $txt = "* ถ้ายอดยกมา ติดลบ อาจเกิดจากข้อมูลทดสอบ ปรับยอดคลังอีกครั้ง ";
+        } else {
+            $txt = "ยอดคงเหลือยกมา";
+        }
+
+          // DB::select(" INSERT INTO $temp_db_stock_card (details) VALUES ('ยอดคงเหลือยกมา') ") ;
+          DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('".$txt."',".$amt_balance_stock.") ") ;
 
         // return "to here" ;
         // dd();
 
 
           $Data = DB::select("
-                SELECT * FROM db_stock_movement where 1 $w01 $w02 $w03 $w04
+                SELECT * FROM db_stock_movement where 1 
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
           ");
 
 
@@ -4787,22 +4818,20 @@ start_date: "2021-08-01"
                $insertData = array(
                   "ref_inv" =>  @$value->doc_no?$value->doc_no:NULL,
                   "action_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  // "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                  "sender" =>  @$value->sender?$value->sender:NULL,
+                  "sent_date" =>  @$value->sent_date?$value->sent_date:NULL,
+                  "who_cancel" =>  @$value->who_cancel?$value->who_cancel:NULL,
+                  "cancel_date" =>  @$value->cancel_date?$value->cancel_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  // "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
                   "details" =>  @$value->note?$value->note:NULL,
-                  // "amt" =>  @$value->amt?$value->amt:0,
-                  // "in_out" =>  @$value->in_out?$value->in_out:0,
                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
-                  // "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  // "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  // "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  // "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  // "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  // "status" =>  @$value->status?$value->status:0,
-                  // "note" =>  @$value->note?$value->note:NULL,
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -4810,12 +4839,214 @@ start_date: "2021-08-01"
 
             }
 
+            // if($amt_balance_stock_02<0){
+            //      DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('หมายเหตุ',0) ") ;
+            // }
+
             return "db_stock_card => success";
 
 
 
         }
     }
+
+
+
+    public function ajaxProcessStockcard_01(Request $request)
+    {
+        // return  $request ;
+
+
+        if(isset($request->business_location_id_fk)){
+            $w01 = " AND  business_location_id_fk =".$request->business_location_id_fk."  " ;
+        }else{
+            $w01 = '';
+        }
+
+        if(isset($request->branch_id_fk)){
+            $w02 = " AND  branch_id_fk ='".$request->branch_id_fk."'  " ;
+        }else{
+            $w02 = '';
+        }
+
+        if(isset($request->product_id_fk)){
+            $w03 = " AND  product_id_fk ='".$request->product_id_fk."'  " ;
+        }else{
+            $w03 = '';
+        }
+
+        if(isset($request->lot_number)){
+            $w04 = " AND  lot_number ='".$request->lot_number."'  " ;
+        }else{
+            $w04 = '';
+        }
+
+        if(isset($request->start_date) && isset($request->end_date)){
+            $w05 = " and date(db_stock_movement.doc_date) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  " ;
+        }else{
+            $w05 = '';
+        }
+
+        if(isset($request->warehouse_id_fk)){
+            $w06 = " AND  warehouse_id_fk ='".$request->warehouse_id_fk."'  " ;
+        }else{
+            $w06 = '';
+        }
+
+        if(isset($request->zone_id_fk)){
+            $w07 = " AND  zone_id_fk ='".$request->zone_id_fk."'  " ;
+        }else{
+            $w07 = '';
+        }
+
+        if(isset($request->shelf_id_fk)){
+            $w08 = " AND  shelf_id_fk ='".$request->shelf_id_fk."'  " ;
+        }else{
+            $w08 = '';
+        }
+
+        if(isset($request->shelf_floor)){
+            $w09 = " AND  shelf_floor ='".$request->shelf_floor."'  " ;
+        }else{
+            $w09 = '';
+        }
+
+
+        $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
+        DB::select(" DROP TABLE IF EXISTS $temp_db_stock_card ; ");
+        DB::select(" CREATE TABLE $temp_db_stock_card LIKE db_stock_card ");
+
+
+        if($request->ajax()){
+
+       //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
+        $amt_balance_stock =  DB::select(" SELECT amt FROM db_stocks 
+            WHERE 1 
+            $w01 
+            $w02
+            $w03 
+            $w04
+
+             ") ;
+        $amt_balance_stock = @$amt_balance_stock[0]->amt ? $amt_balance_stock[0]->amt : 0 ;
+
+        $amt_in_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+            WHERE 1
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
+                $w06 
+                $w07
+                $w08
+                $w09
+            AND in_out=1;
+
+            ") ;
+
+        $amt_in_stock = @$amt_in_stock[0]->amt ? $amt_in_stock[0]->amt : 0 ;
+
+        $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+
+            WHERE 1
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
+                $w06 
+                $w07
+                $w08
+                $w09
+            AND in_out=2; 
+            ") ;
+
+        $amt_out_stock = @$amt_out_stock[0]->amt ? $amt_out_stock[0]->amt : 0 ;
+
+
+        $amt_balance_stock = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
+        $amt_balance_stock_02 = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
+
+        if($amt_balance_stock < 0 ) {
+            // $amt_balance_stock = 0 ;
+            $txt = "* ถ้ายอดยกมา ติดลบ อาจเกิดจากข้อมูลทดสอบ ปรับยอดคลังอีกครั้ง ";
+        } else {
+            $txt = "ยอดคงเหลือยกมา";
+        }
+
+          // DB::select(" INSERT INTO $temp_db_stock_card (details) VALUES ('ยอดคงเหลือยกมา') ") ;
+          DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('".$txt."',".$amt_balance_stock.") ") ;
+
+        // return "to here" ;
+        // dd();
+
+
+          $Data = DB::select("
+                SELECT * FROM db_stock_movement where 1 
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
+                $w06 
+                $w07
+                $w08
+                $w09
+          ");
+
+
+        // return  $Data ;
+        // return "to here" ;
+        // dd();
+
+          foreach ($Data as $key => $value) {
+
+               $insertData = array(
+                  "ref_inv" =>  @$value->doc_no?$value->doc_no:NULL,
+                  "action_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                  "sender" =>  @$value->sender?$value->sender:NULL,
+                  "sent_date" =>  @$value->sent_date?$value->sent_date:NULL,
+                  "who_cancel" =>  @$value->who_cancel?$value->who_cancel:NULL,
+                  "cancel_date" =>  @$value->cancel_date?$value->cancel_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                  "details" =>  @$value->note?$value->note:NULL,
+                  "amt_in" =>  @$value->in_out==1?$value->amt:0,
+                  "amt_out" =>  @$value->in_out==2?$value->amt:0,
+                  "created_at" =>@$value->dd?$value->dd:NULL
+              );
+
+                AjaxController::insertStockCard_01($insertData);
+
+            }
+
+            // if($amt_balance_stock_02<0){
+            //      DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('หมายเหตุ',0) ") ;
+            // }
+
+            return "db_stock_card_01 => success";
+
+
+
+        }
+    }
+
+   public function insertStockCard($data){
+        $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;
+        DB::table($temp_db_stock_card)->insert($data);
+   }
+
+
+   public function insertStockCard_01($data){
+        $temp_db_stock_card_01 = "temp_db_stock_card_01".\Auth::user()->id;
+        DB::table($temp_db_stock_card_01)->insert($data);
+   }
 
 
   public function truncateStockMovement(){
@@ -4835,19 +5066,34 @@ start_date: "2021-08-01"
 
         // ดึงจากตารางรับเข้า > db_general_receive
         $Data = DB::select("
-                SELECT po_invoice_no as doc_no,db_general_receive.created_at as doc_date,branch_id_fk,
+                SELECT db_general_receive.business_location_id_fk,
+                (
+                CASE WHEN po_invoice_no='-' or po_invoice_no is null THEN CONCAT('CODE',db_general_receive.id) ELSE CONCAT('CODE',po_invoice_no) END
+                ) as doc_no
+                ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd
+                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
+                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date
                 FROM
                 db_general_receive
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
           ");
 
           foreach ($Data as $key => $value) {
-
+/*
+  `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ดำเนินการ',
+  `action_date` datetime DEFAULT NULL COMMENT 'วันทำการ',
+  `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
+  `approve_date` datetime DEFAULT NULL COMMENT 'วันเวลาอนุมัติ',
+  `sender` int(11) DEFAULT '0' COMMENT 'ผู้จัดส่ง Ref>ck_users_admin>id',
+  `sent_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการจัดส่ง',
+  `who_cancel` int(11) DEFAULT '0' COMMENT 'ผู้ยกเลิกการเบิกครั้งนี้ Ref>ck_users_admin>id',
+  `cancel_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการยกเลิก',
+*/
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -4861,6 +5107,12 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -4884,9 +5136,10 @@ start_date: "2021-08-01"
 
         // ดึงจากตารางรับเข้า > db_general_receive
         $Data = DB::select("
-                SELECT db_general_takeout.id as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
+                SELECT db_general_takeout.business_location_id_fk,CONCAT('CODE',db_general_takeout.id) as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
                 db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd
+                concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd,
+                db_general_takeout.recipient as action_user,db_general_takeout.approver as approver,db_general_takeout.updated_at as approve_date
                 FROM
                 db_general_takeout
                 left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
@@ -4897,6 +5150,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -4910,6 +5164,12 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -4935,14 +5195,18 @@ start_date: "2021-08-01"
         // ดึงจากตารางกาปรับยอดคลัง > db_stocks_account_code , db_stocks_account
         // ปรับปรุงยอด (ลด)
         $Data = DB::select("
-                SELECT
-                run_code as doc_no,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
+                SELECT db_stocks_account.business_location_id_fk,
+                (
+                CASE WHEN run_code='-' or run_code is null THEN CONCAT('CODE',db_stocks_account.id) ELSE CONCAT('CODE',run_code) END
+                ) as doc_no
+                ,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
                 db_stocks_account.product_id_fk, db_stocks_account.lot_number,lot_expired_date,
                 (CASE WHEN  db_stocks_account.amt_diff <0 THEN  db_stocks_account.amt_diff * (-1) ELSE  db_stocks_account.amt_diff END) as amt,
                 2 as 'in_out',product_unit_id_fk,
                 warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
                 'ปรับปรุงยอด (ลด)' as note,
-                 db_stocks_account_code.updated_at as dd
+                 db_stocks_account_code.updated_at as dd,
+                 db_stocks_account.action_user as action_user,db_stocks_account.approver as approver,db_stocks_account.approve_date as approve_date
                 FROM
                 db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
                 WHERE
@@ -4954,6 +5218,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -4967,6 +5232,13 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+                  
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -4976,14 +5248,18 @@ start_date: "2021-08-01"
 
             // ปรับปรุงยอด (เพิ่ม)
                 $Data = DB::select("
-                        SELECT
-                        run_code as doc_no,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
+                        SELECT db_stocks_account.business_location_id_fk,
+                        (
+                            CASE WHEN run_code='-' or run_code is null THEN CONCAT('CODE',db_stocks_account.id) ELSE CONCAT('CODE',run_code) END
+                            ) as doc_no
+                            ,db_stocks_account.updated_at as doc_date,db_stocks_account.branch_id_fk,
                         db_stocks_account.product_id_fk, db_stocks_account.lot_number,lot_expired_date,
                         db_stocks_account.amt_diff as amt,
                         1 as 'in_out',product_unit_id_fk,
                         warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_account.status_accepted as status,
                         'ปรับปรุงยอด (เพิ่ม)' as note,
-                         db_stocks_account_code.updated_at as dd
+                         db_stocks_account_code.updated_at as dd,
+                         db_stocks_account.action_user as action_user,db_stocks_account.approver as approver,db_stocks_account.approve_date as approve_date
                         FROM
                         db_stocks_account LEFT JOIN db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk=db_stocks_account_code.id
                         WHERE
@@ -4995,6 +5271,7 @@ start_date: "2021-08-01"
                        $insertData = array(
                           "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                           "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                           "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                           "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                           "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5008,6 +5285,12 @@ start_date: "2021-08-01"
                           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                           "status" =>  @$value->status?$value->status:0,
                           "note" =>  @$value->note?$value->note:NULL,
+
+                            "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                            "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                            "approver" =>  @$value->approver?$value->approver:NULL,
+                            "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                           "created_at" =>@$value->dd?$value->dd:NULL
                       );
 
@@ -5033,13 +5316,17 @@ start_date: "2021-08-01"
 
         // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
         $Data = DB::select("
-                 SELECT
-                borrow_number as doc_no,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
+                SELECT db_products_borrow_code.business_location_id_fk,
+                (
+                CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE CONCAT('CODE',borrow_number) END
+                ) as doc_no
+                ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
 
                 db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
                 db_products_borrow_details.amt,2 as 'in_out',product_unit_id_fk
                 ,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_products_borrow_code.approve_status as status,
-                 'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd
+                'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd,
+                db_products_borrow_details.action_user as action_user,db_products_borrow_details.approver as approver,db_products_borrow_details.approve_date as approve_date
                 FROM
                 db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
           ");
@@ -5049,6 +5336,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5062,6 +5350,12 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -5089,6 +5383,7 @@ start_date: "2021-08-01"
         $Data = DB::select("
 
                 SELECT
+                db_transfer_warehouses_code.business_location_id_fk,
                 db_transfer_warehouses_code.tr_number as doc_no,
                 db_transfer_warehouses_code.updated_at as doc_date,
                 db_transfer_warehouses_code.branch_id_fk,
@@ -5100,7 +5395,8 @@ start_date: "2021-08-01"
                 product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
 
                 'โอนภายในสาขา' as note,
-                db_transfer_warehouses_code.updated_at as dd
+                db_transfer_warehouses_code.updated_at as dd,
+                db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
                 FROM
                 db_transfer_warehouses_details
                 Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
@@ -5112,6 +5408,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5125,6 +5422,12 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+                                      
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -5151,6 +5454,7 @@ start_date: "2021-08-01"
         $Data = DB::select("
 
                 SELECT
+                db_transfer_branch_code.business_location_id_fk,
                 db_transfer_branch_code.tr_number as doc_no,
                 db_transfer_branch_code.updated_at as doc_date,
                 db_transfer_branch_code.branch_id_fk,
@@ -5162,7 +5466,8 @@ start_date: "2021-08-01"
                 product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_branch_code.approve_status as status,
 
                 'โอนระหว่างสาขา (จ่ายออกจากการโอน)' as note,
-                db_transfer_branch_code.updated_at as dd
+                db_transfer_branch_code.updated_at as dd,
+                db_transfer_branch_details.action_user as action_user,db_transfer_branch_code.approver as approver,db_transfer_branch_code.approve_date as approve_date
                 FROM
                 db_transfer_branch_details
                 Left Join db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id = db_transfer_branch_code.id
@@ -5174,6 +5479,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5187,6 +5493,11 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -5198,6 +5509,7 @@ start_date: "2021-08-01"
      // รับเข้าจากการโอน
         $Data = DB::select("
                 SELECT
+                db_transfer_branch_get.business_location_id_fk,
                 db_transfer_branch_get.tr_number as doc_no,
                 db_transfer_branch_get.updated_at as doc_date,
                 db_transfer_branch_get.branch_id_fk,
@@ -5208,7 +5520,8 @@ start_date: "2021-08-01"
                 product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_branch_get.approve_status as status
                 ,(case WHEN db_transfer_branch_get.tr_status_get=6 THEN 'โอนระหว่างสาขา (รับคืนจากการฏิเสธการรับ)'
                 ELSE 'โอนระหว่างสาขา (รับเข้าจากการโอน)' END) as note,
-                db_transfer_branch_get.updated_at as dd
+                db_transfer_branch_get.updated_at as dd,
+                db_transfer_branch_get_products_receive.action_user as action_user,db_transfer_branch_get.approver as approver,db_transfer_branch_get.approve_date as approve_date
                 FROM
                 db_transfer_branch_get_products_receive
                 Left Join db_transfer_branch_get ON db_transfer_branch_get_products_receive.transfer_branch_get_id_fk = db_transfer_branch_get.id
@@ -5220,6 +5533,7 @@ start_date: "2021-08-01"
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5233,6 +5547,12 @@ start_date: "2021-08-01"
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -5260,8 +5580,8 @@ start_date: "2021-08-01"
         $Data = DB::select("
 
             SELECT
-            invoice_code  as doc_no,
-            (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
+            db_pay_product_receipt_002.invoice_code  as doc_no,
+            db_pay_product_receipt_001.action_date as doc_date,
                 db_pay_product_receipt_002.branch_id_fk,
             product_id_fk,
             lot_number,
@@ -5271,102 +5591,133 @@ start_date: "2021-08-01"
             'จ่ายสินค้าตามใบเสร็จ' as note,
             db_pay_product_receipt_002.updated_at as dd
             FROM db_pay_product_receipt_002
+            LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=db_pay_product_receipt_002.orders_id_fk
+
 
           ");
+        
+        if(@$Data){
 
-        if(count($Data) == 1){
+                if(count($Data) == 1){
 
-                    $Data1 = DB::select("
+                            $Data1 = DB::select("
 
-                    SELECT
-                    invoice_code  as doc_no,
-                    (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
-                        db_pay_product_receipt_002.branch_id_fk,
-                    product_id_fk,
-                    lot_number,
-                    lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
-                    warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                    (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
-                    'จ่ายสินค้าตามใบเสร็จ' as note,
-                    db_pay_product_receipt_002.updated_at as dd
-                    FROM db_pay_product_receipt_002
-
-                  ");
-
-
-                  foreach ($Data1 as $key => $value) {
-
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
-
-                        AjaxController::insertStockMovement($insertData);
-
-                }
-
-        }else{
-
-             if(count($Data) > 0 ){
+            SELECT
+            db_pay_product_receipt_002.invoice_code  as doc_no,
+            db_pay_product_receipt_001.action_date as doc_date,
+                db_pay_product_receipt_002.branch_id_fk,
+            product_id_fk,
+            lot_number,
+            lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
+            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+            (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
+            'จ่ายสินค้าตามใบเสร็จ' as note,
+            db_pay_product_receipt_002.updated_at as dd
+            FROM db_pay_product_receipt_002
+            LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=db_pay_product_receipt_002.orders_id_fk
 
 
-                    $Data1 = DB::select("
+                          ");
 
-                    SELECT
-                    invoice_code  as doc_no,
-                    (SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
-                        db_pay_product_receipt_002.branch_id_fk,
-                    product_id_fk,
-                    lot_number,
-                    lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
-                    warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                    (SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
-                    concat('จ่ายสินค้าตามใบเสร็จ  ครั้งที่ '  , time_pay) as note,
-                    db_pay_product_receipt_002.updated_at as dd
-                    FROM db_pay_product_receipt_002
+                    if(@$Data1){
 
-                  ");
+                          foreach ($Data1 as $key => $value) {
+
+                               $insertData = array(
+                                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                  "amt" =>  @$value->amt?$value->amt:0,
+                                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                  "status" =>  @$value->status?$value->status:0,
+                                  "note" =>  @$value->note?$value->note:NULL,
 
 
-                  foreach ($Data1 as $key => $value) {
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
 
-                        AjaxController::insertStockMovement($insertData);
-                }
-             }
+                                  "created_at" =>@$value->dd?$value->dd:NULL
+                              );
 
+                                AjaxController::insertStockMovement($insertData);
+
+                        }
+                    }
+
+                }else{
+
+                     if(count($Data) > 0 ){
+
+
+                            $Data1 = DB::select("
+
+SELECT
+db_pay_product_receipt_002.business_location_id_fk,
+db_pay_product_receipt_002.invoice_code  as doc_no,
+(SELECT pay_date from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as doc_date,
+db_pay_product_receipt_002.branch_id_fk,
+product_id_fk,
+lot_number,
+lot_expired_date,amt_get as amt,2 as 'in_out',product_unit_id_fk,
+warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+(SELECT status_sent from db_pay_product_receipt_001 WHERE invoice_code=db_pay_product_receipt_002.invoice_code limit 1) as status,
+concat('จ่ายสินค้าตามใบเสร็จ  ครั้งที่ '  , db_pay_product_receipt_002.time_pay) as note,
+db_pay_product_receipt_002.updated_at as dd,
+db_pay_product_receipt_001.action_user as action_user,db_pay_product_receipt_001.pay_user as approver,db_pay_product_receipt_001.pay_date as approve_date
+FROM db_pay_product_receipt_002
+LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=db_pay_product_receipt_002.orders_id_fk
+
+                          ");
+
+                        if(@$Data1){
+
+                          foreach ($Data1 as $key => $value) {
+
+                               $insertData = array(
+                                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                  "amt" =>  @$value->amt?$value->amt:0,
+                                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                  "status" =>  @$value->status?$value->status:0,
+                                  "note" =>  @$value->note?$value->note:NULL,
+
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+
+                                  "created_at" =>@$value->dd?$value->dd:NULL
+                              );
+
+                                AjaxController::insertStockMovement($insertData);
+                         }
+                        }
+                     }
+
+              }
       }
 
       return "(7) จ่ายสินค้าตามใบเสร็จ : db_pay_product_receipt_001 => success";
@@ -5385,49 +5736,65 @@ start_date: "2021-08-01"
 
         // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
         $Data = DB::select("
-                SELECT
-                db_stocks_return.invoice_code as doc_no,
-                db_stocks_return.updated_at as doc_date,
-                db_stocks_return.branch_id_fk,
-                product_id_fk,
-                lot_number,
-                lot_expired_date,
-                amt,
-                1 as 'in_out',
-                product_unit_id_fk,
-                warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
-                'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
-                updated_at as dd
-                FROM db_stocks_return
-                WHERE
-                db_stocks_return.status_cancel=1
+SELECT
+db_stocks_return.business_location_id_fk,
+db_stocks_return.invoice_code as doc_no,
+db_stocks_return.updated_at as doc_date,
+db_stocks_return.branch_id_fk,
+product_id_fk,
+lot_number,
+lot_expired_date,
+amt,
+1 as 'in_out',
+product_unit_id_fk,
+warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+db_stocks_return.updated_at as dd,
+db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+
+FROM db_stocks_return
+LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+WHERE
+db_stocks_return.status_cancel=1
 
           ");
 
-          foreach ($Data as $key => $value) {
+                if(@$Data){
 
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
+                  foreach ($Data as $key => $value) {
 
-                AjaxController::insertStockMovement($insertData);
+                       $insertData = array(
+                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                          "amt" =>  @$value->amt?$value->amt:0,
+                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                          "status" =>  @$value->status?$value->status:0,
+                          "note" =>  @$value->note?$value->note:NULL,
 
-            }
+                                              "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+
+                          "created_at" =>@$value->dd?$value->dd:NULL
+                      );
+
+                        AjaxController::insertStockMovement($insertData);
+
+                    }
+
+                }
 
              return "(8) รับคืนจากการยกเลิกใบสั่งซื้อ : db_stocks_return => success";
 
@@ -5447,52 +5814,66 @@ start_date: "2021-08-01"
         // ดึงจาก จ่ายสินค้าตามใบเบิก db_pay_requisition_001
         $Data = DB::select("
 
-            SELECT
-            id as doc_no,
-            updated_at as doc_date,
-            db_pay_requisition_002.branch_id_fk,
-            product_id_fk,
-            db_pay_requisition_002.lot_number,
-            db_pay_requisition_002.lot_expired_date,
-            amt_get as amt,
-            2 as 'in_out',
-            db_pay_requisition_002.product_unit_id_fk,
-            warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,7
-            (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-            concat('จ่ายสินค้าตามใบเบิก') as note,
-            (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
-            FROM db_pay_requisition_002
+SELECT
+db_pay_requisition_002.business_location_id_fk,
+db_pick_pack_packing.packing_code as doc_no,
+db_pick_pack_packing.created_at as doc_date,
+db_pay_requisition_002.branch_id_fk,
+product_id_fk,
+db_pay_requisition_002.lot_number,
+db_pay_requisition_002.lot_expired_date,
+amt_get as amt,
+2 as 'in_out',
+db_pay_requisition_002.product_unit_id_fk,
+warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+concat('จ่ายสินค้าตามใบเบิก') as note,
+(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+FROM db_pay_requisition_002
+Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
 
           ");
 
-        if(count($Data) == 1){
+        if(@$Data){
+
+        if(count(@$Data) == 1){
 
                     $Data1 = DB::select("
 
-                        SELECT
-                        id as doc_no,
-                        updated_at as doc_date,
-                        db_pay_requisition_002.branch_id_fk,
-                        product_id_fk,
-                        db_pay_requisition_002.lot_number,
-                        db_pay_requisition_002.lot_expired_date,
-                        amt_get as amt,
-                        2 as 'in_out',
-                        db_pay_requisition_002.product_unit_id_fk,
-                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-                        concat('จ่ายสินค้าตามใบเบิก') as note,
-                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
-                        FROM db_pay_requisition_002
+SELECT
+db_pay_requisition_002.business_location_id_fk,
+db_pick_pack_packing.packing_code as doc_no,
+db_pick_pack_packing.created_at as doc_date,
+db_pay_requisition_002.branch_id_fk,
+product_id_fk,
+db_pay_requisition_002.lot_number,
+db_pay_requisition_002.lot_expired_date,
+amt_get as amt,
+2 as 'in_out',
+db_pay_requisition_002.product_unit_id_fk,
+warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+concat('จ่ายสินค้าตามใบเบิก') as note,
+(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+,
+db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
+
+FROM db_pay_requisition_002
+Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
+Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
+
 
                   ");
 
+                if(@$Data1){
 
-                  foreach ($Data1 as $key => $value) {
-
+                  foreach (@$Data1 as $key => $value) {
                        $insertData = array(
                           "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                           "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                           "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                           "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                           "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5506,45 +5887,64 @@ start_date: "2021-08-01"
                           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                           "status" =>  @$value->status?$value->status:0,
                           "note" =>  @$value->note?$value->note:NULL,
+                   
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+
                           "created_at" =>@$value->dd?$value->dd:NULL
                       );
 
                         AjaxController::insertStockMovement($insertData);
 
                 }
+            }
 
         }else{
 
-             if(count($Data) > 0 ){
+             if(count(@$Data) > 0 ){
 
 
                     $Data1 = DB::select("
 
+SELECT
+db_pay_requisition_002.business_location_id_fk,
+db_pick_pack_packing.packing_code as doc_no,
+db_pick_pack_packing.created_at as doc_date,
+db_pay_requisition_002.branch_id_fk,
+product_id_fk,
+db_pay_requisition_002.lot_number,
+db_pay_requisition_002.lot_expired_date,
+amt_get as amt,
+2 as 'in_out',
+db_pay_requisition_002.product_unit_id_fk,
+warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+concat('จ่ายสินค้าตามใบเบิก ครั้งที่ ', time_pay) as note,
+(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd,
+db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
 
-                        SELECT
-                        id as doc_no,
-                        updated_at as doc_date,
-                        db_pay_requisition_002.branch_id_fk,
-                        product_id_fk,
-                        db_pay_requisition_002.lot_number,
-                        db_pay_requisition_002.lot_expired_date,
-                        amt_get as amt,
-                        2 as 'in_out',
-                        db_pay_requisition_002.product_unit_id_fk,
-                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-                        concat('จ่ายสินค้าตามใบเบิก ครั้งที่ ', time_pay) as note,
-                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
-                        FROM db_pay_requisition_002
+FROM db_pay_requisition_002
+Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
+Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
+
+
 
                   ");
 
 
-                  foreach ($Data1 as $key => $value) {
+              if(@$Data1){
+
+
+                  foreach (@$Data1 as $key => $value) {
 
                        $insertData = array(
                           "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                           "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
                           "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                           "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                           "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
@@ -5558,13 +5958,22 @@ start_date: "2021-08-01"
                           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                           "status" =>  @$value->status?$value->status:0,
                           "note" =>  @$value->note?$value->note:NULL,
+
+                                              "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+
                           "created_at" =>@$value->dd?$value->dd:NULL
                       );
-
                         AjaxController::insertStockMovement($insertData);
                 }
+              }
+
              }
 
+        }
       }
 
       return "(9) จ่ายสินค้าตามใบเบิก : db_pay_requisition_001 => success";
@@ -5579,7 +5988,7 @@ start_date: "2021-08-01"
     {
 
       if($request->ajax()){
-
+         sleep(5);
          DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
          return "(10) insertStockMovement_Final => success";
 

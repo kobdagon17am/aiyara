@@ -306,8 +306,8 @@
                              <?php $dis04 = !empty(@$sRow->condition_lot_number)?'disabled':'' ?>
                              <select name="lot_number" id="lot_number" class="form-control select2-templating " <?=$dis04?> >
                                 <option value="">-Lot Number-</option>
-                                   @if(@$Check_stock)
-                                      @foreach(@$Check_stock AS $r)
+                                    @if(@$lot_number)
+                                      @foreach(@$lot_number AS $r)
                                         <option value="{{@$r->lot_number}}" {{ (@$r->lot_number==@$sRow->condition_lot_number)?'selected':'' }} >
                                           {{@$r->lot_number}}
                                         </option>
@@ -327,11 +327,11 @@
                             <label for="ref_code" class="col-md-3 col-form-label">Lot expired date : </label>
                             <div class="col-md-9 d-flex">
                               <?php
-                                $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
-                                $last_day_this_month  = date('Y-m-t');
+                              //  $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
+                             //   $last_day_this_month  = date('Y-m-t');
                                ?>
-                               <input id="start_date"  autocomplete="off" placeholder="Begin" value="<?=$first_day_this_month?>" style="border: 1px solid grey;"  />
-                               <input id="end_date"  autocomplete="off" placeholder="End" value="<?=$last_day_this_month?>" style="border: 1px solid grey;"  />
+                               <input id="start_date"  autocomplete="off" placeholder="Begin"  style="border: 1px solid grey;"  />
+                               <input id="end_date"  autocomplete="off" placeholder="End"  style="border: 1px solid grey;"  />
 
                             </div>
                           </div>
@@ -368,7 +368,7 @@
         </div>
 
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
 
               <div class="myBorder" style="margin-top: 2%;">
@@ -430,17 +430,17 @@
                        return false;
                     }
 
-                  if(start_date==''){
-                      $("#start_date").focus();
-                      $("#spinner_frame").hide();
-                       return false;
-                    }
+                  // if(start_date==''){
+                  //     // $("#start_date").focus();
+                  //     $("#spinner_frame").hide();
+                  //      return false;
+                  //   }
 
-                    if(end_date==''){
-                      $("#end_date").focus();
-                      $("#spinner_frame").hide();
-                       return false;
-                    }
+                    // if(end_date==''){
+                    //   $("#end_date").focus();
+                    //   $("#spinner_frame").hide();
+                    //    return false;
+                    // }
 
                   var product = $('#product').val();
                   var lot_number = $('#lot_number').val();
@@ -452,7 +452,7 @@
                   // return false;
                         var oTable;
                         $(function() {
-                                oTable = $('#data-table').DataTable({
+                                oTable = $('#data-table-01').DataTable({
                                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                                       processing: true,
                                       serverSide: true,
@@ -464,24 +464,23 @@
                                       stateSave:true,
                                       iDisplayLength: 15,
                                       "searching": false,
-                                      ajax: {
-                                      url: '{{ route('backend.check_stock.datatable') }}',
-                                      data: function ( d ) {
-                                          d.myWhereStock={};
-                                          // d.myWhereStock['business_location_id_fk'] = business_location_id_fk ;
-                                          // d.myWhereStock['product_id_fk'] = product ;
-                                          // d.myWhereStock['lot_number'] = lot_number ;
-                                          // d.myWhereStock['branch_id_fk'] = branch_id_fk ;
-                                          // d.myWhereStock['warehouse_id_fk'] = warehouse_id_fk ;
-                                          // d.myWhereStock['zone_id_fk'] = zone_id_fk ;
-                                          // d.myWhereStock['shelf_id_fk'] = shelf_id_fk ;
-                                          // d.myWhereStock['shelf_floor'] = shelf_floor ;
-                                          // d.myWhereStock['lot_expired_date'] = start_date+":"+end_date ;
-                                          oData = d;
-                                        },
-                                         method: 'POST',
-                                       },
-                                        // dom: 'frtipB',
+                                        ajax: {
+                                            url: '{{ route('backend.check_stock.datatable') }}',
+                                            data :{
+                                                  business_location_id_fk:business_location_id_fk,
+                                                  branch_id_fk:branch_id_fk,
+                                                  warehouse_id_fk:warehouse_id_fk,
+                                                  zone_id_fk:zone_id_fk,
+                                                  shelf_id_fk:shelf_id_fk,
+                                                  shelf_floor:shelf_floor,
+                                                  lot_number:lot_number,
+                                                  start_date:start_date,
+                                                  end_date:end_date,
+                                                  product:product,
+                                                },
+                                              method: 'POST',
+                                            },
+
                                         dom: 'Bfrtip',
                                         buttons: [
                                             {
@@ -546,9 +545,10 @@
                                          rowCallback: function(nRow, aData, dataIndex){
 
                                            $('td:last-child', nRow).html(''
-                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'/'+aData['amt']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>  '
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'/'+aData['amt']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a>  '
 
                                                     ).addClass('input');
+                                           // target=_blank
 
                                          },
 
@@ -868,6 +868,8 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                             setTimeout(function(){
 
+                                 $("#spinner_frame").show();
+
                                  $.ajax({
                                      url: " {{ url('backend/insertStockMovement_From_db_general_receive') }} ",
                                     method: "post",
@@ -878,15 +880,16 @@
                                     {
 
                                       console.log(data);
-                                      $("#spinner_frame").hide();
 
                                     }
                                   });
 
 
-                            },1000);
+                            },2000);
 
                           setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_general_takeout') }} ",
@@ -898,16 +901,17 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
 
-                          },1000);
+                          },2000);
 
 
                           setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_stocks_account') }} ",
@@ -919,15 +923,16 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
 
-                          },1000);
+                          },2000);
 
                            setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_products_borrow_code') }} ",
@@ -939,15 +944,16 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
 
-                          },1000);
+                          },2000);
 
                            setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_transfer_warehouses_code') }} ",
@@ -959,15 +965,16 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
 
-                          },1000);
+                          },2000);
 
                            setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_transfer_branch_code') }} ",
@@ -979,16 +986,17 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
 
-                          },1000);
+                          },2000);
 
 
                           setTimeout(function(){
+
+                               $("#spinner_frame").show();
 
                                $.ajax({
                                    url: " {{ url('backend/insertStockMovement_From_db_pay_product_receipt_001') }} ",
@@ -1000,15 +1008,16 @@
                                   {
 
                                     console.log(data);
-                                    $("#spinner_frame").hide();
 
                                   }
                                 });
 
-                          },1000);
+                          },2000);
 
 
                       setTimeout(function(){
+
+                           $("#spinner_frame").show();
 
                            $.ajax({
                                url: " {{ url('backend/insertStockMovement_From_db_stocks_return') }} ",
@@ -1020,15 +1029,16 @@
                               {
 
                                 console.log(data);
-                                $("#spinner_frame").hide();
 
                               }
                             });
 
-                      },1000);
+                      },2000);
 
         // จ่ายสินค้าตามใบเบิก
                       setTimeout(function(){
+
+                           $("#spinner_frame").show();
 
                            $.ajax({
                                url: " {{ url('backend/insertStockMovement_From_db_pay_requisition_001') }} ",
@@ -1040,14 +1050,15 @@
                               {
 
                                 console.log(data);
-                                $("#spinner_frame").hide();
 
                               }
                             });
 
-                      },1000);
+                      },2000);
 
                       setTimeout(function(){
+
+                           $("#spinner_frame").show();
 
                            $.ajax({
                                url: " {{ url('backend/insertStockMovement_Final') }} ",
@@ -1064,18 +1075,11 @@
                               }
                             });
 
-                      },1000);
+                      },2000);
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                       }
                     });
-
-
-
-
-
-
-
 
              });
 

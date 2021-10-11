@@ -981,62 +981,7 @@ GROUP BY promotions_products.product_id_fk
                  }
               }
               $arr2 = implode(',', $arr1);
-              // return $arr2;
-              // กรณีที่อยู่ไม่ได้ทำตรงนี้แล้ว ไปทำที่ D:\wamp64\www\aiyara\local\app\Http\Controllers\backend\FrontstoreController.php
-              // กำหนดที่อยู่
-          /*
-              if($arr2){
-
-                  $addr_01 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) ;");
-                  if(@$addr_01){
-                      $addr_02 = DB::select("SELECT orders_id_fk FROM `db_delivery` WHERE receipt in ($arr2) ;");
-
-                      if(@$addr_02){
-
-                      foreach ($addr_02 as $key => $v1) {
-
-                        $addr_03 = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                        dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
-                        from customers_addr_frontstore
-                        Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                        Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                        Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                        WHERE
-                        frontstore_id_fk in (".@$v1->orders_id_fk.") ;");
-
-
-                               if(@$addr_03){
-                                foreach ($addr_03 as $key => $v2) {
-                                    DB::select(" UPDATE db_delivery  
-                                    SET 
-                                    recipient_name = '".@$v2->recipient_name."',
-                                    addr_send = '".@$v2->addr_no."',
-                                    postcode = '".@$v2->zip_code."',
-                                    mobile = '".@$v2->tel.' '.@$v2->tel_home."'
-
-                                    where orders_id_fk = '".@$v2->frontstore_id_fk."'
-
-                                   ");
-                                }
-                                
-                              }
-
-                              DB::select("UPDATE db_delivery set set_addr_send_this=1 WHERE shipping_price>0 AND orders_id_fk in (".@$v1->orders_id_fk.") ;");
-
-                        }
-
-
-
-                        
-                      }
-                      
-                  }
-                  
-
-              }
-
-            */
-
+        
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
               // return $d3[0]->addr_send;

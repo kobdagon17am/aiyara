@@ -26,7 +26,7 @@ class DeliveryController extends Controller
         */
 
    // นำเข้า manaul  
-
+/*
   DB::select("
           INSERT IGNORE INTO db_delivery
           ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -133,7 +133,7 @@ class DeliveryController extends Controller
 
    // นำเข้า manaul  
 
-
+*/
 
 
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น

@@ -136,7 +136,7 @@ $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE pr
 $TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
 DB::select(" DROP TABLE IF EXISTS $TABLE_tmp ; ");
 DB::select(" 
-    CREATE TABLE $TABLE_tmp (
+    CREATE TEMPORARY TABLE $TABLE_tmp (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
       `a` text,
       `b` text,
@@ -359,7 +359,7 @@ $amt_page = ceil($cnt_all[0]->cnt/$limit);
 $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
 DB::select(" DROP TABLE IF EXISTS $TABLE ; ");
 DB::select(" 
-    CREATE TABLE $TABLE (
+    CREATE TEMPORARY TABLE $TABLE (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
       `a` text,
       `b` text,

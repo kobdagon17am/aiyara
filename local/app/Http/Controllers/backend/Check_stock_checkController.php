@@ -100,10 +100,10 @@ class Check_stock_checkController extends Controller
         $d = strtotime($row->lot_expired_date); 
         return $row->lot_number." : ".date("d/m/", $d).(date("Y", $d)+543);
       })
-      ->addColumn('date_in_stock', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
+      // ->addColumn('date_in_stock', function($row) {
+      //   $d = strtotime($row->pickup_firstdate); 
+      //   return date("d/m/", $d).(date("Y", $d)+543);
+      // })
       ->addColumn('warehouses', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
@@ -140,10 +140,10 @@ class Check_stock_checkController extends Controller
         $d = strtotime($row->lot_expired_date); 
         return $row->lot_number." : ".date("d/m/", $d).(date("Y", $d)+543);
       })
-      ->addColumn('date_in_stock', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
+      // ->addColumn('date_in_stock', function($row) {
+      //   $d = strtotime($row->pickup_firstdate); 
+      //   return date("d/m/", $d).(date("Y", $d)+543);
+      // })
       ->addColumn('warehouses', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");

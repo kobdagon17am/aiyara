@@ -81,6 +81,7 @@ class General_receiveController extends Controller
        $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
        // dd($Product_in_cause);
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
+       $Approver  = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
        $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -119,6 +120,7 @@ class General_receiveController extends Controller
            'sBusiness_location'=>$sBusiness_location,
            'Check_stock'=>$Check_stock,
            'Product_status'=>$Product_status,
+           'Approver'=>$Approver,
         ) );
     }
 

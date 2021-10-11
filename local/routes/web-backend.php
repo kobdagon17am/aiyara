@@ -374,6 +374,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxProcessTaxdata', 'AjaxController@ajaxProcessTaxdata');
 
     Route::post('ajaxProcessStockcard', 'AjaxController@ajaxProcessStockcard');
+    Route::post('ajaxProcessStockcard_01', 'AjaxController@ajaxProcessStockcard_01');
     Route::post('ajaxOfferToApprove', 'AjaxController@ajaxOfferToApprove');
 
     Route::post('ajaxScanQrcodeProduct', 'AjaxController@ajaxScanQrcodeProduct');
@@ -552,7 +553,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/print_receipt_022/{id}', 'PrintController@frontstore_print_receipt_022');
     Route::get('frontstore/print_receipt_023/{id}', 'PrintController@frontstore_print_receipt_023');
-    // Route::get('frontstore/test_print_receipt_02/{id}', 'PrintController@frontstore_print_receipt_02');
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');

@@ -125,6 +125,9 @@ $(document).ready(function() {
 
       $(document).on('click', '.btnProcess', function(event) {
            
+             var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+
               var product_id_fk =  "{{@$Products[0]->product_id}}";
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
               var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
@@ -145,14 +148,23 @@ $(document).ready(function() {
                 return false;
               }        
 
+              console.log(business_location_id_fk);   
+              console.log(branch_id_fk);   
+              console.log(product_id_fk);   
+              console.log(lot_number);   
+              console.log(start_date);   
+              console.log(end_date);   
+
               $(".myloading").show();
 
                setTimeout(function(){
 
                       $.ajax({
-                          url: " {{ url('backend/ajaxProcessStockcard') }} ", 
+                          url: " {{ url('backend/ajaxProcessStockcard_01') }} ", 
                           method: "post",
                           data: {
+                            business_location_id_fk:business_location_id_fk,
+                            branch_id_fk:branch_id_fk,
                             product_id_fk:product_id_fk,
                             lot_number:lot_number,
                             start_date:start_date,
@@ -187,30 +199,21 @@ $(document).ready(function() {
                                           paging: false,
                                           iDisplayLength: -1,
                                           ajax: {
-                                            url: '{{ route('backend.stock_card_01.datatable') }}',
-                                            data: function ( d ) {
-                                              d.Where={};
-                                              $('.myWhere').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Like={};
-                                              $('.myLike').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Custom={};
-                                              $('.myCustom').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              oData = d;
-                                            },
-                                            method: 'POST'
-                                          },
+                                              url: '{{ route('backend.stock_card_01.datatable') }}',
+                                              data :{
+                                                business_location_id_fk:business_location_id_fk,
+                                                branch_id_fk:branch_id_fk,
+                                                product_id_fk:product_id_fk,
+                                                lot_number:lot_number,
+                                                start_date:start_date,
+                                                end_date:end_date,
+                                                warehouse_id_fk:warehouse_id_fk,
+                                                zone_id_fk:zone_id_fk,
+                                                shelf_id_fk:shelf_id_fk,
+                                                shelf_floor:shelf_floor,
+                                                  },
+                                                method: 'POST',
+                                              },
                                           dom: 'Bfrtip',
                                         buttons: [
                                             {
@@ -255,7 +258,7 @@ $(document).ready(function() {
                                             {
                                                $(".btnPrint").hide();
                                             }else{
-                                                $(".btnPrint").show();
+                                                // $(".btnPrint").show();
                                             }
 
                                             // $(".amt_remain").load(location.href + " .amt_remain");
@@ -318,15 +321,15 @@ $(document).ready(function() {
          // });
 
 
-      $(document).ready(function() {
-          var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
-          var res = date_s_e.split(":");
-          var start_date = res[0]; //alert(start_date);
-          var end_date = res[1]; //alert(end_date);
-          $('#start_date').val(start_date);
-          $('#end_date').val(end_date);
+      // $(document).ready(function() {
+      //     var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
+      //     var res = date_s_e.split(":");
+      //     var start_date = res[0]; //alert(start_date);
+      //     var end_date = res[1]; //alert(end_date);
+      //     $('#start_date').val(start_date);
+      //     $('#end_date').val(end_date);
 
-      });
+      // });
 
 
   </script>   

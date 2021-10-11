@@ -48,6 +48,10 @@ class Stock_cardController extends Controller
     
     public function Datatable(){
       // $sTable = \App\Models\Backend\Stock_card::search()->orderBy('action_date', 'asc');
+      // ดึงข้อมูลเข้าตารางสรุป
+      $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;
+      // return $temp_db_stock_card ;
+
       DB::select(" SET @csum := 0; ");
       // $sTable = DB::select(" 
       //     SELECT db_stock_card.*,
@@ -56,7 +60,7 @@ class Stock_cardController extends Controller
       //      as remain FROM db_stock_card ORDER BY action_date;
       //     ");
       $sTable = DB::select(" 
-          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY action_date;
+          SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM $temp_db_stock_card ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -82,12 +86,24 @@ class Stock_cardController extends Controller
 
 
  
-    public function Datatable01(){
+    public function Datatable01(Request $request){
+  // $sTable = \App\Models\Backend\Stock_card::search()->orderBy('action_date', 'asc');
+      // ดึงข้อมูลเข้าตารางสรุป
+      $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
+      // return $temp_db_stock_card ;
 
       DB::select(" SET @csum := 0; ");
-
+      // $sTable = DB::select(" 
+      //     SELECT db_stock_card.*,
+      //     CASE WHEN @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END ) > 0 THEN 
+      //     (@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) ELSE 0 END
+      //      as remain FROM db_stock_card ORDER BY action_date;
+      //     ");
       $sTable = DB::select(" 
-          SELECT db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM db_stock_card ORDER BY action_date;
+          SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
+          FROM $temp_db_stock_card 
+          WHERE 1 
+          ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -107,15 +123,10 @@ class Stock_cardController extends Controller
           return '';
         }
       })   
-      // ->addColumn('remain', function($row) {
-      //   if(!empty(@$row->remain) && @$row->remain>0 ){
-      //      return @$row->remain;
-      //   }else{
-      //      return  0 ;
-      //   }
-      // })   
+
       ->make(true);
     }
+
 
 
 

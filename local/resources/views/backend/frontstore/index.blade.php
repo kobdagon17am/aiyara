@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -1656,25 +1656,9 @@ DB::select(" TRUNCATE db_consignments_import ; ");
               // console.log(id);
 
               setTimeout(function(){
-                 // window.open("{{ url('backend/frontstore/test_print_receipt_02') }}"+"/"+id);
                  window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
                  $(".myloading").hide();
               }, 500);
-
-         
-        
-              // $.ajax({
-              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
-              //     method: "post",
-              //     data: {
-              //       "_token": "{{ csrf_token() }}", id:id,
-              //     },
-              //     success:function(data)
-              //     { 
-              //       // console.log(data);
-              //       return false;
-              //     }
-              //   });
 
               
             });
