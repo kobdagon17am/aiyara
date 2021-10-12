@@ -10,7 +10,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -29,7 +29,7 @@
         .toast-color {
             color: white;
             background-color: #33b5e5;
-            border-radius: 5px; 
+            border-radius: 5px;
         }
         h1 {
             color:green;
@@ -90,13 +90,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> ระบบบริการสมาชิก </h4> 
-            
+            <h4 class="mb-0 font-size-18"> {{ __('message.member_service_system') }} </h4>
+
         </div>
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -108,7 +108,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -116,7 +116,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 
 <div class="row" >
@@ -130,18 +130,18 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="customer_id" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
+                    <label for="customer_id" class="col-md-3 col-form-label"> {{ __('message.info_member') }} : </label>
                     <div class="col-md-9">
-                       <select id="customer_id" name="customer_id" class="form-control" ></select> 
+                       <select id="customer_id" name="customer_id" class="form-control" ></select>
                     </div>
                   </div>
                 </div>
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="business_name" class="col-md-3 col-form-label"> นามแฝง :  </label>
+                    <label for="business_name" class="col-md-3 col-form-label"> {{ __('message.username') }} :  </label>
                     <div class="col-md-9">
-                       <select id="business_name" name="business_name" class="form-control" ></select> 
+                       <select id="business_name" name="business_name" class="form-control" ></select>
                     </div>
                   </div>
                 </div>
@@ -151,29 +151,29 @@
                 <div class="col-md-6 " >
                   <div class="form-group row">
                      <div class="col-md-9 d-flex">
-              
+
                     </div>
                   </div>
                 </div>
                 <div class="col-md-6 " >
                   <div class="form-group row">
                      <div class="col-md-9 ">
-                   
+
                     </div>
                   </div>
                 </div>
               </div>
-              
+
             <div class="row" style="margin-bottom: 1% !important;"  >
                  <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="introduce_id" class="col-md-3 col-form-label"> รหัสผู้แนะนำ : </label>
+                    <label for="introduce_id" class="col-md-3 col-form-label"> {{ __('message.counselor_id') }} : </label>
                     <div class="col-md-9">
-                       <select id="introduce_id" name="introduce_id" class="form-control" ></select> 
+                       <select id="introduce_id" name="introduce_id" class="form-control" ></select>
                     </div>
                   </div>
                 </div>
-    
+
                 <div class="col-md-6 " style="" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
@@ -189,16 +189,16 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
-       
+
 </div>
-   
-                <b style="font-size: 14px;">หมายเหตุ</b> 
+
+                <b style="font-size: 14px;">{{ __('message.remark') }}</b>
                 <div class="divTable">
                   <div class="divTableBody">
                     <div class="divTableRow">
                       <?php
                       foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon.' : '.$value->txt_desc.' </div>';
+                      echo '<div class="divTableCell">'.$value->icon.' : '.__('message.file_type.'.$value->id).' </div>';
                       }
                       ?>
                     </div>
@@ -209,9 +209,9 @@
                   margin-left: 1%;
                   color: black;
                   ">
-                  (<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง)
-                </div>  
-  
+                  {!! __('message.member_pv_status_info') !!}
+                </div>
+
 
             </div>  <!-- end card-body -->
         </div>  <!-- end card -->
@@ -266,21 +266,21 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w250 '},
-            {data: 'business_name', title :'<center> นามแฝง </center>', className: 'text-left w100'},
-            {data: 'aistockist_status', title :'<center> Status <br> AiStockis </center>', className: 'text-center w80 '},
-            {data: 'qualification', title :'<center> คุณสมบัติ </center>', className: 'text-center w100'},
-            {data: 'package', title :'<center> Package </center>', className: 'text-center'},
-            {data: 'pv', title :'<center> คะแนน<br>ส่วนตัว </center>', className: 'text-center  '},
-            {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
-            {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
-            {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
-            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
+            {data: 'customer_name', title :'<center>{{ __("message.info_member") }}</center>', className: 'text-left w250 '},
+            {data: 'business_name', title :'<center> {{ __("message.username") }} </center>', className: 'text-left w100'},
+            {data: 'aistockist_status', title :'<center> {{ __("message.status_ai_stockist") }} </center>', className: 'text-center w80 '},
+            {data: 'qualification', title :'<center> {{ __("message.qualification") }} </center>', className: 'text-center w100'},
+            {data: 'package', title :'<center> {{ __("message.package") }} </center>', className: 'text-center'},
+            {data: 'pv', title :'<center> {{ __("message.personal_score") }} </center>', className: 'text-center  '},
+            {data: 'introduce_id', title :'<center> {{ __("message.counselor_id") }} </center>', className: 'text-center  '},
+            {data: 'regis_status', title :'<center> {!! __("message.status_apply") !!} </center>', className: 'text-center '},
+            {data: 'regis_date_doc', title :'<center> {{ __("message.date_approve") }} </center>', className: 'text-center'},
+            {data: 'id', title :'{{ __("message.profile") }}', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
             // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
                $('td:last-child', nRow).html(''
                   + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
@@ -330,7 +330,7 @@ $(function() {
         $('#startPayDate').val('');
         $('#endPayDate').val('');
 
-      });        
+      });
 
     </script>
 
@@ -362,7 +362,7 @@ $(function() {
         $('#startPayDate02').val('');
         $('#endPayDate02').val('');
 
-      });        
+      });
 
 
     </script>
@@ -391,7 +391,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -428,9 +428,9 @@ $(function() {
                                           url: '{{ route('backend.member_pv.datatable') }}',
                                           data :{
                                             _token: '{{csrf_token()}}',
-                                                customer_id:customer_id,                                 
-                                                business_name:business_name,                                 
-                                                introduce_id:introduce_id,                                 
+                                                customer_id:customer_id,
+                                                business_name:business_name,
+                                                introduce_id:introduce_id,
                                               },
                                             method: 'POST',
                                           },
@@ -452,12 +452,12 @@ $(function() {
                                             {data: 'introduce_id', title :'<center> รหัสผู้แนะนำ </center>', className: 'text-center  '},
                                             {data: 'regis_status', title :'<center> สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร) </center>', className: 'text-center '},
                                             {data: 'regis_date_doc', title :'<center> วันที่ตรวจสอบผ่าน </center>', className: 'text-center'},
-                                            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'}, 
+                                            {data: 'id', title :'ข้อมูล <br> ส่วนตัว', className: 'text-center w80'},
                                         ],
                                       rowCallback: function(nRow, aData, dataIndex){
                                         if(sU!=''&&sD!=''){
                                             $('td:last-child', nRow).html('-');
-                                        }else{ 
+                                        }else{
                                           // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
                                              $('td:last-child', nRow).html(''
                                                 + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
@@ -473,7 +473,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -593,7 +593,7 @@ $(function() {
                                     $('.column_2').css({"border-style": "", "border-width": "", "border-color": "" });
 
                                   }
-                                  
+
                                   if(value.type=="3"){
                                     $('#file_path3').attr("src", value.file_path);
                                     $('#file_path3').show();
@@ -605,7 +605,7 @@ $(function() {
                                     $('.p_desc_3').css({"background-color": "", "color": "" });
                                     $('.column_3').css({"border-style": "", "border-width": "", "border-color": "" });
                                   }
-                                  
+
                                   if(value.type=="4"){
                                     $('#file_path4').attr("src", value.file_path);
                                     $('#file_path4').show();
@@ -617,10 +617,10 @@ $(function() {
                                     $('.p_desc_4').css({"background-color": "", "color": "" });
                                     $('.column_4').css({"border-style": "", "border-width": "", "border-color": "" });
                                   }
-                          
+
 
                                     // กรณี type อื่นๆ ที่ผ่านก็แสดงเช่นเดียวกัน แต่ไม่มีกรอบ
-                                    // ต้องส่ง ajax ไปดึงมาแสดงต่างหาก เว้น type อันที่ระบุ 
+                                    // ต้องส่ง ajax ไปดึงมาแสดงต่างหาก เว้น type อันที่ระบุ
                                    $.ajax({
                                         url: " {{ url('backend/ajaxGetFilepath02') }} ",
                                         method: "post",
@@ -642,7 +642,7 @@ $(function() {
                                                     // console.log(arrXls.includes(strArray[1]));
                                                     let ch = arrXls.includes(strArray[1]);
                                                     if(ch==true){
-                                                
+
                                                       if(value.type=="1" && value.status=="1"){
                                                         $('#file_path1').attr("src", value.file_path);
                                                         $('#file_path1').show();
@@ -653,13 +653,13 @@ $(function() {
                                                         $('#file_path2').attr("src", value.file_path);
                                                         $('#file_path2').show();
                                                       }
-                                                      
+
                                                       if(value.type=="3" && value.status=="1"){
                                                         $('#file_path3').attr("src", value.file_path);
                                                         $('#file_path3').show();
                                                         $('.p_desc_33').html("เลขบัตรประชาชน : "+value.id_card);
                                                       }
-                                                      
+
                                                       if(value.type=="4" && value.status=="1"){
                                                         $('#file_path4').attr("src", value.file_path);
                                                         $('#file_path4').show();
@@ -680,14 +680,14 @@ $(function() {
                                   $('#file_path2').hide();
                                   $('#file_path3').hide();
                                   $('#file_path4').hide();
-                             
+
                                 }
 
                                  $('#type').val(value.type);
-                            
+
                            });
 
-                   
+
                   }
                 })
 
@@ -695,11 +695,11 @@ $(function() {
 
 
 
-</script> 
+</script>
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id").select2({
           minimumInputLength: 3,
@@ -712,7 +712,7 @@ $(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -729,8 +729,8 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#business_name").select2({
           minimumInputLength: 3,
@@ -743,7 +743,7 @@ $(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -760,8 +760,8 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#introduce_id").select2({
           // minimumInputLength: 3,
@@ -774,7 +774,7 @@ $(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };

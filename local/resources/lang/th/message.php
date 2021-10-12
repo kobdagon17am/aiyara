@@ -207,9 +207,48 @@ return [
 'payment_ai_cash_list' => 'รายการ เติม Ai-Cash',
 'daily_cash_list' => 'รายการส่งเงินรายวัน',
 'times' => 'ครั้งที่',
-'send_reciept_list' => 'รายการใบเสร็จที่ส่ง', 
-'sender' => 'ผู้ส่ง', 
+'send_reciept_list' => 'รายการใบเสร็จที่ส่ง',
+'sender' => 'ผู้ส่ง',
 'send_time' => 'วัน เวลา ที่ส่ง',
 'current_day' => 'วันปัจจุบัน',
-'btn_send_money' => 'กดส่งเงิน'
-];  
+'btn_send_money' => 'กดส่งเงิน',
+
+// backend/add_ai_cash
+'add_ai_cash' => 'เติม Ai-Cash',
+'branch' => 'สาขาที่ดำเนินการ',
+'info_member' => 'รหัส-ชื่อสมาชิก',
+'bill_no' => 'สถานะบิล',
+'date' => 'วันที่ดำเนินการ',
+'approver' => 'ผู้อนุมัติ',
+'ai_cash_total' => 'ยอด Ai-Cash',
+'balance' => 'คงเหลือล่าสุด',
+'cash_latest' => 'ที่เติมครั้งนี้',
+'staff' => 'พนักงาน',
+'operate_place' => 'ที่ดำเนินการ',
+'business_location' => 'Business Location',
+'ai_cash_top_up_date' => 'วันที่เติม Ai-Cash',
+
+// backend/add_ai_cash/create
+'ai_cash_older' => 'ยอด Ai-Cash ที่เติม',
+
+// backend/member_pv
+'member_service_system' => 'ระบบบริการสมาชิก',
+'username' => 'นามแฝง',
+'upline_id' => 'รหัส Upline',
+'counselor_id' => 'รหัสผู้แนะนำ',
+'status_ai_stockist' => 'Status Ai-Stockist',
+'qualification' => 'คุณสมบัติ',
+'personal_score' => 'คะแนนส่วนตัว',
+'upline' => 'Upline',
+'status_apply' => 'สถานะการสมัคร <br> (อ้างอิงตามการส่งเอกสาร)',
+'date_approve' => 'วันที่ตรวจสอบผ่าน',
+'profile' => 'ข้อมูลส่วนตัว',
+'member_pv_status_info' => '(<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง)',
+'file_type' => [
+  '1' => 'ภาพถ่ายบัตรประชาชน',
+  '2' => 'ภายถ่ายหน้าตรง',
+  '3' => 'ภาพถ่ายหน้าตรงถือบัตรประชาชน',
+  '4' => 'ภาพถ่ายหน้าบัญชีธนาคาร',
+],
+'package' => 'Package'
+];

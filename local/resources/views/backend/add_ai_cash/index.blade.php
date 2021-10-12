@@ -8,7 +8,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -27,7 +27,7 @@
         .toast-color {
             color: white;
             background-color: #33b5e5;
-            border-radius: 5px; 
+            border-radius: 5px;
         }
         h1 {
             color:green;
@@ -43,20 +43,20 @@
   <div class="toast toast-color" id="notification"
                 data-delay="3000">
         <div class="toast-body">
-            ! พบรายการ Ai-Cash ที่ยังรอการชำระ 
+            ! พบรายการ Ai-Cash ที่ยังรอการชำระ
         </div>
     </div>
 
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> เติม Ai-Cash </h4> 
+            <h4 class="mb-0 font-size-18  "> {{ __('message.add_ai_cash') }} </h4>
             <!-- test_clear_data -->
         </div>
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
       // print_r($menu_id);
@@ -90,7 +90,7 @@
 
                  <div class="col-md-6 " >
                       <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
+                        <label for="business_location_id_fk" class="col-md-3 col-form-label">{{ __('message.business_location') }} : </label>
                         <div class="col-md-9">
                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                               <option value="">-Business Location-</option>
@@ -106,7 +106,7 @@
 
                     <div class="col-md-6 " >
                       <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> {{ __('message.branch') }} : </label>
                             <div class="col-md-9">
 
                               <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
@@ -114,11 +114,11 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -135,16 +135,16 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
+                    <label for="customer_id_fk" class="col-md-3 col-form-label"> {{ __('message.bill_no') }} : </label>
                     <div class="col-md-9">
-                       <select id="customer_id_fk" name="customer_id_fk" class="form-control" required ></select> 
+                       <select id="customer_id_fk" name="customer_id_fk" class="form-control" required ></select>
                     </div>
                   </div>
                 </div>
                 <!--  `bill_status` int(11) DEFAULT '0' COMMENT '1=รอชำระ,2=ชำระแล้ว,3=ยกเลิก', -->
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="approve_status" class="col-md-3 col-form-label"> สถานะ :  </label>
+                    <label for="approve_status" class="col-md-3 col-form-label"> {{ __('message.status') }} :  </label>
                     <div class="col-md-9">
                       <select id="approve_status" name="approve_status" class="form-control select2-templating " >
                         <option value="">-Status-</option>
@@ -160,14 +160,14 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="startDate" class="col-md-3 col-form-label"> วันที่ดำเนินการ : </label>
+                    <label for="startDate" class="col-md-3 col-form-label"> {{ __('message.date') }} : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
                     </div>
                   </div>
                 </div>
-                <!-- 
+                <!--
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="invoice_code" class="col-md-3 col-form-label"> เลขออเดอร์ : </label>
@@ -189,7 +189,7 @@
 
     <div class="col-md-6 " >
                    <div class="form-group row">
-                    <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
+                    <label for="approver" class="col-md-3 col-form-label"> {{ __('message.approver') }} : </label>
                     <div class="col-md-9">
                      <select id="approver" name="approver" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -205,13 +205,13 @@
                   </div>
                 </div>
 
-                
+
               </div>
-              
+
 
             <div class="row" >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
-                  <!--  
+                  <!--
                   <div class="form-group row">
                     <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
                     <div class="col-md-9">
@@ -231,7 +231,7 @@
                 -->
                 </div>
 
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -323,16 +323,16 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
-            {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
-            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
-            {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
-            {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
-            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
-            {data: 'updated_at', title :'<center>วันที่เติม Ai-Cash</center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'customer_name', title :'<center>{{ __("message.customer") }}</center>', className: 'text-left w100 '},
+            {data: 'aicash_remain', title :'<center>{{ __("message.ai_cash_total") }} <br> {{ __("message.balance") }}</center>', className: 'text-center'},
+            {data: 'aicash_amt', title :'<center>{{ __("message.ai_cash_total") }} <br>{{ __("message.cash_latest") }}</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>{{ __("message.staff") }} </center>', className: 'text-center'},
+            {data: 'pay_type_id_fk', title :'<center>{{ __("message.payment_type") }} </center>', className: 'text-center'},
+            {data: 'total_amt', title :'<center>{{ __("message.total") }} </center>', className: 'text-center'},
+            {data: 'status', title :'<center>{{ __("message.status") }} </center>', className: 'text-center'},
+            {data: 'approver', title :'<center>{{ __("message.approver") }}</center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>{{ __("message.ai_cash_top_up_date") }}</center>', className: 'text-center'},
+            {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -393,17 +393,17 @@ $(function() {
                   // alert(id);
                   $.ajax({
                        type:'POST',
-                       url: " {{ url('backend/ajaxCheckAddAiCash') }} ", 
+                       url: " {{ url('backend/ajaxCheckAddAiCash') }} ",
                        data: { id:id,customer_id_fk:customer_id_fk },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                if(data=="no"){
                                  alert("! ไม่สามารถยกเลิกได้หรือลบได้ เนื่องจากยอด Ai-Cash ถูกใช้ไปแล้ว ");
                                  return false;
                                }
                               $(".myloading").hide();
                           },
-                       
+
                     });
 
            });
@@ -449,12 +449,12 @@ $(function() {
         $('#endPayDate').val('');
         $('#btnSearch03').val('0');
 
-      });        
+      });
 
 
       $('#endDate').change(function(event) {
         $('#btnSearch03').val('0');
-      });  
+      });
 
 
     </script>
@@ -482,7 +482,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
     <script>
@@ -539,8 +539,8 @@ $(function() {
                                                 approve_status:approve_status,
                                                 startDate:startDate,
                                                 endDate:endDate,
-                                                approver:approver,                                 
-                                                // invoice_code:invoice_code,                                 
+                                                approver:approver,
+                                                // invoice_code:invoice_code,
                                               },
                                             method: 'POST',
                                           },
@@ -555,7 +555,7 @@ $(function() {
                                       {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
                                       {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
                                       {data: 'updated_at', title :'<center>วันที่เติม Ai-Cash</center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                      {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -594,7 +594,7 @@ $(function() {
 
                                   }
                             });
-                        
+
                         });
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -603,7 +603,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -618,14 +618,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                     $(".myloading").hide();
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
@@ -641,7 +641,7 @@ $(function() {
            }else{
             $(".myloading").hide();
            }
- 
+
       });
 
 
@@ -649,7 +649,7 @@ $(function() {
     </script>
 
 
-<!-- <audio autoplay> 
+<!-- <audio autoplay>
   <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
 </audio>
  -->
@@ -659,29 +659,29 @@ $(function() {
 
        		var sApprove = "<?=$sA?>";
        		// alert(sApprove);
-            // setInterval(function(){ 
+            // setInterval(function(){
             //   $.ajax({
             //      type:'POST',
-            //      url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+            //      url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
             //       success:function(data){
-            //              console.log(data); 
+            //              console.log(data);
             //              if(data>0){
             //                 $('.toast').toast('show');
             //              }
             //         },
-                 
+
             //   });
 
             // }, 3000);
 
-             // setInterval(function(){ 
+             // setInterval(function(){
               // alert("Oooo Yeaaa!");
              if(sApprove==1){
               $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
                   success:function(data){
-                         console.log(data); 
+                         console.log(data);
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;
@@ -694,7 +694,7 @@ $(function() {
 
                          }
                     },
-                 
+
               });
 
           }
@@ -716,9 +716,9 @@ $(document).ready(function() {
          // alert('You did nothing for 5 seconds');
            $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
                   success:function(data){
-                         console.log(data); 
+                         console.log(data);
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;
@@ -731,7 +731,7 @@ $(document).ready(function() {
 
                          }
                     },
-                 
+
               });
 
          },
@@ -745,8 +745,8 @@ $(document).ready(function() {
 
 </script>
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk").select2({
           minimumInputLength: 3,
@@ -759,7 +759,7 @@ $(document).ready(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -774,23 +774,23 @@ $(document).ready(function() {
 
    });
 </script>
- 
+
 
 
       <script>
-// Clear data in View page  
+// Clear data in View page
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
               location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+
             });
-                
+
       });
 
     </script>
-   
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
 
         DB::select("TRUNCATE `db_add_ai_cash` ;");

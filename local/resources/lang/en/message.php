@@ -47,7 +47,7 @@ return [
     'user' => 'Membership System',
     'admin' => 'Members',
     'role' => 'Role Permission',
-    'branchs' => 'Stock Management ',
+    'branchs' => 'Stock Management',
     'Accounting' => 'Accounting',
     'po_approve' => 'PO Pending Approval',
     'check_stock_account' => 'Stock Check (Accounting)',
@@ -148,7 +148,7 @@ return [
 
 // backend/course_history_list/:id
 'course_event_register_list_header' => 'Registered List COURSE / EVENT',
-'date_activities' => 'Date Activities ',
+'date_activities' => 'Date Activities',
 'score' => 'Score',
 'qualification' => 'Qualification',
 
@@ -211,5 +211,44 @@ return [
 'sender' => 'Sender',
 'send_time' => 'Send Time',
 'current_day' => 'Current Day',
-'btn_send_money' => 'Send Money'
+'btn_send_money' => 'Send Money',
+
+// backend/add_ai_cash
+'add_ai_cash' => 'Add Ai Cash',
+'branch' => 'Branch',
+'info_member' => 'ID - Name Member',
+'bill_no' => 'Bill No.',
+'date' => 'Date',
+'approver' => 'Approver',
+'ai_cash_total' => 'Ai-Cash Total',
+'balance' => 'Balance',
+'cash_latest' => 'Cash Latest',
+'staff' => 'Staff',
+'operate_place' => 'Operate Place',
+'business_location' => 'Business Location',
+'ai_cash_top_up_date' => 'Ai-Cash Top Up Date',
+
+// backend/add_ai_cash/create
+'ai_cash_older' => 'Ai-Cash Older',
+
+// backend/member_pv
+'member_service_system' => 'Member Service System',
+'username' => 'Username',
+'upline_id' => 'Upline ID.',
+'counselor_id' => 'Counselor ID.',
+'status_ai_stockist' => 'Status Ai-Stockist',
+'qualification' => 'Qualification',
+'personal_score' => 'Persernal Score',
+'upline' => 'Upline',
+'status_apply' => 'Apply Status <br> (refer from the File applying)',
+'date_approve' => 'Date Approved',
+'profile' => 'Profile',
+'member_pv_status_info' => '(<span style="font-weight: bold;color:green;">Green</span> = Approved | <span style="font-weight: bold;color:red;">Red</span> = Not Approved | <span style="font-weight: bold;color:#ff884d;">Orange</span> = Not Send)',
+'file_type' => [
+  '1' => 'ID Card Pic.',
+  '2' => 'Picture',
+  '3' => 'Comfirm your Identify with Hoding your Card ID',
+  '4' => 'BookBank Account uploading',
+],
+'package' => 'Package'
 ];

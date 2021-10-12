@@ -12,23 +12,23 @@
 <div class="row">
     <div class="col-7">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> เติม Ai-Cash </h4>
+            <h4 class="mb-0 font-size-18"> {{ __('message.add_ai_cash') }} </h4>
 
             <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
-              
+
             <?php }else{ ?>
                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/add_ai_cash") }}">
-                      <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
+                      <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">{{ __('message.back') }}</span>
                 </a>
             <?php } ?>
-                    
+
         </div>
 
 
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
    ?>
 
@@ -40,7 +40,7 @@
               <form id="frm-main" action="{{ route('backend.add_ai_cash.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
 
 
-                    <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+                    <?php if(isset($_REQUEST['fromAddAiCash'])){
                           $frontstore_id_fk = @$_REQUEST['frontstore_id_fk'];
                        ?>
                        <div class="text-right">
@@ -49,7 +49,7 @@
                 <input name="frontstore_id_fk" type="hidden" value="{{@$_REQUEST['frontstore_id_fk']}}">
 
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
-                              <span style="font-size: 14px;">ย้อนกลับหน้าซื้อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-2"></i> 
+                              <span style="font-size: 14px;">ย้อนกลับหน้าซื้อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-2"></i>
                         </a>
                         <br>
                         <br>
@@ -67,13 +67,13 @@
 
                       <div class="myBorder">
 
-                      <?php  $rr1 =  empty(@$sRow) ? "required" :  "" ;  ?>     
+                      <?php  $rr1 =  empty(@$sRow) ? "required" :  "" ;  ?>
 
                            <div class="form-group row">
-                              <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
+                              <label for="customer_id_fk" class="col-md-4 col-form-label"> {{ __('message.info_member') }} : * </label>
                               <div class="col-md-8">
 
-                        
+
 
 
                                   @if(!empty(@$sRow->customer_id_fk))
@@ -82,50 +82,50 @@
 
                                     <select class="form-control select2-templating " disabled >
                                        <option value="{{@$sRow->customer_id_fk}}" selected >{{@$CustomerAicashName}}</option>
-                                    </select> 
+                                    </select>
 
                                   @else
 
-                                      <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+                                      <?php if(isset($_REQUEST['fromAddAiCash'])){
                                         $customer_id = $_REQUEST['customer_id'];
                                         $CustomerAicashName = $_REQUEST['member_name_aicash'];
                                       ?>
                                             <input type="hidden" name="customer_id_fk" id="customer_id_fk" value="{{@$customer_id}}" >
                                             <select class="form-control select2-templating " disabled >
                                                <option value="{{@$customer_id}}" selected >{{@$CustomerAicashName}}</option>
-                                            </select> 
+                                            </select>
 
-                                             <select id="customer_id_fk_select"  class="form-control" ></select> 
-                                          
+                                             <select id="customer_id_fk_select"  class="form-control" ></select>
+
                                       <?php }else{ ?>
 
                                              <input type="hidden" name="customer_id_fk" id="customer_id_fk" >
                                               <select id="aicash_choose" class="form-control "  >
                                                 <option value=""  >-Select-</option>
-                                              </select> 
+                                              </select>
 
-                                               <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select> 
+                                               <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select>
 
                                       <?php } ?>
 
-                                   
+
                                   @endif
 
-                                  
+
 
                               </div>
                             </div>
 
-                
+
                           <div class="form-group row">
-                            <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่มี :</label>
+                            <label for="aicash_amt" class="col-md-4 col-form-label">{{ __('message.ai_cash_total') }} :</label>
                             <div class="col-md-8">
                                <input class="form-control f-ainumber-18 input-aireadonly " id="aicash_remain" value="{{number_format(@$CustomerAicash[0]->ai_cash,2)}}" readonly />
                             </div>
                           </div>
-      <?php  $rr2 =  empty(@$sRow) ? "required" :  "readonly" ;  ?>                    
+      <?php  $rr2 =  empty(@$sRow) ? "required" :  "readonly" ;  ?>
                           <div class="form-group row">
-                            <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่เติม :</label>
+                            <label for="aicash_amt" class="col-md-4 col-form-label">{{ __('message.ai_cash_older') }} :</label>
                             <div class="col-md-8">
                               <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill" type="text" value="{{ @$sRow->aicash_amt }}" name="aicash_amt" id="aicash_amt" {{@$rr2}} >
                             </div>
@@ -138,7 +138,7 @@
 
                                 <input type="hidden" name="save_new" value="1" >
                                 <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                                <i class="bx bx-save font-size-18 align-middle mr-2"></i><span style="font-size: 14px;">บันทึกข้อมูล</span>
+                                <i class="bx bx-save font-size-18 align-middle mr-2"></i><span style="font-size: 14px;">{{ __('message.save') }}</span>
                                 </button>
 
                             </div>
@@ -148,7 +148,7 @@
                    </div>
 
          @if( !empty(@$sRow) )
-                   <div class="myBorder">      
+                   <div class="myBorder">
 
                           <div class="form-group row">
                             <label for="pay_type_id_fk" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
@@ -158,16 +158,16 @@
                                @ELSE
                                    <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
                                @ENDIF
-                              
+
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
                                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-                                          {{$r->detail}} 
+                                          {{$r->detail}}
                                         </option>
                                       @endforeach
-                                    @endif                                
-                              </select> 
+                                    @endif
+                              </select>
                             </div>
                           </div>
 
@@ -237,7 +237,7 @@
                               @foreach(@$sAccount_bank AS $r)
                                   <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
-                            @endif  
+                            @endif
                           </div>
                         </div>
 
@@ -253,7 +253,7 @@
                               $ds_m = $ds[1];
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>           
+                            }else{$ds='';} ?>
                               <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
 
@@ -267,10 +267,10 @@
 
                                   <span width="100" class="span_file_slip" >
                                     @IF(!empty(@$sRow->file_slip))
-                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" > 
+                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
                                       <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                     @ELSE
-                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" > 
+                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
                                     @ENDIF
                                   </span>
                           </div>
@@ -282,17 +282,17 @@
                         <div class="form-group row show_div_transfer_price " style="<?=$show_div_transfer_price?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินโอน : </label>
                           <div class="col-md-8 ">
-                              
+
                             @IF(@$sRow->pay_type_id_fk==8)
                             <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
                             <input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
-                                     
+
                           </div>
                         </div>
 
-                      
+
                       <div class="form-group row show_div_cash_price " style="display: none;">
                         <label for="cash_price" class="col-md-4 col-form-label"> cash_price : </label>
                         <div class="col-md-8 ">
@@ -305,16 +305,16 @@
                         <div class="form-group row show_div_cash_pay " style="<?=$show_div_cash_pay?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินสดที่ต้องชำระ : </label>
                           <div class="col-md-8 ">
-                              
-                           <?php 
-                                $cash_pay = @$sRow->cash_pay ; 
+
+                           <?php
+                                $cash_pay = @$sRow->cash_pay ;
                           ?>
                                 <input class="form-control f-ainumber-18-b input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
-                                     
+
                           </div>
                         </div>
 
-      
+
  @IF(@$sRow->approve_status >= 2)
  @ELSE
 
@@ -334,22 +334,22 @@
 
                           <!--       <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/add_ai_cash/print_receipt') }}/{{@$sRow->id}}" target=_blank style="float: right;" >
                                   <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ </span></a>
-                                  
+
  -->
                             </div>
                        </div>
-   @ENDIF                 
+   @ENDIF
                        <div class="form-group row" style="text-align: right;">
                             <label for="" class="col-md-4 col-form-label"></label>
                             <div class="col-md-8" >
-                            <?php if(isset($_REQUEST['fromAddAiCash'])){ 
+                            <?php if(isset($_REQUEST['fromAddAiCash'])){
 
                               $frontstore_id_fk = $_REQUEST['frontstore_id_fk'];
 
                                ?>
                             <hr>
                                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/frontstore/$frontstore_id_fk/edit?fromAddAiCash=1") }}">
-                                      <span style="font-size: 14px;">ย้อนกลับไปออกบิลต่อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-1"></i> 
+                                      <span style="font-size: 14px;">ย้อนกลับไปออกบิลต่อ </span><i class="bx bx-right-arrow-alt font-size-18 align-middle mr-1"></i>
                                 </a>
                             <?php } ?>
 
@@ -367,7 +367,7 @@
                   @if( @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
 
                               <div class="myBorder" style="">
-                          
+
                                 <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                   <input name="_method" type="hidden" value="PUT">
                                   <input name="id" type="hidden" value="{{@$sRow->id}}">
@@ -384,7 +384,7 @@
                                                 <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                                               <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                                            @endif
-                                            
+
                                         </div>
                                     </div>
 
@@ -400,7 +400,7 @@
                                       </div>
                                        <div class="col-md-4 mt-2">
                                         <div class=" ">
-                                
+
                                             <input type="radio" class="" id="customSwitch2" name="approve_status" value="6" {{ ( @$sRow->approve_status=='6')?'checked':'' }} required >
                                             <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
 
@@ -436,10 +436,10 @@
 
                             </div>
 
-                  @ENDIF 
-                  @ENDIF 
-                  @ENDIF 
-              
+                  @ENDIF
+                  @ENDIF
+                  @ENDIF
+
   @ENDIF
   @ENDIF
 
@@ -474,18 +474,18 @@
                       $.ajax({
                                type:'POST',
                                dataType:'JSON',
-                               url: " {{ url('backend/ajaxGetAicash') }} ", 
+                               url: " {{ url('backend/ajaxGetAicash') }} ",
                                data: { _token: '{{csrf_token()}}', customer_id:customer_id,frontstore_id_fk:frontstore_id_fk },
                                 success:function(data){
-                                       console.log(data); 
+                                       console.log(data);
                                        $.each(data,function(key,value){
                                           // $("#aicash_remain").val(value.ai_cash);
                                           $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                         
+
                                         });
                                       $(".myloading").hide();
                                   },
-                                error: function(jqXHR, textStatus, errorThrown) { 
+                                error: function(jqXHR, textStatus, errorThrown) {
                                     $(".myloading").hide();
                                 }
                             });
@@ -495,7 +495,7 @@
           function formatNumber(num) {
               return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
           }
-     
+
           function fnGetDBAddAiCash(){
 
                     var id = "{{@$sRow->id}}";
@@ -504,28 +504,28 @@
                     $.ajax({
                            type:'POST',
                            dataType:'JSON',
-                           url: " {{ url('backend/ajaxGetDBAddAiCash') }} ", 
+                           url: " {{ url('backend/ajaxGetDBAddAiCash') }} ",
                            data:{ _token: '{{csrf_token()}}',id:id,},
                            success:function(d){
                             if(d){
                               $.each(d,function(key,value){
-                                  
+
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
                                   if(pay_type_id_fk==''){
-                                     $("#cash_pay").val('');    
+                                     $("#cash_pay").val('');
                                   }else{
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
                                   if(value.transfer_money_datetime==''){
-                                     $("#transfer_money_datetime").val('');    
+                                     $("#transfer_money_datetime").val('');
                                   }else{
-                                     $("#transfer_money_datetime").val(value.transfer_money_datetime); 
+                                     $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   }
 
                                 });
@@ -536,12 +536,12 @@
                               $(".myloading").hide();
 
                             },
-                            error: function(jqXHR, textStatus, errorThrown) { 
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 $(".myloading").hide();
                             }
                       });
-              
-                    
+
+
                 }
 
 
@@ -555,18 +555,18 @@
               $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxGetAicash') }} ", 
+                       url: " {{ url('backend/ajaxGetAicash') }} ",
                        data: { _token: '{{csrf_token()}}', customer_id:customer_id },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                $.each(data,function(key,value){
                                   // $("#aicash_remain").val(value.ai_cash);
                                   $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                 
+
                                 });
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -620,14 +620,14 @@
                       $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ", 
+                       url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ",
                        data: $("#frm-main").serialize()+"&id="+id,
                         success:function(data){
-                                  console.log(data); 
+                                  console.log(data);
                                   // return false;
-                                  
+
                                   $.each(data,function(key,value){
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));  
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   });
 
                                   fnGetDBAddAiCash();
@@ -636,7 +636,7 @@
                                   $("input[name=_method]").val('PUT');
                                   $(".myloading").hide();
                                 },
-                              error: function(jqXHR, textStatus, errorThrown) { 
+                              error: function(jqXHR, textStatus, errorThrown) {
                                   $(".myloading").hide();
                               }
                           });
@@ -662,7 +662,7 @@
                             }else
                         // 4  เครดิต + เงินโอน
                             if(pay_type_id_fk==8){
-                             
+
                                   // เครดิต
                                   $(".show_div_credit").show();
                                   $("#credit_price").val('');
@@ -683,8 +683,8 @@
 
                                   $(".show_div_cash_pay").hide();
 
-                                        
-                              }else 
+
+                              }else
                               // 6  เงินโอน + เงินสด
                               if(pay_type_id_fk==10){
 
@@ -701,7 +701,7 @@
                                 $(".show_div_cash_pay").show();
                                 $('#fee').removeAttr('required');
                                 $("#cash_pay").val('');
-                              
+
                             }
       });
 
@@ -731,25 +731,25 @@
                   $.ajax({
                    type:'POST',
                    dataType:'JSON',
-                   // url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ", 
-                   url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ", 
+                   // url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
+                   url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ",
                    data: $("#frm-main").serialize()+"&id="+id,
                     success:function(data){
-                          console.log(data); 
+                          console.log(data);
 
                           // return false;
 
                             $.each(data,function(key,value){
-                                  
+
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
 
                                   if(pay_type_id_fk==''){
-                                     $("#cash_pay").val('');    
+                                     $("#cash_pay").val('');
                                   }else{
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -810,8 +810,8 @@
 
                                   // $(".show_div_cash_pay").hide();
 
-                                        
-                              }else 
+
+                              }else
                               // 6  เงินโอน + เงินสด
                               if(pay_type_id_fk==10){
 
@@ -828,7 +828,7 @@
                                 // $(".show_div_cash_pay").show();
                                 // $('#fee').removeAttr('required');
                                 // $("#cash_pay").val('');
-                              
+
                             }else{
                                 // $('#fee').removeAttr('required');
                                 // $('input[name=account_bank_id]').removeAttr('required');
@@ -837,11 +837,11 @@
                                 // $(".show_div_transfer_price").hide();
                                 // $(".div_account_bank_id").hide();
                             }
-                         
+
                                $(".myloading").hide();
 
                             },
-                          error: function(jqXHR, textStatus, errorThrown) { 
+                          error: function(jqXHR, textStatus, errorThrown) {
                               // console.log(JSON.stringify(jqXHR));
                               // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               $(".myloading").hide();
@@ -859,7 +859,7 @@
 
                     $("#credit_price").val('');
                     $("#fee_amt").val('');
-                    $("#sum_credit_price").val('');  
+                    $("#sum_credit_price").val('');
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
 
@@ -871,10 +871,10 @@
                     //  $.ajax({
                     //    type:'POST',
                     //    // dataType:'JSON',
-                    //    url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ", 
+                    //    url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ",
                     //    data: { frontstore_id_fk:frontstore_id_fk },
                     //     success:function(data){
-                    //            console.log(data); 
+                    //            console.log(data);
                     //            // $.each(data,function(key,value){
                     //            //    if(value.ai_cash==0){
                     //            //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
@@ -888,14 +888,14 @@
 
                     //           $(".myloading").hide();
                     //       },
-                    //     error: function(jqXHR, textStatus, errorThrown) { 
+                    //     error: function(jqXHR, textStatus, errorThrown) {
                     //         $(".myloading").hide();
                     //     }
                     // });
 
               });
 
-     
+
            $(document).on('change', '.CalAicashAmt', function(event) {
 
 
@@ -904,19 +904,19 @@
 
                     // $("#credit_price").val('');
                     // $("#fee_amt").val('');
-                    // $("#sum_credit_price").val('');  
+                    // $("#sum_credit_price").val('');
                     // $("#transfer_price").val('');
                     // $("#cash_pay").val('');
 
                      $.ajax({
                        type:'POST',
                        // dataType:'JSON',
-                       url: " {{ url('backend/ajaxGetAicashAmt') }} ", 
+                       url: " {{ url('backend/ajaxGetAicashAmt') }} ",
                        data: { id:id },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                 $.each(data,function(key,value){
-                                 
+
                                 });
 
                                 fnGetDBAddAiCash();
@@ -930,7 +930,7 @@
 
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -993,16 +993,16 @@
 
 
       $(document).ready(function() {
-        
+
               $(document).on('click', '.btnDelSlip', function(event) {
                     var id = $(this).data('id');
                     if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
                         return false;
                     }else{
-                    
+
                         $.ajax({
                             type: "POST",
-                            url: " {{ url('backend/ajaxDelFileSlipGiftVoucher') }} ", 
+                            url: " {{ url('backend/ajaxDelFileSlipGiftVoucher') }} ",
                              data:{ _token: '{{csrf_token()}}',id:id },
                             success: function(data){
                               console.log(data);
@@ -1023,10 +1023,10 @@
 
                     $("#credit_price").val('');
                     $("#fee_amt").val('');
-                    $("#sum_credit_price").val('');  
+                    $("#sum_credit_price").val('');
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
-                                        
+
                     $('#credit_price').attr('required', true);
                     setTimeout(function(){
                     $('#credit_price').focus();
@@ -1056,8 +1056,8 @@
 
 </script>
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk_select").select2({
           minimumInputLength: 3,
@@ -1070,7 +1070,7 @@
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -1090,7 +1090,7 @@
           };
 
        $('#customer_id_fk_select').toggleSelect2(false); //hide
-       $('#aicash_choose').show(); 
+       $('#aicash_choose').show();
 
 
        $(document).on('click', '#aicash_choose', function () {
