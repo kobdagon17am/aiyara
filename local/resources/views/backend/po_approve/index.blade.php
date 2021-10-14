@@ -8,7 +8,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -28,7 +28,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
       // print_r($menu_id);
@@ -86,11 +86,11 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -200,7 +200,7 @@
             <div class="row" >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                 </div>
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -221,7 +221,7 @@
                   </div>
                 </div>
               </div>
-             
+
               <br>
 
       </div> <!-- end row -->
@@ -303,7 +303,7 @@ $(function() {
           },
           method: 'POST'
         },
-            
+
    columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
@@ -316,7 +316,7 @@ $(function() {
               }else{
                   return '-';
               }
-            }}, 
+            }},
             {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
             {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
               if(d){
@@ -324,7 +324,7 @@ $(function() {
               }else{
                   return '-';
               }
-            }}, 
+            }},
 
             {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
             {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
@@ -334,12 +334,18 @@ $(function() {
               }else{
                   return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
               }
-            }},    
-            {data: 'id', title :'Tool', className: 'text-center w100'},        
-      
+            }},
+            {data: 'id', title :'Tool', className: 'text-center w100'},
+
         ],
-   
+
          rowCallback: function ( nRow, aData, start, end, display ) {
+
+            if (aData['branch_id_fk'] === 11) {
+              $(nRow).addClass('table-warning')
+            } else if (aData['branch_id_fk'] === 12) {
+              $(nRow).addClass('table-success')
+            }
 
              $('td:last-child', nRow).html(''
               + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -347,7 +353,7 @@ $(function() {
             ).addClass('input');
 
 
-            if(aData['price']<=0){ 
+            if(aData['price']<=0){
                      $('td:last-child', nRow).html('-');
                     }
 
@@ -410,7 +416,7 @@ $(function() {
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
             {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
@@ -491,7 +497,7 @@ $(function() {
           $('#bill_edate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -523,7 +529,7 @@ $(function() {
           $('#transfer_bill_approve_edate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -588,7 +594,7 @@ $(function() {
                                 destroy:true,
                                 ordering: false,
                                 "info":     false,
-                                    
+
                                          ajax: {
                                           url: '{{ route('backend.po_approve.datatable') }}',
                                           data :{
@@ -598,16 +604,16 @@ $(function() {
                                                 doc_id:doc_id,
                                                 bill_sdate:bill_sdate,
                                                 bill_edate:bill_edate,
-                                                transfer_amount_approver:transfer_amount_approver,                                 
-                                                transfer_bill_status:transfer_bill_status,                                 
-                                                transfer_bill_approve_sdate:transfer_bill_approve_sdate,                                 
-                                                transfer_bill_approve_edate:transfer_bill_approve_edate,                                 
+                                                transfer_amount_approver:transfer_amount_approver,
+                                                transfer_bill_status:transfer_bill_status,
+                                                transfer_bill_approve_sdate:transfer_bill_approve_sdate,
+                                                transfer_bill_approve_edate:transfer_bill_approve_edate,
                                                 // approve_sdate:approve_sdate,
-                                                // approve_edate:approve_edate,                                
+                                                // approve_edate:approve_edate,
                                               },
                                             method: 'POST',
-                                          }, 
-                                              
+                                          },
+
                                          columns: [
                                                   {data: 'id', title :'ID', className: 'text-center w50'},
                                                   {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
@@ -620,7 +626,7 @@ $(function() {
                                                     }else{
                                                         return '-';
                                                     }
-                                                  }}, 
+                                                  }},
                                                   {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
                                                   {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
                                                     if(d){
@@ -628,7 +634,7 @@ $(function() {
                                                     }else{
                                                         return '-';
                                                     }
-                                                  }}, 
+                                                  }},
 
                                                   {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
                                                   {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
@@ -638,20 +644,17 @@ $(function() {
                                                     }else{
                                                         return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
                                                     }
-                                                  }},    
-                                                  {data: 'id', title :'Tool', className: 'text-center w100'},        
-                                            
-                                              ],
-                                         
-                                               rowCallback: function ( nRow, aData, start, end, display ) {
+                                                  }},
+                                                  {data: 'id', title :'Tool', className: 'text-center w100'},
 
+                                              ],
+
+                                               rowCallback: function ( nRow, aData, start, end, display ) {
                                                    $('td:last-child', nRow).html(''
                                                     + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                                                     + ''
                                                   ).addClass('input');
-
-
-                                              }
+                                              },
                                     });
 
                                 });
@@ -731,10 +734,10 @@ $(function() {
                                                 doc_id:doc_id,
                                                 bill_sdate:bill_sdate,
                                                 bill_edate:bill_edate,
-                                                transfer_amount_approver:transfer_amount_approver,                                 
-                                                transfer_bill_status:transfer_bill_status,                                 
+                                                transfer_amount_approver:transfer_amount_approver,
+                                                transfer_bill_status:transfer_bill_status,
                                                 approve_sdate:approve_sdate,
-                                                approve_edate:approve_edate,                                
+                                                approve_edate:approve_edate,
                                               },
                                             method: 'POST',
                                           },
@@ -750,7 +753,7 @@ $(function() {
                                       {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
                                       {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
                                       {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                      {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -789,7 +792,7 @@ $(function() {
 
                                   }
                             });
-                        
+
                         });
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -798,7 +801,7 @@ $(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
@@ -813,14 +816,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                     $(".myloading").hide();
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
@@ -836,7 +839,7 @@ $(function() {
            }else{
             $(".myloading").hide();
            }
- 
+
       });
 
 
@@ -844,7 +847,7 @@ $(function() {
     </script>
 
 
-<!-- <audio autoplay> 
+<!-- <audio autoplay>
   <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
 </audio>
  -->
@@ -854,29 +857,29 @@ $(function() {
 
           var sApprove = "<?=$sA?>";
           // alert(sApprove);
-            // setInterval(function(){ 
+            // setInterval(function(){
             //   $.ajax({
             //      type:'POST',
-            //      url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+            //      url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
             //       success:function(data){
-            //              // console.log(data); 
+            //              // console.log(data);
             //              if(data>0){
             //                 $('.toast').toast('show');
             //              }
             //         },
-                 
+
             //   });
 
             // }, 3000);
 
-             // setInterval(function(){ 
+             // setInterval(function(){
               // alert("Oooo Yeaaa!");
              if(sApprove==1){
               $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
                   success:function(data){
-                         // console.log(data); 
+                         // console.log(data);
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;
@@ -889,7 +892,7 @@ $(function() {
 
                          }
                     },
-                 
+
               });
 
           }
@@ -911,9 +914,9 @@ $(document).ready(function() {
          // alert('You did nothing for 5 seconds');
            $.ajax({
                  type:'POST',
-                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ", 
+                 url: " {{ url('backend/ajaxCheckAddAiCashStatus') }} ",
                   success:function(data){
-                         // console.log(data); 
+                         // console.log(data);
                          if(data>0){
                            // alert("! พบรายการ Ai-Cash ที่ยังรอการชำระ ");
                            // return false;
@@ -926,7 +929,7 @@ $(document).ready(function() {
 
                          }
                     },
-                 
+
               });
 
          },
@@ -940,8 +943,8 @@ $(document).ready(function() {
 
 </script>
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk").select2({
           minimumInputLength: 3,
@@ -954,7 +957,7 @@ $(document).ready(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -969,11 +972,11 @@ $(document).ready(function() {
 
    });
 </script>
- 
+
 
 
       <script>
-// Clear data in View page  
+// Clear data in View page
       $(document).ready(function() {
 
             $("#bill_type").on('change',function(){
@@ -989,11 +992,11 @@ $(document).ready(function() {
                  // $(".btnSearch01").hide();
                  // $(".btnSearch02").hide();
               }
-              
-                    
+
+
 
             });
-                
+
       });
 
     </script>

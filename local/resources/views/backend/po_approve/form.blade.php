@@ -50,10 +50,10 @@
                          <h5 class=" col-5 mb-0 "><i class="bx bx-play"></i> Slip File : </h5><br>
 
                         <div class="form-group row">
-                       
+
 
                             @if(@$slip)
-                            @php 
+                            @php
                             @$i = 1
                             @endphp
                                 @foreach(@$slip AS $r)
@@ -74,15 +74,15 @@
                                             @ENDIF
 
                                         </div>
-                            @php 
+                            @php
                             @$i++
                             @endphp
                                 @endforeach
                             @endif
 
-                         
 
-                            
+
+
                         </div>
 
                           @IF(count($slip)==0)
@@ -92,7 +92,7 @@
                         <br>
                         <br>
                         <br>
-                   
+
                         <div class="form-group mb-0 row">
                             <div class="col-md-6">
                                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url('backend/po_approve') }}">
@@ -117,7 +117,7 @@
                         <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
-                        </button> 
+                        </button>
                     </div>
                         @endif
 
@@ -162,7 +162,7 @@
                                                     <div class="row form-group " >
                                                         <div class="col-md-6 text-left">
                                                             <h5 class="font-size-14 ">ยอดชำระในใบสั่งซื้อ </h5>
-                                                            
+
                                                         </div>
                                                         <div class="col-md-6 text-left">
                                                             <input class="form-control" type="text" value="{{@$price}}" readonly >
@@ -211,12 +211,12 @@
                                     </div>
 
 
-                                  @ENDIF           
+                                  @ENDIF
 
-                     <div class="col-md-12 mt-2 text-left">      
+                     <div class="col-md-12 mt-2 text-left">
 
                             @if(@$slip)
-                            @php 
+                            @php
                             @$i = 1
                             @endphp
                                 @foreach(@$slip AS $r)
@@ -253,12 +253,12 @@
                                                 @endif
                                         @endif
 
-                            @php 
+                            @php
                             @$i++
                             @endphp
                                 @endforeach
                             @endif
-                                                       
+
                                        </div>
 
                                   </div>
@@ -270,7 +270,7 @@
                                                     <button type="submit" type="submit" name="approved" value='approved'
                                                         class="btn btn-primary">อนุมัติ</button>
                                                 </div>
-                                        
+
 
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
@@ -327,7 +327,7 @@
 
                                                         @endforeach
                                                     @endif
-                                                       
+
 
                                                     @IF(count($slip)==0)
                                                     <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
@@ -337,7 +337,7 @@
 
                                                 </div>
                                                 <div class="modal-footer">
-                                                     
+
                                                        <button type="submit" type="submit" name="no_approved"
                                                         value='no_approved' class="btn btn-primary">อัพโหลดสลิปใหม่</button>
 
@@ -395,7 +395,7 @@ $(function() {
                 },
               method: 'POST',
             },
-            
+
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
@@ -408,7 +408,7 @@ $(function() {
               }else{
                   return '-';
               }
-            }}, 
+            }},
             // {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
             // {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
             {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
@@ -417,7 +417,7 @@ $(function() {
               }else{
                   return '-';
               }
-            }}, 
+            }},
 
             {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
             {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
@@ -427,11 +427,11 @@ $(function() {
               }else{
                   return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
               }
-            }},            
-      
+            }},
+
         ],
         rowCallback: function(nRow, aData, dataIndex){
-  
+
         }
 
     });

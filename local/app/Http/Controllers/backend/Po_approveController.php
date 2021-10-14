@@ -95,10 +95,10 @@ class Po_approveController extends Controller
 
                 if(!empty($request->slip_ids)){
 
-                    for ($i=0; $i < count($request->slip_ids) ; $i++) { 
+                    for ($i=0; $i < count($request->slip_ids) ; $i++) {
                         DB::select(" UPDATE `payment_slip` SET `code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->slip_ids[$i]."') ");
                     }
-                    
+
                 }
 
                 $sRow->approval_amount_transfer = $request->approval_amount_transfer;
@@ -118,7 +118,7 @@ class Po_approveController extends Controller
                 $sRow->approve_status  = 1;
 
                  if ($request->hasFile('image01')) {
-                      
+
 
                   $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
                   @UNLINK(@$r[0]->url.@$r[0]->file);
@@ -134,7 +134,7 @@ class Po_approveController extends Controller
                   $image->move($image_path, $name);
                   $sRow->file_slip = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
-                   VALUES 
+                   VALUES
                    ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
 
                 }
@@ -152,13 +152,18 @@ class Po_approveController extends Controller
 
                 DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
 
-                
+
             }
 
 
             if (@request('approved') != null) {
-                $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                if ($sRow->order_channel == 'VIP') {
+                  $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+                } else {
+                  $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                }
             }
+
 
 
             $sRow->save();
@@ -259,16 +264,16 @@ class Po_approveController extends Controller
 
         // return $transfer_bill_status;
 
-// qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม 
+// qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
 
        $sTable =     DB::select("
 
-select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk` 
-
-where 
-pay_type_id_fk in (1,8,10,11,12) and 
-`dataset_order_status`.`lang_id` = 1 and 
-`dataset_orders_type`.`lang_id` = 1 and 
+select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
+where
+pay_type_id_fk in (1,8,10,11,12) and
+`dataset_order_status`.`lang_id` = 1 and
+(`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
 `db_orders`.`id` != 0
 
 $business_location_id_fk
@@ -285,10 +290,11 @@ ORDER BY updated_at DESC
 
                 ");
 
-            
-
         $sQuery = \DataTables::of($sTable);
         return $sQuery
+            ->addColumn('created_at', function ($row) {
+              return $row->created_at .'<br>'. '('.$row->b_name.')';
+            })
             ->addColumn('price', function ($row) {
                 if (@$row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
@@ -304,9 +310,13 @@ ORDER BY updated_at DESC
             //     return date('d/m/Y H:i:s', strtotime($row->created_at));
             // })
              ->addColumn('customer_name', function($row) {
+                if (!empty($row->user_id_fk)) {
+                  $user = DB::table('users')->select(DB::raw('CONCAT(name, " ", last_name) as user_full_name'))->where('id', $row->user_id_fk)->first();
+                  return $user->user_full_name;
+                }
                 if(!empty($row->customers_id_fk)){
                 @$Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-                return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.$Customer[0]->first_name." ".@$Customer[0]->last_name;
+                return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
                     }
               })
 
@@ -332,7 +342,7 @@ ORDER BY updated_at DESC
                 }else{
                     return "-";
                 }
-                
+
               })
              ->escapeColumns('approval_amount_transfer')
              ->addColumn('transfer_amount_approver', function($row) {
@@ -344,7 +354,7 @@ ORDER BY updated_at DESC
                 }else{
                     return "-";
                 }
-                
+
               })
              ->escapeColumns('transfer_amount_approver')
 
@@ -364,7 +374,7 @@ ORDER BY updated_at DESC
                 }
             })
             ->escapeColumns('transfer_bill_status')
-     
+
             ->make(true);
     }
 
@@ -388,12 +398,16 @@ ORDER BY updated_at DESC
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
             ->where('dataset_order_status.lang_id', '=', '1')
-            ->where('dataset_orders_type.lang_id', '=', '1')
-           // ->where('db_orders.purchase_type_id_fk', '!=', '6')
+            ->where(function ($query) {
+              $query->where('dataset_orders_type.lang_id', '=', '1')
+                ->orWhereNull('dataset_orders_type.lang_id');
+            })
+            // ->where('dataset_orders_type.lang_id', '=', '1')
+            // ->where('db_orders.purchase_type_id_fk', '!=', '6')
             // ->where('db_orders.order_status_id_fk', '=', '2')
             ->where('db_orders.id', $con01, $w01)
-            ->get(); 
-            // ->toSql(); 
+            ->get();
+            // ->toSql();
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
@@ -439,7 +453,7 @@ ORDER BY updated_at DESC
                 }else{
                     return "-";
                 }
-                
+
               })
              ->escapeColumns('approval_amount_transfer')
              ->addColumn('transfer_amount_approver', function($row) {
@@ -451,7 +465,7 @@ ORDER BY updated_at DESC
                 }else{
                     return "-";
                 }
-                
+
               })
              ->escapeColumns('transfer_amount_approver')
             ->addColumn('transfer_bill_status', function ($row) {
@@ -470,7 +484,7 @@ ORDER BY updated_at DESC
                 }
             })
             ->escapeColumns('transfer_bill_status')
-      
+
             ->make(true);
     }
 
