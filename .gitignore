@@ -26,3 +26,4 @@ local/resources/views/backend/frontstore/index.blade - Copy.php
 local/resources/views/backend/layouts/topbar.blade - Copy.php
 local/resources/lang/~$lang_file.xlsx
 local/resources/lang/lang_file.xlsx
+index.php

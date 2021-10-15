@@ -1,11 +1,19 @@
 <?php
 
-if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
-    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    header('HTTP/1.1 301 Moved Permanently');
-    header('Location: ' . $redirect);
-    exit();
-}
+    $ip_server = getenv('SERVER_ADDR'); 
+
+    if($ip_server=="::1"){
+        // localhost
+    }else{
+        // "NOT > localhost";
+        if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
+            $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            header('HTTP/1.1 301 Moved Permanently');
+            header('Location: ' . $redirect);
+            exit();
+        }
+
+    }
 
 /**
  * Laravel - A PHP Framework For Web Artisans

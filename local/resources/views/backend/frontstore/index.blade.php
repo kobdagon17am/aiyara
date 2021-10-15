@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -432,7 +432,7 @@ $(function() {
         paging:   true,
         searching: false,
         bLengthChange: false ,
-        iDisplayLength: 25,
+        iDisplayLength: 35,
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
@@ -690,7 +690,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // console.log(data);
+                                  // // console.log(data);
                                   // return false;
                                   
                                       Swal.fire({
@@ -745,7 +745,7 @@ $(document).ready(function() {
                                 },
                                 success:function(data)
                                 { 
-                                  // // // console.log(data);
+                                  // // // // console.log(data);
                                   // return false;
                                       Swal.fire({
                                         type: 'success',
@@ -830,7 +830,7 @@ $(document).ready(function() {
 
 
                   var viewcondition = $(this).data('id');
-                  // console.log(viewcondition);
+                  // // console.log(viewcondition);
 
                   if(viewcondition=="ViewAll"){
 
@@ -859,7 +859,7 @@ $(document).ready(function() {
                                                   searching: false,
                                                   bLengthChange: false ,
                                                   destroy: true,
-                                                   iDisplayLength: 25,
+                                                   iDisplayLength: 35,
                                                   ajax: {
                                                       url: '{{ route('backend.frontstore.datatable') }}',
                                                       data :{
@@ -1069,7 +1069,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           { 
-                                            // // console.log(data);
+                                            // // // console.log(data);
                                             $(".div_SumCostActionUser").html(data);
                                             
                                           }
@@ -1093,7 +1093,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           { 
-                                            // console.log(data);
+                                            // // console.log(data);
                                             $(".div_PV_Amount").html(data);
                                             
                                           }
@@ -1125,6 +1125,17 @@ $(document).ready(function() {
 
            });
 
+
+           $(document).on('change', '#approve_status', function(event) {
+                var v = $(this).val();
+                if(v==7){
+                     $("#startDate").val('');
+                     $("#endDate").val('');
+                }
+                console.log(v);
+
+           });
+
             $(document).on('click', '.btnSearchTotal', function(event) {
                   event.preventDefault();
                   $('#data-table').DataTable().clear();
@@ -1138,8 +1149,7 @@ $(document).ready(function() {
                   var action_user = $('#action_user').val();
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
-
-                  // // console.log(invoice_code);
+                  // console.log(approve_status);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           					var oTable;
@@ -1155,7 +1165,8 @@ $(document).ready(function() {
           					        searching: false,
           					        bLengthChange: false ,
           					        destroy: true,
-                            iDisplayLength: 25,
+                            // iDisplayLength: 25,
+                            iDisplayLength: 35,
           					        ajax: {
           		                        url: '{{ route('backend.frontstore.datatable') }}',
           		                        data :{
@@ -1363,7 +1374,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             { 
-                              // // console.log(data);
+                              // // // console.log(data);
                               $(".div_SumCostActionUser").html(data);
                               
                             }
@@ -1386,7 +1397,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             { 
-                            //   console.log(data);
+                            //   // console.log(data);
                               $(".div_PV_Amount").html(data);
                               
                             }
@@ -1419,7 +1430,7 @@ $(document).ready(function() {
                   },
                   success:function(data)
                   { 
-                    // // console.log(data);
+                    // // // console.log(data);
                     $(".div_SumCostActionUser").html(data);
                     
                   }
@@ -1435,7 +1446,7 @@ $(document).ready(function() {
                     },
                     success:function(data)
                     { 
-                      console.log(data);
+                      // console.log(data);
                       $(".div_PV_Amount").html(data);
                     }
                   });
@@ -1604,6 +1615,9 @@ DB::select(" TRUNCATE db_consignments_import ; ");
           $(document).on('click', '.cCancel', function(event) {
 
             var id = $(this).data('id');
+            var approve_status = "{{@$sRow->approve_status}}";
+            // alert(approve_status);
+            // return false;
          
               if (!confirm("ยืนยัน ? เพื่อยกเลิกรายการสั่งซื้อที่ระบุ ")){
                   return false;
@@ -1616,7 +1630,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
                   },
                   success:function(data)
                   { 
-                    // // console.log(data);
+                    // console.log(data);
                     // return false;
                         Swal.fire({
                           type: 'success',
@@ -1653,7 +1667,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
               var id = $(this).data('id');
 
-              // console.log(id);
+              // // console.log(id);
 
               setTimeout(function(){
                  window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
