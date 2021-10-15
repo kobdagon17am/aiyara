@@ -432,7 +432,8 @@ $(function() {
         paging:   true,
         searching: false,
         bLengthChange: false ,
-        iDisplayLength: 35,
+        iDisplayLength: 25,
+        // iDisplayLength: 35,
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
@@ -859,7 +860,8 @@ $(document).ready(function() {
                                                   searching: false,
                                                   bLengthChange: false ,
                                                   destroy: true,
-                                                   iDisplayLength: 35,
+                                                  iDisplayLength: 25,
+                                                  // iDisplayLength: 35,
                                                   ajax: {
                                                       url: '{{ route('backend.frontstore.datatable') }}',
                                                       data :{
@@ -1165,8 +1167,8 @@ $(document).ready(function() {
           					        searching: false,
           					        bLengthChange: false ,
           					        destroy: true,
-                            // iDisplayLength: 25,
-                            iDisplayLength: 35,
+                            iDisplayLength: 25,
+                            // iDisplayLength: 35,
           					        ajax: {
           		                        url: '{{ route('backend.frontstore.datatable') }}',
           		                        data :{

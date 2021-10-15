@@ -1825,18 +1825,7 @@ class FrontstoreController extends Controller
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
                 WHERE 1
-                $action_user_011 
-                $startDate1 
-                $endDate1 
-                $invoice_code 
-                $purchase_type_id_fk
-                $customer_code
-                $customer_name
-                $action_user_02
-                $status_sent_money
-                $approve_status
-                $viewcondition_01
-
+                AND DATE(db_orders.created_at) >= CURDATE()  
         
 
                 GROUP BY action_user
@@ -1920,17 +1909,7 @@ class FrontstoreController extends Controller
                 FROM
                 db_orders
                 WHERE 1
-                $action_user_011 
-                $startDate1 
-                $endDate1 
-                $invoice_code 
-                $purchase_type_id_fk
-                $customer_code
-                $customer_name
-                $action_user_02
-                $status_sent_money
-                $approve_status
-                $viewcondition_01
+                AND DATE(db_orders.created_at) >= CURDATE()  
 
         ");
 
