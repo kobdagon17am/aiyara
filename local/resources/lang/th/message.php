@@ -244,11 +244,36 @@ return [
 'date_approve' => 'วันที่ตรวจสอบผ่าน',
 'profile' => 'ข้อมูลส่วนตัว',
 'member_pv_status_info' => '(<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง)',
-'file_type' => [
+'file_types' => [
   '1' => 'ภาพถ่ายบัตรประชาชน',
   '2' => 'ภายถ่ายหน้าตรง',
   '3' => 'ภาพถ่ายหน้าตรงถือบัตรประชาชน',
   '4' => 'ภาพถ่ายหน้าบัญชีธนาคาร',
 ],
-'package' => 'Package'
+'package' => 'Package',
+
+// /backend/member_regis
+'member_register' => 'สมาชิกลงทะเบียน',
+'document_checking' => 'ตรวจเอกสาร',
+'summary_document_checked_list' => 'สรุปรายการตรวจเอกสาร',
+'location' => 'Location',
+'file_type' => 'ประเภทไฟล์',
+'date_register' => 'ช่วงวันที่ลงทะเบียน',
+'register_checked_list' => 'บันทึกตรวจสอบการลงทะเบียน',
+'check_result' => 'ผลการตรวจสอบ',
+'pass' => 'ผ่าน',
+'fail' => 'ไม่ผ่าน',
+'doc' => 'เอกสาร',
+'date_of_file_approved' => 'วันที่ตรวจเอกสารผ่าน',
+'latest_editing' => 'ปรับปรุงล่าสุด',
+
+// /backend/faq
+'search_question' => 'ค้น : รายการคำถาม',
+'question_list' => 'รายการคำถาม',
+'question_type' => 'หมวดคำถาม',
+'status_faqs' => [
+  'open' => 'เปิดใช้งาน',
+  'close' => 'ปิด',
+],
+'answer' => 'คำตอบ'
 ];

@@ -95,7 +95,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> สมาชิกลงทะเบียน </h4>
+            <h4 class="mb-0 font-size-18"> {{ __('message.member_register') }} </h4>
         </div>
     </div>
 </div>
@@ -135,14 +135,14 @@
               <li class="nav-item">
                 <a class="nav-link tab_a active " data-toggle="tab" href="#home" role="tab">
                   <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                  <span class="d-none d-sm-block">ตรวจเอกสาร</span>
+                  <span class="d-none d-sm-block">{{ __('message.document_checking') }}</span>
                 </a>
               </li>
 
               <li class="nav-item">
                 <a class="nav-link tab_b  " data-toggle="tab" href="#second_tab" role="tab">
                   <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-                  <span class="d-none d-sm-block">สรุปรายการตรวจเอกสาร</span>
+                  <span class="d-none d-sm-block">{{ __('message.summary_document_checked_list') }}</span>
                 </a>
               </li>
 
@@ -158,7 +158,7 @@
               <div class="row" >
                  <div class="col-md-6 " >
                       <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Location : </label>
+                        <label for="business_location_id_fk" class="col-md-3 col-form-label">{{ __('message.location') }} : </label>
                         <div class="col-md-9">
                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
                               <option value="">-Business Location-</option>
@@ -173,7 +173,7 @@
                     </div>
                     <div class="col-md-6 " >
                       <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> {{ __('message.branch') }} : </label>
                             <div class="col-md-9">
 
                               <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  @if($sPermission !== 1) disabled @endif>
@@ -200,7 +200,7 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="customer_id" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
+                    <label for="customer_id" class="col-md-3 col-form-label"> {{ __('message.info_member') }} : </label>
                     <div class="col-md-9">
                        <select id="customer_id" name="customer_id" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -219,7 +219,7 @@
 
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="po_status" class="col-md-3 col-form-label"> ประเภทไฟล์ :  </label>
+                    <label for="po_status" class="col-md-3 col-form-label"> {{ __('message.file_type') }} :  </label>
                     <div class="col-md-9">
                        <select id="filetype" name="filetype" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -239,7 +239,7 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่ลงทะเบียน : </label>
+                    <label for="startDate" class="col-md-3 col-form-label"> {{ __('message.date_register') }} : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -248,7 +248,7 @@
                 </div>
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="approver" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
+                    <label for="approver" class="col-md-3 col-form-label"> {{ __('message.approver') }} : </label>
                      <div class="col-md-9 ">
                      <select id="approver" name="approver" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -281,7 +281,7 @@
                     <label for="" class="col-md-3 col-form-label">  </label>
                      <div class="col-md-9" >
                      <a class="btn btn-info btn-sm btnSearch01 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                        <i class="bx bx-search align-middle "></i> SEARCH
+                        <i class="bx bx-search align-middle "></i> {{ __('message.search') }}
                       </a>
 
                     </div>
@@ -295,12 +295,12 @@
 </div>
 
                   <div style="text-align: center;">
-                  <b>หมายเหตุ</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <b>{{ __('message.remark') }}</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php
                     foreach ($filetype as $key => $value) {
                          echo $value->icon;
                          echo " : ";
-                         echo $value->txt_desc;
+                         echo __('message.file_types.' . $value->id);
                          echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                     }
                     ?>
@@ -319,7 +319,7 @@
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="startDate" class="col-md-3 col-form-label"> ช่วงวันที่ลงทะเบียน : </label>
+                    <label for="startDate" class="col-md-3 col-form-label"> {{ __('message.date_register') }} : </label>
                      <div class="col-md-8 d-flex">
                       <input id="startDate02"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate02"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -328,7 +328,7 @@
                 </div>
                 <div class="col-md-5 " >
                   <div class="form-group row">
-                    <label for="regis_doc_status" class="col-md-3 col-form-label"> สถานะ : </label>
+                    <label for="regis_doc_status" class="col-md-3 col-form-label"> {{ __('message.status') }} : </label>
                      <div class="col-md-9 ">
                      <select id="regis_doc_status" name="regis_doc_status" class="form-control select2-templating " >
                         <option value="">-Select-</option>
@@ -361,7 +361,7 @@
                     <label for="" class="col-md-3 col-form-label">  </label>
                      <div class="col-md-9" >
                      <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                        <i class="bx bx-search align-middle "></i> SEARCH
+                        <i class="bx bx-search align-middle "></i> {{ __('message.search') }}
                       </a>
 
                     </div>
@@ -377,13 +377,13 @@
             </p>
 
 
-                <b style="font-size: 14px;">หมายเหตุ</b>
+                <b style="font-size: 14px;">{{ __('message.remark') }}</b>
                 <div class="divTable">
                   <div class="divTableBody">
                     <div class="divTableRow">
                       <?php
                       foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon.' : '.$value->txt_desc.' </div>';
+                      echo '<div class="divTableCell">'.$value->icon.' : '.__('message.file_types.'.$value->id).' </div>';
                       }
                       ?>
                     </div>
@@ -394,7 +394,7 @@
                   margin-left: 1%;
                   color: black;
                   ">
-                  (<span style="font-weight: bold;color:green;">สีเขียว</span> = ผ่าน | <span style="font-weight: bold;color:red;">สีแดง</span> = ไม่ผ่าน | <span style="font-weight: bold;color:#ff884d;">สีส้ม</span> = ยังไม่ส่ง | สีเทา = รอตรวจสอบ)
+                  {!! __('message.member_pv_status_info') !!}
                 </div>
 
             </div>
@@ -416,7 +416,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="checkRegisTitle"><b><i class="bx bx-play"></i>บันทึกตรวจสอบการลงทะเบียน </b></h5>
+        <h5 class="modal-title" id="checkRegisTitle"><b><i class="bx bx-play"></i>{{ __('message.register_checked_list') }} </b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -439,12 +439,12 @@
 
               <div class="row">
                 <div class="column column_1 " style="background-color:#aaa;">
-                  <h4 class="p_desc_1">(1) ภาพถ่ายบัตรประชาชน</h4>
+                  <h4 class="p_desc_1">(1) {{ __('message.file_types.1') }}</h4>
                   <p> <img id="file_path1" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
                   <h4 class="p_desc_11"></h4>
                 </div>
                 <div class="column column_2 " style="background-color:#bbb;">
-                   <h4 class="p_desc_2">(2) ภายถ่ายหน้าตรง</h4>
+                   <h4 class="p_desc_2">(2) {{ __('message.file_types.2') }}</h4>
                    <p> <img id="file_path2" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
                 </div>
               </div>
@@ -452,12 +452,12 @@
 
               <div class="row">
                 <div class="column column_3 " style="background-color:#bbb;color: black;">
-                  <h4 class="p_desc_3">(3) ภาพถ่ายหน้าตรงถือบัตรประชาชน</h4>
+                  <h4 class="p_desc_3">(3) {{ __('message.file_types.3') }}</h4>
                   <p> <img id="file_path3" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
                   <h4 class="p_desc_33"></h4>
                 </div>
                 <div class="column column_4 " style="background-color:#aaa;">
-                   <h4 class="p_desc_4">(4) ภาพถ่ายหน้าบัญชีธนาคาร</h4>
+                   <h4 class="p_desc_4">(4) {{ __('message.file_types.4') }}</h4>
                    <p> <img id="file_path4" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
                     <h4 class="p_desc_44"> </h4>
                 </div>
@@ -469,7 +469,7 @@
               <div class="row" >
                       <div class="col-md-12" >
                       <div class="form-group row">
-                        <label for="comment" class="col-md-4 col-form-label"> หมายเหตุ (ถ้ามี) : </label>
+                        <label for="comment" class="col-md-4 col-form-label"> {{ __('message.remark') }} : </label>
                         <div class="col-md-6">
                             <textarea class="form-control" rows="3" id="comment" name="comment" ></textarea>
                         </div>
@@ -480,12 +480,12 @@
                 <div class="row" >
                       <div class="col-md-12" >
                       <div class="form-group row">
-                        <label for="regis_status" class="col-md-4 col-form-label"> ผลการตรวจสอบ : </label>
+                        <label for="regis_status" class="col-md-4 col-form-label"> {{ __('message.check_result') }} : </label>
                         <div class="col-md-4">
                            <select name="regis_status" id="regis_status" class="form-control select2-templating " required >
                               <option value="">Select</option>
-                              <option value="1">ผ่าน</option>
-                              <option value="2">ไม่ผ่าน</option>
+                              <option value="1">{{ __('message.pass') }}</option>
+                              <option value="2">{{ __('message.fail') }}</option>
                             </select>
                         </div>
                       </div>
@@ -561,11 +561,11 @@ $(function() {
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w300 '},
-            {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
-            {data: 'regis_status', title :'<center> สถานะการอนุมัติ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-            {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>{{ __("message.info_member") }} </center>', className: 'text-left w300 '},
+            {data: 'filetype', title :'<center> {{ __("message.file_type") }} </center>', className: 'text-left'},
+            {data: 'regis_status', title :'<center> {{ __("message.status") }} </center>', className: 'text-center'},
+            {data: 'approver', title :'<center>{{ __("message.approver") }} </center>', className: 'text-center'},
+            {data: 'approve_date', title :'<center>{{ __("message.date_approve") }} </center>', className: 'text-center'},
             {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
             {data: 'tools', title :'Tools', className: 'text-center w80'},
         ],
@@ -645,11 +645,11 @@ $(function() {
         ],
         columns: [
             {data: 'id', title :'No.', className: 'text-center w50'},
-            {data: 'created_at', title :'<center>วันที่สมัคร</center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left'},
-            {data: 'icon', title :'<center> เอกสาร </center>', className: 'text-center'},
-            {data: 'regis_date_doc', title :'<center>วันที่ตรวจเอกสารผ่าน </center>', className: 'text-center'},
-            {data: 'updated_at', title :'<center>ปรับปรุงล่าสุด </center>', className: 'text-center'},
+            {data: 'created_at', title :'<center>{{ __("message.date_register") }}</center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>{{ __("message.info_member") }}</center>', className: 'text-left'},
+            {data: 'icon', title :'<center> {{ __("message.doc") }} </center>', className: 'text-center'},
+            {data: 'regis_date_doc', title :'<center>{{ __("message.date_of_file_approved") }} </center>', className: 'text-center'},
+            {data: 'updated_at', title :'<center>{{ __("message.latest_editing") }} </center>', className: 'text-center'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 

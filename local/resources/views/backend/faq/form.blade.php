@@ -47,21 +47,21 @@
 
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">รายการคำถาม : * </label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">{{ __('message.question_list') }} : * </label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" value="{{ @$sRow->q_question }}" name="q_question" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-md-2 col-form-label">คำตอบ :</label>
+                    <label for="example-text-input" class="col-md-2 col-form-label">{{ __('message.answer') }} :</label>
                     <div class="col-md-10">
                         <textarea class="form-control" rows="5" name="q_answer" >{{@$sRow->q_answer}}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">สถานะ :</label>
+                    <label class="col-md-2 col-form-label">{{ __('message.status') }} :</label>
                     <div class="col-md-10 mt-2">
                       <div class="custom-control custom-switch">
                         @if( empty($sRow) )
@@ -69,7 +69,7 @@
                         @else
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
                         @endif
-                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
+                          <label class="custom-control-label" for="customSwitch">{{ __('message.status_faqs.open') }}</label>
                       </div>
                     </div>
                 </div>
@@ -77,12 +77,12 @@
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/faq") }}">
-                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+                          <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> {{ __('message.back') }}
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
-                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> {{ __('message.save') }}
                         </button>
                     </div>
                 </div>
