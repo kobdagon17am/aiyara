@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use App\Models\Frontend\RunNumberPayment;
 
 class Add_ai_cashController extends Controller
 {
@@ -166,6 +167,7 @@ class Add_ai_cashController extends Controller
     public function update(Request $request, $id)
     {
 // dd($request->all());
+// dd($request->id);
       if(isset($request->approved)){
           // dd($request->all());
             // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
@@ -174,6 +176,8 @@ class Add_ai_cashController extends Controller
             // $sRow->approve_date = date('Y-m-d');
             // $sRow->note = $request->note;
             // $sRow->save();
+
+            // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
 
             // DB::select("
             //     UPDATE
@@ -192,12 +196,16 @@ class Add_ai_cashController extends Controller
             //     return redirect()->to(url("backend/po_approve"));
             // }
 
-            if($add_aicash['status'] == 'success'){
-              return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
-            }else{
-              return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
-            }
+            // if($add_aicash['status'] == 'success'){
+              // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
+               return $this->form($request->id);
+
+            // }else{
+               // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
+            // }
             // return redirect()->to(url("backend/add_ai_cash/".$request->id."/edit"));
+
+            // return redirect()->to(url("backend/add_ai_cash"));
 
       }else{
            return $this->form($id);
@@ -215,6 +223,9 @@ class Add_ai_cashController extends Controller
           }else{
             $sRow = new \App\Models\Backend\Add_ai_cash;
           }
+
+          // dd($id);
+          // dd(request('approve_status'));
 /*
 1 เงินโอน
 2 บัตรเครดิต
@@ -243,6 +254,7 @@ class Add_ai_cashController extends Controller
 
 
 */
+  // dd(request('pay_type_id_fk'));
             // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
             if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
                $sRow->approve_status = 1  ;
@@ -250,6 +262,12 @@ class Add_ai_cashController extends Controller
             }else if(request('pay_type_id_fk')==5 || request('pay_type_id_fk')==6 || request('pay_type_id_fk')==7 || request('pay_type_id_fk')==9){
               $sRow->approve_status = 2  ;
               $sRow->approver = \Auth::user()->id  ;
+
+                  if($sRow->code_order==""){
+                    $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+                    DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='".$sRow->id."') ");
+                  }
+
             }else{
               $sRow->approve_status = 1 ;
               $sRow->approver = \Auth::user()->id  ;
@@ -312,8 +330,9 @@ class Add_ai_cashController extends Controller
 
           DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
 
-          \DB::commit();
+          
 
+          \DB::commit();
 
 
           if(request('fromAddAiCash')==1){

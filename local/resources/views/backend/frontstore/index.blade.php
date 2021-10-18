@@ -522,7 +522,7 @@ $(function() {
 
            if(aData['type']!='0'){
               $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
-              $("td:eq(6)", nRow).html('');
+              // $("td:eq(6)", nRow).html('');
               $("td:eq(8)", nRow).html('');
             }
 
@@ -961,7 +961,7 @@ $(document).ready(function() {
 
                                                    if(aData['type']!='0'){
                                                       $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
-                                                      $("td:eq(6)", nRow).html('');
+                                                      // $("td:eq(6)", nRow).html('');
                                                       $("td:eq(8)", nRow).html('');
                                                     }
 
@@ -1267,7 +1267,7 @@ $(document).ready(function() {
 
                                      if(aData['type']!='0'){
                                         $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
-                                        $("td:eq(6)", nRow).html('');
+                                        // $("td:eq(6)", nRow).html('');
                                         $("td:eq(8)", nRow).html('');
                                       }
 

@@ -2851,7 +2851,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 UNION ALL 
 
                 SELECT
-                '' as code_order,
+                code_order,
                 db_add_ai_cash.id,
                 db_add_ai_cash.created_at as d2,
                 0 as purchase_type_id_fk,
