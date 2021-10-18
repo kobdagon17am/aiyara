@@ -38,8 +38,6 @@ function data_direct_confirm(sent_to_customer_username){
             $('#large-Modal').modal('hide')
             document.getElementById("data_direct").style.display = "block";
 
-           
-
         }
     })
     

@@ -714,13 +714,13 @@
                      @endif
                      @if($bill['type'] != 6)
 
-                      <div class="form-control bootstrap-tagsinput" id="html_shipping_premium" style=" border: 1px solid #ffc107;line-height: 29px; border-radius: 16px;">
+                      {{-- <div class="form-control bootstrap-tagsinput" id="html_shipping_premium" style=" border: 1px solid #ffc107;line-height: 29px; border-radius: 16px;">
                           <div class="checkbox-color checkbox-success">
                               <input id="checkbox13" type="checkbox" onchange="check_premium()" value="true">
                               <label for="checkbox13"> ส่งแบบพิเศษ / Premium
                               </label>
                           </div>
-                      </div>
+                      </div> --}}
 
 
                   @endif
@@ -833,12 +833,12 @@
          check_shipping({{ @$address->provinces_id }});
          var type = '{{ $bill['type'] }}';
 
-          var premium = document.getElementById('checkbox13').checked;
-              if (premium) {
-                  document.getElementById('shipping_premium').value = true;
-              } else {
-                document.getElementById('shipping_premium').value = false;
-              }
+          // var premium = document.getElementById('checkbox13').checked;
+              // if (premium) {
+              //     document.getElementById('shipping_premium').value = true;
+              // } else {
+              //   document.getElementById('shipping_premium').value = false;
+              // }
 
         sent_address('sent_address',address_provinces_id);
 
@@ -847,7 +847,7 @@
              var sent_address = document.getElementById('sent_address_check').checked;
              var sent_address_card = document.getElementById('sent_address_card_check').checked;
              var sent_other = document.getElementById('sent_other').checked;
-             var premium = document.getElementById('checkbox13').checked;
+            //  var premium = document.getElementById('checkbox13').checked;
 
              if (premium) {
                  document.getElementById('shipping_premium').value = true;
@@ -880,7 +880,7 @@
 
              var type = '{{ $bill['type'] }}';
 
-             var shipping_premium = document.getElementById('checkbox13').checked;
+            //  var shipping_premium = document.getElementById('checkbox13').checked;
 
 
              if (type == 5) {
@@ -938,22 +938,22 @@
          function sent_address(type_sent, provinces_id) {
 
              if (type_sent == 'sent_address') {
-
-
                  check_shipping(provinces_id);
                  document.getElementById("sent_address").style.display = 'block';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'none';
                  $('.sent_address_other').prop('required', false);
-                 document.getElementById("html_shipping_premium").style.display = 'block';
+                //  document.getElementById("html_shipping_premium").style.display = 'block';
                  document.getElementById("sent_address_check").checked = true;
 
-                 if(provinces_id == ''){
-                  document.getElementById('shipping_detail').innerHTML = '';
-                   document.getElementById("btn_pay").style.display = 'none';
+                 if(provinces_id){
+                  document.getElementById("btn_pay").style.display = 'block';
+
                   }else{
-                    document.getElementById("btn_pay").style.display = 'block';
+                    document.getElementById('shipping_detail').innerHTML = '';
+                   document.getElementById("btn_pay").style.display = 'none';
+
                   }
 
              } else if (type_sent == 'sent_address_card') {
@@ -964,14 +964,15 @@
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'none';
                  $('.sent_address_other').prop('required', false);
-                 document.getElementById("html_shipping_premium").style.display = 'block';
-                 if(provinces_id == ''){
-                  document.getElementById('shipping_detail').innerHTML = '';
-                  document.getElementById("btn_pay").style.display = 'none';
-                 }else{
+                //  document.getElementById("html_shipping_premium").style.display = 'block';
+                if(provinces_id){
                   document.getElementById("btn_pay").style.display = 'block';
 
-                 }
+                  }else{
+                    document.getElementById('shipping_detail').innerHTML = '';
+                   document.getElementById("btn_pay").style.display = 'none';
+
+                  }
 
              } else if (type_sent == 'sent_office') {
                  check_shipping(provinces_id = '', type_sent);
@@ -983,8 +984,8 @@
                  $('.sent_address_other').prop('required', false);
 
                  document.getElementById('shipping').textContent = 0;
-                 document.getElementById("html_shipping_premium").style.display = 'none';
-                 document.getElementById("checkbox13").checked = false;
+                //  document.getElementById("html_shipping_premium").style.display = 'none';
+                //  document.getElementById("checkbox13").checked = false;
                  document.getElementById("btn_pay").style.display = 'block';
                  document.getElementById('shipping_detail').innerHTML = '<label class="label label-inverse-warning">รับที่สาขา</label>';
 
@@ -995,9 +996,9 @@
                  document.getElementById("sent_office").style.display = 'none';
 
                  document.getElementById('shipping').textContent = 0;
-                 document.getElementById("html_shipping_premium").style.display = 'block';
+                //  document.getElementById("html_shipping_premium").style.display = 'block';
                  $('.sent_address_other').prop('required', true);
-                 document.getElementById("checkbox13").checked = false;
+                //  document.getElementById("checkbox13").checked = false;
                  document.getElementById("sent_other").checked = true;
                  document.getElementById("btn_pay").style.display = 'block';
                  document.getElementById('shipping_detail').innerHTML = '';
