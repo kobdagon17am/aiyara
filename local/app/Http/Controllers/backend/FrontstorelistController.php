@@ -988,8 +988,13 @@ class FrontstorelistController extends Controller
       })
       ->addColumn('purchase_type', function($row) {
           $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
-          $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
-          return $purchase_type[0]->orders_type;
+          if(@$Frontstore->purchase_type_id_fk){
+              $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
+              return $purchase_type[0]->orders_type; 
+          }else{
+              return '';
+          }
+
       })
       ->addColumn('pv', function($row) {
         // if(!empty($row->add_from) && $row->add_from==2 && @$row->promotion_id_fk!=''){

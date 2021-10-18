@@ -10,7 +10,6 @@ class GiveawayController extends Controller
 {
     public static function check_giveaway($type, $customer_username, $pv_total)
     { //check ของแถม
-
         $data_customer = DB::table('customers')
             ->where('user_name', '=', $customer_username)
             ->first();

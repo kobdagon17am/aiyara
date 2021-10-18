@@ -535,8 +535,13 @@ class FrontstoreController extends Controller
 
       // $type = $sRow->purchase_type_id_fk;
       $pv_total = $sRow->pv_total;
-      $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
-      $check_giveaway = GiveawayController::check_giveaway($sRow->business_location_id_fk,$sRow->purchase_type_id_fk,$customer_pv,$pv_total);
+      // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
+      // dd($customer_pv);
+      // dd($sRow->business_location_id_fk);
+      // dd($ThisCustomer[0]->user_name);
+      // dd($pv_total);
+      $check_giveaway = GiveawayController::check_giveaway($sRow->business_location_id_fk,$sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
+      // dd($check_giveaway);
       // dd($sRow->business_location_id_fk);
       // dd($sRow->purchase_type_id_fk);
       // dd($customer_pv);
