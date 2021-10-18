@@ -1022,14 +1022,12 @@ for ($j=0; $j < $amt_page ; $j++) {
       <td style="text-align: right;"></td>
     </tr>
 
+
     <tr>
-      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+      <td colspan="4" style="margin-left:33px !important;width:80%;font-size: 14px;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+17) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
       </td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"> </td>
     </tr>
 
     <tr>
