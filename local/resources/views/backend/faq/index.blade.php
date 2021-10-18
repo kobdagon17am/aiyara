@@ -12,13 +12,13 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> FAQ  </h4>
+            <h4 class="mb-0 font-size-18"> {{ __('Faq') }}  </h4>
         </div>
     </div>
 </div>
 
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
@@ -40,7 +40,7 @@
             <div class="card-body">
                 <div class="row">
                   <div class="col-4">
-                    <input type="text" class="form-control float-left text-center myLike" placeholder="ค้น: รายการคำถาม" name="q_question">
+                    <input type="text" class="form-control float-left text-center myLike" placeholder="{{ __('message.search_question') }}" name="q_question">
                   </div>
 
                   <div class="col-8 text-right " style="{{@$sC}}" >
@@ -65,7 +65,7 @@
 
 <script>
 
-var sU = "{{@$sU}}"; 
+var sU = "{{@$sU}}";
 var sD = "{{@$sD}}";
 var oTable;
 $(function() {
@@ -104,21 +104,21 @@ $(function() {
           },
           method: 'POST'
         },
-     
+
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'q_question', title :'<center>รายการคำถาม </center>', className: 'text-left'},
-            {data: 'faq_topic', title :'<center>หมวดคำถาม </center>', className: 'text-left'},
-            {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
-               return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
+            {data: 'q_question', title :'<center>{{ __("message.question_list") }} </center>', className: 'text-left'},
+            {data: 'faq_topic', title :'<center>{{ __("message.question_type") }} </center>', className: 'text-left'},
+            {data: 'status',   title :'<center>{{ __("message.status") }}</center>', className: 'text-center',render: function(d) {
+               return d==1?'<span style="color:blue">{{ __("message.status_faqs.open") }}</span>':'<span style="color:red">{{ __("message.status_faqs.close") }}</span>';
             }},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.faq.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary " style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -126,7 +126,7 @@ $(function() {
               ).addClass('input');
 
           }
-          
+
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

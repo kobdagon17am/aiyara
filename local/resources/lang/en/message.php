@@ -244,11 +244,36 @@ return [
 'date_approve' => 'Date Approved',
 'profile' => 'Profile',
 'member_pv_status_info' => '(<span style="font-weight: bold;color:green;">Green</span> = Approved | <span style="font-weight: bold;color:red;">Red</span> = Not Approved | <span style="font-weight: bold;color:#ff884d;">Orange</span> = Not Send)',
-'file_type' => [
+'file_types' => [
   '1' => 'ID Card Pic.',
   '2' => 'Picture',
   '3' => 'Comfirm your Identify with Hoding your Card ID',
   '4' => 'BookBank Account uploading',
 ],
-'package' => 'Package'
+'package' => 'Package',
+
+// /backend/member_regis
+'member_register' => 'Member Register',
+'document_checking' => 'Document Checking',
+'summary_document_checked_list' => 'Summary Document Checked List',
+'location' => 'Location',
+'file_type' => 'File Type',
+'date_register' => 'Date Register',
+'register_checked_list' => 'Register Checked List',
+'check_result' => 'Check Result',
+'pass' => 'Pass',
+'fail' => 'Fail',
+'doc' => 'Doc',
+'date_of_file_approved' => 'Date of File Approved',
+'latest_editing' => 'Latest Editing',
+
+// /backend/faq
+'search_question' => 'Search : Question List',
+'question_list' => 'Question List',
+'question_type' => 'Question Type',
+'status_faqs' => [
+  'open' => 'Opened',
+  'close' => 'Closed',
+],
+'answer' => 'Answer',
 ];

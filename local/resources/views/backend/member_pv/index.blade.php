@@ -198,7 +198,7 @@
                     <div class="divTableRow">
                       <?php
                       foreach ($filetype as $key => $value) {
-                      echo '<div class="divTableCell">'.$value->icon.' : '.__('message.file_type.'.$value->id).' </div>';
+                      echo '<div class="divTableCell">'.$value->icon.' : '.__('message.file_types.'.$value->id).' </div>';
                       }
                       ?>
                     </div>
