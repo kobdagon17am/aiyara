@@ -672,6 +672,8 @@ if(!empty($db_orders[0]->action_user)){
         db_orders.pay_type_id_fk,
         db_orders.cash_pay,
         db_orders.transfer_price,
+        db_orders.credit_price,
+        db_orders.fee_amt,
         dataset_pay_type.detail as pay_type
         from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id 
         WHERE db_orders.id=".$id." 
@@ -679,6 +681,7 @@ if(!empty($db_orders[0]->action_user)){
         ");
     // เงินโอน + เงินสด
     if(@$pay_type[0]->pay_type_id_fk==10){
+
         if(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->cash_pay==0){
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
         }elseif(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->cash_pay>0){
@@ -688,10 +691,25 @@ if(!empty($db_orders[0]->action_user)){
         }else{
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
+
+    }else if(@$pay_type[0]->pay_type_id_fk==7){
+        // เครดิต + เงินสด:
+        if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay==0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+        }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เงินสด: '.@$pay_type[0]->cash_pay;
+        }else{
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }
+
     }else{
         $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
     }
-    
+  
+
+
     $m = 1 ;
     for ($i=0; $i < $amt_page ; $i++) { 
         // DB::select(" UPDATE $TABLE SET a = '$branch_code' WHERE id = (($n*$i)+1) ; ");
@@ -805,7 +823,7 @@ if(!empty($db_orders[0]->action_user)){
         $m++;
 
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
@@ -978,13 +996,10 @@ for ($j=0; $j < $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+      <td colspan="4" style="margin-left:33px !important;width:80%;font-size: 14px;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+17) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
       </td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"> </td>
     </tr>
 
     <tr>

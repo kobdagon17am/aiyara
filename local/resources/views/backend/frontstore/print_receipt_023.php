@@ -719,9 +719,23 @@ if(!empty($db_orders[0]->action_user)){
         }else{
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
+        
+    }else if(@$pay_type[0]->pay_type_id_fk==7){
+        // เครดิต + เงินสด:
+        if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay==0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+        }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->cash_pay>0){
+            $pay_type = 'เงินสด: '.@$pay_type[0]->cash_pay;
+        }else{
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+        }
+
     }else{
         $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
     }
+  
     
     $m = 1 ;
     for ($i=0; $i < $amt_page ; $i++) { 
@@ -836,7 +850,7 @@ if(!empty($db_orders[0]->action_user)){
         $m++;
 
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] การจัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
