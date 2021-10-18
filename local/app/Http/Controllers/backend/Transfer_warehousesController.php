@@ -154,9 +154,14 @@ class Transfer_warehousesController extends Controller
         // dd($id);
         $sRow = \App\Models\Backend\Transfer_warehouses_code::find($id);
         // dd($sRow);
+
+           $approver = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
+           $approver = @$approver[0]->name;
+
+
         return View('backend.transfer_warehouses.form')->with(
         array(
-           'sRow'=>$sRow, 'id'=>$id
+           'sRow'=>$sRow, 'id'=>$id, 'approver'=>$approver
         ) );
     }
 
@@ -183,9 +188,48 @@ class Transfer_warehousesController extends Controller
 
          $rsWarehouses_details = DB::select("
            select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
+         // dd($rsWarehouses_details);
          foreach ($rsWarehouses_details as $key => $value) {
-              DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
+
+        
+           $v=DB::table('db_stocks')
+                // ->where('business_location_id_fk', request('business_location_id_fk'))
+                ->where('branch_id_fk', $value->branch_id_fk)
+                ->where('product_id_fk', $value->product_id_fk)
+                ->where('lot_number', $value->lot_number)
+                ->where('lot_expired_date', $value->lot_expired_date)
+                ->where('warehouse_id_fk', $value->warehouse_id_fk)
+                ->where('zone_id_fk', $value->zone_id_fk)
+                ->where('shelf_id_fk', $value->shelf_id_fk)
+                ->where('shelf_floor', $value->shelf_floor)
+                ->get();
+
+                if($v->count() == 0){
+
+                      DB::table('db_stocks')->insert(array(
+                        'business_location_id_fk' => @\Auth::user()->business_location_id_fk,
+                        'branch_id_fk' => @$value->branch_id_fk,
+                        'product_id_fk' => @$value->product_id_fk,
+                        'lot_number' => @$value->lot_number,
+                        'lot_expired_date' => @$value->lot_expired_date,
+                        'amt' => @$value->amt,
+                        'product_unit_id_fk' => @$value->product_unit_id_fk,
+                        'date_in_stock' => date("Y-m-d H:i:s"),
+                        'warehouse_id_fk' => @$value->warehouse_id_fk,
+                        'zone_id_fk' => @$value->zone_id_fk,
+                        'shelf_id_fk' => @$value->shelf_id_fk,
+                        'shelf_floor' => @$value->shelf_floor,
+                        'created_at' => date("Y-m-d H:i:s"),
+                      ));
+
+                }else{
+                     DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
+                }
+
+
          }
+
+
 
       }
 

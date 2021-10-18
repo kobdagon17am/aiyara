@@ -82,8 +82,8 @@
                           <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
                             @else
-                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                            <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
+                              <input class="form-control" type="text" value="{{ @$approver?@$approver:\Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                              <input class="form-control" type="hidden" value="{{ @$sRow->approver?@$sRow->approver:\Auth::user()->id }}" name="approver" >
                          @endif
                           
                       </div>
