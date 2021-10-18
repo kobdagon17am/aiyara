@@ -2295,7 +2295,7 @@
          $(document).ready(function() {
 
 
-            $(document).on('change', '#purchase_type_id_fk', function(event) {
+            $(document).on('change', '#purchase_type_id_fk,#aistockist,#agency', function(event) {
                   $(".div_btnSaveChangePurchaseType").show();
             });
 
@@ -5168,7 +5168,8 @@ $(document).ready(function() {
 
               var pay_type_id_fk = $("#pay_type_id_fk").val();
 
-              if(pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11){
+        //      if(pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11){
+              if(pay_type_id_fk==10 || pay_type_id_fk==11){
                 console.log(pay_type_id_fk);
                 var transfer_price = $("#transfer_price").val();
                 if(transfer_price<=0){

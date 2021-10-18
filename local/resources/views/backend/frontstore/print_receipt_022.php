@@ -809,12 +809,14 @@ if(!empty($db_orders[0]->action_user)){
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
+        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->note!=''?'* '.@$sRow->note:'&nbsp;')."' WHERE id = (($n*$i)+19) ; ");
+
 
         if($amt_page==1){
 
           // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(@$total_price,2)."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
@@ -830,7 +832,7 @@ if(!empty($db_orders[0]->action_user)){
 
             // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(@$total_price,2)."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
@@ -999,7 +1001,10 @@ for ($j=0; $j < $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td style="font-size: 14px;"></td>
+       <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
+        <?php echo @$DB[0]->a ; ?>
+      </td>
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
       <td style="text-align: right;"> 

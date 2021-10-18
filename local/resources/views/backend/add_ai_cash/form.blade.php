@@ -358,7 +358,7 @@
 
               </form>
               </div>
-
+<!-- การอนุมัติ กรณีโอนเงิน ให้ไปทำการอนุมัติที่เดียวกันที่ เมนู ใบเสร็จรออนุมัติ ตรงส่วนนี้ยกเลิกแล้ว -->
  @IF(@$sRow->approve_status >= 2)
  @ELSE
 
@@ -366,12 +366,13 @@
                   @if( $sPermission==1 || @$menu_permit->can_approve==1 )
                   @if( @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
 
-                              <div class="myBorder" style="">
+                          <!--     <div class="myBorder" style="">
 
                                 <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                   <input name="_method" type="hidden" value="PUT">
                                   <input name="id" type="hidden" value="{{@$sRow->id}}">
                                   <input name="approved" type="hidden" value="1">
+                                  <input name="pay_type_id_fk" type="hidden" value="{{@$sRow->pay_type_id_fk}}">
                                   {{ csrf_field() }}
 
                                    <div class="form-group row">
@@ -434,7 +435,7 @@
 
                               </form>
 
-                            </div>
+                            </div> -->
 
                   @ENDIF
                   @ENDIF
