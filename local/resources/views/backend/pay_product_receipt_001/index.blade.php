@@ -352,8 +352,8 @@
                   <div class="col-8">
                     <input type="text" class="form-control float-left text-center w200 myLike1 " placeholder="ค้น > รหัสใบเสร็จ" name="txtSearch_001">
                   </div>
-
-                  <div class="col-4 text-right" style="{{@$sC}}" >
+                                              <!-- @$sC -->
+                  <div class="col-4 text-right" style="" >
                     <a class="btn btn-info btn-sm mt-1 font-size-18 " href="{{ url('backend/pay_product_receipt') }}">
                       <i class="bx bx-plus font-size-18 align-middle mr-1"></i>บันทึกการจ่ายสินค้า
                     </a>
