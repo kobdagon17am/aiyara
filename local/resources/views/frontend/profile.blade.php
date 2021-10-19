@@ -7,10 +7,14 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
-<style>
-  .icons-alert:before {top: 11px;}
-</style>
+
 @section('css')
+<style>
+  .icons-alert:before {top: 11px;};
+  .usre-image:before {
+    border: 2px solid #18c160;
+  }
+</style>
 
 @endsection
 <div class="row">
@@ -146,7 +150,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
    <div class="panel-body">
     <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
 
-    <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->ai_cash) }} PV</span></h4>
+    <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span></h4>
   </div>
   <div class="panel-footer">
     {{-- Panel Footer --}}
@@ -163,9 +167,46 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 </div>
 </div>
 
-
+<?php //dd($data); ?>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-lg-4 col-md-12">
+    <div class="card user-card">
+        <div class="card-header">
+            <h5>Profile</h5>
+        </div>
+        <div class="card-block">
+            <div class="usre-image">
+                <img src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" class="img-radius" width="100" alt="User-Profile-Image">
+            </div>
+
+            @if(@$data->business_name)
+             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
+            @else
+             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
+            @endif
+
+            <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>
+            <hr>
+            <p class="text-muted m-t-15">Package : {{$data->dt_package}} </p>
+            {{-- <ul class="list-unstyled activity-leval">
+                <li class="active"></li>
+                <li class="active"></li>
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+            </ul> --}}
+
+            {{-- <p class="m-t-15 text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            <hr> --}}
+            {{-- <div class="row justify-content-center user-social-link">
+                <div class="col-auto"><a href="#!"><i class="fa fa-facebook text-facebook"></i></a></div>
+                <div class="col-auto"><a href="#!"><i class="fa fa-twitter text-twitter"></i></a></div>
+                <div class="col-auto"><a href="#!"><i class="fa fa-dribbble text-dribbble"></i></a></div>
+            </div> --}}
+        </div>
+    </div>
+</div>
+  <div class="col-md-8">
 
     <div class="card">
 
