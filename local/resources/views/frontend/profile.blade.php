@@ -176,7 +176,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         </div>
         <div class="card-block">
             <div class="usre-image">
-                <img src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" class="img-radius" width="100" alt="User-Profile-Image">
+              @if(Auth::guard('c_user')->user()->profile_img)
+              <img class="img-radius" width="100" src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" alt="User-Profile-Image">
+              @else
+              <img class="img-radius" width="100" src="{{asset('local/public/images/ex.png')}}" alt="User-Profile-Image">
+              @endif
+
             </div>
 
             @if(@$data->business_name)
