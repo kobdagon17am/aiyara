@@ -972,16 +972,16 @@ if(!empty($db_orders[0]->action_user)){
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
-            if($giveaway_voucher_price>0){
-                if(($total_price+@$shipping_price) > $giveaway_voucher_price){
-                    DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
-                }else{
-                    DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
-                }
-            }else{
+            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
+            // if($giveaway_voucher_price>0){
+            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            //     }else{
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
+            //     }
+            // }else{
                 DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
-            }
+            // }
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
         }elseif($amt_page>1 && ($i+1)!=$amt_page){
@@ -997,16 +997,16 @@ if(!empty($db_orders[0]->action_user)){
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
-            if($giveaway_voucher_price>0){
-                if(($total_price+@$shipping_price) > $giveaway_voucher_price){
-                    DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
-                }else{
-                    DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
-                }
-            }else{
+            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
+            // if($giveaway_voucher_price>0){
+            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            //     }else{
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
+            //     }
+            // }else{
                 DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
-            }
+            // }
             // หนเา
             DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
           }
