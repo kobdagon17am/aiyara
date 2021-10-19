@@ -540,28 +540,57 @@ class FrontstoreController extends Controller
       // dd($sRow->business_location_id_fk);
       // dd($ThisCustomer[0]->user_name);
       // dd($pv_total);
-      $check_giveaway = GiveawayController::check_giveaway($sRow->business_location_id_fk,$sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
-      // dd($check_giveaway);
+      $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
+      // dd(@$check_giveaway);
+      // dd(@$check_giveaway[0]['status']);
+      // print_r($check_giveaway);
       // dd($sRow->business_location_id_fk);
       // dd($sRow->purchase_type_id_fk);
       // dd($customer_pv);
       // dd($pv_total);
-      if($check_giveaway){
-              $arr = [];
-              for ($i=0; $i < count($check_giveaway) ; $i++) { 
-                   $c = array_column($check_giveaway,$i);
-                   foreach ($c as $key => $value) {
-                   //  // if($value['status'] == "fail"){
-                       // array_push($arr,$value->status);
-                   //  // }
-                   }
-                   // $im = implode(',',$arr);
-              }
-              // print_r($im);
-      }
 
+      // $giveaway_desc = [];
+  
+      // if($check_giveaway){
+      //    for ($i=0; $i < count($check_giveaway) ; $i++) { 
+
+      //     if(@$check_giveaway[$i]['status']=='success'){
+      //         $arr = [];
+      //         foreach ($check_giveaway as $key => $v) {
+      //             // print_r($v);
+      //             if($v['status']=='success'){
+      //               // print_r($v['gv_id']);
+      //               array_push($arr,$v['gv_id']);
+      //             }
+      //         }
+      //         $im = implode(',',$arr);
+      //     }
+ 
+      //    }
+      //    // dd($im);
+      //    if(@$im){
+      //     $rg = DB::select("select * from db_giveaway where id in ($im); ");
+      //     // dd($rg);
+      //     if($rg){
+
+      //       foreach ($rg as $key => $v) {
+      //          // echo $v->giveaway_option_id_fk;
+      //          if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+      //            // $arr_desc = '* มีสินค้าแถม';
+      //             array_push($giveaway_desc,'* มีสินค้าแถม');
+      //             array_push($giveaway_desc,$v->giveaway_option_id_fk);
+      //          }
+      //          if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+      //             // แสดงยอดเงิน giveaway_voucher
+      //            array_push($giveaway_desc,'* แถม GIFT VOUCHER '.$v->giveaway_voucher.' บาท');
+
+      //          }
+      //       }
+      //     }
+      //    }
+      // }
+      // dd($arr_desc);
       // dd($check_giveaway);
-
 
       $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
 
@@ -628,6 +657,8 @@ class FrontstoreController extends Controller
            'ChangePurchaseType'=>$ChangePurchaseType,
            'CusAistockistName'=>@$CusAistockistName,
            'CusAgencyName'=>@$CusAgencyName,
+           // 'giveaway_desc'=>@$giveaway_desc,
+           'check_giveaway'=>@$check_giveaway,
         ) );
     }
 

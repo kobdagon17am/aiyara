@@ -1045,6 +1045,7 @@ class Products_fifo_billController extends Controller
                array_push($product_id_fk,$value->product_id_fk);
             }
             // return $product_id_fk;
+            $product_id_fk = array_filter($product_id_fk);
             $arr_product_id_fk = implode(',',$product_id_fk);
             // return $product_id_fk;
 
