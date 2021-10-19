@@ -1865,7 +1865,7 @@ class FrontstoreController extends Controller
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE 1
+                WHERE db_orders.approve_status not in (5)
                 $action_user_011 
                 $startDate1 
                 $endDate1 

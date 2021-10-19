@@ -220,6 +220,11 @@ class Po_approveController extends Controller
     public function Datatable(Request $req)
     {
 
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+
         if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
             $business_location_id_fk = " and db_orders.business_location_id_fk =  ".$req->business_location_id_fk ;
         }else{
@@ -231,6 +236,23 @@ class Po_approveController extends Controller
         }else{
             $branch_id_fk = "";
         }
+
+        if($sPermission==1){
+            if(!empty($req->branch_id_fk)){
+             $branch_id_fk = " and db_orders.branch_id_fk =  ".$req->branch_id_fk ;
+            }else{
+             $branch_id_fk = "";
+            }
+
+          }else{
+        
+                if($User_branch_id){
+                     $branch_id_fk = " and db_orders.branch_id_fk =  ".$User_branch_id."" ;
+                }else{
+                    $branch_id_fk = " and db_orders.branch_id_fk = '9999999999999999999' " ;
+                }
+        }
+
 
         if(!empty($req->doc_id)){
             $doc_id = " and db_orders.code_order =  '".$req->doc_id."' " ;
