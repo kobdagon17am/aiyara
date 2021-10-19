@@ -20,7 +20,7 @@ class Product_unitController extends Controller
       $sRowGroup = \App\Models\Backend\Product_unit::orderBy('group_id','desc')->limit(1)->get();
       $groupMaxID = $sRowGroup[0]->group_id+1;
       // dd($groupMaxID);
-      $sLanguage = \App\Models\Backend\Language::get();
+      $sLanguage = \App\Models\Backend\language::get();
       return View('backend.product_unit.form')->with(array('sLanguage'=>$sLanguage,'groupMaxID'=>$groupMaxID ) );
     }
 
@@ -34,7 +34,7 @@ class Product_unitController extends Controller
        $sRowGroup = \App\Models\Backend\Product_unit::find($id);
        $sRow = \App\Models\Backend\Product_unit::where('group_id', $sRowGroup->group_id)->get();
        // dd($sRow[0]->status);
-       $sLanguage = \App\Models\Backend\Language::get();
+       $sLanguage = \App\Models\Backend\language::get();
        return View('backend.product_unit.form')->with(array('sRow'=>$sRow, 'id'=>$id , 'sLanguage'=>$sLanguage ) );
     }
 
@@ -105,6 +105,17 @@ class Product_unitController extends Controller
       }
     }
 
+    public function show($id)
+    {
+      $sRow = \App\Models\Backend\Product_unit::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+       // return response()->json(\App\Models\Alert::Msg('success'));
+       return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Product_unit::find($id);

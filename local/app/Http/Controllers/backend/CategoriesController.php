@@ -97,12 +97,23 @@ class CategoriesController extends Controller
         return redirect()->action('backend\CategoriesController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
-
+    function show($id){
+      $sRow = \App\Models\Backend\Categories::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+       // return response()->json(\App\Models\Alert::Msg('success'));
+       return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Categories::find($id);
       if( $sRow ){
-        $sRow->forceDelete();
+        $sRow->deleted_at = date('Y-m-d');
+        $sRow->save();
+        // $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
     }

@@ -12,7 +12,8 @@ class Orders_typeController extends Controller
 
     public function index(Request $request)
     {
-
+      // $testString = $request->server('SERVER_PROTOCOL');
+      // dd($testString);
       $dsOrders_type  = \App\Models\Backend\Orders_type::get();
       return view('backend.orders_type.index')->with(['dsOrders_type'=>$dsOrders_type]);
 
@@ -110,12 +111,24 @@ class Orders_typeController extends Controller
         return redirect()->action('backend\Orders_typeController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
-
+    public function show($id)
+    {
+      $sRow = \App\Models\Backend\Orders_type::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+      // return response()->json(\App\Models\Alert::Msg('success'));
+      return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Orders_type::find($id);
       if( $sRow ){
-        $sRow->forceDelete();
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
     }
