@@ -530,6 +530,13 @@ class DeliveryController extends Controller
         	   return '-';
         }
       })
+
+      ->addColumn('id2', function($row) {
+             $total_price = @$row->total_price?@$row->total_price:0;
+             $shipping_price = @$row->shipping_price?@$row->shipping_price:0;
+             return $row->id.':'.$total_price.':'.$shipping_price;
+      })
+
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

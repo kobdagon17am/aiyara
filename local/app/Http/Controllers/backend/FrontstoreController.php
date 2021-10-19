@@ -23,9 +23,6 @@ class FrontstoreController extends Controller
     public function index(Request $request)
     {
 
-      // $r = RunNumberPayment::run_number_order(1);
-      // dd($r);
-
       // dd($request);
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
@@ -953,6 +950,7 @@ class FrontstoreController extends Controller
                   $sRow->approve_status = 2 ;
                   $sRow->order_status_id_fk = 5  ;
               }
+              $sRow->note    = request('note');
 
               $sRow->save();
 
@@ -1341,6 +1339,8 @@ class FrontstoreController extends Controller
 //   `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
 // เช็คดูก่อน ว่า check_press_save = 2 + approve_status <> 0 และดูด้วยว่า มีรหัส code_order แล้วหรือยัง 
 
+              // dd("1305");
+
               if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->code_order==""){
 
                  $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
@@ -1348,6 +1348,11 @@ class FrontstoreController extends Controller
                  $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
                  DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
 
+              }
+
+              // dd($sRow->delivery_location);
+              if(@$sRow->delivery_location==0){
+                DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
               }
 
 
@@ -2141,6 +2146,18 @@ class FrontstoreController extends Controller
 
                         if(@$sDBSentMoneyDaily){
                          $tt = 1; 
+
+                                 $sDBSentMoneyDaily02 = DB::select("
+                                    SELECT
+                                    db_sent_money_daily.*,
+                                    ck_users_admin.`name` as sender
+                                    FROM
+                                    db_sent_money_daily
+                                    Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                                    WHERE date(db_sent_money_daily.updated_at)=CURDATE() and sender_id=$user_login_id
+                                    AND status_cancel=0
+                                    order by db_sent_money_daily.time_sent
+                              ");
                         
                         foreach(@$sDBSentMoneyDaily AS $r){
                         
@@ -2149,7 +2166,7 @@ class FrontstoreController extends Controller
                           SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
                                       FROM
                                       db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where db_orders.id in (".$sDBSentMoneyDaily[0]->orders_ids.") AND code_order<>'' AND action_user='$user_login_id' ;
+                                      where db_orders.id in (".(@$sDBSentMoneyDaily02[0]->orders_ids?@$sDBSentMoneyDaily02[0]->orders_ids:0).") AND code_order<>'' AND action_user='$user_login_id' ;
 
                                       ");
                         // AND code_order<>'' AND action_user='$user_login_id'

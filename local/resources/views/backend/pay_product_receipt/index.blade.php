@@ -187,10 +187,15 @@
                     <div class="form-group row ">
                       <div class="col-md-12 d-flex  ">
                         <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label>
+
                         <div class="col-md-4">
-                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value=""  > 
- <!-- P1210500002  P1210500001 -->
+                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value=""  >  
                         </div>
+
+                       <!--  <div class="col-md-2">
+                         <span style="color:red;font-size: 18px;">*** อยู่ระหว่างปรับปรุง </span>
+                        </div>
+ -->
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%;display: none;" >
                           <i class="bx bx-search align-middle "></i> SEARCH
                         </a>
@@ -262,6 +267,14 @@
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
                           </button>
 
+                        </div>
+                      </div>
+
+
+
+                     <div class="form-group row div_btn_save_02_desc " style="text-align: center;display: none;">
+                        <div class="col-md-12">หมายเหตุ
+                          <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> เนื่องจาก สินค้าบางรายการไม่มีในคลัง ระบบจะไม่ให้ บันทึกใบเบิกได้ กรุณาดำเนินการ นำสินค้าเข้าคลังให้ครบก่อน  </span>
                         </div>
                       </div>
 
@@ -371,8 +384,8 @@
            $('#data-table-0001').hide();
            $('#data-table-0002').hide();
             
-            // $(document).on('change', '#txtSearch', function(event) {
-            $(document).on('click', '#txtSearch', function(event) {
+            // $(document).on('click change', '#txtSearch', function(event) {
+            $(document).on('change', '#txtSearch', function(event) {
               $(".myloading").show();
               
               var txtSearch = $("input[name='txtSearch']").val();
@@ -390,15 +403,17 @@
                       // return false;
                       
 	                    if(data==0){
-	                    	// alert("! ค้นไม่พบเลขที่ใบเสร็จ");
                         Swal.fire({
                           position: 'top-end',
                           title: '! ค้นไม่พบใบเสร็จ',
                           showConfirmButton: false,
                           timer: 2500
                         })
-	                    	$(".myloading").hide();
-	                    	return false;
+	                    	// $(".myloading").hide();
+	                    	// return false;
+                           setTimeout(function(){
+                                location.reload();
+                           }, 1500);
 
 	                    }else{
 
@@ -521,9 +536,25 @@
                                       if(aData['ch_amt_lot_wh']==0){
                                         $(".div_btn_save").hide();
                                       }else{
-                                          $(".div_btn_save").show();
+                                          // $(".div_btn_save").show();
+
+                                             console.log(aData['check_product_instock']);
+
+                                            if(aData['check_product_instock']=="N"){
+                                              $(".div_btn_save").hide();
+                                              $(".div_btn_save_02_desc").show();
+                                            }else{
+                                              $(".div_btn_save").show();
+                                              $(".div_btn_save_02_desc").hide();
+
+                                            }
+
+
                                       }
                                   }, 1500);
+
+
+                               
 
                             }
 				                });
@@ -690,16 +721,16 @@
                                                                          url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
-                                                                               // console.log(d2);
+                                                                               console.log(d2);
                                                                        
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
-                                                                       $(".myloading").hide();
-                                                                    },
-                                                                  error: function(jqXHR, textStatus, errorThrown) {
-                                                                      $(".myloading").hide();
-                                                                  }
-                                                              });
+                                                                             $(".myloading").hide();
+                                                                          },
+                                                                        error: function(jqXHR, textStatus, errorThrown) {
+                                                                            $(".myloading").hide();
+                                                                        }
+                                                                    });
 
                                                                 }
                                                           });

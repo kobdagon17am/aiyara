@@ -520,6 +520,7 @@
                                               var product_id_fk = product_id_fk[0] ;
 
                                               var lot_number = rows.data().pluck('lot_number').toArray();
+                                              var lot_expired_date = rows.data().pluck('lot_expired_date').toArray();
                                               var lot_number = lot_number[0];
 
                                               if ( group==lot_number ) {
@@ -546,6 +547,7 @@
 
                                            $('td:last-child', nRow).html(''
                                                       + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'/'+aData['amt']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a>  '
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+':'+aData['lot_expired_date']+'/'+start_date+':'+end_date+'/'+aData['amt']+'/'+aData['warehouse_id_fk']+':'+aData['zone_id_fk']+':'+aData['shelf_id_fk']+':'+aData['shelf_floor']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a>  '
 
                                                     ).addClass('input');
                                            // target=_blank

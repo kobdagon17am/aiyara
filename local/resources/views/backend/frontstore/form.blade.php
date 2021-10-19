@@ -90,17 +90,18 @@
           left: 45% !important;
         }
 
-      /* Chrome, Safari, Edge, Opera */
-    input.quantity::-webkit-outer-spin-button,
-    input.quantity::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
 
-    /* Firefox */
-    input.quantity {
-      -moz-appearance: textfield;
-    }
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+          text-align: center;
+        }
 
 </style>
 
@@ -2546,7 +2547,7 @@
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number" readonly >'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="0" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -2566,7 +2567,7 @@
                                 +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -2655,7 +2656,7 @@
                                 +'   <button class="btn btn-outline-secondary btn-minus"> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number">'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="0" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -2674,7 +2675,7 @@
                                 +'   <button class="btn btn-outline-secondary btn-minus"> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number">'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button data-product_id_fk="'+aData['id']+'" class="btn btn-outline-secondary btn-plus"> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -2776,7 +2777,7 @@
 
 
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
-          event.preventDefault();
+          e.preventDefault();
 
           var limited_amt_person = $(this).attr('limited_amt_person');
           $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
@@ -2790,7 +2791,7 @@
 
 
         $(document).on('click', '.btn-plus-pro, .btn-minus-pro', function(e) {
-          event.preventDefault();
+          e.preventDefault();
           const isNegative = $(e.target).closest('.btn-minus-pro').is('.btn-minus-pro');
           const input = $(e.target).closest('.input-group').find('input');
           if (input.is('input')) {
@@ -2801,7 +2802,7 @@
 
         $(document).on('click', '.btn-plus, .btn-minus', function(e) {
 
-            event.preventDefault();
+            e.preventDefault();
             const isNegative = $(e.target).closest('.btn-minus').is('.btn-minus');
             const input = $(e.target).closest('.input-group').find('input');
             if (input.is('input')) {
@@ -2920,6 +2921,16 @@
         // if(localStorage.getItem('note')){
         //   $('#note').val(localStorage.getItem('note'));
         // }
+
+         $(document).on('keyup', '.xxx', function(e) {
+          e.preventDefault();
+          var v = parseInt($(this).val()-1);
+          $(this).val(v);
+          $(this).closest(".input-group-prepend").find(".btn-plus").trigger('click');
+          return false;
+        });
+
+
 
         $(document).on('click', '.btn-plus', function(e) {
           // event.preventDefault();
@@ -3317,9 +3328,9 @@
                                       ).addClass('input');
 
                                       //fnGetDBfrontstore();
-                                      setTimeout(function(){
-                                        $(".ShippingCalculate02").trigger('click');
-                                      }, 1000);
+                                      // setTimeout(function(){
+                                      //   $(".ShippingCalculate02").trigger('click');
+                                      // }, 1000);
 
                                     }
                                 });
@@ -3559,7 +3570,7 @@
                                 +'   <button class="btn btn-outline-secondary btn-minus"> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="0" type="number">'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="0" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button data-product_id_fk="'+d+'" class="btn btn-outline-secondary btn-plus"> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -3578,7 +3589,7 @@
                                 +'   <button class="btn btn-outline-secondary btn-minus"> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number">'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="'+aData['frontstore_products_list']+'" type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button data-product_id_fk="'+aData['id']+'" class="btn btn-outline-secondary btn-plus"> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -3670,7 +3681,7 @@
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0" name="quantity[]" value="'+v[2]+'"  type="number" readonly >'
+                                +'   <input class=" quantity xxx " min="0" name="quantity[]" value="'+v[2]+'"  type="number"  >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button promotion_id_fk="'+v[0]+'" limited_amt_person="'+v[1]+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
                                 +'     <i class="fa fa-plus"></i> '
@@ -3682,24 +3693,7 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-                          // if (aData['frontstore_promotions_list'] > 0 ) {
-
-                          //     $("td:eq(4)", nRow).html(
-                          //       '<input name="promotion_id_fk_pro[]" value="'+aData['frontstore_promotions_list']+'" type="hidden" ><div class="input-group inline-group"> '
-                          //       +' <div class="input-group-prepend"> '
-                          //       +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-minus-product-pro "> '
-                          //       +'     <i class="fa fa-minus"></i> '
-                          //       +'   </button>'
-                          //       +'   <input class=" quantity " min="0" name="quantity[]" value="'+aData['frontstore_promotions_list']+'" type="number" readonly >'
-                          //       +'   <div class="input-group-append"> '
-                          //       +'   <button promotion_id_fk="'+aData['frontstore_promotions_list']+'" limited_amt_person="'+aData['limited_amt_person']+'" class="btn btn-outline-secondary btn-plus-product-pro "> '
-                          //       +'     <i class="fa fa-plus"></i> '
-                          //       +'    </button> '
-                          //       +'  </div> '
-                          //       +' </div> '
-                          //       );
-
-                          // }
+           
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
@@ -3711,7 +3705,7 @@
                                 +'   <button class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > '
                                 +'     <i class="fa fa-minus"></i> '
                                 +'   </button>'
-                                +'   <input class=" quantity " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ '+aData['cuase_cannot_buy']+' " style="cursor:pointer;background-color:#d9d9d9 !important;" >'
+                                +'   <input class=" quantity xxx " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ '+aData['cuase_cannot_buy']+' " style="cursor:pointer;background-color:#d9d9d9 !important;" >'
                                 +'   <div class="input-group-append"> '
                                 +'   <button  class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > '
                                 +'     <i class="fa fa-plus"></i> '

@@ -1403,7 +1403,7 @@ $(function() {
 
       ?>
           <script>
-          location.replace( "{{ url('backend/pay_product_receipt') }}");
+          location.replace( "{{ url('backend/pay_product_receipt_001') }}");
           </script>
           <?php
       }

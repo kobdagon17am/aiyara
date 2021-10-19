@@ -400,7 +400,10 @@ $(function() {
                                if(data=="no"){
                                  alert("! ไม่สามารถยกเลิกได้หรือลบได้ เนื่องจากยอด Ai-Cash ถูกใช้ไปแล้ว ");
                                  return false;
+                               }else{
+                                  location.reload();
                                }
+                             
                               $(".myloading").hide();
                           },
 

@@ -62,6 +62,8 @@
             <input name="_method" type="hidden" value="PUT">
             @endif
 
+            {{ csrf_field() }}
+
             <div class="myBorder">
 
               <div class="form-group row">
@@ -85,21 +87,7 @@
                 <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                 <div class="col-md-8">
 
-                  @if($sPermission==1)
-
-                  <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating" required>
-                    <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
-                  </select>
-
-                  @else
-
-                  @if( empty(@$sRow) )
-                  <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
-                  @else
-                  <input type="hidden" name="branch_id_fk" value="{{@$sRow->branch_id_fk}}">
-                  @endif
-
-                  <select class="form-control select2-templating" disabled="">
+                  <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating" >
                     @if(@$sBranchs)
                     @foreach(@$sBranchs AS $r)
                     <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
@@ -109,10 +97,6 @@
                     @endforeach
                     @endif
                   </select>
-
-                  @endif
-
-
 
 
                 </div>
@@ -360,7 +344,7 @@
               </div>
 
               <div class="form-group row">
-                <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf :</label>
+                <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf : *</label>
                 <div class="col-md-3">
                   <input class="form-control" type="number" value="{{ @$sRow->shelf_floor }}" id="shelf_floor"
                     name="shelf_floor" required>
@@ -526,7 +510,7 @@
                        $('#warehouse_id_fk').html(layout);
                        $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                        $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-                       $('#shelf_floor').val(1);
+                       // $('#shelf_floor').val(1);
                        $(".myloading").hide();
                    }
                   }
@@ -535,7 +519,7 @@
                $('#warehouse_id_fk').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
                $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-               $('#shelf_floor').val(1);
+               // $('#shelf_floor').val(1);
                $(".myloading").hide();
            }
 

@@ -1340,7 +1340,7 @@ class Pick_warehouse_fifoController extends Controller
 
                       $pn .=     
                             '<div class="divTableRow" style="text-align:center;">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง. </div>
+                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง </div>
                             </div>
                             ';
 

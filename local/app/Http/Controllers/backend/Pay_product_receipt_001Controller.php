@@ -442,7 +442,7 @@ class Pay_product_receipt_001Controller extends Controller
                 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
                       $fnCheckStock = new  AjaxController();
                        $r_check_stcok = $fnCheckStock->fnCheckStock(
-                        $sRow->branch_id_fk,
+                        $v->branch_id_fk,
                         $v->product_id_fk,
                         $v->amt_get,
                         $v->lot_number,
@@ -1080,9 +1080,37 @@ class Pay_product_receipt_001Controller extends Controller
       ->addColumn('column_002', function($row) {
 
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-    			$Products = DB::select("
-      			SELECT $temp_ppr_002.*,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id."
-      			");
+
+    			// $Products = DB::select("
+      	// 	    	SELECT $temp_ppr_002.product_id_fk,$temp_ppr_002.amt,$temp_ppr_002.product_name,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id."
+      	// 		");
+
+DB::select(" DROP TABLE IF EXISTS temp_product_fifo; ");
+// สินค้าปกติ
+DB::select(" CREATE TEMPORARY TABLE temp_product_fifo 
+SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product' 
+group by $temp_ppr_002.product_id_fk
+");
+// สินค้าโปรโมชั่น
+DB::select(" INSERT IGNORE INTO temp_product_fifo 
+SELECT 
+promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
+CONCAT(
+(SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
+(SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
+dataset_product_unit.product_unit
+FROM `promotions_products` 
+LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
+where promotion_id_fk in (
+SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
+$temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+group by promotions_products.product_id_fk
+");
+
+        $Products = DB::select("
+               SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
+           ");
+
 
       			$pn = '<div class="divTable"><div class="divTableBody">';
       			$pn .=     
@@ -1492,7 +1520,7 @@ class Pay_product_receipt_001Controller extends Controller
                 '<div class="divTableRow">
                  <div class="divTableCell" >
 
-                  <a href="javascript: void(0);" class="btn btn-sm btn-danger cDelete2 " data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าครั้งล่าสุด" data-time_pay='.$row->time_pay.' ><i class="bx bx-trash font-size-16 align-middle"></i></a>
+                  <a href="javascript: void(0);" class="btn btn-sm btn-danger cDelete2 " data-toggle="tooltip" data-placement="left" title="ยกเลิกรายการจ่ายสินค้าครั้งล่าสุด" data-time_pay='.$row->time_pay.' ><i class="bx bx-trash font-size-16 align-middle"></i></a>
 
                  </div>
                  </div>

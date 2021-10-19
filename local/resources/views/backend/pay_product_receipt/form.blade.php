@@ -734,7 +734,7 @@
                                                                          url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
-                                                                               // console.log(d2);
+                                                                               console.log(d2);
                                                                                // return false;
                                                                        
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
@@ -860,7 +860,7 @@
                                                                          url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
-                                                                               // console.log(d2);
+                                                                               console.log(d2);
                                                                                // return false;
                                                                        
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');

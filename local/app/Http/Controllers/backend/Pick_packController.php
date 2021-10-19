@@ -29,26 +29,42 @@ class Pick_packController extends Controller
       if(isset($request->save_to_packing)){
 
         $arr = implode(',', $request->row_id);
+        // dd($arr);
 
         $receipt = '';
+        $packing_code = '';
         $arr_receipt = [];
         $arr_orders_id_fk = [];
+        $arr_packing_code = [];
+        $arr_delivery_id = [];
         // No packing code
-        $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE id in ($arr) and packing_code=0 ");
-        if($packing_code){
-            foreach ($packing_code as $key => $value) {
+        $no_packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE id in ($arr) and packing_code in (0,5) ");
+        // dd($no_packing_code);
+        if($no_packing_code){
+            foreach ($no_packing_code as $key => $value) {
                 array_push($arr_receipt,$value->receipt);
                 array_push($arr_orders_id_fk,$value->orders_id_fk);
             }
             $receipt = implode(',',$arr_receipt);
             $orders_id_fk = implode(',',$arr_orders_id_fk);
         }
+        // dd($receipt);
+
 
         // Packing code
-        $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE id in ($arr) and packing_code<>0 ");
+        $packing = DB::select(" SELECT packing_code FROM db_delivery WHERE id in ($arr) and packing_code not in (0,5) ");
+        if($packing){
+            foreach ($packing as $key => $value) {
+                array_push($arr_packing_code,$value->packing_code);
+            }
+            $packing_code = implode(',',$arr_packing_code);
+        }
+
+        // dd($packing_code);
+
         if($packing_code){
 
-            $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE packing_code in (".$packing_code[0]->packing_code.") ");
+            $packing_code = DB::select(" SELECT id,packing_code,orders_id_fk,receipt FROM db_delivery WHERE packing_code in ($packing_code) ");
             // dd($packing_code);
             foreach ($packing_code as $key => $value) {
                 array_push($arr_orders_id_fk,$value->orders_id_fk);
@@ -61,6 +77,7 @@ class Pick_packController extends Controller
         }
 
         // dd($orders_id_fk);
+        // dd($receipt);
 
         DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE id in ($arr)  ");
 

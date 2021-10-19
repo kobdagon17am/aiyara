@@ -143,6 +143,7 @@ class General_receiveController extends Controller
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_in_cause_id_fk    = request('product_in_cause_id_fk');
           $sRow->product_id_fk    = request('product_id_fk');
+          $sRow->product_status_id_fk    = request('product_status_id_fk');
           $sRow->po_invoice_no    = request('po_invoice_no');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
@@ -193,6 +194,7 @@ class General_receiveController extends Controller
                         'warehouse_id_fk' => request('warehouse_id_fk'),
                         'zone_id_fk' => request('zone_id_fk'),
                         'shelf_id_fk' => request('shelf_id_fk'),
+                        'shelf_floor' => request('shelf_floor'),
                         'created_at' => date("Y-m-d H:i:s"),
                       ));
 

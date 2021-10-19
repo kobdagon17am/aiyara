@@ -108,7 +108,7 @@ class Check_stockController extends Controller
          // dd($request->lot_number);
         // dd($request->date);
         // dd($id);
-        // dd($request);
+        
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -128,11 +128,13 @@ class Check_stockController extends Controller
         $sRow = \App\Models\Backend\Check_stock::where('product_id_fk',$id)->get();
         // dd($sRow);
 
+        $w_wh = explode(":",$request->wh);
+
         $b = DB::select(" select * from branchs where id=".$sRow[0]->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$sRow[0]->warehouse_id_fk." ");
-        $zone = DB::select(" select * from zone where id=".$sRow[0]->zone_id_fk." ");
-        $shelf = DB::select(" select * from shelf where id=".$sRow[0]->shelf_id_fk." ");
-        $wh = @$b[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$sRow[0]->shelf_floor;
+        $warehouse = DB::select(" select * from warehouse where id=".$w_wh[0]." ");
+        $zone = DB::select(" select * from zone where id=".$w_wh[1]." ");
+        $shelf = DB::select(" select * from shelf where id=".$w_wh[2]." ");
+        $wh = @$b[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$w_wh[3];
         // $wh = @$b[0]->b_name;
 
          return View('backend.check_stock.stock_card_01')->with(
@@ -144,6 +146,10 @@ class Check_stockController extends Controller
            'date_s_e'=>$request->date,
            'wh'=>$wh,
            'total'=>$total,
+           'warehouse_id_fk'=>$w_wh[0],
+           'zone_id_fk'=>$w_wh[1],
+           'shelf_id_fk'=>$w_wh[2],
+           'shelf_floor'=>$w_wh[3],
          ));
 
     }

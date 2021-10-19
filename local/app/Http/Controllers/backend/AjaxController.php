@@ -2496,7 +2496,7 @@ if($frontstore[0]->check_press_save==2){
         if($request->ajax()){
             if($request->id){
               $r = DB::select(" SELECT url,file,order_id FROM `payment_slip` WHERE `id`=".$request->id." ");
-              DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".@$r[0]->order_id."  ");
+              DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL,`transfer_bill_status`='1' where id=".@$r[0]->order_id."  ");
               @UNLINK(@$r[0]->url.@$r[0]->file);
               DB::select(" DELETE FROM `payment_slip` WHERE `id`=".$request->id." ");
             }
@@ -2586,9 +2586,18 @@ if($frontstore[0]->check_press_save==2){
                $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=".$request->id." ");
                // return($ch_aicash_02[0]->aicash_amt);
 
-               if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
-                 return 'no';
+               // เช็คสถานะก่อนว่า รออนุมัติ หรือไม่ ถ้า ใช่ ให้ลบได้ ถ้าเป็น สถานะอื่นๆ จะไม่ให้ลบ 
+               // ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id
+               if($ch_aicash_02[0]->approve_status==1){
+                return true;
+               }else{
+                 if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
+                     return 'no';
+                   }
                }
+
+
+               
         }
     }
 
@@ -3612,6 +3621,7 @@ if($frontstore[0]->check_press_save==2){
             WHERE date(updated_at)=CURDATE()
             $wh
             AND approve_status in (2,4)
+            AND approve_status not in (5,6)
             AND status_sent_money <> 1
             AND code_order <> ''
             AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
@@ -3630,6 +3640,8 @@ if($frontstore[0]->check_press_save==2){
             $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)."
              ");
 
+            // return $r1;
+
             if($r1){
 
                   $time_sent = $r1[0]->time_sent + 1 ;
@@ -3637,14 +3649,16 @@ if($frontstore[0]->check_press_save==2){
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
 
-                  DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE date(updated_at)=CURDATE() AND status_sent_money=0  ");
+                  DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
+
+                  // return $id;
 
             }else{
 
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ('1',".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
 
-                  DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE date(updated_at)=CURDATE() AND status_sent_money=0  ");
+                  DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
               }
 
           }
@@ -4736,7 +4750,9 @@ if($frontstore[0]->check_press_save==2){
         }
 
         if(isset($request->lot_number)){
-            $w04 = " AND  lot_number ='".$request->lot_number."'  " ;
+            $t = explode(":",$request->lot_number);
+            // $w04 = " AND  lot_number ='".$t[0]."' AND lot_expired_date = '".$t[1]."'  " ;
+            $w04 = " AND  lot_number ='".$t[0]."' " ;
         }else{
             $w04 = '';
         }
@@ -4757,7 +4773,7 @@ if($frontstore[0]->check_press_save==2){
 
        //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
         $amt_balance_stock =  DB::select(" SELECT amt FROM db_stocks 
-            WHERE 1 
+            WHERE 1
             $w01 
             $w02
             $w03 
@@ -4782,7 +4798,7 @@ if($frontstore[0]->check_press_save==2){
         $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
 
             WHERE 1
-                 $w01 
+                $w01 
                 $w02 
                 $w03 
                 $w04 
@@ -4797,8 +4813,9 @@ if($frontstore[0]->check_press_save==2){
         $amt_balance_stock_02 = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
 
         if($amt_balance_stock < 0 ) {
-            // $amt_balance_stock = 0 ;
-            $txt = "* ถ้ายอดยกมา ติดลบ อาจเกิดจากข้อมูลทดสอบ ปรับยอดคลังอีกครั้ง ";
+            $amt_balance_stock = 0 ;
+            // $txt = "* ถ้ายอดยกมา ติดลบ อาจเกิดจากข้อมูลทดสอบ ปรับยอดคลังอีกครั้ง ";
+            $txt = "ยอดคงเหลือยกมา";
         } else {
             $txt = "ยอดคงเหลือยกมา";
         }
@@ -4865,8 +4882,6 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxProcessStockcard_01(Request $request)
     {
-        // return  $request ;
-
 
         if(isset($request->business_location_id_fk)){
             $w01 = " AND  business_location_id_fk =".$request->business_location_id_fk."  " ;
@@ -4887,7 +4902,8 @@ if($frontstore[0]->check_press_save==2){
         }
 
         if(isset($request->lot_number)){
-            $w04 = " AND  lot_number ='".$request->lot_number."'  " ;
+            $t = explode(":",$request->lot_number);
+            $w04 = " AND  lot_number ='".$t[0]."' AND lot_expired_date = '".$t[1]."'  " ;
         }else{
             $w04 = '';
         }
@@ -4897,6 +4913,8 @@ if($frontstore[0]->check_press_save==2){
         }else{
             $w05 = '';
         }
+
+
 
         if(isset($request->warehouse_id_fk)){
             $w06 = " AND  warehouse_id_fk ='".$request->warehouse_id_fk."'  " ;
@@ -4932,11 +4950,16 @@ if($frontstore[0]->check_press_save==2){
 
        //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
         $amt_balance_stock =  DB::select(" SELECT amt FROM db_stocks 
-            WHERE 1 
+            WHERE 1
             $w01 
             $w02
             $w03 
             $w04
+
+                $w06 
+                $w07
+                $w08
+                $w09
 
              ") ;
         $amt_balance_stock = @$amt_balance_stock[0]->amt ? $amt_balance_stock[0]->amt : 0 ;
@@ -6055,6 +6078,9 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
 
       }
     }
+
+
+
 
 
 

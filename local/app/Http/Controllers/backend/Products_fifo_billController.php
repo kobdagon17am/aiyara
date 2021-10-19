@@ -343,6 +343,7 @@ class Products_fifo_billController extends Controller
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function DatatablePayReceiptFIFO(Request $req){
 
+
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -369,9 +370,15 @@ class Products_fifo_billController extends Controller
 
       $invoice_code = $req->invoice_code;
 
+      if(!empty($req->invoice_code)){
       $sTable = DB::select("
         SELECT * from $temp_ppr_001 WHERE invoice_code='$invoice_code'
         ");
+      }else{
+         $sTable = DB::select("
+          SELECT * from $temp_ppr_001 WHERE invoice_code='99999999999999999999999'
+        ");
+      }
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -395,6 +402,8 @@ class Products_fifo_billController extends Controller
         })
        ->escapeColumns('column_001')
       ->addColumn('column_002', function($row) {
+
+        if(!empty($row)){
           
           $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
@@ -402,13 +411,49 @@ class Products_fifo_billController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+          $temp_product_fifo = "temp_product_fifo".\Auth::user()->id; 
 
-           $Products = DB::select("
-            SELECT $temp_ppr_002.*,dataset_product_unit.product_unit,$temp_ppr_001.customers_id_fk as cus_id from $temp_ppr_002 
-            LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id 
-            LEFT JOIN $temp_ppr_001 on $temp_ppr_002.frontstore_id_fk=$temp_ppr_001.id
-            where $temp_ppr_002.frontstore_id_fk=".$row->id."
-          ");
+// สินค้าปกติ  + สินค้าโปร ด้วย
+          //  $Products = DB::select("
+          //   SELECT $temp_ppr_002.*,dataset_product_unit.product_unit,$temp_ppr_001.customers_id_fk as cus_id from $temp_ppr_002 
+          //   LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id 
+          //   LEFT JOIN $temp_ppr_001 on $temp_ppr_002.frontstore_id_fk=$temp_ppr_001.id
+          //   where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product'
+          // ");
+/*
+           SELECT temp_ppr_0021.*,dataset_product_unit.product_unit,temp_ppr_0011.customers_id_fk as cus_id from temp_ppr_0021 
+            LEFT Join dataset_product_unit ON temp_ppr_0021.product_unit_id_fk = dataset_product_unit.id 
+            LEFT JOIN temp_ppr_0011 on temp_ppr_0021.frontstore_id_fk=temp_ppr_0011.id
+            where temp_ppr_0021.frontstore_id_fk=895 and temp_ppr_0021.type_product='product'
+*/
+
+
+DB::select(" DROP TABLE IF EXISTS $temp_product_fifo; ");
+// สินค้าปกติ
+// TEMPORARY
+DB::select(" CREATE TABLE $temp_product_fifo 
+SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product' 
+group by $temp_ppr_002.product_id_fk
+");
+// สินค้าโปรโมชั่น
+DB::select(" INSERT IGNORE INTO $temp_product_fifo 
+SELECT 
+promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
+CONCAT(
+(SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
+(SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
+dataset_product_unit.product_unit
+FROM `promotions_products` 
+LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
+where promotion_id_fk in (
+SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
+$temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+group by promotions_products.product_id_fk
+");
+
+        $Products = DB::select("
+               SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from $temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
+           ");
 
 
           $pn = '<div class="divTable"><div class="divTableBody">';
@@ -554,8 +599,8 @@ class Products_fifo_billController extends Controller
                                               VALUES (
                                                 '".$v_02->business_location_id_fk."',
                                                 '".$v_02->branch_id_fk."',
-                                                '".$value->frontstore_id_fk."',
-                                                '".$value->cus_id."',
+                                                '".$row->id."',
+                                                '".$row->customers_id_fk."',
                                                 '".$row->invoice_code."',
                                                 '".$v_02->product_id_fk."',
                                                 '".$value->product_name."',
@@ -673,8 +718,8 @@ class Products_fifo_billController extends Controller
                                               VALUES (
                                                 '".$v_02->business_location_id_fk."',
                                                 '".$v_02->branch_id_fk."',
-                                                '".$value->frontstore_id_fk."',
-                                                '".$value->cus_id."',
+                                                '".$row->id."',
+                                                '".$row->customers_id_fk."',
                                                 '".$row->invoice_code."',
                                                 '".$v_02->product_id_fk."',
                                                 '".$value->product_name."',
@@ -760,8 +805,8 @@ class Products_fifo_billController extends Controller
                                               VALUES (
                                                 '".$v_02->business_location_id_fk."',
                                                 '".$v_02->branch_id_fk."',
-                                                '".$value->frontstore_id_fk."',
-                                                '".$value->cus_id."',
+                                                '".$row->id."',
+                                                '".$row->customers_id_fk."',
                                                 '".$row->invoice_code."',
                                                 '".$v_02->product_id_fk."',
                                                 '".$value->product_name."',
@@ -816,6 +861,8 @@ class Products_fifo_billController extends Controller
                             </div>
                             ';
 
+                      @$_SESSION['check_product_instock'] = 0;
+
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                     
                      $i = 1;
@@ -853,8 +900,8 @@ class Products_fifo_billController extends Controller
                                               VALUES (
                                                 '".$v_02->business_location_id_fk."',
                                                 '".$v_02->branch_id_fk."',
-                                                '".$value->frontstore_id_fk."',
-                                                '".$value->cus_id."',
+                                                '".$row->id."',
+                                                '".$row->customers_id_fk."',
                                                 '".$row->invoice_code."',
                                                 '".$v_02->product_id_fk."',
                                                 '".$value->product_name."',
@@ -925,6 +972,9 @@ class Products_fifo_billController extends Controller
           }
 
           return $pn;
+        }else{
+          return '<font color=red>*** อยู่ระหว่างปรับปรุง</font>';
+        }
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) { 
@@ -964,7 +1014,18 @@ class Products_fifo_billController extends Controller
               return 0;
           }
 
-       })       
+       })    
+
+      ->addColumn('check_product_instock', function($row) { 
+      // ดูว่าไม่มีสินค้าในคลังบางรายการ
+          if(@$_SESSION['check_product_instock']=="0"){
+            return "N"; 
+          }else{
+            return "Y"; 
+          }
+
+       })  
+
       ->make(true);
     }
 
@@ -973,6 +1034,13 @@ class Products_fifo_billController extends Controller
 
     public function ajaxSearch_bill_db_orders(Request $request)
     {
+
+      if(empty($request->txtSearch)){
+        return 0;
+      }
+
+      // return $request->txtSearch;
+      // dd();
 
       $business_location_id_fk = \Auth::user()->business_location_id_fk;
       $branch_id_fk = \Auth::user()->branch_id_fk;
@@ -996,7 +1064,7 @@ class Products_fifo_billController extends Controller
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
       DB::select(" CREATE TABLE $temp_db_stocks_check LIKE temp_db_stocks_check_template ");
 
-      // dd();
+      // return $temp_db_stocks_check ; // temp_db_stocks_check1
 
     // return $request;
     // หาในตาราง db_orders ว่ามีมั๊ย
@@ -1005,6 +1073,7 @@ class Products_fifo_billController extends Controller
     $invoice_code = $request->txtSearch;
     $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  ");
 
+    // return $r01;
     // return $r01[0]->invoice_code;
 
     if($r01){
@@ -1012,6 +1081,8 @@ class Products_fifo_billController extends Controller
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_001; ");
         DB::select(" CREATE TABLE $temp_ppr_001 LIKE db_orders ");
         DB::select(" INSERT $temp_ppr_001 SELECT * FROM db_orders WHERE invoice_code='$invoice_code' ");
+
+        // return $temp_ppr_001;
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_002; ");
         DB::select(" CREATE TABLE $temp_ppr_002 LIKE db_order_products_list ");
@@ -1034,20 +1105,29 @@ class Products_fifo_billController extends Controller
           ");
 
         // $Data = DB::select(" SELECT * FROM $temp_ppr_003; ");
+        // $Data = DB::select(" SELECT * FROM $temp_ppr_002; ");
         // return $Data;
 // FIFO 
         // Qry > product_id_fk from $temp_ppr_002
-            $product = DB::select(" select product_id_fk from $temp_ppr_002 ");
+
+           // สินค้าปกติ + สินค้าโปรโมชั่น
+            $product = DB::select(" 
+                select product_id_fk from temp_ppr_0021 where temp_ppr_0021.type_product='product'
+                UNION 
+                SELECT product_id_fk FROM `promotions_products` where promotion_id_fk in (
+                SELECT temp_ppr_0021.promotion_id_fk from temp_ppr_0021 
+                where temp_ppr_0021.type_product='promotion' )
+             ");
             // return $product;
 
-            $product_id_fk = [];
+            $product_id_fk = [0];
             foreach ($product as $key => $value) {
                array_push($product_id_fk,$value->product_id_fk);
             }
             // return $product_id_fk;
             $product_id_fk = array_filter($product_id_fk);
             $arr_product_id_fk = implode(',',$product_id_fk);
-            // return $product_id_fk;
+            // return $arr_product_id_fk;
 
             if(in_array($temp_db_stocks,$array_TABLES)){
               // return "IN";
@@ -1057,9 +1137,10 @@ class Products_fifo_billController extends Controller
               DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
             }
 
-          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
-          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
-
+          if(!empty($arr_product_id_fk)){
+            DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+             WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+          }
  
           if(in_array($temp_db_stocks_compare,$array_TABLES)){
             // return "IN";
@@ -1067,8 +1148,6 @@ class Products_fifo_billController extends Controller
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks_compare LIKE temp_db_stocks_compare_template ");
           }
-
-
 
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
@@ -1212,9 +1291,13 @@ class Products_fifo_billController extends Controller
                $amt_pay_this = $value->amt_remain; 
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+
+               if(!empty($value->product_id_fk)){
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
+               }
+                
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
@@ -1578,6 +1661,8 @@ class Products_fifo_billController extends Controller
                             <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                             </div>
                             ';
+
+                      @$_SESSION['check_product_instock'] = 0;
                     
                       $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                     
@@ -2254,6 +2339,8 @@ class Products_fifo_billController extends Controller
                                     </div>
                                     ';
                             
+                            @$_SESSION['check_product_instock'] = 0;
+
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                             
                              $i = 1;

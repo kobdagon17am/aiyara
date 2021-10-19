@@ -308,8 +308,8 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 10,
+        // scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 20,
         // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.pick_pack.datatable') }}',
@@ -489,13 +489,13 @@ $(function() {
 
   					     setTimeout(function(){
   	            		if($('.select-info').text()!=''){
-  	            			var str = $('.select-info').text();
-        							var str = str.split(" ");
+  	            // 			var str = $('.select-info').text();
+        							// var str = str.split(" ");
         								$('.divBtnSave').show();
-                         $(".myloading").hide();
+               //           $(".myloading").hide();
         				
   		            	}else{
-  		            		$('.divBtnSave').hide();
+  		              		$('.divBtnSave').hide();
                        $('input[name*=row_id').remove();
   		            	}
   		            }, 500);
@@ -724,13 +724,13 @@ $(function() {
           	
                  setTimeout(function(){
                     if($('.select-info').text()!=''){
-                      var str = $('.select-info').text();
-                      var str = str.split(" ");
-                      if(parseInt(str[0])>1){
+                      // var str = $('.select-info').text();
+                      // var str = str.split(" ");
+                      // if(parseInt(str[0])>1){
                         $('.divBtnSave').show();
-                      }else{
-                        $('.divBtnSave').hide();
-                      }
+                      // }else{
+                      //   $('.divBtnSave').hide();
+                      // }
                     }else{
                       $('.divBtnSave').hide();
                     }
@@ -742,13 +742,13 @@ $(function() {
 
                    setTimeout(function(){
                       if($('.select-info').text()!=''){
-                        var str = $('.select-info').text();
-                        var str = str.split(" ");
-                        if(parseInt(str[0])>1){
+                        // var str = $('.select-info').text();
+                        // var str = str.split(" ");
+                        // if(parseInt(str[0])>1){
                           $('.divBtnSave').show();
-                        }else{
-                          $('.divBtnSave').hide();
-                        }
+                        // }else{
+                        //   $('.divBtnSave').hide();
+                        // }
                       }else{
                         $('.divBtnSave').hide();
                       }

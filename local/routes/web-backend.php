@@ -751,8 +751,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
     // Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
 
-    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
-    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card_01');
+    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}/{wh}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}/{wh}', 'Check_stockController@stock_card_01');
 
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');
@@ -910,6 +910,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxCourseCheckRegis', 'AjaxController@ajaxCourseCheckRegis');
     
     Route::post('ajaxGetRegis_date_doc', 'AjaxController@ajaxGetRegis_date_doc');
+
 
 
     Route::resource('giveaway', 'GiveawayController');

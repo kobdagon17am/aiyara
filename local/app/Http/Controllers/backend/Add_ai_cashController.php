@@ -370,13 +370,19 @@ class Add_ai_cashController extends Controller
        // return($ch_aicash_01[0]->ai_cash);
        // $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=$id ");
        // return($ch_aicash_02[0]->aicash_amt);
+               if($sRow->approve_status==1){
+                      DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=$id ");
+               }else{
 
-       if( $ch_aicash_01[0]->ai_cash < $sRow->aicash_amt ){
+                     if( $ch_aicash_01[0]->ai_cash < $sRow->aicash_amt ){
+                     }else{
+                          DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
+                          DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=$id ");
+                     }
+            
+               }
 
-       }else{
-            DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
-            DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=$id ");
-       }
+
 
        return response()->json(\App\Models\Alert::Msg('success'));
 

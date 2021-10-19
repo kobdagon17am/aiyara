@@ -127,14 +127,15 @@ $(document).ready(function() {
            
              var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
               var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              // var wh =  "{{@$wh}}"; alert(wh);
 
               var product_id_fk =  "{{@$Products[0]->product_id}}";
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
               var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
-              var warehouse_id_fk =  "{{@$sRow[0]->warehouse_id_fk}}"; //alert(branch_id_fk);
-              var zone_id_fk =  "{{@$sRow[0]->zone_id_fk}}"; //alert(branch_id_fk);
-              var shelf_id_fk =  "{{@$sRow[0]->shelf_id_fk}}"; //alert(branch_id_fk);
-              var shelf_floor =  "{{@$sRow[0]->shelf_floor}}"; //alert(branch_id_fk);
+              var warehouse_id_fk =  "{{@$warehouse_id_fk}}"; //alert(warehouse_id_fk);
+              var zone_id_fk =  "{{@$zone_id_fk}}"; //alert(zone_id_fk);
+              var shelf_id_fk =  "{{@$shelf_id_fk}}"; //alert(shelf_id_fk);
+              var shelf_floor =  "{{@$shelf_floor}}"; //alert(shelf_floor);
 
               var start_date =  $('#start_date').val();
               if(start_date==''){

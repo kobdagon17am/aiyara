@@ -512,7 +512,7 @@ $(function() {
           method: 'POST'
         },
               columns: [
-                  {data: 'id', title :'ID', className: 'text-center'},
+                  {data: 'id2', title :'ID', className: 'text-center'},
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
@@ -644,51 +644,58 @@ $(function() {
 
                   setTimeout(function(){
 
+                          var shipping_price = 0;
+                          var total_price = 0;
+
                           var rows_selected = $('#data-table').DataTable().column(0).checkboxes.selected();
                           $.each(rows_selected, function(index, rowId){
+
+                            var v = rowId.split(':');
 
                             $('#last_form').after(
                                  $('<input>')
                                     .attr('type', 'hidden')
                                     .attr('name', 'row_id[]')
-                                    .attr('id', 'row_id'+rowId)
-                                    .val(rowId)
+                                    .attr('id', 'row_id'+v[0])
+                                    .val(v[0])
                              );
+
+                            total_price+=parseFloat(v[1]); 
+                            shipping_price+=parseFloat(v[2]); 
 
                           });
 
-                          var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
-                          var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
-                          var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
+                          console.log('total_price='+total_price); 
+                          console.log('shipping_price='+shipping_price); 
+
+                          // var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
+                          // var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
+                          // var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
 
                           // console.log(ids); 
                           // console.log(shipping_price); 
                           // console.log(total_price); 
-                          $(".myloading").hide();
+                          // $(".myloading").hide();
+                  
 
             					     setTimeout(function(){
             	            		if($('.select-info').text()!=''){
             	            			var str = $('.select-info').text();
                   							var str = str.split(" ");
                   							if(parseInt(str[0])>1){
-                                    sum_shipping_price = 0;
-                                    $.each(shipping_price,function(){sum_shipping_price+=parseFloat(this) || 0;});
-                                    console.log(sum_shipping_price); 
-                                  if(sum_shipping_price>0){
-                                     $('.divBtnSave').show();
-                                  }else{
-                                    $('.divBtnSave').hide();
-                                    sum = 0;
-                                    $.each(total_price,function(){sum+=parseFloat(this) || 0;});
-                                    console.log(sum); 
-                                    var shipping_cost = "{{@$shipping_cost}}";
-                                    // console.log(shipping_cost); 
-                                    if(sum>=shipping_cost){
-                                      $('.divBtnSave').show();
-                                    }else{
-                                      $('.divBtnSave').hide();
-                                    }
-                                  }
+
+                                      if(shipping_price>0){
+                                             $('.divBtnSave').show();
+                                        }else{
+                                          $('.divBtnSave').hide();
+                                          var shipping_cost = "{{@$shipping_cost}}";
+                                          if(total_price>=shipping_cost){
+                                            $('.divBtnSave').show();
+                                          }else{
+                                            $('.divBtnSave').hide();
+                                          }
+                                        }
+                                
                   								
                   							}else{
                   								$('.divBtnSave').hide();
