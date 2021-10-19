@@ -318,8 +318,10 @@
                     <label class="col-md-3 col-form-label">พิจารณาโปรอื่นหรือไม่</label>
                     <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
+
                           <input type="checkbox" class="custom-control-input" id="another_pro" name="another_pro" value="1" {{ ( @$sRow->another_pro=='1')?'checked':'' }}>
-                          <label class="custom-control-label" for="another_pro"> Y / N </label>
+                          <label class="custom-control-label" for="another_pro"> {{ ( @$sRow->another_pro=='1')?'ใช่':'ไม่' }} </label>
+
                       </div>
                     </div>
                 </div>
@@ -334,7 +336,7 @@
                         @else
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="status" value="1" {{ ( @$sRow->status=='1')?'checked':'' }}>
                         @endif
-                          <label class="custom-control-label" for="customSwitch">เปิดใช้งาน</label>
+                          <label class="custom-control-label" for="customSwitch"> {{ ( @$sRow->status=='1')?'เปิดใช้งาน':'ปิดใช้งาน' }}  </label>
                       </div>
                     </div>
                 </div>
