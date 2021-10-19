@@ -26,8 +26,18 @@ class ProfileController extends Controller
      */
     public function index()
     {
+      $data = DB::table('customers')
+      ->select('customers.business_name','customers.prefix_name','customers.first_name','customers.last_name','customers.user_name','customers.created_at','customers.date_mt_first','customers.pv_mt_active',
+      'customers.pv_mt','customers.pv_mt','customers.bl_a','customers.bl_b','customers.bl_c','customers.pv_a','customers.pv_b','customers.pv_c',
+      'customers.pv','dataset_package.dt_package','dataset_qualification.code_name','q_max.code_name as max_code_name',
+      'q_max.business_qualifications as max_q_name','dataset_qualification.business_qualifications as q_name','customers.team_active_a','customers.team_active_b','customers.team_active_c')
+      ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
+      ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+      ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=','customers.qualification_max_id')
+      ->where('customers.user_name','=',Auth::guard('c_user')->user()->user_name)
+      ->first();
 
-      return view('frontend/profile');
+      return view('frontend/profile',compact('data'));
     }
 
     // public function edit_profile()

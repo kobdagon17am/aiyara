@@ -166,6 +166,10 @@
                         <img src="{{ asset('backend/images/flags/flag_laos.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">Laos</span>
                     </a>
 
+                    <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
+                      <img src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">KHM</span>
+                  </a>
+
                 </div>
             </li>
 
