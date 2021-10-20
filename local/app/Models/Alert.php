@@ -39,4 +39,15 @@ class Alert extends Model
 			<b>Line : </b> '.$e->getLine().'<br/>'
 		);
 	}
+
+  public static function myTxt($e)
+	{
+		return array(
+			'status'=>'error',
+			'msg' =>'
+			<b>Message : </b> '.$e.'<br/>'
+		);
+	}
+
+
 }
