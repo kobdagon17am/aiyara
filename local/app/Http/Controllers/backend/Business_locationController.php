@@ -75,7 +75,17 @@ class Business_locationController extends Controller
         return redirect()->action('backend\Business_locationController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
-
+    public function show($id)
+    {
+      $sRow = \App\Models\Backend\Business_location::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+       // return response()->json(\App\Models\Alert::Msg('success'));
+       return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Business_location::find($id);

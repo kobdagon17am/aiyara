@@ -63,7 +63,17 @@ class Crm_gettopicController extends Controller
         return redirect()->action('backend\Crm_gettopicController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
-
+    public function show($id)
+    {
+      $sRow = \App\Models\Backend\Crm_gettopic::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+       // return response()->json(\App\Models\Alert::Msg('success'));
+       return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Crm_gettopic::find($id);

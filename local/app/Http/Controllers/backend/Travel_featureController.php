@@ -28,14 +28,6 @@ class Travel_featureController extends Controller
       return $this->form();
     }
 
-    public function show($id)
-    {
-       $sLang = \App\Models\Backend\Language::get();
-       $sRow = \App\Models\Backend\Travel_feature::find($id);
-       return View('backend.travel_feature.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sLang'=>$sLang ) );
-    }
-
-
     public function edit($id)
     {
        $sLang = \App\Models\Backend\Language::get();
@@ -78,7 +70,17 @@ class Travel_featureController extends Controller
         return redirect()->action('backend\Travel_featureController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
-
+    public function show($id)
+    {
+      $sRow = \App\Models\Backend\Travel_feature::find($id);
+      if( $sRow ){
+        $sRow->deleted_at = date('Y-m-d H:i:s');
+        $sRow->save();
+        // $sRow->forceDelete();
+      }
+       // return response()->json(\App\Models\Alert::Msg('success'));
+       return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+    }
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Travel_feature::find($id);

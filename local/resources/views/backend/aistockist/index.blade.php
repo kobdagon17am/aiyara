@@ -34,7 +34,12 @@
                   </div>
 
                 </div>
-
+                @if (session('success'))
+                    <br>
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
 
@@ -112,7 +117,8 @@ $(function() {
               }
               var str_D = '';
               if(sD=='1'){
-                str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.aistockist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                str_D = '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>';
+                // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.aistockist.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
               }
               if(sU!='1' && sD!='1'){
                  $('td:last-child', nRow).html('-');
@@ -128,6 +134,11 @@ $(function() {
       oTable.draw();
     });
 });
+function go_to_rem(id){
+      if (confirm('Are you sure?')) {
+          window.location.replace("{{ route('backend.aistockist.index') }}/"+id)
+      }
+    }
 </script>
 
 
