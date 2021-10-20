@@ -1568,9 +1568,10 @@
 
                         @else
 
-                        <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" >
+                          <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" >
 
                           <input type="hidden" name="member_id_aicash" id="member_id_aicash" >
+
                           <select id="aicash_choose" class="form-control "  >
                             <option value=""  >-Select-</option>
                           </select>

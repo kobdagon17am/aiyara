@@ -1253,11 +1253,16 @@ if($frontstore[0]->check_press_save==2){
 
           if(!empty($request->pay_type_id_fk)){
 
+            // return @$request->pay_type_id_fk;
+            // dd();
+
                   if(@$request->pay_type_id_fk==6 || @$request->pay_type_id_fk==9 || @$request->pay_type_id_fk==11 ){
 
                     // DB::select("  TRUNCATE temp_cus_ai_cash ; ");
                     DB::select("  DELETE FROM temp_cus_ai_cash where admin_id_login ='".\Auth::user()->id."'; ");
                     DB::select("  ALTER TABLE temp_cus_ai_cash  AUTO_INCREMENT=1; ");
+
+                    // return @$request->user_name;
 
                     if(@$request->user_name){
                         $this->fnSearchIntroduceId($request->user_name);
@@ -4229,7 +4234,8 @@ if($frontstore[0]->check_press_save==2){
             $sql =  DB::select("  SELECT * FROM customers where user_name ='$user_name' ");
             $arr = [];
             foreach ($sql as $key => $row) {
-                if ($row->line_type=="AA" || !$row) break;
+                // if ($row->line_type=="AA" || !$row) break;
+                if (!$row) break;
                  DB::select("  INSERT IGNORE INTO `temp_cus_ai_cash`
                     (`admin_id_login`, `user_name`, `introduce_id`, `line_type`, `ai_cash`, `cus_id_fk`, `prefix_name`, `first_name`, `last_name`) VALUES
                     ('".\Auth::user()->id."', '".$row->user_name."', '".$row->introduce_id."', '".$row->line_type."', '".$row->ai_cash."', '".$row->id."', '".$row->prefix_name."', '".$row->first_name."', '".$row->last_name."') ");
@@ -4248,6 +4254,7 @@ if($frontstore[0]->check_press_save==2){
             ->orWhere('first_name','LIKE', '%'.$request->term.'%')
             ->orWhere('last_name','LIKE', '%'.$request->term.'%')
             ->take(15)
+            ->groupBy('user_name')
             ->orderBy('user_name', 'asc')
             ->get();
             $json_result = [];
