@@ -214,7 +214,7 @@ class Check_stockController extends Controller
 
       // $sTable = \App\Models\Backend\Check_stock::search()->orderBy('updated_at', 'desc');
       $sTable = DB::select("
-            SELECT *
+            SELECT concat(product_id_fk,lot_number) as gr,db_stocks.*
             FROM
             db_stocks
             WHERE 1

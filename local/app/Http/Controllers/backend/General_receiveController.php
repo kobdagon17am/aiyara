@@ -142,6 +142,7 @@ class General_receiveController extends Controller
 
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_in_cause_id_fk    = request('product_in_cause_id_fk');
+          $sRow->description    = request('description');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_status_id_fk    = request('product_status_id_fk');
           $sRow->po_invoice_no    = request('po_invoice_no');

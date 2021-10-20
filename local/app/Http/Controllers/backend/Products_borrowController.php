@@ -182,7 +182,7 @@ class Products_borrowController extends Controller
           // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
              $fnCheckStock = new  AjaxController();
                  $r_check_stcok = $fnCheckStock->fnCheckStock(
-                  $sRow->branch_id_fk,
+                  $v->branch_id_fk,
                   $v->product_id_fk,
                   $v->amt,
                   $v->lot_number,

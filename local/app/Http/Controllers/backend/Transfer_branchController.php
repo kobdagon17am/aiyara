@@ -259,7 +259,7 @@ class Transfer_branchController extends Controller
 
                  $fnCheckStock = new  AjaxController();
                  $r_check_stcok = $fnCheckStock->fnCheckStock(
-                  $sRow->branch_id_fk,
+                  $v->branch_id_fk,
                   $v->product_id_fk,
                   $v->amt,
                   $v->lot_number,

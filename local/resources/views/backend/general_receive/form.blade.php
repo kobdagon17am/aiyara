@@ -107,9 +107,9 @@
               <div class="form-group row">
                 <label for="" class="col-md-3 col-form-label"> สาเหตุที่รับเข้า : * </label>
                 <div class="col-md-8">
-                  <select name="product_in_cause_id_fk" class="form-control select2-templating " required>
+                  <select name="product_in_cause_id_fk" class="form-control select2-templating " id='import' required onchange="g_import('import')">
                     <option value="">Select</option>
-                    @if(@$Product_in_cause)
+                    @if(@$Product_in_cause) 
                     @foreach(@$Product_in_cause AS $r)
                     <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_in_cause_id_fk)?'selected':'' }}>
                       {{$r->txt_desc}}
@@ -119,7 +119,12 @@
                   </select>
                 </div>
               </div>
-
+              <div class="form-group row d-none" id="what_import">
+                <label for="" class="col-md-3 col-form-label"> หมายเหตุ : * </label>
+                <div class="col-md-8">
+                  <textarea name="description"  class='form-control' cols="30" rows="10">{{@$sRow->description}}</textarea>
+                </div>
+              </div>
               <div class="form-group row">
                 <label for="" class="col-md-3 col-form-label"> สภาพสินค้าที่รับเข้า : * </label>
                 <div class="col-md-8">
@@ -444,6 +449,15 @@
 @section('script')
 
 <script type="text/javascript">
+
+  function g_import(id){
+    var a = document.getElementById(id).value;
+    if(a==4){
+      $('#what_import').removeClass('d-none');
+    }else{
+      $('#what_import').addClass('d-none');
+    }
+  }
   $('#business_location_id_fk').change(function(){
           $(".myloading").show();
           var business_location_id_fk = this.value;

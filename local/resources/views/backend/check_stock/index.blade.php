@@ -43,9 +43,9 @@
             <h4 class="mb-0 font-size-18"> Check Stock </h4>
             <h4 class="mb-0 font-size-18">
 
-             <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;display: none;" >
+   <!--           <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
-                          </a>
+                          </a> -->
 
                           </h4>
 
@@ -338,15 +338,24 @@
                     </div>
 
                     <div class="col-md-6 " >
-                        <div class="form-group row">
+                        <div class="form-group row d-flex ">
                           <label for="ref_code" class="col-md-2 col-form-label">  </label>
                             <div class="col-md-10">
+                       
+
                           <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                             <i class="bx bx-search align-middle "></i> SEARCH
                           </a>
+
+                         <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
+                            <i class="bx bx-cog align-middle "></i> Process Stock movement
+                          </a>
+
+                  
                          </div>
                        </div>
                     </div>
+
 
                   </div>
 
@@ -838,7 +847,7 @@
   $(document).ready(function(){
 
     setTimeout(function(){
-       $('.btnStockMovement').trigger('click');
+       // $('.btnStockMovement').trigger('click');
     },1500);
 
     setTimeout(function(){
