@@ -452,7 +452,7 @@ $giveaway_t1 = '';
 
                                if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
                                   // แสดงยอดเงิน giveaway_voucher
-                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* แถม GIFT VOUCHER '.$v->giveaway_voucher.' บาท </span>' ;
+                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
 
                                }
                             }
@@ -462,7 +462,7 @@ $giveaway_t1 = '';
                                     $rg2 = DB::select("select sum(giveaway_voucher) as giveaway_voucher from db_giveaway where giveaway_option_id_fk=2 and id in ($im); ");
                                     if(@$rg2[0]->giveaway_voucher>0){
                                        $giveaway_voucher_price = $rg2[0]->giveaway_voucher;
-                                       $product_name = 'แถม GIFT VOUCHER '.$rg2[0]->giveaway_voucher .' บาท ';
+                                       $product_name = 'แถม AiVoucher '.$rg2[0]->giveaway_voucher .' บาท ';
                                        DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
                                     }
                                 }

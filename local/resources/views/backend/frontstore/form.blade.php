@@ -703,7 +703,7 @@
 
                                // if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
                                //    // แสดงยอดเงิน giveaway_voucher
-                               //   echo '<span style="color:red;font-weight:bold;">* แถม GIFT VOUCHER '.$v->giveaway_voucher.' บาท </span>' ;
+                               //   echo '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
 
                                // }
                             }
