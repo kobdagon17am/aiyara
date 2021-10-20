@@ -821,9 +821,6 @@ if(!empty($db_orders[0]->action_user)){
 9   เครดิต + Ai-Cash    
 10  เงินโอน + เงินสด    
 11  เงินโอน + Ai-Cash   
-12  Gift Voucher + เงินโอน  
-13  Gift Voucher + บัตรเครดิต   
-14  Gift Voucher + Ai-Cash  
 */
 
       
@@ -860,6 +857,41 @@ if(!empty($db_orders[0]->action_user)){
         }else{
             $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
+
+    }else if(@$pay_type[0]->pay_type_id_fk==8){ // 8   เครดิต + เงินโอน 
+        if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price==0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+        }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price>0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+        }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->transfer_price>0){
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
+        }else{
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+        }
+
+    }else if(@$pay_type[0]->pay_type_id_fk==9){ // 9   เครดิต + Ai-Cash 
+        if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price==0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+        }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price>0){
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->aicash_price>0){
+            $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }else{
+            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }
+
+    }else if(@$pay_type[0]->pay_type_id_fk==11){ // 11   เงินโอน + Ai-Cash 
+
+        if(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->aicash_price==0){
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
+        }elseif(@$pay_type[0]->transfer_price>0 && @$pay_type[0]->aicash_price>0){
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }elseif(@$pay_type[0]->transfer_price==0 && @$pay_type[0]->aicash_price>0){
+            $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }else{
+            $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+        }
+
 
     }else{ // 5   เงินสด  
         $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
