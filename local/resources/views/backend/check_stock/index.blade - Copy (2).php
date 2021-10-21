@@ -11,19 +11,6 @@
      margin-bottom: 0rem  !important;
   }
 
-/* #data-table-01 tr.odd {
-  background-color: white;
-}
-
-#data-table-01 tr.even {
-  background-color: #f2f2f2;
-}
-*/
- #data-table-01 tr:hover {
-  background-color: #f9ffe6;
-}
-
-
 </style>
 @endsection
 
@@ -101,13 +88,20 @@
 
                               <?php if(@\Auth::user()->permission==1){ ?>
 
-                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                                      <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
+                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" <?=$dis01?> >
                                             <option value="">-Business Location-</option>
                                             @if(@$sBusiness_location)
                                               @foreach(@$sBusiness_location AS $r)
-                                              <option value="{{$r->id}}" >
+                                              @IF(empty(@$sRow->condition_business_location))
+                                              <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
                                                 {{$r->txt_desc}}
                                               </option>
+                                              @ELSE
+                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
+                                                {{$r->txt_desc}}
+                                              </option>
+                                              @ENDIF
                                               @endforeach
                                             @endif
                                           </select>
@@ -148,7 +142,13 @@
 
                               <?php if(@\Auth::user()->permission==1){ ?>
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                    <option value="">-เลือก Business Location ก่อน-</option>
+                                      @if(@$sBranchs)
+                                        @foreach(@$sBranchs AS $r)
+                                          <option value="{{$r->id}}" >
+                                            {{$r->b_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
                                   </select>
                               <?php }else{ ?>
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled="" >
@@ -376,9 +376,9 @@
           </div>
         </div>
 
-              <div class="myBorder" >
-                 <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;"></table>
-              </div>
+
+                <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+
 
               <div class="myBorder" style="margin-top: 2%;">
 
@@ -428,16 +428,16 @@
                   var start_date = $('#start_date').val();
                   var end_date = $('#end_date').val();
 
-                   // if(business_location_id_fk==''){
-                   //    $("#business_location_id_fk").select2('open');
-                   //    $("#spinner_frame").hide();
-                   //     return false;
-                   //  }
-                   // if(branch_id_fk==''){
-                   //    $("#branch_id_fk").select2('open');
-                   //    $("#spinner_frame").hide();
-                   //     return false;
-                   //  }
+                   if(business_location_id_fk==''){
+                      $("#business_location_id_fk").select2('open');
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+                   if(branch_id_fk==''){
+                      $("#branch_id_fk").select2('open');
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
 
                   // if(start_date==''){
                   //     // $("#start_date").focus();
@@ -490,25 +490,30 @@
                                               method: 'POST',
                                             },
 
-                                        // dom: 'Bfrtip',
-                                        // buttons: [
-                                        //     {
-                                        //         extend: 'excelHtml5',
-                                        //         title: 'CHECK STOCK'
-                                        //     },
+                                        dom: 'Bfrtip',
+                                        buttons: [
+                                            {
+                                                extend: 'excelHtml5',
+                                                title: 'CHECK STOCK'
+                                            },
 
-                                        // ],
+                                        ],
                                        columns: [
-                                              {data: 'id', title :'no.', className: 'text-center w50'},
+                                              {data: 'id', title :'ID', className: 'text-center w50'},
                                               {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left w230 '},
                                               {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                                               {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
-                                              {data: 'amt_desc', title :'<center>จำนวน </center>', className: 'text-center'},
+                                              {data: 'amt',defaultContent: "0",   title :'<center>จำนวน</center>', className: 'text-center',render: function(d) {
+                                                       return '';
+                                              }},
                                               {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
                                               {data: 'stock_card', title :'STOCK CARD', className: 'text-center w150'},
                                           ],
-
-                                           rowGroup: {
+                                          // order: [[1, 'asc']],
+                                          // columnDefs: [
+                                          //               { "visible": false, "targets": 6 }
+                                          //           ],
+                                          rowGroup: {
                                           startRender: null,
                                           endRender: function ( rows, group  ) {
                                               var sTotal = rows
@@ -520,29 +525,41 @@
                                                  }, 0);
                                                   sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ').display( sTotal );
 
-                                                  var product_id_fk = rows.data().pluck('product_id_fk').toArray();
-                                                  var product_id_fk = product_id_fk[0] ;
+                                              var product_id_fk = rows.data().pluck('product_id_fk').toArray();
+                                              var product_id_fk = product_id_fk[0] ;
 
-                                                  var lot_number = rows.data().pluck('lot_number').toArray();
-                                                  var lot_expired_date = rows.data().pluck('lot_expired_date').toArray();
-                                                  var lot_number = lot_number[0];
+                                              var lot_number = rows.data().pluck('lot_number').toArray();
+                                              var lot_expired_date = rows.data().pluck('lot_expired_date').toArray();
+                                              var lot_number = lot_number[0];
 
-                                       
+                                              if ( group==lot_number ) {
+
+                                                  return $('<tr>')
+                                                  .append( '<td colspan="4" style="text-align:right;background-color:#f2f2f2 !important;">Total > '+group+'</td>' )
+                                                  .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
+                                                  .append( '<td></td><td style=" background-color:#f2f2f2 !important;font-weight: bold;text-align:center; "><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+lot_number+'/'+start_date+':'+end_date+'/'+sTotal.trim()+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a> </td>' );
+
+
+                                              }else{
                                                    return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
-                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' )
-                                                  .append( '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>' );
+                                                  .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' );
+                                              }
 
 
-                                           },
-                                             dataSrc: [  "product_name" ]
-                                         },
-                                        
+                                          },
+                                          dataSrc: [  "product_name","lot_number"]
+                                      },
+
                                          rowCallback: function(nRow, aData, dataIndex){
 
-                                           var info = $(this).DataTable().page.info();
-                                           $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                           $('td:last-child', nRow).html(''
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+'/'+start_date+':'+end_date+'/'+aData['amt']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a>  '
+                                                      + '<a class="btn btn-outline-success waves-effect waves-light" href="{{ url('backend/check_stock/stock_card_01') }}/'+aData['product_id_fk']+'/'+aData['lot_number']+':'+aData['lot_expired_date']+'/'+start_date+':'+end_date+'/'+aData['amt']+'/'+aData['warehouse_id_fk']+':'+aData['zone_id_fk']+':'+aData['shelf_id_fk']+':'+aData['shelf_floor']+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;"  > STOCK CARD </a>  '
+
+                                                    ).addClass('input');
+                                           // target=_blank
 
                                          },
 
@@ -665,7 +682,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูลคลัง !!.');
+                       alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
                        $.each(data,function(key,value){
@@ -703,7 +720,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Zone !!.');
+                       alert('ไม่พบข้อมูล Zone !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Zone -</option>';
                        $.each(data,function(key,value){
@@ -740,7 +757,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Shelf !!.');
+                       alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Shelf -</option>';
                        $.each(data,function(key,value){
@@ -773,7 +790,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Lot number !!.');
+                       alert('ไม่พบข้อมูล Lot number !!.');
                        var layout = '<option value="" selected>- เลือก Lot number -</option>';
                        $('#lot_number').html(layout);
                    }else{

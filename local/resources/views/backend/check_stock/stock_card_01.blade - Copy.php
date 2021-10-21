@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$p_name }} : LOT NUMBER = {{@$lot_number}} : LOT EXPIRED = {{@$lot_expired_date}}   
+            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
               
                &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
                <i class="bx bx-play"></i> {{@$wh}}  
@@ -78,11 +78,10 @@
                         </div>
                       </div>
 
-                    
                     <div class="col-md-4">
-                      <!-- <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;"> -->
-                      <div style="float: right;font-size: 18px !important;font-weight: bold;">
-                        ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
+                      <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
+                        <!-- number_format(@$sBalance[0]->amt,0) -->
+                        ยอดคงเหลือ = {{number_format(@$total,0)}}
                       </div>
                     </div>
 
@@ -124,17 +123,19 @@ $(document).ready(function() {
       }
 
 
-    
       $(document).on('click', '.btnProcess', function(event) {
            
-              var db_stocks_id =  "{{@$id}}"; //alert(business_location_id_fk);
-              var business_location_id_fk =  "{{@$Stock[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
-              var branch_id_fk =  "{{@$Stock[0]->branch_id_fk}}"; //alert(branch_id_fk);
-              var product_id_fk =  "{{@$Stock[0]->product_id_fk}}"; //
-              var lot_number =  "{{@$Stock[0]->lot_number}}"; //alert(lot_number);
-              var lot_expired_date =  "{{@$Stock[0]->lot_expired_date}}"; //alert(lot_number);
-              
-              var warehouse_id_fk =  "{{@$Stock[0]->warehouse_id_fk}}"; //alert(lot_number);
+             var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              // var wh =  "{{@$wh}}"; alert(wh);
+
+              var product_id_fk =  "{{@$Products[0]->product_id}}";
+              var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              var warehouse_id_fk =  "{{@$warehouse_id_fk}}"; //alert(warehouse_id_fk);
+              var zone_id_fk =  "{{@$zone_id_fk}}"; //alert(zone_id_fk);
+              var shelf_id_fk =  "{{@$shelf_id_fk}}"; //alert(shelf_id_fk);
+              var shelf_floor =  "{{@$shelf_floor}}"; //alert(shelf_floor);
 
               var start_date =  $('#start_date').val();
               if(start_date==''){
@@ -146,16 +147,14 @@ $(document).ready(function() {
               if(end_date==''){
                 $('#end_date').focus();
                 return false;
-              }     
+              }        
 
-              // console.log(business_location_id_fk);   
-              // console.log(branch_id_fk);   
-              // console.log(product_id_fk);   
-              // console.log(lot_number);   
-              // console.log(lot_expired_date);   
-              // console.log(start_date);   
-              // console.log(end_date);   
-              // console.log(warehouse_id_fk);   
+              console.log(business_location_id_fk);   
+              console.log(branch_id_fk);   
+              console.log(product_id_fk);   
+              console.log(lot_number);   
+              console.log(start_date);   
+              console.log(end_date);   
 
               $(".myloading").show();
 
@@ -165,15 +164,17 @@ $(document).ready(function() {
                           url: " {{ url('backend/ajaxProcessStockcard_01') }} ", 
                           method: "post",
                           data: {
-                            db_stocks_id:db_stocks_id,
                             business_location_id_fk:business_location_id_fk,
                             branch_id_fk:branch_id_fk,
                             product_id_fk:product_id_fk,
                             lot_number:lot_number,
-                            lot_expired_date:lot_expired_date,
                             start_date:start_date,
                             end_date:end_date,
+                            branch_id_fk:branch_id_fk,
                             warehouse_id_fk:warehouse_id_fk,
+                            zone_id_fk:zone_id_fk,
+                            shelf_id_fk:shelf_id_fk,
+                            shelf_floor:shelf_floor,
                             "_token": "{{ csrf_token() }}", 
                           },
                           success:function(data)
@@ -199,30 +200,21 @@ $(document).ready(function() {
                                           paging: false,
                                           iDisplayLength: -1,
                                           ajax: {
-                                            url: '{{ route('backend.stock_card.datatable') }}',
-                                            data: function ( d ) {
-                                              d.Where={};
-                                              $('.myWhere').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Like={};
-                                              $('.myLike').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Custom={};
-                                              $('.myCustom').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              oData = d;
-                                            },
-                                            method: 'POST'
-                                          },
+                                              url: '{{ route('backend.stock_card_01.datatable') }}',
+                                              data :{
+                                                business_location_id_fk:business_location_id_fk,
+                                                branch_id_fk:branch_id_fk,
+                                                product_id_fk:product_id_fk,
+                                                lot_number:lot_number,
+                                                start_date:start_date,
+                                                end_date:end_date,
+                                                warehouse_id_fk:warehouse_id_fk,
+                                                zone_id_fk:zone_id_fk,
+                                                shelf_id_fk:shelf_id_fk,
+                                                shelf_floor:shelf_floor,
+                                                  },
+                                                method: 'POST',
+                                              },
                                           dom: 'Bfrtip',
                                         buttons: [
                                             {
@@ -244,7 +236,9 @@ $(document).ready(function() {
                                               {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
                                                     return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
                                               }},
-                                       
+                                              // {data: 'remain',title :'<center>ยอดคงเหลือ</center>', className: 'text-center',render: function(d) {
+                                              //       return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                              // }},
                                               {data: 'remain', title :'<center>ยอดคงเหลือ</center>', className: 'text-center'},
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
@@ -292,7 +286,6 @@ $(document).ready(function() {
       });
 
 });
-
 
 
 </script>

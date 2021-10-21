@@ -22,12 +22,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$Products[0]->product_code." : ".@$Products[0]->product_name }} : LOT NUMBER = {{@$lot_number}}  
-              
-               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-               <i class="bx bx-play"></i> {{@$wh}} 
-
-             </h4>
+            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$p_name }} </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
                 <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
               </a>
@@ -79,9 +74,9 @@
                       </div>
 
                     <div class="col-md-4">
-                      <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;">
-                        <!-- number_format(@$sBalance[0]->amt,0) -->
-                        ยอดคงเหลือ = {{number_format(@$total,0)}}
+                      <!-- <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;"> -->
+                      <div style="float: right;font-size: 18px !important;font-weight: bold;">
+                        ยอดคงเหลือ = {{number_format(@$sBalance[0]->amt,0)}}
                       </div>
                     </div>
 
@@ -142,12 +137,12 @@ $(document).ready(function() {
                 return false;
               }     
 
-              console.log(business_location_id_fk);   
-              console.log(branch_id_fk);   
-              console.log(product_id_fk);   
-              console.log(lot_number);   
-              console.log(start_date);   
-              console.log(end_date);   
+              // console.log(business_location_id_fk);   
+              // console.log(branch_id_fk);   
+              // console.log(product_id_fk);   
+              // console.log(lot_number);   
+              // console.log(start_date);   
+              // console.log(end_date);   
 
               $(".myloading").show();
 

@@ -4932,146 +4932,132 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxProcessStockcard_01(Request $request)
     {
-        // return  $request ;
-        
 
-        $Stock = \App\Models\Backend\Check_stock::where('id',$request->db_stocks_id)->get();
-
-
-        if(isset($Stock[0]->business_location_id_fk)){
-            $w01 = " AND  business_location_id_fk =".$Stock[0]->business_location_id_fk."  " ;
+        if(isset($request->business_location_id_fk)){
+            $w01 = " AND  business_location_id_fk =".$request->business_location_id_fk."  " ;
         }else{
             $w01 = '';
         }
 
-        if(isset($Stock[0]->branch_id_fk)){
-            $w02 = " AND  branch_id_fk ='".$Stock[0]->branch_id_fk."'  " ;
+        if(isset($request->branch_id_fk)){
+            $w02 = " AND  branch_id_fk ='".$request->branch_id_fk."'  " ;
         }else{
             $w02 = '';
         }
 
-        if(isset($Stock[0]->product_id_fk)){
-            $w03 = " AND  product_id_fk ='".$Stock[0]->product_id_fk."'  " ;
+        if(isset($request->product_id_fk)){
+            $w03 = " AND  product_id_fk ='".$request->product_id_fk."'  " ;
         }else{
             $w03 = '';
         }
 
-        if(isset($Stock[0]->lot_number)){
-            $w04 = " AND  lot_number ='".$Stock[0]->lot_number."' " ;
+        if(isset($request->lot_number)){
+            $t = explode(":",$request->lot_number);
+            $w04 = " AND  lot_number ='".$t[0]."' AND lot_expired_date = '".$t[1]."'  " ;
         }else{
             $w04 = '';
         }
 
         if(isset($request->start_date) && isset($request->end_date)){
             $w05 = " and date(db_stock_movement.doc_date) BETWEEN '".$request->start_date."' AND '".$request->end_date."'  " ;
-            $w052 = " and date(db_stocks.lot_expired_date) >= CURDATE()  " ;
         }else{
             $w05 = '';
-            $w052 = '';
         }
 
-        if(isset($Stock[0]->lot_expired_date)){
-            $w06 = " AND  lot_expired_date ='".$Stock[0]->lot_expired_date."' " ;
+
+
+        if(isset($request->warehouse_id_fk)){
+            $w06 = " AND  warehouse_id_fk ='".$request->warehouse_id_fk."'  " ;
         }else{
             $w06 = '';
         }
 
-        if(isset($Stock[0]->warehouse_id_fk)){
-            $w07 = " AND  warehouse_id_fk ='".$Stock[0]->warehouse_id_fk."' " ;
+        if(isset($request->zone_id_fk)){
+            $w07 = " AND  zone_id_fk ='".$request->zone_id_fk."'  " ;
         }else{
             $w07 = '';
         }
 
-        if(isset($Stock[0]->zone_id_fk)){
-            $w08 = " AND  zone_id_fk ='".$Stock[0]->zone_id_fk."' " ;
+        if(isset($request->shelf_id_fk)){
+            $w08 = " AND  shelf_id_fk ='".$request->shelf_id_fk."'  " ;
         }else{
             $w08 = '';
         }
 
-        if(isset($Stock[0]->shelf_id_fk)){
-            $w09 = " AND  shelf_id_fk ='".$Stock[0]->shelf_id_fk."' " ;
+        if(isset($request->shelf_floor)){
+            $w09 = " AND  shelf_floor ='".$request->shelf_floor."'  " ;
         }else{
             $w09 = '';
         }
 
 
-        if(isset($Stock[0]->shelf_floor)){
-            $w10 = " AND  shelf_floor ='".$Stock[0]->shelf_floor."' " ;
-        }else{
-            $w10 = '';
-        }
-
-
-        $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;
+        $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
         DB::select(" DROP TABLE IF EXISTS $temp_db_stock_card ; ");
         DB::select(" CREATE TABLE $temp_db_stock_card LIKE db_stock_card ");
 
 
         if($request->ajax()){
 
-            // return $w01 ;
-            // return $w02 ;
-            // return $w03 ;
-            // return $w052 ;
-            // return $w06 ;
-
        //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
-        $amt_balance_stock =  DB::select(" SELECT sum(amt) as amt FROM db_stocks 
+        $amt_balance_stock =  DB::select(" SELECT amt FROM db_stocks 
             WHERE 1
             $w01 
             $w02
             $w03 
             $w04
-            $w052
-            $w06
-            $w07
-            $w08
-            $w09
-            $w10
-            GROUP BY product_id_fk
+
+                $w06 
+                $w07
+                $w08
+                $w09
 
              ") ;
         $amt_balance_stock = @$amt_balance_stock[0]->amt ? $amt_balance_stock[0]->amt : 0 ;
 
-        // return  $amt_balance_stock;
-
-        $amt_in_out =  DB::select(" SELECT 
-                SUM(CASE WHEN in_out=2 THEN amt*-1 ELSE amt END
-                ) as amt
-                FROM db_stock_movement 
+        $amt_in_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
             WHERE 1
                 $w01 
                 $w02 
                 $w03 
-                $w04
+                $w04 
                 $w05 
-                $w06
+                $w06 
                 $w07
-                            $w08
-            $w09
-            $w10
-            ") ;
-        $amt_in_out = @$amt_in_out[0]->amt ? $amt_in_out[0]->amt : 0 ;
-        // return $amt_in_out;
-        $check = 0;
-        // if($amt_in_out>$amt_balance_stock){
-        //     $amt_balance_stock = $amt_balance_stock + $amt_in_out;
-        //     $check = 1;
-        // }else{
-            $amt_balance_stock = $amt_balance_stock - $amt_in_out;
-        // }
+                $w08
+                $w09
+            AND in_out=1;
 
-      
+            ") ;
+
+        $amt_in_stock = @$amt_in_stock[0]->amt ? $amt_in_stock[0]->amt : 0 ;
+
+        $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+
+            WHERE 1
+                $w01 
+                $w02 
+                $w03 
+                $w04 
+                $w05 
+                $w06 
+                $w07
+                $w08
+                $w09
+            AND in_out=2; 
+            ") ;
+
+        $amt_out_stock = @$amt_out_stock[0]->amt ? $amt_out_stock[0]->amt : 0 ;
+
+
+        $amt_balance_stock = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
+        $amt_balance_stock_02 = $amt_balance_stock + ( $amt_out_stock - $amt_in_stock ) ;
 
         if($amt_balance_stock < 0 ) {
             // $amt_balance_stock = 0 ;
             $txt = "* ถ้ายอดยกมา ติดลบ อาจเกิดจากข้อมูลทดสอบ ปรับยอดคลังอีกครั้ง ";
-            // $txt = "ยอดคงเหลือยกมา";
         } else {
             $txt = "ยอดคงเหลือยกมา";
         }
-
-        // return $amt_balance_stock;
 
           // DB::select(" INSERT INTO $temp_db_stock_card (details) VALUES ('ยอดคงเหลือยกมา') ") ;
           DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('".$txt."',".$amt_balance_stock.") ") ;
@@ -5085,14 +5071,12 @@ if($frontstore[0]->check_press_save==2){
                 $w01 
                 $w02 
                 $w03 
-                $w04
+                $w04 
                 $w05 
-                $w06
+                $w06 
                 $w07
-                            $w08
-            $w09
-            $w10
-                GROUP BY product_id_fk,doc_no
+                $w08
+                $w09
           ");
 
 
@@ -5122,7 +5106,7 @@ if($frontstore[0]->check_press_save==2){
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
-                AjaxController::insertStockCard($insertData);
+                AjaxController::insertStockCard_01($insertData);
 
             }
 
@@ -5130,19 +5114,12 @@ if($frontstore[0]->check_press_save==2){
             //      DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('หมายเหตุ',0) ") ;
             // }
 
-                if($check==1){
-                      $txt = "ปรับยอด";
-                      // DB::select(" INSERT INTO $temp_db_stock_card (details,amt_out) VALUES ('".$txt."',932) ") ;
-                }
-        
-
-            return "db_stock_card => success";
+            return "db_stock_card_01 => success";
 
 
 
         }
     }
-
 
    public function insertStockCard($data){
         $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;

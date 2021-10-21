@@ -745,8 +745,14 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     // Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
     // Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
 
+    Route::post('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
+    
     Route::post('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
     Route::get('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
+
+    Route::post('check_stock/stock_card_01/{id}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}', 'Check_stockController@stock_card_01');
 
     Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
     // Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');

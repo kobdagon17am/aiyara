@@ -101,13 +101,20 @@
 
                               <?php if(@\Auth::user()->permission==1){ ?>
 
-                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                                      <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
+                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" <?=$dis01?> >
                                             <option value="">-Business Location-</option>
                                             @if(@$sBusiness_location)
                                               @foreach(@$sBusiness_location AS $r)
-                                              <option value="{{$r->id}}" >
+                                              @IF(empty(@$sRow->condition_business_location))
+                                              <option value="{{$r->id}}" {{ (@$r->id=='1')?'selected':'' }} >
                                                 {{$r->txt_desc}}
                                               </option>
+                                              @ELSE
+                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->condition_business_location)?'selected':'' }} >
+                                                {{$r->txt_desc}}
+                                              </option>
+                                              @ENDIF
                                               @endforeach
                                             @endif
                                           </select>
@@ -148,7 +155,13 @@
 
                               <?php if(@\Auth::user()->permission==1){ ?>
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                    <option value="">-เลือก Business Location ก่อน-</option>
+                                      @if(@$sBranchs)
+                                        @foreach(@$sBranchs AS $r)
+                                          <option value="{{$r->id}}" >
+                                            {{$r->b_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
                                   </select>
                               <?php }else{ ?>
                                   <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled="" >
@@ -428,16 +441,16 @@
                   var start_date = $('#start_date').val();
                   var end_date = $('#end_date').val();
 
-                   // if(business_location_id_fk==''){
-                   //    $("#business_location_id_fk").select2('open');
-                   //    $("#spinner_frame").hide();
-                   //     return false;
-                   //  }
-                   // if(branch_id_fk==''){
-                   //    $("#branch_id_fk").select2('open');
-                   //    $("#spinner_frame").hide();
-                   //     return false;
-                   //  }
+                   if(business_location_id_fk==''){
+                      $("#business_location_id_fk").select2('open');
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
+                   if(branch_id_fk==''){
+                      $("#branch_id_fk").select2('open');
+                      $("#spinner_frame").hide();
+                       return false;
+                    }
 
                   // if(start_date==''){
                   //     // $("#start_date").focus();
@@ -665,7 +678,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูลคลัง !!.');
+                       alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
                        $.each(data,function(key,value){
@@ -703,7 +716,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Zone !!.');
+                       alert('ไม่พบข้อมูล Zone !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Zone -</option>';
                        $.each(data,function(key,value){
@@ -740,7 +753,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Shelf !!.');
+                       alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Shelf -</option>';
                        $.each(data,function(key,value){
@@ -773,7 +786,7 @@
                   success:function(data)
                   {
                    if(data == ''){
-                       // alert('ไม่พบข้อมูล Lot number !!.');
+                       alert('ไม่พบข้อมูล Lot number !!.');
                        var layout = '<option value="" selected>- เลือก Lot number -</option>';
                        $('#lot_number').html(layout);
                    }else{
