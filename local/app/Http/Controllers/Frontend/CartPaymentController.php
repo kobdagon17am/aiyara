@@ -114,8 +114,6 @@ class CartPaymentController extends Controller
 
         $check_giveaway = GiveawayController::check_giveaway($type,$customer_username, $pv_total);
 
-        dd($check_giveaway);
-
         $bill = array(
             'vat' => $vat,
             'shipping' => $shipping,
