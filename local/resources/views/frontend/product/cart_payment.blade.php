@@ -671,8 +671,11 @@
                      <hr m-t-2>
 
                      @if ($check_giveaway)
-                     <?php $i = 1; ?>
+                     <?php
+
+                     $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
+
 
                           @if($check_giveaway_value['status'] == 'success')
 
