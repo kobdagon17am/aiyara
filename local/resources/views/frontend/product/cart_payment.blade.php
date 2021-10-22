@@ -189,7 +189,7 @@
                                          <div class="form-radio">
                                              <div class="radio radio-inline" id="i_sent_address">
                                                  <label>
-                                                     <input type="radio" onchange="sent_address('sent_address')"
+                                                     <input type="radio" onchange="sent_address('sent_address',{{$address->province_id_fk}})"
                                                          id="sent_address_check" name="receive" value="sent_address"
                                                          checked="checked">
                                                      <i class="helper"></i><b>จัดส่ง</b>
@@ -849,11 +849,11 @@
              var sent_other = document.getElementById('sent_other').checked;
             //  var premium = document.getElementById('checkbox13').checked;
 
-             if (premium) {
-                 document.getElementById('shipping_premium').value = true;
-             } else {
-                 document.getElementById('shipping_premium').value = false;
-             }
+            //  if (premium) {
+            //      document.getElementById('shipping_premium').value = true;
+            //  } else {
+            //      document.getElementById('shipping_premium').value = false;
+            //  }
 
              if (sent_address) {
                  check_shipping({{ @$address->provinces_id }});
@@ -897,7 +897,7 @@
                      location_id: location_id,
                      provinces_id: provinces_id,
                      price: price,
-                     shipping_premium: shipping_premium,
+                     shipping_premium: '',
                      type: type,
                      sum_gv: sum_gv,
                      type_sent: type_sent,
@@ -938,6 +938,7 @@
          function sent_address(type_sent, provinces_id) {
 
              if (type_sent == 'sent_address') {
+
                  check_shipping(provinces_id);
                  document.getElementById("sent_address").style.display = 'block';
                  document.getElementById("sent_address_card").style.display = 'none';
