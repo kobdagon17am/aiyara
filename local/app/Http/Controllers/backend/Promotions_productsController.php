@@ -26,7 +26,7 @@ class Promotions_productsController extends Controller
        // $sProduct = \App\Models\Backend\Products::get();
        $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
           
-       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
+       $sProductUnit = \App\Models\Backend\Product_unit::where('status', 1)->where('lang_id', 1)->get();
        return View('backend.promotions_products.form')->with(array('sRowNew'=>$sRowNew,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit));
 
     }
@@ -43,7 +43,7 @@ class Promotions_productsController extends Controller
        $sRowNew = \App\Models\Backend\Promotions::find($sRow->promotion_id_fk);
        $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
        // dd($sProduct);
-       $sProductUnit = \App\Models\Backend\Product_unit::get();
+       $sProductUnit = \App\Models\Backend\Product_unit::where('status', 1)->where('lang_id', 1)->get();
        return View('backend.promotions_products.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sRowNew'=>$sRowNew ,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit ) );
     }
 
@@ -53,7 +53,7 @@ class Promotions_productsController extends Controller
        $sRowNew = \App\Models\Backend\Promotions::find($sRow->promotion_id_fk);
        $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
        // dd($sProduct);
-       $sProductUnit = \App\Models\Backend\Product_unit::get();
+       $sProductUnit = \App\Models\Backend\Product_unit::where('status', 1)->where('lang_id', 1)->get();
        return View('backend.promotions_products.form')->with(array('sRow'=>$sRow , 'id'=>$id, 'sRowNew'=>$sRowNew ,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit ) );
     }
 
