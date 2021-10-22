@@ -100,38 +100,7 @@
 <?php
     require(app_path().'/Models/MyFunction.php');
 
-
-if(substr($data[0],0,1)=="O"){
-    $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' "); 
-    $arr_orders_id = [];
-    foreach ($d1 as $key => $v) {
-        array_push($arr_orders_id,$v->id);
-    }
-}else{
-
-        $id = intval(substr($data[0],2));
-
-        $d1 = DB::select(" SELECT orders_id_fk FROM `db_delivery` WHERE `packing_code`='".$id."' "); 
-
-        if($d1){
-
-           $arr_orders_id = [];
-            foreach ($d1 as $key => $v) {
-                array_push($arr_orders_id,$v->orders_id_fk);
-            }
-          
-        }
-
-}
-
-
-
-// echo count($arr3);
-for ($z=0; $z < count($arr_orders_id) ; $z++) { 
-    // code...
-
-$id = @$arr_orders_id[$z];
-
+$id = $data[0];
 $n = 22;
 $limit = 10;
 
@@ -382,57 +351,128 @@ $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_gi
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-          if(@$check_giveaway){
-               // dd($id);
-               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_product' ");
-               // dd($sGiveaway);
+$giveaway_voucher_price = 0;
+$giveaway_t1 = '';
 
-                if(@$sGiveaway){
+                      if(@$check_giveaway){
 
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'สินค้าแถม',  null,  '' ,  '',  '',  ''); ");
+                         for ($i=0; $i < count($check_giveaway) ; $i++) { 
 
-                      foreach ($sGiveaway as $key => $v) {
+                          if(@$check_giveaway[$i]['status']=='success'){
+                              $arr = [];
+                              foreach ($check_giveaway as $key => $v) {
+                                  // print_r($v);
+                                  if($v['status']=='success'){
+                                    // print_r($v['gv_id']);
+                                    array_push($arr,$v['gv_id']);
+                                  }
+                              }
+                              $im = implode(',',$arr);
+                          }
+                 
+                         }
+                         // dd($im);
+                         if(@$im){
+                            $rg = DB::select("select * from db_giveaway where id in ($im); ");
+                          // dd($rg);
 
-                        $product_name = 
-                        ' &nbsp;&nbsp;&nbsp; - '.$v->product_name.' = 
-                        '.($v->product_amt*$v->free).' 
-                        '.$v->product_unit_name.'
-                        ';
-                          
-                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
 
-                       }
-                }
-                  
-         }
+                            if(!empty($check_giveaway)){
+                                $rg1 = DB::select("select * from db_giveaway where giveaway_option_id_fk=1 and id in ($im); ");
+                                if(@$rg1){
+                                $product_name = 'ได้รับสินค้าแถม';
+                                DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
+                                }
+                            }
+
+
+                          if(@$rg){
+
+                            foreach ($rg as $key => $v) {
+                               // echo $v->giveaway_option_id_fk;
+                              
+                                if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+                                 // $giveaway_t1 .= 'ได้รับสินค้าแถม';
+                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* ได้รับสินค้าแถม </span> ';
+
+                                 $rg_p = DB::select(" 
+
+                                  SELECT db_giveaway_products.*,
+                                  (SELECT product_code FROM products WHERE id=db_giveaway_products.product_id_fk limit 1) as product_code,
+                                  (SELECT product_name FROM products_details WHERE product_id_fk=db_giveaway_products.product_id_fk and lang_id=1 limit 1) as product_name,
+                                  dataset_product_unit.product_unit
+                                  FROM
+                                  db_giveaway_products
+                                  Left Join dataset_product_unit ON db_giveaway_products.product_unit = dataset_product_unit.id
+                                  WHERE giveaway_id_fk in (".$v->id.") ; ");
+
+                                 ?>
+
+                                  <div class="divTable">
+                                  
+                                 <div class="divTableBody">
+                                  <?php
+
+                                 if(@$rg_p){
+                                  $i = 1;
+                                  foreach ($rg_p as $key => $v2) {
+
+                                    $product_name = 
+                                    ' &nbsp;&nbsp;&nbsp; - '.$v2->product_code." : ".$v2->product_name.' = 
+                                    '.$v2->product_amt.' 
+                                    '.$v2->product_unit.'
+                                    ';
+                                      
+                                     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
+
+                                ?>
+
+                         <!--          <div class="divTableRow">
+                                  <div class="divTableCell" style="width: 2%;"><center><?=$i?>)</div>
+                                  <div class="divTableCell" style="width: 25%;text-align: left !important;"><?=$v2->product_code." : ".$v2->product_name?>
+                                  </div>
+                                  <div class="divTableCell" style="width: 5%;"><center><?=$v2->product_amt?></div>
+                                  <div class="divTableCell" style="width: 5%;"><?=$v2->product_unit?></div>
+                                  </div> -->
+
+                                <?php 
+                                 $i++;
+
+                                   }
+                                 }
+
+                                 ?>
+                                  </div>
+                                  </div>
+                                  <?php
+
+                               }
+
+                             
+
+                               if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+                                  // แสดงยอดเงิน giveaway_voucher
+                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
+
+                               }
+                            }
+                          }
+
+                             if(!empty($check_giveaway)){
+                                    $rg2 = DB::select("select sum(giveaway_voucher) as giveaway_voucher from db_giveaway where giveaway_option_id_fk=2 and id in ($im); ");
+                                    if(@$rg2[0]->giveaway_voucher>0){
+                                       $giveaway_voucher_price = $rg2[0]->giveaway_voucher;
+                                       $product_name = 'แถม AiVoucher '.$rg2[0]->giveaway_voucher .' บาท ';
+                                       DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
+                                    }
+                                }
+
+                         }
+                      }
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-          if(@$check_giveaway){
-               // dd($id);
-               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_gv' ");
-               // dd($sGiveaway);
-
-                if(@$sGiveaway){
-
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'แถม AiVoucher',  null,  '' ,  '',  '',  ''); ");
-
-                      foreach ($sGiveaway as $key => $v) {
-
-                        $product_name = 
-                        ' &nbsp;&nbsp;&nbsp; - AiVoucher = 
-                        '.($v->gv_free*$v->free).' 
-                         บาท
-                        ';
-                          
-                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
-
-                       }
-                }
-                  
-         }
-// สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                        
-                                       
+
 
 $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
 // echo $cnt_all[0]->cnt;
@@ -857,8 +897,7 @@ if(!empty($db_orders[0]->action_user)){
         $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
     }
 
-  
-    
+
     $m = 1 ;
     for ($i=0; $i < $amt_page ; $i++) { 
         // DB::select(" UPDATE $TABLE SET a = '$branch_code' WHERE id = (($n*$i)+1) ; ");
@@ -971,6 +1010,8 @@ if(!empty($db_orders[0]->action_user)){
 
         $m++;
 
+
+
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 
@@ -989,7 +1030,16 @@ if(!empty($db_orders[0]->action_user)){
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
+            // if($giveaway_voucher_price>0){
+            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            //     }else{
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
+            //     }
+            // }else{
+                DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
+            // }
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
         }elseif($amt_page>1 && ($i+1)!=$amt_page){
@@ -1005,8 +1055,16 @@ if(!empty($db_orders[0]->action_user)){
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
-
+            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
+            // if($giveaway_voucher_price>0){
+            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            //     }else{
+            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
+            //     }
+            // }else{
+                DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
+            // }
             // หนเา
             DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
           }
@@ -1072,7 +1130,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 
 <!-- รายการสินค้า -->
 
-<?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>
+ <?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>
 
           <tr style="vertical-align: top;line-height: 10px !important;">
 
@@ -1134,7 +1192,6 @@ for ($j=0; $j < $amt_page ; $j++) {
 
     </table>
 
-
   <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;" >
     <tr>
       <td style="margin-left:33px !important;width:80%;font-size: 14px;">
@@ -1145,7 +1202,6 @@ for ($j=0; $j < $amt_page ; $j++) {
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
     </tr>
-
 
     <tr>
       <td colspan="4" style="margin-left:33px !important;width:80%;font-size: 14px;">
@@ -1210,5 +1266,4 @@ for ($j=0; $j < $amt_page ; $j++) {
        <?php echo @$DB[0]->g ; ?>
  </div>
 
-<?php } ?>
 <?php } ?>

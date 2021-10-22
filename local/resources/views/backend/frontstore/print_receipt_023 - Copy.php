@@ -375,6 +375,7 @@ if(!empty($gift_voucher)){
 }
 
 
+
 $ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
 // ของแถม
 $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$sRow->pv_total);
@@ -382,56 +383,126 @@ $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_gi
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-          if(@$check_giveaway){
-               // dd($id);
-               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_product' ");
-               // dd($sGiveaway);
+$giveaway_voucher_price = 0;
+$giveaway_t1 = '';
 
-                if(@$sGiveaway){
+                      if(@$check_giveaway){
 
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'สินค้าแถม',  null,  '' ,  '',  '',  ''); ");
+                         for ($i=0; $i < count($check_giveaway) ; $i++) { 
 
-                      foreach ($sGiveaway as $key => $v) {
+                          if(@$check_giveaway[$i]['status']=='success'){
+                              $arr = [];
+                              foreach ($check_giveaway as $key => $v) {
+                                  // print_r($v);
+                                  if($v['status']=='success'){
+                                    // print_r($v['gv_id']);
+                                    array_push($arr,$v['gv_id']);
+                                  }
+                              }
+                              $im = implode(',',$arr);
+                          }
+                 
+                         }
+                         // dd($im);
+                         if(@$im){
+                            $rg = DB::select("select * from db_giveaway where id in ($im); ");
+                          // dd($rg);
 
-                        $product_name = 
-                        ' &nbsp;&nbsp;&nbsp; - '.$v->product_name.' = 
-                        '.($v->product_amt*$v->free).' 
-                        '.$v->product_unit_name.'
-                        ';
-                          
-                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
 
-                       }
-                }
-                  
-         }
+                            if(!empty($check_giveaway)){
+                                $rg1 = DB::select("select * from db_giveaway where giveaway_option_id_fk=1 and id in ($im); ");
+                                if(@$rg1){
+                                $product_name = 'ได้รับสินค้าแถม';
+                                DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
+                                }
+                            }
+
+
+                          if(@$rg){
+
+                            foreach ($rg as $key => $v) {
+                               // echo $v->giveaway_option_id_fk;
+                              
+                                if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+                                 // $giveaway_t1 .= 'ได้รับสินค้าแถม';
+                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* ได้รับสินค้าแถม </span> ';
+
+                                 $rg_p = DB::select(" 
+
+                                  SELECT db_giveaway_products.*,
+                                  (SELECT product_code FROM products WHERE id=db_giveaway_products.product_id_fk limit 1) as product_code,
+                                  (SELECT product_name FROM products_details WHERE product_id_fk=db_giveaway_products.product_id_fk and lang_id=1 limit 1) as product_name,
+                                  dataset_product_unit.product_unit
+                                  FROM
+                                  db_giveaway_products
+                                  Left Join dataset_product_unit ON db_giveaway_products.product_unit = dataset_product_unit.id
+                                  WHERE giveaway_id_fk in (".$v->id.") ; ");
+
+                                 ?>
+
+                                  <div class="divTable">
+                                  
+                                 <div class="divTableBody">
+                                  <?php
+
+                                 if(@$rg_p){
+                                  $i = 1;
+                                  foreach ($rg_p as $key => $v2) {
+
+                                    $product_name = 
+                                    ' &nbsp;&nbsp;&nbsp; - '.$v2->product_code." : ".$v2->product_name.' = 
+                                    '.$v2->product_amt.' 
+                                    '.$v2->product_unit.'
+                                    ';
+                                      
+                                     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
+
+                                ?>
+
+                         <!--          <div class="divTableRow">
+                                  <div class="divTableCell" style="width: 2%;"><center><?=$i?>)</div>
+                                  <div class="divTableCell" style="width: 25%;text-align: left !important;"><?=$v2->product_code." : ".$v2->product_name?>
+                                  </div>
+                                  <div class="divTableCell" style="width: 5%;"><center><?=$v2->product_amt?></div>
+                                  <div class="divTableCell" style="width: 5%;"><?=$v2->product_unit?></div>
+                                  </div> -->
+
+                                <?php 
+                                 $i++;
+
+                                   }
+                                 }
+
+                                 ?>
+                                  </div>
+                                  </div>
+                                  <?php
+
+                               }
+
+                             
+
+                               if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+                                  // แสดงยอดเงิน giveaway_voucher
+                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
+
+                               }
+                            }
+                          }
+
+                             if(!empty($check_giveaway)){
+                                    $rg2 = DB::select("select sum(giveaway_voucher) as giveaway_voucher from db_giveaway where giveaway_option_id_fk=2 and id in ($im); ");
+                                    if(@$rg2[0]->giveaway_voucher>0){
+                                       $giveaway_voucher_price = $rg2[0]->giveaway_voucher;
+                                       $product_name = 'แถม AiVoucher '.$rg2[0]->giveaway_voucher .' บาท ';
+                                       DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
+                                    }
+                                }
+
+                         }
+                      }
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-          if(@$check_giveaway){
-               // dd($id);
-               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_gv' ");
-               // dd($sGiveaway);
-
-                if(@$sGiveaway){
-
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'แถม AiVoucher',  null,  '' ,  '',  '',  ''); ");
-
-                      foreach ($sGiveaway as $key => $v) {
-
-                        $product_name = 
-                        ' &nbsp;&nbsp;&nbsp; - AiVoucher = 
-                        '.($v->gv_free*$v->free).' 
-                         บาท
-                        ';
-                          
-                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
-
-                       }
-                }
-                  
-         }
-// สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                                       
                                        
 
 $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
