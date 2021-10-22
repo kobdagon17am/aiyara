@@ -48,6 +48,13 @@ class Alert extends Model
 			<b>Message : </b> '.$e.'<br/>'
 		);
 	}
-
+  public static function myTxtDel($e)
+	{
+		return array(
+			'status'=>'success',
+			'msg' =>'
+			<b>Message : </b> '.$e.'<br/>'
+		);
+	}
 
 }

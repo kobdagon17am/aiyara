@@ -83,14 +83,30 @@ class Giveaway_productsController extends Controller
       }
     }
 
-    public function destroy($id)
-    {
-      $sRow = \App\Models\Backend\Giveaway_products::find($id);
-      if( $sRow ){
-        $sRow->forceDelete();
-      }
-      return response()->json(\App\Models\Alert::Msg('success'));
-    }
+        public function show($id)
+        {
+          $sRow = \App\Models\Backend\Giveaway_products::find($id);
+          // dd($sRow->giveaway_id_fk);
+          if( $sRow ){
+            $sRow->deleted_at = date('Y-m-d H:i:s');
+            $sRow->save();
+            // $sRow->forceDelete();
+              return redirect()->to(url("backend/giveaway/".$sRow->giveaway_id_fk."/edit"))->with(['alert'=>\App\Models\Alert::myTxtDel("ทำการลบรายการสินค้าแถมเรียบร้อยแล้ว")]);
+          }
+           // return response()->json(\App\Models\Alert::Msg('success'));
+
+           // return back()->with(['success' => 'ทำการลบข้อมูลเรียบร้อย']);
+        }
+
+
+    // public function destroy($id)
+    // {
+    //   $sRow = \App\Models\Backend\Giveaway_products::find($id);
+    //   if( $sRow ){
+    //     $sRow->forceDelete();
+    //   }
+    //   return response()->json(\App\Models\Alert::Msg('success'));
+    // }
 
     public function Datatable(){
       $sTable = \App\Models\Backend\Giveaway_products::search()->orderBy('id', 'asc');

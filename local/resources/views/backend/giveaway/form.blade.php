@@ -537,7 +537,8 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.giveaway_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.giveaway_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.giveaway_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>'
                       ).addClass('input');
                     }
                 });
@@ -546,6 +547,12 @@
                 });
             });
 
+function go_to_rem(id){
+      if (confirm('Are you sure?')) {
+          window.location.replace("{{ route('backend.giveaway_products.index') }}/"+id)
+      }
+    }
+    
 
             </script>
 
