@@ -1966,7 +1966,7 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  '.trans('message.all_payment_list').' ('.$sD3.')  
+                  '.trans('message.all_payment_list').' ('.$sD3.')  (ไม่รวมบิล <font color=red>* รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
                 </th></tr>
                 <tr>
                   <th width="10%">'.trans('message.seller').'</th>
@@ -2797,7 +2797,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                       </tr>
 
                       <tr>
-                        <th scope="row">'.trans('message.total').'</th>
+                        <th scope="row">'.trans('message.total').'<br>(ยกเว้นรายการ <font color=red>* รอดำเนินการต่อ </font>)</th>
                         <td style="text-align: right;font-weight:bold;">'.@$cnt_05.' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$pv_total_05,0).' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$sum_price_05,2).' </td>
@@ -3046,7 +3046,8 @@ ORDER BY created_at DESC
           // return $purchase_type[0]->orders_type;
           return @$approve_status[0]->txt_desc;
         }else{
-          return "No completed";
+          // return "No completed";
+          return "<font color=red>* รอดำเนินการต่อ</font>";
         }
      
       })

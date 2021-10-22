@@ -375,9 +375,9 @@ if(!empty($gift_voucher)){
 }
 
 
-$ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
+$ThisCustomer = DB::select(" select * from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
 // ของแถม
-$check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$sRow->pv_total);
+$check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,@$ThisCustomer[0]->user_name,@$sRow->pv_total);
 // dd(@$check_giveaway);
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -865,7 +865,7 @@ if(!empty($db_orders[0]->action_user)){
         DB::select(" UPDATE $TABLE SET a = '&nbsp;' WHERE id = (($n*$i)+1) ; ");
         DB::select(" UPDATE $TABLE SET a = '$cus_user_name' WHERE id = (($n*$i)+2) ; ");
         DB::select(" UPDATE $TABLE SET a = '$cus_name' WHERE id = (($n*$i)+3) ; ");
-        DB::select(" UPDATE $TABLE SET a = '$sRow->code_order' WHERE id = (($n*$i)+4) ; ");
+        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->code_order?@$sRow->code_order:0)."' WHERE id = (($n*$i)+4) ; ");
         DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$sRow->created_at))."' WHERE id = (($n*$i)+5) ; ");
 
         // รายการสินค้า

@@ -2731,7 +2731,15 @@
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
           e.preventDefault();
 
+          var v = $(e.target).closest('.input-group').find('input.quantity').val();
           var limited_amt_person = $(this).attr('limited_amt_person');
+          // alert(v+":"+limited_amt_person);
+
+          if(v>=limited_amt_person){
+            alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ "+limited_amt_person);
+            $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
+          }
+
           $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
 
           const isNegative = $(e.target).closest('.btn-minus-product-pro').is('.btn-minus-product-pro');
@@ -2739,6 +2747,8 @@
           if (input.is('input')) {
             input[0][isNegative ? 'stepDown' : 'stepUp']()
           }
+
+
         })
 
 
@@ -2879,6 +2889,7 @@
           var v = parseInt($(this).val()-1);
           $(this).val(v);
           $(this).closest(".input-group-prepend").find(".btn-plus").trigger('click');
+          $(this).closest(".input-group-prepend").find(".btn-plus-product-pro").trigger('click');
           return false;
         });
 
