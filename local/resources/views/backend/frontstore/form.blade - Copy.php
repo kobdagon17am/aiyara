@@ -615,18 +615,122 @@
           </div>
 
 
-          <div class="form-group row " style="margin-left: 1%;" >
-            <div class="col-md-10">
-       
+          <div class="form-group row " style="margin-left: 5%;" >
+            <div class="col-md-4">
+
+             
+
+                  @if(@$sRow->purchase_type_id_fk!=6)
+                     
+                     @IF(@$check_giveaway)
+
+
+
+                      <?php
+                      // dd($check_giveaway);
+
+                      if(@$check_giveaway){
+
+                         for ($i=0; $i < count($check_giveaway) ; $i++) { 
+
+                          if(@$check_giveaway[$i]['status']=='success'){
+                              $arr = [];
+                              foreach ($check_giveaway as $key => $v) {
+                                  // print_r($v);
+                                  if($v['status']=='success'){
+                                    // print_r($v['gv_id']);
+                                    array_push($arr,$v['gv_id']);
+                                  }
+                              }
+                              $im = implode(',',$arr);
+                          }
+                 
+                         }
+                         // dd($im);
+                         if(@$im){
+                          $rg = DB::select("select * from db_giveaway where id in ($im); ");
+                          // dd($rg);
+                          if(@$rg){
+
+                            foreach ($rg as $key => $v) {
+                               // echo $v->giveaway_option_id_fk;
+                              
+                                if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+                                 echo '<span style="color:red;font-weight:bold;">* ได้รับสินค้าแถม </span> ';
+
+                                 $rg_p = DB::select(" 
+
+                                  SELECT db_giveaway_products.*,
+                                  (SELECT product_code FROM products WHERE id=db_giveaway_products.product_id_fk limit 1) as product_code,
+                                  (SELECT product_name FROM products_details WHERE product_id_fk=db_giveaway_products.product_id_fk and lang_id=1 limit 1) as product_name,
+                                  dataset_product_unit.product_unit
+                                  FROM
+                                  db_giveaway_products
+                                  Left Join dataset_product_unit ON db_giveaway_products.product_unit = dataset_product_unit.id
+                                  WHERE giveaway_id_fk in (".$v->id.") ; ");
+
+                                 ?>
+
+                                  <div class="divTable">
+                                  
+                                 <div class="divTableBody">
+                                  <?php
+
+                                 if(@$rg_p){
+                                  $i = 1;
+                                  foreach ($rg_p as $key => $v2) {
+
+                                ?>
+
+                                  <div class="divTableRow">
+                                  <div class="divTableCell" style="width: 2%;"><center><?=$i?>)</div>
+                                  <div class="divTableCell" style="width: 25%;text-align: left !important;"><?=$v2->product_code." : ".$v2->product_name?>
+                                  </div>
+                                  <div class="divTableCell" style="width: 5%;"><center><?=$v2->product_amt?></div>
+                                  <div class="divTableCell" style="width: 5%;"><?=$v2->product_unit?></div>
+                                  </div>
+                                 
+
+                                <?php 
+                                 $i++;
+
+                                   }
+                                 }
+
+                                 ?>
+                                  </div>
+                                  </div>
+                                  <?php
+
+                               }
+
+                               if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+                                  // แสดงยอดเงิน giveaway_voucher
+                                 echo '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
+
+                               }
+                            }
+                          }
+                         }
+                      }
+                                       
+                      ?>
+
+                @ENDIF
+                @ENDIF
+
+          </div>
+          </div>
+
            @if ($check_giveaway)
                      <?php $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
 
                           @if($check_giveaway_value['status'] == 'success')
 
-                          <h5 class="text-danger" style="margin-bottom: 0px;" >Promotion Free {{ $i++ }}</h5>
+                          <h5 class="text-danger">Promotion Free {{ $i++ }}</h4>
                             <div class="table-responsive p-3">
-                            <table class="table">
+                         <table class="table">
                                  <tr class="table-success">
                                      <td><strong>{{ $check_giveaway_value['rs']['name'] }} x
                                              [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
@@ -660,12 +764,7 @@
                             @endforeach
 
                      @endif
-
-            </div>
-          </div>
-
-
-
+                     
 
                 <div class="form-group row" style="display: none;">
                   <label for="" class="col-md-9 col-form-label"> Total : * </label>

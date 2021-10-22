@@ -539,9 +539,62 @@ class FrontstoreController extends Controller
       // dd($pv_total);
       $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
       // dd(@$check_giveaway);
+      // dd(@$check_giveaway[0]['status']);
+      // print_r($check_giveaway);
+      // dd($sRow->business_location_id_fk);
+      // dd($sRow->purchase_type_id_fk);
+      // dd($customer_pv);
+      // dd($pv_total);
+
+      // $giveaway_desc = [];
+  
+      // if($check_giveaway){
+      //    for ($i=0; $i < count($check_giveaway) ; $i++) { 
+
+      //     if(@$check_giveaway[$i]['status']=='success'){
+      //         $arr = [];
+      //         foreach ($check_giveaway as $key => $v) {
+      //             // print_r($v);
+      //             if($v['status']=='success'){
+      //               // print_r($v['gv_id']);
+      //               array_push($arr,$v['gv_id']);
+      //             }
+      //         }
+      //         $im = implode(',',$arr);
+      //     }
+ 
+      //    }
+      //    // dd($im);
+      //    if(@$im){
+      //     $rg = DB::select("select * from db_giveaway where id in ($im); ");
+      //     // dd($rg);
+      //     if($rg){
+
+      //       foreach ($rg as $key => $v) {
+      //          // echo $v->giveaway_option_id_fk;
+      //          if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+      //            // $arr_desc = '* มีสินค้าแถม';
+      //             array_push($giveaway_desc,'* มีสินค้าแถม');
+      //             array_push($giveaway_desc,$v->giveaway_option_id_fk);
+      //          }
+      //          if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+      //             // แสดงยอดเงิน giveaway_voucher
+      //            array_push($giveaway_desc,'* แถม GIFT VOUCHER '.$v->giveaway_voucher.' บาท');
+
+      //          }
+      //       }
+      //     }
+      //    }
+      // }
+      // dd($arr_desc);
+      // dd($check_giveaway);
 
       $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
 
+      // CourseCheckRegis::cart_check_register($value['id'], $value['quantity'],user_name);
+      // $chek_course = CourseCheckRegis::cart_check_register('1', '1',@$user_name);
+      // dd($sRow->customers_id_fk);
+      // dd($chek_course);
 
       $DATE_CREATED = date("Y-m-d",strtotime($sRow->created_at));
       $DATE_YESTERDAY = Carbon::yesterday()->format('Y-m-d');

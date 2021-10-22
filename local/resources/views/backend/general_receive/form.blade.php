@@ -119,7 +119,7 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group row d-none" id="what_import">
+              <div class="form-group row @if(@$sRow->product_in_cause_id_fk!='4') d-none @endif" id="what_import">
                 <label for="" class="col-md-3 col-form-label"> หมายเหตุ : * </label>
                 <div class="col-md-8">
                   <textarea name="description"  class='form-control' cols="30" rows="10">{{@$sRow->description}}</textarea>

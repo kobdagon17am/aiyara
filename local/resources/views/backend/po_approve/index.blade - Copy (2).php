@@ -58,49 +58,14 @@
         <div class="card">
             <div class="card-body">
 
-         
-
-@if(@\Auth::user()->permission==1)
-
               <div class="row" >
+
                  <div class="col-md-6 " >
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
                         <div class="col-md-9">
                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                               <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
-                                @endforeach
-                              @endif
-                            </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                            <div class="col-md-9">
-
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
-                              </select>
-
-                            </div>
-                          </div>
-                    </div>
-               </div>
-@ELSE
-
-
-              <div class="row" >
-                 <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
-                        <div class="col-md-9">
-                         <select  class="form-control select2-templating " disabled="" >
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
                                   <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
@@ -116,21 +81,28 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                                 <select  class="form-control select2-templating " disabled=""  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
+                                   @if($sPermission==1)
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @endif
                                   @endforeach
-                                 @endif
-                                </select>
+                                @endif
+                              </select>
 
                             </div>
                           </div>
                     </div>
+
                </div>
-
-@ENDIF
-
 
               <div class="row" >
                 <div class="col-md-6 " >
@@ -263,7 +235,7 @@
                         </div>
                       </div>
 
-                      <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                      <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;">
                       </table>
 
                   </div>
@@ -295,7 +267,7 @@
 <script>
 var oTable;
 $(function() {
-    oTable = $('#data-table').DataTable({
+    oTable = $('#data-table-01').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
@@ -355,7 +327,7 @@ $(function() {
             }},
 
             {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+            // {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
               if(d=='true'){
                   return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
@@ -442,7 +414,7 @@ $(function() {
             {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
             {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
             {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+            // {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
             {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
@@ -570,7 +542,7 @@ $(function() {
             $(document).on('click', '.btnSearch01', function(event) {
                   event.preventDefault();
 
-                  $('#data-table').DataTable().clear();
+                  $('#data-table-01').DataTable().clear();
 
                   $(".myloading").show();
                   $(".div_datatable_01").show();
@@ -779,7 +751,7 @@ $(function() {
                                       {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
                                       {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
                                       {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                                      {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                                      // {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
                                       {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
                                       {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],

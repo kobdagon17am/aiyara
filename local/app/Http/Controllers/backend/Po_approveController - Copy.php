@@ -11,22 +11,13 @@ class Po_approveController extends Controller
 
     public function index(Request $request)
     {
-        // $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
-        //     return $query->where('id', auth()->user()->business_location_id_fk);
-        // })->get();
-        // $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
-        //      return $query->where('id', auth()->user()->branch_id);
-        //  })->get();
-        $sBusiness_location = \App\Models\Backend\Business_location::get();
-        $sBranchs = \App\Models\Backend\Branchs::get();
-
-
-        if(@\Auth::user()->permission==1){
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
-        }else{
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order,created_at desc limit 500 ");
-        }
-
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+             return $query->where('id', auth()->user()->branch_id);
+         })->get();
+        $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
 
         return View('backend.po_approve.index')->with(
@@ -234,26 +225,33 @@ class Po_approveController extends Controller
        $User_branch_id = \Auth::user()->branch_id_fk;
 
 
-
-        if(@\Auth::user()->permission==1){
-
-            if(!empty( $req->business_location_id_fk) ){
-                $business_location_id_fk = " and db_orders.business_location_id_fk = ".$req->business_location_id_fk." " ;
-            }else{
-                $business_location_id_fk = "";
-            }
-
-            if(!empty( $req->branch_id_fk) ){
-                $branch_id_fk = " and db_orders.branch_id_fk = ".$req->branch_id_fk." " ;
-            }else{
-                $branch_id_fk = "";
-            }
-
+        if(!empty( $req->business_location_id_fk) ){
+            // $business_location_id_fk = " and db_orders.business_location_id_fk =  ".$req->business_location_id_fk ;
+            $business_location_id_fk = " and db_orders.business_location_id_fk = 2 " ;
         }else{
+            $business_location_id_fk = "";
+        }
 
-            $business_location_id_fk = " and db_orders.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
-            $branch_id_fk = " and db_orders.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+        if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
+            $branch_id_fk = " and db_orders.branch_id_fk =  ".$req->branch_id_fk ;
+        }else{
+            $branch_id_fk = "";
+        }
 
+        if($sPermission==1){
+            if(!empty($req->branch_id_fk)){
+             $branch_id_fk = " and db_orders.branch_id_fk =  ".$req->branch_id_fk ;
+            }else{
+             $branch_id_fk = "";
+            }
+
+          }else{
+        
+                if($User_branch_id){
+                     $branch_id_fk = " and db_orders.branch_id_fk =  ".$User_branch_id."" ;
+                }else{
+                    $branch_id_fk = " and db_orders.branch_id_fk = '9999999999999999999' " ;
+                }
         }
 
 
@@ -287,30 +285,25 @@ class Po_approveController extends Controller
            $transfer_bill_approvedate = "";
         }
 
-        // return $transfer_bill_status;
+        // return $business_location_id_fk;
+        // return '289 = xxxx'.$business_location_id_fk." yyyyyyyyyyyyyyyyyy";
 
 // qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
 
+
        $sTable =     DB::select("
 
-select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
-left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
-where
-pay_type_id_fk in (1,8,10,11,12) and
-`dataset_order_status`.`lang_id` = 1 and
-(`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
-`db_orders`.`id` != 0
+            select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+            left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
+            where
+            pay_type_id_fk in (1,8,10,11,12) and
+            `dataset_order_status`.`lang_id` = 1 and
+            (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+            `db_orders`.`id` != 0
 
-$business_location_id_fk
-$branch_id_fk
-$doc_id
-$transfer_amount_approver
-$transfer_bill_status
-$created_at
-$transfer_bill_approvedate
+            
 
-
-ORDER BY updated_at DESC
+            ORDER BY updated_at DESC
 
 
                 ");
@@ -370,18 +363,19 @@ ORDER BY updated_at DESC
 
               })
              ->escapeColumns('approval_amount_transfer')
-             ->addColumn('transfer_amount_approver', function($row) {
-                if(@$row->transfer_amount_approver>0 && @$row->transfer_amount_approver!=""){
 
-                    $sD = DB::select(" select * from ck_users_admin where id=".$row->transfer_amount_approver." ");
-                    return @$sD[0]->name;
+             // ->addColumn('transfer_amount_approver', function($row) {
+             //    if(@$row->transfer_amount_approver>0 && @$row->transfer_amount_approver!=""){
 
-                }else{
-                    return "-";
-                }
+             //        $sD = DB::select(" select * from ck_users_admin where id=".$row->transfer_amount_approver." ");
+             //        return @$sD[0]->name;
 
-              })
-             ->escapeColumns('transfer_amount_approver')
+             //    }else{
+             //        return "-";
+             //    }
+
+             //  })
+             // ->escapeColumns('transfer_amount_approver')
 
             ->addColumn('transfer_bill_status', function ($row) {
                 if(!empty($row->transfer_bill_status)){

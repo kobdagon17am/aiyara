@@ -142,7 +142,7 @@
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> สาเหตุที่นำออก : * </label>
                             <div class="col-md-8">
-                              <select name="product_out_cause_id_fk" class="form-control select2-templating " required >
+                              <select name="product_out_cause_id_fk" class="form-control select2-templating " id='export' required onchange="g_export('export')" >
                                 <option value="">Select</option>
                                   @if(@$Product_out_cause)
                                     @foreach(@$Product_out_cause AS $r)
@@ -154,7 +154,12 @@
                               </select>
                             </div>
                           </div>
-
+                          <div class="form-group row @if(@$sRow->product_in_cause_id_fk!='5') d-none @endif" id="what_export">
+                            <label for="" class="col-md-3 col-form-label"> หมายเหตุ : * </label>
+                            <div class="col-md-8">
+                              <textarea name="description"  class='form-control' cols="30" rows="10">{{@$sRow->description}}</textarea>
+                            </div>
+                          </div>
 
                           <div class="form-group row">
                             <label for="receive_person" class="col-md-3 col-form-label">ผู้รับ (นำออกไปให้ใคร) : *</label>
@@ -312,7 +317,15 @@
 
 <script type="text/javascript">
 
-
+function g_export(id){
+  
+    var a = document.getElementById(id).value; // alert(a);
+    if(a==5){
+      $('#what_export').removeClass('d-none');
+    }else{
+      $('#what_export').addClass('d-none');
+    }
+  }
 
        $('#business_location_id_fk').change(function(){
 

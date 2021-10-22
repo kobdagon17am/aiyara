@@ -404,28 +404,51 @@ class Add_ai_cashController extends Controller
 
        // dd($User_branch_id);
 
-        if(!empty($req->business_location_id_fk)){
-           $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
-        }else{
-           $w01 = "";
-        }
+        // if(!empty($req->business_location_id_fk)){
+        //    $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
+        // }else{
+        //    $w01 = "";
+        // }
 
 
-          if($sPermission==1){
-            if(!empty($req->branch_id_fk)){
-             $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+        //   if($sPermission==1){
+        //     if(!empty($req->branch_id_fk)){
+        //      $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+        //     }else{
+        //      $w02 = "" ;
+        //     }
+
+        //   }else{
+        
+        //         if($User_branch_id){
+        //          $w02 = " AND db_add_ai_cash.branch_id_fk = ".$User_branch_id." " ;
+        //         }else{
+        //           $w02 =  " AND db_add_ai_cash.branch_id_fk = '999999999999' " ;
+        //         }
+        // }
+
+
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $w01 = " and db_add_ai_cash.business_location_id_fk = ".$req->business_location_id_fk." " ;
             }else{
-             $w02 = "" ;
+                $w02 = "";
             }
 
-          }else{
-        
-                if($User_branch_id){
-                 $w02 = " AND db_add_ai_cash.branch_id_fk = ".$User_branch_id." " ;
-                }else{
-                  $w02 =  " AND db_add_ai_cash.branch_id_fk = '999999999999' " ;
-                }
+            if(!empty( $req->branch_id_fk) ){
+                $w02 = " and db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $w02 = "";
+            }
+
+        }else{
+
+            $w01 = " and db_add_ai_cash.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $w02 = " and db_add_ai_cash.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
         }
+
 
         if(!empty($req->customer_id_fk)){
            $w03 = " AND db_add_ai_cash.customer_id_fk LIKE '%".$req->customer_id_fk."%'  " ;
@@ -560,18 +583,39 @@ class Add_ai_cashController extends Controller
        $w06 = "";
        $w07 = "";
 
-        if(!empty($req->business_location_id_fk)){
-           $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
-        }else{
-           $w01 = "";
-        }
+        // if(!empty($req->business_location_id_fk)){
+        //    $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
+        // }else{
+        //    $w01 = "";
+        // }
 
-        if(!empty($req->branch_id_fk)){
-           $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
-        }else{
-           $w02 = "" ;
-        }
+        // if(!empty($req->branch_id_fk)){
+        //    $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+        // }else{
+        //    $w02 = "" ;
+        // }
 
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $w01 = " and db_add_ai_cash.business_location_id_fk = ".$req->business_location_id_fk." " ;
+            }else{
+                $w02 = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $w02 = " and db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $w02 = "";
+            }
+
+        }else{
+
+            $w01 = " and db_add_ai_cash.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $w02 = " and db_add_ai_cash.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+        }
+        
         if(!empty($req->doc_id)){
            $w03 = " AND db_add_ai_cash.id ='".$req->doc_id."'  " ;
         }else{

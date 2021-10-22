@@ -121,6 +121,7 @@ class General_takeoutController extends Controller
 
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_out_cause_id_fk    = request('product_out_cause_id_fk');
+          $sRow->description    = request('description');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');

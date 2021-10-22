@@ -58,49 +58,14 @@
         <div class="card">
             <div class="card-body">
 
-         
-
-@if(@\Auth::user()->permission==1)
-
               <div class="row" >
+
                  <div class="col-md-6 " >
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
                         <div class="col-md-9">
                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                               <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
-                                @endforeach
-                              @endif
-                            </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                            <div class="col-md-9">
-
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
-                              </select>
-
-                            </div>
-                          </div>
-                    </div>
-               </div>
-@ELSE
-
-
-              <div class="row" >
-                 <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
-                        <div class="col-md-9">
-                         <select  class="form-control select2-templating " disabled="" >
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
                                   <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
@@ -116,21 +81,28 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                                 <select  class="form-control select2-templating " disabled=""  >
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
+                                   @if($sPermission==1)
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
+                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                                    @endif
+                                    @endif
                                   @endforeach
-                                 @endif
-                                </select>
+                                @endif
+                              </select>
 
                             </div>
                           </div>
                     </div>
+
                </div>
-
-@ENDIF
-
 
               <div class="row" >
                 <div class="col-md-6 " >
@@ -263,7 +235,7 @@
                         </div>
                       </div>
 
-                      <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                      <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;">
                       </table>
 
                   </div>
@@ -281,7 +253,7 @@
                         </div>
                       </div>
 
-                      <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                   <!--    <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
 
                   </div>
               </div>
@@ -295,15 +267,16 @@
 <script>
 var oTable;
 $(function() {
-    oTable = $('#data-table').DataTable({
+    oTable = $('#data-table-01').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
         // scroller: true,
         // scrollCollapse: true,
-        "info":     false,
+        "info":     true,
         scrollX: true,
         ordering: false,
+        destroy: true,
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
@@ -355,7 +328,7 @@ $(function() {
             }},
 
             {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+            // {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
             {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
               if(d=='true'){
                   return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
@@ -393,100 +366,6 @@ $(function() {
 
 
 
-
-var oTable2;
-$(function() {
-    oTable2 = $('#data-table-02').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        // scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 25,
-        ajax: {
-          url: '{{ route('backend.add_ai_cash_02.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
-
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
-            {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
-            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
-            {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
-            {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
-            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
-            {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w60'},
-        ],
-        rowCallback: function(nRow, aData, dataIndex){
-
-          if(aData['transfer_bill_status']==5){
-            for (var i = 0; i < 6; i++) {
-              $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
-            }
-            // $('td:last-child', nRow).html('-ยกเลิก-');
-            $('td:last-child', nRow).html('-');
-
-          }else{
-
-
-              var sPermission = "<?=\Auth::user()->permission?>";
-              var sU = sessionStorage.getItem("sU");
-              var sD = sessionStorage.getItem("sD");
-              if(sPermission==1){
-                sU = 1;
-                sD = 1;
-              }
-              var str_U = '';
-              if(sU=='1'){
-                str_U = '<a href="{{ URL('backend/po_approve/form_aicash') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-              }
-              var str_D = '';
-              // if(sD=='1'){
-              //   str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
-              // }
-              if(sU!='1' && sD!='1'){
-                 $('td:last-child', nRow).html('-');
-              }else{
-                $('td:last-child', nRow).html( str_U ).addClass('input');
-              }
-
-
-          }
-
-        }
-    });
-
-
-});
 
 
   </script>
@@ -570,13 +449,13 @@ $(function() {
             $(document).on('click', '.btnSearch01', function(event) {
                   event.preventDefault();
 
-                  $('#data-table').DataTable().clear();
+                  $('#data-table-01').DataTable().clear();
 
                   $(".myloading").show();
                   $(".div_datatable_01").show();
                   $(".div_datatable_02").hide();
 
-                  var business_location_id_fk = $('#business_location_id_fk').val();
+                  var business_location_id_fk = $('#business_location_id_fk').val(); alert(business_location_id_fk);
                   var branch_id_fk = $('#branch_id_fk').val();
                   var bill_type = $('#bill_type').val();
                   // alert(bill_type);
@@ -696,144 +575,6 @@ $(function() {
 
     </script>
 
-    <script>
-
-        $(document).ready(function() {
-
-            $(document).on('click', '.btnSearch02', function(event) {
-                  event.preventDefault();
-
-                  $('#data-table-02').DataTable().clear();
-
-                  $(".myloading").show();
-
-                  $(".div_datatable_02").show();
-                  $(".div_datatable_01").hide();
-
-                  var business_location_id_fk = $('#business_location_id_fk').val();
-                  var branch_id_fk = $('#branch_id_fk').val();
-                  var bill_type = $('#bill_type').val();
-                  var doc_id = $('#doc_id').val();
-                  // var customer_id_fk = $('#customer_id_fk').val();
-                  var bill_sdate = $('#bill_sdate').val();
-                  var bill_edate = $('#bill_edate').val();
-                  // var bill_status = $('#bill_status').val();
-                  var transfer_amount_approver = $('#transfer_amount_approver').val();
-                  var transfer_bill_status = $('#transfer_bill_status').val();
-                  var approve_sdate = $('#approve_sdate').val();
-                  var approve_edate = $('#approve_edate').val();
-
-                  if(business_location_id_fk==''){
-                    $('#business_location_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-                  // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-
-                   if(bill_type=='' || bill_type === null ){
-                    $('#bill_type').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-
-                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                        var oTable02;
-                        $(function() {
-                          $.fn.dataTable.ext.errMode = 'throw';
-
-                             oTable02 = $('#data-table-02').DataTable({
-                            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                processing: true,
-                                serverSide: true,
-                                scroller: true,
-                                destroy:true,
-                                ordering: false,
-                                ajax: {
-                                          url: '{{ route('backend.add_ai_cash_02.datatable') }}',
-                                          data :{
-                                            _token: '{{csrf_token()}}',
-                                                business_location_id_fk:business_location_id_fk,
-                                                branch_id_fk:branch_id_fk,
-                                                doc_id:doc_id,
-                                                bill_sdate:bill_sdate,
-                                                bill_edate:bill_edate,
-                                                transfer_amount_approver:transfer_amount_approver,
-                                                transfer_bill_status:transfer_bill_status,
-                                                approve_sdate:approve_sdate,
-                                                approve_edate:approve_edate,
-                                              },
-                                            method: 'POST',
-                                          },
-                                   columns: [
-                                      {data: 'id', title :'ID', className: 'text-center w50'},
-                                      {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-                                      {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
-                                      {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
-                                      {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
-                                      {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
-                                      {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
-                                      {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
-                                      {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
-                                      {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
-                                      {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
-                                      {data: 'id', title :'Tools', className: 'text-center w60'},
-                                  ],
-                                  rowCallback: function(nRow, aData, dataIndex){
-
-                                    if(aData['transfer_bill_status']==5){
-                                      for (var i = 0; i < 6; i++) {
-                                        $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
-                                      }
-                                      // $('td:last-child', nRow).html('-ยกเลิก-');
-                                      $('td:last-child', nRow).html('-');
-
-                                    }else{
-
-                                            var sPermission = "<?=\Auth::user()->permission?>";
-                                            var sU = sessionStorage.getItem("sU");
-                                            var sD = sessionStorage.getItem("sD");
-                                            if(sPermission==1){
-                                              sU = 1;
-                                              sD = 1;
-                                            }
-                                            var str_U = '';
-                                            if(sU=='1'){
-                                              str_U = '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                            }
-                                            var str_D = '';
-                                            if(sD=='1'){
-                                              str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
-                                            }
-                                            if(sU!='1' && sD!='1'){
-                                               $('td:last-child', nRow).html('-');
-                                            }else{
-                                              $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                            }
-
-
-                                    }
-
-                                  }
-                            });
-
-                        });
-
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-
-                setTimeout(function(){
-                   $(".myloading").hide();
-                }, 1500);
-
-
-            });
-          });
-
-    </script>
 
     <script>
        $('#business_location_id_fk').change(function(){
