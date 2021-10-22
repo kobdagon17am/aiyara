@@ -617,8 +617,9 @@
 
           <div class="form-group row " style="margin-left: 1%;" >
             <div class="col-md-10">
-       
+       <!-- แถม -->
            @if ($check_giveaway)
+                     <?php //dd($check_giveaway); ?>
                      <?php $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
 
@@ -2560,7 +2561,7 @@
           // alert(frontstore_id_fk);
           // alert(order_type);
 
-            $("#spinner_frame").show();
+            $('.myloading').show();
 
             var oTable;
             $(function() {
@@ -2648,7 +2649,7 @@
 
 
             $('#modalAddFromProductsList').on('focus', function () {
-                $("#spinner_frame").hide();
+                $('.myloading').hide();
             });
 
 
@@ -2681,7 +2682,9 @@
 
 
             $('#modalAddFromProductsList,#modalAddList').on('hidden.bs.modal', function () {
-                // $("#spinner_frame").show();
+                // $('.myloading').show();
+                    $('.myloading').hide();
+
                     setTimeout(function(){
                       window.location.reload(true);
                     },500);
@@ -2701,7 +2704,7 @@
             });
 
           $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
-                $("#spinner_frame").show();
+                // $('.myloading').show();
                 setTimeout(function(){
                   $("#addr_00").trigger('click');
                 },500);
@@ -2795,12 +2798,12 @@
                           // $(".label_money_cash").html("ยอด"+value.pay_type+" :");
                           $("#gift_voucher_cost").val(value.banlance);
                        });
-                       $("#spinner_frame").hide();
+                       $('.myloading').hide();
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
                       //  console.log(JSON.stringify(jqXHR));
                       //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                      $("#spinner_frame").hide();
+                      $('.myloading').hide();
                   }
               });
 
@@ -2903,9 +2906,9 @@
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       //  console.log(response);
+                        console.log(response);
                        //  console.log(frontstore_id_fk);
-                       // return false;
+                       return false;
                         var oTable;
 
                           $(function() {
@@ -3459,7 +3462,7 @@
           var category_id = $(this).data('value');
           // alert(category_id);
 
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
 
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var order_type = $("#purchase_type_id_fk").val();
@@ -3559,7 +3562,7 @@
                 }, 500);
 
                 $('#modalAddFromProductsList').on('focus', function () {
-                    $("#spinner_frame").hide();
+                    $('.myloading').hide();
                 });
 
             });
@@ -3581,7 +3584,7 @@
           $('#frmFrontstorelist').hide();
           $('.div-data-table-list-pro').show();
 
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
             var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
             var order_type = $("#purchase_type_id_fk").val();
             // alert(order_type);
@@ -3699,7 +3702,7 @@
           // return false;
 
           var txtSearchPro = $("#txtSearchPro").val();
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
           if(txtSearchPro==''){
             $("#txtSearchPro").focus();
             $(".myloading").hide();
@@ -3904,7 +3907,7 @@ $(document).ready(function() {
                         error: function(jqXHR, textStatus, errorThrown) {
                             //  console.log(JSON.stringify(jqXHR));
                             //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -3927,16 +3930,17 @@ $(document).ready(function() {
 
         $(document).on('change', '#amt', function(event) {
             event.preventDefault();
-            $("#spinner_frame").show();
+            $('.myloading').show();
             $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
+            setTimeout(function(){$(".btnSaveAddlist").trigger('click');},1000);
+            setTimeout(function(){$('.myloading').hide();},1000);
         });
 
         $(document).on('click', '.btnSaveAddlist', function(event) {
             event.preventDefault();
-            $("#spinner_frame").show();
+            $('.myloading').show();
             $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
+            setTimeout(function(){$('.myloading').hide();},1000);
         });
 
 
@@ -4074,7 +4078,7 @@ $(document).ready(function() {
 
                         var category_id = $(this).data('value');
 
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
 
                      setTimeout(function(){
 
@@ -4168,10 +4172,10 @@ $(document).ready(function() {
 
                               $("input[name=_method]").val('PUT');
                               // alert("A");
-                              // $("#spinner_frame").hide();
+                              // $('.myloading').hide();
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 
@@ -4190,7 +4194,7 @@ $(document).ready(function() {
 
 
                 $('#data-table-list').on('focus', function () {
-                    $("#spinner_frame").hide();
+                    $('.myloading').hide();
                 });
 
 
@@ -4422,7 +4426,7 @@ $(document).ready(function() {
 
                     if(v!=5){
 
-                      $("#spinner_frame").show();
+                      $('.myloading').show();
                       $(".bg_addr").css("background-color", "");
                       $(this).closest('.bg_addr').css("background-color", "#00e673");
 
@@ -4442,7 +4446,7 @@ $(document).ready(function() {
 
            $('.ShippingCalculate02').on('click', function(e) {
 
-                $("#spinner_frame").show();
+                $('.myloading').show();
                     var province_id = $('.ShippingCalculate02').attr('province_id');
                     fnShippingCalculate(province_id);
                     //fnGetDBfrontstore();
@@ -4459,7 +4463,7 @@ $(document).ready(function() {
 
 
                  $('#modalAddFromPromotion,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
-                    $("#spinner_frame").show();
+                    $('.myloading').show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
                       $(".ShippingCalculate02").trigger('click');
@@ -4469,7 +4473,7 @@ $(document).ready(function() {
 
 
                  $('#modalAddFromProductsList').on('hidden.bs.modal', function () {
-                    // $("#spinner_frame").show();
+                    // $('.myloading').show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
                       $(".ShippingCalculate02").trigger('click');
@@ -4528,7 +4532,7 @@ $(document).ready(function() {
 
                           $('.div_cost').show();
                          }
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                         }
                       });
 
@@ -4552,11 +4556,11 @@ $(document).ready(function() {
 
                             }
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -4588,10 +4592,10 @@ $(document).ready(function() {
                             $("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
                             //fnGetDBfrontstore();
                             $("input[name=_method]").val('PUT');
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
         }
@@ -4845,21 +4849,21 @@ $(document).ready(function() {
 
               $(document).on('change', '#fee', function(event) {
                     event.preventDefault();
-                    $("#spinner_frame").show();
+                    $('.myloading').show();
                     $('#credit_price').attr('required', true);
                     setTimeout(function(){
                       $('#credit_price').focus();
-                      $("#spinner_frame").hide();
+                      $('.myloading').hide();
                     });
                 });
 
               $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
                     event.preventDefault();
-                    $("#spinner_frame").show();
+                    $('.myloading').show();
                     $('#transfer_price').attr('required', true);
                     setTimeout(function(){
                         // $('#transfer_price').focus();
-                        $("#spinner_frame").hide();
+                        $('.myloading').hide();
                     });
                 });
 
@@ -4880,7 +4884,7 @@ $(document).ready(function() {
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
                         // event.preventDefault();
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
 
                         var pay_type_id_fk = $("#pay_type_id_fk").val();
                         localStorage.setItem('pay_type_id_fk', pay_type_id_fk);
@@ -4982,14 +4986,14 @@ $(document).ready(function() {
                               alert("! กรุณา กรอกยอด Ai Voucher ");
                               $(this).val('').select2();
                               $("#gift_voucher_price").focus();
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                               return false;
                             }
 
                         }
 
                         if(pay_type_id_fk==''){
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           return false;
                         }
 
@@ -5170,13 +5174,13 @@ $(document).ready(function() {
                                 $('.class_btnSave').removeAttr( "disabled" );
                                 $('.class_btnSave').show();
 
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
                               //  console.log(JSON.stringify(jqXHR));
                               //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5194,7 +5198,7 @@ $(document).ready(function() {
       $(document).on('change', '.CalPrice', function(event) {
 
               event.preventDefault();
-              $("#spinner_frame").show();
+              $('.myloading').show();
 
               var id = "{{@$sRow->id}}";
 
@@ -5209,7 +5213,7 @@ $(document).ready(function() {
                   $("#cash_pay").val(0);
                   $("#cash_price").val(0);
                   $("#transfer_price").focus();
-                  $("#spinner_frame").hide();
+                  $('.myloading').hide();
                   return false;
                 }
 
@@ -5218,7 +5222,7 @@ $(document).ready(function() {
               if(pay_type_id_fk==''){
                 $("#cash_price").val('');
                 $("#cash_pay").val('');
-                $("#spinner_frame").hide();
+                $('.myloading').hide();
                 $(".show_div_cash_pay").hide();
                 return false;
               }
@@ -5247,20 +5251,20 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $("#spinner_frame").hide();
+                                  $('.myloading').hide();
 
                                 });
 
                                  $("input[name=_method]").val('PUT');
 
 
-                               $("#spinner_frame").hide();
+                               $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
                               //  console.log(JSON.stringify(jqXHR));
                               //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5269,7 +5273,7 @@ $(document).ready(function() {
 
               $(document).on('change', '.CalPriceAicash', function(event) {
 
-                $("#spinner_frame").show();
+                $('.myloading').show();
 
                 var this_element = $(this).attr('id');
                 var aicash_remain = $('#aicash_remain').val();
@@ -5298,10 +5302,10 @@ $(document).ready(function() {
                                 $('.class_btnSave').show();
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5346,10 +5350,10 @@ $(document).ready(function() {
                                 });
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5381,7 +5385,7 @@ $(document).ready(function() {
                                // $.each(data,function(key,value){
                                //    if(value.ai_cash==0){
                                //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
-                               //       $("#spinner_frame").hide();
+                               //       $('.myloading').hide();
                                //    }
                                //  });
 
@@ -5389,10 +5393,10 @@ $(document).ready(function() {
                                  $("#credit_price").focus();
                               });
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5401,7 +5405,7 @@ $(document).ready(function() {
 
               $(document).on('change', '#member_id_aicash_select', function(event) {
 
-                  $("#spinner_frame").show();
+                  $('.myloading').show();
 
                       var member_id_aicash = $(this).val();
                       var frontstore_id_fk = $("#frontstore_id_fk").val();
@@ -5410,7 +5414,7 @@ $(document).ready(function() {
 
                       if(member_id_aicash==''){
                           alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           return false;
                       }
 
@@ -5432,7 +5436,7 @@ $(document).ready(function() {
                                   // $("#aicash_remain").val(value.ai_cash);
                                   if(value.ai_cash==0 || value.ai_cash=="0.00" ){
                                       // alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
-                                      $("#spinner_frame").hide();
+                                      $('.myloading').hide();
                                       $(".btnCalAddAicash").hide();
                                       $(".btnSave").attr("disabled", true);
                                       $("#aicash_price").attr("disabled", true);
@@ -5453,10 +5457,10 @@ $(document).ready(function() {
 
                                 });
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5467,7 +5471,7 @@ $(document).ready(function() {
 
               $(document).on('click', '.btnCalAddAicash', function(event) {
 
-                  $("#spinner_frame").show();
+                  $('.myloading').show();
 
                       var this_element = "aicash_price";
                               // alert(this_element);
@@ -5496,10 +5500,10 @@ $(document).ready(function() {
                                 $('.class_btnSave').show();
 
                                 $("input[name=_method]").val('PUT');
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5613,10 +5617,10 @@ $(document).ready(function() {
                                }
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -5728,13 +5732,13 @@ $(document).ready(function() {
 
                               $("input[name=_method]").val('PUT');
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
 
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
                                 //  console.log(JSON.stringify(jqXHR));
                                 //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 
@@ -5816,7 +5820,7 @@ $(document).ready(function() {
 
          $(document).on('change', '.amt_apply', function(event) {
             // event.preventDefault();
-             $("#spinner_frame").show();
+             $('.myloading').show();
              let amt_apply = $(this).val();
              let id_course = $(this).attr('id_course');
              let user_name = $(this).attr('user_name');
@@ -5841,12 +5845,12 @@ $(document).ready(function() {
                           alert("! ไม่สามารถสมัครคอร์สนี้ได้ เนื่องจากไม่เข้าเงื่อนไขเกณฑ์ที่กำหนด โปรดตรวจสอบอีกครั้ง");
                           $('.amt_apply').val('');
                           $('.amt_apply').focus();
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           $(".btnSaveCourse").prop('disabled', true);
                           return false;
                          }else{
                           $(".btnSaveCourse").prop('disabled', false);
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                          }
 
                     },
@@ -5861,7 +5865,7 @@ $(document).ready(function() {
 
          $(document).on('click', '.btnAddAiCashModal02', function(event) {
             event.preventDefault();
-             $("#spinner_frame").show();
+             $('.myloading').show();
             // var customer_id = "{{@$sRow->customers_id_fk}}";
             var customer_id = $("#member_id_aicash").val();
             var member_name_aicash = $("#member_name_aicash").val();
@@ -5870,7 +5874,7 @@ $(document).ready(function() {
 
             if(customer_id==''){
               alert("! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ");
-              $("#spinner_frame").hide();
+              $('.myloading').hide();
               return false;
             }
             var frontstore_id_fk = $("#frontstore_id_fk").val();
@@ -5899,11 +5903,11 @@ $(document).ready(function() {
                                   // / // console.log(result);
                                     if (result.value) {
                                      // $("form").submit();
-                                     // $("#spinner_frame").show();
+                                     // $('.myloading').show();
 
                                      // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                        $("#frm-main").valid();
-                                       $("#spinner_frame").hide();
+                                       $('.myloading').hide();
 
                                                    // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
                                         if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
@@ -5929,7 +5933,7 @@ $(document).ready(function() {
                                      // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
                                     }else{
-                                       $("#spinner_frame").hide();
+                                       $('.myloading').hide();
                                        return false;
                                     }
                               });
@@ -5987,7 +5991,7 @@ $(document).ready(function() {
     //  // สำหรับกรณี Autocomplete
     //  $( "#customer" ).autocomplete({
     //        source: function( request, response ) {
-    //          $("#spinner_frame").show();
+    //          $('.myloading').show();
     //          var txt = $('#customer').val();
     //          $.ajax({
     //           url: " {{ url('backend/ajaxGetCustomer') }} ",
@@ -6000,7 +6004,7 @@ $(document).ready(function() {
     //           success:function(data){
     //              // / // console.log(data);
     //              response( data );
-    //              $("#spinner_frame").hide();
+    //              $('.myloading').hide();
 
     //               $.each(data, function( index, value ) {
     //                     $('#customers_id_fk').val(value.id);
@@ -6141,7 +6145,7 @@ $(document).ready(function() {
          $(document).ready(function() {
 
                     $(document).on('change', '#customers_id_fk', function(event) {
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
                         var customer_id = $(this).val();
                          $.ajax({
                              type:'POST',
@@ -6161,7 +6165,7 @@ $(document).ready(function() {
                                               $(".btn_btnsave").attr("disabled", false);
                                             }
 
-                                            $("#spinner_frame").hide();
+                                            $('.myloading').hide();
                                     });
                             },
 
@@ -6172,7 +6176,7 @@ $(document).ready(function() {
 
              $(document).on('change', '.class_transfer_edit', function(event) {
 
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
                         $(".btnCalAddAicash").trigger('click');
                         $('.class_btnSave').addClass(' btnSave ');
                         $('.class_btnSave').removeAttr( "disabled" );
@@ -6192,7 +6196,7 @@ $(document).ready(function() {
           }
 
           $(document).on('submit', '#frm-main', function(event) {
-              $("#spinner_frame").show();
+              $('.myloading').show();
           });
 
           $.fn.toggleSelect2 = function(state) {

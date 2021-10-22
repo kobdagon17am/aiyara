@@ -321,15 +321,14 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
+// $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
+// dd($data);
 
-              // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
-              // dd($data);
+// $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A56');
+// dd($Check);
 
-      // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A56');
-      // dd($Check);
-
-      // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme('9','1','1','admin');
-      // dd($data);
+// $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme('9','1','1','admin');
+// dd($data);
 
 
 //       $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register_all(1,'A0000014');
@@ -341,7 +340,7 @@ class FrontstoreController extends Controller
 
 //          $arr = [];
 //           for ($i=0; $i < count(@$CourseCheckRegis) ; $i++) { 
-        
+
 //                $c = array_column($CourseCheckRegis,$i);
 //                foreach ($c as $key => $value) {
 //                 if($value['status'] == "fail"){
@@ -351,7 +350,7 @@ class FrontstoreController extends Controller
 //                }
 
 //                $im = implode(',',$arr);
-               
+
 //           }
 //           echo $im;
 
@@ -537,6 +536,7 @@ class FrontstoreController extends Controller
       // dd($sRow->business_location_id_fk);
       // dd($ThisCustomer[0]->user_name);
       // dd($pv_total);
+      // แถม
       $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
       // dd(@$check_giveaway);
 

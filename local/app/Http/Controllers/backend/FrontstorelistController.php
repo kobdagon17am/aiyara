@@ -8,6 +8,8 @@ use DB;
 use File;
 use PDO;
 use App\Models\Frontend\Product;
+use App\Http\Controllers\Frontend\Fc\GiveawayController;
+use App\Models\DbOrderProductsList;
 
 class FrontstorelistController extends Controller
 {
@@ -20,18 +22,19 @@ class FrontstorelistController extends Controller
     {
     }
 
-
     public function plusPromotion(Request $request)
     {
       // return($request->all());
       // dd();
       if(isset($request->promotion_id_fk_pro)){
 
+        $this->fnManageGiveaway(@$request->frontstore_id);
+
         for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-           $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+           $sFrontstore = \App\Models\Backend\Frontstore::find(@$request->frontstore_id);
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
 
@@ -126,6 +129,8 @@ class FrontstorelistController extends Controller
       // dd();
       if(isset($request->promotion_id_fk_pro)){
 
+        $this->fnManageGiveaway(@$request->frontstore_id);
+
         for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -182,16 +187,127 @@ class FrontstorelistController extends Controller
 
     }
 
+    public function fnManageGiveaway($frontstore_id)
+    {
+
+ // แถม 
+      if(!empty($frontstore_id)){
+
+            $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
+            // return  $sFrontstore->business_location_id_fk;
+            // return  $sFrontstore->pv_total;
+            // return  $sFrontstore->customers_id_fk;
+            // return  $sFrontstore->purchase_type_id_fk;
+            $sCustomer = \App\Models\Backend\Customers::find($sFrontstore->customers_id_fk);
+            // return $sCustomer->user_name;
+            // ลยก่อน ถ้าเข้าเงื่อนไขค่อยเพิ่มเข้าไปใหม่
+            DB::table('db_order_products_list_giveaway')->where('order_id_fk', '=', $sFrontstore->id)->delete();
+            DB::table('db_order_products_list')
+                  ->where('frontstore_id_fk', $sFrontstore->id)
+                  ->where('code_order', $sFrontstore->code_order)
+                  ->where('type_product', 'giveaway')
+                  ->where('add_from', '4')
+                  ->delete();
+
+            if (!empty($sFrontstore->business_location_id_fk) and !empty($sFrontstore->pv_total)) {
+                $check_giveaway = GiveawayController::check_giveaway($sFrontstore->purchase_type_id_fk, $sCustomer->user_name, $sFrontstore->pv_total);
+                // return $check_giveaway;
+                foreach ($check_giveaway as $value) {
+                  $insert_order_products_list_type_giveaway = new DbOrderProductsList();
+                    if ($value['status'] == 'success') {
+                        if ($value['rs']) {
+
+                             $_ch =DB::table('db_order_products_list')
+                                ->where('frontstore_id_fk', $sFrontstore->id)
+                                ->where('code_order', $sFrontstore->code_order)
+                                ->where('customers_id_fk', $sFrontstore->customers_id_fk)
+                                ->where('distribution_channel_id_fk', '2')
+                                ->where('giveaway_id_fk', $value['rs']['giveaway_id'])
+                                ->where('amt', $value['rs']['count_free'])
+                                ->where('type_product', 'giveaway')
+                                ->where('add_from', '4')
+                                ->get();
+                                if($_ch->count() == 0){
+                                      
+                                      $insert_order_products_list_type_giveaway->frontstore_id_fk = $sFrontstore->id;
+                                      $insert_order_products_list_type_giveaway->code_order = $sFrontstore->code_order;
+                                      $insert_order_products_list_type_giveaway->customers_id_fk = $sFrontstore->customers_id_fk;
+                                      $insert_order_products_list_type_giveaway->distribution_channel_id_fk = 2;
+                                      $insert_order_products_list_type_giveaway->giveaway_id_fk = $value['rs']['giveaway_id'];
+                                      $insert_order_products_list_type_giveaway->product_name = $value['rs']['name'];
+                                      $insert_order_products_list_type_giveaway->amt = $value['rs']['count_free'];
+                                      $insert_order_products_list_type_giveaway->type_product = 'giveaway';
+                                      $insert_order_products_list_type_giveaway->add_from = 4;
+                                      $insert_order_products_list_type_giveaway->save();
+                                }
+
+                                if ($value['rs']['type'] == 1) { //product แถมเป็นสินค้า
+
+                                    $product = DB::table('db_giveaway_products')
+                                        ->select('products_details.product_id_fk', 'products_details.product_name', 'dataset_product_unit.product_unit'
+                                            , 'dataset_product_unit.group_id as unit_id', 'db_giveaway_products.product_amt')
+                                        ->leftJoin('products_details', 'products_details.product_id_fk', '=', 'db_giveaway_products.product_id_fk')
+                                        ->leftJoin('dataset_product_unit', 'dataset_product_unit.group_id', '=', 'db_giveaway_products.product_unit')
+                                        ->where('db_giveaway_products.giveaway_id_fk', '=', $value['rs']['giveaway_id'])
+                                        ->where('products_details.lang_id', '=', $sFrontstore->business_location_id_fk)
+                                        ->where('dataset_product_unit.lang_id', '=', $sFrontstore->business_location_id_fk)
+                                        ->get();
+
+                                    foreach ($value['rs']['product'] as $giveaway_product) {
+
+                                        DB::table('db_order_products_list_giveaway')->insertOrignore([
+                                            'order_id_fk' => $sFrontstore->id,
+                                            'product_list_id_fk' => $insert_order_products_list_type_giveaway->id,
+                                            'giveaway_id_fk' => $value['rs']['giveaway_id'],
+                                            'code_order' => $sFrontstore->code_order,
+                                            'product_id_fk' => $giveaway_product->product_id_fk,
+                                            'product_name' => $giveaway_product->product_name,
+                                            'product_unit_id_fk' => $giveaway_product->unit_id,
+                                            'product_amt' => $giveaway_product->product_amt,
+                                            'product_unit_name' => $giveaway_product->product_unit,
+                                            'free' => $value['rs']['count_free'],
+                                            'type_product' => 'giveaway_product',
+                                        ]);
+                                    }
+
+                                } else { //gv แถมเป้นกิฟวอยเชอ
+
+                                    DB::table('db_order_products_list_giveaway')->insert([
+                                        'order_id_fk' => $sFrontstore->id,
+                                        'product_list_id_fk' => $insert_order_products_list_type_giveaway->id,
+                                        'product_name' => 'GiftVoucher',
+                                        'code_order' => $sFrontstore->code_order,
+                                        'giveaway_id_fk' => $value['rs']['giveaway_id'],
+                                        'product_amt' => 1,
+                                        'gv_free' => $value['rs']['gv'],
+                                        'free' => $value['rs']['count_free'],
+                                        'type_product' => 'giveaway_gv',
+
+                                    ]);
+                                }
+
+                        }
+                    }
+
+                }
+            }
+
+         }
+
+    }
 
 
     public function plus(Request $request)
     {
+      // return($request->all());
       // return($request->all());
       // return(count($request->product_id_fk));
       // return($request->quantity[0]);
       // dd();
 
       if(isset($request->product_plus)){
+
+        $this->fnManageGiveaway(@$request->frontstore_id);
 
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
@@ -723,6 +839,8 @@ class FrontstorelistController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
+
+            $this->fnManageGiveaway(@$request->frontstore_id);
 
             for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
