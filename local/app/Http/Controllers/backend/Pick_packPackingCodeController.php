@@ -277,9 +277,11 @@ class Pick_packPackingCodeController extends Controller
               $w = DB::select(" select * from ck_users_admin where id=".$row->who_cancel." ");
               $t = "ผู้ทำการยกเลิก ".$w[0]->name." : ".@$row->cancel_date;
 
+              }
+
               return "<span data-toggle='tooltip' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
 
-            }
+            
           }else{
             return @$sD[0]->txt_desc;
           }

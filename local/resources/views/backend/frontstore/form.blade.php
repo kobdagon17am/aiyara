@@ -618,12 +618,12 @@
           <div class="form-group row " style="margin-left: 1%;" >
             <div class="col-md-10">
        <!-- แถม -->
-           @if ($check_giveaway)
+           @if (!empty(@$check_giveaway))
                      <?php //dd($check_giveaway); ?>
                      <?php $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
 
-                          @if($check_giveaway_value['status'] == 'success')
+                          @if(@$check_giveaway_value['status'] == 'success')
 
                           <h5 class="text-danger" style="margin-bottom: 0px;" >Promotion Free {{ $i++ }}</h5>
                             <div class="table-responsive p-3">
@@ -1537,7 +1537,7 @@
 
 
                     <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
-                        <div class="divTableCell" ></div>
+                     <!--    <div class="divTableCell" ></div>
                         <div class="divTH">
                           <label for="" class="label_transfer_price" > หมายเหตุ : </label>
                         </div>
@@ -1547,7 +1547,7 @@
 
                         </div>
                          <div class="divTableCell">
-                        </div>
+                        </div> -->
                       </div>
 
 

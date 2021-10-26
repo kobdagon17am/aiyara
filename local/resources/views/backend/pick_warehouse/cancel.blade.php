@@ -219,15 +219,15 @@
           <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;"> </table>
 
 
-           <?php //echo $sUser[0]->status_sent ?>        
+           <?php  //echo $sUser[0]->status_sent ?>        
            <?php if($sUser[0]->status_sent<6){ ?>        
                 
-                        <div class="col-md-12 text-center  "  >
+                   <!--      <div class="col-md-12 text-center  "  >
                           <br>
                           <button type="submit" class="btn btn-danger btn-sm waves-effect font-size-16 btnCancelBill " >
                           x ยกเลิกใบเสร็จใบนี้
                           </button>
-                        </div>
+                        </div> -->
            <?php }else{ ?>     
 
                 <div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >

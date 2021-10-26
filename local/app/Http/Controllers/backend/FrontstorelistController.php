@@ -212,9 +212,12 @@ class FrontstorelistController extends Controller
             if (!empty($sFrontstore->business_location_id_fk) and !empty($sFrontstore->pv_total)) {
                 $check_giveaway = GiveawayController::check_giveaway($sFrontstore->purchase_type_id_fk, $sCustomer->user_name, $sFrontstore->pv_total);
                 // return $check_giveaway;
+
+                if(@$check_giveaway){
+
                 foreach ($check_giveaway as $value) {
                   $insert_order_products_list_type_giveaway = new DbOrderProductsList();
-                    if ($value['status'] == 'success') {
+                    if (@$value['status'] == 'success') {
                         if ($value['rs']) {
 
                              $_ch =DB::table('db_order_products_list')
@@ -287,6 +290,7 @@ class FrontstorelistController extends Controller
                                 }
 
                         }
+                    }
                     }
 
                 }

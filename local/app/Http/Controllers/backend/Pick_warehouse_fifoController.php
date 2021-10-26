@@ -96,7 +96,7 @@ class Pick_warehouse_fifoController extends Controller
           
           $orders_id_fk = array_filter($arr_00);
           $orders_id_fk = implode(",",$orders_id_fk);
-          // return $arr_00;
+          // return $orders_id_fk;
           // dd();
 
           $r_db_orders = DB::select(" SELECT * FROM db_orders WHERE id in ($orders_id_fk) ");
@@ -113,7 +113,6 @@ class Pick_warehouse_fifoController extends Controller
           $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($id) "); 
           // return $r_db_order_products_list;
           // return ($id);
-     
 
           // check กรณีสินค้าที่เกิดขจากการซื้อโปร ด้วย ถ้าซื้อโปร รหัสสินค้าจะไม่มีในฃตาราง db_order_products_list ต้อง join หาอีกที
 
@@ -226,7 +225,7 @@ class Pick_warehouse_fifoController extends Controller
     // return $r01[0]->invoice_code;
     // return $receipt;
     // return $r_db_orders;
-// dd();
+    // dd();
 
     if($r_db_orders){
 
@@ -620,6 +619,12 @@ class Pick_warehouse_fifoController extends Controller
                  if(count(@$ch_status_cancel)==0 || empty(@$ch_status_cancel)){
                     DB::select(" UPDATE db_pay_requisition_001 SET status_sent=1 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
                  }
+
+          // มีการยกเลิกตั้งแต่การจ่ายครั้งแรกเลย 
+           if($request->time_pay==1){
+              DB::select(" UPDATE db_pay_requisition_001 SET status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
+              DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=6,who_cancel=".@\Auth::user()->id.",cancel_date=now() WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
+            }
 
 
 
@@ -1153,9 +1158,9 @@ class Pick_warehouse_fifoController extends Controller
 
                                    $pn .=     
                                     '<div class="divTableRow">
-                                    <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
-                                    <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
-                                    <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;color:blue;"> '.$pay_this.' </div>
+                                    <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
+                                    <div class="divTableCell" style="width:200px;text-align:center;">'.$v_02->lot_number.' ['.$v_02->lot_expired_date.']</div>
+                                    <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;color:blue;">'.$pay_this.'</div>
                                     </div>
                                     ';
 
