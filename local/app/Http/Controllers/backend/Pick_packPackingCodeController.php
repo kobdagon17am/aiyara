@@ -64,7 +64,7 @@ class Pick_packPackingCodeController extends Controller
         $sTable = DB::select(" select * from db_pick_pack_packing_code where id=$request->id ");
 
       }else{
-        $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND `status`=1 ");
+        $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND `status`=1 order by updated_at desc ");
       }
       
       $sQuery = \DataTables::of($sTable);
@@ -76,16 +76,16 @@ class Pick_packPackingCodeController extends Controller
             return @$DP->packing_code;
       })      
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          $DP = DB::select(" select * from db_orders where id in (".$row->orders_id_fk.") ");
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {
-              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+              $Customer = DB::select(" select * from customers where id=".@$value->customers_id_fk." ");
               array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
             }
             $arr = implode(',', $array);
-            return $arr;
+            // return $arr;
+            return $array[0];
           }
       })
       ->addColumn('action_user_name', function($row) {
@@ -96,6 +96,29 @@ class Pick_packPackingCodeController extends Controller
           return '';
         }
       })
+
+      ->addColumn('receipt02', function($row) {
+        if(@$row->receipt!=''){
+            $r = explode(',',$row->receipt);
+            $t = ' <div class="invoice_code_list" data-toggle="tooltip" data-placement="top" title="คลิ้กเพื่อดูใบเสร็จทั้งหมด" style="cursor:pointer;" >';
+            if(count($r)>3){
+              for ($i=0; $i < 3 ; $i++) { 
+                 $t .= $r[$i].",";
+              }
+              $t .= "...";
+              $arr = [];
+              foreach ($r as $key => $value) {
+              array_push($arr,$value.'');
+              }
+              $arr_inv = implode(",",$arr);
+              return $t."</div>" .' <input type="hidden" class="arr_inv" value="'.$arr_inv.'"> ';
+            }else{
+              return @$row->receipt;
+            }
+        }
+      })
+      ->escapeColumns('receipt02')
+
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
@@ -162,6 +185,8 @@ class Pick_packPackingCodeController extends Controller
         $w03
         $w04
         $w05
+
+        ORDER BY updated_at DESC
 
         ");
 

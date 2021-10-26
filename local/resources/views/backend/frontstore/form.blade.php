@@ -1536,7 +1536,7 @@
 
 
 
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                    <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                         <div class="divTableCell" ></div>
                         <div class="divTH">
                           <label for="" class="label_transfer_price" > หมายเหตุ : </label>
@@ -2138,7 +2138,7 @@
 
                                                      
 
-                                                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                                                      <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH" >
                                                           <label >   </label>
                                                         </div>
@@ -2148,7 +2148,7 @@
                                                       </div>
 
 
-                                                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                                                      <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH">
                                                           <label > หมายเหตุ </label>
                                                         </div>

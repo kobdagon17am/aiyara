@@ -68,6 +68,10 @@
                                                 <img src="{{ $r->url }}/{{ @$r->file }}" width="200px"
                                                     class="grow">
                                                     <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+
+                                                     <input  type="text" class="form-control" name="note" placeholder="" value="หมายเหตุ : {{@$r->note}}" >
+
+
                                             @ELSE
                                                 <img src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
