@@ -88,8 +88,9 @@ class Giveaway_productsController extends Controller
           $sRow = \App\Models\Backend\Giveaway_products::find($id);
           // dd($sRow->giveaway_id_fk);
           if( $sRow ){
-            $sRow->deleted_at = date('Y-m-d H:i:s');
-            $sRow->save();
+            // $sRow->deleted_at = date('Y-m-d H:i:s');
+            // $sRow->save();
+            DB::select(" DELETE FROM db_giveaway_products WHERE id=$id ");
             // $sRow->forceDelete();
               return redirect()->to(url("backend/giveaway/".$sRow->giveaway_id_fk."/edit"))->with(['alert'=>\App\Models\Alert::myTxtDel("ทำการลบรายการสินค้าแถมเรียบร้อยแล้ว")]);
           }

@@ -118,6 +118,7 @@
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                         </button>
+                        
                     </div>
                         @endif
 
@@ -127,7 +128,6 @@
                                     <input name="id" value="{{ $sRow->id }}" type="hidden">
 
                                     {{ csrf_field() }}
-
 
                                     <div class="modal fade" id="confirm" tabindex="-1" role="dialog"
                                         aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
@@ -155,7 +155,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
 
 
                                                 <div class="col-md-12 mt-2 mb-2 text-left">

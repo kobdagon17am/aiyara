@@ -635,7 +635,6 @@
                                  </tr>
                                  @if ($check_giveaway_value['rs']['type'] == 1)
                                      {{-- Product --}}
-                                     <?php //dd($check_giveaway_value['rs']['product']); ?>
                                      @foreach ($check_giveaway_value['rs']['product'] as $product_value)
                                          <tr>
                                              <td><strong style="font-size: 12px">{{ $product_value->product_name }}
@@ -1301,6 +1300,181 @@
                       </div>
                       </div>
 
+                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" > </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                            <?php if(!empty(@$sRow->transfer_money_datetime)){
+                              $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
+                              $ds = explode("-", $ds1);
+                              $ds_d = $ds[2];
+                              $ds_m = $ds[1];
+                              $ds_y = $ds[0];
+                              $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
+                            }else{$ds='';} ?>
+                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{@$ds!='00/00/0000 00:00'?@$ds:null}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
+                          </div>
+
+                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip" >
+
+                                @IF(!empty(@$sRow->file_slip))
+
+                                 <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
+
+                                @ELSE
+                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+
+                                  <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ (1) : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div>
+                      </div>
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                            <?php if(!empty(@$sRow->transfer_money_datetime_02)){
+                              $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
+                              $ds_02 = explode("-", $ds1_02);
+                              $ds_d_02 = $ds_02[2];
+                              $ds_m_02 = $ds_02[1];
+                              $ds_y_02 = $ds_02[0];
+                              $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
+                            }else{$ds_02='';} ?>
+                              <input class="form-control transfer_money_datetime_02 class_transfer_edit " autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_02" >
+                                @IF(!empty(@$sRow->file_slip_02))
+                                  <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
+
+                                @ELSE
+                                  <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+
+                                 <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+                   <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ (2) : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div>
+                      </div>
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" >  </label>
+                      </div>
+                      <div class="divTableCell">
+
+                          <div class="d-flex">
+
+                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03  " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                            <?php if(!empty(@$sRow->transfer_money_datetime_03)){
+                              $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
+                              $ds_03 = explode("-", $ds1_03);
+                              $ds_d_03 = $ds_03[2];
+                              $ds_m_03 = $ds_03[1];
+                              $ds_y_03 = $ds_03[0];
+                              $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
+                            }else{$ds_03='';} ?>
+                              <input class="form-control transfer_money_datetime_03 class_transfer_edit " autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
+                          </div>
+
+                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
+
+                         <span width="100" class="span_file_slip_03" >
+                                @IF(!empty(@$sRow->file_slip_03))
+                                  <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
+
+                                @ELSE
+                                  <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
+                                @ENDIF
+
+                                 <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+
+                         </span>
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ (3) : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div>
+                      </div>
+
 
                    <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
                     <div class="divTableRow show_div_transfer_price " style="<?=$show_div_transfer_price?>" >
@@ -1440,6 +1614,7 @@
                     </div>
 
 
+
                     <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==''||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
                       <div class="divTableRow show_div_cash_pay " style="<?=$show_div_cash_pay?>"  >
                         <div class="divTableCell" >
@@ -1480,72 +1655,6 @@
 
                       </div>
 
-                      <!-- slip โอน -->
-                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                        <div class="divTableCell" >
-                        </div>
-                        <div class="divTH">
-                          <label for="" class="label_cash_pay" > </label>
-                        </div>
-                        <div class="divTableCell">
-
-                         <button type="button" class="btn btn-info btn-sm waves-effect font-size-14  " data-toggle="modal" data-target="#cancel" style=""  >
-                          <i class="bx bx-plus font-size-14 align-middle mr-1"></i> แนบไฟล์สลิปเงินโอน
-                          </button>
-
-                        </div>
-
-                        <div class="divTableCell">
-                        </div>
-
-                      </div>
-
-
-                   <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill==0||@$sRow->pay_with_other_bill==''?"display: none;":''; ?>
-
-                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
-
-                        @if(@$PaymentSlip)
-
-                          @foreach(@$PaymentSlip AS $slip)
-
-                             <span width="100" class="span_file_slip" >
-
-                                      <img src="{{ $slip->url }}/{{ @$slip->file }}" style="margin-top: 5px;height: 180px;" >
-
-                                      <button type="button" data-id="{{@$slip->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-                             </span>
-
-                          @endforeach
-
-                        @ENDIF
-
-
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                    </div>
-
-
-
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                        <div class="divTableCell" ></div>
-                        <div class="divTH">
-                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
-                        </div>
-                        <div class="divTableCell">
-
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
-
-                        </div>
-                         <div class="divTableCell">
-                        </div>
-                      </div>
 
 
 
@@ -2098,84 +2207,6 @@
   </div>
 </div>
 
-
-
-<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
-
-
-                                    <div class="modal fade" id="cancel" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable">
-                                            <div class="modal-content">
-
-
-                                       <form   action="{{ route('backend.frontstore.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-
-                                           <input name="upload_file" type="hidden" value="1">
-                                           <input name="id" type="hidden" value="{{@$sRow->id}}">
-
-                                    {{ csrf_field() }}
-
-
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title mt-0" id="cancel">อัพโหลดไฟล์</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
-                                                       <center>
-                                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
-                                                    </center>
-                                                    <br>
-
-                                                     
-
-                                                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                                                        <div class="divTH" >
-                                                          <label >   </label>
-                                                        </div>
-                                                        <div class="divTableCell" >
-                                                           <input  class="form-control transfer_money_datetime " autocomplete="off"  name="transfer_money_datetime" style="width: 45%;font-weight: bold;" required="" placeholder="วัน เวลา ที่โอน" />
-                                                        </div>
-                                                      </div>
-
-
-                                                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                                                        <div class="divTH">
-                                                          <label > หมายเหตุ </label>
-                                                        </div>
-                                                        <div class="divTableCell" style="width: 90%;" >
-                                                          <input type="text" class="form-control" name="note" placeholder="หมายเหตุ" value="" >
-                                                        </div>
-                                                      </div>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-
-                                                       <button type="submit" class="btn btn-primary">อัพโหลด</button>
-
-                                                        <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">Close</button>
-                                                </div>
-
-                                                    </form>
-
-
-                                            </div><!-- /.modal-content -->
-                                        </div><!-- /.modal-dialog -->
-                                    </div><!-- /.modal -->
-
-
-
-
-                            
-<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
 @endsection
@@ -4116,9 +4147,9 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
-                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -4598,11 +4629,9 @@ $(document).ready(function() {
       $('.transfer_money_datetime').datetimepicker({
           value: '',
           rtl: false,
-          // format: 'd/m/Y H:i',
-          format: 'Y-m-d H:i',
+          format: 'd/m/Y H:i',
           formatTime: 'H:i',
-          // formatDate: 'd/m/Y',
-          formatDate: 'Y-m-d',
+          formatDate: 'd/m/Y',
           monthChangeSpinner: true,
           closeOnTimeSelect: true,
           closeOnWithoutClick: true,
@@ -4614,78 +4643,78 @@ $(document).ready(function() {
           // minDate: 0,
       });
 
-      // $('.transfer_money_datetime').change(function(event) {
-      //   var d = $(this).val();
-      //   // / // console.log(d);
-      //   var t = d.substring(d.length - 5);
-      //   // / // console.log();
-      //   var d = d.substring(0, 10);
-      //   // / // console.log();
-      //   var d = d.split("/").reverse().join("-");
-      //   // / // console.log();
-      //   $('#transfer_money_datetime').val(d+' '+t);
-      // });
+      $('.transfer_money_datetime').change(function(event) {
+        var d = $(this).val();
+        // / // console.log(d);
+        var t = d.substring(d.length - 5);
+        // / // console.log();
+        var d = d.substring(0, 10);
+        // / // console.log();
+        var d = d.split("/").reverse().join("-");
+        // / // console.log();
+        $('#transfer_money_datetime').val(d+' '+t);
+      });
 
 
 
-      // $('.transfer_money_datetime_02').datetimepicker({
-      //     value: '',
-      //     rtl: false,
-      //     format: 'd/m/Y H:i',
-      //     formatTime: 'H:i',
-      //     formatDate: 'd/m/Y',
-      //     monthChangeSpinner: true,
-      //     closeOnTimeSelect: true,
-      //     closeOnWithoutClick: true,
-      //     closeOnInputClick: true,
-      //     openOnFocus: true,
-      //     timepicker: true,
-      //     datepicker: true,
-      //     weeks: false,
-      //     // minDate: 0,
-      // });
+      $('.transfer_money_datetime_02').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'd/m/Y H:i',
+          formatTime: 'H:i',
+          formatDate: 'd/m/Y',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          // minDate: 0,
+      });
 
-      // $('.transfer_money_datetime_02').change(function(event) {
-      //   var d = $(this).val();
-      //   // / // console.log(d);
-      //   var t = d.substring(d.length - 5);
-      //   // / // console.log();
-      //   var d = d.substring(0, 10);
-      //   // / // console.log();
-      //   var d = d.split("/").reverse().join("-");
-      //   // / // console.log();
-      //   $('#transfer_money_datetime_02').val(d+' '+t);
-      // });
+      $('.transfer_money_datetime_02').change(function(event) {
+        var d = $(this).val();
+        // / // console.log(d);
+        var t = d.substring(d.length - 5);
+        // / // console.log();
+        var d = d.substring(0, 10);
+        // / // console.log();
+        var d = d.split("/").reverse().join("-");
+        // / // console.log();
+        $('#transfer_money_datetime_02').val(d+' '+t);
+      });
 
 
-      // $('.transfer_money_datetime_03').datetimepicker({
-      //     value: '',
-      //     rtl: false,
-      //     format: 'd/m/Y H:i',
-      //     formatTime: 'H:i',
-      //     formatDate: 'd/m/Y',
-      //     monthChangeSpinner: true,
-      //     closeOnTimeSelect: true,
-      //     closeOnWithoutClick: true,
-      //     closeOnInputClick: true,
-      //     openOnFocus: true,
-      //     timepicker: true,
-      //     datepicker: true,
-      //     weeks: false,
-      //     // minDate: 0,
-      // });
+      $('.transfer_money_datetime_03').datetimepicker({
+          value: '',
+          rtl: false,
+          format: 'd/m/Y H:i',
+          formatTime: 'H:i',
+          formatDate: 'd/m/Y',
+          monthChangeSpinner: true,
+          closeOnTimeSelect: true,
+          closeOnWithoutClick: true,
+          closeOnInputClick: true,
+          openOnFocus: true,
+          timepicker: true,
+          datepicker: true,
+          weeks: false,
+          // minDate: 0,
+      });
 
-      // $('.transfer_money_datetime_03').change(function(event) {
-      //   var d = $(this).val();
-      //   // / // console.log(d);
-      //   var t = d.substring(d.length - 5);
-      //   // / // console.log();
-      //   var d = d.substring(0, 10);
-      //   // / // console.log();
-      //   var d = d.split("/").reverse().join("-");
-      //   // / // console.log();
-      //   $('#transfer_money_datetime_03').val(d+' '+t);
-      // });
+      $('.transfer_money_datetime_03').change(function(event) {
+        var d = $(this).val();
+        // / // console.log(d);
+        var t = d.substring(d.length - 5);
+        // / // console.log();
+        var d = d.substring(0, 10);
+        // / // console.log();
+        var d = d.split("/").reverse().join("-");
+        // / // console.log();
+        $('#transfer_money_datetime_03').val(d+' '+t);
+      });
 
 
 </script>
@@ -4749,10 +4778,9 @@ $(document).ready(function() {
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     // / // console.log(data);
-                                    // $(".span_file_slip").hide();
-                                    // $(".transfer_money_datetime").val('');
-                                    // $("#note_fullpayonetime").val('');
-                                    location.reload();
+                                    $(".span_file_slip").hide();
+                                    $(".transfer_money_datetime").val('');
+                                    $("#note_fullpayonetime").val('');
                                   }
                               });
 
@@ -4774,7 +4802,7 @@ $(document).ready(function() {
                                   success: function(data){
                                     // / // console.log(data);
                                     $(".span_file_slip_02").hide();
-                                    // $(".transfer_money_datetime_02").val('');
+                                    $(".transfer_money_datetime_02").val('');
                                     $("#note_fullpayonetime_02").val('');
                                   }
                               });
@@ -4797,7 +4825,7 @@ $(document).ready(function() {
                                   success: function(data){
                                     // / // console.log(data);
                                     $(".span_file_slip_03").hide();
-                                    // $(".transfer_money_datetime_03").val('');
+                                    $(".transfer_money_datetime_03").val('');
                                     $("#note_fullpayonetime_03").val('');
                                   }
                               });
@@ -4840,15 +4868,15 @@ $(document).ready(function() {
                     });
                 });
 
-              // $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
-              //       event.preventDefault();
-              //       $('.myloading').show();
-              //       $('#transfer_price').attr('required', true);
-              //       setTimeout(function(){
-              //           // $('#transfer_price').focus();
-              //           $('.myloading').hide();
-              //       });
-              //   });
+              $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
+                    event.preventDefault();
+                    $('.myloading').show();
+                    $('#transfer_price').attr('required', true);
+                    setTimeout(function(){
+                        // $('#transfer_price').focus();
+                        $('.myloading').hide();
+                    });
+                });
 
 
               $(document).on('change', '#credit_price', function(event) {
@@ -4994,14 +5022,14 @@ $(document).ready(function() {
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
 
-                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  // $(".transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $(".transfer_money_datetime").val(value.transfer_money_datetime);
 
-                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  // $(".transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $(".transfer_money_datetime_02").val(value.transfer_money_datetime_02);
 
-                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
-                                  // $(".transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  $(".transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                 });
 
@@ -5057,7 +5085,7 @@ $(document).ready(function() {
                               $(".div_account_bank_id").show();
                               $(".div_pay_with_other_bill").show();
                               $("#transfer_price").val('');
-                              // $(".transfer_money_datetime").attr('required', true);
+                              $(".transfer_money_datetime").attr('required', true);
                               $("#transfer_price").removeAttr('required');
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
@@ -5088,7 +5116,7 @@ $(document).ready(function() {
                               $(".show_div_cash_pay").hide();
 
                               $('input[name=account_bank_id]').removeAttr('required');
-                              // $(".transfer_money_datetime").removeAttr('required');
+                              $(".transfer_money_datetime").removeAttr('required');
                               $("#transfer_price").removeAttr('required');
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
@@ -5105,7 +5133,7 @@ $(document).ready(function() {
                                 $(".div_account_bank_id").show();
                                 $(".div_pay_with_other_bill").show();
                                 $("#transfer_price").val('');
-                                // $(".transfer_money_datetime").attr('required', true);
+                                $(".transfer_money_datetime").attr('required', true);
                                 $("#transfer_price").attr('required',true);
                                 $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
 
@@ -5125,7 +5153,7 @@ $(document).ready(function() {
                                   $(".div_account_bank_id").show();
                                   $(".div_pay_with_other_bill").show();
                                   $("#transfer_price").val('');
-                                  // $(".transfer_money_datetime").attr('required', true);
+                                  $(".transfer_money_datetime").attr('required', true);
                                   $("#transfer_price").attr('required',true);
                                   $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
 
@@ -5144,7 +5172,7 @@ $(document).ready(function() {
                               }else{
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
-                                  // $('.transfer_money_datetime').removeAttr('required');
+                                  $('.transfer_money_datetime').removeAttr('required');
                                   $('#aicash_price').removeAttr('required');
                                   $(".show_div_cash_pay").hide();
                                   $(".show_div_transfer_price").hide();
@@ -5553,15 +5581,15 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
-                                  // if(value.transfer_money_datetime){
-                                  //   $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  // }
-                                  // if(value.transfer_money_datetime_02){
-                                  //   $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  // }
-                                  // if(value.transfer_money_datetime_03){
-                                  //   $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
-                                  // }
+                                  if(value.transfer_money_datetime){
+                                    $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  }
+                                  if(value.transfer_money_datetime_02){
+                                    $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  }
+                                  if(value.transfer_money_datetime_03){
+                                    $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  }
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -5679,9 +5707,9 @@ $(document).ready(function() {
                                   }
 
 
-                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -6271,7 +6299,7 @@ $(document).ready(function() {
             $(".show_div_transfer_price").show();
             $(".div_account_bank_id").show();
             $(".div_pay_with_other_bill").show();
-            // $(".show_div_cash_pay").show();
+            $(".show_div_cash_pay").show();
 
           }
 
@@ -6297,7 +6325,7 @@ $(document).ready(function() {
             if($('#pay_with_other_bill').is(':checked')==true){
                 $("#pay_with_other_bill_note").prop('required',true);
                 $("input[name='account_bank_id']").removeAttr("required");
-                // $(".transfer_money_datetime").removeAttr("required");
+                $(".transfer_money_datetime").removeAttr("required");
                 $("#pay_with_other_bill_note").focus();
             }else{
                 $("#pay_with_other_bill_note").removeAttr("required");
