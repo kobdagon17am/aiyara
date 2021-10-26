@@ -113,7 +113,7 @@
 
                     {
                         data: 'giftvoucher_value_use',
-                        title: '<center>ถูกใช้ไป</center>',
+                        title: '<center>เพิ่ม/ลด</center>',
                         className: 'text-right'
                     },
 

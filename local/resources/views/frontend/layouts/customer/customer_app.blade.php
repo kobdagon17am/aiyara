@@ -502,32 +502,13 @@
       </a>
     </li>
 
-    <li class="pcoded-hasmenu {{ (request()->is('giftvoucher_history') || request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Ai Voucher</b></span>
-				<span class="pcoded-mtext"> Ai Voucher</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-
-			<ul class="pcoded-submenu">
-				<li class="{{ (request()->is('giftvoucher_history')) ? 'active' : '' }}">
-					<a href="{{route('giftvoucher_history')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">ความเคลื่อนไหว</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-
-				<li class="{{ (request()->is('gift_order_history') || request()->is('gift-cart-payment-history/*')  ) ? 'active' : '' }}">
-					<a href="{{route('gift_order_history')}}">
-						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">แลกสินค้า</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
-
+    <li class="{{ (request()->is('giftvoucher_history')) ? 'active' : '' }}">
+      <a href="{{route('giftvoucher_history')}}">
+        <span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Ai Voucher</b></span>
+        <span class="pcoded-mtext">Ai Voucher</span>
+        <span class="pcoded-mcaret"></span>
+      </a>
+    </li>
 
 		<li class="{{ (request()->is('ai-stockist')) ? 'active' : '' }}">
 			<a href="{{route('ai-stockist')}}">

@@ -7,7 +7,7 @@ class Frontend{
 
 		$data_gv = DB::table('db_giftvoucher_cus')
 		->selectRaw('sum(giftvoucher_banlance) as sum_gv')
-		->where('customer_code','=',$user_name)
+		->where('customer_username','=',$user_name)
 		->where('pro_sdate','<=',date('Y-m-d'))
     ->where('pro_edate','>=',date('Y-m-d'))
     ->whereraw('(pro_status = 1 || pro_status = 2)')
@@ -287,7 +287,7 @@ class Frontend{
 
 		$data = DB::table('db_giftvoucher_cus')
     ->select('*')
-		->where('customer_code','=',$customer_user)
+		->where('customer_username','=',$customer_user)
     ->wheredate('pro_edate','>=',now())
     ->whereraw("DATEDIFF(pro_edate,now()) <= 10 ")
 		->count();

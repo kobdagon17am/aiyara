@@ -15,7 +15,7 @@
 .divTable{
   display: table;
   width: 100%;
-  
+
 }
 .divTableRow {
   display: table-row;
@@ -44,7 +44,7 @@
 }
 .divTH {text-align: right;}
 
-  
+
   .tooltip_cost {
     position: relative ;
     cursor: pointer;
@@ -99,7 +99,7 @@
               <div class="divTH">
                 <label for="startDate" >{{ __('message.create_date') }} : </label>
               </div>
-              <?php 
+              <?php
 
                 $sd = date('Y-m-d');
 
@@ -135,7 +135,7 @@
                     @if(@$sPurchase_type)
                       @foreach(@$sPurchase_type AS $r)
                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
-                          {{$r->orders_type}} 
+                          {{$r->orders_type}}
                         </option>
                       @endforeach
                     @endif
@@ -151,17 +151,17 @@
               </div>
               <div class="divTableCell">
 
-                 <select id="customer_code" name="customer_code" class="form-control" ></select> 
+                 <select id="customer_username" name="customer_username" class="form-control" ></select>
 
               </div>
               <div class="divTableCell">
-                <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_code" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_username" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
               <div class="divTH">
                 <label for="" >{{ __('message.customer_name') }} : </label>
               </div>
               <div class="divTableCell">
-                <select id="customer_name" name="customer_name" class="form-control" ></select> 
+                <select id="customer_name" name="customer_name" class="form-control" ></select>
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_name" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -183,7 +183,7 @@
                      <select class="form-control select2-templating " >
                          <option value="">Select</option>
                      </select>
-                    @endif                
+                    @endif
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="invoice_code" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -192,7 +192,7 @@
 
 
             <div class="divTableRow">
-<!-- 
+<!--
                   <div class="divTH">
                 <label for="" >เลขที่ใบสั่งซื้อ : </label>
               </div>
@@ -212,7 +212,7 @@
                   @if(@$sUser)
                     @foreach(@$sUser AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->name}} 
+                        {{$r->name}}
                       </option>
                     @endforeach
                   @endif
@@ -231,7 +231,7 @@
                       <option value="0"> - (รอดำเนินการ)</option>
                       <option value="1"> In Process </option>
                       <option value="2"> Success </option>
-                </select> 
+                </select>
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="status_sent_money" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -246,7 +246,7 @@
                   @if(@$sApproveStatus)
                     @foreach(@$sApproveStatus AS $r)
                       <option value="{{$r->id}}"  >
-                        {{$r->txt_desc}} 
+                        {{$r->txt_desc}}
                       </option>
                     @endforeach
                   @endif
@@ -255,12 +255,12 @@
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub " data-attr="approve_status" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
               </div>
-            
+
             </div>
 
 
 
-            
+
             <div class="divTableRow">
 
               <div class="divTH">
@@ -293,7 +293,7 @@
               <div class="divTableCell">
                 <button type="button" class="btn btn-info btnRefresh " style="padding: 9%;"><i class="fa fa-refresh font-size-18 align-middle "></i></button>
               </div>
-            
+
             </div>
           </div>
         </div>
@@ -302,7 +302,7 @@
   </div>
 </div>
 
-   
+
 
 <div class="row">
   <div class="col-12">
@@ -338,7 +338,7 @@
           <div class="col-lg-5">
             <div class="card">
               <div class="card-body">
-                
+
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                 <div class="div_PV_Amount"></div>
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -351,9 +351,9 @@
             <div class="col-lg-7">
               <div class="card">
                 <div class="card-body">
-                  
+
                   <div class="div_SumCostActionUser"></div>
-                
+
                 </div>
               </div>
             </div>
@@ -410,8 +410,8 @@ $(function() {
 
       $(document).on('mouseout', '.tooltip_cost', function(event) {
             $('.ttt').hide();
-          
-      });      
+
+      });
 
 });
 
@@ -453,14 +453,14 @@ $(function() {
               }else if(d==2){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
               }else if(d==3){
-                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';
               }else if(d==4){
-                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';
               }else if(d==5){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
               }else if(d==6){
-                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
-              }else{ 
+                return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';
+              }else{
                 return '';
               }
             }},
@@ -504,8 +504,8 @@ $(function() {
                 return '<center>'
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
-     
-            {data: 'id', title :'Tools.', className: 'text-center w80'}, 
+
+            {data: 'id', title :'Tools.', className: 'text-center w80'},
         ],
            "columnDefs": [ {
               // "targets": [0,2,6,7,8,9] ,
@@ -517,7 +517,7 @@ $(function() {
            // var info = $(this).DataTable().page.info();
            // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-            if(aData['total_price']){ 
+            if(aData['total_price']){
               $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
 
@@ -533,7 +533,7 @@ $(function() {
 
             $("td:eq(4)", nRow).html(aData['customer_name']);
 
-           
+
 
             if(aData['approve_status']==5){
 
@@ -556,11 +556,11 @@ $(function() {
 
                     if(sU!='1'&&sD!='1'){
                         $('td:last-child', nRow).html('-');
-                    }else{ 
+                    }else{
 
                       if(aData['type']!='0'){ // เติม Ai-Cash
                       }else{
-              
+
                           var str_V = '';
 
                           str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
@@ -672,7 +672,7 @@ $(function() {
 
 <script>
 $(document).ready(function() {
-	
+
        $(document).on('click', '.btnSentMoney', function(e) {
 
                  Swal.fire({
@@ -685,16 +685,16 @@ $(document).ready(function() {
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/ajaxSentMoneyDaily') }} ", 
+                                url: " {{ url('backend/ajaxSentMoneyDaily') }} ",
                                 method: "post",
                                 data: {
-                                  "_token": "{{ csrf_token() }}", 
+                                  "_token": "{{ csrf_token() }}",
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // // console.log(data);
                                   // return false;
-                                  
+
                                       Swal.fire({
                                         type: 'success',
                                         title: 'ทำการส่งเงินเรียบร้อยแล้ว',
@@ -713,19 +713,19 @@ $(document).ready(function() {
                           	 $(".myloading").hide();
                           }
                     });
-                
+
 
 			     }); // ปิด $(document).on('click', '.btnSave'
 
 			});
 
     </script>
-   
+
 
 
 <script>
 $(document).ready(function() {
-	
+
        $(document).on('click', '.btnCancelSentMoney', function(e) {
 
        	var id = $(this).data('id');
@@ -740,13 +740,13 @@ $(document).ready(function() {
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/ajaxCancelSentMoney') }} ", 
+                                url: " {{ url('backend/ajaxCancelSentMoney') }} ",
                                 method: "post",
                                 data: {
                                   "_token": "{{ csrf_token() }}", id:id
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // // // // console.log(data);
                                   // return false;
                                       Swal.fire({
@@ -767,7 +767,7 @@ $(document).ready(function() {
                           	 $(".myloading").hide();
                           }
                     });
-                
+
 
 			     }); // ปิด $(document).on('click', '.btnSave'
 
@@ -784,7 +784,7 @@ $(document).ready(function() {
                $('.invoice_list').html(tt);
                $('#modalOne').modal('show');
             });
-                
+
      });
     </script>
 
@@ -794,8 +794,8 @@ $(document).ready(function() {
            $(document).on('click','.btnRefresh',function(event){
           		$("input").val('');
           		$("select").select2('destroy').val("").select2();
-              $("select").select2({             
-              placeholder: "Select"               
+              $("select").select2({
+              placeholder: "Select"
               });
       				var today = new Date();
       				var dd = String(today.getDate()).padStart(2, '0');
@@ -806,7 +806,7 @@ $(document).ready(function() {
           		$('#endDate').val(today);
           		$('.btnSearchTotal').trigger('click');
             });
-                
+
      });
     </script>
 
@@ -823,7 +823,7 @@ $(document).ready(function() {
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var purchase_type_id_fk = $('#purchase_type_id_fk').val();
-                  var customer_code = $('#customer_code').val();
+                  var customer_username = $('#customer_username').val();
                   var customer_name = $('#customer_name').val();
                   var invoice_code = $('#invoice_code').val();
                   var action_user = $('#action_user').val();
@@ -837,7 +837,7 @@ $(document).ready(function() {
                   if(viewcondition=="ViewAll"){
 
                     $('.btnSearchTotal').trigger('click');
-            
+
                   }else{
               // ###################################
 
@@ -845,7 +845,7 @@ $(document).ready(function() {
 
                                 $('#data-table').DataTable().clear();
                                 $(".myloading").show();
-      
+
 
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                                           var oTable;
@@ -869,7 +869,7 @@ $(document).ready(function() {
                                                             startDate:startDate,
                                                             endDate:endDate,
                                                             purchase_type_id_fk:purchase_type_id_fk,
-                                                            customer_code:customer_code,
+                                                            customer_username:customer_username,
                                                             customer_name:customer_name,
                                                             invoice_code:invoice_code,
                                                             action_user:action_user,
@@ -889,14 +889,14 @@ $(document).ready(function() {
                                                       }else if(d==2){
                                                         return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
                                                       }else if(d==3){
-                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';
                                                       }else if(d==4){
-                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';
                                                       }else if(d==5){
                                                         return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
                                                       }else if(d==6){
-                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
-                                                      }else{ 
+                                                        return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';
+                                                      }else{
                                                         return '';
                                                       }
                                                     }},
@@ -943,8 +943,8 @@ $(document).ready(function() {
                                                         return '<center>'
                                                         + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                                                     }},
-                                             
-                                                    {data: 'id', title :'Tools.', className: 'text-center w80'}, 
+
+                                                    {data: 'id', title :'Tools.', className: 'text-center w80'},
                                                 ],
                                                    "columnDefs": [ {
                                                       // "targets": [0,2,6,7,8,9] ,
@@ -956,7 +956,7 @@ $(document).ready(function() {
                                                    // var info = $(this).DataTable().page.info();
                                                    // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                                    if(aData['total_price']){ 
+                                                    if(aData['total_price']){
                                                       $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
                                                     }
 
@@ -972,7 +972,7 @@ $(document).ready(function() {
 
                                                     $("td:eq(4)", nRow).html(aData['customer_name']);
 
-                                                   
+
 
                                                     if(aData['approve_status']==5){
 
@@ -995,11 +995,11 @@ $(document).ready(function() {
 
                                                             if(sU!='1'&&sD!='1'){
                                                                 $('td:last-child', nRow).html('-');
-                                                            }else{ 
+                                                            }else{
 
                                                               if(aData['type']!='0'){ // เติม Ai-Cash
                                                               }else{
-                                                      
+
                                                                   var str_V = '';
 
                                                                   str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
@@ -1055,14 +1055,14 @@ $(document).ready(function() {
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                                         $.ajax({
-                                          url: " {{ url('backend/getSumCostActionUser') }} ", 
+                                          url: " {{ url('backend/getSumCostActionUser') }} ",
                                           method: "post",
                                           data: {
-                                            "_token": "{{ csrf_token() }}", 
+                                            "_token": "{{ csrf_token() }}",
                                             startDate:startDate,
                                             endDate:endDate,
                                             purchase_type_id_fk:purchase_type_id_fk,
-                                            customer_code:customer_code,
+                                            customer_username:customer_username,
                                             customer_name:customer_name,
                                             invoice_code:invoice_code,
                                             action_user:action_user,
@@ -1071,22 +1071,22 @@ $(document).ready(function() {
                                             viewcondition:viewcondition,
                                           },
                                           success:function(data)
-                                          { 
+                                          {
                                             // // // console.log(data);
                                             $(".div_SumCostActionUser").html(data);
-                                            
+
                                           }
                                         });
                                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                         $.ajax({
-                                          url: " {{ url('backend/getPV_Amount') }} ", 
+                                          url: " {{ url('backend/getPV_Amount') }} ",
                                           method: "post",
                                           data: {
-                                            "_token": "{{ csrf_token() }}", 
+                                            "_token": "{{ csrf_token() }}",
                                             startDate:startDate,
                                             endDate:endDate,
                                             purchase_type_id_fk:purchase_type_id_fk,
-                                            customer_code:customer_code,
+                                            customer_username:customer_username,
                                             customer_name:customer_name,
                                             invoice_code:invoice_code,
                                             action_user:action_user,
@@ -1095,10 +1095,10 @@ $(document).ready(function() {
                                             viewcondition:viewcondition,
                                           },
                                           success:function(data)
-                                          { 
+                                          {
                                             // // console.log(data);
                                             $(".div_PV_Amount").html(data);
-                                            
+
                                           }
                                         });
                                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1110,13 +1110,13 @@ $(document).ready(function() {
 
 // ###################################
                   }
-               
-        }); 
-    }); 
+
+        });
+    });
 
 
 </script>
- 
+
  <script>
 
    $(document).ready(function() {
@@ -1146,7 +1146,7 @@ $(document).ready(function() {
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var purchase_type_id_fk = $('#purchase_type_id_fk').val();
-                  var customer_code = $('#customer_code').val();
+                  var customer_username = $('#customer_username').val();
                   var customer_name = $('#customer_name').val();
                   var invoice_code = $('#invoice_code').val();
                   var action_user = $('#action_user').val();
@@ -1176,7 +1176,7 @@ $(document).ready(function() {
           		                              startDate:startDate,
           		                              endDate:endDate,
           		                              purchase_type_id_fk:purchase_type_id_fk,
-          		                              customer_code:customer_code,
+          		                              customer_username:customer_username,
           		                              customer_name:customer_name,
           		                              invoice_code:invoice_code,
           		                              action_user:action_user,
@@ -1195,14 +1195,14 @@ $(document).ready(function() {
                                         }else if(d==2){
                                           return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติรายเดือน"> <i class="fa fa-calendar-check-o"></i> </span>';
                                         }else if(d==3){
-                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';        
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="รักษาคุณสมบัติท่องเที่ยว"> <i class="fa fa-bus"></i> </span>';
                                         }else if(d==4){
-                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';      
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>';
                                         }else if(d==5){
                                           return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="Gift Voucher"> <i class="fa fa-gift"></i> </span>';
                                         }else if(d==6){
-                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';                                    
-                                        }else{ 
+                                          return '<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="คอร์สอบรม" > <i class="mdi mdi-account-tie"></i> </span>';
+                                        }else{
                                           return '';
                                         }
                                       }},
@@ -1249,8 +1249,8 @@ $(document).ready(function() {
                                           return '<center>'
                                           + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                                       }},
-                               
-                                      {data: 'id', title :'Tools.', className: 'text-center w80'}, 
+
+                                      {data: 'id', title :'Tools.', className: 'text-center w80'},
                                   ],
                                      "columnDefs": [ {
                                         // "targets": [0,2,6,7,8,9] ,
@@ -1262,7 +1262,7 @@ $(document).ready(function() {
                                      // var info = $(this).DataTable().page.info();
                                      // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                      if(aData['total_price']){ 
+                                      if(aData['total_price']){
                                         $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
                                       }
 
@@ -1278,7 +1278,7 @@ $(document).ready(function() {
 
                                       $("td:eq(4)", nRow).html(aData['customer_name']);
 
-                                     
+
 
                                       if(aData['approve_status']==5){
 
@@ -1301,11 +1301,11 @@ $(document).ready(function() {
 
                                               if(sU!='1'&&sD!='1'){
                                                   $('td:last-child', nRow).html('-');
-                                              }else{ 
+                                              }else{
 
                                                 if(aData['type']!='0'){ // เติม Ai-Cash
                                                 }else{
-                                        
+
                                                     var str_V = '';
 
                                                     str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
@@ -1361,14 +1361,14 @@ $(document).ready(function() {
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
                           $.ajax({
-                            url: " {{ url('backend/getSumCostActionUser') }} ", 
+                            url: " {{ url('backend/getSumCostActionUser') }} ",
                             method: "post",
                             data: {
-                              "_token": "{{ csrf_token() }}", 
+                              "_token": "{{ csrf_token() }}",
                               startDate:startDate,
                               endDate:endDate,
                               purchase_type_id_fk:purchase_type_id_fk,
-                              customer_code:customer_code,
+                              customer_username:customer_username,
                               customer_name:customer_name,
                               invoice_code:invoice_code,
                               action_user:action_user,
@@ -1376,22 +1376,22 @@ $(document).ready(function() {
                               approve_status:approve_status,
                             },
                             success:function(data)
-                            { 
+                            {
                               // // // console.log(data);
                               $(".div_SumCostActionUser").html(data);
-                              
+
                             }
                           });
                  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                           $.ajax({
-                            url: " {{ url('backend/getPV_Amount') }} ", 
+                            url: " {{ url('backend/getPV_Amount') }} ",
                             method: "post",
                             data: {
-                              "_token": "{{ csrf_token() }}", 
+                              "_token": "{{ csrf_token() }}",
                               startDate:startDate,
                               endDate:endDate,
                               purchase_type_id_fk:purchase_type_id_fk,
-                              customer_code:customer_code,
+                              customer_username:customer_username,
                               customer_name:customer_name,
                               invoice_code:invoice_code,
                               action_user:action_user,
@@ -1399,10 +1399,10 @@ $(document).ready(function() {
                               approve_status:approve_status,
                             },
                             success:function(data)
-                            { 
+                            {
                             //   // console.log(data);
                               $(".div_PV_Amount").html(data);
-                              
+
                             }
                           });
                  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1411,11 +1411,11 @@ $(document).ready(function() {
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
 
-        }); 
-        }); 
+        });
+        });
 
 
 </script>
@@ -1425,30 +1425,30 @@ $(document).ready(function() {
       $(document).ready(function() {
 
               $.ajax({
-                  url: " {{ url('backend/getSumCostActionUser') }} ", 
+                  url: " {{ url('backend/getSumCostActionUser') }} ",
                   method: "post",
                   data: {
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
 
                   },
                   success:function(data)
-                  { 
+                  {
                     // // // console.log(data);
                     $(".div_SumCostActionUser").html(data);
-                    
+
                   }
                 });
 
 
              // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                   $.ajax({
-                    url: " {{ url('backend/getPV_Amount') }} ", 
+                    url: " {{ url('backend/getPV_Amount') }} ",
                     method: "post",
                     data: {
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       // console.log(data);
                       $(".div_PV_Amount").html(data);
                     }
@@ -1458,7 +1458,7 @@ $(document).ready(function() {
 
 
          });
- 
+
 
     </script>
 
@@ -1467,24 +1467,24 @@ $(document).ready(function() {
 
 
       <script>
-// Clear data in View page  
+// Clear data in View page
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
 
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
                   }
-   
+
             });
-                
+
       });
 
     </script>
-   
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
 
 
@@ -1502,21 +1502,21 @@ $(document).ready(function() {
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-      
+
       DB::select("TRUNCATE customers_addr_sent;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
@@ -1531,15 +1531,15 @@ $(document).ready(function() {
       DB::select("TRUNCATE `db_orders_tmp`;");
       DB::select("TRUNCATE `db_order_products_list`;");
       DB::select("TRUNCATE `db_order_products_list_tmp`;");
-      
+
       DB::select("TRUNCATE `db_order_products_list_giveaway`;");
-      
+
       DB::select("TRUNCATE `db_delivery` ;");
       DB::select("TRUNCATE `db_delivery_packing` ;");
       DB::select("TRUNCATE `db_delivery_packing_code` ;");
       DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
       DB::select("TRUNCATE  db_consignments;");
-      
+
       DB::select("TRUNCATE `db_sent_money_daily` ;");
 
       DB::select("TRUNCATE `db_add_ai_cash` ;");
@@ -1595,7 +1595,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 // DB::select(" TRUNCATE db_promotion_cus ; ");
 // DB::select(" TRUNCATE db_promotion_cus_products ; ");
 
-      
+
       // DB::select("TRUNCATE `db_check_money_daily` ;"); // ไม่ได้ใช้แล้ว
 
       ?>
@@ -1608,7 +1608,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
 
       <script>
-// Clear data in View page  
+// Clear data in View page
       $(document).ready(function() {
 
       	 $(document).on('click', '.test_clear_sent_money', function(event) {
@@ -1621,18 +1621,18 @@ DB::select(" TRUNCATE db_consignments_import ; ");
             var approve_status = "{{@$sRow->approve_status}}";
             // alert(approve_status);
             // return false;
-         
+
               if (!confirm("ยืนยัน ? เพื่อยกเลิกรายการสั่งซื้อที่ระบุ ")){
                   return false;
               }else{
               $.ajax({
-                  url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
+                  url: " {{ url('backend/ajaxCancelOrderBackend') }} ",
                   method: "post",
                   data: {
                     "_token": "{{ csrf_token() }}", id:id,
                   },
                   success:function(data)
-                  { 
+                  {
                     // console.log(data);
                     // return false;
                         Swal.fire({
@@ -1651,13 +1651,13 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
             }
 
-              
+
             });
-                
+
       });
 
     </script>
-   
+
 
       <script>
       $(document).ready(function() {
@@ -1677,15 +1677,15 @@ DB::select(" TRUNCATE db_consignments_import ; ");
                  $(".myloading").hide();
               }, 500);
 
-              
+
             });
-                
+
       });
 
     </script>
-   
 
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_sent_money'])){
 
       DB::select("UPDATE `db_orders` SET `status_sent_money`='0',`sent_money_daily_id_fk`='0' WHERE date(updated_at)=CURDATE();");
@@ -1701,10 +1701,10 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
 
-      $("#customer_code").select2({
+   $(document).ready(function(){
+
+      $("#customer_username").select2({
           minimumInputLength: 3,
           allowClear: true,
           placeholder: 'Select',
@@ -1715,7 +1715,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -1733,8 +1733,8 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_name").select2({
           minimumInputLength: 3,
@@ -1747,7 +1747,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };

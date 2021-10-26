@@ -8,7 +8,7 @@ use App\Models\Frontend\Order;
 use App\Models\Frontend\RunNumberPayment;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Backend\GiftvoucherCus;
 class PvPayment extends Model
 {
 
@@ -22,6 +22,8 @@ class PvPayment extends Model
 
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
+        $GiftvoucherCus = new GiftvoucherCus;
+
 
         // dd($movement_ai_cash);
 
@@ -176,7 +178,11 @@ class PvPayment extends Model
                             ->where('db_order_products_list_giveaway.product_list_id_fk', '=', $product_list_value->id)
                             ->get();
 
+
+
+
                         foreach ($giveaway as $giveaway_value) {
+
                             if ($giveaway_value->type_product == 'giveaway_product') {
 
                                 $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
@@ -186,6 +192,8 @@ class PvPayment extends Model
                                         'approve_date' => date('Y-m-d H:i:s')]);
 
                             } else {
+
+
                                 $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
                                     ->where('id', $giveaway_value->id)
                                     ->update(['approver' => $admin_id,
@@ -195,7 +203,7 @@ class PvPayment extends Model
                                 $expiry_date = date("Y-m-d", strtotime("+1 month", strtotime(now())));
 
                                 $inseart_gift_voucher = DB::table('gift_voucher')->insert([
-                                    'order_id' => $order_id,
+
                                     'customer_id' => $customer_id,
                                     'gv' => $giveaway_value->gv_free,
                                     'banlance' => $giveaway_value->gv_free,
@@ -210,6 +218,38 @@ class PvPayment extends Model
                                     'admin_id' => $admin_id,
 
                                 ]);
+
+                                $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_update->user_name);
+
+                                $gv_banlance = $gv->sum_gv + $giveaway_value->gv_free;
+                                $GiftvoucherCus->customer_username = $customer_update->user_name;
+                                $GiftvoucherCus->giftvoucher_value = $giveaway_value->gv_free;
+                                $GiftvoucherCus->giftvoucher_banlance = $giveaway_value->gv_free;
+                                $GiftvoucherCus->pro_status = 1;
+                                $GiftvoucherCus->detail = 'ได้รับจากการซื้อสินค้า';
+                                $GiftvoucherCus->order_id_fk = $order_id;
+                                $GiftvoucherCus->code_order = $order_data->code_order;
+                                $GiftvoucherCus->giftvoucher_type = 'promotion';
+                                $GiftvoucherCus->pro_sdate = now();
+                                $GiftvoucherCus->pro_edate = $expiry_date;
+                                $GiftvoucherCus->save();
+
+                                $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                                    'customer_id_fk' => $customer_id,
+                                    'order_id_fk' => $order_id,
+                                    'code_order' => $order_data->code_order,
+                                    'giftvoucher_cus_id_fk' => $GiftvoucherCus->id,
+                                    'type_action_giftvoucher'=>0,
+                                    'giftvoucher_value_old' => $gv->sum_gv,
+                                    'giftvoucher_value_use' => $giveaway_value->gv_free,
+                                    'giftvoucher_value_banlance' =>  $giveaway_value->gv_free+$gv->sum_gv,
+                                    'code_order' => $code_order,
+                                    'detail' => 'ได้จากการซื้อสินค้า',
+                                    'status' => 'success',
+                                    'type' => 'Add',
+                                    'type_action_giftvoucher' => 0,
+                                ]);
+
                             }
 
                         }
@@ -569,7 +609,7 @@ class PvPayment extends Model
                     'pv_aistockist' => $add_pv_aipocket,
                     'banlance' => $add_pv_aipocket,
                     'order_channel' => 'VIP',
-                    'status_transfer' => '1'
+                    'status_transfer' => '1',
                     //'detail' => 'Payment Add Ai-Stockist',
                 ]
             );
@@ -577,18 +617,19 @@ class PvPayment extends Model
             $order_update = Order::find($order_id);
 
             if ($order_data->delivery_location_frontend == 'sent_office') {
-              $orderstatus_id = 4;
-              # code...
-          } else {
-              $orderstatus_id = 5;
+                $orderstatus_id = 4;
+                # code...
+            } else {
+                $orderstatus_id = 5;
 
-          }
+            }
             $order_update->pv_mt_old = $customer_update->pv_mt;
             $order_update->approver = $admin_id;
             $order_update->order_status_id_fk = $orderstatus_id;
             $order_update->approve_status = 1;
             $order_update->approve_date = date('Y-m-d H:i:s');
             $customer_update->save();
+
             $order_update->save();
             DB::commit();
 

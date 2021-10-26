@@ -47,7 +47,7 @@ class GiftVoucherController extends Controller
             ->select('db_giftvoucher_cus.*','db_giftvoucher_code.descriptions'
             ,'db_giftvoucher_code.status as status_cancel_active')
             ->leftjoin('db_giftvoucher_code', 'db_giftvoucher_code.id', '=', 'db_giftvoucher_cus.giftvoucher_code_id_fk')
-            ->where('db_giftvoucher_cus.customer_code', '=', Auth::guard('c_user')->user()->user_name)
+            ->where('db_giftvoucher_cus.customer_username', '=', Auth::guard('c_user')->user()->user_name)
             ->whereraw('(db_giftvoucher_cus.pro_status = 1 || db_giftvoucher_cus.pro_status = 2)')
             ->whereRaw(("case WHEN '{$status}' = 'expiry_date' THEN db_giftvoucher_cus.pro_edate < '{$date}' WHEN '{$status}' = 'not_expiry_date' THEN  db_giftvoucher_cus.pro_edate >= '{$date}'
         else 1 END"))
@@ -145,12 +145,18 @@ class GiftVoucherController extends Controller
         })
 
           ->addColumn('giftvoucher_value_use', function ($row) {
-              $gv = '<b class="text-danger">' . number_format($row->giftvoucher_value_use) . '</b>';
+            if( $row->type == 'Add'){
+              $gv = '<b class="text-success"> +' . number_format($row->giftvoucher_value_use) . '</b>';
+
+            }else{
+              $gv = '<b class="text-danger"> -' . number_format($row->giftvoucher_value_use) . '</b>';
+            }
+
               return $gv;
           })
 
           ->addColumn('giftvoucher_value_banlance', function ($row) {
-            $gv = '<b class="text-success">' . number_format($row->giftvoucher_value_banlance) . '</b>';
+            $gv = '<b>' . number_format($row->giftvoucher_value_banlance) . '</b>';
             return $gv;
         })
           ->addColumn('status', function ($row) {
