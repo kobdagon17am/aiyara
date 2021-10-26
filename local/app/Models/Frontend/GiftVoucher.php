@@ -71,81 +71,111 @@ class GiftVoucher extends Model
 
             if ($price_total >= $gv_sum) {
 
+              $price_log = $price_total;
+
                 foreach ($data_gv as $value) {
 
-                    $update_giftvoucher = DB::table('') //update บิล
+                  $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
+                  $gv_sum = $gv_customer->sum_gv;
+
+                  $banlance = $gv_customer->sum_gv - $price_log;
+
+                  if ($banlance < 0) {
+                      $banlance = 0;
+                  }
+
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                      'customer_id_fk' => $id,
+                      'giftvoucher_cus_id_fk' => $value->id,
+                      //'order_id_fk'=>$order_id,
+                      'giftvoucher_value_old' => $gv_sum,
+                      'giftvoucher_value_use' => $price_log,
+                      'giftvoucher_value_banlance' => $banlance,
+                      'code_order' => $code_order,
+                      'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
+                      'status' => 'success',
+                      'type' => 'Remove',
+                      'type_action_giftvoucher' => 0,
+                  ]);
+                  $price_log =  $banlance;
+
+                    $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                         ->where('id', $value->id)
                         ->update(['giftvoucher_banlance' => 0, 'pro_status' => 2]);
 
-                    $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+
+                }
+
+                DB::commit();
+                $resule = ['status' => 'success', 'message' => 'Use Ai Voucher Success'];
+                return $resule;
+
+
+            } else {
+
+                foreach ($data_gv as $value) {
+
+                  $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
+                  $gv_sum = $gv_customer->sum_gv;
+
+                  $banlance = $gv_customer->sum_gv - $price_total;
+                  $gv_rs = $price_total - $value->giftvoucher_banlance;
+                  if ($banlance < 0) {
+                      $banlance = 0;
+                  }
+
+
+
+
+                    if ($gv_rs > 0) {
+
+                      $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
                         'customer_id_fk' => $id,
                         'giftvoucher_cus_id_fk' => $value->id,
                         //'order_id_fk'=>$order_id,
-                        'giftvoucher_value_old' => $value->giftvoucher_banlance,
+                        'giftvoucher_value_old' => $gv_sum,
                         'giftvoucher_value_use' => $value->giftvoucher_banlance,
-                        'giftvoucher_value_banlance' => 0,
+                        'giftvoucher_value_banlance' => $banlance,
                         'code_order' => $code_order,
-                        'detail' => $value->descriptions,
+                        'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
                         'status' => 'success',
                         'type' => 'Remove',
                         'type_action_giftvoucher' => 0,
                     ]);
-                }
-
-                DB::commit();
-                $resule = ['status' => 'success', 'message' => 'Use GiftVoucher Success'];
-                return $resule;
-            } else {
-                foreach ($data_gv as $value) {
-
-                    $gv_rs = $price_total - $value->giftvoucher_banlance;
-                    if ($gv_rs > 0) {
 
                         $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                             ->where('id', $value->id)
                             ->update(['giftvoucher_banlance' => 0, 'pro_status' => 2]);
 
-                        $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
-                            'customer_id_fk' => $id,
-                            'giftvoucher_cus_id_fk' => $value->id,
-                            // 'order_id_fk'=>$order_id,
-                            'giftvoucher_value_old' => $value->giftvoucher_banlance,
-                            'giftvoucher_value_use' => $value->giftvoucher_banlance,
-                            'giftvoucher_value_banlance' => 0,
-                            'code_order' => $code_order,
-                            'detail' => $value->descriptions,
-                            'type' => 'Remove',
-                            'status' => 'success',
-                            'type_action_giftvoucher' => 0,
-                        ]);
-
                         $price_total = $gv_rs;
 
                     } else {
 
+                      $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                        'customer_id_fk' => $id,
+                        'giftvoucher_cus_id_fk' => $value->id,
+                        //'order_id_fk'=>$order_id,
+                        'giftvoucher_value_old' => $gv_sum,
+                        'giftvoucher_value_use' => $price_total,
+                        'giftvoucher_value_banlance' => $banlance,
+                        'code_order' => $code_order,
+                        'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
+                        'status' => 'success',
+                        'type' => 'Remove',
+                        'type_action_giftvoucher' => 0,
+                    ]);
+
                         $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                             ->where('id', $value->id)
                             ->update(['giftvoucher_banlance' => abs($gv_rs), 'pro_status' => 2]);
-
-                        $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
-                            'customer_id_fk' => $id,
-                            'giftvoucher_cus_id_fk' => $value->id,
-                            //'order_id_fk'=>$order_id,
-                            'giftvoucher_value_old' => $value->giftvoucher_banlance,
-                            'giftvoucher_value_use' => $price_total,
-                            'giftvoucher_value_banlance' => abs($gv_rs),
-                            'code_order' => $code_order,
-                            'detail' => $value->descriptions,
-                            'type' => 'Remove',
-                            'status' => 'success',
-                            'type_action_giftvoucher' => 0,
-                        ]);
-
-                        DB::commit();
-                        $resule = ['status' => 'success', 'message' => 'Use GiftVoucher Success'];
-                        return $resule;
+                            DB::commit();
+                            $resule = ['status' => 'success', 'message' => 'Use GiftVoucher Success'];
+                            return $resule;
                     }
+
                 }
+
+
             }
 
         } catch (Exception $e) {
@@ -154,7 +184,5 @@ class GiftVoucher extends Model
             return $resule;
         }
     }
-
-
 
 }

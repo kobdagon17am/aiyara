@@ -208,43 +208,39 @@
 
                     {
                         data: 'detail',
-                        title: '<center>รายละเอียด</center>',
+                        title: '<center>Detail</center>',
                         className: 'text-center'
                     },
 
                     {
                         data: 'giftvoucher_value_old',
-                        title: '<center>ยอดเดิม</center>',
+                        title: '<center>Old Voucher</center>',
                         className: 'text-right'
                     },
 
                     {
                         data: 'giftvoucher_value_use',
-                        title: '<center>เพิ่ม/ลด</center>',
+                        title: '<center>Movement </center>',
                         className: 'text-right'
                     },
 
                     {
                         data: 'giftvoucher_value_banlance',
-                        title: '<center>Banlance</center>',
+                        title: '<center>Balance</center>',
                         className: 'text-right'
                     },
 
-                    {
-                        data: 'type',
-                        title: '<center>Type</center>',
-                        className: 'text-center'
-                    },
+                    // {
+                    //     data: 'type',
+                    //     title: '<center>Type</center>',
+                    //     className: 'text-center'
+                    // },
 
                     {
                         data: 'status',
                         title: '<center>Stattus</center>',
                         className: 'text-center'
                     },
-
-
-
-
           ],order:[[0,'DESC']],
 
   });

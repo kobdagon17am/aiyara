@@ -220,8 +220,8 @@ class PvPayment extends Model
                                 ]);
 
                                 $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_update->user_name);
-
                                 $gv_banlance = $gv->sum_gv + $giveaway_value->gv_free;
+
                                 $GiftvoucherCus->customer_username = $customer_update->user_name;
                                 $GiftvoucherCus->giftvoucher_value = $giveaway_value->gv_free;
                                 $GiftvoucherCus->giftvoucher_banlance = $giveaway_value->gv_free;
@@ -243,7 +243,6 @@ class PvPayment extends Model
                                     'giftvoucher_value_old' => $gv->sum_gv,
                                     'giftvoucher_value_use' => $giveaway_value->gv_free,
                                     'giftvoucher_value_banlance' =>  $giveaway_value->gv_free+$gv->sum_gv,
-                                    'code_order' => $code_order,
                                     'detail' => 'ได้จากการซื้อสินค้า',
                                     'status' => 'success',
                                     'type' => 'Add',

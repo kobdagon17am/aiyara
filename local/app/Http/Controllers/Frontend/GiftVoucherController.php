@@ -128,8 +128,9 @@ class GiftVoucherController extends Controller
           ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(log_gift_voucher.created_at) = '{$s_date}' else 1 END"))
           ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(log_gift_voucher.created_at) >= '{$s_date}' and date(log_gift_voucher.created_at) <= '{$e_date}'else 1 END"))
           ->whereRaw(("case WHEN '{$s_date}' = ''  and '{$e_date}' != ''  THEN  date(log_gift_voucher.created_at) = '{$e_date}' else 1 END"))
-          ->orderby('log_gift_voucher.created_at', 'DESC')
+          ->orderby('log_gift_voucher.id', 'DESC')
           ->get();
+
 
        $sQuery = DataTables::of($log_gift_voucher);
       return $sQuery
@@ -138,6 +139,11 @@ class GiftVoucherController extends Controller
               $date = '<label class="label label-inverse-info-border"><b>' . date('Y/m/d H:i:s', strtotime($row->created_at)) . '</b></label>';
               return $date;
           })
+
+          ->addColumn('code_order', function ($row) {
+            $code_order = '<label class="label label-inverse-info-border"><a href="'.route('cart-payment-history', ['code_order' => $row->code_order]) .'">'.$row->code_order.'</a></label>';
+            return $code_order;
+        })
 
           ->addColumn('giftvoucher_value_old', function ($row) {
             $gv = '<b class="text-primary">' . number_format($row->giftvoucher_value_old) . '</b>';
@@ -167,11 +173,9 @@ class GiftVoucherController extends Controller
             return $row->type;
         })
 
-      ->addColumn('code_order', function ($row) {
-          return $row->code_order;
-      })
 
-          ->rawColumns(['date','giftvoucher_value_old','giftvoucher_value_use','giftvoucher_value_banlance'])
+
+          ->rawColumns(['date','giftvoucher_value_old','giftvoucher_value_use','giftvoucher_value_banlance','code_order'])
           ->make(true);
   }
 
