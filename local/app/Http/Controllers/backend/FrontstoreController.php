@@ -314,7 +314,35 @@ class FrontstoreController extends Controller
     public function store(Request $request)
     {
       // dd($request->all());
-      return $this->form();
+      if(!empty($request->upload_file)){
+
+            $sRow = \App\Models\Backend\Frontstore::find($request->id);
+
+            if ($request->hasFile('image01')) {
+              $this->validate($request, [
+                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+              ]);
+              $image = $request->file('image01');
+              $name = 'S'.time() . '.' . $image->getClientOriginalExtension();
+              $image_path = 'local/public/files_slip/'.date('Ym').'/';
+              $image->move($image_path, $name);
+              $sRow->file_slip = $image_path.$name;
+              DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`,transfer_bill_date,note, `create_at`, `update_at`)
+               VALUES 
+               ('".$sRow->customers_id_fk."', '', '".$sRow->code_order."', '$image_path', '$name','".$request->transfer_money_datetime."','".$request->note."', now(), now()) ");
+              $lastInsertId_01 = DB::getPdo()->lastInsertId();
+
+              $sRow->save();
+
+
+            }
+
+         return redirect()->to(url("backend/frontstore/".$request->id."/edit"));
+
+      }else{
+        return $this->form();
+      }
+      
     }
 
     public function edit($id)
@@ -566,6 +594,11 @@ class FrontstoreController extends Controller
 
       }
 
+
+      $PaymentSlip = DB::select(" select * from payment_slip where code_order='".$sRow->code_order."' ");
+      // dd($PaymentSlip);
+
+
       return View('backend.frontstore.form')->with(
         array(
            'sRow'=>$sRow,
@@ -603,6 +636,7 @@ class FrontstoreController extends Controller
            'CusAgencyName'=>@$CusAgencyName,
            // 'giveaway_desc'=>@$giveaway_desc,
            'check_giveaway'=>@$check_giveaway,
+           'PaymentSlip'=>@$PaymentSlip,
         ) );
     }
 

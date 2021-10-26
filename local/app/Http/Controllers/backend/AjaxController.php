@@ -2485,14 +2485,22 @@ if($frontstore[0]->check_press_save==2){
         // return $request;
         // dd();
         if($request->ajax()){
+            // if($request->id){
+            //   $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
+            //   @UNLINK(@$sRow[0]->file_slip);
+            //   DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".$request->id."  ");
+            //   $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+            //   @UNLINK(@$r[0]->url.@$r[0]->file);
+            //   DB::select(" DELETE FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+            // }
+
             if($request->id){
-              $sRow = DB::select(" select * from db_orders where id=".$request->id."  ");
-              @UNLINK(@$sRow[0]->file_slip);
-              DB::select(" UPDATE db_orders SET file_slip='',transfer_money_datetime=NULL,note_fullpayonetime=NULL where id=".$request->id."  ");
-              $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+              $r = DB::select(" SELECT url,file FROM `payment_slip` WHERE `id`=".$request->id." ");
               @UNLINK(@$r[0]->url.@$r[0]->file);
-              DB::select(" DELETE FROM `payment_slip` WHERE `order_id`=".$request->id." ");
+              DB::select(" DELETE FROM `payment_slip` WHERE `id`=".$request->id." ");
             }
+
+
         }
     }
 
