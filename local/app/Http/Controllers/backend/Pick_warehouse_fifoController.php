@@ -1158,9 +1158,9 @@ class Pick_warehouse_fifoController extends Controller
 
                                    $pn .=     
                                     '<div class="divTableRow">
-                                    <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
-                                    <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
-                                    <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;color:blue;"> '.$pay_this.' </div>
+                                    <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
+                                    <div class="divTableCell" style="width:200px;text-align:center;">'.$v_02->lot_number.' ['.$v_02->lot_expired_date.']</div>
+                                    <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;color:blue;">'.$pay_this.'</div>
                                     </div>
                                     ';
 

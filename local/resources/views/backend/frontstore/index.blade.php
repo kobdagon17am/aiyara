@@ -517,6 +517,8 @@ $(function() {
            // var info = $(this).DataTable().page.info();
            // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
+           // console.log(aData['status']);
+
             if(aData['total_price']){
               $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
             }
@@ -578,14 +580,27 @@ $(function() {
                           }else{
 
                                $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+
+                                    var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+
+
+                                    if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
+                                       $('td:last-child', nRow).html(str_U + st2);
+                                       $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                       if(aData['status_sent_product']==6){
+                                        $('td:last-child', nRow).html(str_U + str_D);
+                                       }
+                                    }
+
+
+
                           }
 
+
+
                     }
 
-                    if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
-                       $('td:last-child', nRow).html('-');
-                       $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                    }
+
 
                     if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
                        $("td:eq(9)", nRow).html('Success');
@@ -599,7 +614,7 @@ $(function() {
               }
 
               if(aData['approve_status']==5){
-                $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
                 $("td:eq(10)", nRow).html('-');
               }
               if(aData['type']=="เติม Ai-Cash"){
@@ -1038,7 +1053,7 @@ $(document).ready(function() {
                                                       }
 
                                                       if(aData['approve_status']==5){
-                                                        $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                                                        $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
                                                         $("td:eq(10)", nRow).html('');
                                                       }
                                                       if(aData['type']=="เติม Ai-Cash"){
@@ -1344,7 +1359,7 @@ $(document).ready(function() {
                                         }
 
                                         if(aData['approve_status']==5){
-                                          $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">ยกเลิก</span>');
+                                          $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
                                           $("td:eq(10)", nRow).html('');
                                         }
                                         if(aData['type']=="เติม Ai-Cash"){
