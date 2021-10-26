@@ -1519,6 +1519,9 @@
                                       <img src="{{ $slip->url }}/{{ @$slip->file }}" style="margin-top: 5px;height: 180px;" >
 
                                       <button type="button" data-id="{{@$slip->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+
+                                      <input {{@$disAfterSave}} type="text" class="form-control" name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" >
+
                              </span>
 
                           @endforeach
