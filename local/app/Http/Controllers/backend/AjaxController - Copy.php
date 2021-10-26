@@ -2643,7 +2643,7 @@ if($frontstore[0]->check_press_save==2){
               if($sRow->id){
                 $insertData = array(
                  "giftvoucher_code_id_fk"=>$sRow->id,
-                 "customer_code"=>$request->customer_username,
+                 "customer_username"=>$request->customer_username,
                  "giftvoucher_value"=>$request->giftvoucher_value,
                  "giftvoucher_banlance"=>$request->giftvoucher_value,
                  "pro_sdate"=> $request->pro_sdate ,

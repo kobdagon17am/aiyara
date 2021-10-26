@@ -14,7 +14,7 @@ class Check_orders_listController extends Controller
     {
 
       return view('backend.check_orders_list.index');
-      
+
     }
 
  public function create()
@@ -67,14 +67,14 @@ class Check_orders_listController extends Controller
           $sRow->tel    = request('tel');
           $sRow->province_id_fk    = request('province_id_fk');
           $sRow->delivery_date    = request('delivery_date');
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
           \DB::commit();
 
            return redirect()->to(url("backend/Check_orders_list/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -96,8 +96,8 @@ class Check_orders_listController extends Controller
       $sTable = \App\Models\Backend\Check_orders_list::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('customer_code', function($row) {
-        $Customer = DB::select(" select * from customer_code where customers_id_fk=".$row->customer_id." ");
+      ->addColumn('customer_username', function($row) {
+        $Customer = DB::select(" select * from customer_username where customers_id_fk=".$row->customer_id." ");
         return $Customer[0]->c_code;
       })
       ->addColumn('customer_name', function($row) {

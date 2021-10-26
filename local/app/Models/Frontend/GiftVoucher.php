@@ -60,7 +60,7 @@ class GiftVoucher extends Model
             ->select('db_giftvoucher_cus.*', 'db_giftvoucher_code.descriptions')
             ->leftjoin('db_giftvoucher_code', 'db_giftvoucher_code.id', '=', 'db_giftvoucher_cus.giftvoucher_code_id_fk')
             ->where('db_giftvoucher_cus.giftvoucher_banlance', '>', 0)
-            ->where('db_giftvoucher_cus.customer_code', '=', $user_name)
+            ->where('db_giftvoucher_cus.customer_username', '=', $user_name)
             ->where('db_giftvoucher_cus.pro_sdate', '<=', date('Y-m-d'))
             ->where('db_giftvoucher_cus.pro_edate', '>=', date('Y-m-d'))
             ->whereraw('(db_giftvoucher_cus.pro_status = 1 || db_giftvoucher_cus.pro_status = 2)')

@@ -15,7 +15,7 @@ class Scan_qrcodeController extends Controller
       return View('backend.scan_qrcode.index');
       // $Products = DB::select("SELECT products.id as product_id,
       // products.product_code,
-      // (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      // (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       // FROM
       // products_details
       // Left Join products ON products_details.product_id_fk = products.id
@@ -76,7 +76,7 @@ class Scan_qrcodeController extends Controller
           db_check_orders.created_at,
           db_check_orders.updated_at,
           db_check_orders.deleted_at,
-          customers.user_name as customer_code
+          customers.user_name as customer_username
           FROM
           db_check_orders
           Left Join customers ON db_check_orders.customer_id = customers.id

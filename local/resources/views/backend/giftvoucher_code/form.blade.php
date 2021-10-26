@@ -128,9 +128,9 @@
 
 
                     <div class="form-group row">
-                      <label for="customer_code" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
+                      <label for="customer_username" class="col-md-3 col-form-label"> รหัส-ชื่อสมาชิก : </label>
                       <div class="col-md-3">
-                        <select id="customer_code" name="customer_code" class="form-control" required ></select> 
+                        <select id="customer_username" name="customer_username" class="form-control" required ></select>
                       </div>
                     </div>
 
@@ -315,7 +315,7 @@
             },
             columns: [
                 {data: 'id', title :'ID', className: 'text-center w50'},
-                {data: 'customer_code',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
+                {data: 'customer_username',   title :'<center>รหัสสมาชิก (ลูกค้า) </center>', className: 'text-center',render: function(d) {
                   //  '4=import เข้ารอตรวจสอบหรือนำไปใช้,1=ใช้งานได้,2=ถูกใช้แล้ว,3=หมดอายุแล้ว',
                   if(d==0){
                       return '-';
@@ -343,7 +343,7 @@
                  var info = $(this).DataTable().page.info();
                  $("td:eq(0)", nRow).html(info.start + iDisplayIndex + 1);
 
-           
+
 
                     if(aData['pro_status']!=2){
 
@@ -489,9 +489,9 @@ $(document).ready(function() {
             return false;
           }
 
-          var customer_code = $("#customer_code").val();
-            if(customer_code==''){
-            $("#customer_code").select2('open');
+          var customer_username = $("#customer_username").val();
+            if(customer_username==''){
+            $("#customer_username").select2('open');
             return false;
           }
 
@@ -935,10 +935,10 @@ $(document).ready(function() {
 </script>
 
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
 
-      $("#customer_code").select2({
+   $(document).ready(function(){
+
+      $("#customer_username").select2({
           minimumInputLength: 3,
           allowClear: true,
           placeholder: '-Select-',
@@ -949,7 +949,7 @@ $(document).ready(function() {
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };

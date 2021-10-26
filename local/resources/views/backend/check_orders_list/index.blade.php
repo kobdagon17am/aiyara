@@ -17,7 +17,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
@@ -39,12 +39,12 @@
                 <div class="row" >
                   <div class="col-8">
                     <input type="text" class="form-control float-left text-center w125 myLike" placeholder="เลขที่บิล" name="bill_no">
-                    <input type="text" class="form-control float-left text-center w125 myLike" placeholder="รหัสลูกค้า" name="customer_code" style="margin-left: 1%;">
+                    <input type="text" class="form-control float-left text-center w125 myLike" placeholder="รหัสลูกค้า" name="customer_username" style="margin-left: 1%;">
                   </div>
 
                   <div class="col-4 text-right" style="{{@$sC}}">
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.check_orders_list.create') }}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
 
@@ -107,7 +107,7 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'bill_no', title :'<center>เลขที่บิล </center>', className: 'text-center'},
-            {data: 'customer_code', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
+            {data: 'customer_username', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
             {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
             {data: 'pay_place', title :'<center>สถานที่จ่าย </center>', className: 'text-center'},
             {data: 'pay_date', title :'<center>วันที่จ่ายสินค้า </center>', className: 'text-center'},
@@ -115,12 +115,12 @@ $(function() {
             // {data: 'qrcode',   title :'<center>Qr-code</center>', className: 'text-center w100 ',render: function(d) {
             //     return '<center><img  src="{{ asset('asset/qrcode/temp/qr.png') }}" style="width: 40%;" ></center>';
             // }},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
               $('td:last-child', nRow).html(''
                 + '<a href="{{ route('backend.check_orders_list.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '

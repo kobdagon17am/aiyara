@@ -7,7 +7,7 @@
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 	use DB;
 	use File;
-	
+
 	class ExcelController extends Controller
 	{
 
@@ -17,7 +17,7 @@
 			$spreadsheet = new Spreadsheet();
 			$amt_sheet = 1;
 
-			for ($j=0; $j < $amt_sheet ; $j++) { 
+			for ($j=0; $j < $amt_sheet ; $j++) {
 
 				if($j>0){
 					$spreadsheet->createSheet();
@@ -35,7 +35,7 @@
 				$sheet->setCellValue('D1', 'Show_to');
 				$sheet->setCellValue('E1', 'Remark');
 
-				for ($i=0; $i < count($sRow) ; $i++) { 
+				for ($i=0; $i < count($sRow) ; $i++) {
 					$sheet->setCellValue('A'.($i+2), $sRow[$i]->customers_id_fk);
 					$sheet->setCellValue('B'.($i+2), $sRow[$i]->txt_msg);
 					$sheet->setCellValue('C'.($i+2), $sRow[$i]->show_from);
@@ -68,11 +68,11 @@
 			        'color' => array('rgb' => '002699'),
 			        // 'size'  => 16,
 			        'name'  => 'Verdana'
-			    ));      
-			 
+			    ));
 
 
-			for ($j=0; $j < $amt_sheet ; $j++) { 
+
+			for ($j=0; $j < $amt_sheet ; $j++) {
 
 				if($j>0){
 					$spreadsheet->createSheet();
@@ -106,7 +106,7 @@
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
 
-				for ($i=0; $i < count($sRow) ; $i++) { 
+				for ($i=0; $i < count($sRow) ; $i++) {
 					$sheet->setCellValue('A'.($i+2), $sRow[$i]->consignment_no);
 					$sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_ref_no);
 					$sheet->setCellValue('C'.($i+2), $sRow[$i]->sender_code);
@@ -168,7 +168,7 @@
 				$sheet->setCellValue('D1', 'Show_to');
 				$sheet->setCellValue('E1', 'Remark');
 
-				for ($i=0; $i < count($sRow) ; $i++) { 
+				for ($i=0; $i < count($sRow) ; $i++) {
 					$sheet->setCellValue('A'.($i+2), $sRow[$i]->customers_id_fk);
 					$sheet->setCellValue('B'.($i+2), $sRow[$i]->txt_msg);
 					$sheet->setCellValue('C'.($i+2), $sRow[$i]->show_from);
@@ -207,7 +207,7 @@
 			$sheet->setCellValue('G1', 'Customer name');
 			$sheet->setCellValue('H1', 'Recipient name');
 
-			for ($i=0; $i < count($sRow) ; $i++) { 
+			for ($i=0; $i < count($sRow) ; $i++) {
 				$sRowCE = DB::table('course_event')->where('id',$sRow[$i]->ce_id_fk)->get();
 				$Customer = DB::table('customers')->where('id',$sRow[$i]->customers_id_fk)->get();
 				$sUser = \App\Models\Backend\Permission\Admin::where('id',$sRow[$i]->subject_recipient)->get();
@@ -251,7 +251,7 @@
 				$sheet->setCellValue('G1', 'Customer name');
 				$sheet->setCellValue('H1', 'Recipient name');
 
-				for ($i=0; $i < count($sRow) ; $i++) { 
+				for ($i=0; $i < count($sRow) ; $i++) {
 					$sRowCE = DB::table('course_event')->where('id',$sRow[$i]->ce_id_fk)->get();
 					$Customer = DB::table('customers')->where('id',$sRow[$i]->customers_id_fk)->get();
 					$sUser = \App\Models\Backend\Permission\Admin::where('id',$sRow[$i]->subject_recipient)->get();
@@ -277,12 +277,12 @@
 
 
 				public function excelExportPromotionCus(Request $request)
-					{	
+					{
 
 						$spreadsheet = new Spreadsheet();
 						$amt_sheet = 1;
 
-						for ($j=0; $j < $amt_sheet ; $j++) { 
+						for ($j=0; $j < $amt_sheet ; $j++) {
 
 							if($j>0){
 								$spreadsheet->createSheet();
@@ -299,7 +299,7 @@
 							$sheet->setCellValue('B1', 'user_name');
 							$sheet->setCellValue('C1', 'created_at');
 
-							for ($i=0; $i < count($sRow) ; $i++) { 
+							for ($i=0; $i < count($sRow) ; $i++) {
 								$sheet->setCellValue('A'.($i+2), $sRow[$i]->promotion_code);
 								// $sheet->setCellValue('B'.($i+2), $sRow[$i]->customer_id_fk);
 								$sheet->setCellValue('B'.($i+2), $sRow[$i]->user_name);
@@ -321,7 +321,7 @@
 
 
 				public function excelExportGiftvoucherCus(Request $request)
-					{	
+					{
 
 						// return $request;
 						// dd();
@@ -329,7 +329,7 @@
 						$spreadsheet = new Spreadsheet();
 						$amt_sheet = 1;
 
-						for ($j=0; $j < $amt_sheet ; $j++) { 
+						for ($j=0; $j < $amt_sheet ; $j++) {
 
 							if($j>0){
 								$spreadsheet->createSheet();
@@ -345,12 +345,12 @@
 							$sheet->setCellValue('A1', 'ID');
 							$sheet->setCellValue('B1', 'DESCRIPTIONS_ID');
 							$sheet->setCellValue('C1', 'DESCRIPTIONS');
-							$sheet->setCellValue('D1', 'CUSTOMER_CODE');
+							$sheet->setCellValue('D1', 'CUSTOMER_USERNAME');
 							$sheet->setCellValue('E1', 'GIFTVOUCHER_VALUE');
 							$sheet->setCellValue('F1', 'STATUS');
 							$sheet->setCellValue('G1', 'CREATED_AT');
 
-							for ($i=0; $i < count($sRow) ; $i++) { 
+							for ($i=0; $i < count($sRow) ; $i++) {
 
 								$d = $sRow[$i]->pro_status;
 								if($d==4){
@@ -368,7 +368,7 @@
 								$sheet->setCellValue('A'.($i+2), $sRow[$i]->id);
 								$sheet->setCellValue('B'.($i+2), $request->giftvoucher_code_id_fk);
 								$sheet->setCellValue('C'.($i+2), $GiftvoucherCode->descriptions);
-								$sheet->setCellValue('D'.($i+2), $sRow[$i]->customer_code);
+								$sheet->setCellValue('D'.($i+2), $sRow[$i]->customer_username);
 								$sheet->setCellValue('E'.($i+2), $sRow[$i]->giftvoucher_value);
 								$sheet->setCellValue('F'.($i+2), $dd);
 								$sheet->setCellValue('G'.($i+2), $sRow[$i]->created_at);
@@ -388,5 +388,5 @@
 
 
 
-		
+
 	}

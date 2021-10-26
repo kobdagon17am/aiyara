@@ -496,7 +496,7 @@ class FrontstoreController extends Controller
             FROM
             db_giftvoucher_cus
             Left Join db_giftvoucher_code ON db_giftvoucher_cus.giftvoucher_code_id_fk = db_giftvoucher_code.id
-            Left Join customers ON db_giftvoucher_cus.customer_code = customers.user_name
+            Left Join customers ON db_giftvoucher_cus.customer_username = customers.user_name
             WHERE
             customers.id = ".$sRow->customers_id_fk."
             AND
@@ -779,7 +779,7 @@ class FrontstoreController extends Controller
             FROM
             db_giftvoucher_cus
             Left Join db_giftvoucher_code ON db_giftvoucher_cus.giftvoucher_code_id_fk = db_giftvoucher_code.id
-            Left Join customers ON db_giftvoucher_cus.customer_code = customers.user_name
+            Left Join customers ON db_giftvoucher_cus.customer_username = customers.user_name
             WHERE
             customers.id = ".$sRow->customers_id_fk."
             AND
@@ -1771,12 +1771,12 @@ class FrontstoreController extends Controller
              $purchase_type_id_fk_02 = "";
           }
 
-          if(!empty($req->customer_code)){
-             $customer_code = " AND db_orders.customers_id_fk = '".$req->customer_code."' " ;
-             $customer_code_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_code."' " ;
+          if(!empty($req->customer_username)){
+             $customer_username = " AND db_orders.customers_id_fk = '".$req->customer_username."' " ;
+             $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_username."' " ;
           }else{
-             $customer_code = "";
-             $customer_code_02 = "";
+             $customer_username = "";
+             $customer_username_02 = "";
           }
 
           if(!empty($req->customer_name)){
@@ -1882,7 +1882,7 @@ class FrontstoreController extends Controller
                 $endDate1
                 $invoice_code
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $action_user_02
                 $status_sent_money
@@ -1977,7 +1977,7 @@ class FrontstoreController extends Controller
                 $endDate1
                 $invoice_code
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $action_user_02
                 $status_sent_money
@@ -2044,7 +2044,7 @@ class FrontstoreController extends Controller
               $endDate2
               $invoice_code2
               $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2337,12 +2337,12 @@ class FrontstoreController extends Controller
              $purchase_type_id_fk_02 = "";
           }
 
-          if(!empty($req->customer_code)){
-             $customer_code = " AND db_orders.customers_id_fk = '".$req->customer_code."' " ;
-             $customer_code_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_code."' " ;
+          if(!empty($req->customer_username)){
+             $customer_username = " AND db_orders.customers_id_fk = '".$req->customer_username."' " ;
+             $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_username."' " ;
           }else{
-             $customer_code = "";
-             $customer_code_02 = "";
+             $customer_username = "";
+             $customer_username_02 = "";
           }
 
           if(!empty($req->customer_name)){
@@ -2417,7 +2417,7 @@ $action_user_011
 $startDate1
 $endDate1
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2443,7 +2443,7 @@ $action_user_012
 $startDate2
 $endDate2
 $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2478,7 +2478,7 @@ $action_user_011
 $startDate1
 $endDate1
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2504,7 +2504,7 @@ $action_user_012
 $startDate2
 $endDate2
 $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2540,7 +2540,7 @@ $action_user_011
 $startDate1
 $endDate1
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2565,7 +2565,7 @@ $action_user_012
 $startDate2
 $endDate2
 $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2599,7 +2599,7 @@ $action_user_011
 $startDate1
 $endDate1
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2623,7 +2623,7 @@ $action_user_012
 $startDate2
 $endDate2
 $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2658,7 +2658,7 @@ $action_user_011
 $startDate1
 $endDate1
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2681,7 +2681,7 @@ $action_user_012
 $startDate2
 $endDate2
 $purchase_type_id_fk_02
-              $customer_code_02
+              $customer_username_02
               $customer_name_02
               $action_user_022
               $status_sent_money_02
@@ -2816,12 +2816,12 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
            $purchase_type_id_fk_02 = "";
         }
 
-          if(!empty($req->customer_code)){
-             $customer_code = " AND db_orders.customers_id_fk = '".$req->customer_code."' " ;
-             $customer_code_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_code."' " ;
+          if(!empty($req->customer_username)){
+             $customer_username = " AND db_orders.customers_id_fk = '".$req->customer_username."' " ;
+             $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_username."' " ;
           }else{
-             $customer_code = "";
-             $customer_code_02 = "";
+             $customer_username = "";
+             $customer_username_02 = "";
           }
 
           if(!empty($req->customer_name)){
@@ -2904,7 +2904,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 $startDate
                 $endDate
                 $purchase_type_id_fk
-                $customer_code
+                $customer_username
                 $customer_name
                 $invoice_code
                 $action_user_02
@@ -2934,7 +2934,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 $startDate2
                 $endDate2
                 $purchase_type_id_fk_02
-                $customer_code_02
+                $customer_username_02
                 $customer_name_02
                 $action_user_022
                 $status_sent_money_02

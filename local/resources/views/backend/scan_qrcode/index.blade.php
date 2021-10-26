@@ -39,7 +39,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -51,7 +51,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -59,7 +59,7 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
+      // echo $menu_id;
    ?>
 <div class="row">
     <div class="col-12">
@@ -68,9 +68,9 @@
 
 
                 <div class="row" >
-                 
+
                   <div class="col-12">
-                        <div class="form-group row "> 
+                        <div class="form-group row ">
 
                             <div class="col-md-10 d-flex  ">
                               <label class="col-4" >ค้นด้วย : QR-CODE / เลขที่ใบเสร็จ / รหัสลูกค้า : </label>
@@ -147,9 +147,9 @@ $(function() {
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'qrcode', title :'<center>รหัส QR-CODE </center>', className: 'text-left'},
             {data: 'receipt', title :'<center>เลขที่ใบเสร็จ </center>', className: 'text-left'},
-            {data: 'customer_code', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
+            {data: 'customer_username', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
         ],
-   
+
     });
 
 });
@@ -162,7 +162,7 @@ $(function() {
 
 
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnSearch', function(event) {
                   event.preventDefault();
 
@@ -197,16 +197,16 @@ $(function() {
                                       {data: 'id', title :'ID', className: 'text-center w50'},
                                       {data: 'qrcode', title :'<center>รหัส QR-CODE </center>', className: 'text-left'},
                                       {data: 'receipt', title :'<center>เลขที่ใบเสร็จ </center>', className: 'text-left'},
-                                      {data: 'customer_code', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
+                                      {data: 'customer_username', title :'<center>รหัสลูกค้า </center>', className: 'text-center'},
                                   ],
-                           
+
                             });
 
                         });
-               
+
             });
 
-        }); 
+        });
     </script>
 
 

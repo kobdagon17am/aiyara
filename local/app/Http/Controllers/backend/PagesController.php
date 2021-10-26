@@ -711,7 +711,7 @@ class PagesController extends Controller{
                          }
                         $insertData = array(
                          "giftvoucher_code_id_fk"=>@$sRow->id,
-                         "customer_code"=>@$customer_username,
+                         "customer_username"=>@$customer_username,
                          "giftvoucher_value"=>@$giftvoucher_value,
                          "giftvoucher_banlance"=>@$giftvoucher_value,
                          "pro_status"=> '4' ,
