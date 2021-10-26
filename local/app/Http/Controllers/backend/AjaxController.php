@@ -453,7 +453,7 @@ class AjaxController extends Controller
 
     }
 
- 
+
 
     public function ajaxGetBranch(Request $request)
     {
@@ -2591,7 +2591,7 @@ if($frontstore[0]->check_press_save==2){
                $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=".$request->id." ");
                // return($ch_aicash_02[0]->aicash_amt);
 
-               // เช็คสถานะก่อนว่า รออนุมัติ หรือไม่ ถ้า ใช่ ให้ลบได้ ถ้าเป็น สถานะอื่นๆ จะไม่ให้ลบ 
+               // เช็คสถานะก่อนว่า รออนุมัติ หรือไม่ ถ้า ใช่ ให้ลบได้ ถ้าเป็น สถานะอื่นๆ จะไม่ให้ลบ
                // ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id
                if($ch_aicash_02[0]->approve_status==1){
                 return true;
@@ -2602,7 +2602,7 @@ if($frontstore[0]->check_press_save==2){
                }
 
 
-               
+
         }
     }
 
@@ -2648,7 +2648,7 @@ if($frontstore[0]->check_press_save==2){
               if($sRow->id){
                 $insertData = array(
                  "giftvoucher_code_id_fk"=>$sRow->id,
-                 "customer_code"=>$request->customer_code,
+                 "customer_username"=>$request->customer_username,
                  "giftvoucher_value"=>$request->giftvoucher_value,
                  "giftvoucher_banlance"=>$request->giftvoucher_value,
                  "pro_sdate"=> $request->pro_sdate ,
@@ -3079,7 +3079,7 @@ if($frontstore[0]->check_press_save==2){
                  $addr .= $v->tel." ";
                  $addr .= $v->tel_home." ";
 
-        
+
 
             }
 
@@ -3702,7 +3702,7 @@ if($frontstore[0]->check_press_save==2){
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET status=2 WHERE id='".$request->id."' ");
 
-      
+
 
       }
 
@@ -3720,7 +3720,7 @@ if($frontstore[0]->check_press_save==2){
 
           DB::select(" UPDATE `db_pay_requisition_001` SET action_user=".(\Auth::user()->id).",action_date=now(),status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET who_cancel=".(\Auth::user()->id).",cancel_date=now(),status=6 WHERE id='".$request->id."' ");
-          DB::select(" UPDATE 
+          DB::select(" UPDATE
             db_pay_requisition_002
             SET
             status_cancel=1
@@ -3728,12 +3728,12 @@ if($frontstore[0]->check_press_save==2){
             ORDER BY time_pay DESC LIMIT 1 ");
 
           // เอาสินค้าคืนคลัง
-          $r = DB::select(" 
+          $r = DB::select("
 
-            SELECT 
+            SELECT
             time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
             FROM db_pay_requisition_002
-            WHERE pick_pack_requisition_code_id_fk='".$request->id."' 
+            WHERE pick_pack_requisition_code_id_fk='".$request->id."'
             ORDER BY time_pay DESC LIMIT 1 ; ");
 
           if($r){
@@ -3756,17 +3756,17 @@ if($frontstore[0]->check_press_save==2){
                       ->get();
                       if($_choose->count() == 0){
 
-                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel) 
-                            SELECT 
+                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel)
+                            SELECT
                             time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now(),1
                              FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND time_pay='".$v->time_pay."' ; ");
 
                        }
 
 
-                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")  
-                                  WHERE 
-                                  business_location_id_fk= ".$v->business_location_id_fk." AND 
+                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")
+                                  WHERE
+                                  business_location_id_fk= ".$v->business_location_id_fk." AND
                                   branch_id_fk= ".$v->branch_id_fk." AND
                                   product_id_fk= ".$v->product_id_fk." AND
                                   lot_number= '".$v->lot_number."' AND
@@ -3774,14 +3774,14 @@ if($frontstore[0]->check_press_save==2){
                                   warehouse_id_fk= ".$v->warehouse_id_fk." AND
                                   zone_id_fk= ".$v->zone_id_fk." AND
                                   shelf_id_fk= ".$v->shelf_id_fk." AND
-                                  shelf_floor= ".$v->shelf_floor." 
+                                  shelf_floor= ".$v->shelf_floor."
                               ");
-       
+
 
                }
           }
 
-          $r2 = DB::select(" 
+          $r2 = DB::select("
             SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel=1 ORDER BY time_pay DESC LIMIT 1 ; ");
 
              foreach ($r2 as $key => $v) {
@@ -3806,7 +3806,7 @@ if($frontstore[0]->check_press_save==2){
                       ->get();
                       if($_choose->count() == 0){
 
-                              DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)  
+                              DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)
                                 VALUES
                                (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->customers_id_fk.", '".$v->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
 
@@ -3822,7 +3822,7 @@ if($frontstore[0]->check_press_save==2){
                  // }
 
 
-      
+
 
       }
 
@@ -4781,11 +4781,11 @@ if($frontstore[0]->check_press_save==2){
         if($request->ajax()){
 
        //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
-        $amt_balance_stock =  DB::select(" SELECT sum(amt) as amt FROM db_stocks 
+        $amt_balance_stock =  DB::select(" SELECT sum(amt) as amt FROM db_stocks
             WHERE 1
-            $w01 
+            $w01
             $w02
-            $w03 
+            $w03
             $w052
             GROUP BY product_id_fk
 
@@ -4794,15 +4794,15 @@ if($frontstore[0]->check_press_save==2){
 
         // return  $amt_balance_stock;
 
-        $amt_in_out =  DB::select(" SELECT 
+        $amt_in_out =  DB::select(" SELECT
                 SUM(CASE WHEN in_out=2 THEN amt*-1 ELSE amt END
                 ) as amt
-                FROM db_stock_movement 
+                FROM db_stock_movement
             WHERE 1
-                $w01 
-                $w02 
-                $w03 
-                $w05 
+                $w01
+                $w02
+                $w03
+                $w05
             ") ;
         $amt_in_out = @$amt_in_out[0]->amt ? $amt_in_out[0]->amt : 0 ;
         // return $amt_in_out;
@@ -4813,16 +4813,16 @@ if($frontstore[0]->check_press_save==2){
         // }else{
             $amt_balance_stock = $amt_balance_stock - $amt_in_out;
         // }
-        
+
         // $amt_balance_stock = 1044;
         // return $amt_balance_stock;
 
-        // $amt_in_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+        // $amt_in_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement
         //     WHERE 1
-        //         $w01 
-        //         $w02 
-        //         $w03 
-        //         $w05 
+        //         $w01
+        //         $w02
+        //         $w03
+        //         $w05
         //     AND in_out=1
         //     GROUP BY product_id_fk,doc_no
 
@@ -4830,13 +4830,13 @@ if($frontstore[0]->check_press_save==2){
 
         // $amt_in_stock = @$amt_in_stock[0]->amt ? $amt_in_stock[0]->amt : 0 ;
 
-        // $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement 
+        // $amt_out_stock =  DB::select(" SELECT SUM(amt) as amt FROM db_stock_movement
 
         //     WHERE 1
-        //         $w01 
-        //         $w02 
-        //         $w03 
-        //         $w05  
+        //         $w01
+        //         $w02
+        //         $w03
+        //         $w05
         //     AND in_out=2
         //     GROUP BY product_id_fk,doc_no
 
@@ -4845,7 +4845,7 @@ if($frontstore[0]->check_press_save==2){
         // $amt_out_stock = @$amt_out_stock[0]->amt ? $amt_out_stock[0]->amt : 0 ;
 
         // $num = $amt_in_stock - $amt_out_stock ;
-        
+
         // // return $amt_balance_stock;
         // // return $amt_in_stock;
         // // return $amt_out_stock;
@@ -4872,11 +4872,11 @@ if($frontstore[0]->check_press_save==2){
 
 
           $Data = DB::select("
-                SELECT * FROM db_stock_movement where 1 
-                $w01 
-                $w02 
-                $w03 
-                $w05 
+                SELECT * FROM db_stock_movement where 1
+                $w01
+                $w02
+                $w03
+                $w05
                 GROUP BY product_id_fk,doc_no
           ");
 
@@ -4919,7 +4919,7 @@ if($frontstore[0]->check_press_save==2){
                       $txt = "ปรับยอด";
                       // DB::select(" INSERT INTO $temp_db_stock_card (details,amt_out) VALUES ('".$txt."',932) ") ;
                 }
-        
+
 
             return "db_stock_card => success";
 
@@ -4933,7 +4933,7 @@ if($frontstore[0]->check_press_save==2){
     public function ajaxProcessStockcard_01(Request $request)
     {
         // return  $request ;
-        
+
 
         $Stock = \App\Models\Backend\Check_stock::where('id',$request->db_stocks_id)->get();
 
@@ -5016,11 +5016,11 @@ if($frontstore[0]->check_press_save==2){
             // return $w06 ;
 
        //   DB::select(" INSERT INTO $temp_db_stock_card (details,amt_in) VALUES ('ยอดคงเหลือยกมา',".$d2.") ") ;
-        $amt_balance_stock =  DB::select(" SELECT sum(amt) as amt FROM db_stocks 
+        $amt_balance_stock =  DB::select(" SELECT sum(amt) as amt FROM db_stocks
             WHERE 1
-            $w01 
+            $w01
             $w02
-            $w03 
+            $w03
             $w04
             $w052
             $w06
@@ -5035,16 +5035,16 @@ if($frontstore[0]->check_press_save==2){
 
         // return  $amt_balance_stock;
 
-        $amt_in_out =  DB::select(" SELECT 
+        $amt_in_out =  DB::select(" SELECT
                 SUM(CASE WHEN in_out=2 THEN amt*-1 ELSE amt END
                 ) as amt
-                FROM db_stock_movement 
+                FROM db_stock_movement
             WHERE 1
-                $w01 
-                $w02 
-                $w03 
+                $w01
+                $w02
+                $w03
                 $w04
-                $w05 
+                $w05
                 $w06
                 $w07
                             $w08
@@ -5061,7 +5061,7 @@ if($frontstore[0]->check_press_save==2){
             $amt_balance_stock = $amt_balance_stock - $amt_in_out;
         // }
 
-      
+
 
         if($amt_balance_stock < 0 ) {
             // $amt_balance_stock = 0 ;
@@ -5081,12 +5081,12 @@ if($frontstore[0]->check_press_save==2){
 
 
           $Data = DB::select("
-                SELECT * FROM db_stock_movement where 1 
-                $w01 
-                $w02 
-                $w03 
+                SELECT * FROM db_stock_movement where 1
+                $w01
+                $w02
+                $w03
                 $w04
-                $w05 
+                $w05
                 $w06
                 $w07
                             $w08
@@ -5134,7 +5134,7 @@ if($frontstore[0]->check_press_save==2){
                       $txt = "ปรับยอด";
                       // DB::select(" INSERT INTO $temp_db_stock_card (details,amt_out) VALUES ('".$txt."',932) ") ;
                 }
-        
+
 
             return "db_stock_card => success";
 
@@ -5339,7 +5339,7 @@ if($frontstore[0]->check_press_save==2){
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
-                  
+
                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                   "action_date" =>  @$value->action_date?$value->action_date:NULL,
                   "approver" =>  @$value->approver?$value->approver:NULL,
@@ -5529,7 +5529,7 @@ if($frontstore[0]->check_press_save==2){
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
-                                      
+
                     "action_user" =>  @$value->action_user?$value->action_user:NULL,
                     "action_date" =>  @$value->action_date?$value->action_date:NULL,
                     "approver" =>  @$value->approver?$value->approver:NULL,
@@ -5702,7 +5702,7 @@ if($frontstore[0]->check_press_save==2){
 
 
           ");
-        
+
         if(@$Data){
 
                 if(count($Data) == 1){
@@ -5994,7 +5994,7 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
                           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                           "status" =>  @$value->status?$value->status:0,
                           "note" =>  @$value->note?$value->note:NULL,
-                   
+
                     "action_user" =>  @$value->action_user?$value->action_user:NULL,
                     "action_date" =>  @$value->action_date?$value->action_date:NULL,
                     "approver" =>  @$value->approver?$value->approver:NULL,
@@ -6117,16 +6117,16 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
    //          if($d1){
    //             $query = DB::select("
    //                  SELECT * FROM customers_addr_frontstore WHERE frontstore_id_fk=999999
-   //                  "); 
+   //                  ");
 
    //              return response()->json($query);
    //          }else{
    //              return response()->json(0);
    //          }
-            
+
 
    //          // return @$query[0]->orders_id_fk;
-            
+
 
    //      }
    //  }
@@ -6147,7 +6147,7 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
             $d2 =  DB::select(" SELECT orders_id_fk as frontstore_id_fk,customer_id FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
             return response()->json($d2);
         }
-        
+
 
       }
     }

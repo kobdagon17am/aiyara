@@ -29,7 +29,7 @@ class PagesController extends Controller{
 
       $file = $request->file('file');
 
-      // File Details 
+      // File Details
       $filename = $file->getClientOriginalName();
       $extension = $file->getClientOriginalExtension();
       $tempPath = $file->getRealPath();
@@ -40,9 +40,9 @@ class PagesController extends Controller{
       $valid_extension = array("csv");
 
       // 2MB in Bytes
-      // $maxFileSize = 2097152; 
+      // $maxFileSize = 2097152;
       // 5MB in Bytes
-      $maxFileSize = 5242880; 
+      $maxFileSize = 5242880;
 
       // Check file extension
       if(in_array(strtolower($extension),$valid_extension)){
@@ -65,13 +65,13 @@ class PagesController extends Controller{
 
           while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
              $num = count($filedata );
-             
+
              // Skip first row (Remove below comment if you want to skip the first row)
              if($i == 0){
                 $i++;
-                continue; 
+                continue;
              }
-             
+
              for ($c=0; $c < $num; $c++) {
                 $importData_arr[$i][] = $filedata [$c];
              }
@@ -124,7 +124,7 @@ class PagesController extends Controller{
 
        // dd($file);
 
-      // File Details 
+      // File Details
       $filename = $file->getClientOriginalName();
       $extension = $file->getClientOriginalExtension();
       $tempPath = $file->getRealPath();
@@ -135,9 +135,9 @@ class PagesController extends Controller{
       $valid_extension = array("xlsx");
 
       // 2MB in Bytes
-      // $maxFileSize = 2097152; 
+      // $maxFileSize = 2097152;
       // 5MB in Bytes
-      $maxFileSize = 5242880; 
+      $maxFileSize = 5242880;
 
       // Check file extension
       if(in_array(strtolower($extension),$valid_extension)){
@@ -161,7 +161,7 @@ class PagesController extends Controller{
           $highestColumn = $worksheet->getHighestColumn(); // total number of columns
           $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-          $lines = $highestRow - 2; 
+          $lines = $highestRow - 2;
           if ($lines <= 0) {
                    // Exit ('There is no data in the Excel table');
               Session::flash('message','There is no data in the Excel table');
@@ -180,7 +180,7 @@ class PagesController extends Controller{
                     // Skip first row (Remove below comment if you want to skip the first row)
                      if($i == 0){
                         $i++;
-                        continue; 
+                        continue;
                      }
 
                    $insertData = array(
@@ -229,7 +229,7 @@ class PagesController extends Controller{
 
            // dd($file);
 
-          // File Details 
+          // File Details
           $filename = $file->getClientOriginalName();
           $extension = $file->getClientOriginalExtension();
           $tempPath = $file->getRealPath();
@@ -240,9 +240,9 @@ class PagesController extends Controller{
           $valid_extension = array("xlsx");
 
           // 2MB in Bytes
-          // $maxFileSize = 2097152; 
+          // $maxFileSize = 2097152;
           // 5MB in Bytes
-          $maxFileSize = 5242880; 
+          $maxFileSize = 5242880;
 
           // Check file extension
           if(in_array(strtolower($extension),$valid_extension)){
@@ -266,7 +266,7 @@ class PagesController extends Controller{
               $highestColumn = $worksheet->getHighestColumn(); // total number of columns
               $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-              $lines = $highestRow - 2; 
+              $lines = $highestRow - 2;
               if ($lines <= 0) {
                        // Exit ('There is no data in the Excel table');
                   Session::flash('message','There is no data in the Excel table');
@@ -286,7 +286,7 @@ class PagesController extends Controller{
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
                             $i++;
-                            continue; 
+                            continue;
                          }
 
                        $insertData = array(
@@ -333,7 +333,7 @@ class PagesController extends Controller{
 
            // dd($file);
 
-          // File Details 
+          // File Details
           $filename = $file->getClientOriginalName();
           $extension = $file->getClientOriginalExtension();
           $tempPath = $file->getRealPath();
@@ -344,9 +344,9 @@ class PagesController extends Controller{
           $valid_extension = array("csv");
 
           // 2MB in Bytes
-          // $maxFileSize = 2097152; 
+          // $maxFileSize = 2097152;
           // 5MB in Bytes
-          $maxFileSize = 5242880; 
+          $maxFileSize = 5242880;
 
           // Check file extension
           if(in_array(strtolower($extension),$valid_extension)){
@@ -370,7 +370,7 @@ class PagesController extends Controller{
               $highestColumn = $worksheet->getHighestColumn(); // total number of columns
               $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-              $lines = $highestRow - 2; 
+              $lines = $highestRow - 2;
               if ($lines <= 0) {
                        // Exit ('There is no data in the Excel table');
                   Session::flash('message','There is no data in the Excel table');
@@ -390,7 +390,7 @@ class PagesController extends Controller{
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
                             $i++;
-                            continue; 
+                            continue;
                          }
 
                        $insertData = array(
@@ -437,7 +437,7 @@ class PagesController extends Controller{
 
           $file = $request->file('fileXLS');
            // dd($file);
-          // File Details 
+          // File Details
           $filename = $file->getClientOriginalName();
           $extension = $file->getClientOriginalExtension();
           $tempPath = $file->getRealPath();
@@ -448,9 +448,9 @@ class PagesController extends Controller{
           $valid_extension = array("xlsx","csv");
 
           // 2MB in Bytes
-          // $maxFileSize = 2097152; 
+          // $maxFileSize = 2097152;
           // 5MB in Bytes
-          $maxFileSize = 5242880; 
+          $maxFileSize = 5242880;
 
           // Check file extension
           // if(in_array(strtolower($extension),$valid_extension)){
@@ -488,7 +488,7 @@ class PagesController extends Controller{
               $highestColumn = $worksheet->getHighestColumn(); // total number of columns
               $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-              $lines = $highestRow - 2; 
+              $lines = $highestRow - 2;
               if ($lines <= 0) {
                        // Exit ('There is no data in the Excel table');
                   Session::flash('message','There is no data in the Excel table');
@@ -506,7 +506,7 @@ class PagesController extends Controller{
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
                             $i++;
-                            continue; 
+                            continue;
                          }
 
                        // $insertData = array(
@@ -542,7 +542,7 @@ class PagesController extends Controller{
             }
 
 
-// CSV 
+// CSV
 
               if(in_array(strtolower($extension),['csv'])){
 
@@ -578,13 +578,13 @@ class PagesController extends Controller{
 
                     while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
                        $num = count($filedata );
-                       
+
                        // Skip first row (Remove below comment if you want to skip the first row)
                        if($i == 0){
                           $i++;
-                          continue; 
+                          continue;
                        }
-                       
+
                        for ($c=0; $c < $num; $c++) {
                           $importData_arr[$i][] = $filedata [$c];
                        }
@@ -643,7 +643,7 @@ class PagesController extends Controller{
 
           $file = $request->file('fileXLS');
            // dd($file);
-          // File Details 
+          // File Details
           $filename = $file->getClientOriginalName();
           $extension = $file->getClientOriginalExtension();
           $tempPath = $file->getRealPath();
@@ -654,9 +654,9 @@ class PagesController extends Controller{
           $valid_extension = array("xlsx");
 
           // 2MB in Bytes
-          // $maxFileSize = 2097152; 
+          // $maxFileSize = 2097152;
           // 5MB in Bytes
-          $maxFileSize = 5242880; 
+          $maxFileSize = 5242880;
 
           // Check file extension
           if(in_array(strtolower($extension),$valid_extension)){
@@ -690,7 +690,7 @@ class PagesController extends Controller{
               $highestColumn = $worksheet->getHighestColumn(); // total number of columns
               $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-              $lines = $highestRow - 2; 
+              $lines = $highestRow - 2;
               if ($lines <= 0) {
                        // Exit ('There is no data in the Excel table');
                   Session::flash('message','There is no data in the Excel table');
@@ -701,17 +701,17 @@ class PagesController extends Controller{
 
                   for ($row = 1; $row <= $highestRow; ++$row) {
 
-                       $customer_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); 
-                       $giftvoucher_value = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); 
+                       $customer_username = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                       $giftvoucher_value = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
 
                         // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
                             $i++;
-                            continue; 
+                            continue;
                          }
                         $insertData = array(
                          "giftvoucher_code_id_fk"=>@$sRow->id,
-                         "customer_code"=>@$customer_code,
+                         "customer_code"=>@$customer_username,
                          "giftvoucher_value"=>@$giftvoucher_value,
                          "giftvoucher_banlance"=>@$giftvoucher_value,
                          "pro_status"=> '4' ,
@@ -756,7 +756,7 @@ class PagesController extends Controller{
 
              // dd($file);
 
-            // File Details 
+            // File Details
             $filename = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $tempPath = $file->getRealPath();
@@ -767,9 +767,9 @@ class PagesController extends Controller{
             $valid_extension = array("xlsx");
 
             // 2MB in Bytes
-            // $maxFileSize = 2097152; 
+            // $maxFileSize = 2097152;
             // 5MB in Bytes
-            $maxFileSize = 5242880; 
+            $maxFileSize = 5242880;
 
             // Check file extension
             if(in_array(strtolower($extension),$valid_extension)){
@@ -793,7 +793,7 @@ class PagesController extends Controller{
                 $highestColumn = $worksheet->getHighestColumn(); // total number of columns
                 $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
 
-                $lines = $highestRow - 1; 
+                $lines = $highestRow - 1;
                 if ($lines <= 0) {
                          // Exit ('There is no data in the Excel table');
                     Session::flash('message','There is no data in the Excel table');
@@ -804,30 +804,30 @@ class PagesController extends Controller{
 
                     for ($row = 1; $row <= $highestRow; ++$row) {
 
-                         $consignment_no = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); 
-                         $customer_ref_no = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); 
-                         $sender_code = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); 
-                         $recipient_code = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); 
-                         $recipient_name = $worksheet->getCellByColumnAndRow(5, $row)->getValue(); 
-                         $address = $worksheet->getCellByColumnAndRow(6, $row)->getValue(); 
-                         $postcode = $worksheet->getCellByColumnAndRow(7, $row)->getValue(); 
-                         $mobile = $worksheet->getCellByColumnAndRow(8, $row)->getValue(); 
-                         $contact_person = $worksheet->getCellByColumnAndRow(9, $row)->getValue(); 
+                         $consignment_no = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                         $customer_ref_no = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                         $sender_code = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+                         $recipient_code = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
+                         $recipient_name = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+                         $address = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                         $postcode = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                         $mobile = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                         $contact_person = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
                          $phone_no = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
-                         $email = $worksheet->getCellByColumnAndRow(11, $row)->getValue(); 
-                         $declare_value = $worksheet->getCellByColumnAndRow(12, $row)->getValue(); 
-                         $cod_amount = $worksheet->getCellByColumnAndRow(13, $row)->getValue(); 
-                         $remark = $worksheet->getCellByColumnAndRow(14, $row)->getValue(); 
-                         $total_box = $worksheet->getCellByColumnAndRow(15, $row)->getValue(); 
-                         $sat_del = $worksheet->getCellByColumnAndRow(16, $row)->getValue(); 
-                         $hrc = $worksheet->getCellByColumnAndRow(17, $row)->getValue(); 
-                         $invr = $worksheet->getCellByColumnAndRow(18, $row)->getValue(); 
-                         $service_code = $worksheet->getCellByColumnAndRow(19, $row)->getValue(); 
+                         $email = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
+                         $declare_value = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+                         $cod_amount = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
+                         $remark = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
+                         $total_box = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
+                         $sat_del = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
+                         $hrc = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
+                         $invr = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
+                         $service_code = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
 
                           // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
                             $i++;
-                            continue; 
+                            continue;
                          }
 
 
@@ -867,7 +867,7 @@ class PagesController extends Controller{
                          $i++;
 
                     }
-                    
+
                     if(!empty($request->requisition_code)){
                       DB::select("UPDATE db_consignments set consignment_no='' WHERE requisition_code='".$request->requisition_code."' ");
                     }
