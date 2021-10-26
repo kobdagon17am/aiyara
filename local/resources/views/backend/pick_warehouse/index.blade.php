@@ -230,8 +230,8 @@
                         </div>
                       </div>
  -->
- <?php if(@$can_approve==1){ ?>
-                       <div class="form-group row div_btn_save_02  "  >
+ <?php if(@\Auth::user()->permission==1 || @$can_approve==1){ ?>
+                       <div class="form-group row  div_btn_save "  >
                         <div class="col-md-12 text-center ">
                           <br>
                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
@@ -255,12 +255,6 @@
           </div>
  <?php } ?>
 
-
-         <div class="form-group row div_btn_save_02_desc " style="display:none;">
-            <div class="col-md-12">หมายเหตุ
-              <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> เนื่องจาก สินค้าบางรายการไม่มีในคลัง ระบบจะไม่ให้ บันทึกใบเบิกได้ กรุณาดำเนินการ นำสินค้าเข้าคลังให้ครบก่อน หรือไม่ ก็ทำการ ยกเลิกใบเบิกใบนี้แล้วทำใบเบิกใหม่ที่มีสินค้าในคลังครบถ้วนอีกครั้ง  </span>
-            </div>
-          </div>
 
 
         </div>
@@ -581,14 +575,7 @@
                                                           }
                                                       }, 500);
 
-                                                      if(aData['check_product_instock']=="N"){
-                                                        $(".div_btn_save_02").hide();
-                                                        $(".div_btn_save_02_desc").show();
-                                                      }else{
-                                                        $(".div_btn_save_02").show();
-                                                        $(".div_btn_save_02_desc").hide();
-
-                                                      }
+                                                 
 
                                                 }
                                             });

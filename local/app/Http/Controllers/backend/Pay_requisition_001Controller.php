@@ -1367,6 +1367,7 @@ class Pay_requisition_001Controller extends Controller
           // $db_pick_pack_packing_code_id = $request->picking_id;
 
           // return $db_pick_pack_packing_code_id;
+          // return $temp_db_pick_pack_requisition_code;
 
           $r_db_pick_pack_packing = DB::select(" SELECT * FROM $temp_db_pick_pack_requisition_code WHERE id in($db_pick_pack_packing_code_id) ");
           // return $r_db_pick_pack_packing;
@@ -1508,14 +1509,20 @@ class Pay_requisition_001Controller extends Controller
                       ));
                 }
              
-             // return "1511";
+             // return "1512";
 
 
               DB::select(" TRUNCATE $temp_db_stocks_compare ;");
 
               DB::select(" UPDATE db_pay_requisition_001 SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (id='$lastInsertId') ");
 
-          
+              // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
+              $ch =  DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' AND status in (2)  ");
+              // return count($ch);
+              if(count($ch)>0){
+                DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
+              }
 
               // ตัด Stock 
               $db_select = DB::select(" 

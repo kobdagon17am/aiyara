@@ -463,7 +463,7 @@
                       {data: 'amt_receipt',   title :'<center>จำนวนใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           return d;
                       }},
-                      {data: 'action_user', title :'<center>ผู้เบิก </center>', className: 'text-center'},
+                      {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
                       {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
@@ -486,7 +486,7 @@
                             
                               ).addClass('input');
 
-                          }else if(aData['status']==2){
+                          }else if(aData['status']==2 || aData['status']==3){
 
                               $('td:last-child', nRow).html(''
                              
@@ -519,7 +519,7 @@
                               ).addClass('input');
 
 
-                          }else if(aData['status']==6){
+                          }else if(aData['status']==6){ // ยกเลิกใบเบิก
 
                               $('td:last-child', nRow).html(''
 
@@ -527,6 +527,8 @@
                              
 
                               ).addClass('input');
+
+                              // $('td:last-child', nRow).html('-');
 
                           }else{
 
@@ -765,7 +767,7 @@
                       {data: 'amt_receipt',   title :'<center>จำนวนใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           return d;
                       }},
-                      {data: 'action_user', title :'<center>ผู้เบิก </center>', className: 'text-center'},
+                      {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
                       {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},

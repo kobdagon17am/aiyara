@@ -961,7 +961,15 @@
 
                                       setTimeout(function () {
                                           // $('#data-table-0002').DataTable().clear().draw();
-                                          location.reload();
+
+                                          if(time_pay==1){
+
+                                            location.replace('{{ url("backend/pay_requisition_001") }}');
+
+                                          }else{
+                                            location.reload();
+                                          }
+                                          
                                       }, 1000);
                                 }
                               })
