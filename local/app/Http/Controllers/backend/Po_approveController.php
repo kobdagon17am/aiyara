@@ -50,7 +50,8 @@ class Po_approveController extends Controller
     public function edit($id)
     {
         $sRow = \App\Models\Backend\Orders::find($id);
-        $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
+        // $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
+        $slip = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->orderby('id', 'asc')->get();
         // dd($slip);
 
         $price = 0;

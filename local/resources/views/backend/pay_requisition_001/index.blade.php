@@ -258,7 +258,7 @@
             <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> วันที่ทำการเบิก : </label>
+                    <label for="" class="col-md-3 col-form-label"> วันที่สร้างใบเบิก : </label>
                      <div class="col-md-9 d-flex">
                       <input id="startDate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" />
                       <input id="endDate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" />
@@ -459,7 +459,7 @@
                   },
                   columns: [
                       {data: 'packing_code_02', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
-                      {data: 'action_date', title :'<center>วันที่ทำการเบิก </center>', className: 'text-center'},
+                      {data: 'action_date', title :'<center>วันที่สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'amt_receipt',   title :'<center>จำนวนใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           return d;
                       }},
@@ -761,7 +761,7 @@
 
                   columns: [
                       {data: 'packing_code_02', title :'<center>รหัสใบเบิก </center>', className: 'text-center'},
-                      {data: 'action_date', title :'<center>วันที่ทำการเบิก </center>', className: 'text-center'},
+                      {data: 'action_date', title :'<center>วันที่สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'amt_receipt',   title :'<center>จำนวนใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           return d;
                       }},

@@ -284,6 +284,28 @@
 </div> <!-- end row -->
 
 
+<div class="modal fade" id="modalOne" tabindex="-1" role="dialog" aria-labelledby="modalOneTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document" style="width:30%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จ (เพิ่มเติม)</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <center>
+       <div class="modal-body invoice_list " style="font-size: 16px;width: 80% !important;">
+
+       </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
 @endsection
 
 @section('script')
@@ -544,13 +566,8 @@ $(function() {
                   },
                   columns: [
                       {data: 'packing_code_02', title :'<center>รหัสใบเบิก</center>', className: 'text-center'},
-                      {data: 'receipt',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '';
-                          }
-                      }},
+                      {data: 'customer_name', title :'<center>ชื่อลูกค้า</center>', className: 'text-center'},
+
                       // {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
                       //     if(d){
                       //       return d.replace(/ *, */g, '<br>');
@@ -558,6 +575,17 @@ $(function() {
                       //       return '-';
                       //     }
                       // }},
+
+                      {data: 'receipt02',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '';
+                          }
+                      }},
+               
+                      // {data: 'receipt02', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
+
                       {data: 'action_user_name', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
                       {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
@@ -626,6 +654,11 @@ $(function() {
               $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
                 oTable2.draw();
               });
+
+                oTable2.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
+                });
+
           });
 
 
@@ -946,6 +979,18 @@ $(function() {
 
     </script>
 
+     <script>
+      $(document).ready(function() {
+
+           $(document).on('click','.invoice_code_list',function(event){
+               var t = $(this).siblings('.arr_inv').val();
+               var tt = t.split(",").join("\r\n");
+               $('.invoice_list').html(tt);
+               $('#modalOne').modal('show');
+            });
+                
+     });
+    </script>
 
     <script>
 
