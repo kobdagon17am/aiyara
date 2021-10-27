@@ -54,6 +54,7 @@ class PromotionCodeController extends Controller
       $status = $req->pstatus;
 
       $sTable = \App\Models\Backend\PromotionCode::search()
+        ->select('db_promotion_code.*', 'promotions.name_thai')
         ->leftJoin('promotions', 'promotions.id', 'db_promotion_code.promotion_id_fk')
         ->when($coupon_name, function ($query, $coupon_name) {
           return $query->where('promotions.name_thai', 'LIKE', "%{$coupon_name}%");
