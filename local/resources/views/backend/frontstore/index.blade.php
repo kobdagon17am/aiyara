@@ -600,6 +600,8 @@ $(function() {
 
                     }
 
+                    console.log(aData['status_sent_product']);
+
 
 
                     if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){

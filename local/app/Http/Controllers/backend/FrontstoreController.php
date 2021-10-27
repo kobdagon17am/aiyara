@@ -3145,11 +3145,20 @@ ORDER BY created_at DESC
       })
       ->addColumn('status_sent_product', function($row) {
         if(!empty($row->code_order)){
-          $r1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE receipts = '".$row->code_order."' ");
+          $r1 = DB::select(" SELECT receipts FROM `db_pick_pack_requisition_code` where status=1 ; ");
           if(@$r1){
-             $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
-             return @$r2[0]->status_sent;
+             $receipts = explode(',', $r1[0]->receipts);
+             if(in_array( $row->code_order, $receipts )){
+                return $row->code_order;
+             }else{
+              return '';
+             }
+             // $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
+             // return @$r2[0]->status_sent;
+          }else{
+            return '';
           }
+          // return $row->code_order;
         }
       })
       ->addColumn('status_sent_desc', function($row) {
