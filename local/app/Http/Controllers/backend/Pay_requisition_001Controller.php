@@ -1518,21 +1518,7 @@ class Pay_requisition_001Controller extends Controller
 
               // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
            
-              $ch01 =  DB::select(" SELECT time_pay FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
-
-              $ch02 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
-
-              // return count($ch);
-              if(count($ch02)>0){
-                DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
-                DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
-              }else{
-                 DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
-                 DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
-              }
-
-
-                $ch01 =  DB::select(" SELECT time_pay FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
+                 $ch01 =  DB::select(" SELECT time_pay FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
 
                   $ch02 =  DB::select(" SELECT * FROM db_pay_requisition_002_cancel_log WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' AND time_pay=5 and status_cancel=1 ");
     
@@ -1542,20 +1528,22 @@ class Pay_requisition_001Controller extends Controller
                   DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
                 }else{
 
-                  $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
+                  if(!empty($ch01[0]->time_pay)){
 
-                  if(count($ch03)>0){
-                     DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
-                     DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
-                  }else{
-                     DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
-                     DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
+                    $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
+
+                    if(count($ch03)>0){
+                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                       DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
+                    }else{
+                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                       DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
+                    }
+
                   }
 
                 }
-
-
-
+           
 
               // ตัด Stock 
               $db_select = DB::select(" 
