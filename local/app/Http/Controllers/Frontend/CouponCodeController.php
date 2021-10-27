@@ -64,7 +64,14 @@ class CouponCodeController extends Controller
             }else{
                $category_id = 9;//coupon type
                $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id,$request->coupon_code);
-               $resule = ['status'=>'success','message'=>'success','html'=>$html,'coupon'=>$request->coupon_code];
+
+               if($html['status'] == 'fail'){
+                $resule = ['status'=>'fail','message'=>$html['message']];
+
+               }else{
+                $resule = ['status'=>'success','message'=>'success','html'=>$html,'coupon'=>$request->coupon_code];
+               }
+
                return $resule;
             }
 

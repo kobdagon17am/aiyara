@@ -360,7 +360,13 @@
       data: {'category_id':category,'type':'{{$type}}'},
     })
     .done(function(data){
-      $('#product_list').html(data['html']);
+
+      if(data['html']){
+        $('#product_list').html(data['html']);
+      }else{
+        $('#product_list').html('');
+      }
+
       $('#coupon_code').val('');
       // console.log("success");
     })

@@ -384,7 +384,6 @@ class Product extends Model
     public static function product_list_coupon($promotion_id, $type, $category_id,$coupon_code)
     { //$promotion_id,$types
 
-
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
@@ -409,7 +408,8 @@ class Product extends Model
               $resule = ['status'=>'success','message'=>'สามารถซื้อได้','html'=>$html];
 
             }else{
-              $resule = ['status'=>'fail','message'=>'ไม่มีรายการ Coupon ที่ท่านเลือก'];
+              //สินค้าไม่มีรูปภาพ
+              $resule = ['status'=>'fail','message'=>'ข้อมูลรายการสินค้าไม่พร้อมใช้งาน'];
 
             }
         return  $resule;

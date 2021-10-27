@@ -80,9 +80,6 @@ class ProductController extends Controller
             $data = ['html' => $html];
         }
 
-
-
-
         return $data;
     }
 
