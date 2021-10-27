@@ -38,7 +38,6 @@ class CouponCodeController extends Controller
         ->select('db_promotion_code.promotion_id_fk','db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
-
        ->where('promotions.orders_type_id','LIKE','%'.$request->type.'%')
        ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
        ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
@@ -49,6 +48,7 @@ class CouponCodeController extends Controller
        ->where('db_promotion_cus.pro_status','=',1)//อนุมัติ code นี้ใช้ได้
        ->where('db_promotion_cus.promotion_code','=',$request->coupon_code)
        ->first();
+
 
        if($coupon){
           if($coupon->pro_status == 2){
@@ -89,15 +89,13 @@ public static function dt_coupon_code(Request $rs)
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
        ->leftjoin('customers', 'customers.user_name', '=', 'db_promotion_cus.used_user_name')
-       ->where('db_promotion_code.approve_status','=',1)
-       ->where('db_promotion_cus.customer_id_fk','=',Auth::guard('c_user')->user()->id)
-
+      //  ->where('db_promotion_code.approve_status','=',1)
+       ->where('db_promotion_cus.user_name','=',Auth::guard('c_user')->user()->user_name)
        ->whereRaw(("case
        WHEN '{$rs->status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
        WHEN '{$rs->status}' = 2 THEN db_promotion_cus.pro_status = 2
        WHEN '{$rs->status}' = 'expiry_date' THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate < '{$date}'
        END"));
-
 
         $sQuery = DataTables::of($sTable);
 
@@ -110,7 +108,7 @@ public static function dt_coupon_code(Request $rs)
                 return $date;
             })
             ->addColumn('expiry_date', function ($row) {
-              if( strtotime($row->pro_edate) > strtotime(date('Y-m-d H:i:s')) ) {
+              if( strtotime($row->pro_edate) >= strtotime(date('Y-m-d')) ) {
                 $expiry_date = '<label class="label label-inverse-info-border"><b>'.date('d/m/Y',strtotime($row->pro_edate)).'</b></label>';
               }else{
                 $expiry_date = '<label class="label label-inverse-danger"><b>'.date('d/m/Y',strtotime($row->pro_edate)).'</b></label>';
@@ -130,7 +128,7 @@ public static function dt_coupon_code(Request $rs)
             ->addColumn('status', function ($row) {
               if($row->pro_status == '1'){
 
-                if(strtotime($row->pro_edate) < strtotime(date('Y-m-d H:i:s'))){
+                if(strtotime($row->pro_edate) < strtotime(date('Y-m-d'))){
                   $status = '<span class="label label-danger">Expried</span>';
                 }else{
                   $status = '<span class="label label-success">Usable</span>';

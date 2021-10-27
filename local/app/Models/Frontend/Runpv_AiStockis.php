@@ -30,7 +30,10 @@ class Runpv_AiStockis extends Model
                     return $resule;
                 } else {
 
+
                   $update_use = Customer::find($user->id);
+                  dd('sss');
+
                   $update_to_customer = Customer::find($to_customer->id);
 
                   $pv_total = $user->pv_aistockist - $pv;
