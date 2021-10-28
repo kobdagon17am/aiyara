@@ -58,16 +58,31 @@
                               </div>
                           </div>
 
-                                   <div class="form-group row">
-                                    <label class="col-md-3 col-form-label">กำหนดให้รูปนี้เป็นรูปหลัก :</label>
-                                    <div class="col-md-8 mt-2">
-                                      <div class="custom-control custom-switch">
-                                          <!-- <input type="checkbox" class="custom-control-input" id="customSwitch" name="image_default" value="1" {{ ( @$sRow->image_default=='1')?'checked':'' }}> -->
-                                          <input type="checkbox" class="custom-control-input" id="customSwitch" name="image_default" value="1" checked >
-                                          <label class="custom-control-label" for="customSwitch"> เป็นรูปหลัก </label>
-                                      </div>
-                                    </div>
-                                </div>
+<?php //print_r(@$sRowNew->id); ?>
+<?php //print_r(@$sRow->id); ?>
+
+@if( empty(@$sRow->id) )
+<div class="form-group row">
+    <label class="col-md-3 col-form-label">กำหนดให้รูปนี้เป็นรูปหลัก :</label>
+    <div class="col-md-8 mt-2">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch" name="image_default" value="1"  >
+            <label class="custom-control-label" for="customSwitch"> เป็นรูปหลัก </label>
+        </div>
+    </div>
+</div>
+@else
+<div class="form-group row">
+    <label class="col-md-3 col-form-label">กำหนดให้รูปนี้เป็นรูปหลัก :</label>
+    <div class="col-md-8 mt-2">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch" name="image_default" value="1" {{ ( @$sRow->image_default=='1')?'checked':'' }} >
+            <label class="custom-control-label" for="customSwitch"> เป็นรูปหลัก </label>
+        </div>
+    </div>
+</div>
+@endif
+
 
 
                       <div class="form-group mb-0 row">
