@@ -3267,6 +3267,70 @@ if($frontstore[0]->check_press_save==2){
     }
 
 
+
+    public function ajaxProductPackingSize(Request $request)
+    {
+
+      if($request->ajax()){
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->get();
+            if($value->count() == 0){
+            }else{
+                  DB::table('db_pick_pack_packing')
+                  ->where('id', $request->id)
+                  ->update(array(
+                    'p_size' => $request->p_size,
+                  ));
+            }
+
+      }
+
+    }
+
+
+    public function ajaxProductPackingWeight(Request $request)
+    {
+
+      if($request->ajax()){
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->get();
+            if($value->count() == 0){
+            }else{
+                  DB::table('db_pick_pack_packing')
+                  ->where('id', $request->id)
+                  ->update(array(
+                    'p_weight' => $request->p_weight,
+                  ));
+            }
+
+      }
+
+    }
+
+    public function ajaxProductPackingAmtBox(Request $request)
+    {
+
+      if($request->ajax()){
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->get();
+            if($value->count() == 0){
+            }else{
+                  DB::table('db_pick_pack_packing')
+                  ->where('id', $request->id)
+                  ->update(array(
+                    'p_amt_box' => $request->p_amt_box,
+                  ));
+            }
+
+      }
+
+    }
+
+
+
     public function ajaxDeleteQrcodeProductPacking(Request $request)
     {
 
@@ -6161,6 +6225,21 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
     }
 
 
+  public function ajaxDelFunction(Request $request)
+    {
+
+      if($request->ajax()){
+        // return $request->id;
+        if(!empty(@$request->id) && !empty(@$request->table)){
+            DB::select(" DELETE FROM ".$request->table." where id =".$request->id." ");
+        }
+
+        if(!empty(@$request->file)){
+            @UNLINK(@$request->file);
+        }
+
+      }
+    }
 
 
 

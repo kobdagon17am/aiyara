@@ -3163,12 +3163,27 @@ ORDER BY created_at DESC
       })
       ->addColumn('status_sent_desc', function($row) {
         if(!empty($row->code_order)){
-          $r1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE receipts = '".$row->code_order."' ");
+
+           $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk,receipts FROM `db_pick_pack_requisition_code` order by pick_pack_packing_code_id_fk desc limit 1 ; ");
           if(@$r1){
-            $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
-            $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
-            return @$r3->txt_desc;
+             $receipts = explode(',', $r1[0]->receipts);
+             if(in_array( $row->code_order, $receipts )){
+                // return $row->code_order;
+                $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
+                $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
+                return @$r3->txt_desc;
+
+             }
+          
           }
+
+
+          // $r1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE receipts = '".$row->code_order."' ");
+          // if(@$r1){
+          //   $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '".$r1[0]->pick_pack_packing_code_id_fk."' ");
+          //   $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
+          //   return @$r3->txt_desc;
+          // }
         }
       })
       ->addColumn('action_user', function($row) {

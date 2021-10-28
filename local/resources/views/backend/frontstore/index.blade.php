@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -583,14 +583,15 @@ $(function() {
 
                                     var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
-
-                                    if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
-                                       $('td:last-child', nRow).html(str_U + st2);
-                                       $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                                       if(aData['status_sent_product']==6){
-                                        $('td:last-child', nRow).html(str_U + str_D);
-                                       }
-                                    }
+                                      // console.log(aData['status_sent_product']+" : "+aData['code_order']);
+                                    // if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
+                                    //  if(aData['status_sent_product']==aData['code_order']){
+                                    //    $('td:last-child', nRow).html(str_U + st2);
+                                    //    $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                    //    if(aData['status_sent_product']==6){
+                                    //     $('td:last-child', nRow).html(str_U + str_D);
+                                    //    }
+                                    // }
 
 
 
@@ -599,9 +600,6 @@ $(function() {
 
 
                     }
-
-                    console.log(aData['status_sent_product']);
-
 
 
                     if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
