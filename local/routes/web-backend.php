@@ -381,6 +381,10 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxDeleteQrcodeProduct', 'AjaxController@ajaxDeleteQrcodeProduct');
     Route::post('ajaxScanQrcodeProductPacking', 'AjaxController@ajaxScanQrcodeProductPacking');
     Route::post('ajaxDeleteQrcodeProductPacking', 'AjaxController@ajaxDeleteQrcodeProductPacking');
+    
+    Route::post('ajaxProductPackingSize', 'AjaxController@ajaxProductPackingSize');
+    Route::post('ajaxProductPackingWeight', 'AjaxController@ajaxProductPackingWeight');
+    Route::post('ajaxProductPackingAmtBox', 'AjaxController@ajaxProductPackingAmtBox');
 
     Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
 
@@ -503,6 +507,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('warehouse_qr_0001/datatable', 'Pick_warehouseController@warehouse_qr_0001')->name('warehouse_qr_0001.datatable');  
     Route::post('warehouse_qr_0002/datatable', 'Pick_warehouseController@warehouse_qr_0002')->name('warehouse_qr_0002.datatable');  
+    Route::post('warehouse_qr_00022/datatable', 'Pick_warehouseController@warehouse_qr_00022')->name('warehouse_qr_00022.datatable');  
 
     Route::post('warehouse_tb_000/datatable', 'Pick_warehouseController@warehouse_tb_000')->name('warehouse_tb_000.datatable');  
     Route::post('warehouse_tb_001/datatable', 'Pick_warehouseController@warehouse_tb_001')->name('warehouse_tb_001.datatable');  

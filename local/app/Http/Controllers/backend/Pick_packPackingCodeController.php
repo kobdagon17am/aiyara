@@ -177,8 +177,9 @@ class Pick_packPackingCodeController extends Controller
         }
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      $sTable = DB::select(" SELECT * FROM db_pick_pack_packing_code 
-        where status_picked=1 
+      $sTable = DB::select(" 
+
+        SELECT * FROM db_pick_pack_packing_code where status_picked=1 
 
         $w01
         $w02

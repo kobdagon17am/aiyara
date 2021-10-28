@@ -744,10 +744,6 @@ class Pick_warehouseController extends Controller
 $sTable = DB::select(" 
 
 SELECT 
-db_pick_pack_packing.id,
-db_pick_pack_packing.p_size,
-db_pick_pack_packing.p_weight,
-db_pick_pack_packing.p_amt_box,
 db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
 db_pick_pack_packing.packing_code as packing_code,
 CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
@@ -950,6 +946,7 @@ GROUP BY db_order_products_list.product_id_fk
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
             '<div class="divTableRow">
+            <div class="divTableCell" style="width:170px;text-align:center;font-weight:bold;"> ใบปะหน้ากล่อง & ใบเสร็จ </div>
             <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
             </div>
             ';
@@ -957,13 +954,16 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $pn .=     
                 '<div class="divTableRow">
-                 <div class="divTableCell" style="text-align:left;"> 
+        
+                <div class="divTableCell" style="text-align:center;"> <center> <a href="" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> <a href="javascript: void(0);" target=_blank data-id="" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center> </div> 
+                <div class="divTableCell" style="text-align:left;"> 
                   <b>ขนาด <br> 
-                  <input class="p_size" data-id="'.$row->id.'" type="text" value="'.$row->p_size.'"><br>
+                  <input type="text"><br>
                   น้ำหนัก <br>
-                   <input class="p_weight" data-id="'.$row->id.'"  type="text" value="'.$row->p_weight.'"><br>
+                   <input type="text"><br>
                   จำนวนกล่อง <br>
-                   <input type="number" class="p_amt_box" data-id="'.$row->id.'"  type="text" value="'.$row->p_amt_box.'">
+                   <input type="text">
+
                  </div> 
              ';
 
@@ -994,10 +994,6 @@ GROUP BY db_order_products_list.product_id_fk
 $sTable = DB::select(" 
 
 SELECT 
-db_pick_pack_packing.id,
-db_pick_pack_packing.p_size,
-db_pick_pack_packing.p_weight,
-db_pick_pack_packing.p_amt_box,
 db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
 db_pick_pack_packing.packing_code as packing_code,
 CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
@@ -1165,6 +1161,7 @@ GROUP BY db_order_products_list.product_id_fk
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
             '<div class="divTableRow">
+            <div class="divTableCell" style="width:170px;text-align:center;font-weight:bold;"> ใบปะหน้ากล่อง & ใบเสร็จ </div>
             <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
             </div>
             ';
@@ -1172,14 +1169,16 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $pn .=     
                 '<div class="divTableRow">
-            
-                  <div class="divTableCell" style="text-align:left;"> 
+        
+                <div class="divTableCell" style="text-align:center;"> <center> <a href="" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> <a href="javascript: void(0);" target=_blank data-id="" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center> </div> 
+                <div class="divTableCell" style="text-align:left;"> 
                   <b>ขนาด <br> 
-                  <input class="p_size" data-id="'.$row->id.'" type="text" value="'.$row->p_size.'"><br>
+                  <input type="text"><br>
                   น้ำหนัก <br>
-                   <input class="p_weight" data-id="'.$row->id.'"  type="text" value="'.$row->p_weight.'"><br>
+                   <input type="text"><br>
                   จำนวนกล่อง <br>
-                   <input type="number" class="p_amt_box" data-id="'.$row->id.'"  type="text" value="'.$row->p_amt_box.'">
+                   <input type="text">
+
                  </div> 
              ';
 
