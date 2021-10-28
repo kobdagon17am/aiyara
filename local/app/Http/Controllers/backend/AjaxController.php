@@ -2929,6 +2929,17 @@ if($frontstore[0]->check_press_save==2){
 
          }
 
+        if($pay_type_id_fk==1){
+
+                    if(empty($request->transfer_price)){
+                        exit;
+                    }
+                    $transfer_price = str_replace(',','',$request->transfer_price);
+                    $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+                    $transfer_money_datetime = $request->transfer_money_datetime;
+                    DB::select(" UPDATE db_add_ai_cash SET transfer_price=$transfer_price,cash_price=0,cash_pay=0,transfer_money_datetime='$transfer_money_datetime',total_amt=($sum_price) WHERE id=$id ");
+
+         }
 
 
         // if(!empty($request->this_element)){

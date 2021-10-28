@@ -278,7 +278,7 @@
 
 
 
-                      <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==1||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
+                      <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
                         <div class="form-group row show_div_transfer_price " style="<?=$show_div_transfer_price?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินโอน : </label>
                           <div class="col-md-8 ">
@@ -301,7 +301,7 @@
                       </div>
 
 
-                      <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==1||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
+                      <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
                         <div class="form-group row show_div_cash_pay " style="<?=$show_div_cash_pay?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินสดที่ต้องชำระ : </label>
                           <div class="col-md-8 ">
@@ -704,26 +704,6 @@
                                 $("#cash_pay").val('');
 
                             }
-
-                             // 1  เงินโอน 
-                              if(pay_type_id_fk==1){
-
-                                // เงินโอน
-                                $(".show_div_transfer_price").show();
-                                $('input[name=account_bank_id]').prop('checked',false);
-                                $('input[name=account_bank_id]').attr('required', true);
-                                $(".div_account_bank_id").show();
-                                $("#transfer_price").val('');
-                                $(".transfer_money_datetime").attr('required', true);
-                                $("#transfer_price").attr('required',true);
-                                $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
-
-                                $(".show_div_cash_pay").hide();
-                                // $('#fee').removeAttr('required');
-                                // $("#cash_pay").val('');
-
-                            }
-
       });
 
 
@@ -734,6 +714,8 @@
               $(".myloading").show();
 
               var id = "{{@$sRow->id}}";
+
+
               var pay_type_id_fk = $("#pay_type_id_fk").val();
 
               if(pay_type_id_fk==''){
