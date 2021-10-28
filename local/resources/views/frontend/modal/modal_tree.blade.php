@@ -10,9 +10,11 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
   <div class="modal-content">
    <div class="modal-header bg-c-green">
     @if(@$data->business_name)
-    <h4 class="modal-title" style="color: #FFFF">{{$user->prefix_name.' '.$user->first_name.' '.$user->last_name }} ({{$user->user_name}}) </h4>
-    @else
+
     <h4 class="modal-title" style="color: #FFFF">{{$data->business_name}} ({{$data->user_name}})</h4>
+    @else
+    <h4 class="modal-title" style="color: #FFFF">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h4>
+
     @endif
 
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

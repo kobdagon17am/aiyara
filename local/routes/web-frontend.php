@@ -252,6 +252,8 @@ Route::get('{user_name?}/4','Frontend\SalepageController@aifacad')->name('4');
 Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
 Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
 
+Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
+
 // Route::get('aiyara/{user_name?}','Frontend\SalepageController@aiyara')->name('aiyara');
 // Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
 // Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
