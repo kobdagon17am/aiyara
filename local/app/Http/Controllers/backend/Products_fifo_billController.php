@@ -1071,8 +1071,15 @@ group by promotions_products.product_id_fk
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
     $invoice_code = $request->txtSearch;
-    $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
 
+    if(@\Auth::user()->permission==1){
+         $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  ");
+
+    }else{
+        $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
+
+    }
+  
     // return $r01;
     // return $r01[0]->invoice_code;
 

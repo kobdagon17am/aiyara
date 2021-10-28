@@ -272,12 +272,12 @@
 
 
 
-                     <div class="form-group row div_btn_save_02_desc " style="text-align: center;display: none;">
+               <!--       <div class="form-group row div_btn_save_02_desc " style="text-align: center;display: none;">
                         <div class="col-md-12">หมายเหตุ
                           <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> เนื่องจาก สินค้าบางรายการไม่มีในคลัง ระบบจะไม่ให้ บันทึกใบเบิกได้ กรุณาดำเนินการ นำสินค้าเข้าคลังให้ครบก่อน  </span>
                         </div>
                       </div>
-
+ -->
                     </div>
                   </div>
                   </div>
@@ -399,7 +399,7 @@
 	                  },
 	                  success:function(data)
 	                  { 
-	                    // console.log(data);
+	                    console.log(data);
                       // return false;
                       
 	                    if(data==0){
@@ -454,7 +454,7 @@
 
                   $('#data-table-0001').hide();
                   $('#data-table-0002').hide();
-                  $(".div_btn_save").hide();
+                  // $(".div_btn_save").hide();
 
                   $(".div_customer").hide();
                   $(".div_customer").css('background-color','white');
@@ -536,18 +536,18 @@
                                       if(aData['ch_amt_lot_wh']==0){
                                         $(".div_btn_save").hide();
                                       }else{
-                                          // $(".div_btn_save").show();
+                                          $(".div_btn_save").show();
 
                                              console.log(aData['check_product_instock']);
 
-                                            if(aData['check_product_instock']=="N"){
-                                              $(".div_btn_save").hide();
-                                              $(".div_btn_save_02_desc").show();
-                                            }else{
-                                              $(".div_btn_save").show();
-                                              $(".div_btn_save_02_desc").hide();
+                                            // if(aData['check_product_instock']=="N"){
+                                            //   $(".div_btn_save").hide();
+                                            //   $(".div_btn_save_02_desc").show();
+                                            // }else{
+                                            //   $(".div_btn_save").show();
+                                            //   $(".div_btn_save_02_desc").hide();
 
-                                            }
+                                            // }
 
 
                                       }
