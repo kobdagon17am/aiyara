@@ -6225,6 +6225,21 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
     }
 
 
+  public function ajaxDelFunction(Request $request)
+    {
+
+      if($request->ajax()){
+        // return $request->id;
+        if(!empty(@$request->id) && !empty(@$request->table)){
+            DB::select(" DELETE FROM ".$request->table." where id =".$request->id." ");
+        }
+
+        if(!empty(@$request->file)){
+            @UNLINK(@$request->file);
+        }
+
+      }
+    }
 
 
 

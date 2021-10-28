@@ -558,8 +558,9 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.promotions_cost.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger  remove_01 " data-id="'+aData['id']+'" data-table="promotions_cost" data-file=""  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
+                      // cDelete
                     }
                 });
                 $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -611,7 +612,9 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.promotions_images.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_images.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                         + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_images.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="promotions_images" data-file="'+aData['img_path']+'" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                    //   + '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>'
+
                       ).addClass('input');
                     }
                 });
@@ -664,6 +667,40 @@
             });
                 
       });
+
+
+      $(document).on('click', '.remove_01', function(event) {
+
+            var id = $(this).data('id');
+            var table = $(this).data('table');
+            var file = $(this).data('file');
+
+            // alert(id+" : "+table+" : "+file);
+            // return false;
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+            $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+        }
+
+    });
+
 
     </script>
 

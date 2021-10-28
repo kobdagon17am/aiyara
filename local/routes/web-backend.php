@@ -922,6 +922,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     
     Route::post('ajaxGetRegis_date_doc', 'AjaxController@ajaxGetRegis_date_doc');
 
+    Route::post('ajaxDelFunction', 'AjaxController@ajaxDelFunction');
+
 
 
     Route::resource('giveaway', 'GiveawayController');
