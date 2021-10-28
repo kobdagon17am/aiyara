@@ -959,11 +959,11 @@ GROUP BY db_order_products_list.product_id_fk
                 '<div class="divTableRow">
                  <div class="divTableCell" style="text-align:left;"> 
                   <b>ขนาด <br> 
-                  <input class="p_size" data-id="'.$row->id.'" type="text" value="'.$row->p_size.'"><br>
+                  <input class="p_size" data-id="'.@$row->id.'" type="text" value="'.@$row->p_size.'"><br>
                   น้ำหนัก <br>
-                   <input class="p_weight" data-id="'.$row->id.'"  type="text" value="'.$row->p_weight.'"><br>
+                   <input class="p_weight" data-id="'.@$row->id.'"  type="text" value="'.@$row->p_weight.'"><br>
                   จำนวนกล่อง <br>
-                   <input type="number" class="p_amt_box" data-id="'.$row->id.'"  type="text" value="'.$row->p_amt_box.'">
+                   <input type="number" class="p_amt_box" data-id="'.@$row->id.'"  type="text" value="'.@$row->p_amt_box.'">
                  </div> 
              ';
 
@@ -1175,11 +1175,11 @@ GROUP BY db_order_products_list.product_id_fk
             
                   <div class="divTableCell" style="text-align:left;"> 
                   <b>ขนาด <br> 
-                  <input class="p_size" data-id="'.$row->id.'" type="text" value="'.$row->p_size.'"><br>
+                  <input class="p_size" data-id="'.@$row->id.'" type="text" value="'.@$row->p_size.'"><br>
                   น้ำหนัก <br>
-                   <input class="p_weight" data-id="'.$row->id.'"  type="text" value="'.$row->p_weight.'"><br>
+                   <input class="p_weight" data-id="'.@$row->id.'"  type="text" value="'.@$row->p_weight.'"><br>
                   จำนวนกล่อง <br>
-                   <input type="number" class="p_amt_box" data-id="'.$row->id.'"  type="text" value="'.$row->p_amt_box.'">
+                   <input type="number" class="p_amt_box" data-id="'.@$row->id.'"  type="text" value="'.@$row->p_amt_box.'">
                  </div> 
              ';
 
