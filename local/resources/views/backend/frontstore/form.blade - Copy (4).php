@@ -1441,8 +1441,11 @@
                       </div>
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
-      
-                      <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
+            @IF(@$sRow->pay_type_id_fk==6)
+              <input {{@$disAfterSave}} class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
+            @ELSE
+              <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
+            @ENDIF
 
                       </div>
                        <div class="divTableCell">
@@ -5044,9 +5047,9 @@ $(document).ready(function() {
                             if(pay_type_id_fk==6){
 
                                 $("#aicash_price").val('');
-                                // $("#aicash_price").removeAttr('readonly');
-                                // $('#aicash_price').attr('required', true);
-                                // $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+                                $("#aicash_price").removeAttr('readonly');
+                                $('#aicash_price').attr('required', true);
+                                $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
                                 $("#cash_pay").val('');
                                 $(".show_div_aicash_price").show();
                                 $(".show_div_cash_pay").show();
