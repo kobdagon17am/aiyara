@@ -626,6 +626,26 @@
                                 $("#cash_pay").val('');
                               
                             }
+
+                                                       // 1  เงินโอน 
+                              if(pay_type_id_fk==1){
+
+                                // เงินโอน
+                                $(".show_div_transfer_price").show();
+                                $('input[name=account_bank_id]').prop('checked',false);
+                                $('input[name=account_bank_id]').attr('required', true);
+                                $(".div_account_bank_id").show();
+                                $("#transfer_price").val('');
+                                $(".transfer_money_datetime").attr('required', true);
+                                $("#transfer_price").attr('required',true);
+                                $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+
+                                $(".show_div_cash_pay").hide();
+                                // $('#fee').removeAttr('required');
+                                // $("#cash_pay").val('');
+
+                            }
+
       });
 
 
